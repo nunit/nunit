@@ -26,23 +26,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Mono.Addins;
 using NUnit.Engine.Drivers;
-using NUnit.Engine.Internal;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {
-    public class DriverFactory : IDriverFactory, IService
+    public class DriverService : IDriverService, IService
     {
         private const string NUNIT_FRAMEWORK = "nunit.framework";
+        private const string NUNITLITE_FRAMEWORK = "nunitlite";
 
         private const string OLDER_NUNIT_NOT_SUPPORTED_MESSAGE =
             "Unable to load {0}. This runner only supports tests written for NUnit 3.0 or higher.";
 
-        #region IDriverFactory Members
-        // TODO: This method is a standin for our future implementation, which will
-        // load drivers as plugins, in separate assemblies. This implementation has
-        // too much knowledge of what test framework the drivers can handle. In the
-        // future, this responsibility will have to be passed to the driver itself.
+        IList<IDriverFactory> _factories = new List<IDriverFactory>();
+
+        #region IDriverService Members
+
         public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings)
         {
             if (!File.Exists(assemblyPath))
@@ -51,15 +52,15 @@ namespace NUnit.Engine.Services
             try
             {
                 var testAssembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
-                var nunitV3 = new Version(3, 0);
+                var references = testAssembly.GetReferencedAssemblies();
 
-                foreach (var refAssembly in testAssembly.GetReferencedAssemblies())
+                foreach (var factory in _factories)
                 {
-                    if (refAssembly.Name == NUNIT_FRAMEWORK)
-                        if (refAssembly.Version >= nunitV3)
-                            return new NUnit3FrameworkDriver(domain, refAssembly.Name, assemblyPath, settings);
-                        else
-                            return new NUnit2FrameworkDriver(domain, refAssembly.Name, assemblyPath, settings);
+                    foreach (var reference in references)
+                    {
+                        if (factory.IsSupportedFramework(reference))
+                            return factory.GetDriver(domain, reference.Name, assemblyPath, settings);
+                    }
                 }
             }
             catch (Exception ex)
@@ -83,6 +84,10 @@ namespace NUnit.Engine.Services
 
         public void InitializeService()
         {
+            _factories.Add(new NUnit3DriverFactory());
+
+            foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
+                _factories.Add(factory);
         }
 
         public void UnloadService()

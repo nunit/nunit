@@ -88,12 +88,6 @@ namespace NUnit.Engine
             {
                 AddinManager.Initialize(NUnitConfiguration.ApplicationDirectory);
                 AddinManager.Registry.Update(null);
-
-#if DEBUG
-                Console.WriteLine("Addin Roots:");
-                foreach (var root in AddinManager.Registry.GetAddinRoots())
-                    Console.WriteLine("   {0}", root.Name);
-#endif
             }
 
             SettingsService settingsService = new SettingsService(true);
@@ -113,7 +107,7 @@ namespace NUnit.Engine
             this.Services.Add(new ProjectService());
             this.Services.Add(new RuntimeFrameworkSelector());
             this.Services.Add(new DefaultTestRunnerFactory());
-            this.Services.Add(new DriverFactory());
+            this.Services.Add(new DriverService());
             this.Services.Add(new TestAgency());
             this.Services.Add(new ResultService());
 

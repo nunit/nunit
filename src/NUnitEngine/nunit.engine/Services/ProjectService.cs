@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using NUnit.Common;
 using Mono.Addins;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {

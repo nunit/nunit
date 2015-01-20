@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Xml;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine
 {

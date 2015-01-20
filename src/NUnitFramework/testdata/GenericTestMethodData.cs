@@ -46,12 +46,14 @@ namespace NUnit.TestData
         {
         }
 
+#pragma warning disable 414
         private static readonly object[] Source = new object[] {
             new object[] { 5, 2, "ABC" },
             new object[] { 5, "Y", "ABC" },
             new object[] { "X", 2, "ABC" },
             new object[] { "X", "Y", "ABC" }
         };
+#pragma warning restore 414
     }
 
     public class IncompatibleGenericCombinatorialData

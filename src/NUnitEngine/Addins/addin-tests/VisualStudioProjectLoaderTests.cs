@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using NUnit.Engine.Extensibility;
 using NUnit.Engine.Tests.resources;
 using NUnit.Framework;
 
@@ -80,8 +81,6 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
         public void CanLoadVsProject(string resourceName, string[] configs, string assemblyName)
         {
             Assert.That(_loader.CanLoadFrom(resourceName));
-
-            string fileName = Path.GetFileNameWithoutExtension(resourceName);
 
             using (TestResource file = new TestResource(resourceName))
             {

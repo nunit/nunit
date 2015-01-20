@@ -55,13 +55,14 @@
     <Compile Include="..\EngineApiVersion.cs">
       <Link>EngineApiVersion.cs</Link>
     </Compile>
-    <Compile Include="IProject.cs" />
-    <Compile Include="IProjectLoader.cs" />
-    <Compile Include="IResultWriter.cs" />
+    <Compile Include="Extensibility\IDriverFactory.cs" />
+    <Compile Include="Extensibility\IProject.cs" />
+    <Compile Include="Extensibility\IProjectLoader.cs" />
+    <Compile Include="Extensibility\IResultWriter.cs" />
     <Compile Include="IResultService.cs" />
-    <Compile Include="IResultWriterFactory.cs" />
+    <Compile Include="Extensibility\IResultWriterFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IFrameworkDriver.cs" />
+    <Compile Include="Extensibility\IFrameworkDriver.cs" />
     <Compile Include="ILogging.cs" />
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="ISettings.cs" />

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Extensibility
 {
     /// <summary>
     /// The IFrameworkDriver interface is implemented by a class that

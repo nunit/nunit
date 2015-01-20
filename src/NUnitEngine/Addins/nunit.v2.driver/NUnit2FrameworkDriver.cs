@@ -27,6 +27,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using NUnit.Core;
+using NUnit.Engine.Extensibility;
 
 using TestPackage = NUnit.Core.TestPackage;
 

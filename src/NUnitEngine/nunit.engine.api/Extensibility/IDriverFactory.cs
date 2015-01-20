@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2009-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,35 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
-using System.Xml;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Extensibility
 {
     /// <summary>
-    /// Common interface for objects that process and write out test results
+    /// Interface implemented by a Type that knows how to create a driver for a test assembly.
     /// </summary>
-    public interface IResultWriter
+    public interface IDriverFactory
     {
         /// <summary>
-        /// Checks if the output path is writable. If the output is not
-        /// writable, this method should throw an exception.
+        /// Gets a flag indicating whether a given AssemblyName
+        /// represents a test framework supported by this factory.
         /// </summary>
-        /// <param name="outputPath"></param>
-        void CheckWritability(string outputPath);
+        bool IsSupportedFramework(AssemblyName refAssembly);
 
         /// <summary>
-        /// Writes result to the specified output path.
+        /// Gets a driver for a given test assembly and framework
+        /// which it is already known to reference.
         /// </summary>
-        /// <param name="resultNode">XmlNode for the result</param>
-        /// <param name="outputPath">Path to which it should be written</param>
-        void WriteResultFile(XmlNode resultNode, string outputPath);
-
-        /// <summary>
-        /// Writes result to a TextWriter.
-        /// </summary>
-        /// <param name="resultNode">XmlNode for the result</param>
-        /// <param name="writer">TextWriter to which it should be written</param>
-        void WriteResultFile(XmlNode resultNode, TextWriter writer);
+        /// <param name="domain">The domain in which the assembly will be loaded</param>
+        /// <param name="frameworkAssemblyName">The name of the test framework reference</param>
+        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="settings">A dictionarly of settings to be used for this assembly</param>
+        /// <returns></returns>
+        IFrameworkDriver GetDriver(AppDomain domain, string frameworkAssemblyName, string assemblyPath, IDictionary<string, object> settings);
     }
 }

@@ -23,12 +23,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
+using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Drivers
 {
-    public interface IDriverFactory
+    public class NUnit3DriverFactory : IDriverFactory
     {
-        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings);
+        private const string NUNIT_FRAMEWORK = "nunit.framework";
+
+        public bool IsSupportedFramework(AssemblyName reference)
+        {
+            return reference.Name == NUNIT_FRAMEWORK && reference.Version.Major == 3;
+        }
+
+        public IFrameworkDriver GetDriver(AppDomain domain, string frameworkAssemblyName, string assemblyPath, IDictionary<string, object> settings)
+        {
+            return new NUnit3FrameworkDriver(domain, frameworkAssemblyName, assemblyPath, settings);
+        }
     }
 }

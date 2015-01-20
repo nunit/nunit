@@ -117,13 +117,13 @@ namespace NUnit.Engine
 
         #region DriverFactory
 
-        private IDriverFactory driverFactory;
-        public IDriverFactory DriverFactory
+        private IDriverService driverFactory;
+        public IDriverService DriverFactory
         {
             get
             {
                 if (driverFactory == null)
-                    driverFactory = (IDriverFactory)ServiceManager.GetService(typeof(IDriverFactory));
+                    driverFactory = (IDriverService)ServiceManager.GetService(typeof(IDriverService));
 
                 return driverFactory;
             }

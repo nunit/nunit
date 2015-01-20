@@ -27,6 +27,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using Mono.Addins;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {

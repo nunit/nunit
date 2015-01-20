@@ -20,15 +20,15 @@
 	</Runtime>
 
 	<ExtensionPoint path="/NUnit/Engine/TypeExtensions/IProjectLoader">
-		<ExtensionNode objectType="NUnit.Engine.IProjectLoader"/>
+		<ExtensionNode objectType="NUnit.Engine.Extensibility.IProjectLoader"/>
 	</ExtensionPoint>
 
 	<ExtensionPoint path="/NUnit/Engine/TypeExtensions/IResultWriterFactory">
-		<ExtensionNode objectType="NUnit.Engine.IResultWriterFactory"/>
+		<ExtensionNode objectType="NUnit.Engine.Extensibility.IResultWriterFactory"/>
 	</ExtensionPoint>
 
-	<ExtensionPoint path="/NUnit/Engine/TypeExtensions/IFrameworkDriver">
-		<ExtensionNode objectType="NUnit.Engine.IFrameworkDriver"/>
+	<ExtensionPoint path="/NUnit/Engine/TypeExtensions/IDriverFactory">
+		<ExtensionNode objectType="NUnit.Engine.Extensibility.IDriverFactory"/>
 	</ExtensionPoint>
 
 </Addin>

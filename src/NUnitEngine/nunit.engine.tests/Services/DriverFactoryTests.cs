@@ -24,14 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Web.UI;
-using System.Xml;
-using NUnit.Engine.Internal;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using NUnit.Engine.Drivers;
-using NUnit.Tests.Assemblies;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.Tests
 {
@@ -58,7 +53,7 @@ namespace NUnit.Engine.Services.Tests
 
         private IFrameworkDriver GetDriver(string fileName)
         {
-            var factory = new DriverFactory();
+            var factory = new DriverService();
             return factory.GetDriver(
                 AppDomain.CurrentDomain,
                 Path.Combine(TestContext.CurrentContext.TestDirectory, fileName),
