@@ -16,103 +16,28 @@
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
+    <WixVariables>Build=$(Configuration)</WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug;</DefineConstants>
+    <WixVariables>
+    </WixVariables>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+    <WixVariables />
+    <DefineConstants>
+    </DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="nunit-framework.wxs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\NUnitFramework\framework\nunit.framework-2.0.csproj">
-      <Name>nunit.framework-2.0</Name>
-      <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\framework\nunit.framework-3.5.csproj">
-      <Name>nunit.framework-3.5</Name>
-      <Project>{ee7e1d47-c686-496a-81f2-b05f085bc21f}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\framework\nunit.framework-4.0.csproj">
-      <Name>nunit.framework-4.0</Name>
-      <Project>{6a281c98-b74d-403b-8536-966871b992e3}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\framework\nunit.framework-4.5.csproj">
-      <Name>nunit.framework-4.5</Name>
-      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\framework\nunit.framework-portable.csproj">
-      <Name>nunit.framework-portable</Name>
-      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\framework\nunit.framework-sl-5.0.csproj">
-      <Name>nunit.framework-sl-5.0</Name>
-      <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-2.0.csproj">
-      <Name>nunitlite.runner-2.0</Name>
-      <Project>{28c7b9d6-be1f-45e5-952c-0d5c9ca3efdf}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-3.5.csproj">
-      <Name>nunitlite.runner-3.5</Name>
-      <Project>{ce9ef1ee-b954-4dea-b016-952f5f4b11a2}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-4.0.csproj">
-      <Name>nunitlite.runner-4.0</Name>
-      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-4.5.csproj">
-      <Name>nunitlite.runner-4.5</Name>
-      <Project>{46ec0bc1-8f51-4b4d-b967-2ee452ea68fc}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-sl-5.0.csproj">
-      <Name>nunitlite.runner-sl-5.0</Name>
-      <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
