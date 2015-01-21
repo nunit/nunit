@@ -31,6 +31,35 @@
                      Title="NUnit Engine"
                      Description="Installs the NUnit engine">
                 <ComponentGroupRef Id="NUNIT.ENGINE" />
+                <Feature Id="ADDINS"
+                         Level="1"
+                         Title="NUnit Addins"
+                         Description="Addins that extend the functionality of NUnit">
+                    <Feature Id="ADDINS.NUNIT.PROJECT.LOADER"
+                             Level="1"
+                             Title="NUnit Project Loader"
+                             Description="Allows you to load NUnit Project files">
+                        <ComponentGroupRef Id="ADDINS.NUNIT.PROJECT.LOADER" />
+                    </Feature>
+                    <Feature Id="ADDINS.VS.PROJECT.LOADER"
+                             Level="1"
+                             Title="Visual Studio Project Loader"
+                             Description="Allows you to load Visual Studio Solution and Project files">
+                        <ComponentGroupRef Id="ADDINS.VS.PROJECT.LOADER" />
+                    </Feature>
+                    <Feature Id="ADDINS.NUNIT.V2.WRITER"
+                             Level="1"
+                             Title="NUnit 2.0 Result Writer"
+                             Description="Allows you to test results out in the NUnit 2.x format">
+                        <ComponentGroupRef Id="ADDINS.NUNIT.V2.WRITER" />
+                    </Feature>
+                </Feature>
+                <Feature Id="NUNIT.V2.DRIVER"
+                         Level="1"
+                         Title="NUnit 2.x Driver"
+                         Description="Allows you to run NUnit 2.x test suites">
+                    <ComponentGroupRef Id="NUNIT.V2.DRIVER" />
+                </Feature>
             </Feature>
 
             <Feature Id="NUNIT.CONSOLE"
@@ -50,14 +79,17 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFiles64Folder">
                 <Directory Id="INSTALLDIR" Name="NUnit.org">
-                    <Directory Id="TOOLS" Name="tools" />
+                    <Directory Id="BIN" Name="bin">
+                        <Directory Id="ADDINS" Name="addins" />
+                        <Directory Id="V2DRIVER" Name="v2-driver" />
+                    </Directory>
                 </Directory>
 			</Directory>
 		</Directory>
 	</Fragment>
 
 	<Fragment>
-        <ComponentGroup Id="NUNIT.COMMON" Directory="TOOLS">
+        <ComponentGroup Id="NUNIT.COMMON" Directory="BIN">
             <Component Id="CHANGES.txt">
                 <File Id="CHANGES.txt" Source="..\..\CHANGES.txt" />
             </Component>
@@ -72,12 +104,16 @@
             </Component>
         </ComponentGroup>
         
-		<ComponentGroup Id="NUNIT.ENGINE" Directory="TOOLS">
+		<ComponentGroup Id="NUNIT.ENGINE" Directory="BIN">
 			<Component Id="NUNIT.ENGINE">
                 <File Id="nunit.engine.dll" 
                       ProcessorArchitecture="msil" 
                       Source="$(var.BuildDir)nunit.engine.dll" />
 			</Component>
+            <Component Id="NUNIT.ENGINE.ADDINS">
+                <File Id="nunit.engine.addins"
+                      Source="$(var.BuildDir)nunit.engine.addins" />
+            </Component>
             <Component Id="NUNIT.ENGINE.API">
                 <File Id="nunit.engine.api.dll" 
                       ProcessorArchitecture="msil" 
@@ -99,15 +135,55 @@
                 <File Id="nunit_agent_x86.exe.config" 
                       Source="$(var.BuildDir)nunit-agent-x86.exe.config" />
             </Component>
+            <Component Id="MONO.ADDINS">
+                <File Id="Mono.Addins.dll"
+                      Source="$(var.BuildDir)Mono.Addins.dll" />
+            </Component>
 		</ComponentGroup>
 
-        <ComponentGroup Id="NUNIT.CONSOLE" Directory="TOOLS">
+        <ComponentGroup Id="NUNIT.CONSOLE" Directory="BIN">
             <Component Id="NUNIT_CONSOLE">
                 <File Id="nunit_console.exe" 
                       ProcessorArchitecture="msil" 
                       Source="$(var.BuildDir)nunit-console.exe" />
                 <File Id="nunit_console.exe.config"
                       Source="$(var.BuildDir)nunit-console.exe.config" />
+            </Component>
+        </ComponentGroup>
+        
+        <ComponentGroup Id="ADDINS.NUNIT.PROJECT.LOADER" Directory="ADDINS">
+            <Component Id="ADDINS.NUNIT.PROJECT.LOADER">
+                <File Id="nunit_project_loader.dll"
+                      Source="$(var.BuildDir)addins\nunit-project-loader.dll" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="ADDINS.VS.PROJECT.LOADER" Directory="ADDINS">
+            <Component Id="ADDINS.VS.PROJECT.LOADER">
+                <File Id="vs_project_loader.dll"
+                      Source="$(var.BuildDir)addins\vs-project-loader.dll" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="ADDINS.NUNIT.V2.WRITER" Directory="ADDINS">
+            <Component Id="ADDINS.NUNIT.V2.WRITER">
+                <File Id="nunit_v2_result_writer.dll"
+                      Source="$(var.BuildDir)addins\nunit-v2-result-writer.dll" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="NUNIT.V2.DRIVER" Directory="V2DRIVER">
+            <Component Id="NUNIT.V2.DRIVER">
+                <File Id="nunit.v2.driver.dll"
+                      Source="$(var.BuildDir)v2-driver\nunit.v2.driver.dll" />
+            </Component>
+            <Component Id="NUNIT.2.CORE">
+                <File Id="nunit.core.dll"
+                      Source="$(var.BuildDir)v2-driver\nunit.core.dll" />
+            </Component>
+            <Component Id="NUNIT.2.CORE.INTERFACES">
+                <File Id="nunit.core.interfaces.dll"
+                      Source="$(var.BuildDir)v2-driver\nunit.core.interfaces.dll" />
             </Component>
         </ComponentGroup>
 	</Fragment>

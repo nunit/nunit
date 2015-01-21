@@ -439,12 +439,12 @@
 
 	<Target Name="PackageFrameworkInstall" Label="Creates the MSI installer for the NUnit.Framework">
 		<MSBuild Targets="Build" Projects="$(InstallDir)\framework\nunit-framework.wixproj"
-			Properties="Configuration=$(Configuration)" />		
+			Properties="Configuration=$(Configuration); Platform=x64" />		
 	</Target>
 
 	<Target Name="PackageRunnersInstall" Label="Creates the MSI installer for the NUnit console runner and tools">
 		<MSBuild Targets="Build" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
-			Properties="Configuration=$(Configuration)" />
+			Properties="Configuration=$(Configuration); Platform=x64" />
 	</Target>
 
 	<Target Name="PackageAllInstalls" Label="Creates all of the MSI installers for NUnit"
