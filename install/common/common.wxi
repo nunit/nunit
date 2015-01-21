@@ -26,6 +26,8 @@
     </Property>
 
     <Property Id="CMD_EXE" Value="[!SystemFolder]cmd.exe" />
+    
+    <?define BuildDir = "$(var.OutDir)\" ?>
 
     <!-- ***************************************************************** -->
     <!-- *********  Properties for the Add Remove Programs list  ********* -->
