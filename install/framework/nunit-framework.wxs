@@ -58,7 +58,7 @@
     
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFiles64Folder">
+			<Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLDIR" Name="NUnit.org">
                     <Directory Id="FRAMEWORK" Name="framework">
                         <Directory Id="VERSION" Name="!(bind.FileVersion.nunit.framework.45.dll)">
