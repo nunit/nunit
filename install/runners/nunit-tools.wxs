@@ -31,34 +31,29 @@
                      Title="NUnit Engine"
                      Description="Installs the NUnit engine">
                 <ComponentGroupRef Id="NUNIT.ENGINE" />
-                <Feature Id="ADDINS"
-                         Level="1"
-                         Title="NUnit Addins"
-                         Description="Addins that extend the functionality of NUnit">
-                    <Feature Id="ADDINS.NUNIT.PROJECT.LOADER"
-                             Level="1"
-                             Title="NUnit Project Loader"
-                             Description="Allows you to load NUnit Project files">
-                        <ComponentGroupRef Id="ADDINS.NUNIT.PROJECT.LOADER" />
-                    </Feature>
-                    <Feature Id="ADDINS.VS.PROJECT.LOADER"
-                             Level="1"
-                             Title="Visual Studio Project Loader"
-                             Description="Allows you to load Visual Studio Solution and Project files">
-                        <ComponentGroupRef Id="ADDINS.VS.PROJECT.LOADER" />
-                    </Feature>
-                    <Feature Id="ADDINS.NUNIT.V2.WRITER"
-                             Level="1"
-                             Title="NUnit 2.0 Result Writer"
-                             Description="Allows you to test results out in the NUnit 2.x format">
-                        <ComponentGroupRef Id="ADDINS.NUNIT.V2.WRITER" />
-                    </Feature>
+                <Feature Id="ADDINS.NUNIT.PROJECT.LOADER"
+                            Level="1"
+                            Title="NUnit Project Loader"
+                            Description="Allows you to load NUnit Project files">
+                    <ComponentGroupRef Id="ADDINS.NUNIT.PROJECT.LOADER" />
+                </Feature>
+                <Feature Id="ADDINS.VS.PROJECT.LOADER"
+                            Level="1"
+                            Title="Visual Studio Project Loader"
+                            Description="Allows you to load Visual Studio Solution and Project files">
+                    <ComponentGroupRef Id="ADDINS.VS.PROJECT.LOADER" />
                 </Feature>
                 <Feature Id="NUNIT.V2.DRIVER"
                          Level="1"
                          Title="NUnit 2.x Driver"
                          Description="Allows you to run NUnit 2.x test suites">
                     <ComponentGroupRef Id="NUNIT.V2.DRIVER" />
+                </Feature>
+                <Feature Id="ADDINS.NUNIT.V2.WRITER"
+                            Level="1"
+                            Title="NUnit 2.x Result Writer"
+                            Description="Allows you to write test results out in the NUnit 2.x format">
+                    <ComponentGroupRef Id="ADDINS.NUNIT.V2.WRITER" />
                 </Feature>
             </Feature>
 
