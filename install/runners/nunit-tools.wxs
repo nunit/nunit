@@ -72,7 +72,7 @@
     
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFiles64Folder">
+			<Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLDIR" Name="NUnit.org">
                     <Directory Id="BIN" Name="bin">
                         <Directory Id="ADDINS" Name="addins" />

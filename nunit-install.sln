@@ -18,18 +18,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Release|x64 = Release|x64
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Debug|x64.ActiveCfg = Debug|x64
-		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Debug|x64.Build.0 = Debug|x64
-		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Release|x64.ActiveCfg = Release|x64
-		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Release|x64.Build.0 = Release|x64
-		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|x64.ActiveCfg = Debug|x64
-		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|x64.Build.0 = Debug|x64
-		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|x64.ActiveCfg = Release|x64
-		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|x64.Build.0 = Release|x64
+		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Debug|x86.ActiveCfg = Debug|x86
+		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Debug|x86.Build.0 = Debug|x86
+		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Release|x86.ActiveCfg = Release|x86
+		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Release|x86.Build.0 = Release|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|x86.ActiveCfg = Debug|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|x86.Build.0 = Debug|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|x86.ActiveCfg = Release|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
