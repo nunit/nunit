@@ -96,15 +96,15 @@
                 <File Id="nunit.framework.20.dll" 
                       Name="nunit.framework.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunit.framework-2.0.TargetPath)" />
+                      Source="$(var.BuildDir)net-2.0\nunit.framework.dll" />
                 <File Id="nunit.framework.20.xml" 
                       Name="nunit.framework.xml" 
-                      Source="$(var.nunit.framework-2.0.TargetDir)$(var.nunit.framework-2.0.TargetName).xml" 
+                      Source="$(var.BuildDir)net-2.0\nunit.framework.xml" 
                       CompanionFile="nunit.framework.20.dll" />
                 <File Id="nunitlite.20.dll" 
                       Name="nunitlite.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunitlite.runner-2.0.TargetPath)" />
+                      Source="$(var.BuildDir)net-2.0\nunitlite.dll" />
             </Component>
             <Component Id="AssemblyReferenceFolder20">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v2.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
@@ -118,15 +118,15 @@
                 <File Id="nunit.framework.35.dll" 
                       Name="nunit.framework.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunit.framework-3.5.TargetPath)" />
+                      Source="$(var.BuildDir)net-3.5\nunit.framework.dll" />
                 <File Id="nunit.framework.35.xml" 
                       Name="nunit.framework.xml" 
-                      Source="$(var.nunit.framework-3.5.TargetDir)$(var.nunit.framework-3.5.TargetName).xml" 
+                      Source="$(var.BuildDir)net-3.5\nunit.framework.xml" 
                       CompanionFile="nunit.framework.35.dll" />
                 <File Id="nunitlite.35.dll" 
                       Name="nunitlite.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunitlite.runner-3.5.TargetPath)" />
+                      Source="$(var.BuildDir)net-3.5\nunitlite.dll" />
             </Component>
             <Component Id="AssemblyReferenceFolder35">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v3.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
@@ -140,15 +140,15 @@
                 <File Id="nunit.framework.40.dll" 
                       Name="nunit.framework.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunit.framework-4.0.TargetPath)" />
+                      Source="$(var.BuildDir)net-4.0\nunit.framework.dll" />
                 <File Id="nunit.framework.40.xml" 
                       Name="nunit.framework.xml" 
-                      Source="$(var.nunit.framework-4.0.TargetDir)$(var.nunit.framework-4.0.TargetName).xml"
+                      Source="$(var.BuildDir)net-4.0\nunit.framework.xml" 
                       CompanionFile="nunit.framework.40.dll" />
                 <File Id="nunitlite.40.dll" 
                       Name="nunitlite.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunitlite.runner-4.0.TargetPath)" />
+                      Source="$(var.BuildDir)net-4.0\nunitlite.dll" />
             </Component>
             <Component Id="AssemblyReferenceFolder40">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
@@ -162,15 +162,15 @@
                 <File Id="nunit.framework.45.dll" 
                       Name="nunit.framework.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunit.framework-4.5.TargetPath)" />
+                      Source="$(var.BuildDir)net-4.5\nunit.framework.dll" />
                 <File Id="nunit.framework.45.xml" 
                       Name="nunit.framework.xml" 
-                      Source="$(var.nunit.framework-4.5.TargetDir)$(var.nunit.framework-4.5.TargetName).xml"
+                      Source="$(var.BuildDir)net-4.5\nunit.framework.xml" 
                       CompanionFile="nunit.framework.45.dll" />
                 <File Id="nunitlite.45.dll" 
                       Name="nunitlite.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunitlite.runner-4.5.TargetPath)" />
+                      Source="$(var.BuildDir)net-4.5\nunitlite.dll" />
             </Component>
             <Component Id="AssemblyReferenceFolder45">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
@@ -184,10 +184,11 @@
                 <File Id="nunit.framework.portable.dll" 
                       Name="nunit.framework.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunit.framework-portable.TargetPath)" />
+                      Source="$(var.BuildDir)portable\nunit.framework.dll" />
                 <File Id="nunit.framework.portable.xml" 
                       Name="nunit.framework.xml" 
-                      Source="$(var.nunit.framework-portable.TargetDir)$(var.nunit.framework-portable.TargetName).xml" CompanionFile="nunit.framework.portable.dll" />
+                      Source="$(var.BuildDir)portable\nunit.framework.xml" 
+                      CompanionFile="nunit.framework.portable.dll" />
             </Component>
             <!-- What is the AssemblyFoldersEx for Portable? -->
         </ComponentGroup>
@@ -197,14 +198,15 @@
                 <File Id="nunit.framework.sl50.dll" 
                       Name="nunit.framework.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunit.framework-sl-5.0.TargetPath)" />
+                      Source="$(var.BuildDir)sl-5.0\nunit.framework.dll" />
                 <File Id="nunit.framework.sl50.xml" 
                       Name="nunit.framework.xml" 
-                      Source="$(var.nunit.framework-sl-5.0.TargetDir)$(var.nunit.framework-sl-5.0.TargetName).xml" CompanionFile="nunit.framework.sl50.dll" />
+                      Source="$(var.BuildDir)sl-5.0\nunit.framework.xml" 
+                      CompanionFile="nunit.framework.sl50.dll" />
                 <File Id="nunitlite.sl50.dll" 
                       Name="nunitlite.dll" 
                       ProcessorArchitecture="msil" 
-                      Source="$(var.nunitlite.runner-sl-5.0.TargetPath)" />
+                      Source="$(var.BuildDir)sl-5.0\nunitlite.dll" />
             </Component>
             <!-- What is the AssemblyFoldersEx for SilverLight? -->
         </ComponentGroup>

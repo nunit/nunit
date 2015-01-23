@@ -17,55 +17,28 @@
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
+    <WixVariables>Build=$(Configuration)</WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug;</DefineConstants>
+    <WixVariables>
+    </WixVariables>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+    <WixVariables />
+    <DefineConstants>
+    </DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="nunit-tools.wxs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\NUnitConsole\nunit-console\nunit-console.csproj">
-      <Name>nunit-console</Name>
-      <Project>{0de218ca-afb8-423a-9cd2-e22deac55c46}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitEngine\nunit-agent\nunit-agent-x86.csproj">
-      <Name>nunit-agent-x86</Name>
-      <Project>{28b605b2-e2e9-417e-8369-49e263f1f31b}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitEngine\nunit-agent\nunit-agent.csproj">
-      <Name>nunit-agent</Name>
-      <Project>{c2a8fc7a-fa64-46ea-af6d-73d6b371dbf8}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitEngine\nunit.engine.api\nunit.engine.api.csproj">
-      <Name>nunit.engine.api</Name>
-      <Project>{775fad50-3623-4922-97c4-dfb29a8be4c7}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NUnitEngine\nunit.engine\nunit.engine.csproj">
-      <Name>nunit.engine</Name>
-      <Project>{372a3447-d657-40ff-a089-77c19fec30c8}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
