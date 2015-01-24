@@ -74,8 +74,9 @@
       <Link>EngineVersion.cs</Link>
     </Compile>
     <Compile Include="Drivers\NotRunnableFrameworkDriver.cs" />
+    <Compile Include="Drivers\NUnit3DriverFactory.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriver.cs" />
-    <Compile Include="IDriverFactory.cs" />
+    <Compile Include="IDriverService.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="Agents\RemoteTestAgent.cs" />
@@ -117,7 +118,7 @@
     <Compile Include="ServiceContext.cs" />
     <Compile Include="Services\DefaultTestRunnerFactory.cs" />
     <Compile Include="Services\DomainManager.cs" />
-    <Compile Include="Services\DriverFactory.cs" />
+    <Compile Include="Services\DriverService.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RecentFilesService.cs" />
@@ -136,11 +137,6 @@
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunit.v2.driver\nunit.v2.driver.csproj">
-      <Project>{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA}</Project>
-      <Name>nunit.v2.driver</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

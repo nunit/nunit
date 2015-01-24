@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Web.UI;
 using System.Xml;
 using NUnit.Engine.Internal;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {

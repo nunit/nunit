@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using NUnit.Common;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.ProjectLoaders
 {

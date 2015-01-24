@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,19 +22,28 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Addins
+namespace NUnit.Engine.Extensibility
 {
-    class NUnit2ResultWriterFactory : IResultWriterFactory
+    /// <summary>
+    /// The IProjectLoader interface is implemented by any class
+    /// that knows how to load projects in a specific format.
+    /// </summary>
+    public interface IProjectLoader
     {
-        public string Format { get { return "nunit2";  } }
+        /// <summary>
+        /// Returns true if the file indicated is one that this
+        /// loader knows how to load.
+        /// </summary>
+        /// <param name="path">The path of the project file</param>
+        /// <returns>True if the loader knows how to load this file, otherwise false</returns>
+        bool CanLoadFrom( string path );
 
-        public IResultWriter GetResultWriter(params object[] args)
-        {
-            return new NUnit2XmlResultWriter();
-        }
+        /// <summary>
+        /// Loads a project of a known format.
+        /// </summary>
+        /// <param name="path">The path of the project file</param>
+        /// <returns>An IProject interface to the loaded project or null if the project cannot be loaded</returns>
+        IProject LoadFrom(string path);
     }
 }

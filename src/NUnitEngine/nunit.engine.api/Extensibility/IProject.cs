@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Extensibility
 {
     /// <summary>
     /// Interface for the various project types that the engine can load.

@@ -14,7 +14,6 @@ namespace NUnit.ConsoleRunner.Tests
     public class ResultReporterTests
     {
         private const string MOCK_TEST_RESULT = "NUnit.ConsoleRunner.Tests.MockTestResult.xml";
-        private static readonly string NL = Environment.NewLine;
         private static readonly string[] REPORT_SEQUENCE = new string[] {
             "Test Run Summary",
             "Errors and Failures",

@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using System.Xml;
 using System.IO;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {

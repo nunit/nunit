@@ -76,7 +76,6 @@
                 <Directory Id="INSTALLDIR" Name="NUnit.org">
                     <Directory Id="BIN" Name="bin">
                         <Directory Id="ADDINS" Name="addins" />
-                        <Directory Id="V2DRIVER" Name="v2-driver" />
                     </Directory>
                 </Directory>
 			</Directory>
@@ -105,11 +104,15 @@
                       ProcessorArchitecture="msil" 
                       Source="$(var.BuildDir)nunit.engine.dll" />
 			</Component>
-            <Component Id="NUNIT.ENGINE.ADDINS">
-                <File Id="nunit.engine.addins"
+			<Component Id="NUNIT.ENGINE.ADDINS">
+				<File Id="nunit.engine.addins"
                       Source="$(var.BuildDir)nunit.engine.addins" />
-            </Component>
-            <Component Id="NUNIT.ENGINE.API">
+			</Component>
+			<Component Id="NUNIT.ENGINE.ADDIN.XML">
+				<File Id="nunit.engine.addin.xml"
+                      Source="$(var.BuildDir)nunit.engine.addin.xml" />
+			</Component>
+			<Component Id="NUNIT.ENGINE.API">
                 <File Id="nunit.engine.api.dll" 
                       ProcessorArchitecture="msil" 
                       Source="$(var.BuildDir)nunit.engine.api.dll" />
@@ -167,18 +170,18 @@
             </Component>
         </ComponentGroup>
 
-        <ComponentGroup Id="NUNIT.V2.DRIVER" Directory="V2DRIVER">
+        <ComponentGroup Id="NUNIT.V2.DRIVER" Directory="ADDINS">
             <Component Id="NUNIT.V2.DRIVER">
                 <File Id="nunit.v2.driver.dll"
-                      Source="$(var.BuildDir)v2-driver\nunit.v2.driver.dll" />
+                      Source="$(var.BuildDir)addins\nunit.v2.driver.dll" />
             </Component>
             <Component Id="NUNIT.2.CORE">
                 <File Id="nunit.core.dll"
-                      Source="$(var.BuildDir)v2-driver\nunit.core.dll" />
+                      Source="$(var.BuildDir)addins\nunit.core.dll" />
             </Component>
             <Component Id="NUNIT.2.CORE.INTERFACES">
                 <File Id="nunit.core.interfaces.dll"
-                      Source="$(var.BuildDir)v2-driver\nunit.core.interfaces.dll" />
+                      Source="$(var.BuildDir)addins\nunit.core.interfaces.dll" />
             </Component>
         </ComponentGroup>
 	</Fragment>

@@ -23,18 +23,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Addins
+namespace NUnit.Engine.Drivers
 {
-    class NUnit2ResultWriterFactory : IResultWriterFactory
+    public class NUnit2DriverFactory : IDriverFactory
     {
-        public string Format { get { return "nunit2";  } }
+        private const string NUNIT_FRAMEWORK = "nunit.framework";
+        private const string NUNITLITE_FRAMEWORK = "nunitlite";
 
-        public IResultWriter GetResultWriter(params object[] args)
+        public bool IsSupportedFramework(AssemblyName reference)
         {
-            return new NUnit2XmlResultWriter();
+            return reference.Name == NUNIT_FRAMEWORK && reference.Version.Major == 2
+                || reference.Name == NUNITLITE_FRAMEWORK && reference.Version.Major == 1;
+        }
+
+        public IFrameworkDriver GetDriver(AppDomain domain, string frameworkAssemblyName, string assemblyPath, IDictionary<string, object> settings)
+        {
+            return new NUnit2FrameworkDriver(domain, frameworkAssemblyName, assemblyPath, settings);
         }
     }
 }

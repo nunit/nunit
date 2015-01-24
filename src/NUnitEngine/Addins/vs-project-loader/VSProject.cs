@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Text.RegularExpressions;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.ProjectLoaders
 {
@@ -53,11 +54,6 @@ namespace NUnit.Engine.Services.ProjectLoaders
         private const string SOLUTION_EXTENSION = ".sln";
 
         /// <summary>
-        /// The directory holding the project
-        /// </summary>
-        private string _projectDirectory;
-
-        /// <summary>
         /// The XML representation of the project
         /// </summary>
         private XmlDocument _doc;
@@ -74,7 +70,6 @@ namespace NUnit.Engine.Services.ProjectLoaders
         public VSProject( string projectPath )
         {
             ProjectPath = Path.GetFullPath( projectPath );
-            _projectDirectory = Path.GetDirectoryName(ProjectPath);
 
             Load();
         }
@@ -413,14 +408,12 @@ namespace NUnit.Engine.Services.ProjectLoaders
         private class ProjectConfig
         {
             private IProject _project;
-            private string _name;
             private string _outputPath;
             private string _assemblyName;
 
             public ProjectConfig(IProject project, string name, string outputPath, string assemblyName)
             {
                 _project = project;
-                _name = name;
                 _outputPath = outputPath;
                 _assemblyName = assemblyName;
             }

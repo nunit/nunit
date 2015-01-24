@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System.IO;
-using NUnit.Engine.Internal;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {

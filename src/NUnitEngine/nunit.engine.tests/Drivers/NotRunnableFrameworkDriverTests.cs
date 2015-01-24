@@ -28,6 +28,7 @@ using System.Xml;
 using NUnit.Engine.Internal;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using NUnit.Engine.Extensibility;
 using NUnit.Tests.Assemblies;
 
 namespace NUnit.Engine.Drivers.Tests

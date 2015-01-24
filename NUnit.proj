@@ -252,7 +252,7 @@
 			DependsOnTargets="TestAllFrameworks;TestEngine;TestAddins;TestV2Driver;TestConsole" />
 	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
-			DependsOnTargets="TestFramework;TestEngine;TestV2Driver;TestConsole" />
+			DependsOnTargets="TestFramework;TestEngine;TestAddins;TestV2Driver;TestConsole" />
 
 	<Target Name="TestAllFrameworks"
 			Label="Test the framework for the current config and all runtimes">
@@ -312,7 +312,7 @@
 		<Message Text="******************************************************************" />
 
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-			  Command='$(ManagedExeLauncher) $(ConsoleRunner) addins/addin-tests.dll "-result:$(ResultDir)/AddinResult.xml;format=$(ResultFormat)" $(TestOptions)'
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) addins/tests/addin-tests.dll "-result:$(ResultDir)/AddinResult.xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)"/>
 
 	</Target>
@@ -326,7 +326,7 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-			Command='$(ManagedExeLauncher) $(ConsoleRunner) v2-driver/tests/nunit.v2.driver.tests.dll "-result:$(ResultDir)/V2DriverResult.xml;format=$(ResultFormat)"  $(TestOptions)'
+			Command='$(ManagedExeLauncher) $(ConsoleRunner) addins/v2-tests/nunit.v2.driver.tests.dll "-result:$(ResultDir)/V2DriverResult.xml;format=$(ResultFormat)"  $(TestOptions)'
 			ContinueOnError="$(ContinueOnFailure)"/>
 		
 	</Target>
@@ -509,7 +509,7 @@
 		<SupportedFrameworks Include="net-2.0" />
 		<!--<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-3.5" />-->
 		<SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0" />
-		<SupportedFrameworks Include="portable" />
+		<SupportedFrameworks Condition="$(IsWindows)" Include="portable" />
 	</ItemGroup>
 	
 	<ItemGroup Label="Projects for building the framework">
@@ -530,19 +530,22 @@
 		<EngineProjects Include="$(EngineSrcDir)\mono-addins\Mono.Addins.csproj" />
 		<!-- The engine and agent -->
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
-		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
+
 		<!-- Test Assemblies -->
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
-		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
+
 		<!-- Addins -->
 		<EngineProjects Include="$(AddinSrcDir)\nunit-project-loader\nunit-project-loader.csproj" />
 		<EngineProjects Include="$(AddinSrcDir)\vs-project-loader\vs-project-loader.csproj" />
 		<EngineProjects Include="$(AddinSrcDir)\nunit-v2-result-writer\nunit-v2-result-writer.csproj" />
+		<EngineProjects Include="$(AddinSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
+
 		<!-- Addin tests -->
 		<EngineProjects Include="$(AddinSrcDir)\addin-tests\addin-tests.csproj" />
+		<EngineProjects Include="$(AddinSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
 
 	</ItemGroup>
 

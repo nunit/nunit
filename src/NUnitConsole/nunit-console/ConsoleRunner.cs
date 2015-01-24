@@ -26,6 +26,7 @@ using System.IO;
 using System.Xml;
 using NUnit.Common;
 using NUnit.Engine;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.ConsoleRunner
 {
