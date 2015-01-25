@@ -32,6 +32,10 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class MethodHelper
     {
+        private const int STRING_MAX = 20;
+        private const int STRING_LIMIT = STRING_MAX - 3;
+        private const string THREE_DOTS = "...";
+
         /// <summary>
         /// Gets the display name for a method as used by NUnit.
         /// </summary>
@@ -150,10 +154,20 @@ namespace NUnit.Framework.Internal
             }
             else if (arg is string)
             {
+                var str = (string)arg;
+                bool tooLong = str.Length > STRING_MAX;
+
                 StringBuilder sb = new StringBuilder();
                 sb.Append("\"");
                 foreach (char c in (string)arg)
+                {
                     sb.Append(EscapeControlChar(c));
+                    if (tooLong && sb.Length >= STRING_LIMIT)
+                    {
+                        sb.Append(THREE_DOTS);
+                        break;
+                    }
+                }
                 sb.Append("\"");
                 display = sb.ToString();
             }
