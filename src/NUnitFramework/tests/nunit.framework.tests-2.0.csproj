@@ -63,6 +63,7 @@
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
+    <Compile Include="Internal\TestNamingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />

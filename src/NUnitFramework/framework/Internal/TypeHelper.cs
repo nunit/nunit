@@ -118,7 +118,12 @@ namespace NUnit.Framework.Internal
                 else if (arg is decimal) display += "m";
                 else if (arg is long) display += "L";
                 else if (arg is ulong) display += "UL";
-                else if (arg is string) display = "\"" + display + "\"";
+                else if (arg is string)
+                {
+                    if (display.Length > 20)
+                        display = display.Substring(0, 17) + "...";
+                    display = "\"" + display + "\"";
+                }
 
                 sb.Append(display);
             }
