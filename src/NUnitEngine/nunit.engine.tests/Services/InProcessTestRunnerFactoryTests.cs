@@ -45,20 +45,20 @@ namespace NUnit.Engine.Services.Tests
         }
 
         // Single file
-        [TestCase(new string[] { "x.dll" },  null,      typeof(TestDomainRunner))]
-        [TestCase(new string[] { "x.dll" }, "Single",   typeof(TestDomainRunner))]
-        [TestCase(new string[] { "x.dll" }, "Multiple", typeof(MultipleTestDomainRunner))]
+        [TestCase("x.dll",  null,      typeof(TestDomainRunner))]
+        [TestCase("x.dll", "Single",   typeof(TestDomainRunner))]
+        [TestCase("x.dll", "Multiple", typeof(MultipleTestDomainRunner))]
         // Two files
-        [TestCase(new string[] { "x.dll", "y.dll" },  null,     typeof(TestDomainRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll" }, "Single",   typeof(TestDomainRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll" }, "Multiple", typeof(MultipleTestDomainRunner))]
+        [TestCase("x.dll y.dll",  null,     typeof(MultipleTestDomainRunner))]
+        [TestCase("x.dll y.dll", "Single",   typeof(TestDomainRunner))]
+        [TestCase("x.dll y.dll", "Multiple", typeof(MultipleTestDomainRunner))]
         // Three files
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, null,       typeof(TestDomainRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, "Single",   typeof(TestDomainRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, "Multiple", typeof(MultipleTestDomainRunner))]
-        public void CorrectRunnerIsUsed(string[] args, string domainUsage, Type expectedType)
+        [TestCase("x.dll y.dll z.dll", null,       typeof(MultipleTestDomainRunner))]
+        [TestCase("x.dll y.dll z.dll", "Single",   typeof(TestDomainRunner))]
+        [TestCase("x.dll y.dll z.dll", "Multiple", typeof(MultipleTestDomainRunner))]
+        public void CorrectRunnerIsUsed(string files, string domainUsage, Type expectedType)
         {
-            var package = new TestPackage(args);
+            var package = new TestPackage(files.Split(new char[] { ' ' }));
             if (domainUsage != null)
                 package.Settings["DomainUsage"] = domainUsage;
             Assert.That(_factory.MakeTestRunner(package), Is.TypeOf(expectedType));
