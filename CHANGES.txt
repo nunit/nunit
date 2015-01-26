@@ -1,10 +1,61 @@
 ﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the first Beta release.
 
-NUnit 3.0.0 Alpha 4 - December 30, 2014
+NUnit 3.0.0 Alpha 5 - January 30, 2015
+
+General
+
+ * A Windows installer is now included in the release packages.
+ 
+Framework
+
+ * TestCaseAttribute now allows arguments with default values to be omitted. Additionaly, it accepts a Platform property to specify the platforms on which the test case should be run.
+ * TestFixture and TestCase attributes now enforce the requirement that a reason needs to be provided when ignoring a test.
+ * SetUp, TearDown, OneTimeSetUp and OneTimeTearDown methods may now be async.
+ * String arguments over 20 characters in length are truncated when used as part of a test name.
+
+Engine
+
+ * The engine is now extensible using Mono.Addins. In this release, extension points are provided for FrameworkDrivers, ProjectLoaders and OutputWriters. The following addins are bundled as a part of NUnit:
+   * A FrameworkDriver that allows running NUnit V2 tests under NUnit 3.0.
+   * ProjectLoaders for NUnit and Visual Studio projects.
+   * An OutputWriter that creates XML output in NUnit V2 format.
+ * DomainUsage now defaults to Multiple if not specified by the runner
 
 Console
 
- * The command-line may now include any number of assemblies and/or supported projects.
+ * New options supported:
+   * --testlist provides a list of tests to run in a file
+   * --stoponerror indicates that the run should terminate when any test fails.
+
+Issues Resolved
+
+ * 20 TestCaseAttribute needs Platform property.
+ * 60 NUnit should support async setup, teardown, fixture setup and fixture teardown.
+ * 257  TestCaseAttribute should not require parameters with default values to be specified.
+ * 266  Pluggable framework drivers.
+ * 368  Create addin model.
+ * 369  Project loader addins
+ * 370  OutputWriter addins
+ * 403  Move ConsoleOptions.cs and Options.cs to Common and share...
+ * 419  Create Windows Installer for NUnit.
+ * 427  [TestFixture(Ignore=true)] should not be allowed.
+ * 437  Errors in tests under Linux due to hard-coded paths.
+ * 441  NUnit-Console should support --testlist option
+ * 442  Add --stoponerror option back to nunit-console.
+ * 456  Fix memory leak in RuntimeFramework.
+ * 459  Remove the Mixed Platforms build configuration.
+ * 468  Change default domain usage to multiple.
+ * 469  Truncate string arguments in test names in order to limit the length.
+ 
+NUnit 3.0.0 Alpha 4 - December 30, 2014
+
+Framework
+
+ * ApartmentAttribute has been added, replacing STAAttribute and MTAAttribute.
+ * Unnecessary overloads of Assert.That and Assume.That have been removed.
+ * Multiple SetUpFixtures may be specified in a single namespace.
+ * Improvements to the Pairwise strategy test case generation algorithm.
+ * The new NUnitLite runner --testlist option, allows a list of tests to be kept in a file.
 
 Engine
 
@@ -20,13 +71,9 @@ Engine
  * Creation of output files like TestResult.xml in various formats is now a
    service of the engine, available to any runner.
 
-Framework
+Console
 
- * ApartmentAttribute has been added, replacing STAAttribute and MTAAttribute.
- * Unnecessary overloads of Assert.That and Assume.That have been removed.
- * Multiple SetUpFixtures may be specified in a single namespace.
- * Improvements to the Pairwise strategy test case generation algorithm.
- * The new NUnitLite runner --testlist option, allows a list of tests to be kept in a file.
+ * The command-line may now include any number of assemblies and/or supported projects.
 
 Issues Resolved
 
