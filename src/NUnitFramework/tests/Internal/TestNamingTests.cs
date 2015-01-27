@@ -39,19 +39,19 @@ namespace NUnit.Framework.Internal.Tests
         [Test]
         public void SimpleTest()
         {
-            CheckNames(MethodInfo.GetCurrentMethod().Name);
+            CheckNames("SimpleTest");
         }
 
         [TestCase(5, 7, "ABC")]
         public void ParameterizedTest(int x, int y, string s)
         {
-            CheckNames(MethodInfo.GetCurrentMethod().Name + "(5,7,\"ABC\")");
+            CheckNames("ParameterizedTest(5,7,\"ABC\")");
         }
 
         [TestCase("abcdefghijklmnopqrstuvwxyz")]
         public void TestCaseWithLongStringArgument(string s)
         {
-            CheckNames(MethodInfo.GetCurrentMethod().Name + "(\"abcdefghijklmnop...\")");
+            CheckNames("TestCaseWithLongStringArgument(\"abcdefghijklmnop...\")");
         }
 
         [TestCase(42)]
