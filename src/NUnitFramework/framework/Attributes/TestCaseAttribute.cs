@@ -165,7 +165,7 @@ namespace NUnit.Framework
         public string TestName { get; set; }
 
         /// <summary>
-        /// Gets or sets the ignored status of the test
+        /// Gets or sets the reason for ignoring the test
         /// </summary>
         public string Ignore 
         { 
