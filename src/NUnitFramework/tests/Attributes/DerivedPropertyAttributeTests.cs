@@ -30,7 +30,7 @@ namespace NUnit.Framework.Attributes
     public class DerivedPropertyAttributeTests
     {
         [TestCase(typeof(DescriptionAttribute), PropertyNames.Description, "description")]
-        [TestCase(typeof(LevelOfParallelizationAttribute), PropertyNames.LevelOfParallelization, 7)]
+        [TestCase(typeof(LevelOfParallelismAttribute), PropertyNames.LevelOfParallelism, 7)]
         [TestCase(typeof(MaxTimeAttribute), PropertyNames.MaxTime, 50)]
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Fixtures)]
 #if !NETCF
