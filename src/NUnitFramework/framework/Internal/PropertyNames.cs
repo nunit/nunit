@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The number of threads to be used in running tests
         /// </summary>
-        public const string LevelOfParallelization = "LevelOfParallelization";
+        public const string LevelOfParallelism = "LevelOfParallelism";
 
         /// <summary>
         /// The maximum time in ms, above which the test is considered to have failed

@@ -376,7 +376,7 @@
 	<!-- *********************************************************************** -->
 	
 	<Target Name="Package" Label="Packages the source code and binaries already built"
-		DependsOnTargets="PackageSource;PackageBinaries;PackageNuGet">
+		DependsOnTargets="@(AllPackages)">
 	</Target>
 
 	<Target Name="PackageSource" Label="Packages the source code as a zip" DependsOnTargets="_CreateProjectPackageDir">
@@ -437,18 +437,18 @@
 
 	</Target>
 
-	<Target Name="PackageFrameworkInstall" Label="Creates the MSI installer for the NUnit.Framework">
+	<Target Name="PackageFrameworkMsi" Label="Creates the MSI installer for the NUnit.Framework">
 		<MSBuild Targets="Build" Projects="$(InstallDir)\framework\nunit-framework.wixproj"
-			Properties="Configuration=$(Configuration); Platform=x86" />		
+			Properties="Configuration=$(Configuration); Platform=x86; OutputPath=$(ProjectPackageDir)" />
 	</Target>
 
-	<Target Name="PackageRunnersInstall" Label="Creates the MSI installer for the NUnit console runner and tools">
+	<Target Name="PackageConsoleMsi" Label="Creates the MSI installer for the NUnit console runner and engine">
 		<MSBuild Targets="Build" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
-			Properties="Configuration=$(Configuration); Platform=x86" />
+			Properties="Configuration=$(Configuration); Platform=x86; OutputPath=$(ProjectPackageDir)" />
 	</Target>
 
-	<Target Name="PackageAllInstalls" Label="Creates all of the MSI installers for NUnit"
-					DependsOnTargets="PackageFrameworkInstall;PackageRunnersInstall">
+	<Target Name="PackageAllMsis" Label="Creates all of the MSI installers for NUnit"
+					DependsOnTargets="PackageFrameworkMsi;PackageConsoleMsi">
 	</Target>
 	
 	<Target Name="_CreatePackageImage" DependsOnTargets="_CleanPackageWorkingDir">
@@ -475,6 +475,13 @@
 	<!--                       Lists For Use by Targets                          -->
 	<!-- *********************************************************************** -->
 
+	<ItemGroup Label ="Targets for Packaging">
+		<AllPackages Include="PackageSource" />
+	    <AllPackages Include="PackageBinaries" />
+	    <AllPackages Include="PackageNuGet" />
+	    <AllPackages Include="PackageAllMsis" Condition="$(IsWindows)" />
+	</ItemGroup>
+	
 	<ItemGroup Label="Files for packaging in root">
 		<RootFiles Include="LICENSE.txt;NOTICES.txt;CHANGES.txt" />
 	</ItemGroup>

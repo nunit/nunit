@@ -290,11 +290,11 @@ namespace NUnit.Framework.Api
             Context.Listener = listener;
 
 #if PARALLEL
-            int levelOfParallelization = GetLevelOfParallelization();
+            int levelOfParallelism = GetLevelOfParallelism();
 
-            if (levelOfParallelization > 0)
+            if (levelOfParallelism > 0)
             {
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelization);
+                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
                 // Assembly does not have IApplyToContext attributes applied
                 // when the test is built, so  we do it here.
                 // TODO: Generalize this
@@ -345,12 +345,12 @@ namespace NUnit.Framework.Api
         }
 
 #if PARALLEL
-        private int GetLevelOfParallelization()
+        private int GetLevelOfParallelism()
         {
             return Settings.Contains(PackageSettings.NumberOfTestWorkers)
                 ? (int)Settings[PackageSettings.NumberOfTestWorkers]
-                : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelization)
-                   ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelization)
+                : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
+                   ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
 #if NETCF
                    : 1);
 #else
