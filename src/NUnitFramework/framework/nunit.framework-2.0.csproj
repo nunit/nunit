@@ -264,6 +264,7 @@
     <Compile Include="Constraints\ConstraintFactory.cs" />
     <Compile Include="Constraints\ContainsConstraint.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />
+    <Compile Include="Constraints\DictionaryContainsKeyConstraint.cs" />
     <Compile Include="Constraints\EmptyCollectionConstraint.cs" />
     <Compile Include="Constraints\EmptyConstraint.cs" />
     <Compile Include="Constraints\EmptyDirectoryConstraint.cs" />

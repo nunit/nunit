@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,25 +21,25 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// CollectionContainsConstraint is used to test whether a collection
-    /// contains an expected object as a member.
+    /// DictionaryContainsKeyConstraint is used to test whether a dictionary
+    /// contains an expected object as a key.
     /// </summary>
-    public class CollectionContainsConstraint : CollectionItemsEqualConstraint
+    public class DictionaryContainsKeyConstraint : CollectionContainsConstraint
     {
         /// <summary>
-        /// Construct a CollectionContainsConstraint
+        /// Construct a DictionaryContainsKeyConstraint
         /// </summary>
         /// <param name="expected"></param>
-        public CollectionContainsConstraint(object expected)
+        public DictionaryContainsKeyConstraint(object expected)
             : base(expected)
         {
-            this.Expected = expected;
-            this.DisplayName = "Contains";
+            DisplayName = "ContainsKey";
         }
 
         /// <summary>
@@ -48,26 +48,20 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "collection containing " + MsgUtils.FormatValue(Expected); }
+            get { return "dictionary containing key " + MsgUtils.FormatValue(Expected); }
         }
 
         /// <summary>
-        /// Gets the expected object
+        /// Test whether the expected key is contained in the dictionary
         /// </summary>
-        protected object Expected { get; private set; }
-
-        /// <summary>
-        /// Test whether the expected item is contained in the collection
-        /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            foreach (object obj in actual)
-                if (ItemsEqual(obj, Expected))
-                    return true;
+            IDictionary dictionary = actual as IDictionary;
 
-            return false;
+            if (dictionary == null)
+                throw new ArgumentException("The actual value must be an IDictionary", "actual");
+
+            return base.Matches(dictionary.Keys);
         }
     }
 }
