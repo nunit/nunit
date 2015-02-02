@@ -204,6 +204,7 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Internal\RandomizerTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs">
       <SubType>Code</SubType>
     </Compile>

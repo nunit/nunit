@@ -170,6 +170,7 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomGeneratorTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
+    <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpFixtureTests.cs" />
     <Compile Include="Internal\SetUpTearDownTests.cs" />
