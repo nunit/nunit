@@ -30,6 +30,8 @@
     <file src="$builddir$\nunit.engine.api.dll" target="tools" />
     <file src="$builddir$\nunit.engine.api.xml" target="tools" />
     <file src="$builddir$\nunit.engine.dll" target="tools" />
+    <file src="$builddir$\nunit.engine.addins" target="tools" />
+    <file src="$builddir$\nunit.engine.addin.xml" target="tools" />
     <file src="$builddir$\Mono.Addins.dll" target="tools" />
     <file src="$builddir$\addins\nunit.v2.driver.dll" target="tools\addins" />
     <file src="$builddir$\addins\nunit.engine.api.dll" target="tools\addins" />

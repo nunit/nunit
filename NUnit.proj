@@ -9,7 +9,7 @@
 	<PropertyGroup Label="Common Properties">
 		<ProjectName>$(MSBuildProjectName)</ProjectName>
 		<PackageVersion>3.0.0</PackageVersion>
-		<PackageModifier>-alpha-5</PackageModifier>
+		<PackageModifier>-alpha-5b</PackageModifier>
 		<PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
 	</PropertyGroup>
 
@@ -498,6 +498,8 @@
 		<BinFiles Include="$(ConfigurationBuildDir)\ConsoleTests.nunit" />
 		<BinFiles Include="$(ConfigurationBuildDir)\NUnit2TestResult.xsd" />
 		<BinFiles Include="$(ConfigurationBuildDir)\TextSummary.xslt" />
+		<BinFiles Include="$(ConfigurationBuildDir)\nunit.engine.addins" />
+		<BinFiles Include="$(ConfigurationBuildDir)\nunit.engine.addin.xml" />
 
 		<!-- Extra files for Silverlight build -->
 		<BinFiles Include="$(ConfigurationBuildDir)\**\AppManifest.xaml" />
