@@ -138,28 +138,36 @@ namespace NUnit.Engine
 
         private static Assembly CheckPathForEngine(string path, Version minVersion, Version maxVersion, ref Version newestVersionFound, Assembly newestAssemblyFound)
         {
-            if (path != null && File.Exists(path))
+            try
             {
-                var ass = Assembly.ReflectionOnlyLoadFrom(path);
-                var ver = ass.GetName().Version;
-                if (ver >= minVersion && ver <= maxVersion && ver > newestVersionFound)
+                if (path != null && File.Exists(path))
                 {
-                    newestVersionFound = ver;
-                    newestAssemblyFound = ass;
+                    var ass = Assembly.ReflectionOnlyLoadFrom(path);
+                    var ver = ass.GetName().Version;
+                    if (ver >= minVersion && ver <= maxVersion && ver > newestVersionFound)
+                    {
+                        newestVersionFound = ver;
+                        newestAssemblyFound = ass;
+                    }
                 }
             }
+            catch (Exception){}
             return newestAssemblyFound;
         }
 
         private static string FindEngineInRegistry(RegistryKey rootKey, string subKey)
         {
-            using (var key = rootKey.OpenSubKey(subKey, false))
+            try
             {
-                if (key != null)
+                using (var key = rootKey.OpenSubKey(subKey, false))
                 {
-                    return key.GetValue("Engine") as string;
+                    if (key != null)
+                    {
+                        return key.GetValue("Engine") as string;
+                    }
                 }
             }
+            catch (Exception) { }
             return null;
         }
 
