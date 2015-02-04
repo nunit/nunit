@@ -22,6 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using Microsoft.Win32;
 
 namespace NUnit.Engine
 {
@@ -37,37 +41,126 @@ namespace NUnit.Engine
     /// </summary>
     public static class TestEngineActivator
     {
-        private const string DefaultAssemblyName = "nunit.engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL";
-        private const string DefaultTypeName = "NUnit.Engine.TestEngine";
+        internal static readonly Version DefaultMinimumVersion = new Version(3, 0);
+        internal static readonly Version DefaultMaximumVersion = new Version(255, 0);
+
+        private const string DefaultAssemblyName = "nunit.engine.dll";
+        internal const string DefaultTypeName = "NUnit.Engine.TestEngine";
+
+        private const string NunitInstallRegKey = @"SOFTWARE\Nunit.org";
 
         #region Public Methods
 
         /// <summary>
-        /// Create an instance of the test engine using default values for the assembly and type names.
+        /// Create an instance of the test engine.
         /// </summary>
-        /// <returns>An ITestEngine.</returns>
-        public static ITestEngine CreateInstance()
+        /// <remarks>If private copy is false, the search order is the NUnit install directory for the current user, then
+        /// the install directory for the local machine and finally the current AppDomain's ApplicationBase.</remarks>
+        /// <param name="privateCopy">if set to <c>true</c> loads the engine found in the application base directory, 
+        /// otherwise searches for the test engine with the highest version installed. Defaults to <c>true</c>.</param>
+        /// <exception cref="NUnitEngineNotFoundException">Thrown when a test engine of the required minimum version is not found</exception>
+        /// <returns>An <see cref="NUnit.Engine.ITestEngine"/></returns>
+        public static ITestEngine CreateInstance(bool privateCopy = false)
         {
-            return CreateInstance(DefaultAssemblyName, DefaultTypeName);
+            return CreateInstance(DefaultMinimumVersion, DefaultMaximumVersion, privateCopy);
         }
 
         /// <summary>
-        /// Create an instance of the test engine using provided values for the assembly and type names.
-        /// This method is intended for use in experimenting with alternative implementations.
+        /// Create an instance of the test engine with a minimum version.
         /// </summary>
-        /// <param name="assemblyName">The name of the assembly to be used.</param>
-        /// <param name="typeName">The name of the Type to be used.</param>
-        /// <returns>An ITestEngine.</returns>
-        public static ITestEngine CreateInstance(string assemblyName, string typeName)
+        /// <remarks>If private copy is false, the search order is the NUnit install directory for the current user, then
+        /// the install directory for the local machine and finally the current AppDomain's ApplicationBase.</remarks>
+        /// <param name="minVersion">The minimum version of the engine to return inclusive.</param>
+        /// <param name="privateCopy">if set to <c>true</c> loads the engine found in the application base directory, 
+        /// otherwise searches for the test engine with the highest version installed. Defaults to <c>true</c>.</param>
+        /// <exception cref="NUnitEngineNotFoundException">Thrown when a test engine of the given minimum version is not found</exception>
+        /// <returns>An <see cref="ITestEngine"/></returns>
+        public static ITestEngine CreateInstance(Version minVersion, bool privateCopy = false)
+        {
+            return CreateInstance(minVersion, DefaultMaximumVersion, privateCopy);
+        }
+
+        /// <summary>
+        /// Create an instance of the test engine with a minimum and maximum version.
+        /// </summary>
+        /// <remarks>If private copy is false, the search order is the NUnit install directory for the current user, then
+        /// the install directory for the local machine and finally the current AppDomain's ApplicationBase.</remarks>
+        /// <param name="minVersion">The minimum version of the engine to return inclusive.</param>
+        /// <param name="maxVersion">The maximum version of the engine to return inclusive.</param>
+        /// <param name="privateCopy">if set to <c>true</c> loads the engine found in the application base directory, 
+        /// otherwise searches for the test engine with the highest version installed. Defaults to <c>true</c>.</param>
+        /// <exception cref="NUnitEngineNotFoundException">Thrown when a test engine of the given minimum and maximum version is not found</exception>
+        /// <returns>An <see cref="ITestEngine"/></returns>
+        public static ITestEngine CreateInstance(Version minVersion, Version maxVersion, bool privateCopy = false)
         {
             try
             {
-                return (ITestEngine)AppDomain.CurrentDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
+                Assembly engine = FindNewestEngine(minVersion, maxVersion, privateCopy);
+                if (engine == null)
+                {
+                    throw new NUnitEngineNotFoundException(minVersion, maxVersion);
+                }
+                return (ITestEngine)AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(engine.CodeBase, DefaultTypeName);
+            }
+            catch (NUnitEngineNotFoundException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
                 throw new Exception("Failed to load the test engine", ex);
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static Assembly FindNewestEngine(Version minVersion, Version maxVersion, bool privateCopy)
+        {
+            var newestVersionFound = new Version();
+            Assembly newestAssemblyFound = null;
+            string path;
+            if (!privateCopy)
+            {
+                // Check the install for the current user
+                path = FindEngineInRegistry(Registry.CurrentUser, NunitInstallRegKey);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, null);
+
+                // check the install for the local machine
+                path = FindEngineInRegistry(Registry.LocalMachine, NunitInstallRegKey);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+            }
+            // Check the Application BaseDirectory
+            path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DefaultAssemblyName);
+            return CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+        }
+
+        private static Assembly CheckPathForEngine(string path, Version minVersion, Version maxVersion, ref Version newestVersionFound, Assembly newestAssemblyFound)
+        {
+            if (path != null && File.Exists(path))
+            {
+                var ass = Assembly.ReflectionOnlyLoadFrom(path);
+                var ver = ass.GetName().Version;
+                if (ver >= minVersion && ver <= maxVersion && ver > newestVersionFound)
+                {
+                    newestVersionFound = ver;
+                    newestAssemblyFound = ass;
+                }
+            }
+            return newestAssemblyFound;
+        }
+
+        private static string FindEngineInRegistry(RegistryKey rootKey, string subKey)
+        {
+            using (var key = rootKey.OpenSubKey(subKey, false))
+            {
+                if (key != null)
+                {
+                    return key.GetValue("Engine") as string;
+                }
+            }
+            return null;
         }
 
         #endregion
