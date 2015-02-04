@@ -355,21 +355,21 @@ namespace NUnit.Common
                 ErrorMessages.Add("Missing required value for option '" + option + "'.");
             else
             {
-#if NETCF   // NETCF: Create compatibiility method for TryParse
+#if NETCF   // NETCF: Create compatibility method for TryParse
                 try
                 {
                     result = int.Parse(val);
                 }
                 catch (Exception)
                 {
-                    ErrorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+                    ErrorMessages.Add("An int value was expected for option '{0}' but a value of '{1}' was used");
                 }
 #else
                 int r;
                 if (int.TryParse(val, out r))
                     result = r;
                 else
-                    ErrorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+                    ErrorMessages.Add("An int value was expected for option '{0}' but a value of '{1}' was used");
 #endif
             }
 
