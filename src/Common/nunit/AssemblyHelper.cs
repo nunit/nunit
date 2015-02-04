@@ -108,6 +108,37 @@ namespace NUnit.Common
 
         #endregion
 
+        #region Load
+
+        /// <summary>
+        /// Loads an assembly given a string, which may be the 
+        /// path to the assembly or the AssemblyName
+        /// </summary>
+        /// <param name="nameOrPath"></param>
+        /// <returns></returns>
+        public static Assembly Load(string nameOrPath)
+        {
+#if !SILVERLIGHT && !PORTABLE
+            var ext = Path.GetExtension(nameOrPath).ToLower();
+
+            // It's a path to an assembly, get the AssemblyName and load it
+            if (ext == ".dll" || ext == ".exe")
+            {
+#if NETCF
+                return Assembly.LoadFrom(nameOrPath);
+#else
+                var assemblyRef = AssemblyName.GetAssemblyName(nameOrPath);
+                return Assembly.Load(assemblyRef);
+#endif
+            }
+#endif
+
+            // Assume it's the string representation of an AssemblyName
+            return Assembly.Load(nameOrPath);
+        }
+
+        #endregion
+
         #region Helper Methods
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE

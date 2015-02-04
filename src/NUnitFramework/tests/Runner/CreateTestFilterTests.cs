@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -132,7 +133,6 @@ namespace NUnitLite.Runner.Tests
                 Is.EqualTo(new string[] { "Slow" }));
         }
 
-#if !SILVERLIGHT
         [Test]
         public void ThreeTestsFromATestListFile()
         {
@@ -157,7 +157,6 @@ namespace NUnitLite.Runner.Tests
                     Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test", "My.Fourth.Test", "My.Fifth.Test", "My.Sixth.Test"}));
             }
         }
-#endif
 
         [Test]
         public void TestListFileMissing()
@@ -175,3 +174,4 @@ namespace NUnitLite.Runner.Tests
         }
     }
 }
+#endif
