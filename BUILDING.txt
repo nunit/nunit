@@ -4,7 +4,7 @@ NUnit 3.0 consists of three separate layers: the Framework, the Engine and the C
 The source code is kept in a single GitHub repository at http://github.com/nunit/nunit.git.
 
 All three layers are built together using a single Visual Studio solution (nunit.sln on Windows 
-and nunit.linux.sln on Linux), whichn may be built with Visual Studio 2012+, SharpDevelop.
+and nunit.linux.sln on Linux), which may be built with Visual Studio 2012+, SharpDevelop.
 or MonoDevelop.
 
 There is a separate VS2008 solution for building the framework to run under the .NET
