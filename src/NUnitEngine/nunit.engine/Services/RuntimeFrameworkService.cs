@@ -36,12 +36,12 @@ namespace NUnit.Engine.Services
         /// <summary>
         /// Selects a target runtime framework for a TestPackage based on
         /// the settings in the package and the assemblies themselves.
-        /// The package RuntimeFramework setting may be updated as a 
-        /// result and the selected runtime is returned.
+        /// The package RuntimeFramework setting may be updated as a result
+        /// and a string representing the selected runtime is returned.
         /// </summary>
         /// <param name="package">A TestPackage</param>
-        /// <returns>The selected RuntimeFramework</returns>
-        public RuntimeFramework SelectRuntimeFramework(TestPackage package)
+        /// <returns>A string representing the selected RuntimeFramework</returns>
+        public string SelectRuntimeFramework(TestPackage package)
         {
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
             string frameworkSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
@@ -119,7 +119,7 @@ namespace NUnit.Engine.Services
 
             log.Debug("Test will use {0} framework", targetFramework);
 
-            return targetFramework;
+            return targetFramework.ToString();
         }
 
         #region IService Members

@@ -61,6 +61,7 @@
     <Compile Include="Extensibility\IResultWriter.cs" />
     <Compile Include="IResultService.cs" />
     <Compile Include="Extensibility\IResultWriterFactory.cs" />
+    <Compile Include="IRuntimeFrameworkService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensibility\IFrameworkDriver.cs" />
     <Compile Include="ILogging.cs" />
