@@ -22,15 +22,16 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-    public class RuntimeFrameworkSelector : IRuntimeFrameworkSelector, IService
+    public class RuntimeFrameworkService : IRuntimeFrameworkService, IService
     {
-        static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkSelector));
+        static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
 
         /// <summary>
         /// Selects a target runtime framework for a TestPackage based on

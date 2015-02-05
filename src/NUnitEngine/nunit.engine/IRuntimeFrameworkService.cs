@@ -22,10 +22,11 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Engine
 {
-    public interface IRuntimeFrameworkSelector
+    public interface IRuntimeFrameworkService
     {
         /// <summary>
         /// Selects a target runtime framework for a TestPackage based on

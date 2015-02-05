@@ -101,13 +101,13 @@ namespace NUnit.Engine
 
         #region RuntimeFrameworkSelector
 
-        private IRuntimeFrameworkSelector selector;
-        public IRuntimeFrameworkSelector RuntimeFrameworkSelector
+        private IRuntimeFrameworkService selector;
+        public IRuntimeFrameworkService RuntimeFrameworkSelector
         {
             get
             {
                 if (selector == null)
-                    selector = (IRuntimeFrameworkSelector)ServiceManager.GetService(typeof(IRuntimeFrameworkSelector));
+                    selector = (IRuntimeFrameworkService)ServiceManager.GetService(typeof(IRuntimeFrameworkService));
 
                 return selector;
             }

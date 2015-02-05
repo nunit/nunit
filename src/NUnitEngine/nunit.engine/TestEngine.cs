@@ -105,7 +105,7 @@ namespace NUnit.Engine
             this.Services.Add(new RecentFilesService());
             this.Services.Add(new DomainManager());
             this.Services.Add(new ProjectService());
-            this.Services.Add(new RuntimeFrameworkSelector());
+            this.Services.Add(new RuntimeFrameworkService());
             this.Services.Add(new DefaultTestRunnerFactory());
             this.Services.Add(new DriverService());
             this.Services.Add(new TestAgency());
