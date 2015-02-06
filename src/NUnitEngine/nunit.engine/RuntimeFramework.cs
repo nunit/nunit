@@ -273,7 +273,7 @@ namespace NUnit.Engine
             get
             {
                 foreach (RuntimeFramework framework in AvailableFrameworks)
-                    if (this.Supports(framework))
+                    if (framework.Supports(this))
                         return true;
 
                 return false;

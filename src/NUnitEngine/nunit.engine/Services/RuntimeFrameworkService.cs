@@ -34,6 +34,46 @@ namespace NUnit.Engine.Services
         static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
 
         /// <summary>
+        /// Returns true if the runtime framework represented by
+        /// the string passed as an argument is available.
+        /// </summary>
+        /// <param name="name">A string representing a framework, like 'net-4.0'</param>
+        /// <returns>True if the framework is available, false if unavailable or nonexistent</returns>
+        public bool IsAvailable(string name)
+        {
+            var requestedFramework = RuntimeFramework.Parse(name);
+            foreach (var framework in RuntimeFramework.AvailableFrameworks)
+                if (FrameworksMatch(requestedFramework, framework))
+                    return true;
+
+            return false;
+        }
+
+        private static readonly Version AnyVersion = new Version(0, 0);
+
+        private static bool FrameworksMatch(RuntimeFramework f1, RuntimeFramework f2)
+        {
+            var rt1 = f1.Runtime;
+            var rt2 = f2.Runtime;
+
+            if (rt1 != RuntimeType.Any && rt2 != RuntimeType.Any && rt1 != rt2)
+                return false;
+
+            var v1 = f1.ClrVersion;
+            var v2 = f2.ClrVersion;
+
+            if (v1 == AnyVersion || v2 == AnyVersion)
+                return true;
+
+            return v1.Major == v2.Major &&
+                   v1.Minor == v2.Minor &&
+                   (v1.Build < 0 || v2.Build < 0 || v1.Build == v2.Build) &&
+                   (v1.Revision < 0 || v2.Revision < 0 || v1.Revision == v2.Revision) &&
+                   f1.FrameworkVersion.Major == f2.FrameworkVersion.Major &&
+                   f1.FrameworkVersion.Minor == f2.FrameworkVersion.Minor;
+        }
+
+        /// <summary>
         /// Selects a target runtime framework for a TestPackage based on
         /// the settings in the package and the assemblies themselves.
         /// The package RuntimeFramework setting may be updated as a result

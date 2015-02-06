@@ -29,6 +29,14 @@ namespace NUnit.Engine
     public interface IRuntimeFrameworkService
     {
         /// <summary>
+        /// Returns true if the runtime framework represented by
+        /// the string passed as an argument is available.
+        /// </summary>
+        /// <param name="framework">A string representing a framework, like 'net-4.0'</param>
+        /// <returns>True if the framework is available, false if unavailable or nonexistent</returns>
+        bool IsAvailable(string framework);
+
+        /// <summary>
         /// Selects a target runtime framework for a TestPackage based on
         /// the settings in the package and the assemblies themselves.
         /// The package RuntimeFramework setting may be updated as a 
