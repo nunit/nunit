@@ -71,7 +71,7 @@ namespace NUnit.Engine.Runners
             RuntimeFramework = RuntimeFramework.Parse(
                 frameworkSetting != ""
                     ? frameworkSetting
-                    : Services.RuntimeFrameworkSelector.SelectRuntimeFramework(TestPackage));
+                    : Services.RuntimeFrameworkService.SelectRuntimeFramework(TestPackage));
 
             bool useX86Agent = TestPackage.GetSetting(PackageSettings.RunAsX86, false);
             bool enableDebug = TestPackage.GetSetting("AgentDebug", false);
