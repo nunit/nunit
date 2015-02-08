@@ -48,6 +48,7 @@ namespace NUnit.Engine
         internal const string DefaultTypeName = "NUnit.Engine.TestEngine";
 
         private const string NunitInstallRegKey = @"SOFTWARE\Nunit.org";
+        private const string NunitInstallRegKeyWow64 = @"SOFTWARE\Wow6432Node\Nunit.org";
 
         #region Public Methods
 
@@ -119,21 +120,29 @@ namespace NUnit.Engine
         private static Assembly FindNewestEngine(Version minVersion, Version maxVersion, bool privateCopy)
         {
             var newestVersionFound = new Version();
-            Assembly newestAssemblyFound = null;
-            string path;
+
+            // Check the Application BaseDirectory
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DefaultAssemblyName);
+            Assembly newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, null);
             if (!privateCopy)
             {
-                // Check the install for the current user
+                // Check the install for the current user, 32 bit process
                 path = FindEngineInRegistry(Registry.CurrentUser, NunitInstallRegKey);
-                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, null);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
 
-                // check the install for the local machine
+                // Check the install for the current user, 64 bit process
+                path = FindEngineInRegistry(Registry.CurrentUser, NunitInstallRegKeyWow64);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+
+                // check the install for the local machine, 32 bit process
                 path = FindEngineInRegistry(Registry.LocalMachine, NunitInstallRegKey);
                 newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+
+                // check the install for the local machine, 64 bit process
+                path = FindEngineInRegistry(Registry.LocalMachine, NunitInstallRegKeyWow64);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
             }
-            // Check the Application BaseDirectory
-            path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DefaultAssemblyName);
-            return CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+            return newestAssemblyFound;
         }
 
         private static Assembly CheckPathForEngine(string path, Version minVersion, Version maxVersion, ref Version newestVersionFound, Assembly newestAssemblyFound)
