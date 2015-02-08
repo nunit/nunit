@@ -273,7 +273,7 @@
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
-    <Compile Include="Interfaces\ICommandDecorator.cs" />
+    <Compile Include="Interfaces\ICommandWrapper.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
