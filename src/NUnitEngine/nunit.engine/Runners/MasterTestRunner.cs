@@ -25,6 +25,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -56,8 +57,10 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
-            // Temporarily using AggregatingTestRunner for everything
-            //_realRunner = new AggregatingTestRunner(Services, TestPackage);
+            // Last chance to catch invalid settings in package, 
+            // in case the client runner missed them.
+            ValidatePackageSettings();
+
             _realRunner = Services.TestRunnerFactory.MakeTestRunner(TestPackage);
 
             return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
@@ -201,6 +204,32 @@ namespace NUnit.Engine.Runners
         XmlNode ITestRunner.Explore(TestFilter filter)
         {
             return this.Explore(filter).Xml;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        // Any Errors thrown from this method indicate that the client
+        // runner is putting invalid values into the package.
+        private void ValidatePackageSettings()
+        {
+            var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
+            if (frameworkSetting.Length > 0)
+            {
+                var runtimeService = Services.GetService<IRuntimeFrameworkService>();
+                if (!runtimeService.IsAvailable(frameworkSetting))
+                    throw new NUnitEngineException(string.Format("The requested framework {0} is unknown or not available.", frameworkSetting));
+
+                var processModel = TestPackage.GetSetting(PackageSettings.ProcessModel, "Default");
+                if (processModel.ToLower() == "single")
+                {
+                    var currentFramework = RuntimeFramework.CurrentFramework.ToString();
+                    if (currentFramework != frameworkSetting)
+                        throw new NUnitEngineException(string.Format(
+                            "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
+                }
+            }
         }
 
         #endregion

@@ -36,29 +36,34 @@ namespace NUnit.Engine
     /// </summary>
     public class ServiceContext : IServiceLocator
     {
+        #region Constructor
+
+        public ServiceContext()
+        {
+            ServiceManager = new ServiceManager();
+        }
+
+        #endregion
+
         #region Service Properties
 
         #region ServiceManager
 
-        private ServiceManager serviceManager = new ServiceManager();
-        public ServiceManager ServiceManager
-        {
-            get { return serviceManager; }
-        }
+        public ServiceManager ServiceManager { get; private set; }
 
         #endregion
 
         #region DomainManager
 
-        private DomainManager domainManager;
+        private DomainManager _domainManager;
         public DomainManager DomainManager
         {
             get
             {
-                if (domainManager == null)
-                    domainManager = (DomainManager)ServiceManager.GetService(typeof(DomainManager));
+                if (_domainManager == null)
+                    _domainManager = GetService<DomainManager>();
 
-                return domainManager;
+                return _domainManager;
             }
         }
 
@@ -66,50 +71,47 @@ namespace NUnit.Engine
 
         #region UserSettings
 
-        private ISettings userSettings;
+        private ISettings _userSettings;
         public ISettings UserSettings
         {
             get
             {
-                if (userSettings == null)
-                    userSettings = (ISettings)ServiceManager.GetService(typeof(ISettings));
+                if (_userSettings == null)
+                    _userSettings = GetService<ISettings>();
 
-                //        // Temporary fix needed to run TestDomain tests in test AppDomain
-                //        // TODO: Figure out how to set up the test domain correctly
-                //        if ( userSettings == null )
-                //            userSettings = new SettingsService();
-
-                return userSettings;
+                return _userSettings;
             }
         }
 
         #endregion
 
         #region RecentFilesService
-        private IRecentFiles recentFiles;
+        private IRecentFiles _recentFiles;
         public IRecentFiles RecentFiles
         {
             get
             {
-                if ( recentFiles == null )
-                    recentFiles = (IRecentFiles)ServiceManager.GetService( typeof( IRecentFiles ) );
+                if ( _recentFiles == null )
+                    _recentFiles = GetService<IRecentFiles>();
 
-                return recentFiles;
+                return _recentFiles;
             }
         }
         #endregion
 
         #region RuntimeFrameworkSelector
 
-        private IRuntimeFrameworkSelector selector;
-        public IRuntimeFrameworkSelector RuntimeFrameworkSelector
+        // Note: the engine uses the RuntimeFrameworkService directly
+        // while runners only have access to IRuntimeFrameworkService.
+        private RuntimeFrameworkService _runtimeService;
+        public RuntimeFrameworkService RuntimeFrameworkService
         {
             get
             {
-                if (selector == null)
-                    selector = (IRuntimeFrameworkSelector)ServiceManager.GetService(typeof(IRuntimeFrameworkSelector));
+                if (_runtimeService == null)
+                    _runtimeService = GetService<RuntimeFrameworkService>();
 
-                return selector;
+                return _runtimeService;
             }
         }
 
@@ -117,15 +119,15 @@ namespace NUnit.Engine
 
         #region DriverFactory
 
-        private IDriverService driverFactory;
+        private IDriverService _driverFactory;
         public IDriverService DriverFactory
         {
             get
             {
-                if (driverFactory == null)
-                    driverFactory = (IDriverService)ServiceManager.GetService(typeof(IDriverService));
+                if (_driverFactory == null)
+                    _driverFactory = GetService<IDriverService>();
 
-                return driverFactory;
+                return _driverFactory;
             }
         }
 
@@ -133,69 +135,46 @@ namespace NUnit.Engine
 
         #region TestRunnerFactory
 
-        private ITestRunnerFactory testRunnerFactory;
+        private ITestRunnerFactory _testRunnerFactory;
         public ITestRunnerFactory TestRunnerFactory
         {
             get
             {
-                if (testRunnerFactory == null)
-                    testRunnerFactory = (ITestRunnerFactory)ServiceManager.GetService(typeof(ITestRunnerFactory));
+                if (_testRunnerFactory == null)
+                    _testRunnerFactory = GetService<ITestRunnerFactory>();
 
-                return testRunnerFactory;
+                return _testRunnerFactory;
             }
         }
 
         #endregion
 
-        #region TestLoader
-        //        private static TestLoader loader;
-        //        public static TestLoader TestLoader
-        //        {
-        //            get
-        //            {
-        //                if ( loader == null )
-        //                    loader = (TestLoader)ServiceManager.Services.GetService( typeof( TestLoader ) );
-
-        //                return loader;
-        //            }
-        //        }
-        #endregion
-
         #region TestAgency
 
-        private TestAgency agency;
+        private TestAgency _agency;
         public TestAgency TestAgency
         {
             get
             {
-                if (agency == null)
-                    agency = (TestAgency)ServiceManager.GetService(typeof(TestAgency));
+                if (_agency == null)
+                    _agency = GetService<TestAgency>();
 
-                // Temporary fix needed to run ProcessRunner tests in test AppDomain
-                // TODO: Figure out how to set up the test domain correctly
-                //				if ( agency == null )
-                //				{
-                //					agency = new TestAgency();
-                //					agency.Start();
-                //				}
-
-                return agency;
+                return _agency;
             }
         }
 
         #endregion
 
         #region ProjectService
-        private ProjectService projectService;
+        private ProjectService _projectService;
         public ProjectService ProjectService
         {
             get
             {
-                if (projectService == null)
-                    projectService = (ProjectService)
-                        ServiceManager.GetService(typeof(ProjectService));
+                if (_projectService == null)
+                    _projectService = GetService<ProjectService>();
 
-                return projectService;
+                return _projectService;
             }
         }
         #endregion
@@ -212,14 +191,14 @@ namespace NUnit.Engine
 
         #endregion
 
-        #region IServiceLocator Explicit Implementation
+        #region IServiceLocator Implementation
 
-        T IServiceLocator.GetService<T>()
+        public T GetService<T>() where T : class
         {
             return ServiceManager.GetService(typeof(T)) as T;
         }
 
-        object IServiceLocator.GetService(Type serviceType)
+        public object GetService(Type serviceType)
         {
             return ServiceManager.GetService(serviceType);
         }
