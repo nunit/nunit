@@ -189,8 +189,8 @@
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
-    <Compile Include="Internal\IApplyToContext.cs" />
-    <Compile Include="Internal\IApplyToTest.cs" />
+    <Compile Include="Interfaces\IApplyToContext.cs" />
+    <Compile Include="Interfaces\IApplyToTest.cs" />
     <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\StackFilter.cs" />
