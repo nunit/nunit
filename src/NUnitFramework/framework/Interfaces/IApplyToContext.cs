@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal
+using NUnit.Framework.Internal;
+
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The IApplyToContext interface is implemented by attributes

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,18 +28,39 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// ICommandDecorator is implemented by attributes and other
-    /// objects able to decorate a TestCommand, usually by wrapping
-    /// it with an outer command.
+    /// ICommandWrapper is implemented by attributes and other
+    /// objects able to wrap a TestCommand with another command.
     /// </summary>
-    public interface ICommandDecorator
+    /// <remarks>
+    /// Attributes or other objects should implement one of the
+    /// derived interfaces, rather than this one, since they
+    /// indicate in which part of the command chain the wrapper
+    /// should be applied.
+    /// </remarks>
+    public interface ICommandWrapper
     {
         /// <summary>
-        /// Decorate a command, usually by wrapping it with another
-        /// command, and return the decorated command.
+        /// Wrap a command and return the result.
         /// </summary>
-        /// <param name="command">The command to be decorated</param>
-        /// <returns>The decorated command</returns>
-        TestCommand Decorate(TestCommand command);
+        /// <param name="command">The command to be wrapped</param>
+        /// <returns>The wrapped command</returns>
+        TestCommand Wrap(TestCommand command);
+    }
+
+    /// <summary>
+    /// Objects implementing this interface are used to wrap
+    /// the TestMethodCommand itself. They apply after SetUp
+    /// has been run and before TearDown.
+    /// </summary>
+    public interface IWrapTestMethod : ICommandWrapper
+    {
+    }
+
+    /// <summary>
+    /// Objects implementing this interface are used to wrap
+    /// the entire test, including SetUp and TearDown.
+    /// </summary>
+    public interface IWrapSetUpTearDown : ICommandWrapper
+    {
     }
 }

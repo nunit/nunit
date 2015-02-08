@@ -284,8 +284,10 @@
     <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
+    <Compile Include="Interfaces\IApplyToContext.cs" />
+    <Compile Include="Interfaces\IApplyToTest.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
-    <Compile Include="Interfaces\ICommandDecorator.cs" />
+    <Compile Include="Interfaces\ICommandWrapper.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
@@ -359,8 +361,6 @@
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
-    <Compile Include="Internal\IApplyToContext.cs" />
-    <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NetCFExtensions.cs" />
