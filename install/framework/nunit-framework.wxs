@@ -190,7 +190,12 @@
                       Source="$(var.BuildDir)portable\nunit.framework.xml" 
                       CompanionFile="nunit.framework.portable.dll" />
             </Component>
-            <!-- What is the AssemblyFoldersEx for Portable? -->
+            <!-- What is the AssemblyFoldersEx for Portable? For now, I am putting this under .NET 4.5 since the portable is valid for that -->
+            <Component Id="AssemblyReferenceFolderPortable">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.5\AssemblyFoldersEx\NUnit [ProductVersion] Portable" >
+                    <RegistryValue Action="write" Type="string" Value="[PORTABLE]" />
+                </RegistryKey>
+            </Component>
         </ComponentGroup>
 
         <ComponentGroup Id="SL50" Directory="SL50">
@@ -208,7 +213,11 @@
                       ProcessorArchitecture="msil" 
                       Source="$(var.BuildDir)sl-5.0\nunitlite.dll" />
             </Component>
-            <!-- What is the AssemblyFoldersEx for SilverLight? -->
+            <Component Id="AssemblyReferenceFolderSL50">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\Microsoft SDKs\Silverlight\v5.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[SL50]" />
+                </RegistryKey>
+            </Component>
         </ComponentGroup>
         
         
