@@ -138,17 +138,6 @@ namespace NUnit.ConsoleRunner
             // TODO: We really need options as resolved by engine for most of  these
             DisplayRequestedOptions();
 
-            if (_options.Framework != null)
-            {
-                var runtimeService = _engine.Services.GetService<IRuntimeFrameworkService>();
-                if (!runtimeService.IsAvailable(_options.Framework))
-                {
-                    _outWriter.WriteLine(ColorStyle.Error, 
-                        string.Format("The requested framework {0} is not available.", _options.Framework));
-                    return ConsoleRunner.INVALID_ARG;
-                }
-            }
-
             foreach (var spec in _options.ResultOutputSpecifications)
                 GetResultWriter(spec).CheckWritability(spec.OutputPath);
 
