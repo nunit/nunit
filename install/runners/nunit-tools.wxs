@@ -137,6 +137,11 @@
                 <File Id="Mono.Addins.dll"
                       Source="$(var.BuildDir)Mono.Addins.dll" />
             </Component>
+            <Component Id="NUNIT.ENGINE.REGISTRY">
+                <RegistryKey Root="HKMU" Key="Software\NUnit.org" >
+                    <RegistryValue Action="write" Type="string" Name="Engine" Value="[BIN]nunit.engine.dll" />
+                </RegistryKey>
+            </Component>
 		</ComponentGroup>
 
         <ComponentGroup Id="NUNIT.CONSOLE" Directory="BIN">
