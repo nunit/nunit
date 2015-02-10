@@ -216,5 +216,45 @@ namespace NUnit.Framework.Assertions
             Expect(actual, Not.EqualTo(expected));
             Expect(actual, EqualTo(expected).AsCollection);
         }
+
+#if !NETCF && !SILVERLIGHT && !PORTABLE
+        private static int[] underlyingArray = new int[] { 1, 2, 3, 4, 5 };
+
+        [Test]
+        public void ArraySegmentAndArray()
+        {
+            Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new int[] { 2, 3, 4 }));
+        }
+
+        [Test]
+        public void EmptyArraySegmentAndArray()
+        {
+            Assert.That(new ArraySegment<int>(), Is.Not.EqualTo(new int[] { 2, 3, 4 }));
+        }
+
+        [Test]
+        public void ArrayAndArraySegment()
+        {
+            Assert.That(new int[] { 2, 3, 4 }, Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
+        }
+
+        [Test]
+        public void ArrayAndEmptyArraySegment()
+        {
+            Assert.That(new int[] { 2, 3, 4 }, Is.Not.EqualTo(new ArraySegment<int>()));
+        }
+
+        [Test]
+        public void TwoArraySegments()
+        {
+            Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
+        }
+
+        [Test]
+        public void TwoEmptyArraySegments()
+        {
+            Assert.That(new ArraySegment<int>(), Is.EqualTo(new ArraySegment<int>()));
+        }
+#endif
     }
 }
