@@ -33,6 +33,8 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class ArrayEqualsFixture : AssertionHelper
     {
+        private static readonly bool ArraySegmentImplementsIEnumerable = new ArraySegment<int>() is IEnumerable;
+
         [Test]
         public void ArrayIsEqualToItself()
         {
@@ -223,36 +225,42 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraySegmentAndArray()
         {
+            Assume.That(ArraySegmentImplementsIEnumerable);
             Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new int[] { 2, 3, 4 }));
         }
 
         [Test]
         public void EmptyArraySegmentAndArray()
         {
+            Assume.That(ArraySegmentImplementsIEnumerable);
             Assert.That(new ArraySegment<int>(), Is.Not.EqualTo(new int[] { 2, 3, 4 }));
         }
 
         [Test]
         public void ArrayAndArraySegment()
         {
+            Assume.That(ArraySegmentImplementsIEnumerable);
             Assert.That(new int[] { 2, 3, 4 }, Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
         }
 
         [Test]
         public void ArrayAndEmptyArraySegment()
         {
+            Assume.That(ArraySegmentImplementsIEnumerable);
             Assert.That(new int[] { 2, 3, 4 }, Is.Not.EqualTo(new ArraySegment<int>()));
         }
 
         [Test]
         public void TwoArraySegments()
         {
+            Assume.That(ArraySegmentImplementsIEnumerable);
             Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
         }
 
         [Test]
         public void TwoEmptyArraySegments()
         {
+            Assume.That(ArraySegmentImplementsIEnumerable);
             Assert.That(new ArraySegment<int>(), Is.EqualTo(new ArraySegment<int>()));
         }
 #endif
