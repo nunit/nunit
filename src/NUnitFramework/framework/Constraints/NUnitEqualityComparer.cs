@@ -156,12 +156,19 @@ namespace NUnit.Framework.Constraints
                 yGenericTypeDefinition == typeof(KeyValuePair<,>))
             {
                 var keyTolerance = Tolerance.Exact;
+#if NET_4_0 || NET_4_5
+                dynamic dynX = x;
+                dynamic dynY = y;
+
+                return AreEqual(dynX.Key, dynY.Key, ref keyTolerance) && AreEqual(dynX.Value, dynY.Value, ref tolerance);
+#else
                 object xKey = xType.GetProperty("Key").GetValue(x, null);
                 object yKey = yType.GetProperty("Key").GetValue(y, null);
                 object xValue = xType.GetProperty("Value").GetValue(x, null);
                 object yValue = yType.GetProperty("Value").GetValue(y, null);
 
                 return AreEqual(xKey, yKey, ref keyTolerance) && AreEqual(xValue, yValue, ref tolerance);
+#endif
             }
 
             //if (x is ICollection && y is ICollection)
