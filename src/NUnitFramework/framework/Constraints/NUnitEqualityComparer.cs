@@ -134,6 +134,9 @@ namespace NUnit.Framework.Constraints
             Type xType = x.GetType();
             Type yType = y.GetType();
 
+            Type xGenericTypeDefinition = xType.IsGenericType ? xType.GetGenericTypeDefinition() : null;
+            Type yGenericTypeDefinition = yType.IsGenericType ? yType.GetGenericTypeDefinition() : null;
+
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
                 return externalComparer.AreEqual(x, y);
@@ -149,8 +152,8 @@ namespace NUnit.Framework.Constraints
                 return DictionaryEntriesEqual((DictionaryEntry)x, (DictionaryEntry)y, ref tolerance);
 
             // IDictionary<,> will eventually try to compare it's key value pairs when using CollectionTally
-            if (xType.IsGenericType && xType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) &&
-                yType.IsGenericType && yType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+            if (xGenericTypeDefinition == typeof(KeyValuePair<,>) &&
+                yGenericTypeDefinition == typeof(KeyValuePair<,>))
             {
                 var keyTolerance = Tolerance.Exact;
                 object xKey = xType.GetProperty("Key").GetValue(x, null);
@@ -164,11 +167,11 @@ namespace NUnit.Framework.Constraints
             //if (x is ICollection && y is ICollection)
             //    return CollectionsEqual((ICollection)x, (ICollection)y, ref tolerance);
 
-            if (x is IEnumerable && y is IEnumerable && !(x is string && y is string))
-                return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);
-
             if (x is string && y is string)
                 return StringsEqual((string)x, (string)y);
+
+            if (x is IEnumerable && y is IEnumerable)
+                return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);
 
             if (x is Stream && y is Stream)
                 return StreamsEqual((Stream)x, (Stream)y);
