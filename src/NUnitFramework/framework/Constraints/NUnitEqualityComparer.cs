@@ -118,14 +118,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
+#if NET_4_0 || NET_4_5
+        public bool AreEqual(dynamic x, dynamic y, ref Tolerance tolerance)
+#else
         public bool AreEqual(object x, object y, ref Tolerance tolerance)
+#endif
         {
             this.failurePoints = new List<FailurePoint>();
 
-            if (x == null && y == null)
+            if (ReferenceEquals(x, null) && ReferenceEquals(y, null))
                 return true;
 
-            if (x == null || y == null)
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 return false;
 
             if (object.ReferenceEquals(x, y))
@@ -157,10 +161,7 @@ namespace NUnit.Framework.Constraints
             {
                 var keyTolerance = Tolerance.Exact;
 #if NET_4_0 || NET_4_5
-                dynamic dynX = x;
-                dynamic dynY = y;
-
-                return AreEqual(dynX.Key, dynY.Key, ref keyTolerance) && AreEqual(dynX.Value, dynY.Value, ref tolerance);
+                return AreEqual(x.Key, y.Key, ref keyTolerance) && AreEqual(x.Value, y.Value, ref tolerance);
 #else
                 object xKey = xType.GetProperty("Key").GetValue(x, null);
                 object yKey = yType.GetProperty("Key").GetValue(y, null);
@@ -210,11 +211,19 @@ namespace NUnit.Framework.Constraints
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
             }
 
+#if NET_4_0 || NET_4_5
+
+            if (FirstImplementsIEquatableOfSecond(xType, yType))
+                return x.Equals(y);
+            else if (xType != yType && FirstImplementsIEquatableOfSecond(yType, xType))
+                return y.Equals(x);
+#else
             if (FirstImplementsIEquatableOfSecond(xType, yType))
                 return InvokeFirstIEquatableEqualsSecond(x, y);
             else if (xType != yType && FirstImplementsIEquatableOfSecond(yType, xType))
                 return InvokeFirstIEquatableEqualsSecond(y, x);
-            
+#endif
+
             return x.Equals(y);
         }
 
