@@ -98,6 +98,38 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region strings
+
+        /// <summary>
+        /// Verifies that two strings are equal.  Two objects are considered
+        /// equal if both are null, or if both have the same value. NUnit
+        /// has special semantics for some object types.
+        /// If they are not equal an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The value that is expected</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void AreEqual(string expected, string actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.EqualTo(expected), message, args);
+        }
+
+        /// <summary>
+        /// Verifies that two objects are equal.  Two objects are considered
+        /// equal if both are null, or if both have the same value. NUnit
+        /// has special semantics for some object types.
+        /// If they are not equal an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The value that is expected</param>
+        /// <param name="actual">The actual value</param>
+        public static void AreEqual(string expected, string actual)
+        {
+            Assert.That(actual, Is.EqualTo(expected), null, null);
+        }
+
+        #endregion
+
         #region Objects
 
         /// <summary>

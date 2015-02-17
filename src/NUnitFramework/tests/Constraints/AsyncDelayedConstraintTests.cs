@@ -10,35 +10,35 @@ namespace NUnit.Framework.Constraints.Tests
 		[Test]
 		public void ConstraintSuccess()
 		{
-			Assert.IsTrue(new DelayedConstraint(new EqualConstraint(1), 100)
+            Assert.IsTrue(new DelayedConstraint(Is.EqualTo(1), 100)
 				.ApplyTo(async () => await One()).IsSuccess);
 		}
 
 		[Test]
 		public void ConstraintFailure()
 		{
-			Assert.IsFalse(new DelayedConstraint(new EqualConstraint(2), 100)
+            Assert.IsFalse(new DelayedConstraint(Is.EqualTo(2), 100)
 				.ApplyTo(async () => await One()).IsSuccess);
 		}
 
 		[Test]
 		public void ConstraintError()
 		{
-			Assert.Throws<InvalidOperationException>(() => 
-				new DelayedConstraint(new EqualConstraint(1), 100).ApplyTo(new ActualValueDelegate<Task>(async () => await Throw())));
+			Assert.Throws<InvalidOperationException>(() =>
+                new DelayedConstraint(Is.EqualTo(1), 100).ApplyTo(new ActualValueDelegate<Task>(async () => await Throw())));
 		}
 
 		[Test]
 		public void ConstraintVoidDelegateFailureAsDelegateIsNotCalled()
 		{
-			Assert.IsFalse(new DelayedConstraint(new EqualConstraint(1), 100)
+            Assert.IsFalse(new DelayedConstraint(Is.EqualTo(1), 100)
 				.ApplyTo(new TestDelegate(async () => { await One(); })).IsSuccess);
 		}
 
 		[Test]
 		public void ConstraintVoidDelegateExceptionIsFailureAsDelegateIsNotCalled()
 		{
-			Assert.IsFalse(new DelayedConstraint(new EqualConstraint(1), 100)
+            Assert.IsFalse(new DelayedConstraint(Is.EqualTo(1), 100)
 				.ApplyTo(new TestDelegate(async () => { await Throw(); })).IsSuccess);
 		}
 

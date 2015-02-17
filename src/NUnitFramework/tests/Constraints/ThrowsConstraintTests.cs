@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
             theConstraint = new ThrowsConstraint(
                 new AndConstraint(
                     new ExactTypeConstraint(typeof(ArgumentException)),
-                    new PropertyConstraint("ParamName", new EqualConstraint("myParam"))));
+                    new PropertyConstraint("ParamName", new EqualConstraint<string>("myParam"))));
             expectedDescription = @"<System.ArgumentException> and property ParamName equal to ""myParam""";
             stringRepresentation = @"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>";
         }

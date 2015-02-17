@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new OrConstraint(new EqualConstraint(42), new EqualConstraint(99));
+            theConstraint = new OrConstraint(new EqualConstraint<int>(42), new EqualConstraint<int>(99));
             expectedDescription = "42 or 99";
             stringRepresentation = "<or <equal 42> <equal 99>>";
         }
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanCombineTestsWithOrOperator()
         {
-            Assert.That(99, new EqualConstraint(42) | new EqualConstraint(99) );
+            Assert.That(99, new EqualConstraint<int>(42) | new EqualConstraint<int>(99) );
         }
     }
 }

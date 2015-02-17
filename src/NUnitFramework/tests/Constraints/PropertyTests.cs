@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new PropertyConstraint("Length", new EqualConstraint(5));
+            theConstraint = new PropertyConstraint("Length", new EqualConstraint<int>(5));
             expectedDescription = "property Length equal to 5";
             stringRepresentation = "<property Length <equal 5>>";
         }
@@ -83,10 +83,10 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void PropertyEqualToValueWithTolerance()
         {
-            Constraint c = new EqualConstraint(105m).Within(0.1m);
+            Constraint c = Is.EqualTo(105m).Within(0.1m);
             Assert.That(c.Description, Is.EqualTo("105m +/- 0.1m"));
 
-            c = new PropertyConstraint("D", new EqualConstraint(105m).Within(0.1m));
+            c = new PropertyConstraint("D", Is.EqualTo(105m).Within(0.1m));
             Assert.That(c.Description, Is.EqualTo("property D equal to 105m +/- 0.1m"));
         }
     }
