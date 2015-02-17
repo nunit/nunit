@@ -112,7 +112,7 @@ namespace NUnit.Engine.Services.Tests
                 Path.GetFileName( setup.ConfigurationFile ),
                 Is.EqualTo("mock-nunit-assembly.exe.config").IgnoreCase,
                 "ConfigurationFile");
-            Assert.AreEqual( null, setup.PrivateBinPath, "PrivateBinPath" );
+            Assert.IsNull(setup.PrivateBinPath, "PrivateBinPath" );
             Assert.That(setup.ShadowCopyDirectories, Is.SamePath(Path.GetDirectoryName(mockDll)), "ShadowCopyDirectories" );
         }
 

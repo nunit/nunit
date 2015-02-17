@@ -170,10 +170,11 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestEquality_Null()
         {
+            object nullObj = null;
             var rs = new ResultState(TestStatus.Passed);
-            Assert.AreNotEqual(null, rs);
-            Assert.AreNotEqual(rs, null);
-            Assert.False(rs.Equals(null));
+            Assert.AreNotEqual(nullObj, rs);
+            Assert.AreNotEqual(rs, nullObj);
+            Assert.False(rs.Equals(nullObj));
         }
 
         #endregion
