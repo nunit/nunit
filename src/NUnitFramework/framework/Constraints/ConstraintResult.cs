@@ -64,9 +64,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
         public ConstraintResult(IConstraint constraint, object actualValue)
         {
-            this.Name = constraint.DisplayName;
-            this.Description = constraint.Description;
-            this.ActualValue = actualValue;
+            Name = constraint.DisplayName;
+            Description = constraint.Description;
+            ActualValue = actualValue;
         }
 
         /// <summary>

@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "all items not equal to null" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null)))));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint<object>(null)))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

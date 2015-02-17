@@ -32,13 +32,13 @@ namespace NUnit.Framework.Constraints
     /// The EqualConstraintResult class is tailored for formatting
     /// and displaying the result of an EqualConstraint. 
     /// </summary>
-    public class EqualConstraintResult : ConstraintResult
+    public class EqualConstraintResult<TExpected, TActual> : ConstraintResult
     {
-        private object expectedValue;
-        private Tolerance tolerance;
-        private bool caseInsensitive;
-        private bool clipStrings;
-        private IList<NUnitEqualityComparer.FailurePoint> failurePoints;
+        private TExpected _expectedValue;
+        private Tolerance _tolerance;
+        private bool _caseInsensitive;
+        private bool _clipStrings;
+        private IList<NUnitEqualityComparer.FailurePoint> _failurePoints;
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =
@@ -62,14 +62,14 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct an EqualConstraintResult
         /// </summary>
-        public EqualConstraintResult(EqualConstraint constraint, object actual, bool hasSucceeded)
+        public EqualConstraintResult(EqualConstraint<TExpected> constraint, TActual actual, bool hasSucceeded)
             : base(constraint, actual, hasSucceeded) 
         {
-            this.expectedValue = constraint.Arguments[0];
-            this.tolerance = constraint.Tolerance;
-            this.caseInsensitive = constraint.CaseInsensitive;
-            this.clipStrings = constraint.ClipStrings;
-            this.failurePoints = constraint.FailurePoints;
+            _expectedValue = constraint.Expected;
+            _tolerance = constraint.Tolerance;
+            _caseInsensitive = constraint.CaseInsensitive;
+            _clipStrings = constraint.ClipStrings;
+            _failurePoints = constraint.FailurePoints;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The MessageWriter to write to</param>
         public override void WriteMessageTo(MessageWriter writer)
         {
-            DisplayDifferences(writer, expectedValue, ActualValue, 0);
+            DisplayDifferences(writer, _expectedValue, ActualValue, 0);
         }
 
         private void DisplayDifferences(MessageWriter writer, object expected, object actual, int depth)
@@ -92,8 +92,8 @@ namespace NUnit.Framework.Constraints
                 DisplayEnumerableDifferences(writer, (IEnumerable)expected, (IEnumerable)actual, depth);
             else if (expected is Stream && actual is Stream)
                 DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
-            else if (tolerance != null)
-                writer.DisplayDifferences(expected, actual, tolerance);
+            else if (_tolerance != null)
+                writer.DisplayDifferences(expected, actual, _tolerance);
             else
                 writer.DisplayDifferences(expected, actual);
         }
@@ -101,14 +101,14 @@ namespace NUnit.Framework.Constraints
         #region DisplayStringDifferences
         private void DisplayStringDifferences(MessageWriter writer, string expected, string actual)
         {
-            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, caseInsensitive);
+            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, _caseInsensitive);
 
             if (expected.Length == actual.Length)
                 writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatch);
             else
                 writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
 
-            writer.DisplayStringDifferences(expected, actual, mismatch, caseInsensitive, clipStrings);
+            writer.DisplayStringDifferences(expected, actual, mismatch, _caseInsensitive, _clipStrings);
         }
         #endregion
 
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Constraints
         {
             if (expected.Length == actual.Length)
             {
-                long offset = failurePoints[depth].Position;
+                long offset = _failurePoints[depth].Position;
                 writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
             }
             else
@@ -137,9 +137,9 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (failurePoints.Count > depth)
+            if (_failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)failurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)_failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
@@ -256,9 +256,9 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (failurePoints.Count > depth)
+            if (_failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)failurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)_failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 

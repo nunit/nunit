@@ -328,9 +328,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-        public EqualConstraint EqualTo(object expected)
+        public EqualConstraint<TExpected> EqualTo<TExpected>(TExpected expected)
         {
-            return new EqualConstraint(expected);
+            return new EqualConstraint<TExpected>(expected);
         }
 
         #endregion

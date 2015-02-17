@@ -45,7 +45,9 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void EqualsNull() 
         {
-            Assert.AreEqual(null, null);
+            object obj1 = null;
+            object obj2 = null;
+            Assert.AreEqual(obj1, obj2);
         }
         
         [Test]

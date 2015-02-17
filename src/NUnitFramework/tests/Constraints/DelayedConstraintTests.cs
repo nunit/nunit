@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
+            theConstraint = new DelayedConstraint(Is.EqualTo(true), 500);
             expectedDescription = "True after 500 millisecond delay";
             stringRepresentation = "<after 500 <equal True>>";
 
@@ -83,27 +83,27 @@ namespace NUnit.Framework.Constraints
         public void SimpleTest()
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint<bool>(true), AFTER, POLLING));
         }
 
         [Test]
         public void SimpleTestUsingBoolean()
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(() => boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
+            Assert.That(() => boolValue, new DelayedConstraint(new EqualConstraint<bool>(true), AFTER, POLLING));
         }
 
         [Test]
         public void ThatOverload_ZeroDelayIsAllowed()
         {
-            Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), 0));
+            Assert.That(DelegateReturningZero, new DelayedConstraint(Is.EqualTo(0), 0));
         }
 
         [Test]
         public void ThatOverload_DoesNotAcceptNegativeDelayValues()
         {
             Assert.Throws<ArgumentException>(
-                () => Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), -1)));
+                () => Assert.That(DelegateReturningZero, new DelayedConstraint(Is.EqualTo(0), -1)));
         }
 
         [Test]

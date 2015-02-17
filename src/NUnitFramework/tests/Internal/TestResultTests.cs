@@ -235,8 +235,8 @@ namespace NUnit.Framework.Internal
             XmlNode testNode = testResult.ToXml(true);
 
             Assert.AreEqual("Passed", testNode.Attributes["result"]);
-            Assert.AreEqual(null, testNode.Attributes["label"]);
-            Assert.AreEqual(null, testNode.Attributes["site"]);
+            Assert.IsNull(testNode.Attributes["label"]);
+            Assert.IsNull(testNode.Attributes["site"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["start-time"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["end-time"]);
             Assert.AreEqual("0.125000", testNode.Attributes["duration"]);
@@ -255,8 +255,8 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Passed", suiteNode.Attributes["result"]);
-            Assert.AreEqual(null, suiteNode.Attributes["label"]);
-            Assert.AreEqual(null, suiteNode.Attributes["site"]);
+            Assert.IsNull(suiteNode.Attributes["label"]);
+            Assert.IsNull(suiteNode.Attributes["site"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["start-time"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["end-time"]);
             Assert.AreEqual("0.125000", suiteNode.Attributes["duration"]);
@@ -314,7 +314,7 @@ namespace NUnit.Framework.Internal
 
             Assert.AreEqual("Skipped", testNode.Attributes["result"]);
             Assert.AreEqual("Ignored", testNode.Attributes["label"]);
-            Assert.AreEqual(null, testNode.Attributes["site"]);
+            Assert.IsNull(testNode.Attributes["site"]);
             XmlNode reason = testNode.FindDescendant("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.FindDescendant("message"));
@@ -334,7 +334,7 @@ namespace NUnit.Framework.Internal
 
             Assert.AreEqual("Skipped", suiteNode.Attributes["result"]);
             Assert.AreEqual("Ignored", suiteNode.Attributes["label"]);
-            Assert.AreEqual(null, suiteNode.Attributes["site"]);
+            Assert.IsNull(suiteNode.Attributes["site"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
             Assert.AreEqual("1", suiteNode.Attributes["skipped"]);
@@ -389,7 +389,7 @@ namespace NUnit.Framework.Internal
 
             Assert.AreEqual("Failed", testNode.Attributes["result"]);
             Assert.AreEqual("Invalid", testNode.Attributes["label"]);
-            Assert.AreEqual(null, testNode.Attributes["site"]);
+            Assert.IsNull(testNode.Attributes["site"]);
             XmlNode failure = testNode.FindDescendant("failure");
             Assert.NotNull(failure);
             Assert.NotNull(failure.FindDescendant("message"));
@@ -403,7 +403,7 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
-            Assert.AreEqual(null, suiteNode.Attributes["label"]);
+            Assert.IsNull(suiteNode.Attributes["label"]);
             Assert.AreEqual("Child", suiteNode.Attributes["site"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("1", suiteNode.Attributes["failed"]);
@@ -469,8 +469,8 @@ namespace NUnit.Framework.Internal
             XmlNode testNode = testResult.ToXml(true);
 
             Assert.AreEqual("Failed", testNode.Attributes["result"]);
-            Assert.AreEqual(null, testNode.Attributes["label"]);
-            Assert.AreEqual(null, testNode.Attributes["site"]);
+            Assert.IsNull(testNode.Attributes["label"]);
+            Assert.IsNull(testNode.Attributes["site"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["start-time"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["end-time"]);
             Assert.AreEqual("0.125000", testNode.Attributes["duration"]);
@@ -521,7 +521,7 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
-            Assert.AreEqual(null, suiteNode.Attributes["label"]);
+            Assert.IsNull(suiteNode.Attributes["label"]);
             Assert.AreEqual("Child", suiteNode.Attributes["site"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["start-time"]);
             Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["end-time"]);

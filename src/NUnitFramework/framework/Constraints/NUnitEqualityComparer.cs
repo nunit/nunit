@@ -116,6 +116,14 @@ namespace NUnit.Framework.Constraints
 
         #region Public Methods
         /// <summary>
+        /// Compares two strings for equality.
+        /// </summary>
+        public bool AreEqual(string x, string y, ref Tolerance tolerance)
+        {
+            return StringsEqual(x, y);
+        }
+
+        /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
         public bool AreEqual(object x, object y, ref Tolerance tolerance)

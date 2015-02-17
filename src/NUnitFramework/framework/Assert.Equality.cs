@@ -98,7 +98,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Objects
+        #region Generic
 
         /// <summary>
         /// Verifies that two objects are equal.  Two objects are considered
@@ -110,7 +110,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreEqual(object expected, object actual, string message, params object[] args)
+        public static void AreEqual<TExpected, TActual>(TExpected expected, TActual actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected), message, args);
         }
@@ -123,7 +123,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
-        public static void AreEqual(object expected, object actual)
+        public static void AreEqual<TExpected, TActual>(TExpected expected, TActual actual)
         {
             Assert.That(actual, Is.EqualTo(expected), null, null);
         }
@@ -133,8 +133,6 @@ namespace NUnit.Framework
         #endregion
 
         #region AreNotEqual
-
-        #region Objects
 
         /// <summary>
         /// Verifies that two objects are not equal.  Two objects are considered
@@ -146,7 +144,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreNotEqual(object expected, object actual, string message, params object[] args)
+        public static void AreNotEqual<TExpected,TActual>(TExpected expected, TActual actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected), message, args);
         }
@@ -159,12 +157,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
-        public static void AreNotEqual(object expected, object actual)
+        public static void AreNotEqual<TExpected,TActual>(TExpected expected, TActual actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected), null, null);
         }
-
-        #endregion
 
         #endregion
 

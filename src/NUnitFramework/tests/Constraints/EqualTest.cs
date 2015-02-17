@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That("abcdgfe", new EqualConstraint("abcdefg"));
+                    Assert.That("abcdgfe", new EqualConstraint<string>("abcdefg"));
                 }));
         }
 
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That(actual, new EqualConstraint(expected));
+                    Assert.That(actual, Is.EqualTo(expected));
                 }));
         }
 
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That(actual, new EqualConstraint(expected));
+                    Assert.That(actual, new EqualConstraint<string>(expected));
                 }));
         }
 
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That(actual, new EqualConstraint(expected));
+                    Assert.That(actual, Is.EqualTo(expected));
                 }));
         }
 
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Constraints
             if (actual != null && actual.Length > 11)
                 actual = actual.Substring(11);
             string line = rdr.ReadLine();
-            Assert.That(line, new NotConstraint(new EqualConstraint(null)), "No caret line displayed");
+            Assert.That(line, new NotConstraint(new EqualConstraint<object>(null)), "No caret line displayed");
             int caret = line.Substring(11).IndexOf('^');
 
             int minLength = Math.Min(expected.Length, actual.Length);

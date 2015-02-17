@@ -59,7 +59,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 return string.Format(
-                    baseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}", 
+                    baseConstraint.DisplayName == "Equal" ? "{0} equal to {1}" : "{0} {1}", 
                     descriptionPrefix, 
                     baseConstraint.Description);
             }

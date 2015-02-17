@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new NotConstraint( new EqualConstraint(null) );
+            theConstraint = new NotConstraint( new EqualConstraint<object>(null) );
             expectedDescription = "not equal to null";
             stringRepresentation = "<not <equal null>>";
         }
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void NotHonorsIgnoreCaseUsingConstructors()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new NotConstraint(new EqualConstraint("ABC").IgnoreCase)));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new NotConstraint(new EqualConstraint<string>("ABC").IgnoreCase)));
             Assert.That(ex.Message, Does.Contain("ignoring case"));
         }
 
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanUseNotOperator()
         {
-            Assert.That(42, !new EqualConstraint(99));
+            Assert.That(42, !new EqualConstraint<int>(99));
         }
     }
 }

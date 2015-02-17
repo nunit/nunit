@@ -47,16 +47,19 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void NullNotEqualToNonNull()
         {
-            Assert.AreNotEqual( null, 3 );
+            object nullObj = null;
+            Assert.AreNotEqual( nullObj, 3 );
         }
 
         [Test]
         public void NullEqualsNull()
         {
+            object obj1 = null;
+            object obj2 = null;
             var expectedMessage =
                 "  Expected: not equal to null" + Env.NewLine +
                 "  But was:  null" + Env.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotEqual( null, null ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotEqual( obj1, obj2 ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
