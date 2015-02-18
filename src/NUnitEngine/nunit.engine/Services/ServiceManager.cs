@@ -47,7 +47,7 @@ namespace NUnit.Engine.Services
             IService theService = null;
 
             if (serviceIndex.ContainsKey(serviceType))
-                theService = (IService)serviceIndex[serviceType];
+                theService = serviceIndex[serviceType];
             else
                 foreach( IService service in services )
                 {
@@ -100,7 +100,7 @@ namespace NUnit.Engine.Services
             int index = services.Count;
             while (--index >= 0)
             {
-                IService service = services[index] as IService;
+                IService service = services[index];
                 log.Info("Stopping " + service.GetType().Name);
                 try
                 {

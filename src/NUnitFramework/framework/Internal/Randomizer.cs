@@ -58,12 +58,12 @@ namespace NUnit.Framework.Internal
         public static Randomizer GetRandomizer(MemberInfo member)
         {
             if (randomizers.ContainsKey(member))
-                return (Randomizer)randomizers[member];
+                return randomizers[member];
             else
             {
                 Randomizer r = CreateRandomizer();
                 randomizers[member] = r;
-                return (Randomizer)r;
+                return r;
             }
         }
 

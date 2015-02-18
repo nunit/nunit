@@ -120,7 +120,7 @@ namespace NUnit.Engine.Internal
 
             for( int index = 0; index < parts.Count; )
             {
-                string part = (string)parts[index];
+                string part = parts[index];
         
                 switch( part )
                 {
@@ -140,7 +140,7 @@ namespace NUnit.Engine.Internal
             }
 
             // Trailing separator removal
-            if (parts.Count > 1 && path.Length > 1 && (string)parts[parts.Count - 1] == "")
+            if (parts.Count > 1 && path.Length > 1 && parts[parts.Count - 1] == "")
                 parts.RemoveAt(parts.Count - 1);
 
             return String.Join(DirectorySeparatorChar.ToString(), parts.ToArray());

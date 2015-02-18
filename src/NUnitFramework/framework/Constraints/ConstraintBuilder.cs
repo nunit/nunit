@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
             /// <value>The top.</value>
             public ConstraintOperator Top
             {
-                get { return (ConstraintOperator)stack.Peek(); }
+                get { return stack.Peek(); }
             }
 
             /// <summary>
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Constraints
             /// <returns></returns>
             public ConstraintOperator Pop()
             {
-                return (ConstraintOperator)stack.Pop();
+                return stack.Pop();
             }
         }
 

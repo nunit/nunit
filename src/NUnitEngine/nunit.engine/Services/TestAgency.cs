@@ -405,7 +405,7 @@ namespace NUnit.Engine.Services
 
             public AgentRecord this[Guid id]
             {
-                get { return (AgentRecord)agentData[id]; }
+                get { return agentData[id]; }
                 set
                 {
                     if ( value == null )
@@ -421,7 +421,7 @@ namespace NUnit.Engine.Services
                 {
                     foreach( KeyValuePair<Guid, AgentRecord> entry in agentData)
                     {
-                        AgentRecord r = (AgentRecord)entry.Value;
+                        AgentRecord r = entry.Value;
                         if ( r.Agent == agent )
                             return r;
                     }
