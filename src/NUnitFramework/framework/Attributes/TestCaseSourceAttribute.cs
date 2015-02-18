@@ -149,7 +149,7 @@ namespace NUnit.Framework
                                 {
                                     args = new object[array.Length];
                                     for (int i = 0; i < array.Length; i++)
-                                        args[i] = (object)array.GetValue(i);
+                                        args[i] = array.GetValue(i);
 #if NETCF
                                     if (method.IsGenericMethodDefinition)
                                     {

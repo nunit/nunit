@@ -317,7 +317,7 @@ namespace NUnit.Framework.Interfaces
                 if (propName == null)
                     return true;
                 
-                return (string)node.Attributes[propName] == propValue;
+                return node.Attributes[propName] == propValue;
             }
         }
 

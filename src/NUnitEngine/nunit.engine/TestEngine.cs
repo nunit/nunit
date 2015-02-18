@@ -93,7 +93,7 @@ namespace NUnit.Engine
             SettingsService settingsService = new SettingsService(true);
 
             if(InternalTraceLevel == InternalTraceLevel.Default)
-                InternalTraceLevel = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
+                InternalTraceLevel = settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
 
             if(InternalTraceLevel != InternalTraceLevel.Off)
             {

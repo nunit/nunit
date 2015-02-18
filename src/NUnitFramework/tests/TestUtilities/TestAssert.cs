@@ -57,7 +57,7 @@ namespace NUnit.TestUtilities
             object testObject = Activator.CreateInstance(type);
             ITestResult result = TestBuilder.RunTest(test, testObject);
             if (result.HasChildren) // In case it's a parameterized method
-                result = (ITestResult)result.Children[0];
+                result = result.Children[0];
             Assert.That(result.ResultState, Is.EqualTo(resultState));
         }
         #endregion

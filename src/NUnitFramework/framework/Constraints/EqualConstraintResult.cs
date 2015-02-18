@@ -139,7 +139,7 @@ namespace NUnit.Framework.Constraints
 
             if (failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)failurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
@@ -258,7 +258,7 @@ namespace NUnit.Framework.Constraints
 
             if (failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)failurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
