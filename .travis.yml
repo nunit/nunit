@@ -7,7 +7,7 @@ before_script:
   - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
 
 script: 
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:Build;Test" /p:ContinueOnFailure=ErrorAndContinue
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:Build;Test"
   
 env:
   matrix:
