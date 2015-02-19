@@ -112,7 +112,7 @@
 		<ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
 		<ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
 		<ResultFormat Condition="'$(ResultFormat)' == ''">nunit3</ResultFormat>
-		<ContinueOnFailure Condition="'$(ContinueOnFailure)' == ''">true</ContinueOnFailure>
+		<ContinueOnFailure Condition="'$(ContinueOnFailure)' == ''">false</ContinueOnFailure>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Properties for building NuGet packages">

@@ -4,7 +4,7 @@ before_install:
   - sudo apt-get install mono-devel -qq -y
 
 before_script:
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings"
 
 script: 
   - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework /t:$Targets
