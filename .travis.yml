@@ -7,12 +7,12 @@ before_script:
   - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
 
 script: 
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:Build;Test" /p:ContinueOnFailure=ErrorAndContinue
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework /t:$Target /p:ContinueOnFailure=ErrorAndContinue
   
 env:
   matrix:
-    - Framework="net-2.0"
-    - Framework="net-3.5"
-    - Framework="net-4.0"
-    - Framework="net-4.5"
+    - Target="Build;Test" Framework="net-2.0"
+    - Target="BuildFramework;TestFramework" Framework="net-3.5"
+    - Target="BuildFramework;TestFramework" Framework="net-4.0"
+    - Target="BuildFramework;TestFramework" Framework="net-4.5"
     
