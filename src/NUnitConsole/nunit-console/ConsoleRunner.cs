@@ -284,7 +284,7 @@ namespace NUnit.ConsoleRunner
             if (options.StopOnError)
                 package.Settings[PackageSettings.StopOnError] = true;
 
-            if (options.NumWorkers > 0)
+            if (options.NumWorkers >= 0)
                 package.Settings[PackageSettings.NumberOfTestWorkers] = options.NumWorkers;
 
             if (options.RandomSeed > 0)
