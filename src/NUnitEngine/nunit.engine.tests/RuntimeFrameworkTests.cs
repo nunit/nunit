@@ -54,7 +54,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void CurrentFrameworkMustBeAvailable()
         {
-            Assert.That(RuntimeFramework.CurrentFramework.IsAvailable);
+            Assert.That(RuntimeFramework.CurrentFramework.IsAvailable, "{0} not available", RuntimeFramework.CurrentFramework);
         }
 
         [Test]

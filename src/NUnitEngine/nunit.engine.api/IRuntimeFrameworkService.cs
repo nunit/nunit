@@ -26,6 +26,10 @@ using System.Collections.Generic;
 
 namespace NUnit.Engine
 {
+    /// <summary>
+    /// Implemented by a type that provides information about the
+    /// current and other available runtimes.
+    /// </summary>
     public interface IRuntimeFrameworkService
     {
         /// <summary>
