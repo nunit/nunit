@@ -29,13 +29,6 @@ using Microsoft.Win32;
 
 namespace NUnit.Engine
 {
-    // This is a preliminary implementation, which requires a specific version of the engine and only
-    // loads it if it can be found in the current AppBase and ProbingPath or in the GAC.
-    //
-    // TODO: Find the engine in established locations known to NUnit or stored in the registry.
-    //
-    // TODO: Find the best available version of the engine.
-
     /// <summary>
     /// TestEngineActivator creates an instance of the test engine and returns an ITestEngine interface.
     /// </summary>
