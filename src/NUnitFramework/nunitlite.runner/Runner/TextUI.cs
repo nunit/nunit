@@ -110,7 +110,6 @@ namespace NUnitLite.Runner
 
         #region Public Methods
 
-#if !SILVERLIGHT
         /// <summary>
         /// Execute a test run based on the aruments passed
         /// from Main.
@@ -129,6 +128,7 @@ namespace NUnitLite.Runner
             else if (!Directory.Exists(_workDirectory))
                 Directory.CreateDirectory(_workDirectory);
 
+#if !SILVERLIGHT
 #if !NETCF
             if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
@@ -146,6 +146,7 @@ namespace NUnitLite.Runner
                 _errWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile));
                 Console.SetError(_errWriter);
             }
+#endif
 
             if (_options.NoColor)
                 ColorConsole.Enabled = false;
@@ -240,13 +241,11 @@ namespace NUnitLite.Runner
                     _errWriter.Close();
             }
         }
-#endif
 
         #endregion
 
         #region Helper Methods
 
-#if !SILVERLIGHT
         private int RunTests(ITestFilter filter)
         {
             var startTime = DateTime.UtcNow;
@@ -290,7 +289,11 @@ namespace NUnitLite.Runner
         {
             if (traceLevel != InternalTraceLevel.Off)
             {
+#if !SILVERLIGHT
                 var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
+#else
+                var logName = string.Format(LOG_FILE_FORMAT, DateTime.Now.ToString("o"), Path.GetFileName(assemblyPath));
+#endif
 
 #if NETCF // NETCF: Try to encapsulate this
                 InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
@@ -306,7 +309,6 @@ namespace NUnitLite.Runner
 #endif
             }
         }
-#endif
 
         /// <summary>
         /// Writes the header.
@@ -339,11 +341,10 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
-#if !SILVERLIGHT
         private void WriteHelpText()
         {
-            // TODO: The NETCF code is just a placeholder. Figure out how to do it correctly.
-#if NETCF
+            // TODO: The NETCF/Silverlight code is just a placeholder. Figure out how to do it correctly.
+#if NETCF || SILVERLIGHT
             const string name = "NUNITLITE";
 #else
             string name = Assembly.GetEntryAssembly().GetName().Name.ToUpper();
@@ -440,7 +441,6 @@ namespace NUnitLite.Runner
                 writer.WriteLine();
             }
         }
-#endif
 
         /// <summary>
         /// Writes the runtime environment.
@@ -454,7 +454,6 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Make the settings for this run - this is public for testing
         /// </summary>
@@ -509,7 +508,6 @@ namespace NUnitLite.Runner
                     ? namefilter
                     : new AndFilter(namefilter, catFilter);
         }
-#endif
 
         #endregion
 
