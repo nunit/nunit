@@ -101,6 +101,7 @@
     <Compile Include="Attributes\AuthorTests.cs" />
     <Compile Include="Attributes\CategoryAttributeTests.cs" />
     <Compile Include="Attributes\CombinatorialTests.cs" />
+    <Compile Include="Attributes\CommandWrapperTests.cs" />
     <Compile Include="Attributes\DatapointTests.cs" />
     <Compile Include="Attributes\DerivedPropertyAttributeTests.cs" />
     <Compile Include="Attributes\DescriptionTests.cs" />

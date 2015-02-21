@@ -4,15 +4,15 @@ before_install:
   - sudo apt-get install mono-devel -qq -y
 
 before_script:
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings"
 
 script: 
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:Build;Test"
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework /t:$Targets
   
 env:
   matrix:
-    - Framework="net-2.0"
-    - Framework="net-3.5"
-    - Framework="net-4.0"
-    - Framework="net-4.5"
+    - Framework="net-2.0" Targets="Build;Test"
+    - Framework="net-3.5" Targets="Build;TestFramework"
+    - Framework="net-4.0" Targets="Build;TestFramework"
+    - Framework="net-4.5" Targets="Build;TestFramework"
     

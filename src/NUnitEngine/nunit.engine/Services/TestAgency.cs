@@ -27,6 +27,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -133,20 +134,13 @@ namespace NUnit.Engine.Services
             return GetNUnitBinDirectory(version) != null;
         }
 
-        public ITestAgent GetAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool useX86Agent)
+        public ITestAgent GetAgent(TestPackage package, int waitTime)
         {
-            log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", framework);
- 
-            if (!framework.IsAvailable)
-                throw new ArgumentException(
-                    string.Format("The {0} framework is not available", framework),
-                    "framework");
-
             // TODO: Decide if we should reuse agents
             //AgentRecord r = FindAvailableRemoteAgent(type);
             //if ( r == null )
             //    r = CreateRemoteAgent(type, framework, waitTime);
-            return CreateRemoteAgent(framework, waitTime, enableDebug, agentArgs, useX86Agent);
+            return CreateRemoteAgent(package, waitTime);
         }
 
         public void ReleaseAgent( ITestAgent agent )
@@ -174,8 +168,28 @@ namespace NUnit.Engine.Services
         #endregion
 
         #region Helper Methods
-        private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs, bool useX86Agent)
+        private Guid LaunchAgentProcess(TestPackage package)
         {
+            string runtimeSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
+            RuntimeFramework targetRuntime = RuntimeFramework.Parse(
+                runtimeSetting != ""
+                    ? runtimeSetting
+                    : ServiceContext.RuntimeFrameworkService.SelectRuntimeFramework(package));
+
+            bool useX86Agent = package.GetSetting(PackageSettings.RunAsX86, false);
+            bool enableDebug = package.GetSetting("AgentDebug", false);
+            bool verbose = package.GetSetting("Verbose", false);
+            string agentArgs = string.Empty;
+            if (enableDebug) agentArgs += " --pause";
+            if (verbose) agentArgs += " --verbose";
+
+            log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", targetRuntime);
+
+            if (!targetRuntime.IsAvailable)
+                throw new ArgumentException(
+                    string.Format("The {0} framework is not available", targetRuntime),
+                    "framework");
+
             string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion, useX86Agent);
 
             if (agentExePath == null)
@@ -244,9 +258,9 @@ namespace NUnit.Engine.Services
         //    return null;
         //}
 
-        private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool useX86Agent)
+        private ITestAgent CreateRemoteAgent(TestPackage package, int waitTime)
         {
-            Guid agentId = LaunchAgentProcess(framework, enableDebug, agentArgs, useX86Agent);
+            Guid agentId = LaunchAgentProcess(package);
 
             log.Debug( "Waiting for agent {0} to register", agentId.ToString("B") );
 
@@ -391,7 +405,7 @@ namespace NUnit.Engine.Services
 
             public AgentRecord this[Guid id]
             {
-                get { return (AgentRecord)agentData[id]; }
+                get { return agentData[id]; }
                 set
                 {
                     if ( value == null )
@@ -407,7 +421,7 @@ namespace NUnit.Engine.Services
                 {
                     foreach( KeyValuePair<Guid, AgentRecord> entry in agentData)
                     {
-                        AgentRecord r = (AgentRecord)entry.Value;
+                        AgentRecord r = entry.Value;
                         if ( r.Agent == agent )
                             return r;
                     }

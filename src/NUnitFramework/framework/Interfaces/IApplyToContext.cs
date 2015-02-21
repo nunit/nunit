@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,20 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Engine
+namespace NUnit.Framework.Interfaces
 {
-    public interface IRuntimeFrameworkSelector
+    /// <summary>
+    /// The IApplyToContext interface is implemented by attributes
+    /// that want to make changes to the execution context before
+    /// a test is run.
+    /// </summary>
+    public interface IApplyToContext
     {
         /// <summary>
-        /// Selects a target runtime framework for a TestPackage based on
-        /// the settings in the package and the assemblies themselves.
-        /// The package RuntimeFramework setting may be updated as a 
-        /// result and the selected runtime is returned.
+        /// Apply changes to the execution context
         /// </summary>
-        /// <param name="package">A TestPackage</param>
-        /// <returns>The selected RuntimeFramework</returns>
-        RuntimeFramework SelectRuntimeFramework(TestPackage package);
+        /// <param name="context">The execution context</param>
+        void ApplyToContext(TestExecutionContext context);
     }
 }

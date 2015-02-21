@@ -22,25 +22,66 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-    public class RuntimeFrameworkSelector : IRuntimeFrameworkSelector, IService
+    public class RuntimeFrameworkService : IRuntimeFrameworkService, IService
     {
-        static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkSelector));
+        static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
+
+        /// <summary>
+        /// Returns true if the runtime framework represented by
+        /// the string passed as an argument is available.
+        /// </summary>
+        /// <param name="name">A string representing a framework, like 'net-4.0'</param>
+        /// <returns>True if the framework is available, false if unavailable or nonexistent</returns>
+        public bool IsAvailable(string name)
+        {
+            var requestedFramework = RuntimeFramework.Parse(name);
+            foreach (var framework in RuntimeFramework.AvailableFrameworks)
+                if (FrameworksMatch(requestedFramework, framework))
+                    return true;
+
+            return false;
+        }
+
+        private static readonly Version AnyVersion = new Version(0, 0);
+
+        private static bool FrameworksMatch(RuntimeFramework f1, RuntimeFramework f2)
+        {
+            var rt1 = f1.Runtime;
+            var rt2 = f2.Runtime;
+
+            if (rt1 != RuntimeType.Any && rt2 != RuntimeType.Any && rt1 != rt2)
+                return false;
+
+            var v1 = f1.ClrVersion;
+            var v2 = f2.ClrVersion;
+
+            if (v1 == AnyVersion || v2 == AnyVersion)
+                return true;
+
+            return v1.Major == v2.Major &&
+                   v1.Minor == v2.Minor &&
+                   (v1.Build < 0 || v2.Build < 0 || v1.Build == v2.Build) &&
+                   (v1.Revision < 0 || v2.Revision < 0 || v1.Revision == v2.Revision) &&
+                   f1.FrameworkVersion.Major == f2.FrameworkVersion.Major &&
+                   f1.FrameworkVersion.Minor == f2.FrameworkVersion.Minor;
+        }
 
         /// <summary>
         /// Selects a target runtime framework for a TestPackage based on
         /// the settings in the package and the assemblies themselves.
-        /// The package RuntimeFramework setting may be updated as a 
-        /// result and the selected runtime is returned.
+        /// The package RuntimeFramework setting may be updated as a result
+        /// and a string representing the selected runtime is returned.
         /// </summary>
         /// <param name="package">A TestPackage</param>
-        /// <returns>The selected RuntimeFramework</returns>
-        public RuntimeFramework SelectRuntimeFramework(TestPackage package)
+        /// <returns>A string representing the selected RuntimeFramework</returns>
+        public string SelectRuntimeFramework(TestPackage package)
         {
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
             string frameworkSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
@@ -118,7 +159,7 @@ namespace NUnit.Engine.Services
 
             log.Debug("Test will use {0} framework", targetFramework);
 
-            return targetFramework;
+            return targetFramework.ToString();
         }
 
         #region IService Members

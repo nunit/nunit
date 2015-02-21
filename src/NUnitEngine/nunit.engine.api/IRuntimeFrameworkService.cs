@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,19 +21,33 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal
+using System;
+using System.Collections.Generic;
+
+namespace NUnit.Engine
 {
     /// <summary>
-    /// The IApplyToContext interface is implemented by attributes
-    /// that want to make changes to the execution context before
-    /// a test is run.
+    /// Implemented by a type that provides information about the
+    /// current and other available runtimes.
     /// </summary>
-    public interface IApplyToContext
+    public interface IRuntimeFrameworkService
     {
         /// <summary>
-        /// Apply changes to the execution context
+        /// Returns true if the runtime framework represented by
+        /// the string passed as an argument is available.
         /// </summary>
-        /// <param name="context">The execution context</param>
-        void ApplyToContext(TestExecutionContext context);
+        /// <param name="framework">A string representing a framework, like 'net-4.0'</param>
+        /// <returns>True if the framework is available, false if unavailable or nonexistent</returns>
+        bool IsAvailable(string framework);
+
+        /// <summary>
+        /// Selects a target runtime framework for a TestPackage based on
+        /// the settings in the package and the assemblies themselves.
+        /// The package RuntimeFramework setting may be updated as a 
+        /// result and the selected runtime is returned.
+        /// </summary>
+        /// <param name="package">A TestPackage</param>
+        /// <returns>The selected RuntimeFramework</returns>
+        string SelectRuntimeFramework(TestPackage package);
     }
 }

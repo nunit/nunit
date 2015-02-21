@@ -73,7 +73,7 @@ namespace NUnit.Framework.Attributes
         {
             ITestResult result = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithError));
             Assert.AreEqual(ResultState.ChildFailure, result.ResultState);
-            result = (ITestResult)result.Children[0];
+            result = result.Children[0];
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.That(result.Message, Does.Contain("Exception message"));
         }

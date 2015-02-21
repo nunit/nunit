@@ -96,7 +96,7 @@ namespace NUnit.Engine
             SettingsService settingsService = new SettingsService(true);
 
             if(InternalTraceLevel == InternalTraceLevel.Default)
-                InternalTraceLevel = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
+                InternalTraceLevel = settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
 
             if(InternalTraceLevel != InternalTraceLevel.Off)
             {
@@ -108,7 +108,7 @@ namespace NUnit.Engine
             this.Services.Add(new RecentFilesService());
             this.Services.Add(new DomainManager());
             this.Services.Add(new ProjectService());
-            this.Services.Add(new RuntimeFrameworkSelector());
+            this.Services.Add(new RuntimeFrameworkService());
             this.Services.Add(new DefaultTestRunnerFactory());
             this.Services.Add(new DriverService());
             this.Services.Add(new TestAgency());

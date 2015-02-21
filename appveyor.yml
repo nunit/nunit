@@ -1,3 +1,7 @@
+branches:
+  except:
+    - /travis-.*/
+
 build_script: 
   - msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   

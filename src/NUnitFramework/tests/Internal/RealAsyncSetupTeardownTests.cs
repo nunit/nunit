@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
+#pragma warning disable 1998
     public class RealAsyncSetupTeardownTests
     {
         private object _initializedOnce;
@@ -45,5 +46,6 @@ namespace NUnit.Framework.Internal
         }
 
     }
+#pragma warning restore 1998
 }
 #endif

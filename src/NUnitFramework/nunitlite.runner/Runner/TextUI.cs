@@ -76,12 +76,14 @@ namespace NUnitLite.Runner
 #else
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 #endif
+#if !SILVERLIGHT
         private ConsoleOptions _options;
         private string _workDirectory;
+        private ITestAssemblyRunner _runner;
+#endif
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private ExtendedTextWriter _outWriter;
         private TextWriter _errWriter;
-        private ITestAssemblyRunner _runner;
 #if !SILVERLIGHT && !NETCF
         private TeamCityEventListener _teamCity;
 #endif
@@ -109,6 +111,8 @@ namespace NUnitLite.Runner
         #endregion
 
         #region Public Methods
+
+#if !SILVERLIGHT
         /// <summary>
         /// Execute a test run based on the aruments passed
         /// from Main.
@@ -127,7 +131,6 @@ namespace NUnitLite.Runner
             else if (!Directory.Exists(_workDirectory))
                 Directory.CreateDirectory(_workDirectory);
 
-#if !SILVERLIGHT
 #if !NETCF
             if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
@@ -145,7 +148,7 @@ namespace NUnitLite.Runner
                 _errWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile));
                 Console.SetError(_errWriter);
             }
-#endif
+
             if (_options.NoColor)
                 ColorConsole.Enabled = false;
 
@@ -194,12 +197,8 @@ namespace NUnitLite.Runner
 
             try
             {
-                foreach (string name in _options.InputFiles)
-#if NETCF
-                    _assemblies.Add(name.IndexOf(',') != -1 || (name.IndexOf('\\') == -1 && !Path.HasExtension(name)) ? Assembly.Load(name) : Assembly.LoadFrom(name));
-#else
-                    _assemblies.Add(Assembly.Load(name));
-#endif
+                foreach (string nameOrPath in _options.InputFiles)
+                    _assemblies.Add(AssemblyHelper.Load(nameOrPath));
 
                 if (_assemblies.Count == 0)
                     _assemblies.Add(callingAssembly);
@@ -243,11 +242,13 @@ namespace NUnitLite.Runner
                     _errWriter.Close();
             }
         }
+#endif
 
         #endregion
 
         #region Helper Methods
 
+#if !SILVERLIGHT
         private int RunTests(ITestFilter filter)
         {
             var startTime = DateTime.UtcNow;
@@ -291,11 +292,8 @@ namespace NUnitLite.Runner
         {
             if (traceLevel != InternalTraceLevel.Off)
             {
-#if !SILVERLIGHT
                 var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
-#else
-                var logName = string.Format(LOG_FILE_FORMAT, DateTime.Now.ToString("o"), Path.GetFileName(assemblyPath));
-#endif
+
 #if NETCF // NETCF: Try to encapsulate this
                 InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
 #else
@@ -310,6 +308,7 @@ namespace NUnitLite.Runner
 #endif
             }
         }
+#endif
 
         /// <summary>
         /// Writes the header.
@@ -342,10 +341,11 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
+#if !SILVERLIGHT
         private void WriteHelpText()
         {
-            // TODO: The Silverlight code is just a placeholder. Figure out how to do it correctly.
-#if SILVERLIGHT || NETCF
+            // TODO: The NETCF code is just a placeholder. Figure out how to do it correctly.
+#if NETCF
             const string name = "NUNITLITE";
 #else
             string name = Assembly.GetEntryAssembly().GetName().Name.ToUpper();
@@ -442,6 +442,7 @@ namespace NUnitLite.Runner
                 writer.WriteLine();
             }
         }
+#endif
 
         /// <summary>
         /// Writes the runtime environment.
@@ -455,6 +456,7 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
+#if !SILVERLIGHT
         /// <summary>
         /// Make the settings for this run - this is public for testing
         /// </summary>
@@ -509,6 +511,7 @@ namespace NUnitLite.Runner
                     ? namefilter
                     : new AndFilter(namefilter, catFilter);
         }
+#endif
 
         #endregion
 
@@ -532,11 +535,11 @@ namespace NUnitLite.Runner
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT
+#if !NETCF
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 #endif
-
             bool isSuite = result.Test.IsSuite;
             var labels = _options.DisplayTestLabels != null
                 ? _options.DisplayTestLabels.ToUpper(CultureInfo.InvariantCulture)
@@ -553,6 +556,7 @@ namespace NUnitLite.Runner
                 if (!result.Output.EndsWith("\n"))
                     _outWriter.WriteLine();
             }
+#endif
         }
 
         private void WriteTestLabel(ITestResult result)

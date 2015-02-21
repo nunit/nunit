@@ -148,7 +148,7 @@ namespace NUnit.TestUtilities
             foreach (string expected in expectedEvents)
             {
                 int item = 0;
-                string actual = _events.Count > 0 ? _events.Dequeue() as string : null;
+                string actual = _events.Count > 0 ? _events.Dequeue() : null;
                 Assert.AreEqual( expected, actual, "Item {0}", item++ );
             }
         }

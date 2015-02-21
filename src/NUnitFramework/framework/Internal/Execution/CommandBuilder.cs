@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -89,15 +90,19 @@ namespace NUnit.Framework.Internal.Execution
             // Command to execute test
             TestCommand command = new TestMethodCommand(test);
 
+            // Add any wrappers to the TestMethodCommand
+            foreach (IWrapTestMethod wrapper in test.Method.GetCustomAttributes(typeof(IWrapTestMethod), true))
+                command = wrapper.Wrap(command);
+
             // Wrap in TestActionCommand
             command = new TestActionCommand(command);
 
             // Wrap in SetUpTearDownCommand
             command = new SetUpTearDownCommand(command);
 
-            // Add commands from Decorators supplied by attributes
-            foreach (ICommandDecorator decorator in test.Method.GetCustomAttributes(typeof(ICommandDecorator), true))
-                command = decorator.Decorate(command);
+            // Add wrapppers that apply before setup and after teardown
+            foreach (ICommandWrapper decorator in test.Method.GetCustomAttributes(typeof(IWrapSetUpTearDown), true))
+                command = decorator.Wrap(command);
 
             // Add command to set up context using attributes that implement IApplyToContext
             IApplyToContext[] changes = (IApplyToContext[])test.Method.GetCustomAttributes(typeof(IApplyToContext), true);

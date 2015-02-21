@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns></returns>
         public override bool Match(ITest test)
         {
-            IList testCategories = test.Properties[PropertyNames.Category] as IList;
+            IList testCategories = test.Properties[PropertyNames.Category];
 
             if ( testCategories == null || testCategories.Count == 0)
                 return false;

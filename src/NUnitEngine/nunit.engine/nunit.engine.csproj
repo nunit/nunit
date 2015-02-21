@@ -95,7 +95,6 @@
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\SettingsStore.cs" />
-    <Compile Include="IRuntimeFrameworkSelector.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
@@ -122,7 +121,7 @@
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RecentFilesService.cs" />
-    <Compile Include="Services\RuntimeFrameworkSelector.cs" />
+    <Compile Include="Services\RuntimeFrameworkService.cs" />
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />

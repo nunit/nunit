@@ -273,7 +273,7 @@ namespace NUnit.Engine
             get
             {
                 foreach (RuntimeFramework framework in AvailableFrameworks)
-                    if (this.Supports(framework))
+                    if (framework.Supports(this))
                         return true;
 
                 return false;
@@ -532,10 +532,26 @@ namespace NUnit.Engine
                     frameworks.Add(framework);
                 }
 
+                if (Directory.Exists(Path.Combine(monoPrefix, "lib/mono/3.5")))
+                {
+                    RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(2, 0, 50727));
+                    framework.FrameworkVersion = new Version(3,5);
+                    framework.DisplayName = string.Format(displayFmt, "3.5");
+                    frameworks.Add(framework);
+                }
+
                 if (File.Exists(Path.Combine(monoPrefix, "lib/mono/4.0/mscorlib.dll")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(4, 0, 30319));
                     framework.DisplayName = string.Format(displayFmt, "4.0");
+                    frameworks.Add(framework);
+                }
+
+                if (File.Exists(Path.Combine(monoPrefix, "lib/mono/4.5/mscorlib.dll")))
+                {
+                    RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(4, 0, 30319));
+                    framework.FrameworkVersion = new Version(4,5);
+                    framework.DisplayName = string.Format(displayFmt, "4.5");
                     frameworks.Add(framework);
                 }
             }
