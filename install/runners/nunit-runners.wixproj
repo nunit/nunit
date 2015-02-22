@@ -38,7 +38,7 @@
     </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="nunit-tools.wxs" />
+    <Compile Include="runners.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -49,6 +49,9 @@
   <ItemGroup>
     <Content Include="..\common\common.wxi">
       <Link>common.wxi</Link>
+    </Content>
+    <Content Include="..\common\variables.wxi">
+      <Link>variables.wxi</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />

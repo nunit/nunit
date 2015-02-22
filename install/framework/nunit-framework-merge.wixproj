@@ -4,10 +4,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.9</ProductVersion>
-    <ProjectGuid>20132190-582e-462e-b18b-4b2cedddb6c4</ProjectGuid>
+    <ProjectGuid>352151E9-CA8F-4461-AF95-50D1540039C2</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>NUnit.Framework</OutputName>
-    <OutputType>Package</OutputType>
+    <OutputType>Module</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -37,7 +37,7 @@
     </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="framework.wxs" />
+    <Compile Include="framework-merge.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -48,9 +48,6 @@
   <ItemGroup>
     <Content Include="..\common\common.wxi">
       <Link>common.wxi</Link>
-    </Content>
-    <Content Include="..\common\variables.wxi">
-      <Link>variables.wxi</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />

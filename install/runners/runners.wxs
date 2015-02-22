@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" 
+             Name="NUnit Runners" 
+             Language="1033" 
+             Version="!(bind.FileVersion.nunit.engine.dll)" 
+             Manufacturer="nunit.org" 
+             UpgradeCode="94E18606-9590-4BA1-B002-258860D7B151">
+        
+        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+        
+        <!-- Include the information that is common to all installs -->
+        <?include ..\common\variables.wxi ?>
+        <?include ..\common\common.wxi ?>
+
+        <!-- ***************************************************************** -->
+        <!-- **********      Define the NUnit feature tree          ********** -->
+        <!-- ***************************************************************** -->
+        
+        <Feature Id="NUNIT.RUNNERS" 
+                 ConfigurableDirectory="INSTALLDIR" 
+                 Level="1" 
+                 Title="NUnit Runners" 
+                 Display="expand" 
+                 Description="Installs the NUnit engine and the console runner that allows you to run tests.">
+
+            <ComponentGroupRef Id="NUNIT.COMMON"/>
+
+            <Feature Id="NUNIT.ENGINE"
+                     Level="1"
+                     Absent="disallow"
+                     Title="NUnit Engine"
+                     Description="Installs the NUnit engine">
+                <ComponentGroupRef Id="NUNIT.ENGINE" />
+                <Feature Id="ADDINS.NUNIT.PROJECT.LOADER"
+                            Level="1"
+                            Title="NUnit Project Loader"
+                            Description="Allows you to load NUnit Project files">
+                    <ComponentGroupRef Id="ADDINS.NUNIT.PROJECT.LOADER" />
+                </Feature>
+                <Feature Id="ADDINS.VS.PROJECT.LOADER"
+                            Level="1"
+                            Title="Visual Studio Project Loader"
+                            Description="Allows you to load Visual Studio Solution and Project files">
+                    <ComponentGroupRef Id="ADDINS.VS.PROJECT.LOADER" />
+                </Feature>
+                <Feature Id="NUNIT.V2.DRIVER"
+                         Level="1"
+                         Title="NUnit 2.x Driver"
+                         Description="Allows you to run NUnit 2.x test suites">
+                    <ComponentGroupRef Id="NUNIT.V2.DRIVER" />
+                </Feature>
+                <Feature Id="ADDINS.NUNIT.V2.WRITER"
+                            Level="1"
+                            Title="NUnit 2.x Result Writer"
+                            Description="Allows you to write test results out in the NUnit 2.x format">
+                    <ComponentGroupRef Id="ADDINS.NUNIT.V2.WRITER" />
+                </Feature>
+            </Feature>
+
+            <Feature Id="NUNIT.CONSOLE"
+                     Level="1"
+                     Title="NUnit Console"
+                     Description="Installs the NUnit console runner">
+                <ComponentGroupRef Id="NUNIT.CONSOLE" />
+            </Feature>
+		</Feature>
+	</Product>
+
+    <!-- ***************************************************************** -->
+    <!-- **********       Define Directory Structure            ********** -->
+    <!-- ***************************************************************** -->
+    
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLDIR" Name="NUnit.org">
+                    <Directory Id="BIN" Name="bin">
+                        <Directory Id="ADDINS" Name="addins" />
+                    </Directory>
+                </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+</Wix>

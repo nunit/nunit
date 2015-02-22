@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" 
+             Name="NUnit" 
+             Language="1033" 
+             Version="!(bind.FileVersion.nunit.engine.dll)" 
+             Manufacturer="nunit.org" 
+             UpgradeCode="ED9BC7BB-45EE-481A-9479-2753770EF704">
+        
+        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+        
+        <!-- Include the information that is common to all installs -->
+        <?include ..\common\common.wxi ?>
+
+</Wix>
