@@ -6,7 +6,7 @@
     <ProductVersion>3.9</ProductVersion>
     <ProjectGuid>809C00DC-3FD3-45BF-BC0E-E284F314D306</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit.Runners</OutputName>
+    <OutputName>NUnit</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -18,24 +18,12 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
+    <SuppressValidation>False</SuppressValidation>
+    <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug;</DefineConstants>
-    <WixVariables>
-    </WixVariables>
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <WixVariables />
-    <DefineConstants>
-    </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="nunit.wxs" />
@@ -47,11 +35,41 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\common\common.wxi">
-      <Link>common.wxi</Link>
+    <Content Include="..\common\common-directories.wxi">
+      <Link>common-directories.wxi</Link>
+    </Content>
+    <Content Include="..\common\common-features.wxi">
+      <Link>common-features.wxi</Link>
+    </Content>
+    <Content Include="..\common\common-files.wxi">
+      <Link>common-files.wxi</Link>
     </Content>
     <Content Include="..\common\variables.wxi">
       <Link>variables.wxi</Link>
+    </Content>
+    <Content Include="..\framework\framework-directories.wxi">
+      <Link>framework-directories.wxi</Link>
+    </Content>
+    <Content Include="..\framework\framework-features.wxi">
+      <Link>framework-features.wxi</Link>
+    </Content>
+    <Content Include="..\framework\framework-files.wxi">
+      <Link>framework-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\addin-files.wxi">
+      <Link>addin-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\console-files.wxi">
+      <Link>console-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\engine-files.wxi">
+      <Link>engine-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\runner-directories.wxi">
+      <Link>runner-directories.wxi</Link>
+    </Content>
+    <Content Include="..\runners\runner-features.wxi">
+      <Link>runner-features.wxi</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
@@ -64,7 +82,7 @@
 	</Target>
 	-->
   <Target Name="BeforeBuild">
-    <GetAssemblyIdentity AssemblyFiles="..\..\bin\$(Configuration)\nunit.engine.dll">
+    <GetAssemblyIdentity AssemblyFiles="..\..\bin\$(Configuration)\net-4.5\nunit.framework.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
     </GetAssemblyIdentity>
     <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">

@@ -1,60 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Module Id="NUnit.Framework"
-            Language="0"
-            Version="!(bind.FileVersion.nunit.framework.45.dll)">
-
-        <Package Id="5A9E88FC-89AA-48E9-9776-9C7A2DB619C7"
-            Manufacturer="NUnit.org"
-            InstallerVersion="200" 
-            Languages="1033"
-            InstallScope="perMachine" />
-
-        <!-- Include the information that is common to all installs -->
-        <?include ..\common\variables.wxi ?>
-    </Module>
-
-    <!-- ***************************************************************** -->
-    <!-- **********       Define Directory Structure            ********** -->
-    <!-- ***************************************************************** -->
-
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
     <Fragment>
-        <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="ProgramFilesFolder">
-                <Directory Id="INSTALLDIR" Name="NUnit.org">
-                    <Directory Id="FRAMEWORK" Name="framework">
-                        <Directory Id="VERSION" Name="!(bind.FileVersion.nunit.framework.45.dll)">
-                            <Directory Id="NET20" Name="net-2.0" />
-                            <Directory Id="NET35" Name="net-3.5" />
-                            <Directory Id="NET40" Name="net-4.0" />
-                            <Directory Id="NET45" Name="net-4.5" />
-                            <Directory Id="PORTABLE" Name="portable" />
-                            <Directory Id="SL50" Name="sl-5.0" />
-                        </Directory>
-                    </Directory>
-                </Directory>
-            </Directory>
-        </Directory>
-    </Fragment>
-
-    <Fragment>
-        <ComponentGroup Id="NUNIT.COMMON" Directory="VERSION">
-            <Component Id="CHANGES.txt">
-                <File Id="CHANGES.txt" Source="..\..\CHANGES.txt" />
-            </Component>
-            <Component Id="LICENSE.txt">
-                <File Id="LICENSE.txt" Source="..\..\LICENSE.txt" />
-            </Component>
-            <Component Id="NOTICES.txt">
-                <File Id="NOTICES.txt" Source="..\..\NOTICES.txt" />
-            </Component>
-            <Component Id="nunit.ico">
-                <File Id="nunit.ico" Source="..\..\nunit.ico" />
-            </Component>
-        </ComponentGroup>
-
+        
+        <!-- .NET Framework 2.0 -->
         <ComponentGroup Id="NET20" Directory="NET20">
-            <Component Id="NET20" Guid="D5DB98E2-AF98-4308-83FE-BA4D973F973D">
+            <Component Id="NET20" Location="local" Guid="D5DB98E2-AF98-4308-83FE-BA4D973F973D">
                 <File Id="nunit.framework.20.dll"
                       Name="nunit.framework.dll"
                       ProcessorArchitecture="msil"
@@ -63,20 +13,23 @@
                       Name="nunit.framework.xml"
                       Source="$(var.BuildDir)net-2.0\nunit.framework.xml"
                       CompanionFile="nunit.framework.20.dll" />
+            </Component>
+            <Component Id="NET20_RUNNER" Location="local" Guid="42CFBBA6-BD82-4D96-958A-11FBAADDBCF1">
                 <File Id="nunitlite.20.dll"
                       Name="nunitlite.dll"
                       ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)net-2.0\nunitlite.dll" />
             </Component>
-            <Component Id="AssemblyReferenceFolder20">
+            <Component Id="AssemblyReferenceFolder20" Guid="037FAFFF-9329-47E6-A932-D882C74D6E80">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v2.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
                     <RegistryValue Action="write" Type="string" Value="[NET20]" />
                 </RegistryKey>
             </Component>
         </ComponentGroup>
 
+        <!-- .NET Framework 3.5 -->
         <ComponentGroup Id="NET35" Directory="NET35">
-            <Component Id="NET35" Guid="70141F7C-FE62-407A-B2ED-00BF86FEF595">
+            <Component Id="NET35" Location="local" Guid="70141F7C-FE62-407A-B2ED-00BF86FEF595">
                 <File Id="nunit.framework.35.dll"
                       Name="nunit.framework.dll"
                       ProcessorArchitecture="msil"
@@ -85,20 +38,23 @@
                       Name="nunit.framework.xml"
                       Source="$(var.BuildDir)net-3.5\nunit.framework.xml"
                       CompanionFile="nunit.framework.35.dll" />
+            </Component>
+            <Component Id="NET35_RUNNER" Location="local" Guid="B58A61FD-A47E-47C2-95F4-1958E03AA1C1">
                 <File Id="nunitlite.35.dll"
                       Name="nunitlite.dll"
                       ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)net-3.5\nunitlite.dll" />
             </Component>
-            <Component Id="AssemblyReferenceFolder35">
+            <Component Id="AssemblyReferenceFolder35" Guid="5E1F080E-E071-4DB9-947D-78F77F4AF600">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v3.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
                     <RegistryValue Action="write" Type="string" Value="[NET35]" />
                 </RegistryKey>
             </Component>
         </ComponentGroup>
 
+        <!-- .NET Framework 4.0 -->
         <ComponentGroup Id="NET40" Directory="NET40">
-            <Component Id="NET40" Guid="20075750-2D60-4798-A348-5FB0930E9034">
+            <Component Id="NET40" Location="local" Guid="20075750-2D60-4798-A348-5FB0930E9034">
                 <File Id="nunit.framework.40.dll"
                       Name="nunit.framework.dll"
                       ProcessorArchitecture="msil"
@@ -107,20 +63,23 @@
                       Name="nunit.framework.xml"
                       Source="$(var.BuildDir)net-4.0\nunit.framework.xml"
                       CompanionFile="nunit.framework.40.dll" />
+            </Component>
+            <Component Id="NET40_RUNNER" Location="local" Guid="F736F084-7524-4981-B827-EA1AC07A14D3">
                 <File Id="nunitlite.40.dll"
                       Name="nunitlite.dll"
                       ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)net-4.0\nunitlite.dll" />
             </Component>
-            <Component Id="AssemblyReferenceFolder40">
+            <Component Id="AssemblyReferenceFolder40" Guid="5590EDBC-D9C3-4FCB-827D-74A32D314F80">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
                     <RegistryValue Action="write" Type="string" Value="[NET40]" />
                 </RegistryKey>
             </Component>
         </ComponentGroup>
 
+        <!-- .NET Framework 4.5 -->
         <ComponentGroup Id="NET45" Directory="NET45">
-            <Component Id="NET45" Guid="6CBE4F8B-8583-48F2-A2FD-2A3875DB8665">
+            <Component Id="NET45" Location="local" Guid="6CBE4F8B-8583-48F2-A2FD-2A3875DB8665">
                 <File Id="nunit.framework.45.dll"
                       Name="nunit.framework.dll"
                       ProcessorArchitecture="msil"
@@ -129,20 +88,23 @@
                       Name="nunit.framework.xml"
                       Source="$(var.BuildDir)net-4.5\nunit.framework.xml"
                       CompanionFile="nunit.framework.45.dll" />
+            </Component>
+            <Component Id="NET45_RUNNER" Location="local" Guid="0981DAF4-C9CD-4D86-9400-69FBF9FE2A6E">
                 <File Id="nunitlite.45.dll"
                       Name="nunitlite.dll"
                       ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)net-4.5\nunitlite.dll" />
             </Component>
-            <Component Id="AssemblyReferenceFolder45">
+            <Component Id="AssemblyReferenceFolder45" Guid="35D1B1E4-3E0D-4F4C-A5EF-AA4363C403A9">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
                     <RegistryValue Action="write" Type="string" Value="[NET45]" />
                 </RegistryKey>
             </Component>
         </ComponentGroup>
 
+        <!-- Portable .NET Framework -->
         <ComponentGroup Id="PORTABLE" Directory="PORTABLE">
-            <Component Id="PORTABLE" Guid="D469144C-53E9-4DEA-8659-84FC9A673EDB">
+            <Component Id="PORTABLE" Location="local" Guid="D469144C-53E9-4DEA-8659-84FC9A673EDB">
                 <File Id="nunit.framework.portable.dll"
                       Name="nunit.framework.dll"
                       ProcessorArchitecture="msil"
@@ -153,15 +115,16 @@
                       CompanionFile="nunit.framework.portable.dll" />
             </Component>
             <!-- What is the AssemblyFoldersEx for Portable? For now, I am putting this under .NET 4.5 since the portable is valid for that -->
-            <Component Id="AssemblyReferenceFolderPortable">
+            <Component Id="AssemblyReferenceFolderPortable" Guid="FC7BDACA-5313-4348-8B07-A088804E5EBE">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.5\AssemblyFoldersEx\NUnit [ProductVersion] Portable" >
                     <RegistryValue Action="write" Type="string" Value="[PORTABLE]" />
                 </RegistryKey>
             </Component>
         </ComponentGroup>
 
+        <!-- Silverlight 5.0 -->
         <ComponentGroup Id="SL50" Directory="SL50">
-            <Component Id="SL50" Guid="FE2ADBC4-DFEC-41A6-8D5A-6DCACC167059">
+            <Component Id="SL50" Location="local" Guid="FE2ADBC4-DFEC-41A6-8D5A-6DCACC167059">
                 <File Id="nunit.framework.sl50.dll"
                       Name="nunit.framework.dll"
                       ProcessorArchitecture="msil"
@@ -170,17 +133,18 @@
                       Name="nunit.framework.xml"
                       Source="$(var.BuildDir)sl-5.0\nunit.framework.xml"
                       CompanionFile="nunit.framework.sl50.dll" />
+            </Component>
+            <Component Id="SL50_RUNNER" Location="local" Guid="4E09ED33-A575-4438-91F6-8130F416CDDC">
                 <File Id="nunitlite.sl50.dll"
                       Name="nunitlite.dll"
                       ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)sl-5.0\nunitlite.dll" />
             </Component>
-            <Component Id="AssemblyReferenceFolderSL50">
+            <Component Id="AssemblyReferenceFolderSL50" Guid="18C5D635-921C-4983-AD4C-65A7DAAA6476">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\Microsoft SDKs\Silverlight\v5.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
                     <RegistryValue Action="write" Type="string" Value="[SL50]" />
                 </RegistryKey>
             </Component>
         </ComponentGroup>
-
     </Fragment>
-</Wix>
+</Include>
