@@ -4,13 +4,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.9</ProductVersion>
-    <ProjectGuid>20132190-582e-462e-b18b-4b2cedddb6c4</ProjectGuid>
+    <ProjectGuid>40FEA8CD-5C48-4BF4-AC67-DF5E5B149425</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit.Framework</OutputName>
-    <OutputType>Package</OutputType>
+    <OutputName>NUnit.Runners</OutputName>
+    <OutputType>Module</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <Name>nunit-runners</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
@@ -37,7 +38,7 @@
     </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="framework.wxs" />
+    <Compile Include="runners-merge.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -46,9 +47,6 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\common\common.wxi">
-      <Link>common.wxi</Link>
-    </Content>
     <Content Include="..\common\variables.wxi">
       <Link>variables.wxi</Link>
     </Content>
@@ -63,7 +61,7 @@
 	</Target>
 	-->
   <Target Name="BeforeBuild">
-    <GetAssemblyIdentity AssemblyFiles="..\..\bin\$(Configuration)\net-4.5\nunit.framework.dll">
+    <GetAssemblyIdentity AssemblyFiles="..\..\bin\$(Configuration)\nunit.engine.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
     </GetAssemblyIdentity>
     <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">

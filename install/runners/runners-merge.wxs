@@ -1,88 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" 
-             Name="NUnit Runners" 
-             Language="1033" 
-             Version="!(bind.FileVersion.nunit.engine.dll)" 
-             Manufacturer="nunit.org" 
-             UpgradeCode="94E18606-9590-4BA1-B002-258860D7B151">
-        
-        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-        
+    <Module Id="NUnit.Runners"
+            Language="0"
+            Version="!(bind.FileVersion.nunit.engine.dll)">
+
+        <Package Id="69852C66-B20F-4BAD-9B19-C9F3E97CB390"
+            Manufacturer="NUnit.org"
+            InstallerVersion="200" 
+            Languages="1033" 
+            InstallScope="perMachine" />
+
         <!-- Include the information that is common to all installs -->
-        <?include ..\common\common.wxi ?>
-
-        <!-- ***************************************************************** -->
-        <!-- **********      Define the NUnit feature tree          ********** -->
-        <!-- ***************************************************************** -->
-        
-        <Feature Id="NUNIT.RUNNERS" 
-                 ConfigurableDirectory="INSTALLDIR" 
-                 Level="1" 
-                 Title="NUnit Runners" 
-                 Display="expand" 
-                 Description="Installs the NUnit engine and the console runner that allows you to run tests.">
-
-            <ComponentGroupRef Id="NUNIT.COMMON"/>
-
-            <Feature Id="NUNIT.ENGINE"
-                     Level="1"
-                     Absent="disallow"
-                     Title="NUnit Engine"
-                     Description="Installs the NUnit engine">
-                <ComponentGroupRef Id="NUNIT.ENGINE" />
-                <Feature Id="ADDINS.NUNIT.PROJECT.LOADER"
-                            Level="1"
-                            Title="NUnit Project Loader"
-                            Description="Allows you to load NUnit Project files">
-                    <ComponentGroupRef Id="ADDINS.NUNIT.PROJECT.LOADER" />
-                </Feature>
-                <Feature Id="ADDINS.VS.PROJECT.LOADER"
-                            Level="1"
-                            Title="Visual Studio Project Loader"
-                            Description="Allows you to load Visual Studio Solution and Project files">
-                    <ComponentGroupRef Id="ADDINS.VS.PROJECT.LOADER" />
-                </Feature>
-                <Feature Id="NUNIT.V2.DRIVER"
-                         Level="1"
-                         Title="NUnit 2.x Driver"
-                         Description="Allows you to run NUnit 2.x test suites">
-                    <ComponentGroupRef Id="NUNIT.V2.DRIVER" />
-                </Feature>
-                <Feature Id="ADDINS.NUNIT.V2.WRITER"
-                            Level="1"
-                            Title="NUnit 2.x Result Writer"
-                            Description="Allows you to write test results out in the NUnit 2.x format">
-                    <ComponentGroupRef Id="ADDINS.NUNIT.V2.WRITER" />
-                </Feature>
-            </Feature>
-
-            <Feature Id="NUNIT.CONSOLE"
-                     Level="1"
-                     Title="NUnit Console"
-                     Description="Installs the NUnit console runner">
-                <ComponentGroupRef Id="NUNIT.CONSOLE" />
-            </Feature>
-		</Feature>
-	</Product>
+        <?include ..\common\variables.wxi ?>
+    </Module>
 
     <!-- ***************************************************************** -->
     <!-- **********       Define Directory Structure            ********** -->
     <!-- ***************************************************************** -->
-    
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
+
+    <Fragment>
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLDIR" Name="NUnit.org">
                     <Directory Id="BIN" Name="bin">
                         <Directory Id="ADDINS" Name="addins" />
                     </Directory>
                 </Directory>
-			</Directory>
-		</Directory>
-	</Fragment>
+            </Directory>
+        </Directory>
+    </Fragment>
 
-	<Fragment>
+    <Fragment>
         <ComponentGroup Id="NUNIT.COMMON" Directory="BIN">
             <Component Id="CHANGES.txt">
                 <File Id="CHANGES.txt" Source="..\..\CHANGES.txt" />
@@ -97,58 +45,58 @@
                 <File Id="nunit.ico" Source="..\..\nunit.ico" />
             </Component>
         </ComponentGroup>
-        
-		<ComponentGroup Id="NUNIT.ENGINE" Directory="BIN">
-			<Component Id="NUNIT.ENGINE">
-                <File Id="nunit.engine.dll" 
-                      ProcessorArchitecture="msil" 
+
+        <ComponentGroup Id="NUNIT.ENGINE" Directory="BIN">
+            <Component Id="NUNIT.ENGINE">
+                <File Id="nunit.engine.dll"
+                      ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)nunit.engine.dll" />
-			</Component>
-			<Component Id="NUNIT.ENGINE.ADDINS">
-				<File Id="nunit.engine.addins"
+            </Component>
+            <Component Id="NUNIT.ENGINE.ADDINS">
+                <File Id="nunit.engine.addins"
                       Source="$(var.BuildDir)nunit.engine.addins" />
-			</Component>
-			<Component Id="NUNIT.ENGINE.ADDIN.XML">
-				<File Id="nunit.engine.addin.xml"
+            </Component>
+            <Component Id="NUNIT.ENGINE.ADDIN.XML">
+                <File Id="nunit.engine.addin.xml"
                       Source="$(var.BuildDir)nunit.engine.addin.xml" />
-			</Component>
-			<Component Id="NUNIT.ENGINE.API">
-                <File Id="nunit.engine.api.dll" 
-                      ProcessorArchitecture="msil" 
+            </Component>
+            <Component Id="NUNIT.ENGINE.API">
+                <File Id="nunit.engine.api.dll"
+                      ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)nunit.engine.api.dll" />
                 <File Id="nunit.engine.api.xml"
                       Source="$(var.BuildDir)nunit.engine.api.xml" />
             </Component>
             <Component Id="NUNIT_AGENT">
-                <File Id="nunit_agent.exe" 
-                      ProcessorArchitecture="msil" 
+                <File Id="nunit_agent.exe"
+                      ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)nunit-agent.exe" />
                 <File Id="nunit_agent.exe.config"
                       Source="$(var.BuildDir)nunit-agent.exe.config" />
             </Component>
             <Component Id="NUNIT_AGENT_X86">
-                <File Id="nunit_agent_x86.exe" 
-                      ProcessorArchitecture="x86" 
+                <File Id="nunit_agent_x86.exe"
+                      ProcessorArchitecture="x86"
                       Source="$(var.BuildDir)nunit-agent-x86.exe" />
-                <File Id="nunit_agent_x86.exe.config" 
+                <File Id="nunit_agent_x86.exe.config"
                       Source="$(var.BuildDir)nunit-agent-x86.exe.config" />
             </Component>
             <Component Id="MONO.ADDINS">
                 <File Id="Mono.Addins.dll"
                       Source="$(var.BuildDir)Mono.Addins.dll" />
             </Component>
-		</ComponentGroup>
+        </ComponentGroup>
 
         <ComponentGroup Id="NUNIT.CONSOLE" Directory="BIN">
             <Component Id="NUNIT_CONSOLE">
-                <File Id="nunit_console.exe" 
-                      ProcessorArchitecture="msil" 
+                <File Id="nunit_console.exe"
+                      ProcessorArchitecture="msil"
                       Source="$(var.BuildDir)nunit-console.exe" />
                 <File Id="nunit_console.exe.config"
                       Source="$(var.BuildDir)nunit-console.exe.config" />
             </Component>
         </ComponentGroup>
-        
+
         <ComponentGroup Id="ADDINS.NUNIT.PROJECT.LOADER" Directory="ADDINS">
             <Component Id="ADDINS.NUNIT.PROJECT.LOADER">
                 <File Id="nunit_project_loader.dll"
@@ -184,5 +132,5 @@
                       Source="$(var.BuildDir)addins\nunit.core.interfaces.dll" />
             </Component>
         </ComponentGroup>
-	</Fragment>
+    </Fragment>
 </Wix>
