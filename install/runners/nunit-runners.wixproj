@@ -23,6 +23,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <WixVariables>Build=$(Configuration)</WixVariables>
+    <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="runners.wxs" />
