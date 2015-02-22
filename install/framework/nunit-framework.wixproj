@@ -22,20 +22,6 @@
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug;</DefineConstants>
-    <WixVariables>
-    </WixVariables>
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <WixVariables />
-    <DefineConstants>
-    </DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="framework.wxs" />
   </ItemGroup>
@@ -46,12 +32,21 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\common\common.wxi">
-      <Link>common.wxi</Link>
+    <Content Include="..\common\common-directories.wxi">
+      <Link>common-directories.wxi</Link>
+    </Content>
+    <Content Include="..\common\common-features.wxi">
+      <Link>common-features.wxi</Link>
+    </Content>
+    <Content Include="..\common\common-files.wxi">
+      <Link>common-files.wxi</Link>
     </Content>
     <Content Include="..\common\variables.wxi">
       <Link>variables.wxi</Link>
     </Content>
+    <Content Include="framework-directories.wxi" />
+    <Content Include="framework-features.wxi" />
+    <Content Include="framework-files.wxi" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
