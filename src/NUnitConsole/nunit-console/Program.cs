@@ -38,7 +38,7 @@ namespace NUnit.ConsoleRunner
     public class Program
     {
         //static Logger log = InternalTrace.GetLogger(typeof(Runner));
-        static ExtendedTextWriter OutWriter = new ExtendedTextWriter(Console.Out);
+        static ExtendedTextWriter OutWriter = new ColorConsoleWriter();
         static ConsoleOptions Options = new ConsoleOptions();
 
         [STAThread]

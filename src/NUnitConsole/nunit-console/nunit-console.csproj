@@ -53,11 +53,17 @@
     <Compile Include="..\..\Common\nunit\ColorConsole.cs">
       <Link>ColorConsole.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\ColorStyle.cs">
       <Link>ColorStyle.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>ConsoleOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>ExtendedTextWriter.cs</Link>

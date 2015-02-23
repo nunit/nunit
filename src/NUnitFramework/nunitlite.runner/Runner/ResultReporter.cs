@@ -154,8 +154,7 @@ namespace NUnitLite.Runner
                     var suite = result.Test as TestSuite;
                     var site = result.ResultState.Site;
                     if (suite.TestType == "Theory" || site == FailureSite.SetUp || site == FailureSite.TearDown)
-                        using (new ColorConsole(ColorStyle.Failure))
-                            WriteSingleResult(result);
+                        WriteSingleResult(result, ColorStyle.Failure);
                     if (site == FailureSite.SetUp) return;
                 }
 
@@ -163,8 +162,7 @@ namespace NUnitLite.Runner
                     WriteErrorsAndFailures(childResult);
             }
             else if (result.ResultState.Status == TestStatus.Failed)
-                using (new ColorConsole(ColorStyle.Failure))
-                    WriteSingleResult(result);
+                WriteSingleResult(result, ColorStyle.Failure);
         }
 
         #endregion
@@ -193,8 +191,7 @@ namespace NUnitLite.Runner
                     ? ColorStyle.Warning
                     : ColorStyle.Output;
 
-                using (new ColorConsole(colorStyle))
-                    WriteSingleResult(result);
+                WriteSingleResult(result, colorStyle);
             }
         }
 
@@ -259,7 +256,7 @@ namespace NUnitLite.Runner
 
         private static readonly char[] EOL_CHARS = new char[] { '\r', '\n' };
 
-        private void WriteSingleResult(ITestResult result)
+        private void WriteSingleResult(ITestResult result, ColorStyle style)
         {
             string status = result.ResultState.Label;
             if (string.IsNullOrEmpty(status))
@@ -273,13 +270,14 @@ namespace NUnitLite.Runner
             }
 
             _writer.WriteLine();
-            _writer.WriteLine("{0}) {1} : {2}", ++_reportIndex, status, result.FullName);
+            _writer.WriteLine(
+                style, string.Format("{0}) {1} : {2}", ++_reportIndex, status, result.FullName));
 
             if (result.Message != null && result.Message != string.Empty)
-                _writer.WriteLine(result.Message.TrimEnd(EOL_CHARS));
+                _writer.WriteLine(style, result.Message.TrimEnd(EOL_CHARS));
 
             if (result.StackTrace != null && result.StackTrace != string.Empty)
-                _writer.WriteLine(result.StackTrace.TrimEnd(EOL_CHARS));
+                _writer.WriteLine(style, result.StackTrace.TrimEnd(EOL_CHARS));
         }
 
         #endregion

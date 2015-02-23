@@ -47,7 +47,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             _report = new StringBuilder();
 
-            var writer = new ExtendedTextWriter(new StringWriter(_report));
+            var writer = new ExtendedTextWrapper(new StringWriter(_report));
             var options = new ConsoleOptions();
             options.Parse(new string[] { "MockTestResult.xml" });
 

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014-2015 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,45 +21,77 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.IO;
+using System.Text;
 
 namespace NUnit.Common
 {
-    /// <summary>
-    /// ExtendedTextWriter extends the TextWriter abstract class 
-    /// to support displaying text in color.
-    /// $</summary>
-    public abstract class ExtendedTextWriter : TextWriter
+    public class ColorConsoleWriter : ExtendedTextWrapper
     {
+        /// <summary>
+        /// Construct a ColorConsoleWriter
+        /// </summary>
+        public ColorConsoleWriter() : base(Console.Out) { }
+
         #region Extended Methods
+        /// <summary>
+        /// Writes the value with the specified style.
+        /// </summary>
+        /// <param name="style">The style.</param>
+        /// <param name="value">The value.</param>
+        public override void Write(ColorStyle style, string value)
+        {
+            using (new ColorConsole(style))
+            {
+                Write(value);
+            }
+        }
 
         /// <summary>
         /// Writes the value with the specified style.
         /// </summary>
         /// <param name="style">The style.</param>
         /// <param name="value">The value.</param>
-        public abstract void Write(ColorStyle style, string value);
-
-        /// <summary>
-        /// Writes the value with the specified style
-        /// </summary>
-        /// <param name="style">The style.</param>
-        /// <param name="value">The value.</param>
-        public abstract void WriteLine(ColorStyle style, string value);
+        public override void WriteLine(ColorStyle style, string value)
+        {
+            using (new ColorConsole(style))
+            {
+                WriteLine(value);
+            }
+        }
 
         /// <summary>
         /// Writes the label and the option that goes with it.
         /// </summary>
         /// <param name="label">The label.</param>
         /// <param name="option">The option.</param>
-        public abstract void WriteLabel(string label, object option);
+        public override void WriteLabel(string label, object option)
+        {
+            WriteLabel(label, option, ColorStyle.Value);
+        }
 
         /// <summary>
         /// Writes the label and the option that goes with it followed by a new line.
         /// </summary>
         /// <param name="label">The label.</param>
         /// <param name="option">The option.</param>
-        public abstract void WriteLabelLine(string label, object option);
+        public override void WriteLabelLine(string label, object option)
+        {
+            WriteLabelLine(label, option, ColorStyle.Value);
+        }
+
+        /// <summary>
+        /// Writes the label and the option that goes with it and optionally writes a new line.
+        /// </summary>
+        /// <param name="label">The label.</param>
+        /// <param name="option">The option.</param>
+        /// <param name="valueStyle">The color to display the value with</param>
+        public void WriteLabel(string label, object option, ColorStyle valueStyle)
+        {
+            Write(ColorStyle.Label, label);
+            Write(valueStyle, option.ToString());
+        }
 
         /// <summary>
         /// Writes the label and the option that goes with it followed by a new line.
@@ -67,7 +99,11 @@ namespace NUnit.Common
         /// <param name="label">The label.</param>
         /// <param name="option">The option.</param>
         /// <param name="valueStyle">The color to display the value with</param>
-        public abstract void WriteLabelLine(string label, object option, ColorStyle valueStyle);
+        public override void WriteLabelLine(string label, object option, ColorStyle valueStyle)
+        {
+            WriteLabel(label, option, valueStyle);
+            WriteLine();
+        }
 
         #endregion
     }

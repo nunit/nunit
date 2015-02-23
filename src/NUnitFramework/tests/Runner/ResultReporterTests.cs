@@ -63,7 +63,7 @@ namespace NUnitLite.Runner.Tests
         public void CreateReporter()
         {
             _report = new StringBuilder();
-            var writer = new ExtendedTextWriter(new StringWriter(_report));
+            var writer = new ExtendedTextWrapper(new StringWriter(_report));
 
             _reporter = new ResultReporter(_result, writer, false);
         }

@@ -29,7 +29,7 @@ namespace NUnitLite.Runner.Silverlight
 
             this.runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
             this.callingAssembly = Assembly.GetCallingAssembly();
-            this.writer = new ExtendedTextWriter(new TextBlockWriter(this.ScratchArea));
+            this.writer = new TextBlockWriter(this.ScratchArea);
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

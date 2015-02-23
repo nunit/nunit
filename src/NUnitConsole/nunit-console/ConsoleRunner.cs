@@ -165,7 +165,7 @@ namespace NUnit.ConsoleRunner
                 RestoreOutput();
             }
 
-            var reporter = new ResultReporter(result, new ExtendedTextWriter(Console.Out), _options);
+            var reporter = new ResultReporter(result, new ColorConsoleWriter(), _options);
             reporter.ReportResults();
 
             foreach (var spec in _options.ResultOutputSpecifications)
@@ -222,7 +222,7 @@ namespace NUnit.ConsoleRunner
             {
                 var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
                 outStreamWriter.AutoFlush = true;
-                _outWriter = new ExtendedTextWriter(outStreamWriter);
+                _outWriter = new ExtendedTextWrapper(outStreamWriter);
             }
 
             if (_options.ErrFile != null)

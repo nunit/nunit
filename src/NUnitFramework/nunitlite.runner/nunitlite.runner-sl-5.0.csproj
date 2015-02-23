@@ -64,11 +64,17 @@
     <Compile Include="..\..\Common\nunit\ColorConsole.cs">
       <Link>Runner\ColorConsole.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>Runner\ColorConsoleWriter.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\ColorStyle.cs">
       <Link>Runner\ColorStyle.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>Runner\ConsoleOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>Runner\ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>Runner\ExtendedTextWriter.cs</Link>

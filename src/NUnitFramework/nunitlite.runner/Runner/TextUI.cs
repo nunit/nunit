@@ -102,8 +102,8 @@ namespace NUnitLite.Runner
         public TextUI(TextWriter writer)
         {
             // Set the default writer - may be overridden by the args specified
-            _outWriter = new ExtendedTextWriter(writer);
-            _errWriter = new ExtendedTextWriter(writer);
+            _outWriter = new ExtendedTextWrapper(writer);
+            _errWriter = new ExtendedTextWrapper(writer);
             ColorConsole.Enabled = false;
         }
         #endregion
@@ -136,7 +136,7 @@ namespace NUnitLite.Runner
 
             if (_options.OutFile != null)
             {
-                _outWriter = new ExtendedTextWriter(new StreamWriter(Path.Combine(_workDirectory, _options.OutFile)));
+                _outWriter = new ExtendedTextWrapper(new StreamWriter(Path.Combine(_workDirectory, _options.OutFile)));
                 Console.SetOut(_outWriter);
                 ColorConsole.Enabled = false;
             }
