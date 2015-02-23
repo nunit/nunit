@@ -43,7 +43,7 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
                     new Exception("Inner Inner Exception")));
         }
 
-#if !NET_2_0 && !NET_3_5 && !NETCF
+#if NET_4_0 || NET_4_5 || SILVERLIGHT || PORTABLE
         [Test]
         public void ThrowsWithAggregateException()
         {
