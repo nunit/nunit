@@ -65,10 +65,6 @@
 		<ProjectSuffix>4.0</ProjectSuffix>
 		<Runtime>NET</Runtime>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Framework)'=='net-3.5'">
-		<ProjectSuffix>3.5</ProjectSuffix>
-		<Runtime>NET</Runtime>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(Framework)'=='net-2.0'">
 		<ProjectSuffix>2.0</ProjectSuffix>
 		<Runtime>NET</Runtime>
@@ -79,10 +75,6 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Framework)'=='mono-4.0'">
 		<ProjectSuffix>4.0</ProjectSuffix>
-		<Runtime>mono</Runtime>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Framework)'=='mono-3.5'">
-		<ProjectSuffix>3.5</ProjectSuffix>
 		<Runtime>mono</Runtime>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Framework)'=='mono-2.0'">
@@ -524,7 +516,6 @@
 	<ItemGroup Label="Supported Frameworks">
 		<SupportedFrameworks Include="net-4.5" />
 		<SupportedFrameworks Include="net-4.0" />
-		<SupportedFrameworks Include="net-3.5" />
 		<SupportedFrameworks Include="net-2.0" />
 		<!--<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-3.5" />-->
 		<SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0" />
