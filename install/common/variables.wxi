@@ -24,7 +24,7 @@
     <Property Id="MONODIRECTORY">
         <RegistrySearch Id="MonoDirectory" Type="directory" Root="HKLM" Key="Software\Novell\Mono\[MONODEFAULTCLR]" Name="SDKInstallRoot" />
     </Property>
-
+    
     <Property Id="CMD_EXE" Value="[!SystemFolder]cmd.exe" />
     
     <?define BuildDir = "$(var.OutDir)\" ?>
@@ -40,7 +40,6 @@
     <Property Id="ARPURLINFOABOUT" Value="NUnit is a testing framework for all .NET languages" />
     <Property Id="ARPURLUPDATEINFO" Value="http://nunit.org" />
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
     <!-- ***************************************************************** -->

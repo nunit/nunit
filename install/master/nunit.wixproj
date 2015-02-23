@@ -4,27 +4,30 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.9</ProductVersion>
-    <ProjectGuid>20132190-582e-462e-b18b-4b2cedddb6c4</ProjectGuid>
+    <ProjectGuid>809C00DC-3FD3-45BF-BC0E-E284F314D306</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit.Framework</OutputName>
+    <OutputName>NUnit</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <Name>nunit</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
+    <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WixVariables>Build=$(Configuration)</WixVariables>
+    <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="framework.wxs" />
+    <Compile Include="nunit.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -45,9 +48,30 @@
     <Content Include="..\common\variables.wxi">
       <Link>variables.wxi</Link>
     </Content>
-    <Content Include="framework-directories.wxi" />
-    <Content Include="framework-features.wxi" />
-    <Content Include="framework-files.wxi" />
+    <Content Include="..\framework\framework-directories.wxi">
+      <Link>framework-directories.wxi</Link>
+    </Content>
+    <Content Include="..\framework\framework-features.wxi">
+      <Link>framework-features.wxi</Link>
+    </Content>
+    <Content Include="..\framework\framework-files.wxi">
+      <Link>framework-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\addin-files.wxi">
+      <Link>addin-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\console-files.wxi">
+      <Link>console-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\engine-files.wxi">
+      <Link>engine-files.wxi</Link>
+    </Content>
+    <Content Include="..\runners\runner-directories.wxi">
+      <Link>runner-directories.wxi</Link>
+    </Content>
+    <Content Include="..\runners\runner-features.wxi">
+      <Link>runner-features.wxi</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
