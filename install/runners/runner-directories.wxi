@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <Fragment>
+        <DirectoryRef Id="INSTALLDIR">
+            <Directory Id="BIN" Name="bin">
+                <Directory Id="ADDINS" Name="addins" />
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+</Include>

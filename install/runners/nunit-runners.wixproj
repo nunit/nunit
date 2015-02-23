@@ -18,27 +18,16 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
+    <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug;</DefineConstants>
-    <WixVariables>
-    </WixVariables>
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <WixVariables />
-    <DefineConstants>
-    </DefineConstants>
+    <WixVariables>Build=$(Configuration)</WixVariables>
+    <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="nunit-tools.wxs" />
+    <Compile Include="runners.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -47,9 +36,23 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\common\common.wxi">
-      <Link>common.wxi</Link>
+    <Content Include="..\common\common-directories.wxi">
+      <Link>common-directories.wxi</Link>
     </Content>
+    <Content Include="..\common\common-features.wxi">
+      <Link>common-features.wxi</Link>
+    </Content>
+    <Content Include="..\common\common-files.wxi">
+      <Link>common-files.wxi</Link>
+    </Content>
+    <Content Include="..\common\variables.wxi">
+      <Link>variables.wxi</Link>
+    </Content>
+    <Content Include="addin-files.wxi" />
+    <Content Include="console-files.wxi" />
+    <Content Include="engine-files.wxi" />
+    <Content Include="runner-directories.wxi" />
+    <Content Include="runner-features.wxi" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
