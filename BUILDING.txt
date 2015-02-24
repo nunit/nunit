@@ -12,7 +12,7 @@ compact framework 3.5.
 
 The solutions all place their output in a common bin directory. Console runner and engine
 components are placed directly in the bin directory while framework components end up in
-subdirectories net-2.0, net-3.5, net4.0, sl-5.0, portable and netcf-3.5. Future platform
+subdirectories net-2.0, net4.0, sl-5.0, portable and netcf-3.5. Future platform
 builds will cause new subdirectories to be created.
 
 The build shell script and build.cmd script are provided as an easy way to locate and
