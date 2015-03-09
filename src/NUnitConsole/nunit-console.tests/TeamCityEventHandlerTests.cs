@@ -14,7 +14,7 @@ namespace NUnit.ConsoleRunner.Tests
         private TeamCityEventHandler _teamCity;
         private StringBuilder _output;
 
-        private static readonly string NL = NUnit.Env.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         [SetUp]
         public void CreateTeamCityEventHandler()

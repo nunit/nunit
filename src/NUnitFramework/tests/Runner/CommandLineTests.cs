@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT
 using System;
 using System.Reflection;
 using System.Text;
@@ -500,3 +501,4 @@ namespace NUnit.Common.Tests
         #endregion
     }
 }
+#endif

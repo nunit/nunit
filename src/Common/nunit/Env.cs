@@ -24,6 +24,8 @@
 using System;
 using System.Text;
 
+#if NUNIT
+#endif
 namespace NUnit
 {
     /// <summary>
@@ -47,7 +49,7 @@ namespace NUnit
         /// <summary>
         /// Path to the 'My Documents' folder
         /// </summary>
-#if SILVERLIGHT || PocketPC || WindowsCE || NETCF || PORTABLE
+#if PocketPC || WindowsCE || NETCF || PORTABLE
         public static string DocumentFolder = @"\My Documents";
 #else
         public static string DocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);

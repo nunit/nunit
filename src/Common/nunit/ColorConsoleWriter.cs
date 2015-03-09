@@ -29,10 +29,22 @@ namespace NUnit.Common
 {
     public class ColorConsoleWriter : ExtendedTextWrapper
     {
+        public bool _colorEnabled;
+
         /// <summary>
-        /// Construct a ColorConsoleWriter
+        /// Construct a ColorConsoleWriter.
         /// </summary>
-        public ColorConsoleWriter() : base(Console.Out) { }
+        public ColorConsoleWriter() : this(true) { }
+
+        /// <summary>
+        /// Construct a ColorConsoleWriter.
+        /// </summary>
+        /// <param name="colorEnabled">Flag indicating whether color should be enabled</param>
+        public ColorConsoleWriter(bool colorEnabled)
+            : base(Console.Out)
+        {
+            _colorEnabled = colorEnabled;
+        }
 
         #region Extended Methods
         /// <summary>
@@ -42,10 +54,13 @@ namespace NUnit.Common
         /// <param name="value">The value.</param>
         public override void Write(ColorStyle style, string value)
         {
-            using (new ColorConsole(style))
-            {
+            if (_colorEnabled)
+                using (new ColorConsole(style))
+                {
+                    Write(value);
+                }
+            else
                 Write(value);
-            }
         }
 
         /// <summary>
@@ -55,10 +70,13 @@ namespace NUnit.Common
         /// <param name="value">The value.</param>
         public override void WriteLine(ColorStyle style, string value)
         {
-            using (new ColorConsole(style))
-            {
+            if (_colorEnabled)
+                using (new ColorConsole(style))
+                {
+                    WriteLine(value);
+                }
+            else
                 WriteLine(value);
-            }
         }
 
         /// <summary>
@@ -87,7 +105,7 @@ namespace NUnit.Common
         /// <param name="label">The label.</param>
         /// <param name="option">The option.</param>
         /// <param name="valueStyle">The color to display the value with</param>
-        public void WriteLabel(string label, object option, ColorStyle valueStyle)
+        public override void WriteLabel(string label, object option, ColorStyle valueStyle)
         {
             Write(ColorStyle.Label, label);
             Write(valueStyle, option.ToString());

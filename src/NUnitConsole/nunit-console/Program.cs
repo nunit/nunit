@@ -38,8 +38,8 @@ namespace NUnit.ConsoleRunner
     public class Program
     {
         //static Logger log = InternalTrace.GetLogger(typeof(Runner));
-        static ExtendedTextWriter OutWriter = new ColorConsoleWriter();
         static ConsoleOptions Options = new ConsoleOptions();
+        static ExtendedTextWriter OutWriter = new ColorConsoleWriter(!Options.NoColor);
 
         [STAThread]
         public static int Main(string[] args)
@@ -55,7 +55,7 @@ namespace NUnit.ConsoleRunner
                 return ConsoleRunner.INVALID_ARG;
             }
 
-            ColorConsole.Enabled = !Options.NoColor;
+            //ColorConsole.Enabled = !Options.NoColor;
 
             // Create SettingsService early so we know the trace level right at the start
             //SettingsService settingsService = new SettingsService();

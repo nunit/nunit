@@ -164,13 +164,13 @@ namespace NUnitLite.Runner.Tests
             var options = new ConsoleOptions("--testlist:\\badtestlistfile");
             Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
             Assert.That(options.ErrorMessages, Does.Contain("Unable to locate file: \\badtestlistfile"));
-            var filter = TextUI.CreateTestFilter(options);
+            var filter = TextRunner.CreateTestFilter(options);
             Assert.That(filter, Is.EqualTo(TestFilter.Empty));
         }
 
         private TestFilter GetFilter(params string[] args)
         {
-            return TextUI.CreateTestFilter(new ConsoleOptions(args));
+            return TextRunner.CreateTestFilter(new ConsoleOptions(args));
         }
     }
 }

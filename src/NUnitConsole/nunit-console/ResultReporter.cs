@@ -62,15 +62,7 @@ namespace NUnit.ConsoleRunner
         {
             _writer.WriteLine();
 
-            if (_options.StopOnError && Summary.FailureCount + Summary.ErrorCount > 0)
-            {
-                _writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
-                _writer.WriteLine();
-            }
-
             WriteSummaryReport();
-
-            WriteAssemblyErrorsAndWarnings();
 
             if (_overallResult == "Failed")
                 WriteErrorsAndFailuresReport();
@@ -118,27 +110,6 @@ namespace NUnit.ConsoleRunner
 
         #endregion
 
-        #region Assembly Errors and Warnings
-
-        public void WriteAssemblyErrorsAndWarnings()
-        {
-            foreach (XmlNode node in _result.SelectNodes("descendant::test-suite[@type='Assembly']"))
-            {
-                if (node.GetAttribute("runstate") == "NotRunnable")
-                    WriteAssemblyMessage(ColorStyle.Error, node.SelectSingleNode("properties/property[@name='_SKIPREASON']").GetAttribute("value"));
-                else if (node.GetAttribute("total") == "0" || node.GetAttribute("testcasecount") == "0")
-                    WriteAssemblyMessage(ColorStyle.Warning, "Warning: No tests found in " + node.GetAttribute("name"));
-            }
-        }
-
-        private void WriteAssemblyMessage(ColorStyle style, string message)
-        {
-            _writer.WriteLine(style, message);
-            _writer.WriteLine();
-        }
-
-        #endregion
-
         #region Errors and Failures Report
 
         public void WriteErrorsAndFailuresReport()
@@ -147,6 +118,12 @@ namespace NUnit.ConsoleRunner
             _writer.WriteLine(ColorStyle.SectionHeader, "Errors and Failures");
             _writer.WriteLine();
             WriteErrorsAndFailures(_result);
+
+            if (_options.StopOnError)
+            {
+                _writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
+                _writer.WriteLine();
+            }
         }
 
         private void WriteErrorsAndFailures(XmlNode result)

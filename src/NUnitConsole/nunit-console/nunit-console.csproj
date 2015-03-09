@@ -62,6 +62,9 @@
     <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>ConsoleOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\Env.cs">
+      <Link>Env.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
       <Link>ExtendedTextWrapper.cs</Link>
     </Compile>

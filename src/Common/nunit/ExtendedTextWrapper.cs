@@ -72,11 +72,7 @@ namespace NUnit.Common
         /// </summary>
         public override Encoding Encoding
         {
-#if SILVERLIGHT
-            get { return Encoding.UTF8; }
-#else
             get { return _writer.Encoding; }
-#endif
         }
 
         /// <summary>
@@ -128,6 +124,17 @@ namespace NUnit.Common
         {
             Write(label);
             Write(option.ToString());
+        }
+
+        /// <summary>
+        /// Writes the label and the option that goes with it.
+        /// </summary>
+        /// <param name="label">The label.</param>
+        /// <param name="option">The option.</param>
+        /// <param name="valueStyle">The color to display the value with</param>
+        public override void WriteLabel(string label, object option, ColorStyle valueStyle)
+        {
+            WriteLabel(label, option);
         }
 
         /// <summary>

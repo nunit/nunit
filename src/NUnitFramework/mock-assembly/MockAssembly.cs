@@ -88,7 +88,7 @@ namespace NUnit.Tests
 
             public static void Main(string[] args)
             {
-                new TextUI().Execute(args);
+                new AutoRun().Execute(args);
             }
         }
 

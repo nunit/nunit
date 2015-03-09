@@ -172,7 +172,7 @@ namespace NUnitLite.Runner.Silverlight
         /// <param name="label">The label.</param>
         /// <param name="option">The option.</param>
         /// <param name="valueStyle">The color to display the value with</param>
-        public void WriteLabel(string label, object option, ColorStyle valueStyle)
+        public override void WriteLabel(string label, object option, ColorStyle valueStyle)
         {
             Write(ColorStyle.Label, label);
             Write(valueStyle, option.ToString());
@@ -213,7 +213,7 @@ namespace NUnitLite.Runner.Silverlight
             Color.FromArgb(255,0,255,0),    // Help
             Color.FromArgb(255,0,255,0),    // Label
             Colors.White,    // Value
-            Colors.Green,    // Pass
+            Color.FromArgb(255,0,255,0),    // Pass
             Colors.Red,      // Failure
             Colors.Yellow,   // Warning
             Colors.Red       // Error

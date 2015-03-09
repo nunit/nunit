@@ -1,11 +1,9 @@
 ﻿#if SILVERLIGHT
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using NUnit.Common;
-using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -16,9 +14,9 @@ namespace NUnitLite.Runner.Silverlight
     /// </summary>
     public partial class TestPage : UserControl
     {
-        private Assembly callingAssembly;
-        private ITestAssemblyRunner runner;
-        private ExtendedTextWriter writer;
+        private Assembly _callingAssembly;
+        private TextUI _textUI;
+        private TextRunner _textRunner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestPage"/> class.
@@ -27,42 +25,29 @@ namespace NUnitLite.Runner.Silverlight
         {
             InitializeComponent();
 
-            this.runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-            this.callingAssembly = Assembly.GetCallingAssembly();
-            this.writer = new TextBlockWriter(this.ScratchArea);
+            _callingAssembly = Assembly.GetCallingAssembly();
+            _textUI = new TextUI(new TextBlockWriter(this.ScratchArea));
+            _textRunner = new TextRunner(_textUI);
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            TextUI.WriteHeader(this.writer);
-            TextUI.WriteRuntimeEnvironment(this.writer);
+            _textUI.DisplayHeader();
 
-            if (!LoadTestAssembly())
-                writer.WriteLine("No tests found in assembly {0}", GetAssemblyName(callingAssembly));
-            else
-                Dispatcher.BeginInvoke(() => ExecuteTests());
+            _textUI.DisplayTestFiles(new string[] { AssemblyHelper.GetAssemblyName(_callingAssembly).Name });
+
+            _textUI.DisplayRuntimeEnvironment();
+
+            Dispatcher.BeginInvoke(() => ExecuteTests());
         }
 
         #region Helper Methods
 
-        private bool LoadTestAssembly()
-        {
-            return runner.Load(callingAssembly, new Dictionary<string, string>()) != null;
-        }
-
-        private string GetAssemblyName(Assembly assembly)
-        {
-            return new AssemblyName(assembly.FullName).Name;
-        }
-
         private void ExecuteTests()
         {
-            ITestResult result = runner.Run(TestListener.NULL, TestFilter.Empty);
-            ResultReporter reporter = new ResultReporter(result, writer, false);
+            _textRunner.Execute(_callingAssembly);
 
-            reporter.ReportResults();
-
-            ResultSummary summary = reporter.Summary;
+            ResultSummary summary = _textRunner.Summary;
 
             this.Total.Text = summary.TestCount.ToString();
             this.Failures.Text = summary.FailureCount.ToString();
