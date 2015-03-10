@@ -44,13 +44,6 @@ namespace NUnitLite.Runner
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 #endif
 
-        private Assembly _testAssembly;
-
-        public AutoRun()
-        {
-            _testAssembly = Assembly.GetCallingAssembly();
-        }
-
         /// <summary>
         /// Execute the tests in the assembly, passing in
         /// a list of arguments.

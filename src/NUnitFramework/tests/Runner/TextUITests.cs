@@ -228,40 +228,21 @@ namespace NUnitLite.Runner.Tests
             Assert.That(GetReportLines(), Is.EqualTo(expected));
         }
 
-        [Test, Platform(Exclude="NETCF", Reason="Stacktrace not filtered correctly")]
+        [Test, Platform(Exclude = "NETCF", Reason = "Stacktrace not filtered correctly")]
         public void ErrorsAndFailuresReportTest()
         {
-            var expected = new string[] {
-                "Errors and Failures",
-                "",
-                "1) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5",
-                "Method is not public",
-                "",
-                "2) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest",
-                "Intentional failure",
-#if DEBUG
-                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 143",
-#else
-                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest()",
-#endif
-                "",
-                "3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest",
-                "No arguments were provided",
-                "",
-                "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException",
-                "System.Exception : Intentional Exception",
-#if DEBUG
-                "   at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 180",
-                "   at NUnit.Tests.Assemblies.MockTestFixture.TestWithException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 175",
-#else
-                "   at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException()",
-                "   at NUnit.Tests.Assemblies.MockTestFixture.TestWithException()",
-#endif
-                ""
-            };
-
             _textUI.DisplayErrorsAndFailuresReport(_result);
-            Assert.That(GetReportLines(), Is.EqualTo(expected));
+            var lines = GetReportLines();
+
+            Assert.That(lines[0], Is.EqualTo("Errors and Failures"));
+            Assert.That(lines[2], Is.EqualTo("1) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5"));
+            Assert.That(lines[3], Is.EqualTo("Method is not public"));
+            Assert.That(lines[5], Is.EqualTo("2) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest"));
+            Assert.That(lines[6], Is.EqualTo("Intentional failure"));
+            Assert.That(lines[9], Is.EqualTo("3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest"));
+            Assert.That(lines[10], Is.EqualTo("No arguments were provided"));
+            Assert.That(lines[12], Is.EqualTo("4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
+            Assert.That(lines[13], Is.EqualTo("System.Exception : Intentional Exception"));
         }
 #endif
 
