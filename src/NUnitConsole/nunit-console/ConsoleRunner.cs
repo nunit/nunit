@@ -89,7 +89,7 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public int Execute()
         {
-            _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files:");
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files");
             foreach (string file in _options.InputFiles)
                 _outWriter.WriteLine(ColorStyle.Default, "    " + file);
             _outWriter.WriteLine();
@@ -165,7 +165,8 @@ namespace NUnit.ConsoleRunner
                 RestoreOutput();
             }
 
-            var reporter = new ResultReporter(result, new ExtendedTextWriter(Console.Out), _options);
+            var writer = new ColorConsoleWriter(!_options.NoColor);
+            var reporter = new ResultReporter(result, writer, _options);
             reporter.ReportResults();
 
             foreach (var spec in _options.ResultOutputSpecifications)
@@ -222,7 +223,7 @@ namespace NUnit.ConsoleRunner
             {
                 var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
                 outStreamWriter.AutoFlush = true;
-                _outWriter = new ExtendedTextWriter(outStreamWriter);
+                _outWriter = new ExtendedTextWrapper(outStreamWriter);
             }
 
             if (_options.ErrFile != null)

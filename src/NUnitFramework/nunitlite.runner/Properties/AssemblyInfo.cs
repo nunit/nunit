@@ -27,8 +27,6 @@ using System.Reflection;
 [assembly: AssemblyTitle("NUnitLite Runner .NET 4.5")]
 #elif NET_4_0
 [assembly: AssemblyTitle("NUnitLite Runner .NET 4.0")]
-#elif NET_3_5
-[assembly: AssemblyTitle("NUnitLite Runner .NET 3.5")]
 #elif NET_2_0
 [assembly: AssemblyTitle("NUnitLite Runner .NET 2.0")]
 #elif SL_5_0

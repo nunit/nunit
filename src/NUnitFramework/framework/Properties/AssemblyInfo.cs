@@ -28,8 +28,6 @@ using System.Reflection;
 [assembly: AssemblyTitle("NUnit Framework .NET 4.5")]
 #elif NET_4_0
 [assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
-#elif NET_3_5
-[assembly: AssemblyTitle("NUnit Framework .NET 3.5")]
 #elif NET_2_0
 [assembly: AssemblyTitle("NUnit Framework .NET 2.0")]
 #elif SL_5_0

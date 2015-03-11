@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <Fragment>
+        <ComponentGroup Id="NUNIT.CONSOLE" Directory="BIN">
+            <Component Id="NUNIT_CONSOLE" Location="local" Guid="EEABEE65-D977-46B7-99B4-73814BF7BE63">
+                <File Id="nunit_console.exe"
+                      ProcessorArchitecture="msil"
+                      Source="$(var.BuildDir)nunit-console.exe" />
+                <File Id="nunit_console.exe.config"
+                      Source="$(var.BuildDir)nunit-console.exe.config" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Include>

@@ -62,15 +62,7 @@ namespace NUnit.ConsoleRunner
         {
             _writer.WriteLine();
 
-            if (_options.StopOnError && Summary.FailureCount + Summary.ErrorCount > 0)
-            {
-                _writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
-                _writer.WriteLine();
-            }
-
             WriteSummaryReport();
-
-            WriteAssemblyErrorsAndWarnings();
 
             if (_overallResult == "Failed")
                 WriteErrorsAndFailuresReport();
@@ -118,27 +110,6 @@ namespace NUnit.ConsoleRunner
 
         #endregion
 
-        #region Assembly Errors and Warnings
-
-        public void WriteAssemblyErrorsAndWarnings()
-        {
-            foreach (XmlNode node in _result.SelectNodes("descendant::test-suite[@type='Assembly']"))
-            {
-                if (node.GetAttribute("runstate") == "NotRunnable")
-                    WriteAssemblyMessage(ColorStyle.Error, node.SelectSingleNode("properties/property[@name='_SKIPREASON']").GetAttribute("value"));
-                else if (node.GetAttribute("total") == "0" || node.GetAttribute("testcasecount") == "0")
-                    WriteAssemblyMessage(ColorStyle.Warning, "Warning: No tests found in " + node.GetAttribute("name"));
-            }
-        }
-
-        private void WriteAssemblyMessage(ColorStyle style, string message)
-        {
-            _writer.WriteLine(style, message);
-            _writer.WriteLine();
-        }
-
-        #endregion
-
         #region Errors and Failures Report
 
         public void WriteErrorsAndFailuresReport()
@@ -147,6 +118,12 @@ namespace NUnit.ConsoleRunner
             _writer.WriteLine(ColorStyle.SectionHeader, "Errors and Failures");
             _writer.WriteLine();
             WriteErrorsAndFailures(_result);
+
+            if (_options.StopOnError)
+            {
+                _writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
+                _writer.WriteLine();
+            }
         }
 
         private void WriteErrorsAndFailures(XmlNode result)
@@ -157,10 +134,7 @@ namespace NUnit.ConsoleRunner
             {
                 case "test-case":
                     if (resultState == "Failed")
-                    {
-                        using (new ColorConsole(ColorStyle.Failure))
-                            WriteSingleResult(result);
-                    }
+                        WriteSingleResult(result, ColorStyle.Failure);
                     return;
 
                 case "test-run":
@@ -173,15 +147,13 @@ namespace NUnit.ConsoleRunner
                     {
                         if (result.GetAttribute("type") == "Theory")
                         {
-                            using (new ColorConsole(ColorStyle.Failure))
-                                WriteSingleResult(result);
+                            WriteSingleResult(result, ColorStyle.Failure);
                         }
                         else
                         {
                             var site = result.GetAttribute("site");
                             if (site == "SetUp" || site == "TearDown")
-                                using (new ColorConsole(ColorStyle.Failure))
-                                    WriteSingleResult(result);
+                                WriteSingleResult(result, ColorStyle.Failure);
                             if (site == "SetUp") return;
                         }
                     }
@@ -220,8 +192,7 @@ namespace NUnit.ConsoleRunner
                             ? ColorStyle.Warning 
                             : ColorStyle.Output;
 
-                        using (new ColorConsole(colorStyle))
-                            WriteSingleResult(result);
+                        WriteSingleResult(result, colorStyle);
                     }
 
                     break;
@@ -241,7 +212,7 @@ namespace NUnit.ConsoleRunner
 
         private static readonly char[] EOL_CHARS = new char[] { '\r', '\n' };
 
-        private void WriteSingleResult(XmlNode result)
+        private void WriteSingleResult(XmlNode result, ColorStyle colorStyle)
         {
             string status = result.GetAttribute("label");
             if (status == null)
@@ -256,7 +227,8 @@ namespace NUnit.ConsoleRunner
 
             string fullName = result.GetAttribute("fullname");
 
-            _writer.WriteLine("{0}) {1} : {2}", ++_reportIndex, status, fullName);
+            _writer.WriteLine(colorStyle,
+                string.Format("{0}) {1} : {2}", ++_reportIndex, status, fullName));
 
             XmlNode failureNode = result.SelectSingleNode("failure");
             if (failureNode != null)
@@ -269,10 +241,10 @@ namespace NUnit.ConsoleRunner
                 // to WriteLine(). Newlines within the strings are retained.
 
                 if (message != null)
-                    _writer.WriteLine(message.InnerText.TrimEnd(EOL_CHARS));
+                    _writer.WriteLine(colorStyle, message.InnerText.TrimEnd(EOL_CHARS));
 
                 if (stacktrace != null)
-                    _writer.WriteLine(stacktrace.InnerText.TrimEnd(EOL_CHARS));
+                    _writer.WriteLine(colorStyle, stacktrace.InnerText.TrimEnd(EOL_CHARS));
             }
 
             XmlNode reasonNode = result.SelectSingleNode("reason");
@@ -281,7 +253,7 @@ namespace NUnit.ConsoleRunner
                 XmlNode message = reasonNode.SelectSingleNode("message");
 
                 if (message != null)
-                    _writer.WriteLine(message.InnerText.TrimEnd(EOL_CHARS));
+                    _writer.WriteLine(colorStyle, message.InnerText.TrimEnd(EOL_CHARS));
             }
 
             _writer.WriteLine(); // Skip after each item

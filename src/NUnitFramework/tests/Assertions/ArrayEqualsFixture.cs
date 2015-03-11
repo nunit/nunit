@@ -33,7 +33,7 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class ArrayEqualsFixture : AssertionHelper
     {
-#pragma warning disable 183, 184
+#pragma warning disable 183, 184 // error number varies in different runtimes
         // Used to detect runtimes where ArraySegments implement IEnumerable
         private static readonly bool ArraySegmentImplementsIEnumerable = new ArraySegment<int>() is IEnumerable;
 #pragma warning restore 183, 184

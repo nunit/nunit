@@ -34,7 +34,7 @@ namespace NUnitLite.Runner.Tests
         public void WhenTimeoutIsSpecified_RunSettingsIncludeIt()
         {
             var options = new ConsoleOptions("test.dll", "--timeout=50");
-            var settings = TextUI.MakeRunSettings(options);
+            var settings = TextRunner.MakeRunSettings(options);
 
             Assert.That(settings.ContainsKey("DefaultTimeout"));
             Assert.AreEqual(50, settings["DefaultTimeout"]);
@@ -44,7 +44,7 @@ namespace NUnitLite.Runner.Tests
         public void WhenWorkDirectoryIsSpecified_RunSettingsIncludeIt()
         {
             var options = new ConsoleOptions("test.dll", "--work=results");
-            var settings = TextUI.MakeRunSettings(options);
+            var settings = TextRunner.MakeRunSettings(options);
 
             Assert.That(settings.ContainsKey("WorkDirectory"));
             Assert.AreEqual(Path.GetFullPath("results"), settings["WorkDirectory"]);
@@ -54,7 +54,7 @@ namespace NUnitLite.Runner.Tests
         public void WhenSeedIsSpecified_RunSettingsIncludeIt()
         {
             var options = new ConsoleOptions("test.dll", "--seed=1234");
-            var settings = TextUI.MakeRunSettings(options);
+            var settings = TextRunner.MakeRunSettings(options);
 
             Assert.That(settings.ContainsKey("RandomSeed"));
             Assert.AreEqual(1234, settings["RandomSeed"]);

@@ -44,6 +44,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
+      <Link>ExtendedTextWrapperTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\OutputSpecificationTests.cs">
       <Link>OutputSpecificationTests.cs</Link>
     </Compile>

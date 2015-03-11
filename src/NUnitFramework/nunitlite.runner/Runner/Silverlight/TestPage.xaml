@@ -74,10 +74,10 @@
         </Grid>
         
         <!-- Results -->
-        <ScrollViewer Grid.Row ="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row ="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#FF4A5D80">
             <TextBlock x:Name="ScratchArea" TextWrapping="Wrap" Width="800" Text="{Binding ScratchArea}" />
         </ScrollViewer>
-        <TextBlock Grid.Row="1" x:Name="Notice" HorizontalAlignment="Center" VerticalAlignment="Center">Running Tests...</TextBlock>
+        <TextBlock Grid.Row="1" x:Name="Notice" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White">Running Tests...</TextBlock>
         
     </Grid>
     

@@ -30,8 +30,6 @@
     <file src="CHANGES.txt" />
     <file src="$builddir$\net-2.0\nunit.framework.dll" target="lib\net20" />
     <file src="$builddir$\net-2.0\nunit.framework.xml" target="lib\net20" />
-    <file src="$builddir$\net-3.5\nunit.framework.dll" target="lib\net35" />
-    <file src="$builddir$\net-3.5\nunit.framework.xml" target="lib\net35" />
     <file src="$builddir$\net-4.0\nunit.framework.dll" target="lib\net40" />
     <file src="$builddir$\net-4.0\nunit.framework.xml" target="lib\net40" />
     <file src="$builddir$\net-4.5\nunit.framework.dll" target="lib\net45" />

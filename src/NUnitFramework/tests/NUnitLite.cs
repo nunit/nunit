@@ -62,8 +62,8 @@ namespace NUnitLite.Tests
             //}
             //else
             //{
-                //           return new TcpUI("ferrari", 9000).Execute(args);
-                return new TextUI().Execute(args);
+            //           return new TcpUI("ferrari", 9000).Execute(args);
+                return new AutoRun().Execute(args);
             //}
         }
     }

@@ -36,8 +36,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 4.5 Debug")]
 #elif NET_4_0
 [assembly: AssemblyConfiguration(".NET 4.0 Debug")]
-#elif NET_3_5
-[assembly: AssemblyConfiguration(".NET 3.5 Debug")]
 #elif NET_2_0
 [assembly: AssemblyConfiguration(".NET 2.0 Debug")]
 #elif SL_5_0
@@ -58,8 +56,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 4.5")]
 #elif NET_4_0
 [assembly: AssemblyConfiguration(".NET 4.0")]
-#elif NET_3_5
-[assembly: AssemblyConfiguration(".NET 3.5")]
 #elif NET_2_0
 [assembly: AssemblyConfiguration(".NET 2.0")]
 #elif SL_5_0

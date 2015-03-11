@@ -65,10 +65,6 @@
 		<ProjectSuffix>4.0</ProjectSuffix>
 		<Runtime>NET</Runtime>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Framework)'=='net-3.5'">
-		<ProjectSuffix>3.5</ProjectSuffix>
-		<Runtime>NET</Runtime>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(Framework)'=='net-2.0'">
 		<ProjectSuffix>2.0</ProjectSuffix>
 		<Runtime>NET</Runtime>
@@ -79,10 +75,6 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Framework)'=='mono-4.0'">
 		<ProjectSuffix>4.0</ProjectSuffix>
-		<Runtime>mono</Runtime>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Framework)'=='mono-3.5'">
-		<ProjectSuffix>3.5</ProjectSuffix>
 		<Runtime>mono</Runtime>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Framework)'=='mono-2.0'">
@@ -437,18 +429,24 @@
 
 	</Target>
 
+	<Target Name="PackageMasterMsi" Label="Creates the master MSI installer for NUnit">
+		<MSBuild Targets="Build" Projects="$(InstallDir)\master\nunit.wixproj"
+			Properties="Configuration=$(Configuration); Platform=x86" />
+	</Target>
+
 	<Target Name="PackageFrameworkMsi" Label="Creates the MSI installer for the NUnit.Framework">
 		<MSBuild Targets="Build" Projects="$(InstallDir)\framework\nunit-framework.wixproj"
-			Properties="Configuration=$(Configuration); Platform=x86; OutputPath=$(ProjectPackageDir)" />
+			Properties="Configuration=$(Configuration); Platform=x86" />
 	</Target>
 
 	<Target Name="PackageConsoleMsi" Label="Creates the MSI installer for the NUnit console runner and engine">
 		<MSBuild Targets="Build" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
-			Properties="Configuration=$(Configuration); Platform=x86; OutputPath=$(ProjectPackageDir)" />
+			Properties="Configuration=$(Configuration); Platform=x86" />
 	</Target>
 
 	<Target Name="PackageAllMsis" Label="Creates all of the MSI installers for NUnit"
-					DependsOnTargets="PackageFrameworkMsi;PackageConsoleMsi">
+					DependsOnTargets="_CreateProjectPackageDir;PackageMasterMsi;PackageFrameworkMsi;PackageConsoleMsi">
+		<Copy DestinationFolder="$(ProjectPackageDir)" SourceFiles="@(InstallerFiles)" />
 	</Target>
 	
 	<Target Name="_CreatePackageImage" DependsOnTargets="_CleanPackageWorkingDir">
@@ -480,6 +478,10 @@
 	    <AllPackages Include="PackageBinaries" />
 	    <AllPackages Include="PackageNuGet" />
 	    <AllPackages Include="PackageAllMsis" Condition="$(IsWindows)" />
+	</ItemGroup>
+
+	<ItemGroup Label="MSI Installer Files">
+		<InstallerFiles Include="$(ConfigurationBuildDir)\*.msi" />
 	</ItemGroup>
 	
 	<ItemGroup Label="Files for packaging in root">
@@ -514,7 +516,6 @@
 	<ItemGroup Label="Supported Frameworks">
 		<SupportedFrameworks Include="net-4.5" />
 		<SupportedFrameworks Include="net-4.0" />
-		<SupportedFrameworks Include="net-3.5" />
 		<SupportedFrameworks Include="net-2.0" />
 		<!--<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-3.5" />-->
 		<SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0" />

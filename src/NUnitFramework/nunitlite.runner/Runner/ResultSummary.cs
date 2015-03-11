@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnitLite.Runner
@@ -39,6 +40,11 @@ namespace NUnitLite.Runner
         public ResultSummary(ITestResult result)
         {
             InitializeCounters();
+
+            ResultState = result.ResultState;
+            StartTime = result.StartTime;
+            EndTime = result.EndTime;
+            Duration = result.Duration;
 
             Summarize(result);
         }
@@ -97,6 +103,14 @@ namespace NUnitLite.Runner
         /// Gets the ignore count
         /// </summary>
         public int IgnoreCount { get; private set; }
+
+        public ResultState ResultState { get; private set; }
+
+        public DateTime StartTime { get; private set; }
+
+        public DateTime EndTime { get; private set; }
+
+        public TimeSpan Duration { get; private set; }
 
         #endregion
 
