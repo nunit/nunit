@@ -31,20 +31,13 @@ namespace NUnit.Common
     public class ColorConsole : IDisposable
     {
         /// <summary>
-        /// Gets or sets the Enabled flag, indicating whether color is 
-        /// being used. This must be set at program startup.
-        /// </summary>
-        public static bool Enabled { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ColorConsole"/> class.
         /// </summary>
         /// <param name="style">The color style to use.</param>
         public ColorConsole(ColorStyle style)
         {
 #if !SILVERLIGHT && !NETCF
-            if (ColorConsole.Enabled)
-                Console.ForegroundColor = GetColor(style);
+            Console.ForegroundColor = GetColor(style);
 #endif
         }
 
@@ -159,8 +152,7 @@ namespace NUnit.Common
         public void Dispose()
         {
 #if !SILVERLIGHT && !NETCF
-            if (ColorConsole.Enabled)
-                Console.ResetColor();
+            Console.ResetColor();
 #endif
         }
 

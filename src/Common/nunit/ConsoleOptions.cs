@@ -28,7 +28,7 @@ using Mono.Options;
 
 namespace NUnit.Common
 {
-	/// <summary>
+    /// <summary>
     /// ConsoleOptions encapsulates the option settings for
     /// the nunit-console program. It inherits from the Mono
     /// Options OptionSet class and provides a central location
@@ -140,7 +140,7 @@ namespace NUnit.Common
 
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files.",
-                v => WorkDirectory = RequiredValue(v, "--work"));
+                v => workDirectory = RequiredValue(v, "--work"));
 
             this.Add("output|out=", "File {PATH} to contain text output from the tests.",
                 v => OutFile = RequiredValue(v, "--output"));
@@ -267,7 +267,11 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
-        public string WorkDirectory { get; private set; }
+        private string workDirectory = NUnit.Env.DefaultWorkDirectory;
+        public string WorkDirectory 
+        {
+            get { return workDirectory; }
+        }
 
         public string InternalTraceLevel { get; private set; }
 

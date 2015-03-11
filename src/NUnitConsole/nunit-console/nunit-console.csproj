@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>nunit.engine.tests.dll</Commandlineparameters>
+    <Commandlineparameters>net-2.0/nunit.framework.tests.dll -process:Single</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,11 +53,20 @@
     <Compile Include="..\..\Common\nunit\ColorConsole.cs">
       <Link>ColorConsole.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\ColorStyle.cs">
       <Link>ColorStyle.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>ConsoleOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Env.cs">
+      <Link>Env.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>ExtendedTextWriter.cs</Link>

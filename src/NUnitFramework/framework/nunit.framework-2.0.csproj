@@ -58,6 +58,9 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\Env.cs">
+      <Link>Env.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\Guard.cs">
       <Link>Guard.cs</Link>
     </Compile>
@@ -329,7 +332,6 @@
     <Compile Include="Constraints\UniqueItemsConstraint.cs" />
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
-    <Compile Include="Env.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />
     <Compile Include="Exceptions\InconclusiveException.cs" />

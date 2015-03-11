@@ -76,6 +76,9 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
+      <Link>Runner\ExtendedTextWrapperTests.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -250,8 +253,8 @@
     <Compile Include="Runner\CreateTestFilterTests.cs" />
     <Compile Include="Runner\MakeRunSettingsTests.cs" />
     <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="Runner\ResultReporterTests.cs" />
     <Compile Include="Runner\TeamCityEventListenerTests.cs" />
+    <Compile Include="Runner\TextUITests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
@@ -269,6 +272,7 @@
     <Compile Include="Syntax\TestCompiler.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
+    <Compile Include="TestContextTests.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
     <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectCollection.cs" />
