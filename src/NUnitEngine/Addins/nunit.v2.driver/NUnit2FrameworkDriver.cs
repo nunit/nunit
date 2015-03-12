@@ -24,12 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Xml;
 using NUnit.Core;
 using NUnit.Engine.Extensibility;
 
-using TestPackage = NUnit.Core.TestPackage;
 
 namespace NUnit.Engine.Drivers
 {
@@ -112,7 +109,7 @@ namespace NUnit.Engine.Drivers
             if (_runner.Test == null)
                 return String.Format(LOAD_RESULT_FORMAT, _name, _fullname, "Error loading test");
 
-            var result = _runner.Run(Core.NullListener.NULL, Core.TestFilter.Empty, false, LoggingThreshold.Off);
+            var result = _runner.Run(new TestEventAdapter(listener), Core.TestFilter.Empty, false, LoggingThreshold.Off);
 
             return result.ToXml(true).OuterXml;
         }
