@@ -87,29 +87,29 @@ namespace Mono.Addins
 			AddinEngine.Initialize (asm, configDir, null, null);
 		}
 
-	    /// <summary>
-	    /// Initializes the add-in engine.
-	    /// </summary>
-	    /// <param name="startupAsm">The startup assembly</param>
-	    /// <param name="configDir">
-	    /// Location of the add-in registry.
-	    /// </param>
-	    /// <remarks>
-	    /// The add-in engine needs to be initialized before doing any add-in operation.
-	    /// Configuration information about the add-in registry will be stored in the
-	    /// provided location. The add-in engine will look for add-ins in an 'addins'
-	    /// subdirectory of the provided directory.
-	    /// 
-	    /// When specifying a path, it is possible to use a special folder name as root.
-	    /// For example: [Personal]/.config/MyApp. In this case, [Personal] will be replaced
-	    /// by the location of the Environment.SpecialFolder.Personal folder. Any value
-	    /// of the Environment.SpecialFolder enumeration can be used (always between square
-	    /// brackets)
-	    /// </remarks>
-	    public static void Initialize(Assembly startupAsm, string configDir)
-        {
-            AddinEngine.Initialize(startupAsm, configDir, null, null);
-        }
+		/// <summary>
+		/// Initializes the add-in engine.
+		/// </summary>
+		/// <param name="startupAsm">The startup assembly</param>
+		/// <param name="configDir">
+		/// Location of the add-in registry.
+		/// </param>
+		/// <remarks>
+		/// The add-in engine needs to be initialized before doing any add-in operation.
+		/// Configuration information about the add-in registry will be stored in the
+		/// provided location. The add-in engine will look for add-ins in an 'addins'
+		/// subdirectory of the provided directory.
+		/// 
+		/// When specifying a path, it is possible to use a special folder name as root.
+		/// For example: [Personal]/.config/MyApp. In this case, [Personal] will be replaced
+		/// by the location of the Environment.SpecialFolder.Personal folder. Any value
+		/// of the Environment.SpecialFolder enumeration can be used (always between square
+		/// brackets)
+		/// </remarks>
+		public static void Initialize(Assembly startupAsm, string configDir)
+		{
+			AddinEngine.Initialize(startupAsm, configDir, null, null);
+		}
 		
 		/// <summary>
 		/// Initializes the add-in engine.

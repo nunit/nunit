@@ -35,13 +35,12 @@ namespace NUnit.Engine
     public static class TestEngineActivator
     {
         internal static readonly Version DefaultMinimumVersion = new Version(3, 0);
-        internal static readonly Version DefaultMaximumVersion = new Version(255, 0);
 
         private const string DefaultAssemblyName = "nunit.engine.dll";
         internal const string DefaultTypeName = "NUnit.Engine.TestEngine";
 
-        private const string NunitInstallRegKey = @"SOFTWARE\Nunit.org";
-        private const string NunitInstallRegKeyWow64 = @"SOFTWARE\Wow6432Node\Nunit.org";
+        private const string NunitInstallRegKey = @"SOFTWARE\Nunit.org\Engine";
+        private const string NunitInstallRegKeyWow64 = @"SOFTWARE\Wow6432Node\Nunit.org\Engine";
 
         #region Public Methods
 
@@ -56,7 +55,7 @@ namespace NUnit.Engine
         /// <returns>An <see cref="NUnit.Engine.ITestEngine"/></returns>
         public static ITestEngine CreateInstance(bool privateCopy = false)
         {
-            return CreateInstance(DefaultMinimumVersion, DefaultMaximumVersion, privateCopy);
+            return CreateInstance(DefaultMinimumVersion, privateCopy);
         }
 
         /// <summary>
@@ -71,28 +70,12 @@ namespace NUnit.Engine
         /// <returns>An <see cref="ITestEngine"/></returns>
         public static ITestEngine CreateInstance(Version minVersion, bool privateCopy = false)
         {
-            return CreateInstance(minVersion, DefaultMaximumVersion, privateCopy);
-        }
-
-        /// <summary>
-        /// Create an instance of the test engine with a minimum and maximum version.
-        /// </summary>
-        /// <remarks>If private copy is false, the search order is the NUnit install directory for the current user, then
-        /// the install directory for the local machine and finally the current AppDomain's ApplicationBase.</remarks>
-        /// <param name="minVersion">The minimum version of the engine to return inclusive.</param>
-        /// <param name="maxVersion">The maximum version of the engine to return inclusive.</param>
-        /// <param name="privateCopy">if set to <c>true</c> loads the engine found in the application base directory, 
-        /// otherwise searches for the test engine with the highest version installed. Defaults to <c>true</c>.</param>
-        /// <exception cref="NUnitEngineNotFoundException">Thrown when a test engine of the given minimum and maximum version is not found</exception>
-        /// <returns>An <see cref="ITestEngine"/></returns>
-        public static ITestEngine CreateInstance(Version minVersion, Version maxVersion, bool privateCopy = false)
-        {
             try
             {
-                Assembly engine = FindNewestEngine(minVersion, maxVersion, privateCopy);
+                Assembly engine = FindNewestEngine(minVersion, privateCopy);
                 if (engine == null)
                 {
-                    throw new NUnitEngineNotFoundException(minVersion, maxVersion);
+                    throw new NUnitEngineNotFoundException(minVersion);
                 }
                 return (ITestEngine)AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(engine.CodeBase, DefaultTypeName);
             }
@@ -110,35 +93,35 @@ namespace NUnit.Engine
 
         #region Private Methods
 
-        private static Assembly FindNewestEngine(Version minVersion, Version maxVersion, bool privateCopy)
+        private static Assembly FindNewestEngine(Version minVersion, bool privateCopy)
         {
             var newestVersionFound = new Version();
 
             // Check the Application BaseDirectory
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DefaultAssemblyName);
-            Assembly newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, null);
+            Assembly newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, null);
             if (!privateCopy)
             {
                 // Check the install for the current user, 32 bit process
                 path = FindEngineInRegistry(Registry.CurrentUser, NunitInstallRegKey);
-                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, newestAssemblyFound);
 
                 // Check the install for the current user, 64 bit process
                 path = FindEngineInRegistry(Registry.CurrentUser, NunitInstallRegKeyWow64);
-                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, newestAssemblyFound);
 
                 // check the install for the local machine, 32 bit process
                 path = FindEngineInRegistry(Registry.LocalMachine, NunitInstallRegKey);
-                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, newestAssemblyFound);
 
                 // check the install for the local machine, 64 bit process
                 path = FindEngineInRegistry(Registry.LocalMachine, NunitInstallRegKeyWow64);
-                newestAssemblyFound = CheckPathForEngine(path, minVersion, maxVersion, ref newestVersionFound, newestAssemblyFound);
+                newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, newestAssemblyFound);
             }
             return newestAssemblyFound;
         }
 
-        private static Assembly CheckPathForEngine(string path, Version minVersion, Version maxVersion, ref Version newestVersionFound, Assembly newestAssemblyFound)
+        private static Assembly CheckPathForEngine(string path, Version minVersion, ref Version newestVersionFound, Assembly newestAssemblyFound)
         {
             try
             {
@@ -146,7 +129,7 @@ namespace NUnit.Engine
                 {
                     var ass = Assembly.ReflectionOnlyLoadFrom(path);
                     var ver = ass.GetName().Version;
-                    if (ver >= minVersion && ver <= maxVersion && ver > newestVersionFound)
+                    if (ver >= minVersion && ver > newestVersionFound)
                     {
                         newestVersionFound = ver;
                         newestAssemblyFound = ass;
@@ -165,7 +148,22 @@ namespace NUnit.Engine
                 {
                     if (key != null)
                     {
-                        return key.GetValue("Engine") as string;
+                        Version newest = null;
+                        string[] subkeys = key.GetValueNames();
+                        foreach (string name in subkeys)
+                        {
+                            try
+                            {
+                                var current = new Version(name);
+                                if (newest == null || current.CompareTo(newest) > 0)
+                                {
+                                    newest = current;
+                                }
+                            }
+                            catch (Exception){}
+                        }
+                        if(newest != null)
+                            return key.GetValue(newest.ToString()) as string;
                     }
                 }
             }

@@ -19,22 +19,15 @@ namespace NUnit.Engine
         /// Initializes a new instance of the <see cref="NUnitEngineNotFoundException"/> class.
         /// </summary>
         /// <param name="minVersion">The minimum version.</param>
-        /// <param name="maxVersion">The maximum version.</param>
-        internal NUnitEngineNotFoundException(Version minVersion, Version maxVersion = null)
-            :base(CreateMessage(minVersion, maxVersion))
+        internal NUnitEngineNotFoundException(Version minVersion)
+            :base(CreateMessage(minVersion))
         {
         }
 
-        private static string CreateMessage(Version minVersion = null, Version maxVersion = null)
+        private static string CreateMessage(Version minVersion = null)
         {
-            if (maxVersion == null || maxVersion == TestEngineActivator.DefaultMaximumVersion)
-            {
-                return string.Format("{0} with a version greater than or equal to {1} not found",
-                    TestEngineActivator.DefaultTypeName, minVersion ?? TestEngineActivator.DefaultMinimumVersion);
-            }
-
-            return string.Format("{0} with a version greater than or equal to {1} and less than or equal to {2} not found",
-                TestEngineActivator.DefaultTypeName, minVersion ?? TestEngineActivator.DefaultMinimumVersion, maxVersion);
+            return string.Format("{0} with a version greater than or equal to {1} not found",
+                TestEngineActivator.DefaultTypeName, minVersion ?? TestEngineActivator.DefaultMinimumVersion);
         }
     }
 }
