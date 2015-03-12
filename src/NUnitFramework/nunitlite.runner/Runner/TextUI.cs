@@ -32,7 +32,6 @@ using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner
 {
-
     public class TextUI
     {
         private ExtendedTextWriter _outWriter;

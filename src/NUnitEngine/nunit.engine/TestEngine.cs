@@ -24,6 +24,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using Mono.Addins;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
@@ -86,7 +87,9 @@ namespace NUnit.Engine
         {
             if (!AddinManager.IsInitialized)
             {
-                AddinManager.Initialize(NUnitConfiguration.ApplicationDirectory);
+                // Pass in the current nunit.engine assembly because mono.addins uses the executing assembly by
+                // default and that might be in a an entirely different directory than the runner that is using it.
+                AddinManager.Initialize(Assembly.GetExecutingAssembly(), NUnitConfiguration.ApplicationDirectory);
                 AddinManager.Registry.Update(null);
             }
 

@@ -40,6 +40,11 @@
                 <File Id="Mono.Addins.dll"
                       Source="$(var.BuildDir)Mono.Addins.dll" />
             </Component>
+            <Component Id="NUNIT.ENGINE.REGISTRY">
+                <RegistryKey Root="HKMU" Key="Software\NUnit.org\Engine" >
+                    <RegistryValue Action="write" Type="string" Name="!(bind.FileVersion.nunit.engine.dll)" Value="[BIN]nunit.engine.dll" />
+                </RegistryKey>
+            </Component>
         </ComponentGroup>
     </Fragment>
 </Include>
