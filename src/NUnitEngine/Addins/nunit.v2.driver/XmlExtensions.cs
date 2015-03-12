@@ -181,6 +181,11 @@ namespace NUnit.Engine.Drivers
                 else
                     properties.AddProperty(key, propValue);
             }
+
+            // Special handling for empty _CATEGORIES prop
+            // which is sometimes created by NUnit V2
+            if (properties.ChildNodes.Count == 0)
+                parent.RemoveChild(properties);
         }
 
         // Adds a property element and its contents
@@ -226,7 +231,7 @@ namespace NUnit.Engine.Drivers
         /// <param name="node">The node to which the element should be added.</param>
         /// <param name="name">The element name.</param>
         /// <returns>The newly created child element</returns>
-        private static XmlNode AddElement(this XmlNode node, string name)
+        public static XmlNode AddElement(this XmlNode node, string name)
         {
             XmlNode childNode = node.OwnerDocument.CreateElement(name);
             node.AppendChild(childNode);
