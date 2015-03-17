@@ -270,6 +270,9 @@ namespace NUnit.ConsoleRunner
             if (options.DisposeRunners)
                 package.Settings[PackageSettings.DisposeRunners] = true;
 
+            if (options.ShadowCopyFiles)
+                package.Settings[PackageSettings.ShadowCopyFiles] = true;
+
             if (options.DefaultTimeout >= 0)
                 package.Settings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
 

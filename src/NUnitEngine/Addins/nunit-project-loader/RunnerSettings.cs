@@ -79,5 +79,10 @@ namespace NUnit.Engine
         /// Indicates that test runners should be disposed after the tests are executed
         /// </summary>
         public const string DisposeRunners = "DisposeRunners";
+
+        /// <summary>
+        /// Indicates that the test assemblies should be shadow copied. Defaults to false.
+        /// </summary>
+        public const string ShadowCopyFiles = "ShadowCopyFiles";
     }
 }
