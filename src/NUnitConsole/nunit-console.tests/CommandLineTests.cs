@@ -59,6 +59,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("RunAsX86", "x86")]
         [TestCase("DisposeRunners", "dispose-runners")]
+        [TestCase("ShadowCopyFiles", "shadowcopy")]
         [TestCase("TeamCity", "teamcity")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {

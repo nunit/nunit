@@ -83,6 +83,11 @@ namespace NUnit.Common
         /// </summary>
         public const string DisposeRunners = "DisposeRunners";
 
+        /// <summary>
+        /// Indicates that the test assemblies should be shadow copied. Defaults to false.
+        /// </summary>
+        public const string ShadowCopyFiles = "ShadowCopyFiles";
+
         #endregion
 
         #region Settings taken from DriverSettings in the framework

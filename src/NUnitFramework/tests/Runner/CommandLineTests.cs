@@ -59,6 +59,7 @@ namespace NUnit.Common.Tests
 #if !NUNITLITE
         [TestCase("RunAsX86", "x86")]
         [TestCase("DisposeRunners", "dispose-runners")]
+        [TestCase("ShadowCopyFiles", "shadowcopy")]
 #endif
 #if !SILVERLIGHT && !NETCF
         [TestCase("TeamCity", "teamcity")]

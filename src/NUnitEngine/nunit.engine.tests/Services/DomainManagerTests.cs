@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Tests.Assemblies;
 
@@ -94,10 +95,10 @@ namespace NUnit.Engine.Services.Tests
             manager.Unload(domain);
         }
 
-        [Test, Platform("Linux,Net", Reason = "get_SetupInformation() fails on Windows+Mono")]
-        public void AppDomainSetUpCorrect()
+        [Test]
+        public void AppDomainDefaultsToNotShadowCopy()
         {
-            ServiceContext context = new ServiceContext();
+            var context = new ServiceContext();
             context.Add(new SettingsService());
             var domainManager = new DomainManager();
             context.Add(domainManager);
@@ -106,6 +107,23 @@ namespace NUnit.Engine.Services.Tests
             string mockDll = MockAssembly.AssemblyPath;
             AppDomainSetup setup = domainManager.CreateAppDomainSetup(new TestPackage(mockDll));
 
+            Assert.That(setup.ShadowCopyFiles, Is.Null.Or.EqualTo("false"));
+        }
+
+        [Test, Platform("Linux,Net", Reason = "get_SetupInformation() fails on Windows+Mono")]
+        public void AppDomainSetUpCorrect()
+        {
+            var context = new ServiceContext();
+            context.Add(new SettingsService());
+            var domainManager = new DomainManager();
+            context.Add(domainManager);
+            context.ServiceManager.InitializeServices();
+
+            string mockDll = MockAssembly.AssemblyPath;
+            var package = new TestPackage(mockDll);
+            package.Settings["ShadowCopyFiles"] = true;
+            AppDomainSetup setup = domainManager.CreateAppDomainSetup(package);
+
             Assert.That(setup.ApplicationName, Does.StartWith("Tests_"));
             Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(mockDll)), "ApplicationBase");
             Assert.That( 
@@ -113,6 +131,7 @@ namespace NUnit.Engine.Services.Tests
                 Is.EqualTo("mock-nunit-assembly.exe.config").IgnoreCase,
                 "ConfigurationFile");
             Assert.AreEqual( null, setup.PrivateBinPath, "PrivateBinPath" );
+            Assert.That(setup.ShadowCopyFiles, Is.EqualTo("true"));
             Assert.That(setup.ShadowCopyDirectories, Is.SamePath(Path.GetDirectoryName(mockDll)), "ShadowCopyDirectories" );
         }
 

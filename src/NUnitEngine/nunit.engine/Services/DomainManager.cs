@@ -174,7 +174,7 @@ namespace NUnit.Engine.Services
 
             setup.PrivateBinPath = binPath;
 
-            if (package.GetSetting("ShadowCopyFiles", true))
+            if (package.GetSetting("ShadowCopyFiles", false))
             {
                 setup.ShadowCopyFiles = "true";
                 setup.ShadowCopyDirectories = appBase;

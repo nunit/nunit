@@ -118,6 +118,9 @@ namespace NUnit.Common
 
             this.Add("dispose-runners", "Dispose each test runner after it has finished running its tests.",
                 v => DisposeRunners = v != null);
+
+            this.Add("shadowcopy", "Shadow copy test files",
+                v => ShadowCopyFiles = v != null);
 #endif
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
@@ -235,6 +238,8 @@ namespace NUnit.Common
         public bool RunAsX86 { get; private set; }
 
         public bool DisposeRunners { get; private set; }
+
+        public bool ShadowCopyFiles { get; private set; }
 
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }

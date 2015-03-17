@@ -57,6 +57,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--timeout=50", "DefaultTimeout", 50)]
         [TestCase("--x86", "RunAsX86", true)]
         [TestCase("--dispose-runners", "DisposeRunners", true)]
+        [TestCase("--shadowcopy", "ShadowCopyFiles", true)]
         [TestCase("--process=Separate", "ProcessModel", "Separate")]
         [TestCase("--process=separate", "ProcessModel", "Separate")]
         [TestCase("--domain=Multiple", "DomainUsage", "Multiple")]
