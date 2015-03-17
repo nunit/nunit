@@ -416,4 +416,43 @@ namespace NUnit.Framework.Internal
         }
         #endregion
     }
+
+
+    #region Issue 318 - Test Fixture is null on ITest objects
+
+    public class FixtureNotNullTestAttribute : TestActionAttribute
+    {
+        private readonly string _location;
+
+        public FixtureNotNullTestAttribute(string location)
+        {
+            _location = location;
+        }
+
+        public override void BeforeTest(ITest test)
+        {
+            Assert.That(test, Is.Not.Null, "ITest is null on a " + _location);
+            Assert.That(test.Fixture, Is.Not.Null, "ITest.Fixture is null on a " + _location);
+            Assert.That(test.Fixture.GetType(), Is.EqualTo(test.FixtureType), "ITest.Fixture is not the correct type on a " + _location);
+        }
+    }
+
+    [FixtureNotNullTest("TestFixture class")]
+    [TestFixture]
+    public class FixtureIsNotNullForTests
+    {
+        [FixtureNotNullTest("Test method")]
+        [Test]
+        public void TestMethod()
+        {
+        }
+
+        [FixtureNotNullTest("TestCase method")]
+        [TestCase(1)]
+        public void TestCaseMethod(int i)
+        {
+        }
+    }
+
+    #endregion
 }
