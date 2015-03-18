@@ -110,7 +110,7 @@ namespace NUnit.Common
                 v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
 
             // How to Run Tests
-            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0. If not specified, tests will be run under the current framework.",
+            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0. If not specified, tests will run under the framework they are compiled with.",
                 v => Framework = RequiredValue(v, "--framework"));
 
             this.Add("x86", "Run tests in an x86 process on 64 bit systems",
