@@ -129,7 +129,7 @@ namespace NUnit.Engine.Drivers
 
         public void StopRun(bool force)
         {
-            throw new NotImplementedException();
+            _runner.CancelRun();
         }
 
         private static string Escape(string original)
