@@ -128,6 +128,35 @@ namespace NUnit.Framework.Internal
         public string FullName { get; set; }
 
         /// <summary>
+        /// Gets the name of the class containing this test. Returns
+        /// null if the test is not associated with a class.
+        /// </summary>
+        public string ClassName
+        { 
+            get
+            {
+                Type type = FixtureType;
+
+                if (type == null)
+                    return null;
+
+                if (type.IsGenericType)
+                    type = type.GetGenericTypeDefinition();
+
+                return type.FullName;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the method implementing this test.
+        /// Returns null if the test is not implemented as a method.
+        /// </summary>
+        public virtual string MethodName
+        {
+            get { return null; }
+        }
+
+        /// <summary>
         /// Gets the Type of the fixture used in running this test
         /// or null if no fixture type is associated with it.
         /// </summary>
@@ -289,6 +318,10 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("id", this.Id.ToString());
             thisNode.AddAttribute("name", this.Name);
             thisNode.AddAttribute("fullname", this.FullName);
+            if (this.MethodName != null)
+                thisNode.AddAttribute("methodname", this.MethodName);
+            if (this.ClassName != null)
+                thisNode.AddAttribute("classname", this.ClassName);
             thisNode.AddAttribute("runstate", this.RunState.ToString());
 
             if (Properties.Keys.Count > 0)

@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class MethodHelper
     {
-        private const int STRING_MAX = 20;
+        private const int STRING_MAX = 40;
         private const int STRING_LIMIT = STRING_MAX - 3;
         private const string THREE_DOTS = "...";
 

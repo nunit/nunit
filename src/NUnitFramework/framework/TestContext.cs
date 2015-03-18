@@ -292,6 +292,14 @@ namespace NUnit.Framework
             }
 
             /// <summary>
+            /// The ClassName of the test
+            /// </summary>
+            public string ClassName
+            {
+                get { return _test.ClassName;  }
+            }
+
+            /// <summary>
             /// The properties of the test.
             /// </summary>
             public IPropertyBag Properties

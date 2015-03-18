@@ -153,6 +153,14 @@ namespace NUnit.Framework.Internal
             get { return "test-case"; }
         }
 
+        /// <summary>
+        /// Returns the name of the method
+        /// </summary>
+        public override string MethodName
+        {
+            get { return Method.Name; }
+        }
+
         #endregion
     }
 }
