@@ -103,14 +103,14 @@ namespace NUnit.Common
                 v => ActiveConfig = RequiredValue(v, "--config"));
 
             // Where to Run Tests
-            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple",
+            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple. If not specified, defaults to Separate for a single assembly or Multiple for more than one.",
                 v => ProcessModel = RequiredValue(v, "--process", "Single", "Separate", "Multiple"));
 
-            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
+            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple. If not specified, defaults to Separate for a single assembly or Multiple for more than one.",
                 v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
 
             // How to Run Tests
-            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0",
+            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0. If not specified, tests will be run under the current framework.",
                 v => Framework = RequiredValue(v, "--framework"));
 
             this.Add("x86", "Run tests in an x86 process on 64 bit systems",
@@ -129,7 +129,7 @@ namespace NUnit.Common
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
-            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests.",
+            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => numWorkers = RequiredInt(v, "--workers"));
 
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
@@ -142,7 +142,7 @@ namespace NUnit.Common
                 v => PauseBeforeRun = v != null);
 
             // Output Control
-            this.Add("work=", "{PATH} of the directory to use for output files.",
+            this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
                 v => workDirectory = RequiredValue(v, "--work"));
 
             this.Add("output|out=", "File {PATH} to contain text output from the tests.",
