@@ -30,6 +30,7 @@ namespace NUnit.Framework.Internal.Tests
         protected const string OUTER_CLASS = "NUnit.Framework.Internal.Tests.TestNamingTests";
 
         protected abstract string FixtureName { get; }
+        protected abstract string ClassName { get; }
 
         protected TestContext.TestAdapter CurrentTest
         {
@@ -39,36 +40,43 @@ namespace NUnit.Framework.Internal.Tests
         [Test]
         public void SimpleTest()
         {
-            CheckNames("SimpleTest");
+            CheckNames("SimpleTest", "SimpleTest");
         }
 
         [TestCase(5, 7, "ABC")]
         public void ParameterizedTest(int x, int y, string s)
         {
-            CheckNames("ParameterizedTest(5,7,\"ABC\")");
+            CheckNames("ParameterizedTest(5,7,\"ABC\")", "ParameterizedTest");
         }
 
         [TestCase("abcdefghijklmnopqrstuvwxyz")]
         public void TestCaseWithLongStringArgument(string s)
         {
-            CheckNames("TestCaseWithLongStringArgument(\"abcdefghijklmnopqrstuvwxyz\")");
+            CheckNames("TestCaseWithLongStringArgument(\"abcdefghijklmnopqrstuvwxyz\")", "TestCaseWithLongStringArgument");
         }
 
         [TestCase(42)]
         public void GenericTest<T>(T arg)
         {
-            CheckNames("GenericTest<Int32>(42)");
+            CheckNames("GenericTest<Int32>(42)", "GenericTest");
         }
 
-        private void CheckNames(string expectedName)
+        private void CheckNames(string expectedTestName, string expectedMethodName)
         {
-            Assert.That(CurrentTest.Name, Is.EqualTo(expectedName));
-            Assert.That(CurrentTest.FullName, Is.EqualTo(OUTER_CLASS + "+" + FixtureName + "." + expectedName));
+            Assert.That(CurrentTest.Name, Is.EqualTo(expectedTestName));
+            Assert.That(CurrentTest.FullName, Is.EqualTo(OUTER_CLASS + "+" + FixtureName + "." + expectedTestName));
+            Assert.That(CurrentTest.MethodName, Is.EqualTo(expectedMethodName));
+            Assert.That(CurrentTest.ClassName, Is.EqualTo(OUTER_CLASS + "+" + ClassName));
         }
 
         public class SimpleFixture : TestNamingTests
         {
             protected override string FixtureName
+            {
+                get { return "SimpleFixture"; }
+            }
+
+            protected override string ClassName
             {
                 get { return "SimpleFixture"; }
             }
@@ -81,6 +89,11 @@ namespace NUnit.Framework.Internal.Tests
             {
                 get { return "GenericFixture<Int32>"; }
             }
+
+            protected override string ClassName
+            {
+                get { return "GenericFixture`1"; }
+            }
         }
 
         [TestFixture(42, "Forty-two")]
@@ -91,6 +104,11 @@ namespace NUnit.Framework.Internal.Tests
             protected override string FixtureName
             {
                 get { return "ParameterizedFixture(42,\"Forty-two\")"; }
+            }
+
+            protected override string ClassName
+            {
+                get { return "ParameterizedFixture"; }
             }
         }
 
@@ -103,6 +121,11 @@ namespace NUnit.Framework.Internal.Tests
             {
                 get { return "ParameterizedFixtureWithLongStringArgument(\"This is really much too long to be us...\")"; }
             }
+
+            protected override string ClassName
+            {
+                get { return "ParameterizedFixtureWithLongStringArgument"; }
+            }
         }
 
         [TestFixture(typeof(int), typeof(string), 42, "Forty-two")]
@@ -113,6 +136,11 @@ namespace NUnit.Framework.Internal.Tests
             protected override string FixtureName
             {
                 get { return "GenericParameterizedFixture<Int32,String>(42,\"Forty-two\")"; }
+            }
+
+            protected override string ClassName
+            {
+                get { return "GenericParameterizedFixture`2"; }
             }
         }
     }

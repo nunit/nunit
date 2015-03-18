@@ -50,6 +50,18 @@ namespace NUnit.Framework.Interfaces
         string FullName { get; }
 
         /// <summary>
+        /// Gets the name of the class containing this test. Returns
+        /// null if the test is not associated with a class.
+        /// </summary>
+        string ClassName { get; }
+
+        /// <summary>
+        /// Gets the name of the method implementing this test.
+        /// Returns null if the test is not implemented as a method.
+        /// </summary>
+        string MethodName { get; }
+
+        /// <summary>
         /// Gets the Type of the test fixture, if applicable, or
         /// null if no fixture type is associated with this test.
         /// </summary>
