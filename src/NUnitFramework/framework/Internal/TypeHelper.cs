@@ -35,6 +35,10 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TypeHelper
     {
+        private const int STRING_MAX = 40;
+        private const int STRING_LIMIT = STRING_MAX - 3;
+        private const string THREE_DOTS = "...";
+
         internal sealed class NonmatchingTypeClass
         {
         }
@@ -120,8 +124,8 @@ namespace NUnit.Framework.Internal
                 else if (arg is ulong) display += "UL";
                 else if (arg is string)
                 {
-                    if (display.Length > 20)
-                        display = display.Substring(0, 17) + "...";
+                    if (display.Length > STRING_MAX)
+                        display = display.Substring(0, STRING_LIMIT) + THREE_DOTS;
                     display = "\"" + display + "\"";
                 }
 

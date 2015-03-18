@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal.Tests
         [TestCase("abcdefghijklmnopqrstuvwxyz")]
         public void TestCaseWithLongStringArgument(string s)
         {
-            CheckNames("TestCaseWithLongStringArgument(\"abcdefghijklmnop...\")");
+            CheckNames("TestCaseWithLongStringArgument(\"abcdefghijklmnopqrstuvwxyz\")");
         }
 
         [TestCase(42)]
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal.Tests
 
             protected override string FixtureName
             {
-                get { return "ParameterizedFixtureWithLongStringArgument(\"This is really mu...\")"; }
+                get { return "ParameterizedFixtureWithLongStringArgument(\"This is really much too long to be us...\")"; }
             }
         }
 
