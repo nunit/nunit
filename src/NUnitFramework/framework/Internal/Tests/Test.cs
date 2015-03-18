@@ -200,14 +200,14 @@ namespace NUnit.Framework.Internal
         /// <value>A list of child tests</value>
         public abstract System.Collections.Generic.IList<ITest> Tests { get; }
 
-        #endregion
-
-        #region Other Public Properties
-
         /// <summary>
         /// Gets or sets a fixture object for running this test.
         /// </summary>
-        public object Fixture { get; set; }
+        public virtual object Fixture { get; set; }
+
+        #endregion
+
+        #region Other Public Properties
 
         /// <summary>
         /// Gets or Sets the Int value representing the seed for the RandomGenerator
