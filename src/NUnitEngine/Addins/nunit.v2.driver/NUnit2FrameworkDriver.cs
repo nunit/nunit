@@ -24,7 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using NUnit.Core;
+using NUnit.Core.Filters;
 using NUnit.Engine.Extensibility;
 
 
@@ -101,7 +103,8 @@ namespace NUnit.Engine.Drivers
 
         public int CountTestCases(TestFilter filter)
         {
-            return 0;
+            ITestFilter v2Filter = CreateNUnit2TestFilter(filter);
+            return _runner.CountTestCases(v2Filter);
         }
 
         public string Run(ITestEventListener listener, TestFilter filter)
@@ -109,7 +112,9 @@ namespace NUnit.Engine.Drivers
             if (_runner.Test == null)
                 return String.Format(LOAD_RESULT_FORMAT, _name, _fullname, "Error loading test");
 
-            var result = _runner.Run(new TestEventAdapter(listener), Core.TestFilter.Empty, false, LoggingThreshold.Off);
+            ITestFilter v2Filter = CreateNUnit2TestFilter(filter);
+
+            var result = _runner.Run(new TestEventAdapter(listener), v2Filter, false, LoggingThreshold.Off);
 
             return result.ToXml(true).OuterXml;
         }
@@ -124,7 +129,7 @@ namespace NUnit.Engine.Drivers
 
         public void StopRun(bool force)
         {
-            throw new NotImplementedException();
+            _runner.CancelRun();
         }
 
         private static string Escape(string original)
@@ -135,6 +140,69 @@ namespace NUnit.Engine.Drivers
                 .Replace("'", "&apos;")
                 .Replace("<", "&lt;")
                 .Replace(">", "&gt;");
+        }
+
+        private static ITestFilter CreateNUnit2TestFilter(TestFilter filter)
+        {
+            if (filter == null || filter.Xml == null)
+                return Core.TestFilter.Empty;
+
+            var topNode = filter.Xml;
+            if (topNode.Name != "filter")
+                throw new Exception("Expected filter element at top level");
+
+            switch (topNode.ChildNodes.Count)
+            {
+                case 0:
+                    return Core.TestFilter.Empty;
+
+                case 1:
+                    return FromXml(topNode.FirstChild);
+
+                default:
+                    return FromXml(topNode);
+            }
+        }
+
+        private static readonly char[] COMMA = { ',' };
+
+        private static Core.TestFilter FromXml(XmlNode xmlNode)
+        {
+            switch (xmlNode.Name)
+            {
+                case "filter":
+                case "and":
+                    var andFilter = new Core.Filters.AndFilter();
+                    foreach (XmlNode childNode in xmlNode.ChildNodes)
+                        andFilter.Add(FromXml(childNode));
+                    return andFilter;
+
+                case "or":
+                    var orFilter = new Core.Filters.OrFilter();
+                    foreach (System.Xml.XmlNode childNode in xmlNode.ChildNodes)
+                        orFilter.Add(FromXml(childNode));
+                    return orFilter;
+
+                case "not":
+                    return new NotFilter(FromXml(xmlNode.FirstChild));
+
+                case "tests":
+                    var testFilter = new Core.Filters.SimpleNameFilter();
+                    var testNodes = xmlNode.SelectNodes("test");
+                    if(testNodes != null)
+                        foreach (XmlNode childNode in testNodes)
+                            testFilter.Add(childNode.InnerText);
+                    return testFilter;
+
+                case "cat":
+                    var catFilter = new Core.Filters.CategoryFilter();
+                    foreach (string cat in xmlNode.InnerText.Split(COMMA))
+                        catFilter.AddCategory(cat);
+                    return catFilter;
+
+                default:
+                    throw new ArgumentException("Invalid filter element: " + xmlNode.Name, "xmlNode");
+            }
         }
     }
 }
