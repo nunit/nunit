@@ -8,7 +8,7 @@
     <owners>Charlie Poole</owners>
     <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
-    <iconUrl>http://nunit.org/nuget/nunit_32x32.png</iconUrl>
+    <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Console runner for version 3.0 of the NUnit unit-testing framework.</summary>
     <description>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. Currently, the runner will not run 2.6 tests at all, but a plugin will be available in a future release.&#10;&#13;&#10;&#13;This is an alpha release and is not intended for production use.</description>
