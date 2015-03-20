@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
+#if PARALLEL && !NETCF
 using System;
 using System.Threading;
 using System.Runtime.Remoting.Messaging;
@@ -60,16 +60,16 @@ namespace NUnit.Framework.Internal
 
         [Test]
         public void ILogicalThreadAffinativeTest()
-        {	
+        {
             CallContext.SetData( CONTEXT_DATA, new EmptyCallContextData() );
         }
 
         [Test]
         public void ILogicalThreadAffinativeTestConsole()
-        {	
+        {
             CallContext.SetData( CONTEXT_DATA, new EmptyCallContextData() );
             // TODO: make this Assertable
-            //Console.WriteLine("ILogicalThreadAffinativeTest");
+            // Console.WriteLine("ILogicalThreadAffinativeTest");
             Console.Out.Flush();
         }
 
@@ -77,8 +77,8 @@ namespace NUnit.Framework.Internal
         public void GenericPrincipalTest()
         {
             GenericIdentity ident = new GenericIdentity("Bob");
-            GenericPrincipal prpal = new GenericPrincipal(ident, 
-                new string[] {"Level1"});
+            GenericPrincipal prpal = new GenericPrincipal(ident,
+                    new string[] {"Level1"});
 
             CallContext.SetData( CONTEXT_DATA, new PrincipalCallContextData( prpal ) );
         }
@@ -87,8 +87,8 @@ namespace NUnit.Framework.Internal
         public void SetGenericPrincipalOnThread()
         {
             GenericIdentity ident = new GenericIdentity("Bob");
-            GenericPrincipal prpal = new GenericPrincipal(ident, 
-                new string[] {"Level1"});
+            GenericPrincipal prpal = new GenericPrincipal(ident,
+                    new string[] {"Level1"});
 
             System.Threading.Thread.CurrentPrincipal = prpal;
         }
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Internal
         {
             TestIdentity ident = new TestIdentity( "test" );
             GenericPrincipal principal = new GenericPrincipal( ident, new string[] { "Level1" } );
-        
+
             System.Threading.Thread.CurrentPrincipal = principal;
         }
 
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal
             IPrincipal principal = Thread.CurrentPrincipal;
 
             TestBuilder.RunTestFixture( typeof( FixtureThatChangesTheCurrentPrincipal ) );
-            
+
             Assert.That(
                 Thread.CurrentPrincipal,
                 Is.SameAs(principal),
@@ -163,7 +163,9 @@ namespace NUnit.Framework.Internal
     [Serializable]
     public class TestIdentity : GenericIdentity
     {
-        public TestIdentity( string name ) : base( name ) { }
+        public TestIdentity( string name ) : base( name )
+        {
+        }
     }
 
 }

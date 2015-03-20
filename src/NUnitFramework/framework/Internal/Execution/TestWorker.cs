@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestWorker
     {
-        static Logger log = InternalTrace.GetLogger("TestWorker");
+        private static Logger log = InternalTrace.GetLogger("TestWorker");
 
         private WorkItemQueue _readyQueue;
         private Thread _workerThread;
@@ -58,29 +58,45 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="queue">The queue from which to pull work items</param>
         /// <param name="name">The name of this worker</param>
         /// <param name="apartmentState">The apartment state to use for running tests</param>
-        public TestWorker(WorkItemQueue queue, string name, ApartmentState apartmentState)
+        public TestWorker(WorkItemQueue queue, string name
+#if !NETCF
+                          , ApartmentState apartmentState
+#endif
+                          )
         {
             _readyQueue = queue;
 
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = name;
+#if !NETCF
             _workerThread.SetApartmentState(apartmentState);
+#endif
         }
 
         /// <summary>
         /// The name of this worker - also used for the thread
         /// </summary>
-        public string Name { get { return _workerThread.Name; } }
+        public string Name
+        {
+            get { return _workerThread.Name; }
+        }
 
         /// <summary>
         /// Indicates whether the worker thread is running
         /// </summary>
-        public bool IsAlive { get { return _workerThread.IsAlive; } }
+        public bool IsAlive
+        {
+#if NETCF
+            get { return !_workerThread.Join(0); }
+#else
+            get { return _workerThread.IsAlive; }
+#endif
+        }
 
         /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
         /// </summary>
-        void TestWorkerThreadProc()
+        private void TestWorkerThreadProc()
         {
             log.Info("{0} starting ", _workerThread.Name);
 
@@ -96,9 +112,11 @@ namespace NUnit.Framework.Internal.Execution
 
                     log.Info("{0} executing {1}", _workerThread.Name, workItem.Test.Name);
 
-                    if (Busy != null) Busy(this, EventArgs.Empty);
+                    if (Busy != null)
+                        Busy(this, EventArgs.Empty);
                     workItem.Execute();
-                    if (Idle != null) Idle(this, EventArgs.Empty);
+                    if (Idle != null)
+                        Idle(this, EventArgs.Empty);
 
                     ++_workItemCount;
                 }
@@ -124,9 +142,14 @@ namespace NUnit.Framework.Internal.Execution
         {
             _running = false;
 
+#if NETCF
+            if (_workerThread != null && !_workerThread.Join(0))
+#else
             if (_workerThread != null && _workerThread.IsAlive)
+#endif
                 ThreadUtility.Kill(_workerThread);
         }
     }
 }
+
 #endif

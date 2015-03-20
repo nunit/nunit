@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,10 +37,12 @@ namespace NUnit.Framework.Internal.Execution
         /// The queue is paused
         /// </summary>
         Paused,
+
         /// <summary>
         /// The queue is running
         /// </summary>
         Running,
+
         /// <summary>
         /// The queue is stopped
         /// </summary>
@@ -54,10 +56,13 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class WorkItemQueue
     {
-        Logger log = InternalTrace.GetLogger("WorkItemQueue");
+        private Logger log = InternalTrace.GetLogger("WorkItemQueue");
 
         private Queue<WorkItem> _innerQueue = new Queue<WorkItem>();
         private object _syncRoot = new object();
+#if NETCF
+        private ManualResetEvent _syncEvent = new ManualResetEvent(false);
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
@@ -116,7 +121,11 @@ namespace NUnit.Framework.Internal.Execution
                 _innerQueue.Enqueue(work);
                 if (_innerQueue.Count > MaxCount)
                     MaxCount = _innerQueue.Count;
+#if NETCF
+                _syncEvent.Set();
+#else
                 Monitor.PulseAll(_syncRoot);
+#endif
             }
         }
 
@@ -133,7 +142,16 @@ namespace NUnit.Framework.Internal.Execution
                     if (State == WorkItemQueueState.Stopped)
                         return null; // Tell worker to terminate
                     else // We are either paused or empty, so wait for something to change
+#if NETCF
+                    {
+                        Monitor.Exit(_syncRoot);
+                        _syncEvent.WaitOne();
+                        Monitor.Enter(_syncRoot);
+                        _syncEvent.Reset();
+                    }
+#else
                         Monitor.Wait(_syncRoot);
+#endif
                 }
 
                 // Queue is running and non-empty
@@ -151,7 +169,11 @@ namespace NUnit.Framework.Internal.Execution
             {
                 log.Info("{0} starting", Name);
                 State = WorkItemQueueState.Running;
+#if NETCF
+                _syncEvent.Set();
+#else
                 Monitor.PulseAll(_syncRoot);
+#endif
             }
         }
 
@@ -165,7 +187,11 @@ namespace NUnit.Framework.Internal.Execution
                 log.Info("{0} stopping - {1} WorkItems processed, max size {2}", Name, ItemsProcessed, MaxCount);
 
                 State = WorkItemQueueState.Stopped;
+#if NETCF
+                _syncEvent.Set();
+#else
                 Monitor.PulseAll(_syncRoot);
+#endif
             }
         }
 
@@ -183,4 +209,5 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
+
 #endif

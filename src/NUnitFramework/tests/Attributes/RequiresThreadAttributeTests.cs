@@ -1,6 +1,6 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT
 using System;
 using System.Threading;
 
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Attributes
     public class RequiresThreadAttributeTests : ThreadingTests
     {
         private Thread SetupThread { get; set; }
-        
+
         [SetUp]
         public void GetSetUpThreadInfo()
         {
@@ -41,15 +41,16 @@ namespace NUnit.Framework.Attributes
         [Test, RequiresThread]
         public void TestWithRequiresThreadRunsInSeparateThread()
         {
-            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
+            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
         }
 
         [Test, RequiresThread]
         public void TestWithRequiresThreadRunsSetUpAndTestOnSameThread()
         {
-            Assert.That( Thread.CurrentThread, Is.EqualTo( SetupThread ) );
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
+#if !NETCF
         [Test, RequiresThread( ApartmentState.STA )]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
         {
@@ -63,6 +64,7 @@ namespace NUnit.Framework.Attributes
             Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
             Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
         }
+#endif
 
         [TestFixture, RequiresThread]
         public class FixtureRequiresThread
@@ -71,7 +73,7 @@ namespace NUnit.Framework.Attributes
             public void RequiresThreadCanBeSetOnTestFixture()
             {
                 // TODO: Figure out how to test this
-                //Assert.That(Environment.StackTrace, Contains.Substring("RunTestProc"));
+                // Assert.That(Environment.StackTrace, Contains.Substring("RunTestProc"));
             }
         }
 
@@ -83,7 +85,7 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void RequiresThreadAttributeIsInheritable()
             {
-                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof (RequiresThreadAttribute), true);
+                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof(RequiresThreadAttribute), true);
                 Assert.That(attributes, Has.Length.EqualTo(1),
                     "RequiresThreadAttribute was not inherited from the base class");
             }
