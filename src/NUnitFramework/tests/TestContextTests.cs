@@ -198,10 +198,14 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-        }
+#if !PORTABLE && !SILVERLIGHT
+			Assert.That(context.TestDirectory, Is.Not.Null);
+			Assert.That(context.WorkDirectory, Is.Not.Null);
+#endif
+		}
     }
 
-    [TestFixture]
+	[TestFixture]
     public class TestContextOneTimeTearDownTests
     {
         [Test]
