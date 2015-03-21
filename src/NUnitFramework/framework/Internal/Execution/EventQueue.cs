@@ -218,6 +218,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #if NETCF
                 syncEvent.Set();
+                syncEvent.Reset();
 #else
                 Monitor.Pulse(syncRoot);
 #endif
@@ -261,7 +262,6 @@ namespace NUnit.Framework.Internal.Execution
                         Monitor.Exit(syncRoot);
                         syncEvent.WaitOne();
                         Monitor.Enter(syncRoot);
-                        syncEvent.Reset();
                     }
 #else
                         Monitor.Wait(syncRoot);
@@ -286,6 +286,7 @@ namespace NUnit.Framework.Internal.Execution
                     stopped = true;
 #if NETCF
                     syncEvent.Set();
+                    syncEvent.Reset();
 #else
                     Monitor.PulseAll(syncRoot);
 #endif

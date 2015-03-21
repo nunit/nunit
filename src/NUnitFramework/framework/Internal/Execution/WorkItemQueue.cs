@@ -123,6 +123,7 @@ namespace NUnit.Framework.Internal.Execution
                     MaxCount = _innerQueue.Count;
 #if NETCF
                 _syncEvent.Set();
+                _syncEvent.Reset();
 #else
                 Monitor.PulseAll(_syncRoot);
 #endif
@@ -147,7 +148,6 @@ namespace NUnit.Framework.Internal.Execution
                         Monitor.Exit(_syncRoot);
                         _syncEvent.WaitOne();
                         Monitor.Enter(_syncRoot);
-                        _syncEvent.Reset();
                     }
 #else
                         Monitor.Wait(_syncRoot);
@@ -171,6 +171,7 @@ namespace NUnit.Framework.Internal.Execution
                 State = WorkItemQueueState.Running;
 #if NETCF
                 _syncEvent.Set();
+                _syncEvent.Reset();
 #else
                 Monitor.PulseAll(_syncRoot);
 #endif
@@ -189,6 +190,7 @@ namespace NUnit.Framework.Internal.Execution
                 State = WorkItemQueueState.Stopped;
 #if NETCF
                 _syncEvent.Set();
+                _syncEvent.Reset();
 #else
                 Monitor.PulseAll(_syncRoot);
 #endif
