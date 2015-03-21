@@ -73,9 +73,6 @@ namespace NUnit.Framework.Internal.Execution
 #if !PORTABLE
     private void RunnerThreadProc()
     {
-#if NETCF
-        _topLevelWorkItem.Context.EstablishExecutionEnvironment();
-#endif
         _topLevelWorkItem.Execute();
     }
 #endif
