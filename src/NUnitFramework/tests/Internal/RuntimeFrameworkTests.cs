@@ -34,10 +34,10 @@ namespace NUnit.Framework.Internal
             RuntimeType.Silverlight;
 #else
             Type.GetType("Mono.Runtime", false) != null
-            ? RuntimeType.Mono
-            : Environment.OSVersion.Platform == PlatformID.WinCE
-            ? RuntimeType.NetCF
-            : RuntimeType.Net;
+				? RuntimeType.Mono
+				: Environment.OSVersion.Platform == PlatformID.WinCE
+					? RuntimeType.NetCF
+					: RuntimeType.Net;
 #endif
 
         [Test]
