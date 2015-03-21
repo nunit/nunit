@@ -39,20 +39,16 @@ namespace NUnit.Framework.Internal.Execution
         private int _levelOfParallelism;
         private int _itemsDispatched;
 
-        // Our Shifts
+        // Non-STA
         private WorkShift _parallelShift = new WorkShift("Parallel");
         private WorkShift _nonParallelShift = new WorkShift("NonParallel");
+        private WorkItemQueue _parallelQueue;
+        private WorkItemQueue _nonParallelQueue;
+
+        // STA
 #if !NETCF
         private WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
-#endif
-
-        // Our Queues
-        private WorkItemQueue _parallelQueue;
-#if !NETCF
         private WorkItemQueue _parallelSTAQueue;
-#endif
-        private WorkItemQueue _nonParallelQueue;
-#if !NETCF
         private WorkItemQueue _nonParallelSTAQueue;
 #endif
 
