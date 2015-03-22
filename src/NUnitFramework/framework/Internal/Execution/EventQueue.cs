@@ -157,6 +157,7 @@ namespace NUnit.Framework.Internal.Execution
         private bool stopped;
 #if NETCF
         private ManualResetEvent syncEvent = new ManualResetEvent(false);
+        private int waitCount = 0;
 #endif
 
         /// <summary>
@@ -218,6 +219,10 @@ namespace NUnit.Framework.Internal.Execution
 
 #if NETCF
                 syncEvent.Set();
+
+                while (waitCount != 0)
+                    Thread.Sleep(0);
+
                 syncEvent.Reset();
 #else
                 Monitor.Pulse(syncRoot);
@@ -260,7 +265,9 @@ namespace NUnit.Framework.Internal.Execution
 #if NETCF
                     {
                         Monitor.Exit(syncRoot);
+                        Interlocked.Increment(ref waitCount);
                         syncEvent.WaitOne();
+                        Interlocked.Decrement(ref waitCount);
                         Monitor.Enter(syncRoot);
                     }
 #else
@@ -286,6 +293,10 @@ namespace NUnit.Framework.Internal.Execution
                     stopped = true;
 #if NETCF
                     syncEvent.Set();
+
+                    while (waitCount != 0)
+                        Thread.Sleep(0);
+
                     syncEvent.Reset();
 #else
                     Monitor.PulseAll(syncRoot);
