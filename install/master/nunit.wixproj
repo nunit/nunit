@@ -3,10 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <PackageVersion Condition=" '$(PackageVersion)' == '' ">3.0.0-beta-1</PackageVersion>
     <ProductVersion>3.9</ProductVersion>
     <ProjectGuid>809C00DC-3FD3-45BF-BC0E-E284F314D306</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit</OutputName>
+    <OutputName>NUnit.$(PackageVersion)</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -16,7 +17,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
+    <DefineConstants>Debug;DisplayVersion=3.0</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
@@ -25,6 +26,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WixVariables>Build=$(Configuration)</WixVariables>
     <SuppressIces>ICE61</SuppressIces>
+    <DefineConstants>DisplayVersion=3.0</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="nunit.wxs" />
@@ -82,11 +84,11 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
-  <Target Name="BeforeBuild">
+  <!--<Target Name="BeforeBuild">
     <GetAssemblyIdentity AssemblyFiles="..\..\bin\$(Configuration)\net-4.5\nunit.framework.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
     </GetAssemblyIdentity>
-    <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">
+    <CreateProperty Value="$(OutputName).$([System.Version]::new(%(AssemblyVersions.Version)).ToString(2))-beta-1">
       <Output TaskParameter="Value" PropertyName="TargetName" />
     </CreateProperty>
     <CreateProperty Value="$(TargetName)$(TargetExt)">
@@ -95,5 +97,5 @@
     <CreateProperty Value="$(TargetDir)$(TargetFileName)">
       <Output TaskParameter="Value" PropertyName="TargetPath" />
     </CreateProperty>
-  </Target>
+  </Target>-->
 </Project>
