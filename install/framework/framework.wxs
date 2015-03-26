@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="*" 
-             Name="NUnit Framework !(bind.FileVersion.nunit.framework.45.dll)" 
+             Name="NUnit Framework $(var.DisplayVersion)" 
              Language="1033" 
              Version="!(bind.FileVersion.nunit.framework.45.dll)" 
              Manufacturer="nunit.org"

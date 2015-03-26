@@ -3,10 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <PackageVersion Condition=" '$(PackageVersion)' == '' ">3.0.0-beta-1</PackageVersion>
     <ProductVersion>3.9</ProductVersion>
     <ProjectGuid>20132190-582e-462e-b18b-4b2cedddb6c4</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit.Framework</OutputName>
+    <OutputName>NUnit.Framework.$(PackageVersion)</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -15,12 +16,13 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
+    <DefineConstants>Debug;DisplayVersion=3.0 Beta 1</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>DisplayVersion=3.0</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
   </PropertyGroup>
   <ItemGroup>
@@ -58,11 +60,11 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
-  <Target Name="BeforeBuild">
+  <!--<Target Name="BeforeBuild">
     <GetAssemblyIdentity AssemblyFiles="..\..\bin\$(Configuration)\net-4.5\nunit.framework.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
     </GetAssemblyIdentity>
-    <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">
+    <CreateProperty Value="$(OutputName).$([System.Version]::new(%(AssemblyVersions.Version)).ToString(2))-beta-1">
       <Output TaskParameter="Value" PropertyName="TargetName" />
     </CreateProperty>
     <CreateProperty Value="$(TargetName)$(TargetExt)">
@@ -71,5 +73,5 @@
     <CreateProperty Value="$(TargetDir)$(TargetFileName)">
       <Output TaskParameter="Value" PropertyName="TargetPath" />
     </CreateProperty>
-  </Target>
+  </Target>-->
 </Project>
