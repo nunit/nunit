@@ -17,7 +17,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;DisplayVersion=3.0</DefineConstants>
+    <DefineConstants>Debug;DisplayVersion=3.0 Beta 1</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>

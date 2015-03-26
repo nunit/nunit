@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-	<PackageVersion Condition=" '$(PackageVersion)' == '' ">3.0.0-beta-1</PackageVersion>
+    <PackageVersion Condition=" '$(PackageVersion)' == '' ">3.0.0-beta-1</PackageVersion>
     <ProductVersion>3.9</ProductVersion>
     <ProjectGuid>0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
@@ -17,7 +17,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;DisplayVersion=3.0</DefineConstants>
+    <DefineConstants>Debug;DisplayVersion=3.0 Beta 1</DefineConstants>
     <WixVariables>Build=$(Configuration)</WixVariables>
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
