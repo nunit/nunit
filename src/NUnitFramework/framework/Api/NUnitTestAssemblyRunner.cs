@@ -352,7 +352,7 @@ namespace NUnit.Framework.Api
                 : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
 #if NETCF
-                   : 1);
+                   : 2);
 #else
                    : Math.Max(Environment.ProcessorCount, 2));
 #endif

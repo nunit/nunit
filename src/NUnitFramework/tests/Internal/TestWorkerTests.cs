@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,7 +37,11 @@ namespace NUnit.Framework.Internal.Execution
         public void SetUp()
         {
             _queue = new WorkItemQueue("TestQ");
+#if NETCF
+            _worker = new TestWorker(_queue, "TestQ_Worker");
+#else
             _worker = new TestWorker(_queue, "TestQ_Worker", ApartmentState.MTA);
+#endif
         }
 
         [TearDown]
@@ -54,7 +58,7 @@ namespace NUnit.Framework.Internal.Execution
 
             _worker.Busy += (s, ea) => { sb.Append("Busy"); };
             work.Executed += (s, ea) => { sb.Append("Exec"); };
-            _worker.Idle += (s, ea) => { sb.Append("Idle"); };                                                                                                                                                                                                                                       
+			_worker.Idle += (s, ea) => { sb.Append ("Idle"); };
 
             _queue.Enqueue(work);
             _worker.Start();
@@ -63,7 +67,10 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(() => sb.ToString(), Is.EqualTo("BusyExecIdle").After(200));
         }
 
-        private void FakeMethod() { }
+        private void FakeMethod()
+        {
+        }
     }
 }
+
 #endif

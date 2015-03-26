@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;PARALLEL</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -38,7 +38,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;PARALLEL</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
