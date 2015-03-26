@@ -11,11 +11,11 @@
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Console runner for version 3.0 of the NUnit unit-testing framework.</summary>
-    <description>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. Currently, the runner will not run 2.6 tests at all, but a plugin will be available in a future release.&#10;&#13;&#10;&#13;This is an alpha release and is not intended for production use.</description>
-    <releaseNotes>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. Currently, the runner will not run 2.6 tests at all, but a plugin will be available in a future release.&#10;&#13;&#10;&#13;This is an alpha release and is not intended for production use.</releaseNotes>
+    <description>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. The runner will run 2.6 tests using a plugin.&#10;&#13;&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</description>
+    <releaseNotes>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. The runner will run 2.6 tests using a plugin.&#10;&#13;&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd runner</tags>
-    <copyright>Copyright (c) 2014 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
   </metadata>
   <files>
     <file src="LICENSE.txt" />
