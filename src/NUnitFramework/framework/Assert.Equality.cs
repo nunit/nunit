@@ -98,6 +98,44 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Ints
+
+        /// <summary>
+        /// Verifies that two ints are equal. If they are not, then an
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void AreEqual(int expected, int actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.EqualTo(expected), message, args);
+        }
+        /// <summary>
+        /// Verifies that two ints are equal. If they are not, then an
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="message">The message to display in case of failure</param>
+        public static void AreEqual(int expected, int actual, string message)
+        {
+            Assert.That(actual, Is.EqualTo(expected), message, null);
+        }
+        /// <summary>
+        /// Verifies that two ints are equal. If they are not, then an
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        public static void AreEqual(int expected, int actual)
+        {
+            Assert.That(actual, Is.EqualTo(expected), null, null);
+        }
+
+        #endregion
+
         #region Objects
 
         /// <summary>

@@ -55,6 +55,14 @@ namespace NUnit.Framework.Assertions
             int i32 = 0;
             Assert.AreEqual(i32, l64);
         }
+
+        [Test]
+        public void IntCharComparision()
+        {
+            char c= '\u0000';
+            int i = 0;
+            Assert.AreEqual(c, i);
+        }
         
         [Test]
         public void IntegerLongComparison()
