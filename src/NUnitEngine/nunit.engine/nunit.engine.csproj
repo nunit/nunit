@@ -104,9 +104,13 @@
     <Compile Include="Runners\LocalTestRunner.cs" />
     <Compile Include="Runners\MasterTestRunner.cs" />
     <Compile Include="Runners\MultipleTestDomainRunner.cs" />
+    <Compile Include="Internal\ParallelTaskWorkerPool.cs" />
+    <Compile Include="Runners\ParallelTestProcessRunner.cs" />
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
+    <Compile Include="Internal\TestEngineLoaderTask.cs" />
+    <Compile Include="Internal\TestEngineRunnerTask.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
     <Compile Include="Services\ResultWriters\XmlTransformResultWriter.cs" />
