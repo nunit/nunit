@@ -45,6 +45,11 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Run tests in a separate process per assembly
         /// </summary>
-        Multiple
+        Multiple,
+        /// <summary>
+        /// Run tests in a separate process for each test assembly 
+        /// and run them all in parallel
+        /// </summary>
+        Parallel,
     }
 }
