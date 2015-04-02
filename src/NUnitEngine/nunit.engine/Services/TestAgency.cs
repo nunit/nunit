@@ -401,17 +401,27 @@ namespace NUnit.Engine.Services
         /// </summary>
         private class AgentDataBase
         {
+            private readonly object _lock = new object();
             private Dictionary<Guid, AgentRecord> agentData = new Dictionary<Guid, AgentRecord>();
 
             public AgentRecord this[Guid id]
             {
-                get { return agentData[id]; }
+                get 
+                {
+                    lock (_lock)
+                    {
+                        return agentData[id];
+                    } 
+                }
                 set
                 {
-                    if ( value == null )
-                        agentData.Remove( id );
-                    else
-                        agentData[id] = value;
+                    lock (_lock)
+                    {
+                        if (value == null)
+                            agentData.Remove(id);
+                        else
+                            agentData[id] = value;
+                    }
                 }
             }
 
@@ -419,30 +429,41 @@ namespace NUnit.Engine.Services
             {
                 get
                 {
-                    foreach( KeyValuePair<Guid, AgentRecord> entry in agentData)
+                    lock (_lock)
                     {
-                        AgentRecord r = entry.Value;
-                        if ( r.Agent == agent )
-                            return r;
+                        foreach (KeyValuePair<Guid, AgentRecord> entry in agentData)
+                        {
+                            AgentRecord r = entry.Value;
+                            if (r.Agent == agent)
+                                return r;
+                        }
                     }
-
                     return null;
                 }
             }
 
             public void Add( AgentRecord r )
             {
-                agentData[r.Id] = r;
+                lock (_lock)
+                {
+                    agentData[r.Id] = r;
+                }
             }
 
             public void Remove(Guid agentId)
             {
-                agentData.Remove(agentId);
+                lock (_lock)
+                {
+                    agentData.Remove(agentId);    
+                }
             }
 
             public void Clear()
             {
-                agentData.Clear();
+                lock (_lock)
+                {
+                    agentData.Clear();
+                }
             }
 
             //#region IEnumerable Members
