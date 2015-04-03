@@ -80,25 +80,12 @@ namespace NUnit.Engine.Runners
             }
 
             var results = new List<TestEngineResult>();
-            var workerPool = new ParallelTaskWorkerPool(GetLevelOfParallelism());
-            var tasks = new List<TestEngineLoaderTask>();
 
             foreach (TestPackage subPackage in packages)
             {
                 var runner = CreateRunner(subPackage);
                 _runners.Add(runner);
-                
-                var task = new TestEngineLoaderTask(runner);
-                tasks.Add(task);
-                workerPool.Enqueue(task);
-            }
-
-            workerPool.Start();
-            workerPool.WaitAll();
-
-            foreach (var task in tasks)
-            {
-                results.Add(task.Result());
+                results.Add(runner.Load());
             }
 
             return ResultHelper.Merge(results);
