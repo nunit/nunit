@@ -77,6 +77,7 @@
     <Compile Include="Drivers\NUnit3DriverFactory.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriver.cs" />
     <Compile Include="IDriverService.cs" />
+    <Compile Include="Internal\ITask.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="Agents\RemoteTestAgent.cs" />
