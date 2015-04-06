@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         private List<EqualityAdapter> externalComparers = new List<EqualityAdapter>();
 
         /// <summary>
-        /// List of points at which a failure occured.
+        /// List of points at which a failure occurred.
         /// </summary>
         private List<FailurePoint> failurePoints;
 

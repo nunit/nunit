@@ -69,7 +69,7 @@ namespace NUnit.Engine
 
         /// <summary>
         /// Returns a test runner instance for use by clients in discovering,
-        /// exploring and exeuting tests.
+        /// exploring and executing tests.
         /// </summary>
         /// <param name="package">The TestPackage for which the runner is intended.</param>
         /// <returns>An ITestRunner.</returns>

@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     /// exists on the object provided through Match.
     /// 
     /// Originally, PropertyConstraint provided this feature
-    /// in addition to making optional tests on the vaue
+    /// in addition to making optional tests on the value
     /// of the property. The two constraints are now separate.
     /// </summary>
     public class PropertyExistsConstraint : Constraint

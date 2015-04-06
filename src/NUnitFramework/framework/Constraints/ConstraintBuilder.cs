@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     /// ConstraintBuilder maintains the stacks that are used in
     /// processing a ConstraintExpression. An OperatorStack
     /// is used to hold operators that are waiting for their
-    /// operands to be reognized. a ConstraintStack holds 
+    /// operands to be reorganized. a ConstraintStack holds 
     /// input constraints as well as the results of each
     /// operator applied.
     /// </summary>
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Appends the specified constraint to the expresson by pushing
+        /// Appends the specified constraint to the expression by pushing
         /// it on the constraint stack.
         /// </summary>
         /// <param name="constraint">The constraint to push.</param>

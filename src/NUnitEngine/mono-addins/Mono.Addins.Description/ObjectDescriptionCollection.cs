@@ -107,7 +107,7 @@ namespace Mono.Addins.Description
 		/// Checks if an object is present in the collection.
 		/// </summary>
 		/// <param name='ob'>
-		/// Objecect to check.
+		/// Object to check.
 		/// </param>
 		public bool Contains (ObjectDescription ob)
 		{

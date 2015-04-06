@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Commands
         private readonly List<TestActionItem> _actions;
 
         /// <summary>
-        /// Constructs a OneTimeSetUpComand for a suite
+        /// Constructs a OneTimeSetUpCommand for a suite
         /// </summary>
         /// <param name="suite">The suite to which the command applies</param>
         /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>

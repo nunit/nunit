@@ -230,10 +230,10 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void InvalidOption()
         {
-            ConsoleOptions options = new ConsoleOptions("-asembly:nunit.tests.dll");
+            ConsoleOptions options = new ConsoleOptions("-assembly:nunit.tests.dll");
             Assert.False(options.Validate());
             Assert.AreEqual(1, options.ErrorMessages.Count);
-            Assert.AreEqual("Invalid argument: -asembly:nunit.tests.dll", options.ErrorMessages[0]);
+            Assert.AreEqual("Invalid argument: -assembly:nunit.tests.dll", options.ErrorMessages[0]);
         }
 
 

@@ -150,7 +150,7 @@ namespace NUnit.Framework.Interfaces
         public TestStatus Status { get; private set; }
 
         /// <summary>
-        /// Gets the label under which this test resullt is
+        /// Gets the label under which this test result is
         /// categorized, if any.
         /// </summary>
         public string Label { get; private set; }
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Interfaces
 
     /// <summary>
     /// The FailureSite enum indicates the stage of a test
-    /// in which an error or failure occured.
+    /// in which an error or failure occurred.
     /// </summary>
     public enum FailureSite
     {

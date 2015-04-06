@@ -61,7 +61,7 @@ namespace NUnit.Engine.Internal
         /// Load the value of one of the group's settings or return a default value
         /// </summary>
         /// <param name="settingName">Name of setting to load</param>
-        /// <param name="defaultValue">Value to return if the seeting is not present</param>
+        /// <param name="defaultValue">Value to return if the setting is not present</param>
         /// <returns>Value of the setting or the default</returns>
         public T GetSetting<T>(string settingName, T defaultValue)
         {

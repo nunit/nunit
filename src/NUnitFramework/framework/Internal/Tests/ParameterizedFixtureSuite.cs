@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Type represented by this suite.
         /// </summary>
-        /// <value>A Sysetm.Type.</value>
+        /// <value>A System.Type.</value>
         public Type ParameterizedType
         {
             get { return type; }

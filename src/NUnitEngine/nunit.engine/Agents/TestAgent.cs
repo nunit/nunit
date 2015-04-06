@@ -44,7 +44,7 @@ namespace NUnit.Engine.Agents
         #region Constructors
 
         /// <summary>
-        /// Consructs a TestAgent
+        /// Constructs a TestAgent
         /// </summary>
         /// <param name="agentId"></param>
         /// <param name="agency"></param>
@@ -73,7 +73,7 @@ namespace NUnit.Engine.Agents
 
         /// <summary>
         /// Gets a reference to the TestAgency with which this agent 
-        /// is asssociated. Returns null if the agent is not 
+        /// is associated. Returns null if the agent is not 
         /// connected to an agency.
         /// </summary>
         public ITestAgency Agency

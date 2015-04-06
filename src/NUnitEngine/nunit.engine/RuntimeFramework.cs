@@ -316,7 +316,7 @@ namespace NUnit.Engine
         /// <summary>
         /// Parses a string representing a RuntimeFramework.
         /// The string may be just a RuntimeType name or just
-        /// a Version or a hyphentated RuntimeType-Version or
+        /// a Version or a hyphenated RuntimeType-Version or
         /// a Version prefixed by 'v'.
         /// </summary>
         /// <param name="s"></param>

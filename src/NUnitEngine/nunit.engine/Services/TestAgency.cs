@@ -286,7 +286,7 @@ namespace NUnit.Engine.Services
         /// Return the NUnit Bin Directory for a particular
         /// runtime version, or null if it's not installed.
         /// For normal installations, there are only 1.1 and
-        /// 2.0 directories. However, this method accomodates
+        /// 2.0 directories. However, this method accommodates
         /// 3.5 and 4.0 directories for the benefit of NUnit
         /// developers using those runtimes.
         /// </summary>

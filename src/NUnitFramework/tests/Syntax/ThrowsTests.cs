@@ -119,7 +119,7 @@ namespace NUnit.Framework.Syntax
         }
 
         [Test]
-        public void LambdaThrowsExcepton()
+        public void LambdaThrowsException()
         {
             Assert.That(
                 () => new MyClass(null),

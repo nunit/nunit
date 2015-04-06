@@ -59,7 +59,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// The syntax element folowing this operator
+        /// The syntax element following this operator
         /// </summary>
         public object RightContext
         {

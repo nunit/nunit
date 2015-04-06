@@ -240,7 +240,7 @@ namespace NUnit.Framework.Internal
                 "UNIX,Linux");
         }
 
-        // This throws under Microsoft .Net due to the invlaid enumeration value of 128
+        // This throws under Microsoft .Net due to the invalid enumeration value of 128
         [Test, Platform(Exclude="Net")]
         public void DetectUnixUnderMono()
         {

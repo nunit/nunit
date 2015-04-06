@@ -43,7 +43,7 @@ namespace NUnit.Framework
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         /// <summary>
-        /// Construct with the name of the method, property or field that will prvide data
+        /// Construct with the name of the method, property or field that will provide data
         /// </summary>
         /// <param name="sourceName">The name of the method, property or field that will provide data</param>
         public TestCaseSourceAttribute(string sourceName)
