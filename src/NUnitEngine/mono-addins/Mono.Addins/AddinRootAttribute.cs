@@ -35,7 +35,7 @@ namespace Mono.Addins
 	/// Marks an assembly as being an add-in root.
 	/// </summary>
 	/// <remarks>
-	/// An add-in root is an assemly which can be extended by add-ins.
+	/// An add-in root is an assembly which can be extended by add-ins.
 	/// </remarks>
 	[AttributeUsage (AttributeTargets.Assembly)]
 	public class AddinRootAttribute: AddinAttribute

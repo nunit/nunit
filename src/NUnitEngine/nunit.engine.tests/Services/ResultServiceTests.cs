@@ -60,7 +60,7 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [Test]
-        public void NUnit3Format_NonExistentTranform_ThrowsArgumentException()
+        public void NUnit3Format_NonExistentTransform_ThrowsArgumentException()
         {
             Assert.That(
                 () => _resultService.GetResultWriter("user", new object[] { "junk.xslt" }), 

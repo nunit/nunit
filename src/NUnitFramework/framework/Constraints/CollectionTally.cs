@@ -28,11 +28,11 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// CollectionTally counts (tallies) the number of
-    /// occurences of each object in one or more enumerations.
+    /// occurrences of each object in one or more enumerations.
     /// </summary>
     public class CollectionTally
     {
-        // Internal list used to track occurences
+        // Internal list used to track occurrences
         private readonly List<object> list = new List<object>();
 
         private readonly NUnitEqualityComparer comparer;

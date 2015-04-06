@@ -52,7 +52,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Name of the item that is needed in order for
-        /// a test to run. Multiple itemss may be given,
+        /// a test to run. Multiple items may be given,
         /// separated by a comma.
         /// </summary>
         public string Include

@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the current instance to be case-sensitve
+        /// Modifies the current instance to be case-sensitive
         /// and returns it.
         /// </summary>
         public PathConstraint RespectCase

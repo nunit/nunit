@@ -149,7 +149,7 @@ namespace NUnit.Engine.Runners
 
         /// <summary>
         /// Load a TestPackage for possible execution. The 
-        /// explicit implemenation returns an ITestEngineResult
+        /// explicit implementation returns an ITestEngineResult
         /// for consumption by clients.
         /// </summary>
         /// <returns>An XmlNode representing the loaded assembly.</returns>

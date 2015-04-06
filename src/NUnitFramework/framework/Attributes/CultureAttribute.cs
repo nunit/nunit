@@ -114,7 +114,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Test to determine if one of a collection of culturess
+        /// Test to determine if one of a collection of cultures
         /// is being used currently.
         /// </summary>
         /// <param name="cultures"></param>

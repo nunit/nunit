@@ -266,7 +266,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCaseSource("exception_source"), Explicit]
-        public void HandlesExceptioninTestCaseSource_GuiDisplay(string lhs, string rhs)
+        public void HandlesExceptionInTestCaseSource_GuiDisplay(string lhs, string rhs)
         {
             Assert.AreEqual(lhs, rhs);
         }

@@ -56,7 +56,7 @@ namespace NUnit.Framework.Api
 
         #region Construction Test
         [Test]
-        public void ConstructContoller()
+        public void ConstructController()
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
             Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());

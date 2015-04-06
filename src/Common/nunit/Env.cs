@@ -38,7 +38,7 @@ namespace NUnit
         // NOTE: Since this is done at compile time for .NET CF,
         // these binaries are not yet currently portable.
         /// <summary>
-        /// The newline sequence in the current environmemt.
+        /// The newline sequence in the current environment.
         /// </summary>
 #if PocketPC || WindowsCE || NETCF
         public static readonly string NewLine = "\r\n";

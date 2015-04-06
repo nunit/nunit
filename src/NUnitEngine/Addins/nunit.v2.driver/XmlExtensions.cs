@@ -46,7 +46,7 @@ namespace NUnit.Engine.Drivers
     //   4. output element
     //   5. totals are all set to 0 in the test-suite element
     // The last item can be corrected if we decide to, but it will require
-    // decending the tree to calculate the totals at each node.
+    // descending the tree to calculate the totals at each node.
 
     public static class XmlExtensions
     {

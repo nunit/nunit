@@ -76,7 +76,7 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [Test]
-        public void GetCommonAppBase_ThreeElements_DiferentDirectories()
+        public void GetCommonAppBase_ThreeElements_DifferentDirectories()
         {
             string[] assemblies = new string[] { path1, path2, path3 };
 

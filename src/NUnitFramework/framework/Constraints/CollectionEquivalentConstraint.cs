@@ -26,7 +26,7 @@ using System.Collections;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// CollectionEquivalentCOnstraint is used to determine whether two
+    /// CollectionEquivalentConstraint is used to determine whether two
     /// collections are equivalent.
     /// </summary>
     public class CollectionEquivalentConstraint : CollectionItemsEqualConstraint

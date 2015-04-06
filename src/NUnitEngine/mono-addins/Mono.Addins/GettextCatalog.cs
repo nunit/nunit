@@ -30,7 +30,7 @@ using System;
 
 namespace Mono.Addins
 {
-	// TODO: Add real translation suport, which can work in Windows
+	// TODO: Add real translation support, which can work in Windows
 	
 	internal class GettextCatalog
 	{

@@ -42,7 +42,7 @@ namespace NUnit.Engine
         /// <returns>An XmlNode representing the loaded package.</returns>
         /// <remarks>
         /// This method is normally optional, since Explore and Run call
-        /// it automatially when necessary. The method is kept in order
+        /// it automatically when necessary. The method is kept in order
         /// to make it easier to convert older programs that use it.
         /// </remarks>
         XmlNode Load();
@@ -95,7 +95,7 @@ namespace NUnit.Engine
         /// Explore a loaded TestPackage and return information about the tests found.
         /// </summary>
         /// <param name="filter">The TestFilter to be used in selecting tests to explore.</param>
-        /// <returns>An XmlNode representing the tests fould.</returns>
+        /// <returns>An XmlNode representing the tests found.</returns>
         XmlNode Explore(TestFilter filter);
     }
 }

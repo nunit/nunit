@@ -134,7 +134,7 @@ namespace NUnit.Engine.Services
         {
             AppDomainSetup setup = new AppDomainSetup();
 
-            //For paralell tests, we need to use distinct application name
+            //For parallel tests, we need to use distinct application name
             setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
 
             FileInfo testFile = package.FullName != null && package.FullName != string.Empty

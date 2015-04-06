@@ -32,7 +32,7 @@ namespace Mono.Addins
 	/// Assigns an attribute value to an extension
 	/// </summary>
 	/// <remarks>
-	/// This attribute can be used together with the [Extenion] attribute to specify
+	/// This attribute can be used together with the [Extension] attribute to specify
 	/// a value for an attribute of the extension.
 	/// </remarks>
 	public class ExtensionAttributeAttribute: Attribute

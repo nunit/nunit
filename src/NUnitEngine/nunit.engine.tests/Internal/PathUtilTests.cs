@@ -115,7 +115,7 @@ namespace NUnit.Engine.Internal.Tests
             Assert.AreEqual(@"folder2\folder3", PathUtils.RelativePath(
                 @"c:\folder1\", @"c:\folder1\folder2\folder3"));
             
-            // Case-insensitive behaviour, preserving 2nd filePath directories in result:
+            // Case-insensitive behavior, preserving 2nd filePath directories in result:
             Assert.AreEqual(@"Folder2\Folder3", PathUtils.RelativePath(
                 @"C:\folder1", @"c:\folder1\Folder2\Folder3"));
             Assert.AreEqual(@"..\Folder2\folder3", PathUtils.RelativePath(
@@ -196,7 +196,7 @@ namespace NUnit.Engine.Internal.Tests
             Assert.AreEqual("folder2/folder3", PathUtils.RelativePath(
                 "/folder1/", "/folder1/folder2/folder3"));
             
-            // Case-sensitive behaviour:
+            // Case-sensitive behavior:
             Assert.AreEqual("../Folder1/Folder2/folder3",
                 PathUtils.RelativePath("/folder1", "/Folder1/Folder2/folder3"),
                 "folders differing in case");

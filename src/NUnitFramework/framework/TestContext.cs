@@ -100,7 +100,7 @@ namespace NUnit.Framework
 #endif
 
         /// <summary>
-        /// Gets the directory to be used for outputing files created
+        /// Gets the directory to be used for outputting files created
         /// by this test run.
         /// </summary>
         public string WorkDirectory
