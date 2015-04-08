@@ -72,7 +72,7 @@ namespace NUnit.Framework
         #region ArgumentException
 
         /// <summary>
-        /// Creates a constraint specifying an expected TargetInvocationException
+        /// Creates a constraint specifying an expected ArgumentException
         /// </summary>
         public static ExactTypeConstraint ArgumentException
         {
@@ -81,10 +81,22 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region ArgumentNullException
+
+        /// <summary>
+        /// Creates a constraint specifying an expected ArgumentNUllException
+        /// </summary>
+        public static ExactTypeConstraint ArgumentNullException
+        {
+            get { return TypeOf(typeof (System.ArgumentNullException)); }
+        }
+
+        #endregion
+
         #region InvalidOperationException
 
         /// <summary>
-        /// Creates a constraint specifying an expected TargetInvocationException
+        /// Creates a constraint specifying an expected InvalidOperationException
         /// </summary>
         public static ExactTypeConstraint InvalidOperationException
         {
