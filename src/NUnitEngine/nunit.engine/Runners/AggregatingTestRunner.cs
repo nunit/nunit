@@ -135,7 +135,7 @@ namespace NUnit.Engine.Runners
 
             foreach (ITestEngineRunner runner in _runners)
             {
-                var task = new TestEngineRunnerTask(runner, listener, filter);
+                var task = new TestEngineRunnerTask(runner, listener, filter, disposeRunners);
                 tasks.Add(task);
                 workerPool.Enqueue(task);
             }
@@ -146,7 +146,6 @@ namespace NUnit.Engine.Runners
             foreach (var task in tasks)
             {
                 results.Add(task.Result());
-                if (disposeRunners) task.Dispose();
             }
 
             if (disposeRunners) _runners.Clear();

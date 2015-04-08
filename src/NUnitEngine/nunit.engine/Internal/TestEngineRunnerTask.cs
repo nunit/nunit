@@ -21,19 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
 namespace NUnit.Engine.Internal
 {
-    public class TestEngineRunnerTask : ITask, IDisposable
+    public class TestEngineRunnerTask : ITask
     {
         private readonly ITestEngineRunner _runner;
         private readonly ITestEventListener _listener;
         private readonly TestFilter _filter;
         private volatile TestEngineResult _testResult;
+        private readonly bool _disposeRunner;
 
-        public TestEngineRunnerTask(ITestEngineRunner runner, ITestEventListener listener, TestFilter filter)
+        public TestEngineRunnerTask(ITestEngineRunner runner, ITestEventListener listener, TestFilter filter, bool disposeRunner)
         {
+            _disposeRunner = disposeRunner;
             _filter = filter;
             _listener = listener;
             _runner = runner;
@@ -42,16 +42,15 @@ namespace NUnit.Engine.Internal
         public void Execute()
         {
             _testResult = _runner.Run(_listener, _filter);
+            if (_disposeRunner)
+            {
+                _runner.Dispose();
+            }
         }
 
         public TestEngineResult Result()
         {
             return _testResult;
-        }
-
-        public void Dispose()
-        {
-            _runner.Dispose();
         }
     }
 }
