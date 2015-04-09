@@ -96,8 +96,8 @@ namespace NUnit.Engine.Drivers
             if (test.IsSuite)
                 thisNode.AddAttribute("type", test.TestType);
             thisNode.AddAttribute("id", test.TestName.TestID.ToString());
-            thisNode.AddAttribute("name", Escape(test.TestName.Name));
-            thisNode.AddAttribute("fullname", Escape(test.TestName.FullName));
+            thisNode.AddAttribute("name", test.TestName.Name);
+            thisNode.AddAttribute("fullname", test.TestName.FullName);
             thisNode.AddAttribute("runstate", test.RunState.ToString());
 
             if (test.IsSuite)
@@ -256,17 +256,6 @@ namespace NUnit.Engine.Drivers
         #endregion
 
         #region Helper Methods
-
-        // Escapes a string for use in the XML
-        private static string Escape(string original)
-        {
-            return original
-                .Replace("&", "&amp;")
-                .Replace("\"", "&quot;")
-                .Replace("'", "&apos;")
-                .Replace("<", "&lt;")
-                .Replace(">", "&gt;");
-        }
 
         // Returns ResultState translated to a v3 string representation
         private static string GetTranslatedResultState(ResultState resultState)
