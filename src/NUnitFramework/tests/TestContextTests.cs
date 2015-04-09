@@ -72,7 +72,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestCanAccessItsOwnId()
         {
-            Assert.That(TestContext.CurrentContext.Test.ID, Is.GreaterThan(0));
+            Assert.That(TestContext.CurrentContext.Test.ID, Is.Not.Null.And.Not.Empty);
         }
 
         [Test]
@@ -199,13 +199,13 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
 #if !PORTABLE && !SILVERLIGHT
-			Assert.That(context.TestDirectory, Is.Not.Null);
-			Assert.That(context.WorkDirectory, Is.Not.Null);
+            Assert.That(context.TestDirectory, Is.Not.Null);
+            Assert.That(context.WorkDirectory, Is.Not.Null);
 #endif
-		}
+        }
     }
 
-	[TestFixture]
+    [TestFixture]
     public class TestContextOneTimeTearDownTests
     {
         [Test]

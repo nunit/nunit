@@ -37,7 +37,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the id of the test
         /// </summary>
-        int Id { get; }
+        string Id { get; }
 
         /// <summary>
         /// Gets the name of the test

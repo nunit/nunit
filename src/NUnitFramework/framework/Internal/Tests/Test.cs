@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
         {
             this.FullName = name;
             this.Name = name;
-            this.Id = unchecked(nextID++);
+            this.Id = unchecked(nextID++).ToString();
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal
             this.FullName = pathName == null || pathName == string.Empty 
                 ? name : pathName + "." + name;
             this.Name = name;
-            this.Id = unchecked(nextID++);
+            this.Id = unchecked(nextID++).ToString();
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal
         /// Gets or sets the id of the test
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the test
