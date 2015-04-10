@@ -37,7 +37,7 @@ namespace NUnit.Engine.Drivers
             "</test-suite>";
 
         private const string RUN_RESULT_FORMAT =
-            "<test-suite type='Assembly' id='2' name='{0}' fullname='{1}' testcasecount='0' runstate='NotRunnable' result='Skipped' label='NotRunnable'>" +
+            "<test-suite type='Assembly' id='2' name='{0}' fullname='{1}' testcasecount='0' runstate='NotRunnable' result='Failed' label='Invalid'>" +
                 "<properties>" +
                     "<property name='_SKIPREASON' value='{2}'/>" +
                 "</properties>" +
