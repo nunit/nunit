@@ -26,28 +26,6 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void TestSuiteStarted()
-        {
-            var startNode = CreateXmlNode("start-suite");
-
-            _teamCity.TestSuiteStarted(startNode);
-
-            Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testSuiteStarted name='NAME']" + NL));
-        }
-
-        [Test]
-        public void TestSuiteFinished()
-        {
-            var suiteNode = CreateXmlNode("test-suite");
-
-            _teamCity.TestSuiteFinished(suiteNode);
-
-            Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testSuiteFinished name='NAME']" + NL));
-        }
-
-        [Test]
         public void TestStarted()
         {
             var startNode = CreateXmlNode("start-test");

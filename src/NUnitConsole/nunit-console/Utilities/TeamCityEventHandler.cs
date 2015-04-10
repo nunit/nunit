@@ -47,7 +47,7 @@ namespace NUnit.ConsoleRunner.Utilities
 
         public void TestStarted(XmlNode node)
         {
-            string name = node.GetAttribute("name");
+            string name = node.GetAttribute("fullname");
             _outWriter.WriteLine("##teamcity[testStarted name='{0}' captureStandardOutput='true']", Escape(name));
         }
 
@@ -57,7 +57,7 @@ namespace NUnit.ConsoleRunner.Utilities
         /// <param name="result">The result of the test</param>
         public void TestFinished(XmlNode result)
         {
-            string name = result.GetAttribute("name");
+            string name = result.GetAttribute("fullname");
             double duration = result.GetAttribute("duration", 0.0);
 
             switch (result.GetAttribute("result"))
@@ -79,18 +79,6 @@ namespace NUnit.ConsoleRunner.Utilities
                     TC_TestFinished(name, duration);
                     break;
             }
-        }
-
-        public void TestSuiteStarted(XmlNode node)
-        {
-            string name = node.GetAttribute("name");
-            _outWriter.WriteLine("##teamcity[testSuiteStarted name='{0}']", Escape(name));
-        }
-
-        public void TestSuiteFinished(XmlNode node)
-        {
-            string name = node.GetAttribute("name");
-            _outWriter.WriteLine("##teamcity[testSuiteFinished name='{0}']", Escape(name));
         }
 
         #region Helper Methods
