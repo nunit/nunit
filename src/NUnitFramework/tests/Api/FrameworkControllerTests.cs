@@ -50,7 +50,7 @@ namespace NUnit.Framework.Api
         public void CreateController()
         {
             _mockAssemblyPath = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
-            _controller = new FrameworkController(_mockAssemblyPath, _settings);
+            _controller = new FrameworkController(_mockAssemblyPath, "ID", _settings);
             _handler = new CallbackEventHandler();
         }
 
@@ -74,6 +74,8 @@ namespace NUnit.Framework.Api
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
+            Assert.That(GetAttribute(result, "id"), Is.Not.Null.And.StartWith("ID"));
+            Assert.That(GetAttribute(result, "name"), Is.EqualTo(MOCK_ASSEMBLY));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("Runnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
@@ -82,7 +84,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(new FrameworkController(MISSING_FILE, _settings), _handler);
+            new FrameworkController.LoadTestsAction(new FrameworkController(MISSING_FILE, "ID", _settings), _handler);
             var result = GetXmlResult();
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
@@ -96,7 +98,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(new FrameworkController(BAD_FILE, _settings), _handler);
+            new FrameworkController.LoadTestsAction(new FrameworkController(BAD_FILE, "ID", _settings), _handler);
             var result = GetXmlResult();
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
@@ -117,6 +119,8 @@ namespace NUnit.Framework.Api
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
+            Assert.That(GetAttribute(result, "id"), Is.Not.Null.And.StartWith("ID"));
+            Assert.That(GetAttribute(result, "name"), Is.EqualTo(MOCK_ASSEMBLY));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("Runnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
@@ -133,7 +137,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void ExploreTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(MISSING_FILE, _settings);
+            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler);
             var result = GetXmlResult();
@@ -149,7 +153,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void ExploreTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(BAD_FILE, _settings);
+            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler);
             var result = GetXmlResult();
@@ -183,7 +187,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void CountTestsAction_FileNotFound_ReturnsZero()
         {
-            var controller = new FrameworkController(MISSING_FILE, _settings);
+            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
@@ -192,7 +196,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void CountTestsAction_BadFile_ReturnsZero()
         {
-            var controller = new FrameworkController(BAD_FILE, _settings);
+            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
@@ -208,6 +212,8 @@ namespace NUnit.Framework.Api
             var result = GetXmlResult();
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
+            Assert.That(GetAttribute(result, "id"), Is.Not.Null.And.StartWith("ID"));
+            Assert.That(GetAttribute(result, "name"), Is.EqualTo(MOCK_ASSEMBLY));
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("Runnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
@@ -230,7 +236,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(MISSING_FILE, _settings);
+            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
             var result = GetXmlResult();
@@ -246,7 +252,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(BAD_FILE, _settings);
+            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
             var result = GetXmlResult();
@@ -270,6 +276,8 @@ namespace NUnit.Framework.Api
 
             //Assert.That(result.Name, Is.EqualTo("test-suite"));
             //Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
+            //Assert.That(GetAttribute(result, "id"), Is.Not.Null.And.StartWith("ID"));
+            //Assert.That(GetAttribute(result, "name"), Is.EqualTo(MOCK_ASSEMBLY));
             //Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("Runnable"));
             //Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
             //Assert.That(GetAttribute(result, "result"), Is.EqualTo("Failed"));
@@ -291,7 +299,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(MISSING_FILE, _settings);
+            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
             //var result = GetXmlResult();
@@ -307,7 +315,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunAsyncAction_BadFile_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(BAD_FILE, _settings);
+            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
             //var result = GetXmlResult();

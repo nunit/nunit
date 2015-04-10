@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// Static value to seed ids. It's started at 1000 so any
         /// uninitialized ids will stand out.
         /// </summary>
-        private static int nextID = 1000;
+        private static int _nextID = 1000;
 
         /// <summary>
         /// The SetUp methods.
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
         {
             this.FullName = name;
             this.Name = name;
-            this.Id = unchecked(nextID++).ToString();
+            this.Id = GetNextId();
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal
             this.FullName = pathName == null || pathName == string.Empty 
                 ? name : pathName + "." + name;
             this.Name = name;
-            this.Id = unchecked(nextID++).ToString();
+            this.Id = GetNextId();
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
@@ -104,6 +104,11 @@ namespace NUnit.Framework.Internal
             this.Name = method.Name;
             this.FullName += "." + this.Name;
             this.Method = method;
+        }
+
+        private static string GetNextId()
+        {
+            return IdPrefix + unchecked(_nextID++).ToString();
         }
 
         #endregion
@@ -237,6 +242,12 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Other Public Properties
+
+        /// <summary>
+        /// Static prefix used for ids in this AppDomain.
+        /// Set by FrameworkController.
+        /// </summary>
+        public static string IdPrefix { get; set; }
 
         /// <summary>
         /// Gets or Sets the Int value representing the seed for the RandomGenerator

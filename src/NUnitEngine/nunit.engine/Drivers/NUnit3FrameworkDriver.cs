@@ -65,7 +65,7 @@ namespace NUnit.Engine.Drivers
             _testDomain = testDomain;
             _testAssemblyPath = testAssemblyPath;
             _frameworkAssemblyName = frameworkAssemblyName;
-            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, (System.Collections.IDictionary)settings);
+            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, "ID", (System.Collections.IDictionary)settings);
         }
 
         /// <summary>
