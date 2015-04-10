@@ -76,7 +76,7 @@ namespace NUnit.Engine
             {
                 if(xmlNode == null)
                 {
-                    XmlDocument doc = new XmlDocument();
+                    var doc = new XmlDocument();
                     doc.LoadXml(Text);
                     xmlNode = doc.FirstChild;
                 }

@@ -23,22 +23,22 @@
 
 using System;
 using System.IO;
-using NUnit.Common;
+using NUnit.Engine.Services;
 using NUnit.Framework;
 using NUnit.Tests.Assemblies;
 
-namespace NUnit.Engine.Services.Tests
+namespace NUnit.Engine.Tests.Services
 {
     public class DomainManagerTests
     {
-        static string path1 = TestPath("/test/bin/debug/test1.dll");
-        static string path2 = TestPath("/test/bin/debug/test2.dll");
-        static string path3 = TestPath("/test/utils/test3.dll");
+        static readonly string path1 = TestPath("/test/bin/debug/test1.dll");
+        static readonly string path2 = TestPath("/test/bin/debug/test2.dll");
+        static readonly string path3 = TestPath("/test/utils/test3.dll");
 
         [Test]
         public void GetPrivateBinPath()
         {
-            string[] assemblies = new string[] { path1, path2, path3 };
+            string[] assemblies = { path1, path2, path3 };
 
             Assert.AreEqual(
                 TestPath("bin/debug") + Path.PathSeparator + TestPath("utils"),
@@ -48,7 +48,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void GetCommonAppBase_OneElement()
         {
-            string[] assemblies = new string[] { path1 };
+            string[] assemblies = { path1 };
 
             Assert.AreEqual(
                 TestPath("/test/bin/debug"),
@@ -58,7 +58,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void GetCommonAppBase_TwoElements_SameDirectory()
         {
-            string[] assemblies = new string[] { path1, path2 };
+            string[] assemblies = { path1, path2 };
 
             Assert.AreEqual(
                 TestPath("/test/bin/debug"),
@@ -68,7 +68,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void GetCommonAppBase_TwoElements_DifferentDirectories()
         {
-            string[] assemblies = new string[] { path1, path3 };
+            string[] assemblies = { path1, path3 };
 
             Assert.AreEqual(
                 TestPath("/test"),
@@ -78,7 +78,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void GetCommonAppBase_ThreeElements_DifferentDirectories()
         {
-            string[] assemblies = new string[] { path1, path2, path3 };
+            string[] assemblies = { path1, path2, path3 };
 
             Assert.AreEqual(
                 TestPath("/test"),

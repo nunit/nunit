@@ -22,9 +22,10 @@
 // ***********************************************************************
 
 using System.IO;
+using NUnit.Engine.Services.ResultWriters;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.ResultWriters.Tests
+namespace NUnit.Engine.Tests.Services.ResultWriters
 {
     public class XmlTransformResultWriterTests : XmlOutputTest
     {
@@ -32,10 +33,10 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         public void SummaryTransformTest()
         {
             var transformPath = GetLocalPath("TextSummary.xslt");
-            StringWriter writer = new StringWriter();
+            var writer = new StringWriter();
             new XmlTransformResultWriter(new object[] { transformPath }).WriteResultFile(EngineResult.Xml, writer);
 
-            string summary = string.Format(
+            var summary = string.Format(
                 "Tests Run: {0}, Passed: {1}, Failed: {2}, Inconclusive: {3}, Skipped: {4}",
                 EngineResult.Xml.Attributes["total"].Value,
                 EngineResult.Xml.Attributes["passed"].Value,
@@ -43,7 +44,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
                 EngineResult.Xml.Attributes["inconclusive"].Value,
                 EngineResult.Xml.Attributes["skipped"].Value);
 
-            string output = writer.GetStringBuilder().ToString();
+            var output = writer.GetStringBuilder().ToString();
     
             Assert.That(output, Contains.Substring(summary));
         }

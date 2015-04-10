@@ -23,28 +23,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Xml;
+using System.Linq;
 using Mono.Addins;
 using NUnit.Engine.Extensibility;
+using NUnit.Engine.Services.ResultWriters;
 
 namespace NUnit.Engine.Services
 {
     public class ResultService : IResultService, IService
     {
-        IList<IResultWriterFactory> _factories = new List<IResultWriterFactory>();
+        readonly IList<IResultWriterFactory> _factories = new List<IResultWriterFactory>();
 
         public string[] Formats
         {
             get
             {
-                List<string> formats = new List<string>();
-
-                foreach (var factory in _factories)
-                    formats.Add(factory.Format);
-
-                return formats.ToArray();
+                return _factories.Select(factory => factory.Format).ToArray();
             }
         }
 
@@ -54,13 +48,10 @@ namespace NUnit.Engine.Services
         /// <param name="format">The name of the format to be used</param>
         /// <param name="args">A set of arguments to be used in constructing the writer or null if non arguments are needed</param>
         /// <returns>An IResultWriter</returns>
-        public IResultWriter GetResultWriter(string format, object[] args)
-        {
+        public IResultWriter GetResultWriter(string format, object[] args) {
             // TODO: Handle invalid arguments.
-            foreach (var factory in _factories)
-            {
-                if (factory.Format == format)
-                    return factory.GetResultWriter(args);
+            foreach (var factory in _factories.Where(factory => factory.Format == format)) {
+                return factory.GetResultWriter(args);
             }
 
             throw new ArgumentException(string.Format("Invalid XML output format '{0}'", format), "format");

@@ -22,15 +22,15 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Reflection;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Security;
 using System.Security.Policy;
 using System.Security.Principal;
+using System.Text;
+using System.Threading;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 
@@ -42,7 +42,7 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class DomainManager : IService
     {
-        static Logger log = InternalTrace.GetLogger(typeof(DomainManager));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(DomainManager));
 
         #region Properties
 
@@ -51,13 +51,11 @@ namespace NUnit.Engine.Services
         {
             get
             {
-                if ( shadowCopyPath == null )
-                {
+                if ( shadowCopyPath == null ) {
                     shadowCopyPath = ServiceContext.UserSettings.GetSetting("Options.TestLoader.ShadowCopyPath", "");
-                    if (shadowCopyPath == "")
-                        shadowCopyPath = PathUtils.Combine(NUnitConfiguration.ApplicationDirectory, "ShadowCopyCache");
-                    else
-                        shadowCopyPath = Environment.ExpandEnvironmentVariables(shadowCopyPath);
+                    shadowCopyPath = shadowCopyPath == "" 
+                                        ? PathUtils.Combine(NUnitConfiguration.ApplicationDirectory, "ShadowCopyCache") 
+                                        : Environment.ExpandEnvironmentVariables(shadowCopyPath);
                 }
 
                 return shadowCopyPath;
@@ -91,8 +89,6 @@ namespace NUnit.Engine.Services
 
             log.Info("Creating AppDomain " + domainName);
 
-            AppDomain runnerDomain;
-            
             // TODO: Find an approach that works across all platforms
           
             //// TODO: Try to eliminate this test. Currently, running on
@@ -104,12 +100,12 @@ namespace NUnit.Engine.Services
             //    runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup, permissionSet, null);
             //}
             //else
-                runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
+                var runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
             
             // Set PrincipalPolicy for the domain if called for in the settings
                 if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.SetPrincipalPolicy", false))
-                    runnerDomain.SetPrincipalPolicy((PrincipalPolicy)ServiceContext.UserSettings.GetSetting(
-                    "Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal));
+                    runnerDomain.SetPrincipalPolicy(ServiceContext.UserSettings.GetSetting(
+                        "Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal));
 
             //// HACK: Only pass down our AddinRegistry one level so that tests of NUnit
             //// itself start without any addins defined.
@@ -132,34 +128,33 @@ namespace NUnit.Engine.Services
         // Made separate and public for testing
         public AppDomainSetup CreateAppDomainSetup(TestPackage package)
         {
-            AppDomainSetup setup = new AppDomainSetup();
+            var setup = new AppDomainSetup {ApplicationName = "Tests" + "_" + Environment.TickCount};
 
             //For parallel tests, we need to use distinct application name
-            setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
 
-            FileInfo testFile = package.FullName != null && package.FullName != string.Empty
+            var testFile = !string.IsNullOrEmpty(package.FullName)
                 ? new FileInfo(package.FullName)
                 : null;
 
-            string appBase = package.GetSetting(PackageSettings.BasePath, string.Empty);
-            string configFile = package.GetSetting(PackageSettings.ConfigurationFile, string.Empty);
-            string binPath = package.GetSetting(PackageSettings.PrivateBinPath, string.Empty);
+            var appBase = package.GetSetting(PackageSettings.BasePath, string.Empty);
+            var configFile = package.GetSetting(PackageSettings.ConfigurationFile, string.Empty);
+            var binPath = package.GetSetting(PackageSettings.PrivateBinPath, string.Empty);
 
             if (testFile != null)
             {
-                if (appBase == null || appBase == string.Empty)
+                if (string.IsNullOrEmpty(appBase))
                     appBase = testFile.DirectoryName;
 
-                if (configFile == null || configFile == string.Empty)
+                if (string.IsNullOrEmpty(configFile))
                     //configFile = Services.ProjectService.CanLoadProject(testFile.Name)
                     //    ? Path.GetFileNameWithoutExtension(testFile.Name) + ".config"
                     //    : testFile.Name + ".config";
                     configFile = testFile.Name + ".config";
             }
-            else if (appBase == null || appBase == string.Empty)
+            else if (string.IsNullOrEmpty(appBase))
                 appBase = GetCommonAppBase(package.TestFiles);
 
-            char lastChar = appBase[appBase.Length - 1];
+            var lastChar = appBase[appBase.Length - 1];
             if (lastChar != Path.DirectorySeparatorChar && lastChar != Path.AltDirectorySeparatorChar)
                 appBase += Path.DirectorySeparatorChar;
 
@@ -217,7 +212,7 @@ namespace NUnit.Engine.Services
 
                 log.Info("Unloading AppDomain " + domainName);
 
-                thread = new Thread(new ThreadStart(UnloadOnThread));
+                thread = new Thread(UnloadOnThread);
                 thread.Start();
                 if (!thread.Join(30000))
                 {
@@ -228,9 +223,9 @@ namespace NUnit.Engine.Services
 
             private void UnloadOnThread()
             {
-                bool shadowCopy = false;
+                var shadowCopy = false;
                 string cachePath = null;
-                string domainName = "UNKNOWN";               
+                var domainName = "UNKNOWN";               
 
                 try
                 {
@@ -264,7 +259,7 @@ namespace NUnit.Engine.Services
         {
             int processId = Process.GetCurrentProcess().Id;
             long ticks = DateTime.Now.Ticks;
-            string cachePath = Path.Combine( ShadowCopyPath, processId.ToString() + "_" + ticks.ToString() ); 
+            string cachePath = Path.Combine( ShadowCopyPath, processId + "_" + ticks ); 
                 
             try 
             {
@@ -353,15 +348,15 @@ namespace NUnit.Engine.Services
 
         public static string GetPrivateBinPath(string basePath, IList<string> assemblies)
         {
-            List<string> dirList = new List<string>();
-            StringBuilder sb = new StringBuilder(200);
+            var dirList = new List<string>();
+            var sb = new StringBuilder(200);
 
             foreach( string assembly in assemblies )
             {
-                string dir = PathUtils.RelativePath(
+                var dir = PathUtils.RelativePath(
                     Path.GetFullPath(basePath), 
                     Path.GetDirectoryName( Path.GetFullPath(assembly) ) );
-                if ( dir != null && dir != string.Empty && dir != "." && !dirList.Contains( dir ) )
+                if (!string.IsNullOrEmpty(dir) && dir != "." && !dirList.Contains( dir ) )
                 {
                     dirList.Add( dir );
                     if ( sb.Length > 0 )
@@ -369,25 +364,19 @@ namespace NUnit.Engine.Services
                     sb.Append( dir );
                 }
             }
-
             return sb.Length == 0 ? null : sb.ToString();
         }
 
         public void DeleteShadowCopyPath()
         {
-            if ( Directory.Exists( ShadowCopyPath ) )
-                Directory.Delete( ShadowCopyPath, true );
+            if(Directory.Exists(ShadowCopyPath))
+                Directory.Delete(ShadowCopyPath, true);
         }
         #endregion
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext
-        {
-            get { return services; }
-            set { services = value; }
-        }
+        public ServiceContext ServiceContext { get; set; }
 
         public void UnloadService()
         {

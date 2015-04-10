@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
@@ -149,8 +148,8 @@ namespace NUnit.Engine
                     if (key != null)
                     {
                         Version newest = null;
-                        string[] subkeys = key.GetValueNames();
-                        foreach (string name in subkeys)
+                        var subkeys = key.GetValueNames();
+                        foreach (var name in subkeys)
                         {
                             try
                             {

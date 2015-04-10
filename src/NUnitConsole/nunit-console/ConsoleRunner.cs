@@ -50,14 +50,14 @@ namespace NUnit.ConsoleRunner
 
         #region Instance Fields
 
-        private ITestEngine _engine;
-        private ConsoleOptions _options;
-        private IResultService _resultService;
+        private readonly ITestEngine _engine;
+        private readonly ConsoleOptions _options;
+        private readonly IResultService _resultService;
 
         private ExtendedTextWriter _outWriter;
         private TextWriter _errorWriter = Console.Error;
 
-        private string _workDirectory;
+        private readonly string _workDirectory;
 
         #endregion
 
@@ -130,7 +130,7 @@ namespace NUnit.ConsoleRunner
                 }
             }
 
-            return ConsoleRunner.OK;
+            return OK;
         }
 
         private int RunTests(TestPackage package, TestFilter filter)
@@ -221,15 +221,17 @@ namespace NUnit.ConsoleRunner
         {
             if (_options.OutFile != null)
             {
-                var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
-                outStreamWriter.AutoFlush = true;
+                var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile)) {
+                    AutoFlush = true
+                };
                 _outWriter = new ExtendedTextWrapper(outStreamWriter);
             }
 
             if (_options.ErrFile != null)
             {
-                var errorStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile));
-                errorStreamWriter.AutoFlush = true;
+                var errorStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile)) {
+                    AutoFlush = true
+                };
                 _errorWriter = errorStreamWriter;
             }
         }
@@ -253,7 +255,7 @@ namespace NUnit.ConsoleRunner
         // This is public static for ease of testing
         public static TestPackage MakeTestPackage( ConsoleOptions options )
         {
-            TestPackage package = new TestPackage(options.InputFiles);
+            var package = new TestPackage(options.InputFiles);
 
             if (options.ProcessModel != null)//ProcessModel.Default)
                 package.Settings[PackageSettings.ProcessModel] = options.ProcessModel;

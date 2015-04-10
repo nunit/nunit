@@ -21,15 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Reflection;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
+
 namespace NUnit.Framework
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using NUnit.Framework.Interfaces;
-    using NUnit.Framework.Internal;
-    using NUnit.Framework.Internal.Builders;
-
     /// <summary>
     /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
     /// class makes the method callable from the NUnit test runner. There is a property 
@@ -51,7 +50,7 @@ namespace NUnit.Framework
     /// }
     /// </example>
     /// 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class TestAttribute : TestCaseBuilderAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
         private object _expectedResult;
@@ -128,10 +127,9 @@ namespace NUnit.Framework
         {
             ParameterSet parms = null;
 
-            if (this.HasExpectedResult)
+            if (HasExpectedResult)
             {
-                parms = new ParameterSet();
-                parms.ExpectedResult = this.ExpectedResult;
+                parms = new ParameterSet {ExpectedResult = ExpectedResult};
             }
 
             return _builder.BuildTestMethod(method, suite, parms);

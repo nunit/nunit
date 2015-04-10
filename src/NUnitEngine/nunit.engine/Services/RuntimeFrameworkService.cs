@@ -22,8 +22,8 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 
@@ -31,7 +31,7 @@ namespace NUnit.Engine.Services
 {
     public class RuntimeFrameworkService : IRuntimeFrameworkService, IService
     {
-        static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
 
         /// <summary>
         /// Returns true if the runtime framework represented by
@@ -42,11 +42,7 @@ namespace NUnit.Engine.Services
         public bool IsAvailable(string name)
         {
             var requestedFramework = RuntimeFramework.Parse(name);
-            foreach (var framework in RuntimeFramework.AvailableFrameworks)
-                if (FrameworksMatch(requestedFramework, framework))
-                    return true;
-
-            return false;
+            return RuntimeFramework.AvailableFrameworks.Any(framework => FrameworksMatch(requestedFramework, framework));
         }
 
         private static readonly Version AnyVersion = new Version(0, 0);
@@ -83,9 +79,9 @@ namespace NUnit.Engine.Services
         /// <returns>A string representing the selected RuntimeFramework</returns>
         public string SelectRuntimeFramework(TestPackage package)
         {
-            RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            string frameworkSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
-            RuntimeFramework requestedFramework = frameworkSetting.Length > 0
+            var currentFramework = RuntimeFramework.CurrentFramework;
+            var frameworkSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
+            var requestedFramework = frameworkSetting.Length > 0
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion);
 
@@ -95,8 +91,8 @@ namespace NUnit.Engine.Services
             else
                 log.Debug("Requested framework is {0}", requestedFramework);
 
-            RuntimeType targetRuntime = requestedFramework.Runtime;
-            Version targetVersion = requestedFramework.FrameworkVersion;
+            var targetRuntime = requestedFramework.Runtime;
+            var targetVersion = requestedFramework.FrameworkVersion;
 
             if (targetRuntime == RuntimeType.Any)
                 targetRuntime = currentFramework.Runtime;
@@ -105,7 +101,7 @@ namespace NUnit.Engine.Services
             {
                 if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
                 {
-                    foreach (string assembly in package.TestFiles)
+                    foreach (var assembly in package.TestFiles)
                     {
                         // If the file is not an assembly or doesn't exist, then it can't
                         // contribute any information to the decision, so we skip it.
@@ -145,7 +141,7 @@ namespace NUnit.Engine.Services
                 else
                     targetVersion = RuntimeFramework.CurrentFramework.ClrVersion;
 
-                RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
+                var checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
                 if (!checkFramework.IsAvailable || !ServiceContext.TestAgency.IsRuntimeVersionSupported(targetVersion))
                 {
                     log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
@@ -154,7 +150,7 @@ namespace NUnit.Engine.Services
                 }
             }
 
-            RuntimeFramework targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
+            var targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
             package.Settings[PackageSettings.RuntimeFramework] = targetFramework.ToString();
 
             log.Debug("Test will use {0} framework", targetFramework);
@@ -164,12 +160,7 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext
-        {
-            get { return services; }
-            set { services = value; }
-        }
+        public ServiceContext ServiceContext { get; set; }
 
         public void InitializeService()
         {

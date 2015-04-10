@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Runners;
@@ -46,18 +47,14 @@ namespace NUnit.Engine.Services
         /// <returns>An ITestEngineRunner</returns>
         public virtual ITestEngineRunner MakeTestRunner(TestPackage package)
         {
-            DomainUsage domainUsage = (DomainUsage)System.Enum.Parse(
-                typeof(DomainUsage),
-                package.GetSetting(PackageSettings.DomainUsage, "Default"));
+            var domainUsage = (DomainUsage)Enum.Parse(typeof(DomainUsage), package.GetSetting(PackageSettings.DomainUsage, "Default"));
 
             switch (domainUsage)
             {
                 default:
-                case DomainUsage.Default:
-                    if (package.TestFiles.Count > 1)
-                        return new MultipleTestDomainRunner(this.ServiceContext, package);
-                    else
-                        return new TestDomainRunner(this.ServiceContext, package);
+                    return package.TestFiles.Count > 1
+                        ? (ITestEngineRunner)new MultipleTestDomainRunner(ServiceContext, package)
+                        : new TestDomainRunner(ServiceContext, package);
 
                 case DomainUsage.Multiple:
                     package.Settings.Remove("DomainUsage");
@@ -80,12 +77,7 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext 
-        {
-            get { return services; }
-            set { services = value; }
-        }
+        public ServiceContext ServiceContext { get; set; }
 
         public void InitializeService()
         {

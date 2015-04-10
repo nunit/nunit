@@ -79,7 +79,7 @@ namespace NUnit.Engine.Addins
         private void InitializeXmlFile(XmlNode result)
         {
             //ResultSummary summary = new ResultSummary(result);
-            NUnit2ResultSummary summary = new NUnit2ResultSummary(result);
+            var summary = new NUnit2ResultSummary(result);
 
             xmlWriter.WriteStartDocument(false);
             xmlWriter.WriteComment("This file represents the results of running a test suite");
@@ -116,26 +116,18 @@ namespace NUnit.Engine.Addins
         private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
-            xmlWriter.WriteAttributeString("nunit-version",
-                                           Assembly.GetExecutingAssembly().GetName().Version.ToString());
-            xmlWriter.WriteAttributeString("clr-version",
-                                           Environment.Version.ToString());
-            xmlWriter.WriteAttributeString("os-version",
-                                           Environment.OSVersion.ToString());
-            xmlWriter.WriteAttributeString("platform",
-                Environment.OSVersion.Platform.ToString());
-            xmlWriter.WriteAttributeString("cwd",
-                                           Environment.CurrentDirectory);
-            xmlWriter.WriteAttributeString("machine-name",
-                                           Environment.MachineName);
-            xmlWriter.WriteAttributeString("user",
-                                           Environment.UserName);
-            xmlWriter.WriteAttributeString("user-domain",
-                                           Environment.UserDomainName);
+            xmlWriter.WriteAttributeString("nunit-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            xmlWriter.WriteAttributeString("clr-version", Environment.Version.ToString());
+            xmlWriter.WriteAttributeString("os-version", Environment.OSVersion.ToString());
+            xmlWriter.WriteAttributeString("platform", Environment.OSVersion.Platform.ToString());
+            xmlWriter.WriteAttributeString("cwd", Environment.CurrentDirectory);
+            xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
+            xmlWriter.WriteAttributeString("user", Environment.UserName);
+            xmlWriter.WriteAttributeString("user-domain", Environment.UserDomainName);
             xmlWriter.WriteEndElement();
         }
 
-        private string TranslateResult(string resultState, string label)
+        private static string TranslateResult(string resultState, string label)
         {
             switch (resultState)
             {
@@ -235,7 +227,7 @@ namespace NUnit.Engine.Addins
             double duration = result.GetAttribute("duration", 0.0);
             string asserts = result.GetAttribute("asserts");
 
-            if (label != null && label != string.Empty)
+            if (!string.IsNullOrEmpty(label))
                 resultState += ":" + label;
 
             xmlWriter.WriteAttributeString("executed", executed);
@@ -325,10 +317,10 @@ namespace NUnit.Engine.Addins
             for finding uprintable control characters that make the xslt processor error.
             We use characters encoded by the default code page to avoid mistaking bytes as
             individual characters on non-latin code pages.*/
-            char[] encodedChars = System.Text.Encoding.Default.GetChars(System.Text.Encoding.Default.GetBytes(encodedString));
+            var encodedChars = Encoding.Default.GetChars(Encoding.Default.GetBytes(encodedString));
 
             System.Collections.ArrayList pos = new System.Collections.ArrayList();
-            for (int x = 0; x < encodedChars.Length; x++)
+            for (var x = 0; x < encodedChars.Length; x++)
             {
                 char currentChar = encodedChars[x];
                 //unprintable characters are below 0x20 in Unicode tables
@@ -343,7 +335,7 @@ namespace NUnit.Engine.Addins
             {
                 encodedChars[index] = '?';//replace unprintable control characters with ?(3F)
             }
-            return System.Text.Encoding.Default.GetString(System.Text.Encoding.Default.GetBytes(encodedChars));
+            return Encoding.Default.GetString(Encoding.Default.GetBytes(encodedChars));
         }
 
         private void WriteCData(string text)
@@ -351,7 +343,7 @@ namespace NUnit.Engine.Addins
             int start = 0;
             while (true)
             {
-                int illegal = text.IndexOf("]]>", start);
+                var illegal = text.IndexOf("]]>", start, StringComparison.Ordinal);
                 if (illegal < 0)
                     break;
                 xmlWriter.WriteCData(text.Substring(start, illegal - start + 2));
@@ -360,10 +352,7 @@ namespace NUnit.Engine.Addins
                     return;
             }
 
-            if (start > 0)
-                xmlWriter.WriteCData(text.Substring(start));
-            else
-                xmlWriter.WriteCData(text);
+            xmlWriter.WriteCData(start > 0 ? text.Substring(start) : text);
         }
 
         #endregion

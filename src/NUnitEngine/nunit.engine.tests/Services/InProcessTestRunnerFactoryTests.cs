@@ -22,12 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Engine.Runners;
+using NUnit.Engine.Services;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.Tests
+namespace NUnit.Engine.Tests.Services
 {
     public class InProcessTestRunnerFactoryTests
     {
@@ -58,7 +57,7 @@ namespace NUnit.Engine.Services.Tests
         [TestCase("x.dll y.dll z.dll", "Multiple", typeof(MultipleTestDomainRunner))]
         public void CorrectRunnerIsUsed(string files, string domainUsage, Type expectedType)
         {
-            var package = new TestPackage(files.Split(new char[] { ' ' }));
+            var package = new TestPackage(files.Split(' '));
             if (domainUsage != null)
                 package.Settings["DomainUsage"] = domainUsage;
             Assert.That(_factory.MakeTestRunner(package), Is.TypeOf(expectedType));

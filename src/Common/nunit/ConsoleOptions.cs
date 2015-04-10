@@ -213,10 +213,10 @@ namespace NUnit.Common
 
         // Select tests
 
-        private List<string> inputFiles = new List<string>();
+        private readonly List<string> inputFiles = new List<string>();
         public IList<string> InputFiles { get { return inputFiles; } }
 
-        private List<string> testList = new List<string>();
+        private readonly List<string> testList = new List<string>();
         public IList<string> TestList { get { return testList; } }
 
         public string Include { get; private set; }
@@ -272,7 +272,7 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
-        private string workDirectory = NUnit.Env.DefaultWorkDirectory;
+        private string workDirectory = Env.DefaultWorkDirectory;
         public string WorkDirectory 
         {
             get { return workDirectory; }
@@ -283,7 +283,7 @@ namespace NUnit.Common
         /// <summary>Indicates whether a full report should be displayed.</summary>
         public bool Full { get; private set; }
 
-        private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
+        private readonly List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
             get
@@ -298,7 +298,7 @@ namespace NUnit.Common
             }
         }
 
-        private List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
+        private readonly List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ExploreOutputSpecifications { get { return exploreOutputSpecifications; } }
 
         // Error Processing
@@ -358,7 +358,7 @@ namespace NUnit.Common
             // We have to return something even though the value will
             // be ignored if an error is reported. The -1 value seems
             // like a safe bet in case it isn't ignored due to a bug.
-            int result = -1;
+            var result = -1;
 
             if (string.IsNullOrEmpty(val))
                 ErrorMessages.Add("Missing required value for option '" + option + "'.");

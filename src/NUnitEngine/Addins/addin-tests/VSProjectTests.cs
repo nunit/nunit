@@ -23,20 +23,19 @@
 
 using System;
 using System.IO;
-using System.Collections;
-using NUnit.Engine.Tests.resources;
+using NUnit.Engine.Services.ProjectLoaders;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.ProjectLoaders.Tests
+namespace NUnit.Engine.Tests
 {
     [TestFixture]
     public class VSProjectTests
     {
-        private string invalidFile = Path.Combine(Path.GetTempPath(), "invalid.csproj");
+        private readonly string invalidFile = Path.Combine(Path.GetTempPath(), "invalid.csproj");
 
         private void WriteInvalidFile( string text )
         {
-            StreamWriter writer = new StreamWriter( invalidFile );
+            var writer = new StreamWriter( invalidFile );
             writer.WriteLine( text );
             writer.Close();
         }
@@ -79,7 +78,7 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
         public void NoConfigurations()
         {
             WriteInvalidFile("<VisualStudioProject><CSharp><Build><Settings AssemblyName=\"invalid\" OutputType=\"Library\"></Settings></Build></CSharp></VisualStudioProject>");
-            VSProject project = new VSProject(Path.Combine(Path.GetTempPath(), "invalid.csproj"));
+            var project = new VSProject(Path.Combine(Path.GetTempPath(), "invalid.csproj"));
             Assert.AreEqual(0, project.ConfigNames.Count);
         }
     }

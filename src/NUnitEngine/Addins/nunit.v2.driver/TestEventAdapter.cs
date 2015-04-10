@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using NUnit.Core;
 
@@ -34,8 +33,8 @@ namespace NUnit.Engine.Drivers
     /// </summary>
     public class TestEventAdapter : MarshalByRefObject, EventListener
     {
-        private ITestEventListener _listener;
-        private StringBuilder _testOutput = new StringBuilder();
+        private readonly ITestEventListener _listener;
+        private readonly StringBuilder _testOutput = new StringBuilder();
 
         public TestEventAdapter(ITestEventListener listener)
         {
@@ -86,9 +85,7 @@ namespace NUnit.Engine.Drivers
                     Console.Error.Write(testOutput.Text);
                     break;
 
-                default:
-                    // Ignore any other output type
-                    break;
+                // Ignore any other output type
             }
         }
 

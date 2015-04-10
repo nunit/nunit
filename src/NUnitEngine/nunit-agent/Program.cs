@@ -39,15 +39,15 @@ namespace NUnit.Agent
     {
         //static Logger log = InternalTrace.GetLogger(typeof(NUnitTestAgent));
 
-        static Guid AgentId;
-        static string AgencyUrl;
-        static ITestAgency Agency;
+        static Guid _agentId;
+        static string _agencyUrl;
+        static ITestAgency _agency;
 
         /// <summary>
         /// Channel used for communications with the agency
         /// and with clients
         /// </summary>
-        static TcpChannel Channel;
+        static TcpChannel _channel;
 
         /// <summary>
         /// The main entry point for the application.
@@ -55,8 +55,8 @@ namespace NUnit.Agent
         [STAThread]
         public static int Main(string[] args)
         {
-            AgentId = new Guid(args[0]);
-            AgencyUrl = args[1];
+            _agentId = new Guid(args[0]);
+            _agencyUrl = args[1];
             
 #if DEBUG
             bool pause = false;
@@ -114,12 +114,12 @@ namespace NUnit.Agent
             //log.Info("Initializing Services");
             engine.Initialize();
 
-            Channel = ServerUtilities.GetTcpChannel();
+            _channel = ServerUtilities.GetTcpChannel();
 
             //log.Info("Connecting to TestAgency at {0}", AgencyUrl);
             try
             {
-                Agency = Activator.GetObject(typeof(ITestAgency), AgencyUrl) as ITestAgency;
+                _agency = Activator.GetObject(typeof(ITestAgency), _agencyUrl) as ITestAgency;
             }
             catch (Exception ex)
             {
@@ -127,10 +127,10 @@ namespace NUnit.Agent
                 //log.Error("Unable to connect", ex);
             }
 
-            if (Channel != null)
+            if (_channel != null)
             {
                 //log.Info("Starting RemoteTestAgent");
-                RemoteTestAgent agent = new RemoteTestAgent(AgentId, Agency, engine.Services);
+                RemoteTestAgent agent = new RemoteTestAgent(_agentId, _agency, engine.Services);
 
                 try
                 {
@@ -147,13 +147,13 @@ namespace NUnit.Agent
                 catch (Exception ex)
                 {
                     //log.Error("Exception in RemoteTestAgent", ex);
-                    Console.WriteLine("Exception in RemoteTestAgent", ex);
+                    Console.WriteLine("Exception in RemoteTestAgent");
                 }
 
                 //log.Info("Unregistering Channel");
                 try
                 {
-                    ChannelServices.UnregisterChannel(Channel);
+                    ChannelServices.UnregisterChannel(_channel);
                 }
                 catch (Exception ex)
                 {

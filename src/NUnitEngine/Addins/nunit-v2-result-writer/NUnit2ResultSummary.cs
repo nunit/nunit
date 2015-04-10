@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Globalization;
 using System.Xml;
 using NUnit.Common;
 
@@ -33,20 +32,20 @@ namespace NUnit.Engine.Addins
     /// </summary>
     public class NUnit2ResultSummary
     {
-        private int resultCount = 0;
-        private int testsRun = 0;
-        private int failureCount = 0;
-        private int errorCount = 0;
-        private int successCount = 0;
-        private int inconclusiveCount = 0;
-        private int skipCount = 0;
-        private int ignoreCount = 0;
-        private int notRunnable = 0;
+        private int resultCount;
+        private int testsRun;
+        private int failureCount;
+        private int errorCount;
+        private int successCount;
+        private int inconclusiveCount;
+        private int skipCount;
+        private int ignoreCount;
+        private int notRunnable;
 
-        private DateTime startTime = DateTime.MinValue;
-        private DateTime endTime = DateTime.MaxValue;
-        private double duration = 0.0d;
-        private string name;
+        private readonly DateTime startTime = DateTime.MinValue;
+        private readonly DateTime endTime = DateTime.MaxValue;
+        private readonly double duration;
+        private readonly string name;
 
         public NUnit2ResultSummary() { }
 
@@ -101,7 +100,6 @@ namespace NUnit.Engine.Addins
                         case "Ignored":
                             ignoreCount++;
                             break;
-                        case "Skipped":
                         default:
                             skipCount++;
                             break;

@@ -25,17 +25,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using NUnit.Engine.Internal;
+using NUnit.Framework;
 
-namespace NUnit.Engine.Services.ResultWriters.Tests
+namespace NUnit.Engine.Tests.Services.ResultWriters
 {
-    using Engine;
-    using Engine.Internal;
-    using Framework;
-
-    using Runner = NUnit.Framework.Api.NUnitTestAssemblyRunner;
-    using Builder = NUnit.Framework.Api.DefaultTestAssemblyBuilder;
-    using TestListener = NUnit.Framework.Internal.TestListener;
-    using TestFilter = NUnit.Framework.Internal.TestFilter;
+    using Runner = Framework.Api.NUnitTestAssemblyRunner;
+    using Builder = Framework.Api.DefaultTestAssemblyBuilder;
+    using TestListener = Framework.Internal.TestListener;
+    using TestFilter = Framework.Internal.TestFilter;
 
     /// <summary>
     /// This is the abstract base for all XML output tests,
@@ -92,7 +90,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
             // Create a TestEngineResult from the string, just as the TestEngine does,
             // then add a test-run element to the result, wrapping the result so it
             // looks just like what the engine would return!
-            this.EngineResult = new TestEngineResult(xmlText).Aggregate("test-run", AssemblyName, AssemblyPath);
+            EngineResult = new TestEngineResult(xmlText).Aggregate("test-run", AssemblyName, AssemblyPath);
         }
     }
 }

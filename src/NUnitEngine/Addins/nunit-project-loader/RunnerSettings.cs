@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Services.ProjectLoaders
 {
     /// <summary>
     /// RunnerSettings is a static class containing constant values that

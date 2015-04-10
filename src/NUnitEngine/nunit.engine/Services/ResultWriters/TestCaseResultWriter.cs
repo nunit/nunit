@@ -26,7 +26,7 @@ using System.Text;
 using System.Xml;
 using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Services
+namespace NUnit.Engine.Services.ResultWriters
 {
     public class TestCaseResultWriter : IResultWriter
     {

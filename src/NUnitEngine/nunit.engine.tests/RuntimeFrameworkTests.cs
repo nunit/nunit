@@ -29,7 +29,7 @@ namespace NUnit.Engine.Tests
     [TestFixture]
     public class RuntimeFrameworkTests
     {
-        static RuntimeType currentRuntime =
+        static readonly RuntimeType currentRuntime =
             Type.GetType("Mono.Runtime", false) != null
                 ? RuntimeType.Mono
                 : Environment.OSVersion.Platform == PlatformID.WinCE
@@ -113,7 +113,7 @@ namespace NUnit.Engine.Tests
             return f1.Supports(f2);
         }
 
-        internal static TestCaseData[] matchData = new TestCaseData[] {
+        internal static TestCaseData[] matchData = {
             new TestCaseData(
                 new RuntimeFramework(RuntimeType.Net, new Version(3,5)), 
                 new RuntimeFramework(RuntimeType.Net, new Version(2,0))) 
@@ -212,11 +212,11 @@ namespace NUnit.Engine.Tests
 
             public override string ToString()
             {
-                return string.Format("<{0}-{1}>", this.runtime, this.frameworkVersion);
+                return string.Format("<{0}-{1}>", runtime, frameworkVersion);
             }
         }
 
-        internal FrameworkData[] frameworkData = new FrameworkData[] {
+        internal FrameworkData[] frameworkData = {
             new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
             //new FrameworkData(RuntimeType.Net, new Version(1,0,3705), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
             //new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),

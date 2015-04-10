@@ -43,7 +43,7 @@ namespace NUnit.Common
                 throw new NullReferenceException("Output spec may not be null");
 
             string[] parts = spec.Split(';');
-            this.OutputPath = parts[0];
+            OutputPath = parts[0];
 
             for (int i = 1; i < parts.Length; i++)
             {
@@ -57,26 +57,26 @@ namespace NUnit.Common
                     case "format":
                         string fmt = opt[1].Trim();
 
-                        if (this.Format != null && this.Format != fmt)
+                        if (Format != null && Format != fmt)
                             throw new ArgumentException(
                                 string.Format("Conflicting format options: {0}", spec));
 
-                        this.Format = fmt;
+                        Format = fmt;
                         break;
 
                     case "transform":
                         string val = opt[1].Trim();
 
-                        if (this.Transform != null && this.Transform != val)
+                        if (Transform != null && Transform != val)
                             throw new ArgumentException(
                                 string.Format("Conflicting transform options: {0}", spec));
 
-                        if (this.Format != null && this.Format != "user")
+                        if (Format != null && Format != "user")
                             throw new ArgumentException(
                                 string.Format("Conflicting format options: {0}", spec));
 
-                        this.Format = "user";
-                        this.Transform = opt[1].Trim();
+                        Format = "user";
+                        Transform = opt[1].Trim();
                         break;
                 }
             }

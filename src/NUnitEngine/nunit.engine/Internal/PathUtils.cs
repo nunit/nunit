@@ -22,11 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using System.Text;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace NUnit.Engine.Internal
 {
@@ -53,7 +52,7 @@ namespace NUnit.Engine.Internal
         /// <returns>True if the file extension is dll or exe, otherwise false.</returns>
         public static bool IsAssemblyFileType(string path)
         {
-            string extension = Path.GetExtension(path).ToLower();
+            var extension = Path.GetExtension(path).ToLower();
             return extension == ".dll" || extension == ".exe";
         }
 
@@ -68,43 +67,43 @@ namespace NUnit.Engine.Internal
             if (to == null)
                 throw new ArgumentNullException (to);
 
-            string toPathRoot = Path.GetPathRoot(to);
+            var toPathRoot = Path.GetPathRoot(to);
             if (toPathRoot == null || toPathRoot == string.Empty)
                 return to;
-            string fromPathRoot = Path.GetPathRoot(from);
+            var fromPathRoot = Path.GetPathRoot(from);
 
             if (!PathsEqual(toPathRoot, fromPathRoot))
                 return null;
 
-            string fromNoRoot = from.Substring(fromPathRoot.Length);
-            string toNoRoot = to.Substring(toPathRoot.Length);
+            var fromNoRoot = from.Substring(fromPathRoot.Length);
+            var toNoRoot = to.Substring(toPathRoot.Length);
 
-            string[] _from = SplitPath(fromNoRoot);
-            string[] _to = SplitPath(toNoRoot);
+            var _from = SplitPath(fromNoRoot);
+            var _to = SplitPath(toNoRoot);
 
-            StringBuilder sb = new StringBuilder (Math.Max (from.Length, to.Length));
+            var sb = new StringBuilder (Math.Max (from.Length, to.Length));
 
-            int last_common, min = Math.Min (_from.Length, _to.Length);
-            for (last_common = 0; last_common < min;  ++last_common) 
+            int lastCommon, min = Math.Min (_from.Length, _to.Length);
+            for (lastCommon = 0; lastCommon < min;  ++lastCommon) 
             {
-                if (!PathsEqual(_from[last_common], _to[last_common]))
+                if (!PathsEqual(_from[lastCommon], _to[lastCommon]))
                     break;
             }
 
-            if (last_common < _from.Length)
+            if (lastCommon < _from.Length)
                 sb.Append ("..");
-            for (int i = last_common + 1; i < _from.Length; ++i) 
+            for (var i = lastCommon + 1; i < _from.Length; ++i) 
             {
-                sb.Append (PathUtils.DirectorySeparatorChar).Append ("..");
+                sb.Append (DirectorySeparatorChar).Append ("..");
             }
 
             if (sb.Length > 0)
-                sb.Append (PathUtils.DirectorySeparatorChar);
-            if (last_common < _to.Length)
-                sb.Append (_to [last_common]);
-            for (int i = last_common + 1; i < _to.Length; ++i) 
+                sb.Append (DirectorySeparatorChar);
+            if (lastCommon < _to.Length)
+                sb.Append (_to [lastCommon]);
+            for (var i = lastCommon + 1; i < _to.Length; ++i) 
             {
-                sb.Append (PathUtils.DirectorySeparatorChar).Append (_to [i]);
+                sb.Append (DirectorySeparatorChar).Append (_to [i]);
             }
 
             return sb.ToString ();
@@ -115,12 +114,11 @@ namespace NUnit.Engine.Internal
         /// </summary>
         public static string Canonicalize( string path )
         {
-            List<string> parts = new List<string>(
-                path.Split( DirectorySeparatorChar, AltDirectorySeparatorChar ) );
+            var parts = new List<string>(path.Split( DirectorySeparatorChar, AltDirectorySeparatorChar ) );
 
-            for( int index = 0; index < parts.Count; )
+            for( var index = 0; index < parts.Count; )
             {
-                string part = parts[index];
+                var part = parts[index];
         
                 switch( part )
                 {
@@ -158,8 +156,8 @@ namespace NUnit.Engine.Internal
             path1 = Canonicalize( path1 );
             path2 = Canonicalize( path2 );
 
-            int length1 = path1.Length;
-            int length2 = path2.Length;
+            var length1 = path1.Length;
+            var length2 = path2.Length;
 
             // if path1 is longer, then path2 can't be under it
             if ( length1 > length2 )
@@ -181,52 +179,40 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Combines all the arguments into a single path
         /// </summary>
-        public static string Combine(string path1, params string[] morePaths)
-        {
-            string result = path1;
-            foreach (string path in morePaths)
-                result = Path.Combine(result, path);
-            return result;
+        public static string Combine(string path1, params string[] morePaths) {
+            return morePaths.Aggregate(path1, Path.Combine);
         }
-        
+
         #endregion
 
         #region Helper Methods
 
         private static bool IsWindows()
         {
-            return PathUtils.DirectorySeparatorChar == '\\';
+            return DirectorySeparatorChar == '\\';
         }
 
         private static string[] SplitPath(string path)
         {
-            char[] separators = new char[] { PathUtils.DirectorySeparatorChar, PathUtils.AltDirectorySeparatorChar };
+            char[] separators = { DirectorySeparatorChar, AltDirectorySeparatorChar };
 
-            string[] trialSplit = path.Split(separators);
+            var trialSplit = path.Split(separators);
 
-            int emptyEntries = 0;
-            foreach (string piece in trialSplit)
-                if (piece == string.Empty)
-                    emptyEntries++;
+            var emptyEntries = trialSplit.Count(piece => piece == string.Empty);
 
             if (emptyEntries == 0)
                 return trialSplit;
 
-            string[] finalSplit = new string[trialSplit.Length - emptyEntries];
-            int index = 0;
-            foreach (string piece in trialSplit)
-                if (piece != string.Empty)
-                    finalSplit[index++] = piece;
+            var finalSplit = new string[trialSplit.Length - emptyEntries];
+            var index = 0;
+            foreach (var piece in trialSplit.Where(piece => piece != string.Empty))
+                finalSplit[index++] = piece;
 
             return finalSplit;
         }
 
-        private static bool PathsEqual(string path1, string path2)
-        {
-            if (PathUtils.IsWindows())
-                return path1.ToLower().Equals(path2.ToLower());
-            else
-                return path1.Equals(path2);
+        private static bool PathsEqual(string path1, string path2) {
+            return IsWindows() ? path1.ToLower().Equals(path2.ToLower()) : path1.Equals(path2);
         }
 
         #endregion

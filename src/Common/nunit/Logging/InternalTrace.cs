@@ -97,7 +97,7 @@ namespace NUnit.Common
                 if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
                 {
                     traceWriter = new InternalTraceWriter(writer);
-                    traceWriter.WriteLine("InternalTrace: Initializing at level " + traceLevel.ToString());
+                    traceWriter.WriteLine("InternalTrace: Initializing at level " + traceLevel);
                 }
 
                 Initialized = true;

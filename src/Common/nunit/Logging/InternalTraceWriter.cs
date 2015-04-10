@@ -37,7 +37,7 @@ namespace NUnit.Common
     public class InternalTraceWriter : TextWriter
     {
         TextWriter writer;
-        object myLock = new object();
+        readonly object myLock = new object();
 
 #if !PORTABLE
         /// <summary>
@@ -48,7 +48,7 @@ namespace NUnit.Common
         {
             var streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
             streamWriter.AutoFlush = true;
-            this.writer = streamWriter;
+            writer = streamWriter;
         }
 #endif
 

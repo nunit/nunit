@@ -32,12 +32,12 @@ namespace NUnit.ConsoleRunner
 
     public class ResultReporter
     {
-        private ExtendedTextWriter _writer;
-        private XmlNode _result;
-        private string _overallResult;
-        private ConsoleOptions _options;
+        private readonly ExtendedTextWriter _writer;
+        private readonly XmlNode _result;
+        private readonly string _overallResult;
+        private readonly ConsoleOptions _options;
 
-        private int _reportIndex = 0;
+        private int _reportIndex;
 
         public ResultReporter(XmlNode result, ExtendedTextWriter writer, ConsoleOptions options)
         {
@@ -210,13 +210,11 @@ namespace NUnit.ConsoleRunner
 
         #region Helper Methods
 
-        private static readonly char[] EOL_CHARS = new char[] { '\r', '\n' };
+        private static readonly char[] EOL_CHARS = { '\r', '\n' };
 
         private void WriteSingleResult(XmlNode result, ColorStyle colorStyle)
         {
-            string status = result.GetAttribute("label");
-            if (status == null)
-                status = result.GetAttribute("result");
+            var status = result.GetAttribute("label") ?? result.GetAttribute("result");
 
             if (status == "Failed" || status == "Error")
             {

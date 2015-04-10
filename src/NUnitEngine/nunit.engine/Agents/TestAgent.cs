@@ -35,9 +35,9 @@ namespace NUnit.Engine.Agents
     {
         #region Private Fields
 
-        private ITestAgency agency;
-        private Guid agentId;
-        private ServiceContext services;
+        private readonly ITestAgency agency;
+        private readonly Guid agentId;
+        private readonly ServiceContext services;
 
         #endregion
 
@@ -48,6 +48,7 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="agentId"></param>
         /// <param name="agency"></param>
+        /// <param name="services"></param>
         public TestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
         {
             this.agency = agency;
@@ -113,7 +114,7 @@ namespace NUnit.Engine.Agents
         /// </summary>
         public void Dispose()
         {
-            this.Stop();
+            Stop();
         }
         #endregion
 

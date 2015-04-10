@@ -28,20 +28,17 @@ using System.Xml;
 using System.Xml.Schema;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.ResultWriters.Tests
+namespace NUnit.Engine.Tests.Services.ResultWriters
 {
     public class SchemaValidator
     {
-        private XmlReaderSettings settings;
+        private readonly XmlReaderSettings settings;
         private List<string> errors;
 
         public SchemaValidator(string schemaFile)
         {
-            this.settings = new XmlReaderSettings();
-            settings.ValidationType = ValidationType.Schema;
-            settings.Schemas.Add(XmlSchema.Read(
-                new StreamReader(schemaFile),
-                new ValidationEventHandler(ValidationEventHandle)));
+            settings = new XmlReaderSettings {ValidationType = ValidationType.Schema};
+            settings.Schemas.Add(XmlSchema.Read(new StreamReader(schemaFile), ValidationEventHandle));
         }
 
         public string[] Errors
@@ -56,9 +53,8 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
 
         public bool Validate(TextReader rdr)
         {
-            this.errors = new List<string>();
-            
-            XmlReader myXmlValidatingReader = XmlReader.Create(rdr, this.settings);
+            errors = new List<string>();
+            var myXmlValidatingReader = XmlReader.Create(rdr, settings);
 
             try
             {

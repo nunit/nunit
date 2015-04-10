@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Api.Tests
+namespace NUnit.Engine.Tests.Api
 {
     public class ServiceLocatorTests
     {
@@ -12,8 +10,7 @@ namespace NUnit.Engine.Api.Tests
         [SetUp]
         public void CreateEngine()
         {
-            testEngine = new TestEngine();
-            testEngine.InternalTraceLevel = InternalTraceLevel.Off;
+            testEngine = new TestEngine {InternalTraceLevel = InternalTraceLevel.Off};
         }
 
         private void CheckAccessToService(Type serviceType)

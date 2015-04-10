@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Text.RegularExpressions;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.ProjectLoaders
@@ -61,7 +60,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// <summary>
         /// The list of all our configs
         /// </summary>
-        private IDictionary<string, ProjectConfig> _configs = new Dictionary<string, ProjectConfig>();
+        private readonly IDictionary<string, ProjectConfig> _configs = new Dictionary<string, ProjectConfig>();
 
         #endregion
 
@@ -156,10 +155,10 @@ namespace NUnit.Engine.Services.ProjectLoaders
             if (path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
                 return false;
 
-            if ( path.ToLower().IndexOf( "http:" ) >= 0 )
+            if ( path.ToLower().IndexOf("http:", StringComparison.Ordinal) >= 0 )
                 return false;
         
-            string extension = Path.GetExtension( path );
+            var extension = Path.GetExtension( path );
 
             foreach( string validExtension in PROJECT_EXTENSIONS )
                 if ( extension == validExtension )
@@ -192,7 +191,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
                 _doc = new XmlDocument();
                 _doc.Load( rdr );
 
-                string extension = Path.GetExtension( ProjectPath );
+                var extension = Path.GetExtension( ProjectPath );
 
                 switch ( extension )
                 {
@@ -207,9 +206,6 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
                     case ".vcproj":
                         LoadLegacyCppProject();
-                        break;
-
-                    default:
                         break;
                 }
             }
@@ -264,10 +260,10 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// </summary>
         private void LoadMSBuildProject()
         {
-            XmlNamespaceManager namespaceManager = new XmlNamespaceManager(_doc.NameTable);
+            var namespaceManager = new XmlNamespaceManager(_doc.NameTable);
             namespaceManager.AddNamespace("msbuild", "http://schemas.microsoft.com/developer/msbuild/2003");
 
-            XmlNodeList nodes = _doc.SelectNodes("/msbuild:Project/msbuild:PropertyGroup", namespaceManager);
+            var nodes = _doc.SelectNodes("/msbuild:Project/msbuild:PropertyGroup", namespaceManager);
             if (nodes == null) return;
 
             XmlElement assemblyNameElement = (XmlElement)_doc.SelectSingleNode("/msbuild:Project/msbuild:PropertyGroup/msbuild:AssemblyName", namespaceManager);
@@ -276,18 +272,17 @@ namespace NUnit.Engine.Services.ProjectLoaders
             XmlElement outputTypeElement = (XmlElement)_doc.SelectSingleNode("/msbuild:Project/msbuild:PropertyGroup/msbuild:OutputType", namespaceManager);
             string outputType = outputTypeElement.InnerText;
 
-            if (outputType == "Exe" || outputType == "WinExe")
-                assemblyName = assemblyName + ".exe";
-            else
-                assemblyName = assemblyName + ".dll";
+            assemblyName = outputType == "Exe" || outputType == "WinExe" 
+                            ? assemblyName + ".exe" 
+                            : assemblyName + ".dll";
 
             string commonOutputPath = null;
 
             foreach (XmlElement configNode in nodes)
             {
-                string name = GetConfigNameFromCondition(configNode);
+                var name = GetConfigNameFromCondition(configNode);
 
-                XmlElement outputPathElement = (XmlElement)configNode.SelectSingleNode("msbuild:OutputPath", namespaceManager);
+                var outputPathElement = (XmlElement)configNode.SelectSingleNode("msbuild:OutputPath", namespaceManager);
                 string outputPath = null;
                 if (outputPathElement != null)
                     outputPath = outputPathElement.InnerText;
@@ -318,24 +313,22 @@ namespace NUnit.Engine.Services.ProjectLoaders
             foreach (XmlNode configNode in _doc.SelectNodes("/VisualStudioProject/Configurations/Configuration"))
             {
                 string name = RequiredAttributeValue(configNode, "Name");
-                int config_type = System.Convert.ToInt32(RequiredAttributeValue(configNode, "ConfigurationType"));
-                string dirName = name;
-                int bar = dirName.IndexOf('|');
+                int config_type = Convert.ToInt32(RequiredAttributeValue(configNode, "ConfigurationType"));
+                var dirName = name;
+                var bar = dirName.IndexOf('|');
                 if (bar >= 0)
                     dirName = dirName.Substring(0, bar);
-                string outputPath = RequiredAttributeValue(configNode, "OutputDirectory");
+                var outputPath = RequiredAttributeValue(configNode, "OutputDirectory");
                 outputPath = outputPath.Replace("$(SolutionDir)", Path.GetFullPath(Path.GetDirectoryName(ProjectPath)) + Path.DirectorySeparatorChar);
                 outputPath = outputPath.Replace("$(ConfigurationName)", dirName);
 
                 XmlNode toolNode = configNode.SelectSingleNode("Tool[@Name='VCLinkerTool']");
                 string assemblyName = null;
-                if (toolNode != null)
-                {
+                if (toolNode != null) {
                     assemblyName = SafeAttributeValue(toolNode, "OutputFile");
-                    if (assemblyName != null)
-                        assemblyName = Path.GetFileName(assemblyName);
-                    else
-                        assemblyName = Path.GetFileNameWithoutExtension(ProjectPath) + extensionsByConfigType[config_type];
+                    assemblyName = assemblyName != null
+                        ? Path.GetFileName(assemblyName)
+                        : Path.GetFileNameWithoutExtension(ProjectPath) + extensionsByConfigType[config_type];
                 }
                 else
                 {
@@ -351,29 +344,29 @@ namespace NUnit.Engine.Services.ProjectLoaders
             }
         }
 
-        private void ThrowInvalidFileType(string projectPath)
+        private static void ThrowInvalidFileType(string projectPath)
         {
             throw new ArgumentException(
                 string.Format("Invalid project file type: {0}",
                                 Path.GetFileName(projectPath)));
         }
 
-        private void ThrowInvalidFormat(string projectPath, Exception e)
+        private static void ThrowInvalidFormat(string projectPath, Exception e)
         {
             throw new ArgumentException(
                 string.Format("Invalid project file format: {0}",
                                 Path.GetFileName(projectPath)), e);
         }
 
-        private string SafeAttributeValue(XmlNode node, string attrName)
+        private static string SafeAttributeValue(XmlNode node, string attrName)
         {
             XmlNode attrNode = node.Attributes[attrName];
             return attrNode == null ? null : attrNode.Value;
         }
 
-        private string RequiredAttributeValue(XmlNode node, string name)
+        private static string RequiredAttributeValue(XmlNode node, string name)
         {
-            string result = SafeAttributeValue(node, name);
+            var result = SafeAttributeValue(node, name);
             if (result != null)
                 return result;
 
@@ -389,10 +382,10 @@ namespace NUnit.Engine.Services.ProjectLoaders
                 string condition = conditionAttribute.Value;
                 if (condition.IndexOf("$(Configuration)") >= 0)
                 {
-                    int start = condition.IndexOf("==");
+                    var start = condition.IndexOf("==");
                     if (start >= 0)
                     {
-                        configurationName = condition.Substring(start + 2).Trim(new char[] { ' ', '\'' });
+                        configurationName = condition.Substring(start + 2).Trim(' ', '\'');
                         if (configurationName.EndsWith("|AnyCPU"))
                             configurationName = configurationName.Substring(0, configurationName.Length - 7);
                     }
@@ -407,9 +400,9 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
         private class ProjectConfig
         {
-            private IProject _project;
-            private string _outputPath;
-            private string _assemblyName;
+            private readonly IProject _project;
+            private readonly string _outputPath;
+            private readonly string _assemblyName;
 
             public ProjectConfig(IProject project, string name, string outputPath, string assemblyName)
             {
@@ -430,7 +423,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
             private static string Normalize(string path)
             {
-                char sep = Path.DirectorySeparatorChar;
+                var sep = Path.DirectorySeparatorChar;
 
                 if (sep != '\\')
                     path = path.Replace('\\', sep);

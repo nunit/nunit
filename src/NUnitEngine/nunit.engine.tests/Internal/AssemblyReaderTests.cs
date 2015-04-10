@@ -27,85 +27,85 @@ using System.IO;
 
 namespace NUnit.Engine.Internal.Tests
 {
-	[TestFixture]
-	public class AssemblyReaderTests
-	{
-		private AssemblyReader rdr;
+    [TestFixture]
+    public class AssemblyReaderTests
+    {
+        private AssemblyReader rdr;
 
-		[SetUp]
-		public void CreateReader()
-		{
-			rdr = new AssemblyReader( this.GetType().Assembly );
-		}
+        [SetUp]
+        public void CreateReader()
+        {
+            rdr = new AssemblyReader( GetType().Assembly );
+        }
 
-		[TearDown]
-		public void DisposeReader()
-		{
-			if ( rdr != null )
-				rdr.Dispose();
+        [TearDown]
+        public void DisposeReader()
+        {
+            if ( rdr != null )
+                rdr.Dispose();
 
-			rdr = null;
-		}
+            rdr = null;
+        }
 
-		[Test]
-		public void CreateFromPath()
-		{
+        [Test]
+        public void CreateFromPath()
+        {
             string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
-            Assert.AreEqual(path, new AssemblyReader(path).AssemblyPath);
-		}
+            Framework.Assert.AreEqual(path, new AssemblyReader(path).AssemblyPath);
+        }
 
-		[Test]
-		public void CreateFromAssembly()
-		{
+        [Test]
+        public void CreateFromAssembly()
+        {
             string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
-            Assert.AreEqual(path, rdr.AssemblyPath);
-		}
+            Framework.Assert.AreEqual(path, rdr.AssemblyPath);
+        }
 
-		[Test]
-		public void IsValidPeFile()
-		{
-            Assert.IsTrue(rdr.IsValidPeFile);
-		}
+        [Test]
+        public void IsValidPeFile()
+        {
+            Framework.Assert.IsTrue(rdr.IsValidPeFile);
+        }
 
-		[Test]
-		public void IsValidPeFile_Fails()
-		{
+        [Test]
+        public void IsValidPeFile_Fails()
+        {
             string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
             path = Path.Combine(Path.GetDirectoryName(path), "nunit.engine.api.xml");
-            Assert.IsFalse(new AssemblyReader(path).IsValidPeFile);
-		}
+            Framework.Assert.IsFalse(new AssemblyReader(path).IsValidPeFile);
+        }
 
-		[Test]
-		public void IsDotNetFile()
-		{
-			Assert.IsTrue( rdr.IsDotNetFile );
-		}
+        [Test]
+        public void IsDotNetFile()
+        {
+            Framework.Assert.IsTrue( rdr.IsDotNetFile );
+        }
 
-		[Test]
-		public void ImageRuntimeVersion()
-		{
-			string runtimeVersion = rdr.ImageRuntimeVersion;
+        [Test]
+        public void ImageRuntimeVersion()
+        {
+            string runtimeVersion = rdr.ImageRuntimeVersion;
 
-			StringAssert.StartsWith( "v", runtimeVersion );
-			new Version( runtimeVersion.Substring( 1 ) );
-			// This fails when we force running under a prior version
-			// Assert.LessOrEqual( version, Environment.Version );
-		}
+            StringAssert.StartsWith( "v", runtimeVersion );
+            new Version( runtimeVersion.Substring( 1 ) );
+            // This fails when we force running under a prior version
+            // Assert.LessOrEqual( version, Environment.Version );
+        }
 
-	    [Test]
-	    public void ShouldRun32BitAnyCpuCSharpAssembly()
+        [Test]
+        public void ShouldRun32BitAnyCpuCSharpAssembly()
         {
             string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
             path = Path.Combine(Path.GetDirectoryName(path), "nunit-agent.exe");
-            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.False);
-	    }
+            Framework.Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.False);
+        }
 
         [Test]
         public void ShouldRun32Bit32BitCSharpAssembly()
         {
             string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
             path = Path.Combine(Path.GetDirectoryName(path), "nunit-agent-x86.exe");
-            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.True);
+            Framework.Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.True);
         }
 
         [Ignore("This test started failing on AppVeyor for no apparent reason. Ignoring until we figure out why.")]
@@ -115,7 +115,7 @@ namespace NUnit.Engine.Internal.Tests
             string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
             path = Path.Combine(Path.GetDirectoryName(path), "mock-cpp-clr-x64.dll");
             Assume.That(path, Does.Exist);
-            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.False);
+            Framework.Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.False);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace NUnit.Engine.Internal.Tests
             string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
             path = Path.Combine(Path.GetDirectoryName(path), "mock-cpp-clr-x86.dll");
             Assume.That(path, Does.Exist);
-            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.True);
+            Framework.Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.True);
         }
-	}
+    }
 }

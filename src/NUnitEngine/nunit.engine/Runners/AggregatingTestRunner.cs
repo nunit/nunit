@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 
@@ -49,10 +50,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult ExploreTests(TestFilter filter)
         {
-            var results = new List<TestEngineResult>();
-
-            foreach (ITestEngineRunner runner in _runners)
-                results.Add(runner.Explore(filter));
+            var results = _runners.Select(runner => runner.Explore(filter)).ToList();
 
             TestEngineResult result = ResultHelper.Merge(results);
 
@@ -106,14 +104,8 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        protected override int CountTests(TestFilter filter)
-        {
-            int count = 0;
-
-            foreach (ITestEngineRunner runner in _runners)
-                count += runner.CountTestCases(filter);
-
-            return count;
+        protected override int CountTests(TestFilter filter) {
+            return _runners.Sum(runner => runner.CountTestCases(filter));
         }
 
         /// <summary>

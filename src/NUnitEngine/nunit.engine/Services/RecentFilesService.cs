@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 
 namespace NUnit.Engine.Services
@@ -31,7 +30,7 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class RecentFilesService : IRecentFiles, IService
     {
-        private IList<string> _fileEntries = new List<string>();
+        private readonly IList<string> _fileEntries = new List<string>();
 
         private const int MinSize = 0;
         private const int MaxSize = 24;
@@ -45,7 +44,7 @@ namespace NUnit.Engine.Services
         {
             get 
             { 
-                int size = ServiceContext.UserSettings.GetSetting("Gui.RecentProjects.MaxFiles", DefaultSize );
+                var size = ServiceContext.UserSettings.GetSetting("Gui.RecentProjects.MaxFiles", DefaultSize );
                 
                 if ( size < MinSize ) size = MinSize;
                 if ( size > MaxSize ) size = MaxSize;
@@ -54,8 +53,8 @@ namespace NUnit.Engine.Services
             }
             set 
             { 
-                int oldSize = MaxFiles;
-                int newSize = value;
+                var oldSize = MaxFiles;
+                var newSize = value;
                 
                 if ( newSize < MinSize ) newSize = MinSize;
                 if ( newSize > MaxSize ) newSize = MaxSize;
@@ -97,26 +96,26 @@ namespace NUnit.Engine.Services
 
         private void AddEntriesForPrefix(string prefix)
         {
-            for (int index = 1; index < MaxFiles; index++)
+            for (var index = 1; index < MaxFiles; index++)
             {
                 if (_fileEntries.Count >= MaxFiles) break;
 
-                string fileSpec = ServiceContext.UserSettings.GetSetting(GetRecentFileKey(prefix, index)) as string;
+                var fileSpec = ServiceContext.UserSettings.GetSetting(GetRecentFileKey(prefix, index)) as string;
                 if (fileSpec != null) _fileEntries.Add(fileSpec);
             }
         }
 
         private void SaveEntriesToSettings()
         {
-            string prefix = "Gui.RecentProjects";
-            ISettings settings = ServiceContext.UserSettings;
+            const string prefix = "Gui.RecentProjects";
+            var settings = ServiceContext.UserSettings;
 
             while( _fileEntries.Count > MaxFiles )
                 _fileEntries.RemoveAt( _fileEntries.Count - 1 );
 
-            for( int index = 0; index < MaxSize; index++ ) 
+            for( var index = 0; index < MaxSize; index++ ) 
             {
-                string keyName = GetRecentFileKey( prefix, index + 1 );
+                var keyName = GetRecentFileKey( prefix, index + 1 );
                 if ( index < _fileEntries.Count )
                     settings.SaveSetting( keyName, _fileEntries[index] );
                 else

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Engine;
@@ -36,9 +35,9 @@ namespace NUnit.ConsoleRunner.Utilities
 
         public TestFilterBuilder()
         {
-            this.Tests = new List<string>();
-            this.Include = new List<string>();
-            this.Exclude = new List<string>();
+            Tests = new List<string>();
+            Include = new List<string>();
+            Exclude = new List<string>();
         }
 
         public TestFilter GetFilter()
@@ -83,11 +82,11 @@ namespace NUnit.ConsoleRunner.Utilities
 
             var testFilter = new StringBuilder("<filter>");
             if (tests.Length > 0)
-                testFilter.Append(tests.ToString());
+                testFilter.Append(tests);
             if (include.Length > 0)
-                testFilter.Append(include.ToString());
+                testFilter.Append(include);
             if (exclude.Length > 0)
-                testFilter.Append(exclude.ToString());
+                testFilter.Append(exclude);
             testFilter.Append("</filter>");
 
             return new TestFilter(testFilter.ToString());

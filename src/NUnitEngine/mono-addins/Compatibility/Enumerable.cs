@@ -47,12 +47,12 @@ namespace System.Linq
 
 #if !FULL_AOT_RUNTIME
 		static class PredicateOf<T> {
-			public static readonly Func<T, bool> Always = (t) => true;
+			public static readonly Func<T, bool> Always = t => true;
 		}
 #endif
 
 		static class Function<T> {
-			public static readonly Func<T, T> Identity = (t) => t;
+			public static readonly Func<T, T> Identity = t => t;
 		}
 		
 		static class EmptyOf<T> {
@@ -608,7 +608,7 @@ namespace System.Linq
 			if (collection != null)
 				return collection.Contains (value);
 
-			return Contains<TSource> (source, value, null);
+			return Contains (source, value, null);
 		}
 
 		public static bool Contains<TSource> (this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource> comparer)
@@ -690,7 +690,7 @@ namespace System.Linq
 
 		public static IEnumerable<TSource> Distinct<TSource> (this IEnumerable<TSource> source)
 		{
-			return Distinct<TSource> (source, null);
+			return Distinct (source, null);
 		}
 
 		public static IEnumerable<TSource> Distinct<TSource> (this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
@@ -888,7 +888,7 @@ namespace System.Linq
 		public static IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector)
 		{
-			return GroupBy<TSource, TKey> (source, keySelector, null);
+			return GroupBy (source, keySelector, null);
 		}
 
 		public static IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey> (this IEnumerable<TSource> source,
@@ -946,7 +946,7 @@ namespace System.Linq
 		public static IEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
 		{
-			return GroupBy<TSource, TKey, TElement> (source, keySelector, elementSelector, null);
+			return GroupBy (source, keySelector, elementSelector, null);
 		}
 
 		public static IEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement> (this IEnumerable<TSource> source,
@@ -1024,7 +1024,7 @@ namespace System.Linq
 			Func<TKey, IEnumerable<TElement>, TResult> resultSelector,
 			IEqualityComparer<TKey> comparer)
 		{
-			IEnumerable<IGrouping<TKey, TElement>> groups = GroupBy<TSource, TKey, TElement> (
+			IEnumerable<IGrouping<TKey, TElement>> groups = GroupBy (
 				source, keySelector, elementSelector, comparer);
 
 			foreach (IGrouping<TKey, TElement> group in groups)
@@ -1053,7 +1053,7 @@ namespace System.Linq
 			Func<TKey, IEnumerable<TSource>, TResult> resultSelector,
 			IEqualityComparer<TKey> comparer)
 		{
-			IEnumerable<IGrouping<TKey,TSource>> groups = GroupBy<TSource, TKey> (source, keySelector, comparer);
+			IEnumerable<IGrouping<TKey,TSource>> groups = GroupBy (source, keySelector, comparer);
 
 			foreach (IGrouping<TKey, TSource> group in groups)
 				yield return resultSelector (group.Key, group);
@@ -1088,7 +1088,7 @@ namespace System.Linq
 			Func<TInner, TKey> innerKeySelector, Func<TOuter, IEnumerable<TInner>, TResult> resultSelector,
 			IEqualityComparer<TKey> comparer)
 		{
-			ILookup<TKey, TInner> innerKeys = ToLookup<TInner, TKey> (inner, innerKeySelector, comparer);
+			ILookup<TKey, TInner> innerKeys = ToLookup (inner, innerKeySelector, comparer);
 			/*Dictionary<K, List<U>> innerKeys = new Dictionary<K, List<U>> ();
 			foreach (U element in inner)
 			{
@@ -1155,7 +1155,7 @@ namespace System.Linq
 			IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector,
 			Func<TInner, TKey> innerKeySelector, Func<TOuter, TInner, TResult> resultSelector, IEqualityComparer<TKey> comparer)
 		{
-			ILookup<TKey, TInner> innerKeys = ToLookup<TInner, TKey> (inner, innerKeySelector, comparer);
+			ILookup<TKey, TInner> innerKeys = ToLookup (inner, innerKeySelector, comparer);
 			/*Dictionary<K, List<U>> innerKeys = new Dictionary<K, List<U>> ();
 			foreach (U element in inner)
 			{
@@ -1168,7 +1168,7 @@ namespace System.Linq
 			foreach (TOuter element in outer) {
 				TKey outerKey = outerKeySelector (element);
 				if (outerKey != null && innerKeys.Contains (outerKey)) {
-					foreach (TInner innerElement in innerKeys [outerKey])
+					foreach (var innerElement in innerKeys [outerKey])
 						yield return resultSelector (element, innerElement);
 				}
 			}
@@ -2165,7 +2165,7 @@ namespace System.Linq
 		public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector)
 		{
-			return OrderBy<TSource, TKey> (source, keySelector, null);
+			return OrderBy (source, keySelector, null);
 		}
 
 		public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey> (this IEnumerable<TSource> source,
@@ -2184,7 +2184,7 @@ namespace System.Linq
 		public static IOrderedEnumerable<TSource> OrderByDescending<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector)
 		{
-			return OrderByDescending<TSource, TKey> (source, keySelector, null);
+			return OrderByDescending (source, keySelector, null);
 		}
 
 		public static IOrderedEnumerable<TSource> OrderByDescending<TSource, TKey> (this IEnumerable<TSource> source,
@@ -2332,8 +2332,8 @@ namespace System.Linq
 		static IEnumerable<TResult> CreateSelectManyIterator<TSource, TCollection, TResult> (IEnumerable<TSource> source,
 			Func<TSource, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> selector)
 		{
-			foreach (TSource element in source)
-				foreach (TCollection collection in collectionSelector (element))
+			foreach (var element in source)
+				foreach (var collection in collectionSelector (element))
 					yield return selector (element, collection);
 		}
 
@@ -2540,7 +2540,7 @@ namespace System.Linq
 		{
 			Check.Source (source);
 
-			int total = 0;
+			var total = 0;
 			foreach (var element in source) {
 				if (element.HasValue)
 					total = checked (total + element.Value);
@@ -2828,7 +2828,7 @@ namespace System.Linq
 
 		public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey> (this IOrderedEnumerable<TSource> source, Func<TSource, TKey> keySelector)
 		{
-			return ThenBy<TSource, TKey> (source, keySelector, null);
+			return ThenBy (source, keySelector, null);
 		}
 
 		public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey> (this IOrderedEnumerable<TSource> source,
@@ -2852,7 +2852,7 @@ namespace System.Linq
 		public static IOrderedEnumerable<TSource> ThenByDescending<TSource, TKey> (this IOrderedEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector)
 		{
-			return ThenByDescending<TSource, TKey> (source, keySelector, null);
+			return ThenByDescending (source, keySelector, null);
 		}
 
 		public static IOrderedEnumerable<TSource> ThenByDescending<TSource, TKey> (this IOrderedEnumerable<TSource> source,
@@ -2912,7 +2912,7 @@ namespace System.Linq
 		public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
 		{
-			return ToDictionary<TSource, TKey, TElement> (source, keySelector, elementSelector, null);
+			return ToDictionary (source, keySelector, elementSelector, null);
 		}
 
 		public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement> (this IEnumerable<TSource> source,
@@ -2939,7 +2939,7 @@ namespace System.Linq
 		public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
 		{
-			return ToDictionary<TSource, TKey, TSource> (source, keySelector, Function<TSource>.Identity, comparer);
+			return ToDictionary (source, keySelector, Function<TSource>.Identity, comparer);
 		}
 
 		#endregion
@@ -2957,19 +2957,19 @@ namespace System.Linq
 
 		public static ILookup<TKey, TSource> ToLookup<TSource, TKey> (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
 		{
-			return ToLookup<TSource, TKey, TSource> (source, keySelector, Function<TSource>.Identity, null);
+			return ToLookup (source, keySelector, Function<TSource>.Identity, null);
 		}
 
 		public static ILookup<TKey, TSource> ToLookup<TSource, TKey> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
 		{
-			return ToLookup<TSource, TKey, TSource> (source, keySelector, Function<TSource>.Identity, comparer);
+			return ToLookup (source, keySelector, Function<TSource>.Identity, comparer);
 		}
 
 		public static ILookup<TKey, TElement> ToLookup<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
 		{
-			return ToLookup<TSource, TKey, TElement> (source, keySelector, elementSelector, null);
+			return ToLookup (source, keySelector, elementSelector, null);
 		}
 
 		public static ILookup<TKey, TElement> ToLookup<TSource, TKey, TElement> (this IEnumerable<TSource> source,
@@ -3017,18 +3017,18 @@ namespace System.Linq
 			if (comparer == null)
 				comparer = EqualityComparer<TSource>.Default;
 
-			using (IEnumerator<TSource> first_enumerator = first.GetEnumerator (),
-				second_enumerator = second.GetEnumerator ()) {
+			using (IEnumerator<TSource> firstEnumerator = first.GetEnumerator (),
+				secondEnumerator = second.GetEnumerator ()) {
 
-				while (first_enumerator.MoveNext ()) {
-					if (!second_enumerator.MoveNext ())
+				while (firstEnumerator.MoveNext ()) {
+					if (!secondEnumerator.MoveNext ())
 						return false;
 
-					if (!comparer.Equals (first_enumerator.Current, second_enumerator.Current))
+					if (!comparer.Equals (firstEnumerator.Current, secondEnumerator.Current))
 						return false;
 				}
 
-				return !second_enumerator.MoveNext ();
+				return !secondEnumerator.MoveNext ();
 			}
 		}
 
@@ -3168,10 +3168,7 @@ namespace System.Linq
 				return ReadOnlyCollectionOf<TSource>.Empty;
 
 			var ro = source as ReadOnlyCollection<TSource>;
-			if (ro != null)
-				return ro;
-
-			return new ReadOnlyCollection<TSource> (source.ToArray<TSource> ());
+			return ro ?? new ReadOnlyCollection<TSource> (source.ToArray ());
 		}
 
 		#region Exception helpers

@@ -23,9 +23,6 @@
 
 using System;
 using System.IO;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
 using System.Xml;
 using NUnit.Common;
 using NUnit.Engine;
@@ -40,9 +37,9 @@ namespace NUnit.ConsoleRunner
     /// </summary>
     public class TestEventHandler : MarshalByRefObject, ITestEventListener
     {
-        private string _displayLabels;
-        private TextWriter _outWriter;
-        private TeamCityEventHandler _teamCity;
+        private readonly string _displayLabels;
+        private readonly TextWriter _outWriter;
+        private readonly TeamCityEventHandler _teamCity;
 
 
         public TestEventHandler(TextWriter outWriter, string displayLabels, bool teamCity)

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 
 namespace NUnit.Engine.Internal
@@ -46,6 +45,10 @@ namespace NUnit.Engine.Internal
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
         /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="elementName"></param>
+        /// <param name="suiteType"></param>
+        /// <param name="name"></param>
+        /// <param name="fullname"></param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string suiteType, string name, string fullname)
         {
@@ -56,6 +59,9 @@ namespace NUnit.Engine.Internal
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
         /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="elementName"></param>
+        /// <param name="name"></param>
+        /// <param name="fullname"></param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string name, string fullname)
         {
@@ -83,10 +89,10 @@ namespace NUnit.Engine.Internal
         /// <remarks>Used by AbstractTestRunner MakePackageResult method.</remarks>
         public static TestEngineResult Merge(IList<TestEngineResult> results)
         {
-            TestEngineResult mergedResult = new TestEngineResult();
+            var mergedResult = new TestEngineResult();
 
-            foreach (TestEngineResult result in results)
-                foreach (XmlNode node in result.XmlNodes)
+            foreach (var result in results)
+                foreach (var node in result.XmlNodes)
                     mergedResult.Add(node);
 
             return mergedResult;
@@ -112,8 +118,8 @@ namespace NUnit.Engine.Internal
             env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
-            env.AddAttribute("culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
-            env.AddAttribute("uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
         }
 
         #endregion
@@ -131,28 +137,28 @@ namespace NUnit.Engine.Internal
             if (testType != null)
                 combinedNode.AddAttribute("type", testType);
             combinedNode.AddAttribute("id", "2"); // TODO: Should not be hard-coded
-            if (name != null && name != string.Empty)
+            if (!string.IsNullOrEmpty(name))
                 combinedNode.AddAttribute("name", name);
-            if (fullname != null && fullname != string.Empty)
+            if (!string.IsNullOrEmpty(fullname))
                 combinedNode.AddAttribute("fullname", fullname);
 
-            string status = "Inconclusive";
+            var status = "Inconclusive";
             //double totalDuration = 0.0d;
-            int testcasecount = 0;
-            int total = 0;
-            int passed = 0;
-            int failed = 0;
-            int inconclusive = 0;
-            int skipped = 0;
-            int asserts = 0;
+            var testcasecount = 0;
+            var total = 0;
+            var passed = 0;
+            var failed = 0;
+            var inconclusive = 0;
+            var skipped = 0;
+            var asserts = 0;
 
-            bool isTestRunResult = false;
+            var isTestRunResult = false;
 
-            foreach (XmlNode node in resultNodes)
+            foreach (var node in resultNodes)
             {
                 testcasecount += node.GetAttribute("testcasecount", 0);
 
-                XmlAttribute resultAttribute = node.Attributes["result"];
+                var resultAttribute = node.Attributes["result"];
                 if (resultAttribute != null)
                 {
                     isTestRunResult = true;
@@ -180,7 +186,7 @@ namespace NUnit.Engine.Internal
                     asserts += node.GetAttribute("asserts", 0);
                 }
 
-                XmlNode import = combinedNode.OwnerDocument.ImportNode(node, true);
+                var import = combinedNode.OwnerDocument.ImportNode(node, true);
                 combinedNode.AppendChild(import);
             }
 

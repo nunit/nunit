@@ -22,12 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Engine.Runners;
+using NUnit.Engine.Services;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.Tests
+namespace NUnit.Engine.Tests.Services
 {
     public class DefaultTestRunnerFactoryTests
     {
