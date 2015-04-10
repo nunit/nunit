@@ -8,16 +8,16 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Engine.Drivers.Tests
 {
     [TestFixture("hello", "hello", "goodbye")]
     [TestFixture("zip", "zip")]
     [TestFixture(42, 42, 99)]
     public class ParameterizedTestFixture
     {
-        private string eq1;
-        private string eq2;
-        private string neq;
+        private readonly string eq1;
+        private readonly string eq2;
+        private readonly string neq;
         
         public ParameterizedTestFixture(string eq1, string eq2, string neq)
         {
@@ -79,16 +79,16 @@ namespace NUnit.Core.Tests
     [TestFixture(42)]
     public class ParameterizedTestFixtureWithDataSources
     {
-        private int answer;
+        private readonly int answer;
 
-        internal object[] myData = { new int[] { 6, 7 }, new int[] { 3, 14 } };
+        internal object[] MyData = { new[] { 6, 7 }, new[] { 3, 14 } };
 
         public ParameterizedTestFixtureWithDataSources(int val)
         {
-            this.answer = val;
+            answer = val;
         }
 
-        [Test, TestCaseSource("myData")]
+        [Test, TestCaseSource("MyData")]
         public void CanAccessTestCaseSource(int x, int y)
         {
             Assert.That(x * y, Is.EqualTo(answer));
@@ -96,9 +96,9 @@ namespace NUnit.Core.Tests
 
         IEnumerable GenerateData()
         {
-            for(int i = 1; i <= answer; i++)
+            for(var i = 1; i <= answer; i++)
                 if ( answer%i == 0 )
-                    yield return new int[] { i, answer/i  };
+                    yield return new[] { i, answer / i  };
         }
 
         [Test, TestCaseSource("GenerateData")]
@@ -107,11 +107,11 @@ namespace NUnit.Core.Tests
             Assert.That(x * y, Is.EqualTo(answer));
         }
 
-        internal int[] intvals = new int[] { 1, 2, 3 };
+        internal int[] Intvals = { 1, 2, 3 };
 
         [Test]
         public void CanAccessValueSource(
-            [ValueSource("intvals")] int x)
+            [ValueSource("Intvals")] int x)
         {
             Assert.That(answer % x == 0);
         }

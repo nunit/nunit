@@ -25,8 +25,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Configuration;
-using System.Collections.Specialized;
-using System.Threading;
 using Microsoft.Win32;
 
 namespace NUnit.Engine.Internal
@@ -61,15 +59,8 @@ namespace NUnit.Engine.Internal
         /// </summary>
         public static string NUnitLibDirectory
         {
-            get
-            {
-                if (nunitLibDirectory == null)
-                {
-                    nunitLibDirectory =
-                        AssemblyHelper.GetDirectoryName(Assembly.GetExecutingAssembly());
-                }
-
-                return nunitLibDirectory;
+            get {
+                return nunitLibDirectory ?? (nunitLibDirectory = AssemblyHelper.GetDirectoryName(Assembly.GetExecutingAssembly()));
             }
         }
         #endregion
@@ -96,15 +87,7 @@ namespace NUnit.Engine.Internal
         private static string addinDirectory;
         public static string AddinDirectory
         {
-            get
-            {
-                if (addinDirectory == null)
-                {
-                    addinDirectory = Path.Combine(NUnitBinDirectory, "addins");
-                }
-
-                return addinDirectory;
-            }
+            get { return addinDirectory ?? (addinDirectory = Path.Combine(NUnitBinDirectory, "addins")); }
         }
         #endregion
 
@@ -130,15 +113,15 @@ namespace NUnit.Engine.Internal
             {
                 if (monoExePath == null)
                 {
-                    string[] searchNames = IsWindows()
-                        ? new string[] { "mono.bat", "mono.cmd", "mono.exe" }
-                        : new string[] { "mono", "mono.exe" };
+                    var searchNames = IsWindows()
+                        ? new[] { "mono.bat", "mono.cmd", "mono.exe" }
+                        : new[] { "mono", "mono.exe" };
                     
                     monoExePath = FindOneOnPath(searchNames);
 
                     if (monoExePath == null && IsWindows())
                     {
-                        RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Novell\Mono");
+                        var key = Registry.LocalMachine.OpenSubKey(@"Software\Novell\Mono");
                         if (key != null)
                         {
                             string version = key.GetValue("DefaultCLR") as string;
@@ -147,7 +130,7 @@ namespace NUnit.Engine.Internal
                                 key = key.OpenSubKey(version);
                                 if (key != null)
                                 {
-                                    string installDir = key.GetValue("SdkInstallRoot") as string;
+                                    var installDir = key.GetValue("SdkInstallRoot") as string;
                                     if (installDir != null)
                                         monoExePath = Path.Combine(installDir, @"bin\mono.exe");
                                 }
@@ -186,16 +169,10 @@ namespace NUnit.Engine.Internal
         private static string applicationDirectory;
         public static string ApplicationDirectory
         {
-            get
-            {
-                if (applicationDirectory == null)
-                {
-                    applicationDirectory = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                        "NUnit");
-                }
-
-                return applicationDirectory;
+            get {
+                return applicationDirectory ?? (applicationDirectory = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "NUnit"));
             }
         }
         #endregion
@@ -205,24 +182,21 @@ namespace NUnit.Engine.Internal
         {
             get
             {
-                string helpUrl = ConfigurationManager.AppSettings["helpUrl"];
+                var helpUrl = ConfigurationManager.AppSettings["helpUrl"];
 
                 if (helpUrl == null)
                 {
                     helpUrl = "http://nunit.org";
-                    string dir = Path.GetDirectoryName(NUnitBinDirectory);
+                    var dir = Path.GetDirectoryName(NUnitBinDirectory);
                     if ( dir != null )
                     {
                         dir = Path.GetDirectoryName(dir);
                         if ( dir != null )
                         {
-                            string localPath = Path.Combine(dir, @"doc/index.html");
+                            var localPath = Path.Combine(dir, @"doc/index.html");
                             if (File.Exists(localPath))
                             {
-                                UriBuilder uri = new UriBuilder();
-                                uri.Scheme = "file";
-                                uri.Host = "localhost";
-                                uri.Path = localPath;
+                                var uri = new UriBuilder {Scheme = "file", Host = "localhost", Path = localPath};
                                 helpUrl = uri.ToString();
                             }
                         }

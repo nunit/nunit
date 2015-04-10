@@ -21,19 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Xml;
-using NUnit.Engine;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Api.Tests
+namespace NUnit.Engine.Tests.Api
 {
     public class TestFilterTests
     {
         [Test]
         public void EmptyFilter()
         {
-            TestFilter filter = TestFilter.Empty;
+            var filter = TestFilter.Empty;
             Assert.That(filter.Text, Is.EqualTo("<filter/>"));
             Assert.That(filter.Xml.Name, Is.EqualTo("filter"));
             Assert.That(filter.Xml.ChildNodes.Count, Is.EqualTo(0));
@@ -42,8 +40,8 @@ namespace NUnit.Engine.Api.Tests
         [Test]
         public void FilterWithOneTest()
         {
-            string text = "<filter><tests><test>My.Test.Name</test></tests></filter>";
-            TestFilter filter = new TestFilter(text);
+            var text = "<filter><tests><test>My.Test.Name</test></tests></filter>";
+            var filter = new TestFilter(text);
             Assert.That(filter.Text, Is.EqualTo(text));
             Assert.That(filter.Xml.Name, Is.EqualTo("filter"));
             Assert.That(filter.Xml.SelectSingleNode("tests/test").InnerText, Is.EqualTo("My.Test.Name"));
@@ -52,8 +50,8 @@ namespace NUnit.Engine.Api.Tests
         [Test]
         public void FilterWithThreeTests()
         {
-            string text = "<filter><tests><test>My.First.Test</test><test>My.Second.Test</test><test>My.Third.Test</test></tests></filter>";
-            TestFilter filter = new TestFilter(text);
+            var text = "<filter><tests><test>My.First.Test</test><test>My.Second.Test</test><test>My.Third.Test</test></tests></filter>";
+            var filter = new TestFilter(text);
             Assert.That(filter.Text, Is.EqualTo(text));
             Assert.That(filter.Xml.Name, Is.EqualTo("filter"));
             XmlNodeList testNodes = filter.Xml.SelectNodes("tests/test");

@@ -54,15 +54,15 @@ namespace NUnit.Engine.Drivers
                 "</reason>" +
             "</test-suite>";
 
-        AppDomain _testDomain;
-        string _testAssemblyPath;
-        string _frameworkAssemblyName;
+        readonly AppDomain _testDomain;
+        readonly string _testAssemblyPath;
+        readonly string _frameworkAssemblyName;
 
-        string _name;
-        string _fullname;
+        readonly string _name;
+        readonly string _fullname;
 
-        TestRunner _runner;
-        Core.TestPackage _package;
+        readonly TestRunner _runner;
+        readonly Core.TestPackage _package;
 
         public NUnit2FrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
             : this(testDomain, NUNIT_FRAMEWORK, testAssemblyPath, settings) { }
@@ -95,7 +95,7 @@ namespace NUnit.Engine.Drivers
             if (!_runner.Load(new Core.TestPackage(_testAssemblyPath)))
                 return string.Format(LOAD_RESULT_FORMAT, _name, _fullname, "No tests were found");
 
-            Core.ITest test = _runner.Test;
+            var test = _runner.Test;
             // TODO: Handle error where test is null
 
             return test.ToXml(false).OuterXml;
@@ -172,14 +172,14 @@ namespace NUnit.Engine.Drivers
             {
                 case "filter":
                 case "and":
-                    var andFilter = new Core.Filters.AndFilter();
+                    var andFilter = new AndFilter();
                     foreach (XmlNode childNode in xmlNode.ChildNodes)
                         andFilter.Add(FromXml(childNode));
                     return andFilter;
 
                 case "or":
-                    var orFilter = new Core.Filters.OrFilter();
-                    foreach (System.Xml.XmlNode childNode in xmlNode.ChildNodes)
+                    var orFilter = new OrFilter();
+                    foreach (XmlNode childNode in xmlNode.ChildNodes)
                         orFilter.Add(FromXml(childNode));
                     return orFilter;
 
@@ -187,7 +187,7 @@ namespace NUnit.Engine.Drivers
                     return new NotFilter(FromXml(xmlNode.FirstChild));
 
                 case "tests":
-                    var testFilter = new Core.Filters.SimpleNameFilter();
+                    var testFilter = new SimpleNameFilter();
                     var testNodes = xmlNode.SelectNodes("test");
                     if(testNodes != null)
                         foreach (XmlNode childNode in testNodes)
@@ -195,7 +195,7 @@ namespace NUnit.Engine.Drivers
                     return testFilter;
 
                 case "cat":
-                    var catFilter = new Core.Filters.CategoryFilter();
+                    var catFilter = new CategoryFilter();
                     foreach (string cat in xmlNode.InnerText.Split(COMMA))
                         catFilter.AddCategory(cat);
                     return catFilter;

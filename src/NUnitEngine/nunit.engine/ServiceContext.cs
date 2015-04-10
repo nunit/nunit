@@ -58,13 +58,7 @@ namespace NUnit.Engine
         private DomainManager _domainManager;
         public DomainManager DomainManager
         {
-            get
-            {
-                if (_domainManager == null)
-                    _domainManager = GetService<DomainManager>();
-
-                return _domainManager;
-            }
+            get { return _domainManager ?? (_domainManager = GetService<DomainManager>()); }
         }
 
         #endregion
@@ -74,13 +68,7 @@ namespace NUnit.Engine
         private ISettings _userSettings;
         public ISettings UserSettings
         {
-            get
-            {
-                if (_userSettings == null)
-                    _userSettings = GetService<ISettings>();
-
-                return _userSettings;
-            }
+            get { return _userSettings ?? (_userSettings = GetService<ISettings>()); }
         }
 
         #endregion
@@ -89,13 +77,7 @@ namespace NUnit.Engine
         private IRecentFiles _recentFiles;
         public IRecentFiles RecentFiles
         {
-            get
-            {
-                if ( _recentFiles == null )
-                    _recentFiles = GetService<IRecentFiles>();
-
-                return _recentFiles;
-            }
+            get { return _recentFiles ?? (_recentFiles = GetService<IRecentFiles>()); }
         }
         #endregion
 
@@ -106,13 +88,7 @@ namespace NUnit.Engine
         private RuntimeFrameworkService _runtimeService;
         public RuntimeFrameworkService RuntimeFrameworkService
         {
-            get
-            {
-                if (_runtimeService == null)
-                    _runtimeService = GetService<RuntimeFrameworkService>();
-
-                return _runtimeService;
-            }
+            get { return _runtimeService ?? (_runtimeService = GetService<RuntimeFrameworkService>()); }
         }
 
         #endregion
@@ -122,13 +98,7 @@ namespace NUnit.Engine
         private IDriverService _driverFactory;
         public IDriverService DriverFactory
         {
-            get
-            {
-                if (_driverFactory == null)
-                    _driverFactory = GetService<IDriverService>();
-
-                return _driverFactory;
-            }
+            get { return _driverFactory ?? (_driverFactory = GetService<IDriverService>()); }
         }
 
         #endregion
@@ -138,13 +108,7 @@ namespace NUnit.Engine
         private ITestRunnerFactory _testRunnerFactory;
         public ITestRunnerFactory TestRunnerFactory
         {
-            get
-            {
-                if (_testRunnerFactory == null)
-                    _testRunnerFactory = GetService<ITestRunnerFactory>();
-
-                return _testRunnerFactory;
-            }
+            get { return _testRunnerFactory ?? (_testRunnerFactory = GetService<ITestRunnerFactory>()); }
         }
 
         #endregion
@@ -154,13 +118,7 @@ namespace NUnit.Engine
         private TestAgency _agency;
         public TestAgency TestAgency
         {
-            get
-            {
-                if (_agency == null)
-                    _agency = GetService<TestAgency>();
-
-                return _agency;
-            }
+            get { return _agency ?? (_agency = GetService<TestAgency>()); }
         }
 
         #endregion
@@ -169,13 +127,7 @@ namespace NUnit.Engine
         private ProjectService _projectService;
         public ProjectService ProjectService
         {
-            get
-            {
-                if (_projectService == null)
-                    _projectService = GetService<ProjectService>();
-
-                return _projectService;
-            }
+            get { return _projectService ?? (_projectService = GetService<ProjectService>()); }
         }
         #endregion
 

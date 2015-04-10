@@ -21,10 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.ProjectLoaders
@@ -35,15 +33,14 @@ namespace NUnit.Engine.Services.ProjectLoaders
         static readonly char[] TRIM_CHARS = { ' ', '"' };
         const string BUILD_MARKER = ".Build.0 =";
 
-        IDictionary<string, VSProject> _projectLookup = new Dictionary<string, VSProject>();
-        IDictionary<string, SolutionConfig> _configs = new Dictionary<string, SolutionConfig>();
+        readonly IDictionary<string, VSProject> _projectLookup = new Dictionary<string, VSProject>();
+        readonly IDictionary<string, SolutionConfig> _configs = new Dictionary<string, SolutionConfig>();
 
         #region Constructor
 
         public VSSolution(string projectPath)
         {
             ProjectPath = Path.GetFullPath(projectPath);
-
             Load();
         }
 
@@ -125,7 +122,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
                     else if (line.IndexOf(BUILD_MARKER) >= 0)
                     {
                         line = line.Trim();
-                        int endBrace = line.IndexOf('}');
+                        var endBrace = line.IndexOf('}');
 
                         string vsProjectGuid = line.Substring(0, endBrace + 1);
                         VSProject vsProject;
@@ -133,9 +130,9 @@ namespace NUnit.Engine.Services.ProjectLoaders
                         {
                             line = line.Substring(endBrace + 2);
 
-                            int split = line.IndexOf(BUILD_MARKER) + 1;
-                            string solutionConfig = line.Substring(0, split - 1);
-                            int bar = solutionConfig.IndexOf('|');
+                            var split = line.IndexOf(BUILD_MARKER) + 1;
+                            var solutionConfig = line.Substring(0, split - 1);
+                            var bar = solutionConfig.IndexOf('|');
                             if (bar >= 0)
                                 solutionConfig = solutionConfig.Substring(0, bar);
 
@@ -147,7 +144,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
                                     projectConfig = projectConfig.Substring(0, bar);
                             }
 
-                            SolutionConfig config = null;
+                            SolutionConfig config;
 
                             if (_configs.ContainsKey(solutionConfig))
                                 config = _configs[solutionConfig];

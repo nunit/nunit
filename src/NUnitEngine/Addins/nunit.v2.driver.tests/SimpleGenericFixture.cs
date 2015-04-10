@@ -24,14 +24,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
-namespace NUnit.Core.Tests.Generic
+namespace NUnit.Engine.Drivers.Tests
 {
     [Category("Generics")]
     [TestFixture(typeof(List<int>))]
-    [TestFixture(TypeArgs=new Type[] {typeof(ArrayList)} )]
+    [TestFixture(TypeArgs=new[] {typeof(ArrayList)} )]
     public class SimpleGenericFixture<TList> where TList : IList, new()
     {
         [Test]

@@ -100,14 +100,14 @@ namespace NUnit.Engine.Runners
             if (listener != null)
                 listener.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
 
-            DateTime startTime = DateTime.UtcNow;
-            long startTicks = Stopwatch.GetTimestamp();
+            var startTime = DateTime.UtcNow;
+            var startTicks = Stopwatch.GetTimestamp();
 
             TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             result.Xml.InsertEnvironmentElement();
 
-            double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
+            var duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
             result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
             result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
             result.Xml.AddAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
@@ -203,7 +203,7 @@ namespace NUnit.Engine.Runners
         /// <returns>An XmlNode representing the tests found.</returns>
         XmlNode ITestRunner.Explore(TestFilter filter)
         {
-            return this.Explore(filter).Xml;
+            return Explore(filter).Xml;
         }
 
         #endregion
@@ -226,8 +226,7 @@ namespace NUnit.Engine.Runners
                 {
                     var currentFramework = RuntimeFramework.CurrentFramework.ToString();
                     if (currentFramework != frameworkSetting)
-                        throw new NUnitEngineException(string.Format(
-                            "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
+                        throw new NUnitEngineException(string.Format("Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
                 }
             }
         }

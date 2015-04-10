@@ -36,14 +36,14 @@ namespace NUnit.Engine.Agents
     /// </summary>
     public class RemoteTestAgent : TestAgent, ITestEngineRunner
     {
-        static Logger log = InternalTrace.GetLogger(typeof(RemoteTestAgent));
+        static readonly Logger Log = InternalTrace.GetLogger(typeof(RemoteTestAgent));
 
         #region Fields
 
         private ITestEngineRunner _runner;
         private TestPackage _package;
 
-        private ManualResetEvent stopSignal = new ManualResetEvent(false);
+        private readonly ManualResetEvent stopSignal = new ManualResetEvent(false);
         
         #endregion
 
@@ -76,16 +76,16 @@ namespace NUnit.Engine.Agents
 
         public override bool Start()
         {
-            log.Info("Agent starting");
+            Log.Info("Agent starting");
 
             try
             {
-                this.Agency.Register( this );
-                log.Debug( "Registered with TestAgency" );
+                Agency.Register( this );
+                Log.Debug( "Registered with TestAgency" );
             }
             catch( Exception ex )
             {
-                log.Error( "RemoteTestAgent: Failed to register with TestAgency", ex );
+                Log.Error( "RemoteTestAgent: Failed to register with TestAgency", ex );
                 return false;
             }
 
@@ -94,7 +94,7 @@ namespace NUnit.Engine.Agents
 
         public override void Stop()
         {
-            log.Info("Stopping");
+            Log.Info("Stopping");
             // This causes an error in the client because the agent 
             // database is not thread-safe.
             //if (agency != null)
@@ -117,7 +117,7 @@ namespace NUnit.Engine.Agents
         /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
+        /// <param name="filter">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
         public TestEngineResult Explore(TestFilter filter)
         {

@@ -24,8 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Xml;
 
@@ -37,8 +35,8 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public class SettingsStore : SettingsGroup
     {
-        private string _settingsFile;
-        private bool _writeable;
+        private readonly string _settingsFile;
+        private readonly bool _writeable;
 
         #region Constructors
 
@@ -64,13 +62,13 @@ namespace NUnit.Engine.Internal
 
         public void LoadSettings()
         {
-            FileInfo info = new FileInfo(_settingsFile);
+            var info = new FileInfo(_settingsFile);
             if (!info.Exists || info.Length == 0)
                 return;
 
             try
             {
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 doc.Load(_settingsFile);
 
                 foreach (XmlElement element in doc.DocumentElement["Settings"].ChildNodes)
@@ -97,29 +95,29 @@ namespace NUnit.Engine.Internal
         {
             if (_writeable)
             {
-                string dirPath = Path.GetDirectoryName(_settingsFile);
+                var dirPath = Path.GetDirectoryName(_settingsFile);
                 if (!Directory.Exists(dirPath))
                     Directory.CreateDirectory(dirPath);
 
-                XmlTextWriter writer = new XmlTextWriter(_settingsFile, System.Text.Encoding.UTF8);
-                writer.Formatting = Formatting.Indented;
+                var writer = new XmlTextWriter(_settingsFile, System.Text.Encoding.UTF8) {
+                    Formatting = Formatting.Indented
+                };
 
                 writer.WriteProcessingInstruction("xml", "version=\"1.0\"");
                 writer.WriteStartElement("NUnitSettings");
                 writer.WriteStartElement("Settings");
 
-                List<string> keys = new List<string>(_settings.Keys);
+                var keys = new List<string>(_settings.Keys);
                 keys.Sort();
 
-                foreach (string name in keys)
+                foreach (var name in keys)
                 {
                     object val = GetSetting(name);
                     if (val != null)
                     {
                         writer.WriteStartElement("Setting");
                         writer.WriteAttributeString("name", name);
-                        writer.WriteAttributeString("value", 
-                            TypeDescriptor.GetConverter(val).ConvertToInvariantString(val));
+                        writer.WriteAttributeString("value", TypeDescriptor.GetConverter(val).ConvertToInvariantString(val));
                         writer.WriteEndElement();
                     }
                 }

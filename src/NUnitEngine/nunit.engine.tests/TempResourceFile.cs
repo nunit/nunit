@@ -21,14 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.IO;
+
 namespace NUnit.Engine.Tests
 {
-    using System;
-    using System.IO;
-
     public class TempResourceFile : IDisposable
     {
-        string path;
+        readonly string path;
 
         public TempResourceFile(Type type, string name) : this(type, name, null) {}
 
@@ -40,19 +40,19 @@ namespace NUnit.Engine.Tests
             if (!System.IO.Path.IsPathRooted(filePath))
                 filePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), filePath);
 
-            this.path = filePath;
+            path = filePath;
 
-            Stream stream = type.Assembly.GetManifestResourceStream(type, name);
-            byte[] buffer = new byte[(int)stream.Length];
+            var stream = type.Assembly.GetManifestResourceStream(type, name);
+            var buffer = new byte[(int)stream.Length];
             stream.Read(buffer, 0, buffer.Length);
 
-            string dir = System.IO.Path.GetDirectoryName(this.path);
-            if(dir != null && dir.Length != 0)
+            var dir = System.IO.Path.GetDirectoryName(path);
+            if(!string.IsNullOrEmpty(dir))
             {
                 Directory.CreateDirectory(dir);
             }
 
-            using(FileStream fileStream = new FileStream(this.path, FileMode.Create))
+            using(FileStream fileStream = new FileStream(path, FileMode.Create))
             {
                 fileStream.Write(buffer, 0, buffer.Length);
             }
@@ -62,11 +62,11 @@ namespace NUnit.Engine.Tests
         {
             File.Delete(this.path);
             
-            string path = this.path;
+            var path = this.path;
             while(true)
             {
                 path = System.IO.Path.GetDirectoryName(path);
-                 if(path == null || path.Length == 0 || Directory.GetFiles(path).Length > 0)
+                 if(string.IsNullOrEmpty(path) || Directory.GetFiles(path).Length > 0)
                 {
                     break;
                 }
@@ -79,7 +79,7 @@ namespace NUnit.Engine.Tests
         {
             get
             {
-                return this.path;
+                return path;
             }
         }
     }

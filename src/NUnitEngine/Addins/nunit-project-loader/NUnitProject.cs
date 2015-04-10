@@ -39,7 +39,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// unless an exception is thrown. It is modified as the
         /// user makes changes.
         /// </summary>
-        XmlDocument xmlDoc = new XmlDocument();
+        readonly XmlDocument xmlDoc = new XmlDocument();
 
         #endregion
 
@@ -94,7 +94,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
             if (configName != null)
             {
-                XmlNode configNode = GetConfigNode(configName);
+                var configNode = GetConfigNode(configName);
 
                 if (configNode != null)
                 {
@@ -141,10 +141,8 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
         public string GetSetting(string name, string defaultValue)
         {
-            string result = GetSetting(name);
-            return result == null
-                ? defaultValue
-                : result;
+            var result = GetSetting(name);
+            return result ?? defaultValue;
         }
 
         #endregion
@@ -209,9 +207,9 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
         private string GetBasePathForConfig(XmlNode configNode)
         {
-            string projectBasePath = GetProjectBasePath();
+            var projectBasePath = GetProjectBasePath();
 
-            string configBasePath = NormalizePath(configNode.GetAttribute("appbase"));
+            var configBasePath = NormalizePath(configNode.GetAttribute("appbase"));
             if (configBasePath == null)
                 configBasePath = projectBasePath;
             else if (projectBasePath != null)
@@ -244,18 +242,18 @@ namespace NUnit.Engine.Services.ProjectLoaders
             if (runtime != null)
                 settings[RunnerSettings.RuntimeFramework] = runtime;
 
-            string processModel = GetSetting("processModel");
+            var processModel = GetSetting("processModel");
             if (processModel != null)
                 settings[RunnerSettings.ProcessModel] = processModel;
 
-            string domainUsage = GetSetting("domainUsage");
+            var domainUsage = GetSetting("domainUsage");
             if (domainUsage != null)
                 settings[RunnerSettings.DomainUsage] = domainUsage;
 
             return settings;
         }
 
-        static readonly char[] PATH_SEPARATORS = new char[] { '/', '\\' };
+        static readonly char[] PATH_SEPARATORS = { '/', '\\' };
 
         private string NormalizePath(string path)
         {

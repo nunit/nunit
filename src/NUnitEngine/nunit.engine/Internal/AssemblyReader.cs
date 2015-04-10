@@ -37,8 +37,8 @@ namespace NUnit.Engine.Internal
         private BinaryReader rdr;
         private FileStream fs;
 
-        private UInt16 dos_magic = 0xffff;
-        private UInt32 pe_signature = 0xffffffff;
+        private UInt16 _dosMagic = 0xffff;
+        private UInt32 _peSignature = 0xffffffff;
         private UInt16 numberOfSections;
         private UInt16 optionalHeaderSize;
         private PEType peType;
@@ -87,16 +87,16 @@ namespace NUnit.Engine.Internal
 
         public AssemblyReader( Assembly assembly )
         {
-            this.assemblyPath = AssemblyHelper.GetAssemblyPath( assembly );
+            assemblyPath = AssemblyHelper.GetAssemblyPath( assembly );
             CalcHeaderOffsets();
         }
 
         private void CalcHeaderOffsets()
         {
-            this.fs = new FileStream( assemblyPath, FileMode.Open, FileAccess.Read );
-            this.rdr = new BinaryReader( fs );
-            dos_magic = rdr.ReadUInt16();
-            if ( dos_magic == 0x5a4d )
+            fs = new FileStream( assemblyPath, FileMode.Open, FileAccess.Read );
+            rdr = new BinaryReader( fs );
+            _dosMagic = rdr.ReadUInt16();
+            if ( _dosMagic == 0x5a4d )
             {
                 fs.Position = 0x3c;
                 peHeader = rdr.ReadUInt32();
@@ -114,7 +114,7 @@ namespace NUnit.Engine.Internal
                 numDataDirectoryEntries = rdr.ReadUInt32();
 
                 fs.Position = peHeader;
-                pe_signature = rdr.ReadUInt32();
+                _peSignature = rdr.ReadUInt32();
                 rdr.ReadUInt16(); // machine
                 numberOfSections = rdr.ReadUInt16();
                 fs.Position += 12;
@@ -123,12 +123,12 @@ namespace NUnit.Engine.Internal
 
                 sections = new DataSection[numberOfSections];
                 fs.Position = dataSections;
-                for( int i = 0; i < numberOfSections; i++ )
+                for(var i = 0; i < numberOfSections; i++)
                 {
                     fs.Position += 8;
                     sections[i].VirtualSize = rdr.ReadUInt32();
                     sections[i].VirtualAddress = rdr.ReadUInt32();
-                    uint rawDataSize = rdr.ReadUInt32();
+                    var rawDataSize = rdr.ReadUInt32();
                     sections[i].FileOffset = rdr.ReadUInt32();
                     if ( sections[i].VirtualSize == 0 )
                         sections[i].VirtualSize = rawDataSize;
@@ -142,13 +142,13 @@ namespace NUnit.Engine.Internal
                     if (rva != 0)
                     {
                         fs.Position = RvaToLfa(rva) + 8;
-                        uint metadata = rdr.ReadUInt32();
+                        var metadata = rdr.ReadUInt32();
                         fs.Position = RvaToLfa(metadata);
                         if (rdr.ReadUInt32() == 0x424a5342)
                         {
                             // Copy string representing runtime version
                             fs.Position += 12;
-                            StringBuilder sb = new StringBuilder();
+                            var sb = new StringBuilder();
                             char c;
                             while ((c = rdr.ReadChar()) != '\0')
                                 sb.Append(c);
@@ -191,7 +191,7 @@ namespace NUnit.Engine.Internal
 
         public bool IsValidPeFile
         {
-            get { return dos_magic == 0x5a4d && pe_signature == 0x00004550; }
+            get { return _dosMagic == 0x5a4d && _peSignature == 0x00004550; }
         }
 
         public bool IsDotNetFile

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Engine.Extensibility;
 using NUnit.Engine.Internal;
 
@@ -92,14 +93,8 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        protected override int CountTests(TestFilter filter)
-        {
-            int count = 0;
-
-            foreach (IFrameworkDriver driver in _drivers)
-                count += driver.CountTestCases(filter);
-
-            return count;
+        protected override int CountTests(TestFilter filter) {
+            return _drivers.Sum(driver => driver.CountTestCases(filter));
         }
 
 

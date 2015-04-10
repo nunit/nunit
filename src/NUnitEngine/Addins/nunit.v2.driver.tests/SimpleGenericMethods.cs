@@ -21,11 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace NUnit.Core.Tests.Generic
+namespace NUnit.Engine.Drivers.Tests
 {
     [TestFixture,Category("Generics")]
     class SimpleGenericMethods

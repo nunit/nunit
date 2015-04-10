@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -38,13 +38,13 @@ namespace NUnit.Common
         /// <returns></returns>
         public static string[] Parse(string argument)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            int index = 0;
+            var index = 0;
             while (index < argument.Length)
             {
                 string name = GetTestName(argument, ref index);
-                if (name != null && name != string.Empty)
+                if (!string.IsNullOrEmpty(name))
                     list.Add(name);
             }
 
@@ -72,7 +72,7 @@ namespace NUnit.Common
 
         private static int GetSeparator(string argument, int index)
         {
-            int nest = 0;
+            var nest = 0;
 
             while (index < argument.Length)
             {
@@ -84,8 +84,7 @@ namespace NUnit.Common
                         break;
 
                     case '"':
-                        while (++index < argument.Length && argument[index] != '"')
-                            ;
+                        while (++index < argument.Length && argument[index] != '"') { }
                         break;
 
                     case '(':

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Common;
 using Mono.Addins;
 using NUnit.Engine.Extensibility;
@@ -36,24 +37,19 @@ namespace NUnit.Engine.Services
         /// <summary>
         /// List of all installed ProjectLoaders
         /// </summary>
-        IList<IProjectLoader> _loaders = new List<IProjectLoader>();
+        readonly IList<IProjectLoader> _loaders = new List<IProjectLoader>();
 
         bool _isInitialized;
 
         #region IProjectLoader Members
 
-        public bool CanLoadFrom(string path)
-        {
-            foreach (IProjectLoader loader in _loaders)
-                if (loader.CanLoadFrom(path))
-                    return true;
-
-            return false;
+        public bool CanLoadFrom(string path) {
+            return _loaders.Any(loader => loader.CanLoadFrom(path));
         }
 
         public IProject LoadFrom(string path)
         {
-            foreach (IProjectLoader loader in _loaders)
+            foreach (var loader in _loaders)
                 if (loader.CanLoadFrom(path))
                     return loader.LoadFrom(path);
 
@@ -76,12 +72,12 @@ namespace NUnit.Engine.Services
             Guard.ArgumentNotNull(package, "package");
             Guard.ArgumentValid(package.TestFiles.Count == 0, "Package is already expanded", "package");
 
-            string path = package.FullName;
-            IProject project = LoadFrom(path);
+            var path = package.FullName;
+            var project = LoadFrom(path);
             Guard.ArgumentValid(project != null, "Unable to load project " + path, "package");
 
-            string configName = package.GetSetting(PackageSettings.ActiveConfig, (string)null); // Need RunnerSetting
-            TestPackage tempPackage = project.GetTestPackage(configName);
+            var configName = package.GetSetting(PackageSettings.ActiveConfig, (string)null); // Need RunnerSetting
+            var tempPackage = project.GetTestPackage(configName);
 
             // The original package held overrides, so don't change them, but
             // do apply any settings specified within the project itself.
@@ -97,12 +93,7 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext
-        {
-            get { return services; }
-            set { services = value; }
-        }
+        public ServiceContext ServiceContext { get; set; }
 
         public void InitializeService()
         {

@@ -24,11 +24,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
+using NUnit.Engine.Services;
+using NUnit.Framework;
 
-namespace NUnit.Engine.Services.Tests
+namespace NUnit.Engine.Tests.Services
 {
     [TestFixture, Ignore("DriverFactory currently only works in the primary AppDomain")]
     public class DriverFactoryTests

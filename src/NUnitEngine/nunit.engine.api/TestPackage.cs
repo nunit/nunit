@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace NUnit.Engine
 {
@@ -37,8 +36,8 @@ namespace NUnit.Engine
     [Serializable]
     public class TestPackage
     {
-        private List<string> _testFiles = new List<string>();
-        private Dictionary<string, object> _settings = new Dictionary<string, object>();
+        private readonly List<string> _testFiles = new List<string>();
+        private readonly Dictionary<string, object> _settings = new Dictionary<string, object>();
 
         #region Constructors
 
@@ -76,7 +75,7 @@ namespace NUnit.Engine
         /// </summary>
         public string Name
         {
-            get { return FullName == null ? null : Path.GetFileName(FullName); }
+            get { return Path.GetFileName(FullName); }
         }
 
         /// <summary>
@@ -133,7 +132,7 @@ namespace NUnit.Engine
 
         private static bool IsAssemblyFileType(string path)
         {
-            string extension = Path.GetExtension(path).ToLower();
+            var extension = Path.GetExtension(path).ToLower();
             return extension == ".dll" || extension == ".exe";
         }
 

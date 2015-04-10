@@ -25,10 +25,11 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using NUnit.Engine.Services;
 using NUnit.Framework;
 using NUnit.Tests.Assemblies;
 
-namespace NUnit.Engine.Services.ResultWriters.Tests
+namespace NUnit.Engine.Tests.Services.ResultWriters
 {
     public class NUnit2XmlResultWriterTests : XmlOutputTest
     {
@@ -41,10 +42,10 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [OneTimeSetUp]
         public void ConvertEngineResultToXml()
         {
-            StringBuilder sb = new StringBuilder();
-            ResultService service = new ResultService();
+            var sb = new StringBuilder();
+            var service = new ResultService();
             service.InitializeService();
-            using (StringWriter writer = new StringWriter(sb))
+            using (var writer = new StringWriter(sb))
             {
                 service.GetResultWriter("nunit2", null).WriteResultFile(EngineResult.Xml, writer);
             }

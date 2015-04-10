@@ -21,16 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Xml;
 
 namespace NUnit.Engine
 {
     public class RunTestsCallbackHandler : CallbackHandler
     {
-        private ITestEventListener listener;
+        private readonly ITestEventListener listener;
 
         public RunTestsCallbackHandler(ITestEventListener listener)
         {

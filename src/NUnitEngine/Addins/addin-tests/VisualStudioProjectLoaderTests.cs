@@ -21,13 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
 using NUnit.Engine.Extensibility;
+using NUnit.Engine.Services.ProjectLoaders;
 using NUnit.Engine.Tests.resources;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.ProjectLoaders.Tests
+namespace NUnit.Engine.Tests
 {
     [TestFixture]
     public class VisualStudioProjectLoaderTests
@@ -62,22 +62,22 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             Assert.IsFalse(_loader.CanLoadFrom(@"\MyProject\http://localhost/web.csproj"));
         }
 
-        [TestCase("csharp-sample.csproj", new string[] { "Debug", "Release" }, "csharp-sample")]
-        [TestCase("csharp-sample.csproj", new string[] { "Debug", "Release" }, "csharp-sample")]
-        [TestCase("csharp-missing-output-path.csproj", new string[] { "Debug", "Release" }, "MissingOutputPath")]
-        [TestCase("csharp-xna-project.csproj", new string[] { "Debug|x86", "Release|x86" }, "XNAWindowsProject")]
-        [TestCase("vb-sample.vbproj", new string[] { "Debug", "Release" }, "vb-sample")]
-        [TestCase("jsharp-sample.vjsproj", new string[] { "Debug", "Release" }, "jsharp-sample")]
-        [TestCase("fsharp-sample.fsproj", new string[] { "Debug", "Release" }, "fsharp-sample")]
-        [TestCase("cpp-sample.vcproj", new string[] { "Debug|Win32", "Release|Win32" }, "cpp-sample")]
-        [TestCase("cpp-default-library.vcproj", new string[] { "Debug|Win32", "Release|Win32" }, "cpp-default-library")]
-        [TestCase("legacy-csharp-sample.csproj", new string[] { "Debug", "Release" }, "csharp-sample")]
-        [TestCase("legacy-csharp-hebrew-file-problem.csproj", new string[] { "Debug", "Release" }, "HebrewFileProblem")]
-        [TestCase("legacy-vb-sample.vbproj", new string[] { "Debug", "Release" }, "vb-sample")]
-        [TestCase("legacy-jsharp-sample.vjsproj", new string[] { "Debug", "Release" }, "jsharp-sample")]
-        [TestCase("legacy-cpp-sample.vcproj", new string[] { "Debug|Win32", "Release|Win32" }, "cpp-sample")]
-        [TestCase("legacy-cpp-library-with-macros.vcproj", new string[] { "Debug|Win32", "Release|Win32" }, "legacy-cpp-library-with-macros")]
-        [TestCase("legacy-cpp-makefile-project.vcproj", new string[] { "Debug|Win32", "Release|Win32" }, "MakeFileProject")]
+        [TestCase("csharp-sample.csproj", new[] { "Debug", "Release" }, "csharp-sample")]
+        [TestCase("csharp-sample.csproj", new[] { "Debug", "Release" }, "csharp-sample")]
+        [TestCase("csharp-missing-output-path.csproj", new[] { "Debug", "Release" }, "MissingOutputPath")]
+        [TestCase("csharp-xna-project.csproj", new[] { "Debug|x86", "Release|x86" }, "XNAWindowsProject")]
+        [TestCase("vb-sample.vbproj", new[] { "Debug", "Release" }, "vb-sample")]
+        [TestCase("jsharp-sample.vjsproj", new[] { "Debug", "Release" }, "jsharp-sample")]
+        [TestCase("fsharp-sample.fsproj", new[] { "Debug", "Release" }, "fsharp-sample")]
+        [TestCase("cpp-sample.vcproj", new[] { "Debug|Win32", "Release|Win32" }, "cpp-sample")]
+        [TestCase("cpp-default-library.vcproj", new[] { "Debug|Win32", "Release|Win32" }, "cpp-default-library")]
+        [TestCase("legacy-csharp-sample.csproj", new[] { "Debug", "Release" }, "csharp-sample")]
+        [TestCase("legacy-csharp-hebrew-file-problem.csproj", new[] { "Debug", "Release" }, "HebrewFileProblem")]
+        [TestCase("legacy-vb-sample.vbproj", new[] { "Debug", "Release" }, "vb-sample")]
+        [TestCase("legacy-jsharp-sample.vjsproj", new[] { "Debug", "Release" }, "jsharp-sample")]
+        [TestCase("legacy-cpp-sample.vcproj", new[] { "Debug|Win32", "Release|Win32" }, "cpp-sample")]
+        [TestCase("legacy-cpp-library-with-macros.vcproj", new[] { "Debug|Win32", "Release|Win32" }, "legacy-cpp-library-with-macros")]
+        [TestCase("legacy-cpp-makefile-project.vcproj", new[] { "Debug|Win32", "Release|Win32" }, "MakeFileProject")]
         public void CanLoadVsProject(string resourceName, string[] configs, string assemblyName)
         {
             Assert.That(_loader.CanLoadFrom(resourceName));

@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Engine.Services;
-
 namespace NUnit.Engine.Runners
 {
     /// <summary>
@@ -37,8 +35,7 @@ namespace NUnit.Engine.Runners
 
         protected override TestEngineResult LoadPackage()
         {
-            this.TestDomain = Services.DomainManager.CreateDomain(TestPackage);
-
+            TestDomain = Services.DomainManager.CreateDomain(TestPackage);
             return base.LoadPackage();
         }
 
@@ -47,10 +44,10 @@ namespace NUnit.Engine.Runners
         /// </summary>
         public override void UnloadPackage()
         {
-            if (this.TestDomain != null)
+            if (TestDomain != null)
             {
-                Services.DomainManager.Unload(this.TestDomain);
-                this.TestDomain = null;
+                Services.DomainManager.Unload(TestDomain);
+                TestDomain = null;
             }
         }
 

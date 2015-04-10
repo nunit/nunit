@@ -22,21 +22,20 @@
 // ***********************************************************************
 
 using System.Xml;
+using NUnit.Engine.Internal;
+using NUnit.Framework;
 
 namespace NUnit.Engine.Tests
 {
-    using Framework;
-    using Internal;
-
     [TestFixture]
     public class TestEngineResultTests
     {
-        private static readonly string xmlText = "<test-assembly result=\"Passed\" total=\"23\" passed=\"23\" failed=\"0\" inconclusive=\"0\" skipped=\"0\" asserts=\"40\" />";
+        private const string xmlText = "<test-assembly result=\"Passed\" total=\"23\" passed=\"23\" failed=\"0\" inconclusive=\"0\" skipped=\"0\" asserts=\"40\" />";
 
         [Test]
         public void CanCreateFromXmlString()
         {
-            TestEngineResult result = new TestEngineResult(xmlText);
+            var result = new TestEngineResult(xmlText);
             Assert.True(result.IsSingle);
             Assert.That(result.Xml.Name, Is.EqualTo("test-assembly"));
             Assert.That(result.Xml.Attributes["result"].Value, Is.EqualTo("Passed"));
@@ -52,13 +51,13 @@ namespace NUnit.Engine.Tests
         public void CanCreateFromXmlNode()
         {
             XmlNode node = XmlHelper.CreateTopLevelElement("test-assembly");
-            XmlHelper.AddAttribute(node, "result", "Passed");
-            XmlHelper.AddAttribute(node, "total", "23");
-            XmlHelper.AddAttribute(node, "passed", "23");
-            XmlHelper.AddAttribute(node, "failed", "0");
-            XmlHelper.AddAttribute(node, "inconclusive", "0");
-            XmlHelper.AddAttribute(node, "skipped", "0");
-            XmlHelper.AddAttribute(node, "asserts", "40");
+            node.AddAttribute("result", "Passed");
+            node.AddAttribute("total", "23");
+            node.AddAttribute("passed", "23");
+            node.AddAttribute("failed", "0");
+            node.AddAttribute("inconclusive", "0");
+            node.AddAttribute("skipped", "0");
+            node.AddAttribute("asserts", "40");
 
             TestEngineResult result = new TestEngineResult(node);
             Assert.True(result.IsSingle);

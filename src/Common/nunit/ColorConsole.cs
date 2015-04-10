@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -76,7 +76,6 @@ namespace NUnit.Common
                             return ConsoleColor.DarkGray;
                         case ColorStyle.Help:
                             return ConsoleColor.DarkGray;
-                        case ColorStyle.Default:
                         default:
                             return ConsoleColor.Green;
                     }
@@ -106,7 +105,6 @@ namespace NUnit.Common
                             return ConsoleColor.DarkGray;
                         case ColorStyle.Help:
                             return ConsoleColor.DarkGray;
-                        case ColorStyle.Default:
                         default:
                             return ConsoleColor.Green;
                     }
@@ -136,7 +134,6 @@ namespace NUnit.Common
                             return ConsoleColor.Gray;
                         case ColorStyle.Help:
                             return ConsoleColor.Green;
-                        case ColorStyle.Default:
                         default:
                             return ConsoleColor.Green;
                     }

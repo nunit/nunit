@@ -22,14 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml;
 
 namespace NUnit.Engine.Runners
 {
-    using Internal;
-
     /// <summary>
     /// AbstractTestRunner is the base class for all runners
     /// within the NUnit Engine. It implements the ITestRunner
@@ -43,8 +39,8 @@ namespace NUnit.Engine.Runners
 
         public AbstractTestRunner(ServiceContext services, TestPackage package)
         {
-            this.Services = services;
-            this.TestPackage = package;
+            Services = services;
+            TestPackage = package;
         }
 
         #region Properties
@@ -184,7 +180,7 @@ namespace NUnit.Engine.Runners
         /// <exception cref="InvalidOperationException">If no package has been loaded</exception>
         public TestEngineResult Reload()
         {
-            if (this.TestPackage == null)
+            if (TestPackage == null)
                 throw new InvalidOperationException("MasterTestRunner: Reload called before Load");
 
             return LoadResult = ReloadPackage();

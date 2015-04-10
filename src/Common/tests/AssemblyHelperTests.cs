@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 #if !SILVERLIGHT && !PORTABLE
-using System;
 using System.IO;
-using System.Reflection;
 using NUnit.Framework;
 
 #if NUNIT_ENGINE
@@ -52,7 +50,7 @@ namespace NUnit.Common.Tests
 
         public void GetNameForAssembly()
         {
-            var assemblyName = AssemblyHelper.GetAssemblyName(this.GetType().Assembly);
+            var assemblyName = AssemblyHelper.GetAssemblyName(GetType().Assembly);
             Assert.That(assemblyName.Name, Is.EqualTo(THIS_ASSEMBLY_NAME).IgnoreCase);
             Assert.That(assemblyName.FullName, Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
         }
@@ -61,7 +59,7 @@ namespace NUnit.Common.Tests
         [Test]
         public void GetPathForAssembly()
         {
-            string path = AssemblyHelper.GetAssemblyPath(this.GetType().Assembly);
+            string path = AssemblyHelper.GetAssemblyPath(GetType().Assembly);
             Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
             Assert.That(File.Exists(path));
         }
@@ -69,7 +67,7 @@ namespace NUnit.Common.Tests
         [Test]
         public void GetPathForType()
         {
-            string path = AssemblyHelper.GetAssemblyPath(this.GetType());
+            string path = AssemblyHelper.GetAssemblyPath(GetType());
             Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
             Assert.That(File.Exists(path));
         }

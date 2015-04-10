@@ -22,15 +22,14 @@
 // ***********************************************************************
 
 using System;
+using System.IO;
 using System.Text;
 using System.Xml;
-using System.IO;
 using NUnit.Engine.Extensibility;
+using NUnit.Engine.Internal;
 
-namespace NUnit.Engine.Services
+namespace NUnit.Engine.Services.ResultWriters
 {
-    using Internal;
-
     /// <summary>
     /// NUnit3XmlResultWriter is responsible for writing the results
     /// of a test to a file in NUnit 3.0 format.
@@ -58,10 +57,9 @@ namespace NUnit.Engine.Services
 
         public void WriteResultFile(XmlNode resultNode, TextWriter writer)
         {
-            var settings = new XmlWriterSettings();
-            settings.Indent = true;
+            var settings = new XmlWriterSettings {Indent = true};
 
-            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
+            using (var xmlWriter = XmlWriter.Create(writer, settings))
             {
                 xmlWriter.WriteStartDocument(false);
                 resultNode.WriteTo(xmlWriter);

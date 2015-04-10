@@ -21,10 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using NUnit.Core;
 
@@ -220,7 +218,7 @@ namespace NUnit.Engine.Drivers
         /// <param name="value">The value of the attribute.</param>
         private static void AddAttribute(this XmlNode node, string name, string value)
         {
-            XmlAttribute attr = node.OwnerDocument.CreateAttribute(name);
+            var attr = node.OwnerDocument.CreateAttribute(name);
             attr.Value = value;
             node.Attributes.Append(attr);
         }

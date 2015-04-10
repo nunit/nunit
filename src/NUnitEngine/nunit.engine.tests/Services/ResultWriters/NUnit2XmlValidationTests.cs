@@ -24,21 +24,22 @@
 using System;
 using System.IO;
 using System.Text;
+using NUnit.Engine.Services;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.ResultWriters.Tests
+namespace NUnit.Engine.Tests.Services.ResultWriters
 {
     [TestFixture]
     public class NUnit2XmlValidationTests : XmlOutputTest
     {
         private SchemaValidator validator;
 
-        private static readonly string schemaFile = "NUnit2TestResult.xsd";
+        private const string schemaFile = "NUnit2TestResult.xsd";
 
         [OneTimeSetUp]
         public void InitializeValidator()
         {
-            this.validator = new SchemaValidator(GetLocalPath(schemaFile));
+            validator = new SchemaValidator(GetLocalPath(schemaFile));
         }
 
         [Test,SetCulture("")]
@@ -63,9 +64,9 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
 
         private void runSchemaValidatorTest()
         {
-            StringBuilder output = new StringBuilder();
+            var output = new StringBuilder();
 
-            ResultService service = new ResultService();
+            var service = new ResultService();
             service.InitializeService();
             service.GetResultWriter("nunit2", null).WriteResultFile(this.EngineResult.Xml, new StringWriter(output));
 

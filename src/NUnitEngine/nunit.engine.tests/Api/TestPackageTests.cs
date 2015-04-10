@@ -24,7 +24,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Api.Tests
+namespace NUnit.Engine.Tests.Api
 {
     public class TestPackageTests_SingleAssembly
     {
@@ -46,7 +46,7 @@ namespace NUnit.Engine.Api.Tests
         public void AssemblyPathIsIncludedInList()
         {
             Assert.AreEqual(
-                new string[] { Path.GetFullPath("test.dll") },
+                new[] { Path.GetFullPath("test.dll") },
                 package.TestFiles);
         }
 
@@ -64,7 +64,7 @@ namespace NUnit.Engine.Api.Tests
         [SetUp]
         public void CreatePackage()
         {
-            package = new TestPackage(new string[] { "test1.dll", "test2.dll", "test3.dll" });
+            package = new TestPackage(new[] { "test1.dll", "test2.dll", "test3.dll" });
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace NUnit.Engine.Api.Tests
         [Test]
         public void AssemblyPathsAreIncludedInList()
         {
-            string[] expectedAssemblies = new string[] {
+            var expectedAssemblies = new[] {
             Path.GetFullPath("test1.dll"),
             Path.GetFullPath("test2.dll"),
             Path.GetFullPath("test3.dll") };

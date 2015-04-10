@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -34,7 +33,7 @@ namespace NUnit.ConsoleRunner.Utilities
     /// </summary>
     public class TeamCityEventHandler
     {
-        private TextWriter _outWriter;
+        private readonly TextWriter _outWriter;
 
         /// <summary>
         /// Construct a TeamCityEventHandler

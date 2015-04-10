@@ -21,17 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Web.UI;
 using System.Xml;
+using NUnit.Engine.Drivers;
+using NUnit.Engine.Extensibility;
 using NUnit.Engine.Internal;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using NUnit.Engine.Extensibility;
-using NUnit.Tests.Assemblies;
 
-namespace NUnit.Engine.Drivers.Tests
+namespace NUnit.Engine.Tests.Drivers
 {
     // Functional tests of the NUnitFrameworkDriver calling into the framework.
     public class NotRunnableFrameworkDriverTests

@@ -24,8 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Text;
 using Mono.Addins;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
@@ -40,7 +40,7 @@ namespace NUnit.Engine.Services
         private const string OLDER_NUNIT_NOT_SUPPORTED_MESSAGE =
             "Unable to load {0}. This runner only supports tests written for NUnit 3.0 or higher.";
 
-        IList<IDriverFactory> _factories = new List<IDriverFactory>();
+        readonly IList<IDriverFactory> _factories = new List<IDriverFactory>();
 
         #region IDriverService Members
 
@@ -56,10 +56,8 @@ namespace NUnit.Engine.Services
 
                 foreach (var factory in _factories)
                 {
-                    foreach (var reference in references)
-                    {
-                        if (factory.IsSupportedFramework(reference))
-                            return factory.GetDriver(domain, reference.Name, assemblyPath, settings);
+                    foreach (var reference in references.Where(reference => factory.IsSupportedFramework(reference))) {
+                        return factory.GetDriver(domain, reference.Name, assemblyPath, settings);
                     }
                 }
             }
@@ -75,18 +73,13 @@ namespace NUnit.Engine.Services
  
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext 
-        {
-            get { return services; }
-            set { services = value; }
-        }
+        public ServiceContext ServiceContext { get; set; }
 
         public void InitializeService()
         {
             _factories.Add(new NUnit3DriverFactory());
 
-            foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
+            foreach (var factory in AddinManager.GetExtensionObjects<IDriverFactory>())
                 _factories.Add(factory);
         }
 

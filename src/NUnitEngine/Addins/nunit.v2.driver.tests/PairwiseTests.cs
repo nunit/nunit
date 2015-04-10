@@ -8,7 +8,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Engine.Drivers.Tests
 {
     [TestFixture]
     public class PairwiseTest
@@ -16,18 +16,18 @@ namespace NUnit.Core.Tests
         [TestFixture]
         public class LiveTest
         {
-            public Hashtable pairsTested = new Hashtable();
+            public Hashtable PairsTested = new Hashtable();
 
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
             {
-                pairsTested = new Hashtable();
+                PairsTested = new Hashtable();
             }
 
             [TestFixtureTearDown]
             public void TestFixtureTearDown()
             {
-                Assert.That(pairsTested.Count, Is.EqualTo(16));
+                Assert.That(PairsTested.Count, Is.EqualTo(16));
             }
 
             [Test, Pairwise]
@@ -38,9 +38,9 @@ namespace NUnit.Core.Tests
             {
                 Console.WriteLine("Pairwise: {0} {1} {2}", a, b, c);
 
-                pairsTested[a + b] = null;
-                pairsTested[a + c] = null;
-                pairsTested[b + c] = null;
+                PairsTested[a + b] = null;
+                PairsTested[a + c] = null;
+                PairsTested[b + c] = null;
             }
         }
     }

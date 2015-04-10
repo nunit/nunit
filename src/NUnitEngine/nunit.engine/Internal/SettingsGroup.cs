@@ -24,10 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Xml;
+using System.Linq;
+
 
 namespace NUnit.Engine.Internal
 {
@@ -37,7 +35,7 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public class SettingsGroup : ISettings, IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("SettingsGroup");
+        static readonly Logger Log = InternalTrace.GetLogger("SettingsGroup");
 
         protected Dictionary<string, object> _settings = new Dictionary<string, object>();
 
@@ -75,7 +73,7 @@ namespace NUnit.Engine.Internal
 
             try
             {
-                TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
+                var converter = TypeDescriptor.GetConverter(typeof(T));
                 if (converter == null)
                     return defaultValue;
 
@@ -84,8 +82,8 @@ namespace NUnit.Engine.Internal
             catch(Exception ex)
             {
 
-                log.Error("Unable to convert setting {0} to {1}", settingName, typeof(T).Name);
-                log.Error(ex.Message);
+                Log.Error("Unable to convert setting {0} to {1}", settingName, typeof(T).Name);
+                Log.Error(ex.Message);
                 return defaultValue;
             }
         }
@@ -105,20 +103,16 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Remove a group of settings
         /// </summary>
-        /// <param name="GroupName"></param>
+        /// <param name="groupName"></param>
         public void RemoveGroup(string groupName)
         {
-            List<string> keysToRemove = new List<string>();
-
-            string prefix = groupName;
+            var prefix = groupName;
             if (!prefix.EndsWith("."))
                 prefix = prefix + ".";
 
-            foreach (string key in _settings.Keys)
-                if (key.StartsWith(prefix))
-                    keysToRemove.Add(key);
+            var keysToRemove = _settings.Keys.Where(key => key.StartsWith(prefix)).ToList();
 
-            foreach (string key in keysToRemove)
+            foreach (var key in keysToRemove)
                 _settings.Remove(key);
         }
 

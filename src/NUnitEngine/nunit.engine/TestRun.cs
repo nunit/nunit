@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Xml;
 
 namespace NUnit.Engine
@@ -34,22 +32,20 @@ namespace NUnit.Engine
     /// </summary>
     public class TestRun : ITestRun
     {
-        private BackgroundWorker _worker;
-        private ITestEngineRunner _runner;
+        private readonly BackgroundWorker _worker;
+        private readonly ITestEngineRunner _runner;
         private TestEngineResult _result;
 
         /// <summary>
         /// Construct a new TestRun
         /// </summary>
-        /// <param name="listener">The ITestEventListener to use for this run</param>
-        /// <param name="filter">The TestFilter to use for this run</param>
+        /// <param name="runner"></param>
         public TestRun(ITestEngineRunner runner)
         {
             _runner = runner;
 
-            _worker = new BackgroundWorker();
-            _worker.WorkerSupportsCancellation = true;
-            _worker.WorkerReportsProgress = true; // ?
+            _worker = new BackgroundWorker {WorkerSupportsCancellation = true, WorkerReportsProgress = true};
+            // ?
         }
 
         public XmlNode Result
@@ -70,9 +66,7 @@ namespace NUnit.Engine
         /// <param name="filter">The TestFilter to use for this run</param>
         public void Start(ITestEventListener listener, TestFilter filter)
         {
-            _worker.DoWork += (s, ea) => 
-                _result = _runner.Run(listener, filter);
-
+            _worker.DoWork += (s, ea) => _result = _runner.Run(listener, filter);
             _worker.RunWorkerAsync();
         }
 

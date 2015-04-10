@@ -21,13 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Xml;
+using NUnit.Engine.Internal;
+using NUnit.Framework;
 
-namespace NUnit.Engine.Internal.Tests
+namespace NUnit.Engine.Tests
 {
-    using Framework;
-
     public class ResultHelperTests
     {
         private const string resultText1 = "<test-assembly result=\"Passed\" total=\"23\" passed=\"23\" failed=\"0\" inconclusive=\"0\" skipped=\"0\" asserts=\"40\" />";
@@ -45,8 +44,8 @@ namespace NUnit.Engine.Internal.Tests
         {
             result1 = new TestEngineResult(resultText1);
             result2 = new TestEngineResult(resultText2);
-            twoResults = new TestEngineResult[] { result1, result2 };
-            twoNodes = new XmlNode[] { result1.Xml, result2.Xml };
+            twoResults = new[] { result1, result2 };
+            twoNodes = new[] { result1.Xml, result2.Xml };
         }
 
         [Test]
