@@ -90,8 +90,8 @@ namespace NUnit.Engine.Drivers.Tests
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo("0"));
             Assert.That(GetSkipReason(result), Is.EqualTo(REASON));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
-            Assert.That(result.GetAttribute("result"), Is.EqualTo("Skipped"));
-            Assert.That(result.GetAttribute("label"), Is.EqualTo("NotRunnable"));
+            Assert.That(result.GetAttribute("result"), Is.EqualTo("Failed"));
+            Assert.That(result.GetAttribute("label"), Is.EqualTo("Invalid"));
             Assert.That(result.SelectSingleNode("reason/message").InnerText, Is.EqualTo(REASON));
         }
 
