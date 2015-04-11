@@ -37,6 +37,7 @@ namespace NUnit.Engine.Drivers.Tests
     {
         private string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
         private const string MISSING_FILE = "junk.dll";
+        private const string NUNIT_FRAMEWORK = "nunit.framework";
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();
         private NUnit3FrameworkDriver _driver;

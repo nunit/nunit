@@ -95,9 +95,11 @@ namespace NUnit.Engine.Drivers
 
             if (test.IsSuite)
                 thisNode.AddAttribute("type", test.TestType);
-            thisNode.AddAttribute("id", test.TestName.TestID.ToString());
-            thisNode.AddAttribute("name", test.TestName.Name);
-            thisNode.AddAttribute("fullname", test.TestName.FullName);
+
+            var tn = test.TestName;
+            thisNode.AddAttribute("id", string.Format("{0}-{1}", tn.RunnerID, tn.TestID));
+            thisNode.AddAttribute("name", tn.Name);
+            thisNode.AddAttribute("fullname", tn.FullName);
             thisNode.AddAttribute("runstate", test.RunState.ToString());
 
             if (test.IsSuite)

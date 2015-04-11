@@ -33,14 +33,29 @@ namespace NUnit.Engine.Drivers
     {
         private const string NUNIT_FRAMEWORK = "nunit.framework";
 
+        /// <summary>
+        /// Gets a flag indicating whether a given AssemblyName
+        /// represents a test framework supported by this factory.
+        /// </summary>
         public bool IsSupportedFramework(AssemblyName reference)
         {
             return reference.Name == NUNIT_FRAMEWORK && reference.Version.Major == 3;
         }
 
+        /// <summary>
+        /// Gets a driver for a given test assembly and a framework
+        /// which the assembly is already known to reference.
+        /// </summary>
+        /// <param name="domain">The domain in which the assembly will be loaded</param>
+        /// <param name="frameworkAssemblyName">The name of the test framework reference</param>
+        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="settings">A dictionary of settings to be used for this assembly</param>
+        /// <returns></returns>
         public IFrameworkDriver GetDriver(AppDomain domain, string frameworkAssemblyName, string assemblyPath, IDictionary<string, object> settings)
         {
-            return new NUnit3FrameworkDriver(domain, frameworkAssemblyName, assemblyPath, settings);
+            Guard.ArgumentValid(frameworkAssemblyName == "nunit.framework", "Invalid framework name", "frameworkAssemblyName");
+            
+            return new NUnit3FrameworkDriver(domain, assemblyPath, settings);
         }
     }
 }

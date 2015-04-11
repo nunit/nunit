@@ -45,7 +45,7 @@ namespace NUnit.Engine.Drivers
             "</test-suite>";
 
         private const string RUN_RESULT_FORMAT =
-            "<test-suite type='Assembly' id='2' name='{0}' fullname='{1}' testcasecount='0' runstate='NotRunnable' result='Skipped' label='NotRunnable'>" +
+            "<test-suite type='Assembly' id='2' name='{0}' fullname='{1}' testcasecount='0' runstate='NotRunnable' result='Failed' label='Invalid'>" +
                 "<properties>" +
                     "<property name='_SKIPREASON' value='{2}'/>" +
                 "</properties>" +
@@ -64,9 +64,17 @@ namespace NUnit.Engine.Drivers
         TestRunner _runner;
         Core.TestPackage _package;
 
-        public NUnit2FrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-            : this(testDomain, NUNIT_FRAMEWORK, testAssemblyPath, settings) { }
-
+        /// <summary>
+        /// Create a new NUnit2FrameworkDriver
+        /// </summary>
+        /// <param name="testDomain">The AppDomain to use for the runner</param>
+        /// <param name="frameworkAssemblyName">The name of the framework assembly</param>
+        /// <param name="testAssemblyPath">Path to the test assembly</param>
+        /// <param name="settings">Settings for use in loading and running the test</param>
+        /// <remarks>
+        /// The framework assembly name is needed because this driver is used for both the
+        /// nunit.framework 2.x and nunitlite 1.0.
+        /// </remarks>
         public NUnit2FrameworkDriver(AppDomain testDomain, string frameworkAssemblyName, string testAssemblyPath, IDictionary<string, object> settings)
         {
             if (!File.Exists(testAssemblyPath))

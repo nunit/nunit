@@ -51,20 +51,22 @@ namespace NUnit.Engine.Drivers
 
         AppDomain _testDomain;
         string _testAssemblyPath;
-        string _frameworkAssemblyName;
 
         object _frameworkController;
 
+        /// <summary>
+        /// Construct an NUnit3FrameworkDriver
+        /// </summary>
+        /// <param name="testDomain">The AppDomain in which to create the FrameworkController</param>
+        /// <param name="testAssemblyPath">The path to the assembly this driver will be loading</param>
+        /// <param name="idPrefix">A prefix to be used on all generated test ids</param>
+        /// <param name="settings">A dictionary of settings to be used by the framework</param>
         public NUnit3FrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-            : this(testDomain, NUNIT_FRAMEWORK, testAssemblyPath, settings) { }
-
-        public NUnit3FrameworkDriver(AppDomain testDomain, string frameworkAssemblyName, string testAssemblyPath, IDictionary<string, object> settings)
         {
             Guard.ArgumentValid(File.Exists(testAssemblyPath), "testAssemblyPath", "Framework driver constructor called with a file name that doesn't exist.");
 
             _testDomain = testDomain;
             _testAssemblyPath = testAssemblyPath;
-            _frameworkAssemblyName = frameworkAssemblyName;
             _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, "ID", (System.Collections.IDictionary)settings);
         }
 
@@ -136,7 +138,7 @@ namespace NUnit.Engine.Drivers
         private object CreateObject(string typeName, params object[] args)
         {
             return _testDomain.CreateInstanceAndUnwrap(
-                _frameworkAssemblyName, typeName, false, 0,
+                NUNIT_FRAMEWORK, typeName, false, 0,
 #if !NET_4_0
                 null, args, null, null, null );
 #else

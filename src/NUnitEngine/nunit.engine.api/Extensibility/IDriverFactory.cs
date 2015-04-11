@@ -39,8 +39,8 @@ namespace NUnit.Engine.Extensibility
         bool IsSupportedFramework(AssemblyName refAssembly);
 
         /// <summary>
-        /// Gets a driver for a given test assembly and framework
-        /// which it is already known to reference.
+        /// Gets a driver for a given test assembly and a framework
+        /// which the assembly is already known to reference.
         /// </summary>
         /// <param name="domain">The domain in which the assembly will be loaded</param>
         /// <param name="frameworkAssemblyName">The name of the test framework reference</param>
