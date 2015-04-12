@@ -39,9 +39,9 @@ namespace NUnit.Agent
     {
         //static Logger log = InternalTrace.GetLogger(typeof(NUnitTestAgent));
 
-        static Guid _agentId;
-        static string _agencyUrl;
-        static ITestAgency _agency;
+        static Guid AgentId;
+        static string AgencyUrl;
+        static ITestAgency Agency;
 
         /// <summary>
         /// Channel used for communications with the agency
@@ -55,8 +55,8 @@ namespace NUnit.Agent
         [STAThread]
         public static int Main(string[] args)
         {
-            _agentId = new Guid(args[0]);
-            _agencyUrl = args[1];
+            AgentId = new Guid(args[0]);
+            AgencyUrl = args[1];
             
 #if DEBUG
             bool pause = false;
@@ -119,7 +119,7 @@ namespace NUnit.Agent
             //log.Info("Connecting to TestAgency at {0}", AgencyUrl);
             try
             {
-                _agency = Activator.GetObject(typeof(ITestAgency), _agencyUrl) as ITestAgency;
+                Agency = Activator.GetObject(typeof(ITestAgency), AgencyUrl) as ITestAgency;
             }
             catch (Exception ex)
             {
@@ -130,7 +130,7 @@ namespace NUnit.Agent
             if (_channel != null)
             {
                 //log.Info("Starting RemoteTestAgent");
-                RemoteTestAgent agent = new RemoteTestAgent(_agentId, _agency, engine.Services);
+                RemoteTestAgent agent = new RemoteTestAgent(AgentId, Agency, engine.Services);
 
                 try
                 {
