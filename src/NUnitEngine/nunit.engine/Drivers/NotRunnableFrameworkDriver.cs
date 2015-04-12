@@ -46,9 +46,9 @@ namespace NUnit.Engine.Drivers
                 "</reason>" +
             "</test-suite>";
 
-        private string _name;
-        private string _fullname;
-        private string _message;
+        private readonly string _name;
+        private readonly string _fullname;
+        private readonly string _message;
 
         public NotRunnableFrameworkDriver(string assemblyPath, string message)
         {

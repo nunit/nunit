@@ -22,11 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace NUnit.Engine.Internal
 {
@@ -82,29 +80,29 @@ namespace NUnit.Engine.Internal
             string[] _from = SplitPath(fromNoRoot);
             string[] _to = SplitPath(toNoRoot);
 
-            StringBuilder sb = new StringBuilder (Math.Max (from.Length, to.Length));
+            var sb = new StringBuilder (Math.Max (from.Length, to.Length));
 
-            int last_common, min = Math.Min (_from.Length, _to.Length);
-            for (last_common = 0; last_common < min;  ++last_common) 
+            int lastCommon, min = Math.Min (_from.Length, _to.Length);
+            for (lastCommon = 0; lastCommon < min;  ++lastCommon) 
             {
-                if (!PathsEqual(_from[last_common], _to[last_common]))
+                if (!PathsEqual(_from[lastCommon], _to[lastCommon]))
                     break;
             }
 
-            if (last_common < _from.Length)
+            if (lastCommon < _from.Length)
                 sb.Append ("..");
-            for (int i = last_common + 1; i < _from.Length; ++i) 
+            for (int i = lastCommon + 1; i < _from.Length; ++i) 
             {
-                sb.Append (PathUtils.DirectorySeparatorChar).Append ("..");
+                sb.Append (DirectorySeparatorChar).Append ("..");
             }
 
             if (sb.Length > 0)
-                sb.Append (PathUtils.DirectorySeparatorChar);
-            if (last_common < _to.Length)
-                sb.Append (_to [last_common]);
-            for (int i = last_common + 1; i < _to.Length; ++i) 
+                sb.Append (DirectorySeparatorChar);
+            if (lastCommon < _to.Length)
+                sb.Append (_to [lastCommon]);
+            for (int i = lastCommon + 1; i < _to.Length; ++i) 
             {
-                sb.Append (PathUtils.DirectorySeparatorChar).Append (_to [i]);
+                sb.Append (DirectorySeparatorChar).Append (_to [i]);
             }
 
             return sb.ToString ();
@@ -195,12 +193,12 @@ namespace NUnit.Engine.Internal
 
         private static bool IsWindows()
         {
-            return PathUtils.DirectorySeparatorChar == '\\';
+            return DirectorySeparatorChar == '\\';
         }
 
         private static string[] SplitPath(string path)
         {
-            char[] separators = new char[] { PathUtils.DirectorySeparatorChar, PathUtils.AltDirectorySeparatorChar };
+            char[] separators = { DirectorySeparatorChar, AltDirectorySeparatorChar };
 
             string[] trialSplit = path.Split(separators);
 
@@ -223,7 +221,7 @@ namespace NUnit.Engine.Internal
 
         private static bool PathsEqual(string path1, string path2)
         {
-            if (PathUtils.IsWindows())
+            if (IsWindows())
                 return path1.ToLower().Equals(path2.ToLower());
             else
                 return path1.Equals(path2);

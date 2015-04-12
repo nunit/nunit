@@ -36,14 +36,14 @@ namespace NUnit.Engine.Agents
     /// </summary>
     public class RemoteTestAgent : TestAgent, ITestEngineRunner
     {
-        static Logger log = InternalTrace.GetLogger(typeof(RemoteTestAgent));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(RemoteTestAgent));
 
         #region Fields
 
         private ITestEngineRunner _runner;
         private TestPackage _package;
 
-        private ManualResetEvent stopSignal = new ManualResetEvent(false);
+        private readonly ManualResetEvent stopSignal = new ManualResetEvent(false);
         
         #endregion
 
@@ -80,7 +80,7 @@ namespace NUnit.Engine.Agents
 
             try
             {
-                this.Agency.Register( this );
+                Agency.Register( this );
                 log.Debug( "Registered with TestAgency" );
             }
             catch( Exception ex )
@@ -117,7 +117,7 @@ namespace NUnit.Engine.Agents
         /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
+        /// <param name="filter"></param>
         /// <returns>A TestEngineResult.</returns>
         public TestEngineResult Explore(TestFilter filter)
         {

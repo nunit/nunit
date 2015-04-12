@@ -40,10 +40,10 @@ namespace NUnit.Common
         private readonly static string TIME_FMT = "HH:mm:ss.fff";
         private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
 
-        private string name;
-        private string fullname;
-        private InternalTraceLevel maxLevel;
-        private TextWriter writer;
+        private readonly string name;
+        private readonly string fullname;
+        private readonly InternalTraceLevel maxLevel;
+        private readonly TextWriter writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.
@@ -53,9 +53,9 @@ namespace NUnit.Common
         /// <param name="writer">The writer where logs are sent.</param>
         public Logger(string name, InternalTraceLevel level, TextWriter writer)
         {
-            this.maxLevel = level;
+            maxLevel = level;
             this.writer = writer;
-            this.fullname = this.name = name;
+            fullname = this.name = name;
             int index = fullname.LastIndexOf('.');
             if (index >= 0)
                 this.name = fullname.Substring(index + 1);
@@ -156,13 +156,13 @@ namespace NUnit.Common
         #region Helper Methods
         private void Log(InternalTraceLevel level, string message)
         {
-            if (writer != null && this.maxLevel >= level)
+            if (writer != null && maxLevel >= level)
                 WriteLog(level, message);
         }
 
         private void Log(InternalTraceLevel level, string format, params object[] args)
         {
-            if (this.maxLevel >= level)
+            if (maxLevel >= level)
                 WriteLog(level, string.Format( format, args ) );
         }
 
