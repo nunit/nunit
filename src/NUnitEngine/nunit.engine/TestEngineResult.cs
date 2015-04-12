@@ -23,9 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Xml;
-using NUnit.Engine.Internal;
 
 namespace NUnit.Engine
 {
@@ -50,7 +48,7 @@ namespace NUnit.Engine
     [Serializable]
     public class TestEngineResult
     {
-        private List<string> _xmlText = new List<string>();
+        private readonly List<string> _xmlText = new List<string>();
 
         [NonSerialized]
         private List<XmlNode> _xmlNodes = new List<XmlNode>();
@@ -63,8 +61,8 @@ namespace NUnit.Engine
         /// <param name="xml">An XmlNode representing the result</param>
         public TestEngineResult(XmlNode xml)
         {
-            this._xmlNodes.Add(xml);
-            this._xmlText.Add(xml.OuterXml);
+            _xmlNodes.Add(xml);
+            _xmlText.Add(xml.OuterXml);
         }
 
         /// <summary>
@@ -73,7 +71,7 @@ namespace NUnit.Engine
         /// <param name="xml">A string containing the xml result</param>
         public TestEngineResult(string xml)
         {
-            this._xmlText.Add(xml);
+            _xmlText.Add(xml);
         }
 
         /// <summary>
@@ -107,9 +105,9 @@ namespace NUnit.Engine
                 if (_xmlNodes == null)
                     _xmlNodes = new List<XmlNode>();
 
-                for (int i = _xmlNodes.Count; i < _xmlText.Count; i++)
+                for (var i = _xmlNodes.Count; i < _xmlText.Count; i++)
                 {
-                    XmlDocument doc = new XmlDocument();
+                    var doc = new XmlDocument();
                     doc.LoadXml(_xmlText[i]);
                     _xmlNodes.Add(doc.FirstChild);
                 }
@@ -138,13 +136,13 @@ namespace NUnit.Engine
 
         public void Add(string xml)
         {
-            this._xmlText.Add(xml);
+            _xmlText.Add(xml);
         }
 
         public void Add(XmlNode xml)
         {
-            this._xmlText.Add(xml.OuterXml);
-            this._xmlNodes.Add(xml);
+            _xmlText.Add(xml.OuterXml);
+            _xmlNodes.Add(xml);
         }
 
         #endregion
