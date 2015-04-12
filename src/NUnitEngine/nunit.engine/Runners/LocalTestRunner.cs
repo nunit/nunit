@@ -32,7 +32,7 @@ namespace NUnit.Engine.Runners
     {
         public LocalTestRunner(ServiceContext services, TestPackage package) : base(services, package)
         {
-            this.TestDomain = AppDomain.CurrentDomain;
+            TestDomain = AppDomain.CurrentDomain;
         }
     }
 }

@@ -203,7 +203,7 @@ namespace NUnit.Engine.Runners
         /// <returns>An XmlNode representing the tests found.</returns>
         XmlNode ITestRunner.Explore(TestFilter filter)
         {
-            return this.Explore(filter).Xml;
+            return Explore(filter).Xml;
         }
 
         #endregion

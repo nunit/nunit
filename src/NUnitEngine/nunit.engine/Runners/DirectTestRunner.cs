@@ -94,7 +94,7 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases</returns>
         protected override int CountTests(TestFilter filter)
         {
-            int count = 0;
+            var count = 0;
 
             foreach (IFrameworkDriver driver in _drivers)
                 count += driver.CountTestCases(filter);
