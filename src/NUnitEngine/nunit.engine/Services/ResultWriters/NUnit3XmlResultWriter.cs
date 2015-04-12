@@ -58,17 +58,16 @@ namespace NUnit.Engine.Services
 
         public void WriteResultFile(XmlNode resultNode, TextWriter writer)
         {
-            var settings = new XmlWriterSettings();
-            settings.Indent = true;
+            var settings = new XmlWriterSettings {Indent = true};
 
-            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
+            using (var xmlWriter = XmlWriter.Create(writer, settings))
             {
                 xmlWriter.WriteStartDocument(false);
                 resultNode.WriteTo(xmlWriter);
             }
         }
 
-        private XmlNode GetCommandLine()
+        private static XmlNode GetCommandLine()
         {
             var doc = new XmlDocument();
             var test = doc.CreateElement("test-run");

@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 
@@ -59,7 +58,7 @@ namespace NUnit.Common
 
         public static XmlNode CreateXmlNode(string xml)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(xml);
             return doc.FirstChild;
         }
@@ -133,7 +132,7 @@ namespace NUnit.Common
 
             return attr == null
                 ? defaultValue
-                : int.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+                : int.Parse(attr.Value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -149,7 +148,7 @@ namespace NUnit.Common
 
             return attr == null
                 ? defaultValue
-                : double.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+                : double.Parse(attr.Value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -166,10 +165,9 @@ namespace NUnit.Common
                 return defaultValue;
 
             DateTime date;
-            if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date))
-                return defaultValue;
-
-            return date;
+            return !DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date) 
+                ? defaultValue 
+                : date;
         }
 
         #endregion

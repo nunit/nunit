@@ -65,10 +65,10 @@ namespace NUnit.Engine
         {
             get
             {
-                if(!this.Services.ServiceManager.ServicesInitialized)
+                if(!Services.ServiceManager.ServicesInitialized)
                     Initialize();
 
-                return this.Services;
+                return Services;
             }
         }
 
@@ -93,7 +93,7 @@ namespace NUnit.Engine
                 AddinManager.Registry.Update(null);
             }
 
-            SettingsService settingsService = new SettingsService(true);
+            var settingsService = new SettingsService(true);
 
             if(InternalTraceLevel == InternalTraceLevel.Default)
                 InternalTraceLevel = settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
@@ -104,17 +104,17 @@ namespace NUnit.Engine
                 InternalTrace.Initialize(Path.Combine(WorkDirectory, logName), InternalTraceLevel);
             }
 
-            this.Services.Add(settingsService);
-            this.Services.Add(new RecentFilesService());
-            this.Services.Add(new DomainManager());
-            this.Services.Add(new ProjectService());
-            this.Services.Add(new RuntimeFrameworkService());
-            this.Services.Add(new DefaultTestRunnerFactory());
-            this.Services.Add(new DriverService());
-            this.Services.Add(new TestAgency());
-            this.Services.Add(new ResultService());
+            Services.Add(settingsService);
+            Services.Add(new RecentFilesService());
+            Services.Add(new DomainManager());
+            Services.Add(new ProjectService());
+            Services.Add(new RuntimeFrameworkService());
+            Services.Add(new DefaultTestRunnerFactory());
+            Services.Add(new DriverService());
+            Services.Add(new TestAgency());
+            Services.Add(new ResultService());
 
-            this.Services.ServiceManager.InitializeServices();
+            Services.ServiceManager.InitializeServices();
         }
 
         /// <summary>
@@ -125,10 +125,10 @@ namespace NUnit.Engine
         /// <returns>An ITestRunner.</returns>
         public ITestRunner GetRunner(TestPackage package)
         {
-            if(!this.Services.ServiceManager.ServicesInitialized)
+            if(!Services.ServiceManager.ServicesInitialized)
                 Initialize();
 
-            return new Runners.MasterTestRunner(this.Services, package);
+            return new Runners.MasterTestRunner(Services, package);
         }
 
         #endregion

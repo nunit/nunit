@@ -47,7 +47,7 @@ namespace NUnit.Agent
         /// Channel used for communications with the agency
         /// and with clients
         /// </summary>
-        static TcpChannel Channel;
+        static TcpChannel _channel;
 
         /// <summary>
         /// The main entry point for the application.
@@ -114,7 +114,7 @@ namespace NUnit.Agent
             //log.Info("Initializing Services");
             engine.Initialize();
 
-            Channel = ServerUtilities.GetTcpChannel();
+            _channel = ServerUtilities.GetTcpChannel();
 
             //log.Info("Connecting to TestAgency at {0}", AgencyUrl);
             try
@@ -127,7 +127,7 @@ namespace NUnit.Agent
                 //log.Error("Unable to connect", ex);
             }
 
-            if (Channel != null)
+            if (_channel != null)
             {
                 //log.Info("Starting RemoteTestAgent");
                 RemoteTestAgent agent = new RemoteTestAgent(AgentId, Agency, engine.Services);
@@ -153,7 +153,7 @@ namespace NUnit.Agent
                 //log.Info("Unregistering Channel");
                 try
                 {
-                    ChannelServices.UnregisterChannel(Channel);
+                    ChannelServices.UnregisterChannel(_channel);
                 }
                 catch (Exception ex)
                 {

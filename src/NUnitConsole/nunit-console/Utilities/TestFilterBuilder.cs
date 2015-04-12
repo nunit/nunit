@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Engine;
@@ -36,9 +35,9 @@ namespace NUnit.ConsoleRunner.Utilities
 
         public TestFilterBuilder()
         {
-            this.Tests = new List<string>();
-            this.Include = new List<string>();
-            this.Exclude = new List<string>();
+            Tests = new List<string>();
+            Include = new List<string>();
+            Exclude = new List<string>();
         }
 
         public TestFilter GetFilter()
@@ -50,7 +49,7 @@ namespace NUnit.ConsoleRunner.Utilities
             if (Tests.Count > 0)
             {
                 tests.Append("<tests>");
-                foreach (string test in Tests)
+                foreach (var test in Tests)
                     tests.AppendFormat("<test>{0}</test>", test);
                 tests.Append("</tests>");
             }
@@ -58,8 +57,8 @@ namespace NUnit.ConsoleRunner.Utilities
             if (Include.Count > 0)
             {
                 include.Append("<cat>");
-                bool needComma = false;
-                foreach (string category in Include)
+                var needComma = false;
+                foreach (var category in Include)
                 {
                     if (needComma) include.Append(',');
                     include.Append(category);
@@ -71,8 +70,8 @@ namespace NUnit.ConsoleRunner.Utilities
             if (Exclude.Count > 0)
             {
                 exclude.Append("<not><cat>");
-                bool needComma = false;
-                foreach (string category in Exclude)
+                var needComma = false;
+                foreach (var category in Exclude)
                 {
                     if (needComma) exclude.Append(',');
                     exclude.Append(category);
@@ -83,11 +82,11 @@ namespace NUnit.ConsoleRunner.Utilities
 
             var testFilter = new StringBuilder("<filter>");
             if (tests.Length > 0)
-                testFilter.Append(tests.ToString());
+                testFilter.Append(tests);
             if (include.Length > 0)
-                testFilter.Append(include.ToString());
+                testFilter.Append(include);
             if (exclude.Length > 0)
-                testFilter.Append(exclude.ToString());
+                testFilter.Append(exclude);
             testFilter.Append("</filter>");
 
             return new TestFilter(testFilter.ToString());

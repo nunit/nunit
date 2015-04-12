@@ -23,60 +23,55 @@
 
 using System;
 
-namespace NUnit.Common
-{
+namespace NUnit.Common {
     /// <summary>
     /// OutputSpecification encapsulates a file output path and format
     /// for use in saving the results of a run.
     /// </summary>
-    public class OutputSpecification
-    {
+    public class OutputSpecification {
         #region Constructor
 
         /// <summary>
         /// Construct an OutputSpecification from an option value.
         /// </summary>
         /// <param name="spec">The option value string.</param>
-        public OutputSpecification(string spec)
-        {
+        public OutputSpecification(string spec) {
             if (spec == null)
                 throw new NullReferenceException("Output spec may not be null");
 
             string[] parts = spec.Split(';');
-            this.OutputPath = parts[0];
+            OutputPath = parts[0];
 
-            for (int i = 1; i < parts.Length; i++)
-            {
+            for (int i = 1; i < parts.Length; i++) {
                 string[] opt = parts[i].Split('=');
 
                 if (opt.Length != 2)
                     throw new ArgumentException();
 
-                switch (opt[0].Trim())
-                {
+                switch (opt[0].Trim()) {
                     case "format":
                         string fmt = opt[1].Trim();
 
-                        if (this.Format != null && this.Format != fmt)
+                        if (Format != null && Format != fmt)
                             throw new ArgumentException(
                                 string.Format("Conflicting format options: {0}", spec));
 
-                        this.Format = fmt;
+                        Format = fmt;
                         break;
 
                     case "transform":
                         string val = opt[1].Trim();
 
-                        if (this.Transform != null && this.Transform != val)
+                        if (Transform != null && Transform != val)
                             throw new ArgumentException(
                                 string.Format("Conflicting transform options: {0}", spec));
 
-                        if (this.Format != null && this.Format != "user")
+                        if (Format != null && Format != "user")
                             throw new ArgumentException(
                                 string.Format("Conflicting format options: {0}", spec));
 
-                        this.Format = "user";
-                        this.Transform = opt[1].Trim();
+                        Format = "user";
+                        Transform = opt[1].Trim();
                         break;
                 }
             }

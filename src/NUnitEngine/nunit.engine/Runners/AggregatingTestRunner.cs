@@ -108,7 +108,7 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases</returns>
         protected override int CountTests(TestFilter filter)
         {
-            int count = 0;
+            var count = 0;
 
             foreach (ITestEngineRunner runner in _runners)
                 count += runner.CountTestCases(filter);

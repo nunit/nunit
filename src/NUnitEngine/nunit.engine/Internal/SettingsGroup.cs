@@ -24,10 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Xml;
 
 namespace NUnit.Engine.Internal
 {
@@ -37,7 +33,7 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public class SettingsGroup : ISettings, IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("SettingsGroup");
+        static readonly Logger log = InternalTrace.GetLogger("SettingsGroup");
 
         protected Dictionary<string, object> _settings = new Dictionary<string, object>();
 
@@ -105,10 +101,10 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Remove a group of settings
         /// </summary>
-        /// <param name="GroupName"></param>
+        /// <param name="groupName"></param>
         public void RemoveGroup(string groupName)
         {
-            List<string> keysToRemove = new List<string>();
+            var keysToRemove = new List<string>();
 
             string prefix = groupName;
             if (!prefix.EndsWith("."))

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 
 namespace NUnit.Engine.Services
@@ -31,7 +30,7 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class RecentFilesService : IRecentFiles, IService
     {
-        private IList<string> _fileEntries = new List<string>();
+        private readonly IList<string> _fileEntries = new List<string>();
 
         private const int MinSize = 0;
         private const int MaxSize = 24;
@@ -97,7 +96,7 @@ namespace NUnit.Engine.Services
 
         private void AddEntriesForPrefix(string prefix)
         {
-            for (int index = 1; index < MaxFiles; index++)
+            for (var index = 1; index < MaxFiles; index++)
             {
                 if (_fileEntries.Count >= MaxFiles) break;
 
@@ -108,7 +107,7 @@ namespace NUnit.Engine.Services
 
         private void SaveEntriesToSettings()
         {
-            string prefix = "Gui.RecentProjects";
+            const string prefix = "Gui.RecentProjects";
             ISettings settings = ServiceContext.UserSettings;
 
             while( _fileEntries.Count > MaxFiles )

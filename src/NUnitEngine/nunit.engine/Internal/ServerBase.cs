@@ -22,11 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Threading;
 using System.Runtime.Remoting;
-using System.Runtime.Remoting.Services;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Runtime.Remoting.Messaging;
+using System.Threading;
 
 namespace NUnit.Engine.Internal
 {
@@ -41,7 +41,7 @@ namespace NUnit.Engine.Internal
         private TcpChannel channel;
         private bool isMarshalled;
 
-        private object theLock = new object();
+        private readonly object theLock = new object();
 
         protected ServerBase()
         {
@@ -69,39 +69,39 @@ namespace NUnit.Engine.Internal
             {
                 lock (theLock)
                 {
-                    this.channel = ServerUtilities.GetTcpChannel(uri + "Channel", port, 100);
+                    channel = ServerUtilities.GetTcpChannel(uri + "Channel", port, 100);
 
                     RemotingServices.Marshal(this, uri);
-                    this.isMarshalled = true;
+                    isMarshalled = true;
                 }
 
-                if (this.port == 0)
+                if (port == 0)
                 {
-                    ChannelDataStore store = this.channel.ChannelData as ChannelDataStore;
+                    ChannelDataStore store = channel.ChannelData as ChannelDataStore;
                     if (store != null)
                     {
                         string channelUri = store.ChannelUris[0];
-                        this.port = int.Parse(channelUri.Substring(channelUri.LastIndexOf(':') + 1));
+                        port = int.Parse(channelUri.Substring(channelUri.LastIndexOf(':') + 1));
                     }
                 }
             }
         }
 
-        [System.Runtime.Remoting.Messaging.OneWay]
+        [OneWay]
         public virtual void Stop()
         {
             lock( theLock )
             {
-                if ( this.isMarshalled )
+                if ( isMarshalled )
                 {
                     RemotingServices.Disconnect( this );
-                    this.isMarshalled = false;
+                    isMarshalled = false;
                 }
 
-                if ( this.channel != null )
+                if ( channel != null )
                 {
-                    ChannelServices.UnregisterChannel( this.channel );
-                    this.channel = null;
+                    ChannelServices.UnregisterChannel( channel );
+                    channel = null;
                 }
 
                 Monitor.PulseAll( theLock );
@@ -120,7 +120,7 @@ namespace NUnit.Engine.Internal
 
         public void Dispose()
         {
-            this.Stop();
+            Stop();
         }
 
         #endregion

@@ -22,13 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
-using System.IO;
+using System.Collections;
 using System.Collections.Generic;
-using System.Web.UI;
-using System.Xml;
-using NUnit.Engine.Internal;
+using System.IO;
 using NUnit.Engine.Extensibility;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Drivers
 {
@@ -40,20 +38,20 @@ namespace NUnit.Engine.Drivers
     {
         private const string NUNIT_FRAMEWORK = "nunit.framework";
 
-        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
+        private const string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
         private static readonly string COUNT_ACTION = CONTROLLER_TYPE + "+CountTestsAction";
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
         private static readonly string STOP_RUN_ACTION = CONTROLLER_TYPE + "+StopRunAction";
 
-        static ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
+        static readonly ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
 
-        AppDomain _testDomain;
-        string _testAssemblyPath;
-        string _frameworkAssemblyName;
+        readonly AppDomain _testDomain;
+        readonly string _testAssemblyPath;
+        readonly string _frameworkAssemblyName;
 
-        object _frameworkController;
+        readonly object _frameworkController;
 
         public NUnit3FrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
             : this(testDomain, NUNIT_FRAMEWORK, testAssemblyPath, settings) { }
@@ -65,7 +63,7 @@ namespace NUnit.Engine.Drivers
             _testDomain = testDomain;
             _testAssemblyPath = testAssemblyPath;
             _frameworkAssemblyName = frameworkAssemblyName;
-            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, (System.Collections.IDictionary)settings);
+            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, (IDictionary)settings);
         }
 
         /// <summary>

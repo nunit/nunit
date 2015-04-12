@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NUnit.Engine.Extensibility
+﻿namespace NUnit.Engine.Extensibility
 {
     /// <summary>
     /// Interface implemented by objects that can create an IResultWriter for a given format.

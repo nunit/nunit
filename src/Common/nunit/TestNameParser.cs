@@ -38,13 +38,13 @@ namespace NUnit.Common
         /// <returns></returns>
         public static string[] Parse(string argument)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            int index = 0;
+            var index = 0;
             while (index < argument.Length)
             {
-                string name = GetTestName(argument, ref index);
-                if (name != null && name != string.Empty)
+                var name = GetTestName(argument, ref index);
+                if (!string.IsNullOrEmpty(name))
                     list.Add(name);
             }
 
@@ -84,8 +84,7 @@ namespace NUnit.Common
                         break;
 
                     case '"':
-                        while (++index < argument.Length && argument[index] != '"')
-                            ;
+                        while (++index < argument.Length && argument[index] != '"') { }
                         break;
 
                     case '(':

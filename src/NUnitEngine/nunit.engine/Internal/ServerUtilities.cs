@@ -35,23 +35,20 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public static class ServerUtilities
     {
-        static Logger log = InternalTrace.GetLogger(typeof(ServerUtilities));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(ServerUtilities));
 
         /// <summary>
         ///  Create a TcpChannel with a given name, on a given port.
         /// </summary>
         /// <param name="port"></param>
         /// <param name="name"></param>
+        /// <param name="limit"></param>
         /// <returns></returns>
         private static TcpChannel CreateTcpChannel( string name, int port, int limit )
         {
-            Hashtable props = new Hashtable();
-            props.Add( "port", port );
-            props.Add( "name", name );
-            props.Add( "bindTo", "127.0.0.1" );
+            var props = new Hashtable {{"port", port}, {"name", name}, {"bindTo", "127.0.0.1"}};
 
-            BinaryServerFormatterSinkProvider serverProvider =
-                new BinaryServerFormatterSinkProvider();
+            var serverProvider = new BinaryServerFormatterSinkProvider();
 
             // NOTE: TypeFilterLevel and "clientConnectionLimit" property don't exist in .NET 1.0.
             Type typeFilterLevelType = typeof(object).Assembly.GetType("System.Runtime.Serialization.Formatters.TypeFilterLevel");
@@ -64,8 +61,7 @@ namespace NUnit.Engine.Internal
 //                props.Add("clientConnectionLimit", limit);
             }
 
-            BinaryClientFormatterSinkProvider clientProvider =
-                new BinaryClientFormatterSinkProvider();
+            var clientProvider = new BinaryClientFormatterSinkProvider();
 
             return new TcpChannel( props, clientProvider, serverProvider );
         }
@@ -99,13 +95,13 @@ namespace NUnit.Engine.Internal
         /// <returns>A TcpChannel or null</returns>
         public static TcpChannel GetTcpChannel( string name, int port, int limit )
         {
-            TcpChannel channel = ChannelServices.GetChannel( name ) as TcpChannel;
+            var channel = ChannelServices.GetChannel( name ) as TcpChannel;
 
             if ( channel == null )
             {
                 // NOTE: Retries are normally only needed when rapidly creating
                 // and destroying channels, as in running the NUnit tests.
-                int retries = 10;
+                var retries = 10;
                 while( --retries > 0 )
                     try
                     {

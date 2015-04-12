@@ -22,11 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 
@@ -54,10 +53,10 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class TestAgency : ServerBase, ITestAgency, IService
     {
-        static Logger log = InternalTrace.GetLogger(typeof(TestAgency));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(TestAgency));
 
         #region Private Fields
-        private AgentDataBase agentData = new AgentDataBase();
+        private readonly AgentDataBase agentData = new AgentDataBase();
         #endregion
 
         #region Constructors
@@ -97,9 +96,7 @@ namespace NUnit.Engine.Services
         {
             AgentRecord r = agentData[agent.Id];
             if ( r == null )
-                throw new ArgumentException(
-                    string.Format("Agent {0} is not in the agency database", agent.Id),
-                    "agentId");
+                throw new ArgumentException(string.Format("Agent {0} is not in the agency database", agent.Id), "agentId");
             r.Agent = agent;
         }
 
@@ -108,10 +105,7 @@ namespace NUnit.Engine.Services
             AgentRecord r = agentData[agentId];
 
             if ( r == null )
-                throw new ArgumentException(
-                    string.Format("Agent {0} is not in the agency database", agentId),
-                    "agentId" );
-
+                throw new ArgumentException(string.Format("Agent {0} is not in the agency database", agentId), "agentId");
             r.Status = status;
         }
         #endregion
@@ -186,29 +180,25 @@ namespace NUnit.Engine.Services
             log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", targetRuntime);
 
             if (!targetRuntime.IsAvailable)
-                throw new ArgumentException(
-                    string.Format("The {0} framework is not available", targetRuntime),
-                    "framework");
+                throw new ArgumentException(string.Format("The {0} framework is not available", targetRuntime), "framework");
 
             string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion, useX86Agent);
 
             if (agentExePath == null)
-                throw new ArgumentException(
-                    string.Format("NUnit components for version {0} of the CLR are not installed",
-                    targetRuntime.ClrVersion.ToString()), "targetRuntime");
+                throw new ArgumentException(string.Format("NUnit components for version {0} of the CLR are not installed",
+                    targetRuntime.ClrVersion), "targetRuntime");
 
             log.Debug("Using nunit-agent at " + agentExePath);
 
-            Process p = new Process();
-            p.StartInfo.UseShellExecute = false;
-            Guid agentId = Guid.NewGuid();
-            string arglist = agentId.ToString() + " " + ServerUrl + " " + agentArgs;
+            var p = new Process {StartInfo = {UseShellExecute = false}};
+            var agentId = Guid.NewGuid();
+            var arglist = agentId + " " + ServerUrl + " " + agentArgs;
 
             switch( targetRuntime.Runtime )
             {
                 case RuntimeType.Mono:
                     p.StartInfo.FileName = NUnitConfiguration.MonoExePath;
-                    string monoOptions = "--runtime=v" + targetRuntime.ClrVersion.ToString(3);
+                    var monoOptions = "--runtime=v" + targetRuntime.ClrVersion.ToString(3);
                     if (enableDebug) monoOptions += " --debug";
                     p.StartInfo.Arguments = string.Format("{0} \"{1}\" {2}", monoOptions, agentExePath, arglist);
                     break;
@@ -218,7 +208,7 @@ namespace NUnit.Engine.Services
                     if (targetRuntime.ClrVersion.Build < 0)
                         targetRuntime = RuntimeFramework.GetBestAvailableFramework(targetRuntime);
 
-                    string envVar = "v" + targetRuntime.ClrVersion.ToString(3);
+                    var envVar = "v" + targetRuntime.ClrVersion.ToString(3);
                     p.StartInfo.EnvironmentVariables["COMPLUS_Version"] = envVar;
 
                     p.StartInfo.Arguments = arglist;
@@ -310,10 +300,10 @@ namespace NUnit.Engine.Services
                 // The following is only applicable to the dev environment,
                 // which uses parallel build directories. We try to substitute
                 // one version number for another in the path.
-                string[] search = new string[] { "2.0", "3.0", "3.5", "4.0" };
+                string[] search = { "2.0", "3.0", "3.5", "4.0" };
                 string[] replace = v.Minor == 0
-                    ? new string[] { "1.0", "1.1" }
-                    : new string[] { "1.1", "1.0" };
+                    ? new[] { "1.0", "1.1" }
+                    : new[] { "1.1", "1.0" };
 
                 // Look for current value in path so it can be replaced
                 string current = null;
@@ -365,12 +355,12 @@ namespace NUnit.Engine.Services
 
         public void UnloadService()
         {
-            this.Stop();
+            Stop();
         }
 
         public void InitializeService()
         {
-            this.Start();
+            Start();
         }
 
         #endregion
@@ -378,17 +368,17 @@ namespace NUnit.Engine.Services
         #region Nested Class - AgentRecord
         private class AgentRecord
         {
-            public Guid Id;
+            public readonly Guid Id;
             public Process Process;
             public ITestAgent Agent;
             public AgentStatus Status;
 
             public AgentRecord( Guid id, Process p, ITestAgent a, AgentStatus s )
             {
-                this.Id = id;
-                this.Process = p;
-                this.Agent = a;
-                this.Status = s;
+                Id = id;
+                Process = p;
+                Agent = a;
+                Status = s;
             }
 
         }
@@ -401,7 +391,7 @@ namespace NUnit.Engine.Services
         /// </summary>
         private class AgentDataBase
         {
-            private Dictionary<Guid, AgentRecord> agentData = new Dictionary<Guid, AgentRecord>();
+            private readonly Dictionary<Guid, AgentRecord> agentData = new Dictionary<Guid, AgentRecord>();
 
             public AgentRecord this[Guid id]
             {
