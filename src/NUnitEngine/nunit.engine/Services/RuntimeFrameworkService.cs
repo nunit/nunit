@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Common;
 using NUnit.Engine.Internal;
@@ -31,7 +30,7 @@ namespace NUnit.Engine.Services
 {
     public class RuntimeFrameworkService : IRuntimeFrameworkService, IService
     {
-        static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
 
         /// <summary>
         /// Returns true if the runtime framework represented by
@@ -95,8 +94,8 @@ namespace NUnit.Engine.Services
             else
                 log.Debug("Requested framework is {0}", requestedFramework);
 
-            RuntimeType targetRuntime = requestedFramework.Runtime;
-            Version targetVersion = requestedFramework.FrameworkVersion;
+            var targetRuntime = requestedFramework.Runtime;
+            var targetVersion = requestedFramework.FrameworkVersion;
 
             if (targetRuntime == RuntimeType.Any)
                 targetRuntime = currentFramework.Runtime;

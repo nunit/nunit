@@ -23,9 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Xml;
 using Mono.Addins;
 using NUnit.Engine.Extensibility;
 
@@ -33,13 +30,13 @@ namespace NUnit.Engine.Services
 {
     public class ResultService : IResultService, IService
     {
-        IList<IResultWriterFactory> _factories = new List<IResultWriterFactory>();
+        readonly IList<IResultWriterFactory> _factories = new List<IResultWriterFactory>();
 
         public string[] Formats
         {
             get
             {
-                List<string> formats = new List<string>();
+                var formats = new List<string>();
 
                 foreach (var factory in _factories)
                     formats.Add(factory.Format);

@@ -33,10 +33,10 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class ServiceManager
     {
-        private List<IService> services = new List<IService>();
-        private Dictionary<Type, IService> serviceIndex = new Dictionary<Type, IService>();
+        private readonly List<IService> services = new List<IService>();
+        private readonly Dictionary<Type, IService> serviceIndex = new Dictionary<Type, IService>();
 
-        static Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
 
         public bool ServicesInitialized { get; private set; }
 
@@ -90,7 +90,7 @@ namespace NUnit.Engine.Services
                 }
             }
 
-            this.ServicesInitialized = true;
+            ServicesInitialized = true;
         }
 
         public void StopAllServices()

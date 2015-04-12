@@ -36,7 +36,7 @@ namespace NUnit.Engine.Services
         /// <summary>
         /// List of all installed ProjectLoaders
         /// </summary>
-        IList<IProjectLoader> _loaders = new List<IProjectLoader>();
+        readonly IList<IProjectLoader> _loaders = new List<IProjectLoader>();
 
         bool _isInitialized;
 

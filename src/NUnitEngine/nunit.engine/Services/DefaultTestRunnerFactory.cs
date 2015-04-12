@@ -33,7 +33,7 @@ namespace NUnit.Engine.Services
     /// runner for a given package to be loaded and run either in a 
     /// separate process or within the same process. 
     /// </summary>
-    public class DefaultTestRunnerFactory : InProcessTestRunnerFactory, ITestRunnerFactory
+    public class DefaultTestRunnerFactory : InProcessTestRunnerFactory
     {
         /// <summary>
         /// Returns a test runner based on the settings in a TestPackage.
@@ -82,16 +82,15 @@ namespace NUnit.Engine.Services
             {
                 default:
                 case ProcessModel.Default:
-                    if (package.TestFiles.Count > 1)
-                        return new MultipleTestProcessRunner(this.ServiceContext, package);
-                    else
-                        return new ProcessRunner(this.ServiceContext, package);
+                    return package.TestFiles.Count > 1
+                        ? (ITestEngineRunner)new MultipleTestProcessRunner(ServiceContext, package)
+                        : new ProcessRunner(ServiceContext, package);
 
                 case ProcessModel.Multiple:
-                    return new MultipleTestProcessRunner(this.ServiceContext, package);
+                    return new MultipleTestProcessRunner(ServiceContext, package);
 
                 case ProcessModel.Separate:
-                    return new ProcessRunner(this.ServiceContext, package);
+                    return new ProcessRunner(ServiceContext, package);
 
                 case ProcessModel.Single:
                     return base.MakeTestRunner(package);
@@ -117,7 +116,7 @@ namespace NUnit.Engine.Services
 
         private ProcessModel GetTargetProcessModel(TestPackage package)
         {
-            return (ProcessModel)System.Enum.Parse(
+            return (ProcessModel)Enum.Parse(
                 typeof(ProcessModel),
                 package.GetSetting(PackageSettings.ProcessModel, "Default"));
         }

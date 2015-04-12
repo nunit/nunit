@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Mono.Addins;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
@@ -40,7 +39,7 @@ namespace NUnit.Engine.Services
         private const string OLDER_NUNIT_NOT_SUPPORTED_MESSAGE =
             "Unable to load {0}. This runner only supports tests written for NUnit 3.0 or higher.";
 
-        IList<IDriverFactory> _factories = new List<IDriverFactory>();
+        readonly IList<IDriverFactory> _factories = new List<IDriverFactory>();
 
         #region IDriverService Members
 

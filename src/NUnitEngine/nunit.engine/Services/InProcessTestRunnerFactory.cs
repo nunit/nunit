@@ -55,9 +55,9 @@ namespace NUnit.Engine.Services
                 default:
                 case DomainUsage.Default:
                     if (package.TestFiles.Count > 1)
-                        return new MultipleTestDomainRunner(this.ServiceContext, package);
+                        return new MultipleTestDomainRunner(ServiceContext, package);
                     else
-                        return new TestDomainRunner(this.ServiceContext, package);
+                        return new TestDomainRunner(ServiceContext, package);
 
                 case DomainUsage.Multiple:
                     package.Settings.Remove("DomainUsage");

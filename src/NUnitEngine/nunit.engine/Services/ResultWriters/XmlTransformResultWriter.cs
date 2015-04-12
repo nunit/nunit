@@ -32,26 +32,25 @@ namespace NUnit.Engine.Services
 {
     public class XmlTransformResultWriter : IResultWriter
     {
-        private string _xsltFile;
         private readonly XslCompiledTransform _transform = new XslCompiledTransform();
 
         public XmlTransformResultWriter(object[] args)
         {
             Guard.ArgumentNotNull(args, "args");
-            _xsltFile = args[0] as string;
+            var xsltFile = args[0] as string;
 
             Guard.ArgumentValid(
-                !string.IsNullOrEmpty(_xsltFile),
+                !string.IsNullOrEmpty(xsltFile),
                 "Argument to XmlTransformWriter must be a non-empty string",
                 "args");
 
             try
             {
-                _transform.Load(_xsltFile);
+                _transform.Load(xsltFile);
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("Unable to load transform " + _xsltFile, ex.InnerException);
+                throw new ArgumentException("Unable to load transform " + xsltFile, ex.InnerException);
             }
         }
 

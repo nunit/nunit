@@ -42,7 +42,7 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class DomainManager : IService
     {
-        static Logger log = InternalTrace.GetLogger(typeof(DomainManager));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(DomainManager));
 
         #region Properties
 
@@ -51,13 +51,11 @@ namespace NUnit.Engine.Services
         {
             get
             {
-                if ( shadowCopyPath == null )
-                {
+                if ( shadowCopyPath == null ) {
                     shadowCopyPath = ServiceContext.UserSettings.GetSetting("Options.TestLoader.ShadowCopyPath", "");
-                    if (shadowCopyPath == "")
-                        shadowCopyPath = PathUtils.Combine(NUnitConfiguration.ApplicationDirectory, "ShadowCopyCache");
-                    else
-                        shadowCopyPath = Environment.ExpandEnvironmentVariables(shadowCopyPath);
+                    shadowCopyPath = shadowCopyPath == "" 
+                        ? PathUtils.Combine(NUnitConfiguration.ApplicationDirectory, "ShadowCopyCache") 
+                        : Environment.ExpandEnvironmentVariables(shadowCopyPath);
                 }
 
                 return shadowCopyPath;
@@ -75,24 +73,22 @@ namespace NUnit.Engine.Services
         {
             AppDomainSetup setup = CreateAppDomainSetup(package);
 
-            string domainName = "test-domain-" + package.Name;
+            var domainName = "test-domain-" + package.Name;
             // Setup the Evidence
-            Evidence evidence = new Evidence(AppDomain.CurrentDomain.Evidence);
+            var evidence = new Evidence(AppDomain.CurrentDomain.Evidence);
             if (evidence.Count == 0)
             {
-                Zone zone = new Zone(SecurityZone.MyComputer);
+                var zone = new Zone(SecurityZone.MyComputer);
                 evidence.AddHost(zone);
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                Url url = new Url(assembly.CodeBase);
+                var assembly = Assembly.GetExecutingAssembly();
+                var url = new Url(assembly.CodeBase);
                 evidence.AddHost(url);
-                Hash hash = new Hash(assembly);
+                var hash = new Hash(assembly);
                 evidence.AddHost(hash);
             }
 
             log.Info("Creating AppDomain " + domainName);
 
-            AppDomain runnerDomain;
-            
             // TODO: Find an approach that works across all platforms
           
             //// TODO: Try to eliminate this test. Currently, running on
@@ -104,12 +100,11 @@ namespace NUnit.Engine.Services
             //    runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup, permissionSet, null);
             //}
             //else
-                runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
+                var runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
             
             // Set PrincipalPolicy for the domain if called for in the settings
                 if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.SetPrincipalPolicy", false))
-                    runnerDomain.SetPrincipalPolicy((PrincipalPolicy)ServiceContext.UserSettings.GetSetting(
-                    "Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal));
+                    runnerDomain.SetPrincipalPolicy(ServiceContext.UserSettings.GetSetting("Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal));
 
             //// HACK: Only pass down our AddinRegistry one level so that tests of NUnit
             //// itself start without any addins defined.
@@ -132,10 +127,8 @@ namespace NUnit.Engine.Services
         // Made separate and public for testing
         public AppDomainSetup CreateAppDomainSetup(TestPackage package)
         {
-            AppDomainSetup setup = new AppDomainSetup();
-
             //For parallel tests, we need to use distinct application name
-            setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
+            var setup = new AppDomainSetup {ApplicationName = "Tests" + "_" + Environment.TickCount};
 
             FileInfo testFile = package.FullName != null && package.FullName != string.Empty
                 ? new FileInfo(package.FullName)
@@ -196,7 +189,7 @@ namespace NUnit.Engine.Services
         class DomainUnloader
         {
             private Thread thread;
-            private AppDomain domain;
+            private readonly AppDomain domain;
 
             public DomainUnloader(AppDomain domain)
             {
@@ -217,7 +210,7 @@ namespace NUnit.Engine.Services
 
                 log.Info("Unloading AppDomain " + domainName);
 
-                thread = new Thread(new ThreadStart(UnloadOnThread));
+                thread = new Thread(UnloadOnThread);
                 thread.Start();
                 if (!thread.Join(30000))
                 {
@@ -228,9 +221,9 @@ namespace NUnit.Engine.Services
 
             private void UnloadOnThread()
             {
-                bool shadowCopy = false;
+                var shadowCopy = false;
                 string cachePath = null;
-                string domainName = "UNKNOWN";               
+                var domainName = "UNKNOWN";               
 
                 try
                 {
@@ -264,7 +257,7 @@ namespace NUnit.Engine.Services
         {
             int processId = Process.GetCurrentProcess().Id;
             long ticks = DateTime.Now.Ticks;
-            string cachePath = Path.Combine( ShadowCopyPath, processId.ToString() + "_" + ticks.ToString() ); 
+            string cachePath = Path.Combine( ShadowCopyPath, processId + "_" + ticks ); 
                 
             try 
             {
@@ -299,10 +292,10 @@ namespace NUnit.Engine.Services
 
             if(cacheDir.Exists)
             {
-                foreach( DirectoryInfo dirInfo in cacheDir.GetDirectories() )
+                foreach(var dirInfo in cacheDir.GetDirectories())
                     DeleteCacheDir( dirInfo );
 
-                foreach( FileInfo fileInfo in cacheDir.GetFiles() )
+                foreach(var fileInfo in cacheDir.GetFiles())
                 {
                     fileInfo.Attributes = FileAttributes.Normal;
                     try 
@@ -311,8 +304,7 @@ namespace NUnit.Engine.Services
                     }
                     catch( Exception ex )
                     {
-                        Debug.WriteLine( string.Format( 
-                            "Error deleting {0}, {1}", fileInfo.Name, ex.Message ) );
+                        Debug.WriteLine( string.Format("Error deleting {0}, {1}", fileInfo.Name, ex.Message));
                     }
                 }
 
@@ -353,8 +345,8 @@ namespace NUnit.Engine.Services
 
         public static string GetPrivateBinPath(string basePath, IList<string> assemblies)
         {
-            List<string> dirList = new List<string>();
-            StringBuilder sb = new StringBuilder(200);
+            var dirList = new List<string>();
+            var sb = new StringBuilder(200);
 
             foreach( string assembly in assemblies )
             {
