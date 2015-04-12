@@ -11,8 +11,7 @@ namespace NUnit.Engine
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitEngineNotFoundException"/> class.
         /// </summary>
-        public NUnitEngineNotFoundException() : base()
-        {
+        public NUnitEngineNotFoundException() {
         }
 
         /// <summary>
