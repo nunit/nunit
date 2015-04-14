@@ -33,7 +33,7 @@ namespace NUnit.ConsoleRunner.Tests
             _teamCity.TestStarted(startNode);
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testStarted name='NAME' captureStandardOutput='true']" + NL));
+                "##teamcity[testStarted name='FULLNAME' captureStandardOutput='true' flowId='ID']" + NL));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace NUnit.ConsoleRunner.Tests
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testFinished name='NAME' duration='1.234']" + NL));
+                "##teamcity[testFinished name='FULLNAME' duration='1.234' flowId='ID']" + NL));
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace NUnit.ConsoleRunner.Tests
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testIgnored name='NAME' message='Inconclusive']" + NL));
+                "##teamcity[testIgnored name='FULLNAME' message='Inconclusive' flowId='ID']" + NL));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace NUnit.ConsoleRunner.Tests
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testIgnored name='NAME' message='Just because']" + NL));
+                "##teamcity[testIgnored name='FULLNAME' message='Just because' flowId='ID']" + NL));
         }
 
         [Test]
@@ -90,14 +90,16 @@ namespace NUnit.ConsoleRunner.Tests
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testFailed name='NAME' message='Error message' details='Stack trace']" + NL +
-                "##teamcity[testFinished name='NAME' duration='1.234']" + NL));
+                "##teamcity[testFailed name='FULLNAME' message='Error message' details='Stack trace' flowId='ID']" + NL +
+                "##teamcity[testFinished name='FULLNAME' duration='1.234' flowId='ID']" + NL));
         }
 
         private XmlNode CreateXmlNode(string elementName)
         {
             var node = XmlHelper.CreateTopLevelElement(elementName);
             node.AddAttribute("name", "NAME");
+            node.AddAttribute("fullname", "FULLNAME");
+            node.AddAttribute("id", "ID");
 
             return node;
         }

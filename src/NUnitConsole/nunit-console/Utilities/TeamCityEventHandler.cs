@@ -48,7 +48,9 @@ namespace NUnit.ConsoleRunner.Utilities
         public void TestStarted(XmlNode node)
         {
             string name = node.GetAttribute("fullname");
-            _outWriter.WriteLine("##teamcity[testStarted name='{0}' captureStandardOutput='true']", Escape(name));
+            string testId = node.GetAttribute("id");
+
+            _outWriter.WriteLine("##teamcity[testStarted name='{0}' captureStandardOutput='true' flowId='{1}']", Escape(name), Escape(testId));
         }
 
         /// <summary>
@@ -59,44 +61,45 @@ namespace NUnit.ConsoleRunner.Utilities
         {
             string name = result.GetAttribute("fullname");
             double duration = result.GetAttribute("duration", 0.0);
+            string testId = result.GetAttribute("id");
 
             switch (result.GetAttribute("result"))
             {
                 case "Passed":
-                    TC_TestFinished(name, duration);
+                    TC_TestFinished(name, duration, testId);
                     break;
                 case "Inconclusive":
-                    TC_TestIgnored(name, "Inconclusive");
+                    TC_TestIgnored(name, "Inconclusive", testId);
                     break;
                 case "Skipped":
                     XmlNode reason = result.SelectSingleNode("reason/message");
-                    TC_TestIgnored(name, reason == null ? "" : reason.InnerText);
+                    TC_TestIgnored(name, reason == null ? "" : reason.InnerText, testId);
                     break;
                 case "Failed":
                     XmlNode message = result.SelectSingleNode("failure/message");
                     XmlNode stackTrace = result.SelectSingleNode("failure/stack-trace");
-                    TC_TestFailed(name, message == null ? "" : message.InnerText, stackTrace == null ? "" : stackTrace.InnerText);
-                    TC_TestFinished(name, duration);
+                    TC_TestFailed(name, message == null ? "" : message.InnerText, stackTrace == null ? "" : stackTrace.InnerText, testId);
+                    TC_TestFinished(name, duration, testId);
                     break;
             }
         }
 
         #region Helper Methods
 
-        private void TC_TestFinished(string name, double duration)
+        private void TC_TestFinished(string name, double duration, string flowId)
         {
-            _outWriter.WriteLine("##teamcity[testFinished name='{0}' duration='{1}']", Escape(name),
-                             duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
+            _outWriter.WriteLine("##teamcity[testFinished name='{0}' duration='{1}' flowId='{2}']", Escape(name),
+                             duration.ToString("0.000", NumberFormatInfo.InvariantInfo), Escape(flowId));
         }
 
-        private void TC_TestIgnored(string name, string reason)
+        private void TC_TestIgnored(string name, string reason, string flowId)
         {
-            _outWriter.WriteLine("##teamcity[testIgnored name='{0}' message='{1}']", Escape(name), Escape(reason));
+            _outWriter.WriteLine("##teamcity[testIgnored name='{0}' message='{1}' flowId='{2}']", Escape(name), Escape(reason), Escape(flowId));
         }
 
-        private void TC_TestFailed(string name, string message, string details)
+        private void TC_TestFailed(string name, string message, string details, string flowId)
         {
-            _outWriter.WriteLine("##teamcity[testFailed name='{0}' message='{1}' details='{2}']", Escape(name), Escape(message), Escape(details));
+            _outWriter.WriteLine("##teamcity[testFailed name='{0}' message='{1}' details='{2}' flowId='{3}']", Escape(name), Escape(message), Escape(details), Escape(flowId));
         }
 
         private static string Escape(string input)
