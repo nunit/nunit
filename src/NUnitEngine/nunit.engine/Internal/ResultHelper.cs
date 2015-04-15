@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 
 namespace NUnit.Engine.Internal
@@ -46,6 +45,10 @@ namespace NUnit.Engine.Internal
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
         /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="elementName"></param>
+        /// <param name="suiteType"></param>
+        /// <param name="name"></param>
+        /// <param name="fullname"></param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string suiteType, string name, string fullname)
         {
@@ -56,6 +59,9 @@ namespace NUnit.Engine.Internal
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
         /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="elementName"></param>
+        /// <param name="name"></param>
+        /// <param name="fullname"></param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string name, string fullname)
         {
@@ -83,10 +89,10 @@ namespace NUnit.Engine.Internal
         /// <remarks>Used by AbstractTestRunner MakePackageResult method.</remarks>
         public static TestEngineResult Merge(IList<TestEngineResult> results)
         {
-            TestEngineResult mergedResult = new TestEngineResult();
+            var mergedResult = new TestEngineResult();
 
-            foreach (TestEngineResult result in results)
-                foreach (XmlNode node in result.XmlNodes)
+            foreach (var result in results)
+                foreach (var node in result.XmlNodes)
                     mergedResult.Add(node);
 
             return mergedResult;
@@ -139,15 +145,15 @@ namespace NUnit.Engine.Internal
 
             string status = "Inconclusive";
             //double totalDuration = 0.0d;
-            int testcasecount = 0;
-            int total = 0;
-            int passed = 0;
-            int failed = 0;
-            int inconclusive = 0;
-            int skipped = 0;
-            int asserts = 0;
+            var testcasecount = 0;
+            var total = 0;
+            var passed = 0;
+            var failed = 0;
+            var inconclusive = 0;
+            var skipped = 0;
+            var asserts = 0;
 
-            bool isTestRunResult = false;
+            var isTestRunResult = false;
 
             foreach (XmlNode node in resultNodes)
             {
