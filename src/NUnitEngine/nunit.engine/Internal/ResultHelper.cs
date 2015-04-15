@@ -112,8 +112,9 @@ namespace NUnit.Engine.Internal
             env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
-            env.AddAttribute("culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
-            env.AddAttribute("uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("os-architecture", Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"));
         }
 
         #endregion
