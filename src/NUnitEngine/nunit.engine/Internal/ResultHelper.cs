@@ -87,12 +87,12 @@ namespace NUnit.Engine.Internal
         /// <param name="results">A list of TestEngineResults</param>
         /// <returns>A TestEngineResult merging all the imput results</returns>
         /// <remarks>Used by AbstractTestRunner MakePackageResult method.</remarks>
-        public static TestEngineResult Merge(IList<TestEngineResult> results)
+        public static TestEngineResult Merge(IList<TestEngineResult> results) 
         {
             var mergedResult = new TestEngineResult();
 
-            foreach (var result in results)
-                foreach (var node in result.XmlNodes)
+            foreach (TestEngineResult result in results)
+                foreach (XmlNode node in result.XmlNodes)
                     mergedResult.Add(node);
 
             return mergedResult;
@@ -105,7 +105,7 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Insert an environment element as a child of the node provided.
         /// </summary>
-        /// <param name="resultNode"></param>
+        /// <param name="resultNode">Attribute to which environment element attributes will be added.</param>
         public static void InsertEnvironmentElement(this XmlNode resultNode)
         {
             XmlNode env = resultNode.OwnerDocument.CreateElement("environment");
@@ -120,7 +120,11 @@ namespace NUnit.Engine.Internal
             env.AddAttribute("user-domain", Environment.UserDomainName);
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
-            env.AddAttribute("os-architecture", Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"));
+            env.AddAttribute("os-architecture", GetProcessorArchitecture());
+        }
+
+        private static string GetProcessorArchitecture() {
+            return IntPtr.Size == 8 ? "x64" : "x86";
         }
 
         #endregion
@@ -145,15 +149,15 @@ namespace NUnit.Engine.Internal
 
             string status = "Inconclusive";
             //double totalDuration = 0.0d;
-            var testcasecount = 0;
-            var total = 0;
-            var passed = 0;
-            var failed = 0;
-            var inconclusive = 0;
-            var skipped = 0;
-            var asserts = 0;
+            int testcasecount = 0;
+            int total = 0;
+            int passed = 0;
+            int failed = 0;
+            int inconclusive = 0;
+            int skipped = 0;
+            int asserts = 0;
 
-            var isTestRunResult = false;
+            bool isTestRunResult = false;
 
             foreach (XmlNode node in resultNodes)
             {
