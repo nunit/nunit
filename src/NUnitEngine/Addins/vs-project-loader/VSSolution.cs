@@ -92,7 +92,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
                     var config = _configs[name];
                     foreach (string assembly in config.Assemblies)
                     {
-                        package.Add(assembly);
+                        package.AddSubPackage(new TestPackage(assembly));
                     }
                     break;
                 }
@@ -157,9 +157,9 @@ namespace NUnit.Engine.Services.ProjectLoaders
                                 _configs.Add(solutionConfig, config);
                             }
 
-                            foreach (string assembly in vsProject.GetTestPackage(projectConfig).TestFiles)
-                                if (!config.Assemblies.Contains(assembly))
-                                    config.Assemblies.Add(assembly);
+                            foreach (var subPackage in vsProject.GetTestPackage(projectConfig).SubPackages)
+                                if (!config.Assemblies.Contains(subPackage.FullName))
+                                    config.Assemblies.Add(subPackage.FullName);
 
                             //if (VSProject.IsProjectFile(vsProjectPath))
                             //    project.Add(new VSProject(Path.Combine(solutionDirectory, vsProjectPath)));

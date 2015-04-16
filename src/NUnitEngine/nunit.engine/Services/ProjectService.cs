@@ -74,7 +74,7 @@ namespace NUnit.Engine.Services
         public void ExpandProjectPackage(TestPackage package)
         {
             Guard.ArgumentNotNull(package, "package");
-            Guard.ArgumentValid(package.TestFiles.Count == 0, "Package is already expanded", "package");
+            Guard.ArgumentValid(package.SubPackages.Count == 0, "Package is already expanded", "package");
 
             string path = package.FullName;
             IProject project = LoadFrom(path);
@@ -89,8 +89,8 @@ namespace NUnit.Engine.Services
                 if (!package.Settings.ContainsKey(key)) // Don't override settings from command line
                     package.Settings[key] = tempPackage.Settings[key];
 
-            foreach (string assembly in tempPackage.TestFiles)
-                package.Add(assembly);
+            foreach (var subPackage in tempPackage.SubPackages)
+                package.AddSubPackage(subPackage);
         }
 
         #endregion

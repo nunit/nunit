@@ -117,17 +117,17 @@ namespace NUnit.Engine
 
         #endregion
 
-        #region DriverFactory
+        #region DriverService
 
-        private IDriverService _driverFactory;
-        public IDriverService DriverFactory
+        private IDriverService _driverService;
+        public IDriverService DriverService
         {
             get
             {
-                if (_driverFactory == null)
-                    _driverFactory = GetService<IDriverService>();
+                if (_driverService == null)
+                    _driverService = GetService<IDriverService>();
 
-                return _driverFactory;
+                return _driverService;
             }
         }
 

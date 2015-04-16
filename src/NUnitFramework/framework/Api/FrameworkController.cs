@@ -73,6 +73,7 @@ namespace NUnit.Framework.Api
         /// purposes of development.
         /// </summary>
         /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
@@ -83,7 +84,7 @@ namespace NUnit.Framework.Api
             this.Runner = (ITestAssemblyRunner)myAssembly.CreateInstance(
                 runnerType, false, 0, null, new object[] { this.Builder }, null, null);
 
-            Test.IdPrefix = idPrefix;
+            Test.IdPrefix = idPrefix ?? "";
             Initialize(assemblyPath, settings);
         }
 

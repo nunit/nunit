@@ -82,7 +82,8 @@ namespace NUnit.Engine.Services.Tests
         {
             var package = new TestPackage(files.Split(new char[] { ' ' }));
             if (processModel != null)
-                package.Settings["ProcessModel"] = processModel;
+                package.AddSetting("ProcessModel", processModel);
+
             var runner = _factory.MakeTestRunner(package);
 
             Assert.That(runner, Is.TypeOf(expectedType));

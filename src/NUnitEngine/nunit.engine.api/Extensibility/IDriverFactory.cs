@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Engine.Extensibility
@@ -43,10 +42,8 @@ namespace NUnit.Engine.Extensibility
         /// which the assembly is already known to reference.
         /// </summary>
         /// <param name="domain">The domain in which the assembly will be loaded</param>
-        /// <param name="frameworkAssemblyName">The name of the test framework reference</param>
-        /// <param name="assemblyPath">The path to the test assembly</param>
-        /// <param name="settings">A dictionary of settings to be used for this assembly</param>
+        /// <param name="frameworkReference">The AssemblyName of the test framework reference</param>
         /// <returns></returns>
-        IFrameworkDriver GetDriver(AppDomain domain, string frameworkAssemblyName, string assemblyPath, IDictionary<string, object> settings);
+        IFrameworkDriver GetDriver(AppDomain domain, AssemblyName frameworkReference);
     }
 }

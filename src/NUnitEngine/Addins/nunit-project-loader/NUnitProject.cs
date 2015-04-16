@@ -105,7 +105,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
                         string assembly = node.GetAttribute("path");
                         if (basePath != null)
                             assembly = Path.Combine(basePath, assembly);
-                        package.Add(assembly);
+                        package.AddSubPackage(new TestPackage(assembly));
                     }
 
                     var settings = GetSettingsForConfig(configNode);

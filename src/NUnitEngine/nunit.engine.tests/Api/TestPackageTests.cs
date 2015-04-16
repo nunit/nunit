@@ -37,23 +37,28 @@ namespace NUnit.Engine.Api.Tests
         }
 
         [Test]
+        public void PackageIDsAreUnique()
+        {
+            var another = new TestPackage("another.dll");
+            Assert.That(another.ID, Is.Not.EqualTo(package.ID));
+        }
+
+        [Test]
         public void AssemblyPathIsUsedAsFilePath()
         {
             Assert.AreEqual(Path.GetFullPath("test.dll"), package.FullName);
         }
 
         [Test]
-        public void AssemblyPathIsIncludedInList()
-        {
-            Assert.AreEqual(
-                new string[] { Path.GetFullPath("test.dll") },
-                package.TestFiles);
-        }
-
-        [Test]
         public void FileNameIsUsedAsPackageName()
         {
             Assert.That(package.Name, Is.EqualTo("test.dll"));
+        }
+
+        [Test]
+        public void HasNoSubPackages()
+        {
+            Assert.That(package.SubPackages.Count, Is.EqualTo(0));
         }
     }
 
@@ -74,14 +79,12 @@ namespace NUnit.Engine.Api.Tests
         }
 
         [Test]
-        public void AssemblyPathsAreIncludedInList()
+        public void PackageContainsThreeSubpackages()
         {
-            string[] expectedAssemblies = new string[] {
-            Path.GetFullPath("test1.dll"),
-            Path.GetFullPath("test2.dll"),
-            Path.GetFullPath("test3.dll") };
-
-            Assert.AreEqual(expectedAssemblies, package.TestFiles);
+            Assert.That(package.SubPackages.Count, Is.EqualTo(3));
+            Assert.That(package.SubPackages[0].FullName, Is.EqualTo(Path.GetFullPath("test1.dll")));
+            Assert.That(package.SubPackages[1].FullName, Is.EqualTo(Path.GetFullPath("test2.dll")));
+            Assert.That(package.SubPackages[2].FullName, Is.EqualTo(Path.GetFullPath("test3.dll")));
         }
     }
 }

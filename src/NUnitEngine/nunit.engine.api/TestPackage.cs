@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace NUnit.Engine
 {
@@ -37,9 +36,6 @@ namespace NUnit.Engine
     [Serializable]
     public class TestPackage
     {
-        private List<string> _testFiles = new List<string>();
-        private Dictionary<string, object> _settings = new Dictionary<string, object>();
-
         #region Constructors
 
         /// <summary>
@@ -49,11 +45,13 @@ namespace NUnit.Engine
         /// <param name="filePath">The file path.</param>
         public TestPackage(string filePath)
         {
+            ID = GetNextID();
+
             if (filePath != null)
             {
                 FullName = Path.GetFullPath(filePath);
-                if (IsAssemblyFileType(filePath))
-                    Add(FullName);
+                Settings = new Dictionary<string, object>();
+                SubPackages = new List<TestPackage>();
             }
         }
 
@@ -63,13 +61,33 @@ namespace NUnit.Engine
         /// <param name="testFiles"></param>
         public TestPackage(IList<string> testFiles)
         {
+            ID = GetNextID();
+            SubPackages = new List<TestPackage>();
+            Settings = new Dictionary<string, object>();
+
             foreach (string testFile in testFiles)
-                Add(Path.GetFullPath(testFile));
+                SubPackages.Add(new TestPackage(testFile));
+        }
+
+        private static int _nextID = 0;
+
+        private string GetNextID()
+        {
+            return unchecked(_nextID++).ToString();
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Every test package gets a unique ID used to prefix test IDs within that package.
+        /// </summary>
+        /// <remarks>
+        /// The generated ID is only unique for packages created within the same AppDomain.
+        /// For that reason, NUnit pre-creates all test packages that will be needed.
+        /// </remarks>
+        public string ID { get; private set; }
 
         /// <summary>
         /// Gets the name of the package
@@ -86,32 +104,49 @@ namespace NUnit.Engine
         public string FullName { get; private set; }
 
         /// <summary>
-        /// Gets an array of the test files contained in this package
+        /// Gets the list of SubPackages contained in this package
         /// </summary>
-        public IList<string> TestFiles
-        {
-            get { return _testFiles; }
-        }
+        public IList<TestPackage> SubPackages { get; private set; }
 
         /// <summary>
         /// Gets the settings dictionary for this package.
         /// </summary>
-        public IDictionary<string,object> Settings
-        {
-            get { return _settings; }
-        }
+        public IDictionary<string,object> Settings { get; private set; }
 
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// Add a test file to the package.
+        /// Add a subproject to the package.
         /// </summary>
-        /// <param name="testFile">The test file to be added</param>
-        public void Add(string testFile)
+        /// <param name="subPackage">The subpackage to be added</param>
+        public void AddSubPackage(TestPackage subPackage)
         {
-            _testFiles.Add(testFile);
+            SubPackages.Add(subPackage);
+
+            foreach (var key in Settings.Keys)
+                subPackage.Settings[key] = Settings[key];
+        }
+
+        /// <summary>
+        /// Add a setting to a package and all of its subpackages.
+        /// </summary>
+        /// <typeparam name="T">The Type of the setting value</typeparam>
+        /// <param name="name">The name of the setting</param>
+        /// <param name="value">The value of the setting</param>
+        /// <remarks>
+        /// Once a package is created, subpackages may have been created
+        /// as well. If you add a setting directly to the Settings dictionary
+        /// of the package, the subpackages are not updated. This method is
+        /// used when the settings are intended to be reflected to all the
+        /// subpackages under the package.
+        /// </remarks>
+        public void AddSetting<T>(string name, T value)
+        {
+            Settings[name] = value;
+            foreach (var subPackage in SubPackages)
+                subPackage.AddSetting(name, value);
         }
 
         /// <summary>
