@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 
 namespace NUnit.Engine.Internal
@@ -46,6 +45,10 @@ namespace NUnit.Engine.Internal
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
         /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="elementName"></param>
+        /// <param name="suiteType"></param>
+        /// <param name="name"></param>
+        /// <param name="fullname"></param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string suiteType, string name, string fullname)
         {
@@ -56,6 +59,9 @@ namespace NUnit.Engine.Internal
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
         /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="elementName"></param>
+        /// <param name="name"></param>
+        /// <param name="fullname"></param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string name, string fullname)
         {
@@ -81,9 +87,9 @@ namespace NUnit.Engine.Internal
         /// <param name="results">A list of TestEngineResults</param>
         /// <returns>A TestEngineResult merging all the imput results</returns>
         /// <remarks>Used by AbstractTestRunner MakePackageResult method.</remarks>
-        public static TestEngineResult Merge(IList<TestEngineResult> results)
+        public static TestEngineResult Merge(IList<TestEngineResult> results) 
         {
-            TestEngineResult mergedResult = new TestEngineResult();
+            var mergedResult = new TestEngineResult();
 
             foreach (TestEngineResult result in results)
                 foreach (XmlNode node in result.XmlNodes)
@@ -99,7 +105,7 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Insert an environment element as a child of the node provided.
         /// </summary>
-        /// <param name="resultNode"></param>
+        /// <param name="resultNode">Attribute to which environment element attributes will be added.</param>
         public static void InsertEnvironmentElement(this XmlNode resultNode)
         {
             XmlNode env = resultNode.OwnerDocument.CreateElement("environment");
@@ -112,8 +118,13 @@ namespace NUnit.Engine.Internal
             env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
-            env.AddAttribute("culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
-            env.AddAttribute("uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("os-architecture", GetProcessorArchitecture());
+        }
+
+        private static string GetProcessorArchitecture() {
+            return IntPtr.Size == 8 ? "x64" : "x86";
         }
 
         #endregion

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Xml;
 
 namespace NUnit.Engine.Internal.Tests
@@ -45,8 +44,8 @@ namespace NUnit.Engine.Internal.Tests
         {
             result1 = new TestEngineResult(resultText1);
             result2 = new TestEngineResult(resultText2);
-            twoResults = new TestEngineResult[] { result1, result2 };
-            twoNodes = new XmlNode[] { result1.Xml, result2.Xml };
+            twoResults = new[] { result1, result2 };
+            twoNodes = new[] { result1.Xml, result2.Xml };
         }
 
         [Test]
@@ -133,6 +132,7 @@ namespace NUnit.Engine.Internal.Tests
             Assert.NotNull(env.GetAttribute("user-domain"));
             Assert.NotNull(env.GetAttribute("culture"));
             Assert.NotNull(env.GetAttribute("uiculture"));
+            Assert.NotNull(env.GetAttribute("os-architecture"));
         }
     }
 }
