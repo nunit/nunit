@@ -42,7 +42,7 @@ namespace NUnit.Engine
         /// the test package provided. Otherwise, return false. Runners that
         /// cannot be reused must always return false.
         /// </summary>
-        /// <param name="runner>An ITestRunner to possibly be used.</param>
+        /// <param name="runner">An ITestRunner to possibly be used.</param>
         /// <param name="package">The TestPackage to be loaded.</param>
         /// <returns>True if the runner may be reused for the provided package.</returns>
         bool CanReuse(ITestEngineRunner runner, TestPackage package);

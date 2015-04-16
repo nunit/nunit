@@ -403,8 +403,8 @@ namespace NUnit.Engine
         /// are equal. Negative (i.e. unspecified) version
         /// components are ignored.
         /// </summary>
-        /// <param name="other">The RuntimeFramework to be matched.</param>
-        /// <returns>True on match, otherwise false</returns>
+        /// <param name="target">The RuntimeFramework to be matched.</param>
+        /// <returns><c>true</c> on match, otherwise <c>false</c></returns>
         public bool Supports(RuntimeFramework target)
         {
             if (this.Runtime != RuntimeType.Any

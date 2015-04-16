@@ -65,7 +65,6 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Writes the header.
         /// </summary>
-        /// <param name="writer">The writer.</param>
         public void DisplayHeader()
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();

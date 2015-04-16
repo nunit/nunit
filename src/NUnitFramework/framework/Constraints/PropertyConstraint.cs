@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
         private object propValue;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:PropertyConstraint"/> class.
+        /// Initializes a new instance of the <see cref="PropertyConstraint"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="baseConstraint">The constraint to apply to the property.</param>

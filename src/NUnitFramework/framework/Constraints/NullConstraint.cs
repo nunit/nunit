@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     public class NullConstraint : Constraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:NullConstraint"/> class.
+        /// Initializes a new instance of the <see cref="NullConstraint"/> class.
         /// </summary>
         public NullConstraint()
         {
