@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     public class SubPathConstraint : PathConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SubPathConstraint"/> class.
+        /// Initializes a new instance of the <see cref="SubPathConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected path</param>
         public SubPathConstraint(string expected) : base(expected) { }

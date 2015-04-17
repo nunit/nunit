@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     public class RegexConstraint : StringConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:RegexConstraint"/> class.
+        /// Initializes a new instance of the <see cref="RegexConstraint"/> class.
         /// </summary>
         /// <param name="pattern">The pattern.</param>
         public RegexConstraint(string pattern) : base(pattern) 

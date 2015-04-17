@@ -29,8 +29,8 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// EqualityAdapter class handles all equality comparisons
-    /// that use an IEqualityComparer, IEqualityComparer&lt;T&gt;
-    /// or a ComparisonAdapter.
+    /// that use an <see cref="IEqualityComparer"/>, <see cref="IEqualityComparer{T}"/>
+    /// or a <see cref="ComparisonAdapter"/>.
     /// </summary>
     public abstract class EqualityAdapter
     {
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         #region Nested IComparer Adapter
 
         /// <summary>
-        /// Returns an EqualityAdapter that wraps an IComparer.
+        /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
         /// </summary>
         public static EqualityAdapter For(IComparer comparer)
         {
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// EqualityAdapter that wraps an IComparer.
+        /// <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
         /// </summary>
         class ComparerAdapter : EqualityAdapter
         {
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         #region Nested IEqualityComparer Adapter
 
         /// <summary>
-        /// Returns an EqualityAdapter that wraps an IEqualityComparer.
+        /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IEqualityComparer"/>.
         /// </summary>
         public static EqualityAdapter For(IEqualityComparer comparer)
         {
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Constraints
         #region Nested IEqualityComparer<T> Adapter
 
         /// <summary>
-        /// Returns an EqualityAdapter that wraps an IEqualityComparer&lt;T&gt;.
+        /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IEqualityComparer{T}"/>.
         /// </summary>
         public static EqualityAdapter For<T>(IEqualityComparer<T> comparer)
         {
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Constraints
         #region Nested IComparer<T> Adapter
 
         /// <summary>
-        /// Returns an EqualityAdapter that wraps an IComparer&lt;T&gt;.
+        /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer{T}"/>.
         /// </summary>
         public static EqualityAdapter For<T>(IComparer<T> comparer)
         {
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// EqualityAdapter that wraps an IComparer.
+        /// <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
         /// </summary>
         class ComparerAdapter<T> : GenericEqualityAdapter<T>
         {
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Constraints
         #region Nested Comparison<T> Adapter
 
         /// <summary>
-        /// Returns an EqualityAdapter that wraps a Comparison&lt;T&gt;.
+        /// Returns an <see cref="EqualityAdapter"/> that wraps a <see cref="Comparison{T}"/>.
         /// </summary>
         public static EqualityAdapter For<T>(Comparison<T> comparer)
         {

@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         private ComparisonAdapter comparer = ComparisonAdapter.Default;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ComparisonConstraint"/> class.
+        /// Initializes a new instance of the <see cref="ComparisonConstraint"/> class.
         /// </summary>
         /// <param name="value">The value against which to make a comparison.</param>
         /// <param name="lessComparisonResult">if set to <c>true</c> less succeeds.</param>
@@ -94,8 +94,10 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use an IComparer and returns self
+        /// Modifies the constraint to use an <see cref="IComparer"/> and returns self
         /// </summary>
+        /// <param name="comparer">The comparer used for comparison tests</param>
+        /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using(IComparer comparer)
         {
             this.comparer = ComparisonAdapter.For(comparer);
@@ -103,8 +105,10 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use an IComparer&lt;T&gt; and returns self
+        /// Modifies the constraint to use an <see cref="IComparer{T}"/> and returns self
         /// </summary>
+        /// <param name="comparer">The comparer used for comparison tests</param>
+        /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(IComparer<T> comparer)
         {
             this.comparer = ComparisonAdapter.For(comparer);
@@ -112,8 +116,10 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use a Comparison&lt;T&gt; and returns self
+        /// Modifies the constraint to use a <see cref="Comparison{T}"/> and returns self
         /// </summary>
+        /// <param name="comparer">The comparer used for comparison tests</param>
+        /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(Comparison<T> comparer)
         {
             this.comparer = ComparisonAdapter.For(comparer);
