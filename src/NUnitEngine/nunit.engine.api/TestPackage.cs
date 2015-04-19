@@ -73,7 +73,7 @@ namespace NUnit.Engine
 
         private string GetNextID()
         {
-            return unchecked(_nextID++).ToString();
+            return (_nextID++).ToString();
         }
 
         #endregion
@@ -132,7 +132,6 @@ namespace NUnit.Engine
         /// <summary>
         /// Add a setting to a package and all of its subpackages.
         /// </summary>
-        /// <typeparam name="T">The Type of the setting value</typeparam>
         /// <param name="name">The name of the setting</param>
         /// <param name="value">The value of the setting</param>
         /// <remarks>
@@ -142,7 +141,7 @@ namespace NUnit.Engine
         /// used when the settings are intended to be reflected to all the
         /// subpackages under the package.
         /// </remarks>
-        public void AddSetting<T>(string name, T value)
+        public void AddSetting(string name, object value)
         {
             Settings[name] = value;
             foreach (var subPackage in SubPackages)

@@ -58,6 +58,9 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Construct a FrameworkController using the default builder and runner.
         /// </summary>
+        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings)
         {
             this.Builder = new DefaultTestAssemblyBuilder();
