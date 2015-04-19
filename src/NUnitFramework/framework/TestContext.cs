@@ -256,7 +256,7 @@ namespace NUnit.Framework
             /// <summary>
             /// Gets the unique Id of a test
             /// </summary>
-            public int ID
+            public String ID
             {
                 get { return _test.Id; }
             }

@@ -58,11 +58,15 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Construct a FrameworkController using the default builder and runner.
         /// </summary>
-        public FrameworkController(string assemblyPath, IDictionary settings)
+        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
+        public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings)
         {
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
+            Test.IdPrefix = idPrefix;
             Initialize(assemblyPath, settings);
         }
 
@@ -72,23 +76,25 @@ namespace NUnit.Framework.Api
         /// purposes of development.
         /// </summary>
         /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public FrameworkController(string assemblyPath, IDictionary settings, string runnerType, string builderType)
+        public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
             Assembly myAssembly = Assembly.GetExecutingAssembly();
             this.Builder = (ITestAssemblyBuilder)myAssembly.CreateInstance(builderType);
             this.Runner = (ITestAssemblyRunner)myAssembly.CreateInstance(
                 runnerType, false, 0, null, new object[] { this.Builder }, null, null);
 
+            Test.IdPrefix = idPrefix ?? "";
             Initialize(assemblyPath, settings);
         }
 
         private void Initialize(string assemblyPath, IDictionary settings)
         {
-            this.AssemblyPath = assemblyPath;
-            this.Settings = settings;
+            AssemblyPath = assemblyPath;
+            Settings = settings;
 
             if (settings.Contains(PackageSettings.InternalTraceLevel))
             {

@@ -123,14 +123,14 @@ namespace NUnit.Engine.Services.ProjectLoaders
                 if (configName == null || configName == name)
                 {
                     var config = _configs[name];
-                    package.Add(config.AssemblyPath);
+                    package.AddSubPackage(new TestPackage(config.AssemblyPath));
                     appbase = config.OutputDirectory;
                     break;
                 }
             }
 
             if (appbase != null)
-                package.Settings["BasePath"] = appbase;
+                package.AddSetting("BasePath", appbase);
 
             return package;
         }

@@ -157,7 +157,7 @@ namespace NUnit.Engine.Services
                     configFile = testFile.Name + ".config";
             }
             else if (appBase == null || appBase == string.Empty)
-                appBase = GetCommonAppBase(package.TestFiles);
+                appBase = GetCommonAppBase(package.SubPackages);
 
             char lastChar = appBase[appBase.Length - 1];
             if (lastChar != Path.DirectorySeparatorChar && lastChar != Path.AltDirectorySeparatorChar)
@@ -170,7 +170,7 @@ namespace NUnit.Engine.Services
                 : configFile;
 
             if (package.GetSetting(PackageSettings.AutoBinPath, binPath == string.Empty))
-                binPath = GetPrivateBinPath(appBase, package.TestFiles);
+                binPath = GetPrivateBinPath(appBase, package.SubPackages);
 
             setup.PrivateBinPath = binPath;
 
@@ -335,6 +335,15 @@ namespace NUnit.Engine.Services
             return domain.FriendlyName.StartsWith( "test-domain-" );
         }
 
+        public static string GetCommonAppBase(IList<TestPackage> packages)
+        {
+            var assemblies = new List<string>();
+            foreach (var package in packages)
+                assemblies.Add(package.FullName);
+
+            return GetCommonAppBase(assemblies);
+        }
+
         public static string GetCommonAppBase(IList<string> assemblies)
         {
             string commonBase = null;
@@ -349,6 +358,15 @@ namespace NUnit.Engine.Services
             }
 
             return commonBase;
+        }
+
+        public static string GetPrivateBinPath(string basePath, IList<TestPackage> packages)
+        {
+            var assemblies = new List<string>();
+            foreach (var package in packages)
+                assemblies.Add(package.FullName);
+
+            return GetPrivateBinPath(basePath, assemblies);
         }
 
         public static string GetPrivateBinPath(string basePath, IList<string> assemblies)

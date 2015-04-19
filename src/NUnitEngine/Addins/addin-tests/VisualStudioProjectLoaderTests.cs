@@ -93,10 +93,10 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
                     TestPackage package = project.GetTestPackage(config);
 
                     Assert.AreEqual(resourceName, package.Name);
-                    Assert.AreEqual(1, package.TestFiles.Count);
-                    Assert.AreEqual(assemblyName, Path.GetFileNameWithoutExtension(package.TestFiles[0]));
+                    Assert.AreEqual(1, package.SubPackages.Count);
+                    Assert.AreEqual(assemblyName, Path.GetFileNameWithoutExtension(package.SubPackages[0].FullName));
                     Assert.That(package.Settings.ContainsKey("BasePath"));
-                    Assert.That(Path.GetDirectoryName(package.TestFiles[0]), Is.SamePath((string)package.Settings["BasePath"]));
+                    Assert.That(Path.GetDirectoryName(package.SubPackages[0].FullName), Is.SamePath((string)package.Settings["BasePath"]));
                 }
             }
         }
@@ -113,8 +113,8 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
                 IProject project = _loader.LoadFrom(file.Path);
 
                 Assert.AreEqual(2, project.ConfigNames.Count);
-                Assert.AreEqual(4, project.GetTestPackage("Debug").TestFiles.Count);
-                Assert.AreEqual(4, project.GetTestPackage("Release").TestFiles.Count);
+                Assert.AreEqual(4, project.GetTestPackage("Debug").SubPackages.Count);
+                Assert.AreEqual(4, project.GetTestPackage("Release").SubPackages.Count);
             }
         }
 
@@ -130,8 +130,8 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
                 IProject project = _loader.LoadFrom(file.Path);
 
                 Assert.AreEqual(2, project.ConfigNames.Count);
-                Assert.AreEqual(4, project.GetTestPackage("Debug").TestFiles.Count);
-                Assert.AreEqual(4, project.GetTestPackage("Release").TestFiles.Count);
+                Assert.AreEqual(4, project.GetTestPackage("Debug").SubPackages.Count);
+                Assert.AreEqual(4, project.GetTestPackage("Release").SubPackages.Count);
             }
         }
 
@@ -143,8 +143,8 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             {
                 IProject project = _loader.LoadFrom(file.Path);
                 Assert.AreEqual(2, project.ConfigNames.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Debug").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Release").TestFiles.Count);
+                Assert.AreEqual(1, project.GetTestPackage("Debug").SubPackages.Count);
+                Assert.AreEqual(1, project.GetTestPackage("Release").SubPackages.Count);
             }
         }
 
@@ -158,8 +158,8 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
                 IProject project = _loader.LoadFrom(file.Path);
 
                 Assert.AreEqual(2, project.ConfigNames.Count);
-                Assert.AreEqual(2, project.GetTestPackage("Debug").TestFiles.Count);
-                Assert.AreEqual(2, project.GetTestPackage("Release").TestFiles.Count);
+                Assert.AreEqual(2, project.GetTestPackage("Debug").SubPackages.Count);
+                Assert.AreEqual(2, project.GetTestPackage("Release").SubPackages.Count);
             }
         }
 
@@ -172,8 +172,8 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             {
                 IProject project = _loader.LoadFrom(file.Path);
                 Assert.AreEqual(2, project.ConfigNames.Count);
-                Assert.AreEqual(2, project.GetTestPackage("Release").TestFiles.Count, "Release should have 2 assemblies");
-                Assert.AreEqual(1, project.GetTestPackage("Debug").TestFiles.Count, "Debug should have 1 assembly");
+                Assert.AreEqual(2, project.GetTestPackage("Release").SubPackages.Count, "Release should have 2 assemblies");
+                Assert.AreEqual(1, project.GetTestPackage("Debug").SubPackages.Count, "Debug should have 1 assembly");
             }
         }
     }

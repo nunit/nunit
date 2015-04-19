@@ -67,22 +67,13 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
-            var packages = new List<TestPackage>();
-
-            foreach (string testFile in TestPackage.TestFiles)
-            {
-                var subPackage = new TestPackage(testFile);
-                if (Services.ProjectService.CanLoadFrom(testFile))
-                    Services.ProjectService.ExpandProjectPackage(subPackage);
-                foreach (string key in TestPackage.Settings.Keys)
-                    subPackage.Settings[key] = TestPackage.Settings[key];
-                packages.Add(subPackage);
-            }
-
             var results = new List<TestEngineResult>();
 
-            foreach (TestPackage subPackage in packages)
+            foreach (var subPackage in TestPackage.SubPackages)
             {
+                if (Services.ProjectService.CanLoadFrom(subPackage.FullName))
+                    Services.ProjectService.ExpandProjectPackage(subPackage);
+
                 var runner = CreateRunner(subPackage);
                 _runners.Add(runner);
                 results.Add(runner.Load());

@@ -72,7 +72,7 @@
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\InProcessTestRunnerFactoryTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
-    <Compile Include="Services\DriverFactoryTests.cs" />
+    <Compile Include="Services\DriverServiceTests.cs" />
     <Compile Include="Services\ResultServiceTests.cs" />
     <Compile Include="Services\ResultWriters\NUnit2XmlResultWriterTests.cs" />
     <Compile Include="Services\ResultWriters\NUnit2XmlValidationTests.cs" />

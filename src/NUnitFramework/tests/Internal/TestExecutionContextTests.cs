@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
             Assert.That(ec.CurrentTest.Name, Is.EqualTo("TestExecutionContextTests"));
             Assert.That(ec.CurrentTest.FullName,
                 Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
-            Assert.That(fixtureContext.CurrentTest.Id, Is.GreaterThan(0));
+            Assert.That(fixtureContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
             Assert.That(fixtureContext.CurrentTest.Properties.Get("Question"), Is.EqualTo("Why?"));
         }
 
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void FixtureSetUpCanAccessFixtureId()
         {
-            Assert.That(fixtureContext.CurrentTest.Id, Is.GreaterThan(0));
+            Assert.That(fixtureContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void SetUpCanAccessTestId()
         {
-            Assert.That(setupContext.CurrentTest.Id, Is.GreaterThan(0));
+            Assert.That(setupContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestCanAccessItsOwnId()
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.GreaterThan(0));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
         [Test]

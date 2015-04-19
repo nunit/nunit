@@ -22,14 +22,22 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine
 {
+    /// <summary>
+    /// The IDriverService interface is implemented by the driver service, which is able
+    /// to provide drivers for loading and running tests using various frameworks.
+    /// </summary>
     public interface IDriverService
     {
-        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings);
+        /// <summary>
+        /// Get a driver suitable for loading and running tests in the specified assembly.
+        /// </summary>
+        /// <param name="domain">The AppDomain in which to run the tests</param>
+        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <returns></returns>
+        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath);
     }
 }
