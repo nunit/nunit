@@ -31,12 +31,49 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public class TestContextTests
     {
+        private string _name;
+
+#if !SILVERLIGHT && !PORTABLE
+        private string _testDirectory;
+#endif
+        private string _workDirectory;
+
+        public TestContextTests()
+        {
+            _name = TestContext.CurrentContext.Test.Name;
+
+#if !SILVERLIGHT && !PORTABLE
+            _testDirectory = TestContext.CurrentContext.TestDirectory;
+#endif
+            _workDirectory = TestContext.CurrentContext.WorkDirectory;
+        }
+
+#if !SILVERLIGHT && !PORTABLE
+        [Test]
+        public void ConstructorCanAccessTestDirectory()
+        {
+            Assert.That(_testDirectory, Is.Not.Null);
+        }
+#endif
+
+        [Test]
+        public void ConstructorAccessWorkDirectory()
+        {
+            Assert.That(_workDirectory, Is.Not.Null);
+        }
+
         [Test]
         public void TestCanAccessItsOwnName()
         {
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
         }
-        
+
+        [Test]
+        public void ConstructorCanAccessFixtureName()
+        {
+            Assert.That(_name, Is.EqualTo("TestContextTests"));
+        }
+
         [TestCase(5)]
         public void TestCaseCanAccessItsOwnName(int x)
         {
