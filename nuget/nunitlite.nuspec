@@ -37,5 +37,7 @@
     <file src="$builddir$\net-4.5\nunitlite.dll" target="lib\net45" />
     <file src="$builddir$\sl-5.0\nunitlite.dll" target="lib\sl5" />
     <file src="nuget\Program.cs" target="content" />
+    <file src="nuget\Program.vb" target="content" />
+    <file src="nuget\install.ps1" target="tools" />
   </files>
 </package>
