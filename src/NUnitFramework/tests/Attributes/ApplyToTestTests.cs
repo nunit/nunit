@@ -151,6 +151,14 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("1242-01-01 00:00:00Z"));
         }
 
+        [Test]
+        public void IgnoreAttributeWithExplicitIgnoresTest()
+        {
+            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
+            new ExplicitAttribute().ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+        }
+
         #endregion
 
         #region ExplicitAttribute
@@ -168,6 +176,14 @@ namespace NUnit.Framework.Attributes
             new ExplicitAttribute("BECAUSE").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
+        }
+
+        [Test]
+        public void ExplicitAttributeWithIgnoreIgnoresTest()
+        {
+            new ExplicitAttribute().ApplyToTest(test);
+            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
         }
 
         #endregion
