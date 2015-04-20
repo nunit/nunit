@@ -47,7 +47,9 @@ namespace NUnit.Framework.Constraints
         /// Apply the item constraint to each item in the collection,
         /// failing if any item fails.
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
         /// <param name="actual"></param>
+        /// <exception cref="ArgumentException">The actual value must be an <see cref="IEnumerable"/></exception>
         /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {

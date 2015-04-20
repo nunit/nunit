@@ -21,6 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Collections;
+using System.IO;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -44,12 +48,16 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
         /// <param name="actual">The value to be tested</param>
+        /// <exception cref="ArgumentException">
+        /// The actual value must be a non-null <see cref="String" />, <see cref="IEnumerable"/> or <see cref="DirectoryInfo"/>
+        /// </exception>
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             if (actual == null)
-                throw new System.ArgumentException("The actual value must be a non-null string, IEnumerable or DirectoryInfo", "actual");
+                throw new ArgumentException("The actual value must be a non-null string, IEnumerable or DirectoryInfo", "actual");
 
             if (actual is string)
                 realConstraint = new EmptyStringConstraint();

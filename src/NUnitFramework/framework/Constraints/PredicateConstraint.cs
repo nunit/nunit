@@ -59,6 +59,10 @@ namespace NUnit.Framework.Constraints
         /// Determines whether the predicate succeeds when applied
         /// to the actual value.
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
+        /// <param name="actual"></param>
+        /// <exception cref="ArgumentException">The actual value is not of type <typeparam name="TActual"/></exception>
+        /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             if (!(actual is T))

@@ -159,6 +159,7 @@ namespace NUnit.Framework.Api
         /// Count Test Cases using a filter
         /// </summary>
         /// <param name="filter">The filter to apply</param>
+        /// <exception cref="InvalidOperationException">The CountTestCases method was called but no test has been loaded</exception>
         /// <returns>The number of test cases found</returns>
         public int CountTestCases(ITestFilter filter)
         {
@@ -187,6 +188,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <param name="filter">A test filter used to select tests to be run</param>
+        /// <exception cref="InvalidOperationException">The Run method was called but no test has been loaded</exception>
         /// <remarks>
         /// RunAsync is a template method, calling various abstract and
         /// virtual methods to be overridden by derived classes.

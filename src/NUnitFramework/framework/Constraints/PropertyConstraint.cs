@@ -50,7 +50,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
         /// <param name="actual">The value to be tested</param>
+        /// <exception cref="ArgumentNullException">Argument actual must not be null</exception>
+        /// <exception cref="ArgumentException">Property was not found</exception>
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {

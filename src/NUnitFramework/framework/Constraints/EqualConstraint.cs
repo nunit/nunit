@@ -156,6 +156,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use a tolerance when determining equality.
         /// </summary>
         /// <param name="amount">Tolerance value to be used</param>
+        /// <exception cref="InvalidOperationException">Within modifier may appear only once in a constraint expression</exception>
         /// <returns>Self.</returns>
         public EqualConstraint Within(object amount)
         {

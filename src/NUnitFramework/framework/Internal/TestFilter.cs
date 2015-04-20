@@ -109,6 +109,7 @@ namespace NUnit.Framework.Internal
         /// Create a TestFilter instance from an xml representation.
         /// </summary>
         /// <param name="xmlText"></param>
+        /// <exception cref="Exception">Expected filter element at top level</exception>
         /// <returns></returns>
         public static TestFilter FromXml(string xmlText)
         {

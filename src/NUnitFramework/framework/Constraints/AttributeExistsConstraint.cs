@@ -36,7 +36,8 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Constructs an AttributeExistsConstraint for a specific attribute Type
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="type">The type.</param>
+        /// <exception cref="ArgumentException">Type is not an attribute</exception>
         public AttributeExistsConstraint(Type type)
             : base(type)
         {

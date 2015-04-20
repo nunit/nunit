@@ -54,6 +54,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Test whether the expected key is contained in the dictionary
         /// </summary>
+        /// <param name="actual"></param>
+        /// <exception cref="ArgumentException">The actual value must be an <see cref="IDictionary"/></exception>
+        /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
             IDictionary dictionary = actual as IDictionary;

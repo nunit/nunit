@@ -125,6 +125,12 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Compare a Type T to an object
             /// </summary>
+            /// <param name="expected"></param>
+            /// <param name="actual"></param>
+            /// <exception cref="ArgumentException">
+            /// Either <paramref name="expected"/> or <paramref name="actual"/> isn't of type <typeparam name="T"/>
+            /// </exception>
+            /// <returns></returns>
             public override int Compare(object expected, object actual)
             {
                 if (!typeof(T).IsAssignableFrom(expected.GetType()))
@@ -152,6 +158,12 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Compare a Type T to an object
             /// </summary>
+            /// <param name="expected"></param>
+            /// <param name="actual"></param>
+            /// <exception cref="ArgumentException">
+            /// Either <paramref name="expected"/> or <paramref name="actual"/> isn't of type <typeparam name="T"/>
+            /// </exception>
+            /// <returns></returns>
             public override int Compare(object expected, object actual)
             {
                 if (!typeof(T).IsAssignableFrom(expected.GetType()))

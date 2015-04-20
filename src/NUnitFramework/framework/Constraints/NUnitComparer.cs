@@ -46,6 +46,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        /// <exception cref="ArgumentException">Neither value implements <see cref="IComparable"/> or <see cref="IComparable{T}"/></exception>
         /// <returns></returns>
         public int Compare(object x, object y)
         {

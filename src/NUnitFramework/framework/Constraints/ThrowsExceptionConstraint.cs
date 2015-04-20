@@ -43,7 +43,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Executes the code and returns success if an exception is thrown.
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
         /// <param name="actual">A delegate representing the code to be tested</param>
+        /// <exception cref="ArgumentException">The actual value must be a <see cref="TestDelegate"/></exception>
         /// <returns>True if an exception is thrown, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {

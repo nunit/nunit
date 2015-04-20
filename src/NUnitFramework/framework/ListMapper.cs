@@ -49,6 +49,7 @@ namespace NUnit.Framework
         /// Produces a collection containing all the _values of a property
         /// </summary>
         /// <param name="name">The collection of property _values</param>
+        /// <exception cref="ArgumentException">An object in the collection does not have a <paramref name="name"/> property</exception>
         /// <returns></returns>
         public ICollection Property( string name )
         {
