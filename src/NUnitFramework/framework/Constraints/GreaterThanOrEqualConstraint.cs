@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     public class GreaterThanOrEqualConstraint : ComparisonConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:GreaterThanOrEqualConstraint"/> class.
+        /// Initializes a new instance of the <see cref="GreaterThanOrEqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
         public GreaterThanOrEqualConstraint(object expected) : base(expected, false, true, true, "greater than or equal to") { }

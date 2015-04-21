@@ -256,46 +256,46 @@ namespace NUnit.ConsoleRunner
             TestPackage package = new TestPackage(options.InputFiles);
 
             if (options.ProcessModel != null)//ProcessModel.Default)
-                package.Settings[PackageSettings.ProcessModel] = options.ProcessModel;
+                package.AddSetting(PackageSettings.ProcessModel, options.ProcessModel);
 
             if (options.DomainUsage != null)
-                package.Settings[PackageSettings.DomainUsage] = options.DomainUsage;
+                package.AddSetting(PackageSettings.DomainUsage, options.DomainUsage);
 
             if (options.Framework != null)
-                package.Settings[PackageSettings.RuntimeFramework] = options.Framework;
+                package.AddSetting(PackageSettings.RuntimeFramework, options.Framework);
 
             if (options.RunAsX86)
-                package.Settings[PackageSettings.RunAsX86] = true;
+                package.AddSetting(PackageSettings.RunAsX86, true);
 
             if (options.DisposeRunners)
-                package.Settings[PackageSettings.DisposeRunners] = true;
+                package.AddSetting(PackageSettings.DisposeRunners, true);
 
             if (options.ShadowCopyFiles)
-                package.Settings[PackageSettings.ShadowCopyFiles] = true;
+                package.AddSetting(PackageSettings.ShadowCopyFiles, true);
 
             if (options.DefaultTimeout >= 0)
-                package.Settings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
+                package.AddSetting(PackageSettings.DefaultTimeout, options.DefaultTimeout);
 
             if (options.InternalTraceLevel != null)
-                package.Settings[PackageSettings.InternalTraceLevel] = options.InternalTraceLevel;
+                package.AddSetting(PackageSettings.InternalTraceLevel, options.InternalTraceLevel);
 
             if (options.ActiveConfig != null)
-                package.Settings[PackageSettings.ActiveConfig] = options.ActiveConfig;
+                package.AddSetting(PackageSettings.ActiveConfig, options.ActiveConfig);
             
             if (options.WorkDirectory != null)
-                package.Settings[PackageSettings.WorkDirectory] = options.WorkDirectory;
+                package.AddSetting(PackageSettings.WorkDirectory, options.WorkDirectory);
 
             if (options.StopOnError)
-                package.Settings[PackageSettings.StopOnError] = true;
+                package.AddSetting(PackageSettings.StopOnError, true);
 
             if (options.NumWorkers >= 0)
-                package.Settings[PackageSettings.NumberOfTestWorkers] = options.NumWorkers;
+                package.AddSetting(PackageSettings.NumberOfTestWorkers, options.NumWorkers);
 
             if (options.RandomSeed > 0)
-                package.Settings[PackageSettings.RandomSeed] = options.RandomSeed;
+                package.AddSetting(PackageSettings.RandomSeed, options.RandomSeed);
 
             if (options.Verbose)
-                package.Settings["Verbose"] = true;
+                package.AddSetting("Verbose", true);
 
 #if DEBUG
             //foreach (KeyValuePair<string, object> entry in package.Settings)

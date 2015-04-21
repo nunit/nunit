@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ConstraintExpression"/> class.
+        /// Initializes a new instance of the <see cref="ConstraintExpression"/> class.
         /// </summary>
         public ConstraintExpression() 
         {
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ConstraintExpression"/> 
+        /// Initializes a new instance of the <see cref="ConstraintExpression"/> 
         /// class passing in a ConstraintBuilder, which may be pre-populated.
         /// </summary>
         /// <param name="builder">The builder.</param>

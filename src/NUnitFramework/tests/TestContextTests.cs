@@ -31,12 +31,49 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public class TestContextTests
     {
+        private string _name;
+
+#if !SILVERLIGHT && !PORTABLE
+        private string _testDirectory;
+#endif
+        private string _workDirectory;
+
+        public TestContextTests()
+        {
+            _name = TestContext.CurrentContext.Test.Name;
+
+#if !SILVERLIGHT && !PORTABLE
+            _testDirectory = TestContext.CurrentContext.TestDirectory;
+#endif
+            _workDirectory = TestContext.CurrentContext.WorkDirectory;
+        }
+
+#if !SILVERLIGHT && !PORTABLE
+        [Test]
+        public void ConstructorCanAccessTestDirectory()
+        {
+            Assert.That(_testDirectory, Is.Not.Null);
+        }
+#endif
+
+        [Test]
+        public void ConstructorAccessWorkDirectory()
+        {
+            Assert.That(_workDirectory, Is.Not.Null);
+        }
+
         [Test]
         public void TestCanAccessItsOwnName()
         {
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
         }
-        
+
+        [Test]
+        public void ConstructorCanAccessFixtureName()
+        {
+            Assert.That(_name, Is.EqualTo("TestContextTests"));
+        }
+
         [TestCase(5)]
         public void TestCaseCanAccessItsOwnName(int x)
         {
@@ -72,7 +109,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestCanAccessItsOwnId()
         {
-            Assert.That(TestContext.CurrentContext.Test.ID, Is.GreaterThan(0));
+            Assert.That(TestContext.CurrentContext.Test.ID, Is.Not.Null.And.Not.Empty);
         }
 
         [Test]
@@ -199,13 +236,13 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
 #if !PORTABLE && !SILVERLIGHT
-			Assert.That(context.TestDirectory, Is.Not.Null);
-			Assert.That(context.WorkDirectory, Is.Not.Null);
+            Assert.That(context.TestDirectory, Is.Not.Null);
+            Assert.That(context.WorkDirectory, Is.Not.Null);
 #endif
-		}
+        }
     }
 
-	[TestFixture]
+    [TestFixture]
     public class TestContextOneTimeTearDownTests
     {
         [Test]

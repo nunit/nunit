@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         Type actualType;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:PropertyExistConstraint"/> class.
+        /// Initializes a new instance of the <see cref="PropertyExistsConstraint"/> class.
         /// </summary>
         /// <param name="name">The name of the property.</param>
         public PropertyExistsConstraint(string name)

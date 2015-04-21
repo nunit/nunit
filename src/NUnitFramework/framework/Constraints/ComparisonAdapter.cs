@@ -30,7 +30,8 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// ComparisonAdapter class centralizes all comparisons of
     /// _values in NUnit, adapting to the use of any provided
-    /// IComparer, IComparer&lt;T&gt; or Comparison&lt;T&gt;
+    /// <see cref="IComparer"/>, <see cref="IComparer{T}"/>
+    /// or <see cref="Comparison{T}"/>.
     /// </summary>
     public abstract class ComparisonAdapter
     {
@@ -44,7 +45,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a ComparisonAdapter that wraps an IComparer
+        /// Returns a ComparisonAdapter that wraps an <see cref="IComparer"/>
         /// </summary>
         public static ComparisonAdapter For(IComparer comparer)
         {
@@ -52,7 +53,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a ComparisonAdapter that wraps an IComparer&lt;T&gt;
+        /// Returns a ComparisonAdapter that wraps an <see cref="IComparer{T}"/>
         /// </summary>
         public static ComparisonAdapter For<T>(IComparer<T> comparer)
         {
@@ -60,7 +61,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a ComparisonAdapter that wraps a Comparison&lt;T&gt;
+        /// Returns a ComparisonAdapter that wraps a <see cref="Comparison{T}"/>
         /// </summary>
         public static ComparisonAdapter For<T>(Comparison<T> comparer)
         {
@@ -85,7 +86,7 @@ namespace NUnit.Framework.Constraints
             private readonly IComparer comparer;
 
             /// <summary>
-            /// Construct a ComparisonAdapter for an IComparer
+            /// Construct a ComparisonAdapter for an <see cref="IComparer"/>
             /// </summary>
             public ComparerAdapter(IComparer comparer)
             {
@@ -105,8 +106,8 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// ComparisonAdapter&lt;T&gt; extends ComparisonAdapter and
-        /// allows use of an IComparer&lt;T&gt; or Comparison&lt;T&gt;
+        /// ComparerAdapter extends <see cref="ComparisonAdapter"/> and
+        /// allows use of an <see cref="IComparer{T}"/> or <see cref="Comparison{T}"/>
         /// to actually perform the comparison.
         /// </summary>
         class ComparerAdapter<T> : ComparisonAdapter
@@ -114,7 +115,7 @@ namespace NUnit.Framework.Constraints
             private readonly IComparer<T> comparer;
 
             /// <summary>
-            /// Construct a ComparisonAdapter for an IComparer&lt;T&gt;
+            /// Construct a ComparisonAdapter for an <see cref="IComparer{T}"/>
             /// </summary>
             public ComparerAdapter(IComparer<T> comparer)
             {
@@ -141,7 +142,7 @@ namespace NUnit.Framework.Constraints
             private readonly Comparison<T> comparison;
 
             /// <summary>
-            /// Construct a ComparisonAdapter for a Comparison&lt;T&gt;
+            /// Construct a ComparisonAdapter for a <see cref="Comparison{T}"/>
             /// </summary>
             public ComparisonAdapterForComparison(Comparison<T> comparer)
             {

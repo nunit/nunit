@@ -44,10 +44,11 @@ namespace NUnit.Engine.Agents
         #region Constructors
 
         /// <summary>
-        /// Constructs a TestAgent
+        /// Initializes a new instance of the <see cref="TestAgent"/> class.
         /// </summary>
-        /// <param name="agentId"></param>
-        /// <param name="agency"></param>
+        /// <param name="agentId">The identifier of the agent.</param>
+        /// <param name="agency">The agency that this agent is associated with.</param>
+        /// <param name="services">The context under which to run the agent.</param>
         public TestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
         {
             this.agency = agency;
@@ -92,7 +93,7 @@ namespace NUnit.Engine.Agents
         /// <summary>
         /// Starts the agent, performing any required initialization
         /// </summary>
-        /// <returns>True if successful, otherwise false</returns>
+        /// <returns><c>true</c> if the agent was started successfully.</returns>
         public abstract bool Start();
 
         /// <summary>

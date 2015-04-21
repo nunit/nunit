@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     public class FalseConstraint : Constraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:FalseConstraint"/> class.
+        /// Initializes a new instance of the <see cref="FalseConstraint"/> class.
         /// </summary>
         public FalseConstraint()
         {

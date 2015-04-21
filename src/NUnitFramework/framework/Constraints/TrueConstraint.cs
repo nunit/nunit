@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     public class TrueConstraint : Constraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:TrueConstraint"/> class.
+        /// Initializes a new instance of the <see cref="TrueConstraint"/> class.
         /// </summary>
         public TrueConstraint()
         {

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     public class StartsWithConstraint : StringConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:StartsWithConstraint"/> class.
+        /// Initializes a new instance of the <see cref="StartsWithConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected string</param>
         public StartsWithConstraint(string expected) : base(expected) 

@@ -35,8 +35,10 @@ namespace NUnit.Engine.Drivers.Tests
     // Functional tests of the NUnitFrameworkDriver calling into the framework.
     public class NUnit3FrameworkDriverTests
     {
-        private string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
+        private const string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
         private const string MISSING_FILE = "junk.dll";
+        private const string NUNIT_FRAMEWORK = "nunit.framework";
+        private const string LOAD_MESSAGE = "Method called without calling Load first";
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();
         private NUnit3FrameworkDriver _driver;
@@ -46,7 +48,7 @@ namespace NUnit.Engine.Drivers.Tests
         public void CreateDriver()
         {
             _mockAssemblyPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
-            _driver = new NUnit3FrameworkDriver(AppDomain.CurrentDomain, _mockAssemblyPath, _settings);
+            _driver = new NUnit3FrameworkDriver(AppDomain.CurrentDomain);
         }
 
         #region Construction Test
@@ -61,7 +63,7 @@ namespace NUnit.Engine.Drivers.Tests
 
         public void ConstructController_MissingFile_ThrowsArgumentInvalid()
         {
-            Assert.That(new NUnit3FrameworkDriver(AppDomain.CurrentDomain, MISSING_FILE, _settings), Throws.ArgumentException);
+            Assert.That(new NUnit3FrameworkDriver(AppDomain.CurrentDomain), Throws.ArgumentException);
         }
         #endregion
 
@@ -69,7 +71,7 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void Load_GoodFile_ReturnsRunnableSuite()
         {
-            var result = XmlHelper.CreateXmlNode(_driver.Load());
+            var result = XmlHelper.CreateXmlNode(_driver.Load(_mockAssemblyPath, _settings));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
@@ -83,7 +85,7 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void Explore_AfterLoad_ReturnsRunnableSuite()
         {
-            _driver.Load();
+            _driver.Load(_mockAssemblyPath, _settings);
             var result = XmlHelper.CreateXmlNode(_driver.Explore(TestFilter.Empty));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
@@ -100,7 +102,7 @@ namespace NUnit.Engine.Drivers.Tests
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
-            Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo(LOAD_MESSAGE));
         }
         #endregion
 
@@ -108,7 +110,7 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void CountTestsAction_AfterLoad_ReturnsCorrectCount()
         {
-            _driver.Load();
+            _driver.Load(_mockAssemblyPath, _settings);
             Assert.That(_driver.CountTestCases(TestFilter.Empty), Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
         }
 
@@ -119,7 +121,7 @@ namespace NUnit.Engine.Drivers.Tests
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
-            Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo(LOAD_MESSAGE));
         }
         #endregion
 
@@ -127,7 +129,7 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite()
         {
-            _driver.Load();
+            _driver.Load(_mockAssemblyPath, _settings);
             var result = XmlHelper.CreateXmlNode(_driver.Run(new NullListener(), TestFilter.Empty));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
@@ -149,7 +151,7 @@ namespace NUnit.Engine.Drivers.Tests
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
-            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo(LOAD_MESSAGE));
         }
         #endregion
 

@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use an IComparer and returns self.
+        /// Modifies the constraint to use an <see cref="IComparer"/> and returns self.
         /// </summary>
         public CollectionOrderedConstraint Using(IComparer comparer)
         {
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use an IComparer&lt;T&gt; and returns self.
+        /// Modifies the constraint to use an <see cref="IComparer{T}"/> and returns self.
         /// </summary>
         public CollectionOrderedConstraint Using<T>(IComparer<T> comparer)
         {
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use a Comparison&lt;T&gt; and returns self.
+        /// Modifies the constraint to use a <see cref="Comparison{T}"/> and returns self.
         /// </summary>
         public CollectionOrderedConstraint Using<T>(Comparison<T> comparer)
         {

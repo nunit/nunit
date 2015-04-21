@@ -30,8 +30,8 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.Tests
 {
-    [TestFixture, Ignore("DriverFactory currently only works in the primary AppDomain")]
-    public class DriverFactoryTests
+    [TestFixture, Ignore("DriverService currently only works in the primary AppDomain")]
+    public class DriverServiceTests
     {
         [Test]
         public void AssemblyUsesNUnitFrameworkDriver()
@@ -56,8 +56,7 @@ namespace NUnit.Engine.Services.Tests
             var factory = new DriverService();
             return factory.GetDriver(
                 AppDomain.CurrentDomain,
-                Path.Combine(TestContext.CurrentContext.TestDirectory, fileName),
-                new Dictionary<string, object>());
+                Path.Combine(TestContext.CurrentContext.TestDirectory, fileName));
         }
     }
 }

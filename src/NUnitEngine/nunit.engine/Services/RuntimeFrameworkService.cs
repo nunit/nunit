@@ -105,8 +105,10 @@ namespace NUnit.Engine.Services
             {
                 if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
                 {
-                    foreach (string assembly in package.TestFiles)
+                    foreach (var subPackage in package.SubPackages)
                     {
+                        var assembly = subPackage.FullName;
+
                         // If the file is not an assembly or doesn't exist, then it can't
                         // contribute any information to the decision, so we skip it.
                         if (PathUtils.IsAssemblyFileType(assembly) && File.Exists(assembly))

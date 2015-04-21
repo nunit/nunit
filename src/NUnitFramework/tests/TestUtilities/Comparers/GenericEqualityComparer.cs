@@ -27,7 +27,7 @@ namespace NUnit.TestUtilities.Comparers
 {
     /// <summary>
     /// GenericEqualityComparer is used in testing to ensure that only
-    /// the IEqualityComparer&lt;T&gt; interface is used.
+    /// the <see cref="IEqualityComparer{T}"/> interface is used.
     /// </summary>
     public class GenericEqualityComparer<T> : IEqualityComparer<T>
     {

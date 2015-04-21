@@ -35,7 +35,6 @@ namespace NUnit.Engine
         /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
         TestEngineResult Load();
 
@@ -88,7 +87,7 @@ namespace NUnit.Engine
         /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
+        /// <param name="filter">Criteria used to filter the search results</param>
         /// <returns>A TestEngineResult.</returns>
         TestEngineResult Explore(TestFilter filter);
     }

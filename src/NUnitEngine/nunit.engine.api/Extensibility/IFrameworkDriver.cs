@@ -35,10 +35,16 @@ namespace NUnit.Engine.Extensibility
     public interface IFrameworkDriver
     {
         /// <summary>
+        /// Gets and sets the unique identifier for this driver,
+        /// used to ensure that test ids are unique across drivers.
+        /// </summary>
+        string ID { get; set; }
+
+        /// <summary>
         /// Loads the tests in an assembly.
         /// </summary>
         /// <returns>An Xml string representing the loaded test</returns>
-        string Load();
+        string Load(string testAssemblyPath, IDictionary<string, object> settings);
 
         /// <summary>
         /// Count the test cases that would be executed.

@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void IdFilter_ConstructWithMultipleIds()
         {
-            var filter = new IdFilter(new int[] { dummyFixture.Id, anotherFixture.Id });
+            var filter = new IdFilter(new string[] { dummyFixture.Id, anotherFixture.Id });
 
             Assert.False(filter.IsEmpty);
             Assert.That(filter.Match(dummyFixture));

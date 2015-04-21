@@ -31,18 +31,20 @@ using System.Reflection;
 namespace NUnit.Engine.Internal
 {
     /// <summary>
-    /// Summary description for RemotingUtilities.
+    /// A collection of utility methods used to create, retrieve
+    /// and release <see cref="TcpChannel"/>s.
     /// </summary>
     public static class ServerUtilities
     {
         static Logger log = InternalTrace.GetLogger(typeof(ServerUtilities));
 
         /// <summary>
-        ///  Create a TcpChannel with a given name, on a given port.
+        ///  Create a <see cref="TcpChannel"/> with a given name on a given port.
         /// </summary>
-        /// <param name="port"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the channel to create.</param>
+        /// <param name="port">The port number of the channel to create.</param>
+        /// <param name="limit">The rate limit of the channel to create.</param>
+        /// <returns>A <see cref="TcpChannel"/> configured with the given name and port.</returns>
         private static TcpChannel CreateTcpChannel( string name, int port, int limit )
         {
             Hashtable props = new Hashtable();
@@ -70,34 +72,38 @@ namespace NUnit.Engine.Internal
             return new TcpChannel( props, clientProvider, serverProvider );
         }
 
+        /// <summary>
+        /// Get a default channel. If one does not exist, then one is created and registered.
+        /// </summary>
+        /// <returns>The specified <see cref="TcpChannel"/> or null if it cannot be found and created</returns>
         public static TcpChannel GetTcpChannel()
         {
             return GetTcpChannel( "", 0, 2 );
         }
 
         /// <summary>
-        /// Get a channel by name, casting it to a TcpChannel.
-        /// Otherwise, create, register and return a TcpChannel with
+        /// Get a channel by name, casting it to a <see cref="TcpChannel"/>.
+        /// Otherwise, create, register and return a <see cref="TcpChannel"/> with
         /// that name, on the port provided as the second argument.
         /// </summary>
-        /// <param name="name">The channel name</param>
+        /// <param name="name">The name of the channel</param>
         /// <param name="port">The port to use if the channel must be created</param>
-        /// <returns>A TcpChannel or null</returns>
+        /// <returns>The specified <see cref="TcpChannel"/> or null if it cannot be found and created</returns>
         public static TcpChannel GetTcpChannel( string name, int port )
         {
             return GetTcpChannel( name, port, 2 );
         }
         
         /// <summary>
-        /// Get a channel by name, casting it to a TcpChannel.
-        /// Otherwise, create, register and return a TcpChannel with
+        /// Get a channel by name, casting it to a <see cref="TcpChannel"/>.
+        /// Otherwise, create, register and return a <see cref="TcpChannel"/> with
         /// that name, on the port provided as the second argument.
         /// </summary>
-        /// <param name="name">The channel name</param>
+        /// <param name="name">The name of the channel</param>
         /// <param name="port">The port to use if the channel must be created</param>
         /// <param name="limit">The client connection limit or negative for the default</param>
-        /// <returns>A TcpChannel or null</returns>
-        public static TcpChannel GetTcpChannel( string name, int port, int limit )
+        /// <returns>The specified <see cref="TcpChannel"/> or null if it cannot be found and created</returns>
+        public static TcpChannel GetTcpChannel(string name, int port, int limit)
         {
             TcpChannel channel = ChannelServices.GetChannel( name ) as TcpChannel;
 
@@ -123,6 +129,10 @@ namespace NUnit.Engine.Internal
             return channel;
         }
 
+        /// <summary>
+        /// Unregisters the <see cref="IChannel"/> from the <see cref="ChannelServices"/> registry.
+        /// </summary>
+        /// <param name="channel">The channel to unregister.</param>
         public static void SafeReleaseChannel( IChannel channel )
         {
             if( channel != null )
