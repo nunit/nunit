@@ -42,7 +42,7 @@ namespace NUnit.TestData.RepeatedTestFixture
         private int teardownCount;
         protected int count;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetUp()
         {
             fixtureSetupCount++;

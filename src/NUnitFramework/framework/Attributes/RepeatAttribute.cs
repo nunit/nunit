@@ -52,9 +52,14 @@ namespace NUnit.Framework
             _count = count;
         }
 
-        #region IWrapSetUpTearDown Members
+		#region IWrapSetUpTearDown Members
 
-        public TestCommand Wrap(TestCommand command)
+		/// <summary>
+		/// Wrap a command and return the result.
+		/// </summary>
+		/// <param name="command">The command to be wrapped</param>
+		/// <returns>The wrapped command</returns>
+		public TestCommand Wrap(TestCommand command)
         {
             return new RepeatedTestCommand(command, _count);
         }
