@@ -290,17 +290,18 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
-
         #region RepeatAttribute
 
-        // public void RepeatAttributeSetsRepeatCount()
-        // {
-        //    new RepeatAttribute(5).ApplyToTest(test);
-        //    Assert.That(test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
-        // }
+        [Test]
+        public void RepeatAttributeSetsRepeatCount()
+        {
+            new RepeatAttribute(5).ApplyToTest(test);
+            Assert.That(test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
+        }
 
         #endregion
+
+#if !SILVERLIGHT && !NETCF && !PORTABLE
 
         #region RequiresMTAAttribute
 
