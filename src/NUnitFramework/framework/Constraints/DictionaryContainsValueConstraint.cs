@@ -23,66 +23,45 @@
 
 using System;
 using System.Collections;
-using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Helper class with properties and methods that supply
-    /// a number of constraints used in Asserts.
+    /// DictionaryContainsValueConstraint is used to test whether a dictionary
+    /// contains an expected object as a value.
     /// </summary>
-    public class Contains
+    public class DictionaryContainsValueConstraint : CollectionContainsConstraint
     {
-        #region Item
-
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
-        /// presence of a particular object in the collection.
+        /// Construct a DictionaryContainsValueConstraint
         /// </summary>
-        public static CollectionContainsConstraint Item(object expected)
+        /// <param name="expected"></param>
+        public DictionaryContainsValueConstraint(object expected)
+            : base(expected)
         {
-            return new CollectionContainsConstraint(expected);
+            DisplayName = "ContainsValue";
         }
 
-        #endregion
-
-        #region Key
-
         /// <summary>
-        /// Returns a new DictionaryContainsKeyConstraint checking for the
-        /// presence of a particular key in the dictionary.
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
         /// </summary>
-        public static DictionaryContainsKeyConstraint Key(object expected)
+        public override string Description
         {
-            return new DictionaryContainsKeyConstraint(expected);
+            get { return "dictionary containing value " + MsgUtils.FormatValue(Expected); }
         }
 
-        #endregion
-
-        #region Value
-
         /// <summary>
-        /// Returns a new DictionaryContainsValueConstraint checking for the
-        /// presence of a particular value in the dictionary.
+        /// Test whether the expected value is contained in the dictionary
         /// </summary>
-        public static DictionaryContainsValueConstraint Value(object expected)
+        protected override bool Matches(IEnumerable actual)
         {
-            return new DictionaryContainsValueConstraint(expected);
+            IDictionary dictionary = actual as IDictionary;
+
+            if (dictionary == null)
+                throw new ArgumentException("The actual value must be an IDictionary", "actual");
+
+            return base.Matches(dictionary.Values);
         }
-
-        #endregion
-
-        #region Substring
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        public static SubstringConstraint Substring(string expected)
-        {
-            return new SubstringConstraint(expected);;
-        }
-
-        #endregion
     }
 }
