@@ -65,6 +65,7 @@
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Attributes\CommandWrapperTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
+    <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
