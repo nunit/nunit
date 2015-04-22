@@ -38,7 +38,7 @@ namespace NUnit.Framework
     /// RepeatAttribute may be applied to test case in order
     /// to run it multiple times.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class RepeatAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
         private int _count;
@@ -54,6 +54,11 @@ namespace NUnit.Framework
 
         #region IWrapSetUpTearDown Members
 
+        /// <summary>
+        /// Wrap a command and return the result.
+        /// </summary>
+        /// <param name="command">The command to be wrapped</param>
+        /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
             return new RepeatedTestCommand(command, _count);
