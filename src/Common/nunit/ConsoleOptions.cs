@@ -265,11 +265,7 @@ namespace NUnit.Common
             //   noshadow
             //   nothread
             //   nodots
-
-            // Options to be added:
-            //   teamcity
-            //   workers
-
+           
             // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
