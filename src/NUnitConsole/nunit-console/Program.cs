@@ -21,15 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.IO;
+using System.Reflection;
+using Mono.Options;
+using NUnit.Common;
+using NUnit.Engine;
+
 namespace NUnit.ConsoleRunner
 {
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using Common;
-    using Engine;
-    using Mono.Options;
-
     /// <summary>
     /// This class provides the entry point for the console runner.
     /// </summary>

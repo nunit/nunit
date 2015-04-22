@@ -24,10 +24,10 @@
 using System;
 using NUnit.Common;
 using NUnit.Framework;
-    
+
+#if !SILVERLIGHT && !NETC
 namespace NUnit.ConsoleRunner.Tests
 {
-
     [TestFixture]
     public sealed class DefaultOptionsProviderTests
     {
@@ -71,3 +71,4 @@ namespace NUnit.ConsoleRunner.Tests
         }
     }
 }
+#endif
