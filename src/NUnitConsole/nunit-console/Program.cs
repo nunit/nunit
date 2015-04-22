@@ -21,16 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
-using System.Reflection;
-using Mono.Options;
-using NUnit.Common;
-using NUnit.Engine;
-
 namespace NUnit.ConsoleRunner
 {
-    using Utilities;
+    using System;
+    using System.IO;
+    using System.Reflection;
+    using Common;
+    using Engine;
+    using Mono.Options;
 
     /// <summary>
     /// This class provides the entry point for the console runner.
@@ -38,7 +36,7 @@ namespace NUnit.ConsoleRunner
     public class Program
     {
         //static Logger log = InternalTrace.GetLogger(typeof(Runner));
-        static ConsoleOptions Options = new ConsoleOptions();
+        static ConsoleOptions Options = new ConsoleOptions(new DefaultOptionsProvider());
         static ExtendedTextWriter OutWriter = new ColorConsoleWriter(!Options.NoColor);
 
         [STAThread]

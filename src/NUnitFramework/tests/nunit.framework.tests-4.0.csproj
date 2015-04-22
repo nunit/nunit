@@ -51,6 +51,9 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
+      <Link>Runner\DefaultOptionsProviderTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
       <Link>Runner\ExtendedTextWrapperTests.cs</Link>
     </Compile>

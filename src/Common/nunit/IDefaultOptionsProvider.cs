@@ -1,6 +1,6 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
-//
+// Copyright (c) 2015 Charlie Poole
+// 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -21,22 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
-#if NET_4_5
-[assembly: AssemblyTitle("NUnitLite Runner .NET 4.5")]
-#elif NET_4_0
-[assembly: AssemblyTitle("NUnitLite Runner .NET 4.0")]
-#elif NET_2_0
-[assembly: AssemblyTitle("NUnitLite Runner .NET 2.0")]
-#elif SL_5_0
-[assembly: AssemblyTitle("NUnitLite Runner Silverlight 5.0")]
-#elif NETCF_3_5
-[assembly: AssemblyTitle("NUnitLite Runner CF 3.5")]
-#else
-[assembly: AssemblyTitle("NUnitLite Runner")]
-#endif
-
-[assembly: AssemblyDescription("")]
-[assembly: InternalsVisibleTo("nunit.framework.tests")]
+namespace NUnit.Common
+{
+    internal interface IDefaultOptionsProvider
+    {
+        bool TeamCity { get; }
+    }
+}
