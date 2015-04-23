@@ -46,7 +46,16 @@ namespace NUnit.Framework.Attributes
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(MaxTimeFixture));
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
-            TestResult result = (TestResult)suiteResult.Children[0];
+            ITestResult result = suiteResult.Children[0];
+            Assert.That(result.Message, Does.Contain("exceeds maximum of 1ms"));
+        }
+
+        [Test]
+        public void MaxTimeExceededOnTestCase()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithTestCase));
+            Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
+            ITestResult result = suiteResult.Children[0].Children[0];
             Assert.That(result.Message, Does.Contain("exceeds maximum of 1ms"));
         }
 
