@@ -21,24 +21,24 @@
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
-    <file src="$builddir$\nunit-agent.exe" target="tools" />
-    <file src="$builddir$\nunit-agent.exe.config" target="tools" />
-    <file src="$builddir$\nunit-agent-x86.exe" target="tools" />
-    <file src="$builddir$\nunit-agent-x86.exe.config" target="tools" />
-    <file src="$builddir$\nunit-console.exe" target="tools" />
-    <file src="$builddir$\nunit-console.exe.config" target="tools" />
-    <file src="$builddir$\nunit.engine.api.dll" target="tools" />
-    <file src="$builddir$\nunit.engine.api.xml" target="tools" />
-    <file src="$builddir$\nunit.engine.dll" target="tools" />
-    <file src="$builddir$\nunit.engine.addins" target="tools" />
-    <file src="$builddir$\nunit.engine.addin.xml" target="tools" />
-    <file src="$builddir$\Mono.Addins.dll" target="tools" />
-    <file src="$builddir$\addins\nunit.v2.driver.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit.engine.api.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit.core.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit.core.interfaces.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit-v2-result-writer.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit-project-loader.dll" target="tools\addins" />
-    <file src="$builddir$\addins\vs-project-loader.dll" target="tools\addins" />
+    <file src="bin\nunit-agent.exe" target="tools" />
+    <file src="bin\nunit-agent.exe.config" target="tools" />
+    <file src="bin\nunit-agent-x86.exe" target="tools" />
+    <file src="bin\nunit-agent-x86.exe.config" target="tools" />
+    <file src="bin\nunit-console.exe" target="tools" />
+    <file src="bin\nunit-console.exe.config" target="tools" />
+    <file src="bin\nunit.engine.api.dll" target="tools" />
+    <file src="bin\nunit.engine.api.xml" target="tools" />
+    <file src="bin\nunit.engine.dll" target="tools" />
+    <file src="bin\nunit.engine.addins" target="tools" />
+    <file src="bin\nunit.engine.addin.xml" target="tools" />
+    <file src="bin\Mono.Addins.dll" target="tools" />
+    <file src="bin\addins\nunit.v2.driver.dll" target="tools\addins" />
+    <file src="bin\addins\nunit.engine.api.dll" target="tools\addins" />
+    <file src="bin\addins\nunit.core.dll" target="tools\addins" />
+    <file src="bin\addins\nunit.core.interfaces.dll" target="tools\addins" />
+    <file src="bin\addins\nunit-v2-result-writer.dll" target="tools\addins" />
+    <file src="bin\addins\nunit-project-loader.dll" target="tools\addins" />
+    <file src="bin\addins\vs-project-loader.dll" target="tools\addins" />
   </files>
 </package>
