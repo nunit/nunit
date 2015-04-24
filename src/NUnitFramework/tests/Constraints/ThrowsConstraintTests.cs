@@ -46,14 +46,14 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message\r\n   at NUnit.TestUtilities" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine + "   at NUnit.TestUtilities" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message\r\n   at NUnit.TestUtilities" )
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine + "   at NUnit.TestUtilities" )
         };
     }
 
     [TestFixture]
-    public class ThrowsConstraintTest_InstanceOfType : ThrowsConstraintTestBase
+    public class ThrowsConstraintTest_InstanceOfType : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -100,9 +100,9 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message\r\n   at NUnit.TestUtilities" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine + "   at NUnit.TestUtilities" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message\r\n   at NUnit.TestUtilities" )
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine + "   at NUnit.TestUtilities" )
         };
     }
 #endif
