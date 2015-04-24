@@ -37,24 +37,47 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public ExceptionTypeConstraint(Type type) : base(type) { }
 
-        // TODO: This needs tests. May need a special result type.
-        ///// <summary>
-        ///// Write the actual value for a failing constraint test to a
-        ///// MessageWriter. Overriden to write additional information 
-        ///// in the case of an Exception.
-        ///// </summary>
-        ///// <param name="writer">The MessageWriter to use</param>
-        //public override void WriteActualValueTo(MessageWriter writer)
-        //{
-        //    Exception ex = actual as Exception;
-        //    base.WriteActualValueTo(writer);
+        /// <summary>
+        /// Applies the constraint to an actual value, returning a ConstraintResult.
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            actualType = actual == null ? null : actual.GetType();
 
-        //    if (ex != null)
-        //    {
-        //        writer.WriteLine(" ({0})", ex.Message);
-        //        writer.Write(ex.StackTrace);
-        //    }
-        //}
+            return new ExceptionTypeConstraintResult(this, actual, actualType, this.Matches(actual));
+        }
+
+        #region Nested Result Class
+        class ExceptionTypeConstraintResult : ConstraintResult
+        {
+            private readonly object caughtException;
+
+            public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object caughtException, Type type, bool matches)
+                : base(constraint, type, matches) 
+            { 
+                this.caughtException = caughtException;
+            }
+
+            public override void WriteActualValueTo(MessageWriter writer)
+            {
+                if (this.Status == ConstraintStatus.Failure)
+                {
+                    Exception ex = caughtException as Exception;
+
+                    if (ex == null)
+                    {
+                        base.WriteActualValueTo(writer);
+                    }
+                    else
+                    {
+                        writer.WriteActualValue(ex);
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }
 

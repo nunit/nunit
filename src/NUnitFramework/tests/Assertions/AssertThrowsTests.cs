@@ -101,7 +101,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.NullReferenceException>" + Env.NewLine));
+                "  But was:  <System.NullReferenceException: my message\r\n   at NUnit.TestUtilities"));
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.Exception>" + Env.NewLine));
+                "  But was:  <System.Exception: my message\r\n   at NUnit.TestUtilities"));
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() => Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.Exception>" + Env.NewLine +
-                "  But was:  <System.ArgumentException>" + Env.NewLine));
+                "  But was:  <System.ArgumentException: my message\r\n   at NUnit.TestUtilities"));
         }
 
         [Test]
