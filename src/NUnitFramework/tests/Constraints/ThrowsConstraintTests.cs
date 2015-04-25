@@ -46,9 +46,9 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine + "   at NUnit.TestUtilities" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine + "   at NUnit.TestUtilities" )
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine )
         };
     }
 
@@ -100,9 +100,9 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine + "   at NUnit.TestUtilities" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine + "   at NUnit.TestUtilities" )
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine )
         };
     }
 #endif

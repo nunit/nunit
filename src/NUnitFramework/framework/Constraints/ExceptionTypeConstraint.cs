@@ -44,6 +44,11 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
+            Exception castedToException = actual as Exception;
+
+            if (actual != null && castedToException == null)
+                throw new ArgumentException("Actual value must be an Exception", "actual");
+
             actualType = actual == null ? null : actual.GetType();
 
             return new ExceptionTypeConstraintResult(this, actual, actualType, this.Matches(actual));
