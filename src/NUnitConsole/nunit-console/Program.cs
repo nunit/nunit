@@ -30,15 +30,13 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-    using Utilities;
-
     /// <summary>
     /// This class provides the entry point for the console runner.
     /// </summary>
     public class Program
     {
         //static Logger log = InternalTrace.GetLogger(typeof(Runner));
-        static ConsoleOptions Options = new ConsoleOptions();
+        static ConsoleOptions Options = new ConsoleOptions(new DefaultOptionsProvider());
         static ExtendedTextWriter OutWriter = new ColorConsoleWriter(!Options.NoColor);
 
         [STAThread]

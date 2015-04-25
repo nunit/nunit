@@ -1,6 +1,6 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
-//
+// Copyright (c) 2015 Charlie Poole
+// 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -20,23 +20,26 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+namespace NUnit.Common
+{
+    using System;
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
-#if NET_4_5
-[assembly: AssemblyTitle("NUnitLite Runner .NET 4.5")]
-#elif NET_4_0
-[assembly: AssemblyTitle("NUnitLite Runner .NET 4.0")]
-#elif NET_2_0
-[assembly: AssemblyTitle("NUnitLite Runner .NET 2.0")]
-#elif SL_5_0
-[assembly: AssemblyTitle("NUnitLite Runner Silverlight 5.0")]
-#elif NETCF_3_5
-[assembly: AssemblyTitle("NUnitLite Runner CF 3.5")]
-#else
-[assembly: AssemblyTitle("NUnitLite Runner")]
+    internal sealed class DefaultOptionsProvider : IDefaultOptionsProvider
+    {
+#if !SILVERLIGHT && !NETC
+        private const string EnvironmentVariableTeamcityProjectName = "TEAMCITY_PROJECT_NAME";
 #endif
 
-[assembly: AssemblyDescription("")]
-[assembly: InternalsVisibleTo("nunit.framework.tests")]
+        public bool TeamCity
+        {
+            get
+            {
+#if !SILVERLIGHT && !NETCF
+                return !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(EnvironmentVariableTeamcityProjectName));
+#else
+                return false;
+#endif
+            }
+        }
+    }
+}
