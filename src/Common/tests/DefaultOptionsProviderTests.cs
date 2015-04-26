@@ -25,7 +25,7 @@ using System;
 using NUnit.Common;
 using NUnit.Framework;
 
-#if !SILVERLIGHT && !NETC
+#if !SILVERLIGHT && !NETCF
 namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]

@@ -26,7 +26,7 @@ namespace NUnit.Common
 
     internal sealed class DefaultOptionsProvider : IDefaultOptionsProvider
     {
-#if !SILVERLIGHT && !NETC
+#if !SILVERLIGHT && !NETCF
         private const string EnvironmentVariableTeamcityProjectName = "TEAMCITY_PROJECT_NAME";
 #endif
 
