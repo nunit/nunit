@@ -112,6 +112,17 @@ namespace NUnit.Framework.Constraints
         {
             get { return failurePoints; }
         }
+
+        /// <summary>
+        /// Flags the comparer to include <see cref="DateTimeOffset.Offset"/>
+        /// property in comparison of two <see cref="DateTimeOffset"/> values.
+        /// </summary>
+        /// <remarks>
+        /// Using this modifier does not allow to use the <see cref="Tolerance"/>
+        /// modifier.
+        /// </remarks>
+        public bool WithSameOffset { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -186,6 +197,16 @@ namespace NUnit.Framework.Constraints
 
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.AreEqual(x, y, ref tolerance);
+
+#if !NETCF
+            if (x is DateTimeOffset && y is DateTimeOffset && WithSameOffset)
+            {
+                DateTimeOffset xAsOffset = (DateTimeOffset)x;
+                DateTimeOffset yAsOffset = (DateTimeOffset)y;
+
+                return InvokeFirstIEquatableEqualsSecond(x, y) && InvokeFirstIEquatableEqualsSecond(xAsOffset.Offset, yAsOffset.Offset);
+            }
+#endif
 
             if (tolerance != null && tolerance.Value is TimeSpan)
             {

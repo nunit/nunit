@@ -183,6 +183,22 @@ namespace NUnit.Framework.Constraints
         public class DateTimeOffSetEquality
         {
             [Test]
+            public void ShouldBeEqualWhenOffsetIsNotIncluded()
+            {
+                DateTimeOffset value1 = new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0));
+                DateTimeOffset value2 = new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0));
+                Assert.That(value1, Is.EqualTo(value2));
+            }
+
+            [Test]
+            public void ShouldNotBeEqualWhenOffsetIsIncluded()
+            {
+                DateTimeOffset value1 = new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0));
+                DateTimeOffset value2 = new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0));
+                Assert.That(value1, Is.Not.EqualTo(value2).WithSameOffset);
+            }
+
+            [Test]
             public void CanMatchDates()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1));

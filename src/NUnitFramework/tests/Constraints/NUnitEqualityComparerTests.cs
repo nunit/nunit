@@ -84,6 +84,28 @@ namespace NUnit.Framework.Constraints
             Assert.That(comparer.AreEqual(x, y, ref tolerance));
         }
 
+#if !NETCF
+        [Test]
+        public void TwoDateTimeOffsetsShouldBeEqualWhenOffsetIsNotIncludedInComparison()
+        {
+            DateTimeOffset value1 = new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0));
+            DateTimeOffset value2 = new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0));
+            
+            Assert.That(comparer.AreEqual(value1, value2, ref tolerance));
+        }
+
+        [Test]
+        public void DateTimeOffsetsShouldNotBeEqualWhenOffsetIsIncludedInComparison()
+        {
+            DateTimeOffset value1 = new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0));
+            DateTimeOffset value2 = new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0));
+            
+            comparer.WithSameOffset = true;
+
+            Assert.That(comparer.AreEqual(value1, value2, ref tolerance), Is.False);
+        }
+#endif
+
 #if !PORTABLE
         [Test]
         public void SameDirectoriesAreEqual()
