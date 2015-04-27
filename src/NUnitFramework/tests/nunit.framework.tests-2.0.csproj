@@ -38,6 +38,12 @@
     <NoWarn>0414</NoWarn>
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -300,5 +306,10 @@
       <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
       <Name>nunit.testdata-2.0</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\framework\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
   </ItemGroup>
 </Project>
