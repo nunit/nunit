@@ -1,4 +1,4 @@
-﻿namespace JetBrains.TeamCityCert.Tools
+﻿namespace NUnit.Integration.Tests.TeamCity.Core
 {
     internal enum ValidationState
     {

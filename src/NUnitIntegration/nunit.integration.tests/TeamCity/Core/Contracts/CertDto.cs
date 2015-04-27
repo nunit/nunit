@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JetBrains.TeamCityCert.Tools.Contracts
+using JetBrains.Annotations;
+
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using JetBrains.Annotations;
-
     public sealed class CertDto
     {
         public CertDto(IEnumerable<CmdLineToolDto> cmdLineTools)

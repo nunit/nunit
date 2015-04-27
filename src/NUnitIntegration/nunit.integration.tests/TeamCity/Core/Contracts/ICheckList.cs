@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 
-namespace JetBrains.TeamCityCert.Tools.Contracts
+using JetBrains.Annotations;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    using System.Collections.Generic;
-
     public interface ICheckList
     {
         [NotNull] IEnumerable<ITest> GetCheckList(CertType certType);

@@ -1,10 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System;
 
-namespace JetBrains.TeamCityCert.Tools.Contracts
+using JetBrains.Annotations;
+
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    using System;
-    using System.Diagnostics.Contracts;
-
     public sealed class TestResultDto
     {
         public TestResultDto([NotNull] string toolId, [NotNull] string caseId, TestState state)

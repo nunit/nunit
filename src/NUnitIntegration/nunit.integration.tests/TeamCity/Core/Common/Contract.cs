@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace System.Diagnostics.Contracts
+namespace NUnit.Integration.Tests.TeamCity.Core.Common
 {
     public static class Contract
     {

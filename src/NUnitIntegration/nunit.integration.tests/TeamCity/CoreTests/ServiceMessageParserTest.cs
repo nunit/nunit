@@ -1,14 +1,14 @@
-﻿namespace JetBrains.TeamCityCert.Tools.Tests
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+using NUnit.Framework;
+using NUnit.Integration.Tests.TeamCity.Core;
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.CoreTests
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-
-    using JetBrains.TeamCityCert.Tools.Common;
-
-    using NUnit.Framework;
-
     [TestFixture]
     public class ServiceMessageParserTest
     {

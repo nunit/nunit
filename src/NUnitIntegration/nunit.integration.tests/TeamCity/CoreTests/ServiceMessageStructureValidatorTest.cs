@@ -1,12 +1,15 @@
-﻿namespace JetBrains.TeamCityCert.Tools.Tests
+﻿using System;
+using System.Linq;
+
+using Moq;
+
+using NUnit.Framework;
+using NUnit.Integration.Tests.TeamCity.Core;
+
+using Shouldly;
+
+namespace NUnit.Integration.Tests.TeamCity.CoreTests
 {
-    using System;
-    using System.Linq;
-
-    using Moq;
-    using NUnit.Framework;
-    using Shouldly;
-
     public sealed class ServiceMessageStructureValidatorTest
     {
         [SetUp]

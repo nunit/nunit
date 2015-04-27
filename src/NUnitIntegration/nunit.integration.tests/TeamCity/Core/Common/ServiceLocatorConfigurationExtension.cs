@@ -1,11 +1,10 @@
-﻿namespace JetBrains.TeamCityCert.Tools.Common
+﻿using System;
+
+using NUnit.Integration.Tests.TeamCity.Core.Contracts;
+using NUnit.Integration.Tests.TeamCity.Core.TestFramework;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Common
 {
-    using System;
-    using System.Diagnostics.Contracts;
-
-    using JetBrains.TeamCityCert.Tools.Contracts;
-    using JetBrains.TeamCityCert.Tools.TestFramework;
-
     public sealed class ServiceLocatorConfigurationExtension : IServiceLocatorConfigurationExtension
     {
         private static readonly Lazy<TestsRepository> TestsRepository = new Lazy<TestsRepository>(() => new TestsRepository());

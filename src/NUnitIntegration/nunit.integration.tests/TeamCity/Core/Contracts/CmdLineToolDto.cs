@@ -1,12 +1,13 @@
-﻿namespace JetBrains.TeamCityCert.Tools.Contracts
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.Linq;
-
-    using JetBrains.Annotations;
-
     public sealed class CmdLineToolDto
     {
         public CmdLineToolDto(

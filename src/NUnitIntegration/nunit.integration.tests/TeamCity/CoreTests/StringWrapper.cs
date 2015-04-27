@@ -1,7 +1,7 @@
-namespace JetBrains.TeamCityCert.Tools.Tests
-{
-    using System.IO;
+using System.IO;
 
+namespace NUnit.Integration.Tests.TeamCity.CoreTests
+{
     public class StringWrapper : TextReader
     {
         private readonly string _string;

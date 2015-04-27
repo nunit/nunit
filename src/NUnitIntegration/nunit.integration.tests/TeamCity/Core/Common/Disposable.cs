@@ -1,10 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using System;
 
-namespace JetBrains.TeamCityCert.Tools.Common
+using JetBrains.Annotations;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Common
 {
-    using System;
-    using System.Diagnostics.Contracts;
-
     public static class Disposable
     {
         [NotNull]

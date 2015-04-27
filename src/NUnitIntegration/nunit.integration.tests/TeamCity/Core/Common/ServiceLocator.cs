@@ -1,14 +1,13 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JetBrains.TeamCityCert.Tools.Common
+using JetBrains.Annotations;
+
+using NUnit.Integration.Tests.TeamCity.Core.Contracts;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Common
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.Linq;
-
-    using JetBrains.TeamCityCert.Tools.Contracts;
-
     public sealed class ServiceLocator : IServiceLocator
     {
         private static readonly ServiceLocator SharedRoot = new ServiceLocator();

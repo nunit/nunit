@@ -1,13 +1,12 @@
-﻿namespace JetBrains.TeamCityCert.Tools
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.IO;
-    using System.Linq;
-    
-    using JetBrains.TeamCityCert.Tools.Common;
-    
     internal sealed class OutputValidator : IOutputValidator
     {
         public ValidationResult Validate(IEnumerable<string> output)

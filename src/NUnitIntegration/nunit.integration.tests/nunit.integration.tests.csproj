@@ -86,17 +86,11 @@
     <Compile Include="TeamCity\Core\TestsRepository.cs" />
     <Compile Include="TeamCity\Core\ValidationResult.cs" />
     <Compile Include="TeamCity\Core\ValidationState.cs" />
+    <Compile Include="TeamCity\Tests\Test.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TeamCity\Tests\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TeamCity\Core\JetBrains.TeamCityCert.Tools.csproj" />
-    <Content Include="TeamCity\Core\JetBrains.TeamCityCert.Tools.csproj.user" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="TeamCity\Core\packages.config" />
-    <None Include="TeamCity\Core\Settings.StyleCop" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-4.0.csproj">

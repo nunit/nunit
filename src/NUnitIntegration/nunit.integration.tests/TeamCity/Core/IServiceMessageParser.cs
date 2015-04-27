@@ -1,10 +1,10 @@
+using System.Collections.Generic;
+using System.IO;
+
 using JetBrains.Annotations;
 
-namespace JetBrains.TeamCityCert.Tools
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    using System.Collections.Generic;
-    using System.IO;
-
     /// <summary>
     /// Provides service messages parsing from stream
     /// </summary>

@@ -1,11 +1,11 @@
+using System;
+
 using JetBrains.Annotations;
 
-namespace JetBrains.TeamCityCert.Tools.Contracts
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    using System;
-
-    using JetBrains.TeamCityCert.Tools.Common;
-
     public interface IServiceLocatorConfigurationExtension
     {
         IDisposable Initialize([NotNull] ServiceLocator serviceLocator);

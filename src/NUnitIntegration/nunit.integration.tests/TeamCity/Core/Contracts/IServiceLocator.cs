@@ -1,10 +1,10 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace JetBrains.TeamCityCert.Tools.Contracts
+using JetBrains.Annotations;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    using System;
-    using System.Collections.Generic;
-
     public interface IServiceLocator
     {
         [NotNull] T GetService<T>([CanBeNull] string serviceName = null);

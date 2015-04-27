@@ -1,4 +1,4 @@
-﻿namespace JetBrains.TeamCityCert.Tools.Contracts
+﻿namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
     public enum TestState
     {

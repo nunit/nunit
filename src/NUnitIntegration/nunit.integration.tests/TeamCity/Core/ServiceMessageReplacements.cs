@@ -1,10 +1,11 @@
-namespace JetBrains.TeamCityCert.Tools
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.Core
+{
     internal sealed class ServiceMessageReplacements : IServiceMessageReplacements
     {
         private static readonly Dictionary<char, char> EscMap = new Dictionary<char, char>

@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 
-namespace JetBrains.TeamCityCert.Tools
+using JetBrains.Annotations;
+
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    using System.Collections.Generic;
-
     internal interface IServiceMessageStructureValidator
     {
         [NotNull]

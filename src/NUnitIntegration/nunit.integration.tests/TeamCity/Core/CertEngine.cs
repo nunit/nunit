@@ -1,13 +1,12 @@
-﻿namespace JetBrains.TeamCityCert.Tools
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+using NUnit.Integration.Tests.TeamCity.Core.Contracts;
+
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.Linq;
-
-    using JetBrains.TeamCityCert.Tools.Common;
-    using JetBrains.TeamCityCert.Tools.Contracts;
-
     internal sealed class CertEngine : ICertEngine
     {
         public IEnumerable<TestResultDto> Run(CertDto cert)

@@ -1,14 +1,13 @@
-﻿namespace JetBrains.TeamCityCert.Tools
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-
-    using JetBrains.TeamCityCert.Tools.Common;
-
     /// <summary>
     /// Provides service messages parsing from stream
     /// </summary>

@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 
-namespace JetBrains.TeamCityCert.Tools.Contracts
+using JetBrains.Annotations;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    using System.Collections.Generic;
-
     public interface IProcessManager
     {
         [NotNull] ProcessOutputDto StartProcess([NotNull] string cmdLineFileName, IEnumerable<string> args);

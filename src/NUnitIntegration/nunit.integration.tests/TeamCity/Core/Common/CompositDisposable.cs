@@ -1,10 +1,10 @@
-﻿namespace JetBrains.TeamCityCert.Tools.Common
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace NUnit.Integration.Tests.TeamCity.Core.Common
+{
     public class CompositDisposable : IDisposable, IEnumerable<IDisposable>
     {
         private readonly List<IDisposable> _disposable = new List<IDisposable>();

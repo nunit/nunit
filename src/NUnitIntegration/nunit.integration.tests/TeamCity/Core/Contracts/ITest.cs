@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace JetBrains.TeamCityCert.Tools.Contracts
+namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
     public interface ITest
     {

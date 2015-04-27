@@ -1,15 +1,14 @@
-﻿namespace JetBrains.TeamCityCert.Tools.TestFramework
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+using NUnit.Integration.Tests.TeamCity.Core.Common;
+using NUnit.Integration.Tests.TeamCity.Core.Contracts;
+
+namespace NUnit.Integration.Tests.TeamCity.Core.TestFramework
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-
-    using JetBrains.TeamCityCert.Tools.Common;
-    using JetBrains.TeamCityCert.Tools.Contracts;
-
     internal class CmdLineToolTestTwoSuccesfullTests : ICmdLineToolTest
     {
         public CertType CertType

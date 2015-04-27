@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace JetBrains.TeamCityCert.Tools
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
     internal interface IServiceMessageValidator
     {

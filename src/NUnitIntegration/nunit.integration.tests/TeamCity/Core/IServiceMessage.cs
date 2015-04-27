@@ -1,9 +1,9 @@
+using System.Collections.Generic;
+
 using JetBrains.Annotations;
 
-namespace JetBrains.TeamCityCert.Tools
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Object representation of TeamCity service message
     /// </summary>

@@ -1,11 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 
-namespace JetBrains.TeamCityCert.Tools
+using JetBrains.Annotations;
+
+using NUnit.Integration.Tests.TeamCity.Core.Contracts;
+
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    using System.Collections.Generic;
-
-    using JetBrains.TeamCityCert.Tools.Contracts;
-
     internal interface ITestsRepository
     {
         [NotNull] IEnumerable<ICmdLineToolTest> GetCmdLineToolTests(CertType certType);
