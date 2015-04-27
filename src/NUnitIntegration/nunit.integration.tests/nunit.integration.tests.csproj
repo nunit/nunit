@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5B8B7C48-55B5-4587-B208-BF48C12B904D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.Integration.Tests</RootNamespace>
+    <AssemblyName>NUnit.Integration.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\IntegrationTests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Release\IntegrationTests\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>TeamCity\Libs\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Shouldly">
+      <HintPath>TeamCity\Libs\Shouldly.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TeamCity\CoreTests\ServiceMessageParserPerformanceTest.cs" />
+    <Compile Include="TeamCity\CoreTests\ServiceMessageParserTest.cs" />
+    <Compile Include="TeamCity\CoreTests\ServiceMessageStructureValidatorTest.cs" />
+    <Compile Include="TeamCity\CoreTests\StringWrapper.cs" />
+    <Compile Include="TeamCity\Core\CertEngine.cs" />
+    <Compile Include="TeamCity\Core\Common\Annotations.cs" />
+    <Compile Include="TeamCity\Core\Common\CompositDisposable.cs" />
+    <Compile Include="TeamCity\Core\Common\Contract.cs" />
+    <Compile Include="TeamCity\Core\Common\Disposable.cs" />
+    <Compile Include="TeamCity\Core\Common\ServiceLocator.cs" />
+    <Compile Include="TeamCity\Core\Common\ServiceLocatorConfigurationExtension.cs" />
+    <Compile Include="TeamCity\Core\Contracts\CaseDto.cs" />
+    <Compile Include="TeamCity\Core\Contracts\CertDto.cs" />
+    <Compile Include="TeamCity\Core\Contracts\CertType.cs" />
+    <Compile Include="TeamCity\Core\Contracts\CmdLineToolDto.cs" />
+    <Compile Include="TeamCity\Core\Contracts\ICertEngine.cs" />
+    <Compile Include="TeamCity\Core\Contracts\ICheckList.cs" />
+    <Compile Include="TeamCity\Core\Contracts\IProcessManager.cs" />
+    <Compile Include="TeamCity\Core\Contracts\IServiceLocator.cs" />
+    <Compile Include="TeamCity\Core\Contracts\IServiceLocatorConfigurationExtension.cs" />
+    <Compile Include="TeamCity\Core\Contracts\ITest.cs" />
+    <Compile Include="TeamCity\Core\Contracts\ProcessOutputDto.cs" />
+    <Compile Include="TeamCity\Core\Contracts\TestResultDto.cs" />
+    <Compile Include="TeamCity\Core\Contracts\TestState.cs" />
+    <Compile Include="TeamCity\Core\ICmdLineToolTest.cs" />
+    <Compile Include="TeamCity\Core\IOutputValidator.cs" />
+    <Compile Include="TeamCity\Core\IServiceMessage.cs" />
+    <Compile Include="TeamCity\Core\IServiceMessageParser.cs" />
+    <Compile Include="TeamCity\Core\IServiceMessageReplacements.cs" />
+    <Compile Include="TeamCity\Core\IServiceMessageStructureValidator.cs" />
+    <Compile Include="TeamCity\Core\IServiceMessageValidator.cs" />
+    <Compile Include="TeamCity\Core\ITestsRepository.cs" />
+    <Compile Include="TeamCity\Core\OutputValidator.cs" />
+    <Compile Include="TeamCity\Core\ServiceMessage.cs" />
+    <Compile Include="TeamCity\Core\ServiceMessageConstants.cs" />
+    <Compile Include="TeamCity\Core\ServiceMessageParser.cs" />
+    <Compile Include="TeamCity\Core\ServiceMessageReplacements.cs" />
+    <Compile Include="TeamCity\Core\ServiceMessageStructureValidator.cs" />
+    <Compile Include="TeamCity\Core\ServiceMessageValidator.cs" />
+    <Compile Include="TeamCity\Core\TestFramework\CmdLineToolTestTwoSuccesfullTests.cs" />
+    <Compile Include="TeamCity\Core\TestsRepository.cs" />
+    <Compile Include="TeamCity\Core\ValidationResult.cs" />
+    <Compile Include="TeamCity\Core\ValidationState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TeamCity\Tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TeamCity\Core\JetBrains.TeamCityCert.Tools.csproj" />
+    <Content Include="TeamCity\Core\JetBrains.TeamCityCert.Tools.csproj.user" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TeamCity\Core\packages.config" />
+    <None Include="TeamCity\Core\Settings.StyleCop" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\Tools\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\Tools\NuGet.targets'))" />
+  </Target>
+  <Import Project="$(SolutionDir)\Tools\NuGet.targets" Condition="Exists('$(SolutionDir)\Tools\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

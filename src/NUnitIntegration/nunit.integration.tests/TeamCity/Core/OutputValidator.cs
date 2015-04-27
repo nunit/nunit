@@ -1,0 +1,89 @@
+﻿namespace JetBrains.TeamCityCert.Tools
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.IO;
+    using System.Linq;
+    
+    using JetBrains.TeamCityCert.Tools.Common;
+    
+    internal sealed class OutputValidator : IOutputValidator
+    {
+        public ValidationResult Validate(IEnumerable<string> output)
+        {
+            Contract.Requires<ArgumentNullException>(output != null);
+            Contract.Ensures(Contract.Result<ValidationResult>() != null);
+
+            var isSuccess = true;
+            var details = new List<string>();
+
+            var rawMessages = output.Select(line => ServiceLocator.Root.GetService<IServiceMessageParser>().ParseServiceMessages(new StringReader(line))).SelectMany(i => i).ToList();
+            var validatedMessages = new List<IServiceMessage>();
+            var messageValidator = ServiceLocator.Root.GetService<IServiceMessageValidator>();
+            foreach (var message in rawMessages)
+            {
+                var messageValidationResult = messageValidator.Validate(message);
+                switch (messageValidationResult.State)
+                {
+                    case ValidationState.Valid:
+                        validatedMessages.Add(message);
+                        break;
+
+                    case ValidationState.HasWarning:
+                        details.Add(string.Format("Message \"{0}\" has warning(s)", message.Name));
+                        validatedMessages.Add(message);
+                        break;
+
+                    case ValidationState.Unknow:
+                        details.Add(string.Format("Message \"{0}\" is unknown", message.Name));
+                        break;
+
+                    case ValidationState.NotValid:
+                        details.Add(string.Format("Message \"{0}\" is not valid", message.Name));
+                        isSuccess = false;
+                        break;
+                }
+
+                foreach (var validationDetail in messageValidationResult.Details)
+                {
+                    details.Add(string.Format("\t{0}", validationDetail));
+                }
+            }
+
+            if (!isSuccess)
+            {
+                return new ValidationResult(ValidationState.NotValid, details.ToString());
+            }
+
+            var structureValidationResult = ServiceLocator.Root.GetService<IServiceMessageStructureValidator>().Validate(validatedMessages);
+            switch (structureValidationResult.State)
+            {
+                case ValidationState.HasWarning:
+                    details.Add("Message structure validation has warning(s)");
+                    break;
+
+                case ValidationState.Unknow:
+                    details.Add("Message structure validation result is unknown");
+                    break;
+
+                case ValidationState.NotValid:
+                    details.Add("Message structure validation has errors");
+                    isSuccess = false;
+                    break;
+            }
+
+            foreach (var validationDetail in structureValidationResult.Details)
+            {
+                details.Add(string.Format("\t{0}", validationDetail));
+            }
+
+            if (!isSuccess)
+            {
+                return new ValidationResult(ValidationState.NotValid, details.ToString());
+            }
+
+            return new ValidationResult(ValidationState.Valid, details.ToString());
+        }
+    }
+}
