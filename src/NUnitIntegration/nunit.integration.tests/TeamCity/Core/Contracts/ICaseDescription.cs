@@ -2,7 +2,7 @@
 
 namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
-    public interface ITest
+    public interface ICaseDescription
     {
         CertType CertType { get; }
 

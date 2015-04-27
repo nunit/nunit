@@ -50,7 +50,7 @@
     <Compile Include="TeamCity\Core\CertEngine.cs" />
     <Compile Include="TeamCity\Core\Common\Annotations.cs" />
     <Compile Include="TeamCity\Core\Common\CompositDisposable.cs" />
-    <Compile Include="TeamCity\Core\Common\Contract.cs" />
+    <Compile Include="TeamCity\Core\Contract.cs" />
     <Compile Include="TeamCity\Core\Common\Disposable.cs" />
     <Compile Include="TeamCity\Core\Common\ServiceLocator.cs" />
     <Compile Include="TeamCity\Core\Common\ServiceLocatorConfigurationExtension.cs" />
@@ -58,35 +58,36 @@
     <Compile Include="TeamCity\Core\Contracts\CertDto.cs" />
     <Compile Include="TeamCity\Core\Contracts\CertType.cs" />
     <Compile Include="TeamCity\Core\Contracts\CmdLineToolDto.cs" />
+    <Compile Include="TeamCity\Core\Contracts\ICase.cs" />
     <Compile Include="TeamCity\Core\Contracts\ICertEngine.cs" />
     <Compile Include="TeamCity\Core\Contracts\ICheckList.cs" />
     <Compile Include="TeamCity\Core\Contracts\IProcessManager.cs" />
     <Compile Include="TeamCity\Core\Contracts\IServiceLocator.cs" />
     <Compile Include="TeamCity\Core\Contracts\IServiceLocatorConfigurationExtension.cs" />
-    <Compile Include="TeamCity\Core\Contracts\ITest.cs" />
+    <Compile Include="TeamCity\Core\Contracts\ICaseDescription.cs" />
     <Compile Include="TeamCity\Core\Contracts\ProcessOutputDto.cs" />
     <Compile Include="TeamCity\Core\Contracts\TestResultDto.cs" />
     <Compile Include="TeamCity\Core\Contracts\TestState.cs" />
-    <Compile Include="TeamCity\Core\ICmdLineToolTest.cs" />
     <Compile Include="TeamCity\Core\IOutputValidator.cs" />
     <Compile Include="TeamCity\Core\IServiceMessage.cs" />
     <Compile Include="TeamCity\Core\IServiceMessageParser.cs" />
     <Compile Include="TeamCity\Core\IServiceMessageReplacements.cs" />
     <Compile Include="TeamCity\Core\IServiceMessageStructureValidator.cs" />
     <Compile Include="TeamCity\Core\IServiceMessageValidator.cs" />
-    <Compile Include="TeamCity\Core\ITestsRepository.cs" />
+    <Compile Include="TeamCity\Core\ICaseRepository.cs" />
     <Compile Include="TeamCity\Core\OutputValidator.cs" />
+    <Compile Include="TeamCity\Core\ProcessManager.cs" />
     <Compile Include="TeamCity\Core\ServiceMessage.cs" />
     <Compile Include="TeamCity\Core\ServiceMessageConstants.cs" />
     <Compile Include="TeamCity\Core\ServiceMessageParser.cs" />
     <Compile Include="TeamCity\Core\ServiceMessageReplacements.cs" />
     <Compile Include="TeamCity\Core\ServiceMessageStructureValidator.cs" />
     <Compile Include="TeamCity\Core\ServiceMessageValidator.cs" />
-    <Compile Include="TeamCity\Core\TestFramework\CmdLineToolTestTwoSuccesfullTests.cs" />
-    <Compile Include="TeamCity\Core\TestsRepository.cs" />
+    <Compile Include="TeamCity\Core\Cases\CaseTwoSuccesfullTests.cs" />
+    <Compile Include="TeamCity\Core\CaseRepository.cs" />
     <Compile Include="TeamCity\Core\ValidationResult.cs" />
     <Compile Include="TeamCity\Core\ValidationState.cs" />
-    <Compile Include="TeamCity\Tests\Test.cs" />
+    <Compile Include="TeamCity\TeamCityIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

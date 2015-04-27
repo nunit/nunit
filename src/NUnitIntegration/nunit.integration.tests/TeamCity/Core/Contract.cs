@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NUnit.Integration.Tests.TeamCity.Core.Common
+namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    public static class Contract
+    internal static class Contract
     {
         public static void Requires<T>(bool condition)
         {

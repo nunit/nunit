@@ -6,8 +6,8 @@ using NUnit.Integration.Tests.TeamCity.Core.Contracts;
 
 namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    internal interface ITestsRepository
+    internal interface ICaseRepository
     {
-        [NotNull] IEnumerable<ICmdLineToolTest> GetCmdLineToolTests(CertType certType);
+        [NotNull] IEnumerable<ICase> GetCases(CertType certType);
     }
 }
