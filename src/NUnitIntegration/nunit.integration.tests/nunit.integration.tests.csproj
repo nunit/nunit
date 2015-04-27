@@ -98,6 +98,12 @@
     <None Include="TeamCity\Core\packages.config" />
     <None Include="TeamCity\Core\Settings.StyleCop" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-4.0.csproj">
+      <Project>{6A281C98-B74D-403B-8536-966871B992E3}</Project>
+      <Name>nunit.framework-4.0</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
