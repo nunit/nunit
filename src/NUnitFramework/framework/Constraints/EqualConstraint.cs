@@ -175,7 +175,9 @@ namespace NUnit.Framework.Constraints
         /// </remarks>
         public EqualConstraint WithSameOffset
         {
-            get { _comparer.WithSameOffset = true;
+            get 
+            { 
+                _comparer.WithSameOffset = true;
                 return this;
             }
         }

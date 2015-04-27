@@ -180,24 +180,81 @@ namespace NUnit.Framework.Constraints
         #region DateTimeOffsetEquality
 
 #if !NETCF
-        public class DateTimeOffSetEquality
+
+        public class DateTimeOffsetShouldBeSame
         {
-            [Test]
-            public void ShouldBeEqualWhenOffsetIsNotIncluded()
+      
+            [Datapoints]
+            public static readonly DateTimeOffset[] sameDateTimeOffsets = 
+                {
+                    new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0)), 
+                    new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0)),
+                    new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 1, 0)),
+                    new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 55), new TimeSpan(3, 0, 0)),
+                    new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 55), new TimeSpan(3, 50, 0))
+                };
+
+            [Theory]
+            public void PositiveEqualityTest(DateTimeOffset value1, DateTimeOffset value2)
             {
-                DateTimeOffset value1 = new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0));
-                DateTimeOffset value2 = new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0));
+                Assume.That(value1 == value2);
+
                 Assert.That(value1, Is.EqualTo(value2));
             }
 
-            [Test]
-            public void ShouldNotBeEqualWhenOffsetIsIncluded()
+            [Theory]
+            public void NegativeEqualityTest(DateTimeOffset value1, DateTimeOffset value2)
             {
-                DateTimeOffset value1 = new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0));
-                DateTimeOffset value2 = new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0));
-                Assert.That(value1, Is.Not.EqualTo(value2).WithSameOffset);
+                Assume.That(value1 != value2);
+
+                Assert.That(value1, Is.Not.EqualTo(value2));
             }
 
+            [Theory]
+            public void PositiveEqualityTestWithTolerance(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
+
+                Assert.That(value1, Is.EqualTo(value2).Within(1).Minutes);
+            }
+
+            [Theory]
+            public void NegativeEqualityTestWithTolerance(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
+                
+                Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes);
+            }
+
+            [Theory]
+            public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
+                
+                Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+            }
+
+            [Theory]
+            public void PositiveEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
+                Assume.That(value1.Offset == value2.Offset);
+
+                Assert.That(value1, Is.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+            }
+
+            [Theory]
+            public void NegativeEqualityTestWithinToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
+                Assume.That(value1.Offset != value2.Offset);
+
+                Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+            }
+        }
+
+        public class DateTimeOffSetEquality
+        {
             [Test]
             public void CanMatchDates()
             {

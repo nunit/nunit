@@ -199,12 +199,29 @@ namespace NUnit.Framework.Constraints
                 return Numerics.AreEqual(x, y, ref tolerance);
 
 #if !NETCF
-            if (x is DateTimeOffset && y is DateTimeOffset && WithSameOffset)
+            if (x is DateTimeOffset && y is DateTimeOffset)
             {
+                bool result;
+
                 DateTimeOffset xAsOffset = (DateTimeOffset)x;
                 DateTimeOffset yAsOffset = (DateTimeOffset)y;
 
-                return InvokeFirstIEquatableEqualsSecond(x, y) && InvokeFirstIEquatableEqualsSecond(xAsOffset.Offset, yAsOffset.Offset);
+                if (tolerance != null && tolerance.Value is TimeSpan)
+                {
+                    TimeSpan amount = (TimeSpan)tolerance.Value;
+                    result = (xAsOffset - yAsOffset).Duration() <= amount;
+                }
+                else
+                {
+                    result = xAsOffset == yAsOffset;
+                }
+
+                if (result && WithSameOffset)
+                {
+                    result = xAsOffset.Offset == yAsOffset.Offset;
+                }
+
+                return result;
             }
 #endif
 
@@ -214,11 +231,6 @@ namespace NUnit.Framework.Constraints
 
                 if (x is DateTime && y is DateTime)
                     return ((DateTime)x - (DateTime)y).Duration() <= amount;
-
-#if !NETCF
-                if (x is DateTimeOffset && y is DateTimeOffset)
-                    return ((DateTimeOffset)x - (DateTimeOffset)y).Duration() <= amount;
-#endif
 
                 if (x is TimeSpan && y is TimeSpan)
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
