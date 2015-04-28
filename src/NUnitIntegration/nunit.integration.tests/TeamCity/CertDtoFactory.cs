@@ -7,21 +7,47 @@ namespace NUnit.Integration.Tests.TeamCity
 {
     internal sealed class CertDtoFactory
     {
+        private const int MaxThreadsCount = 100;
+
         public CertDto CreateCert()
         {
-            return new CertDto(
-                new[]
-                    {
-                        // CreateCmdLineToolDto("20", IntegrationType.CommandArg),
-                        // CreateCmdLineToolDto("20", IntegrationType.EnvironmentVar),
-                        // CreateCmdLineToolDto("40", IntegrationType.CommandArg),
-                        // CreateCmdLineToolDto("40", IntegrationType.EnvironmentVar),
-                        // CreateCmdLineToolDto("45", IntegrationType.CommandArg),
-                        CreateCmdLineToolDto("45", IntegrationType.EnvironmentVar),
-                    });
+            return new CertDto(CreateCmdLineToolDto());
         }
 
-        private static CmdLineToolDto CreateCmdLineToolDto(string framework, IntegrationType integrationType)
+        private static IEnumerable<CmdLineToolDto> CreateCmdLineToolDto()
+        {
+            var frameworks = new[]
+            {
+                "20",
+                "40",
+                "45",
+            };
+
+            return (
+                from framework in frameworks
+                select CreateCmdLineToolDto(framework)).SelectMany(i => i);
+        }
+
+        private static IEnumerable<CmdLineToolDto> CreateCmdLineToolDto(string framework)
+        {
+            var integrationTypes = new[]
+            {
+                IntegrationType.CommandArg,
+                IntegrationType.EnvironmentVar,
+            };
+
+            var generalCases = (
+                from integrationType in integrationTypes
+                select CreateCmdLineToolDto(framework, integrationType, 1, CaseLists.GeneralCases)).SelectMany(i => i);
+
+            var multithreadingCases = (
+                from integrationType in integrationTypes
+                select CreateCmdLineToolDto(framework, integrationType, 50, CaseLists.GeneralCases)).SelectMany(i => i);
+
+            return generalCases.Concat(multithreadingCases);
+        }
+
+        private static IEnumerable<CmdLineToolDto> CreateCmdLineToolDto(string framework, IntegrationType integrationType, int threadsCount, IEnumerable<string> cases)
         {
             var args = new List<string>
             {
@@ -29,27 +55,32 @@ namespace NUnit.Integration.Tests.TeamCity
             };
 
             var environmentVariables = new Dictionary<string, string>();
-            string integrationTypeDescription = "unknown integration type";
+            string integrationTypeInfo = "unknown integration type";
             switch (integrationType)
             {
                 case IntegrationType.CommandArg:
                     args.Add("--teamcity");
-                    integrationTypeDescription = "--teamcity";
+                    integrationTypeInfo = "--teamcity";
                     break;
 
                 case IntegrationType.EnvironmentVar:
                     environmentVariables.Add("TEAMCITY_PROJECT_NAME", "Test");
-                    integrationTypeDescription = "env var";
+                    integrationTypeInfo = "env var";
                     break;
             }
 
-            return new CmdLineToolDto(
+            if (threadsCount > 1)
+            {
+                args.Add(string.Format("--workers={0}", threadsCount));
+            }
+
+            yield return new CmdLineToolDto(
                 CertType.TestFramework,
-                string.Format("NUnit v{0} using {1}", framework, integrationTypeDescription),
+                string.Format("NUnit for .Net{0} using {1} and {2} treads", framework, integrationTypeInfo, threadsCount),
                 string.Format(@"net{0}\nunit-console.exe", framework),
                 args.ToArray(),
                 environmentVariables,
-                CaseList.Cases.Select(CreateCaseDto));
+                cases.Select(CreateCaseDto));
         }
 
         private static CaseDto CreateCaseDto(string caseId)

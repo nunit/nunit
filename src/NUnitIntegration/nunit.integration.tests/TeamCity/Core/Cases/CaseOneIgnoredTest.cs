@@ -31,7 +31,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             var testStarted1 = testMessages[0];
             var testIgnored1 = testMessages[1];            
 
-            if (!CheckNameOfPair(testStarted1, testIgnored1, out result))
+            if (!CheckPair(testStarted1, testIgnored1, out result))
             {
                 return result;
             }

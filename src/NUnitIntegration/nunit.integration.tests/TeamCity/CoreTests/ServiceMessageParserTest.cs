@@ -12,23 +12,6 @@ namespace NUnit.Integration.Tests.TeamCity.CoreTests
     [TestFixture]
     public class ServiceMessageParserTest
     {
-        private CompositDisposable _disp;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _disp = new CompositDisposable
-            {
-                ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension())
-            };
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _disp.Dispose();
-        }
-
         [Test]
         public void BrokenStream0()
         {

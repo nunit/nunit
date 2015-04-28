@@ -40,6 +40,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Common
                 AddCaseMapping<CaseOneIgnoredTest>(serviceLocator),
                 AddCaseMapping<CaseTwoIgnoredTests>(serviceLocator),
                 AddCaseMapping<CaseSuccesfulIgnoredFailedTests>(serviceLocator),
+                AddCaseMapping<CaseMultithreadingTests>(serviceLocator),
             };
         }
 

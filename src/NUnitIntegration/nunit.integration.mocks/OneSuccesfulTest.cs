@@ -7,6 +7,7 @@ namespace NUnit.Integration.Mocks
         [Test, Category("OneSuccesfulTest")]
         public void Test1()
         {
+            Utilities.DoSomething();
         }
     }
 }

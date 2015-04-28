@@ -7,12 +7,14 @@ namespace NUnit.Integration.Mocks
         [Test, Category("TwoSuccesfulTests")]
         public void Test1()
         {
+            Utilities.DoSomething();
             Assert.Pass("Reason");
         }
 
         [Test, Category("TwoSuccesfulTests")]
         public void Test2()
         {
+            Utilities.DoSomething();
         }
     }
 }

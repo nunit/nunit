@@ -32,12 +32,12 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             var testFailed1 = testMessages[1];
             var testFinished1 = testMessages[2];
 
-            if (!CheckNameOfPair(testStarted1, testFinished1, out result))
+            if (!CheckPair(testStarted1, testFinished1, out result))
             {
                 return result;
             }
 
-            if (!CheckNameOfPair(testStarted1, testFailed1, out result))
+            if (!CheckPair(testStarted1, testFailed1, out result))
             {
                 return result;
             }

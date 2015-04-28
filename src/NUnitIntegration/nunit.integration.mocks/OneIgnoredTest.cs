@@ -7,6 +7,7 @@ namespace NUnit.Integration.Mocks
         [Test, Category("OneIgnoredTest")]
         public void Test1()
         {
+            Utilities.DoSomething();
             Assert.Ignore("Reason");
         }
     }

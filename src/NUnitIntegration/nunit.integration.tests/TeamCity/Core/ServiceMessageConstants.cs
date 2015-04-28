@@ -15,5 +15,6 @@
         public const string TestStdErrMessageName = "testStdErr";
 
         public const string MessageAttributeName = "name";
+        public const string MessageAttributeFlowId = "flowId";
     }
 }

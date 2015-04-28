@@ -7,6 +7,7 @@ namespace NUnit.Integration.Mocks
         [Test, Category("OneFailedTest")]
         public void Test1()
         {
+            Utilities.DoSomething();
             Assert.Fail("Reason");
         }
     }

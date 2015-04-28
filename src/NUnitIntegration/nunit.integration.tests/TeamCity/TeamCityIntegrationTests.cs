@@ -9,12 +9,7 @@ namespace NUnit.Integration.Tests.TeamCity
 {
     public sealed class TeamCityIntegrationTests
     {
-        private static readonly CertDto Cert = new CertDtoFactory().CreateCert();
-        
-        static TeamCityIntegrationTests()
-        {
-            ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension());
-        }
+        private static readonly CertDto Cert = new CertDtoFactory().CreateCert();       
 
         public static object[] TestResults
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -124,16 +123,38 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             return true;
         }
 
-        protected bool CheckNameOfPair([NotNull] IServiceMessage message1, [NotNull] IServiceMessage message2, out ValidationResult result)
+        protected bool CheckPair([NotNull] IServiceMessage message1, [NotNull] IServiceMessage message2, out ValidationResult result)
         {
             Contract.Requires<ArgumentNullException>(message1 != null);
             Contract.Requires<ArgumentNullException>(message2 != null);
 
-            var name1 = GetAtr(message1, "name");
-            var name2 = GetAtr(message2, "name");
-            if (name1 != name2)
+            if (!CheckAttr(message1, message2, ServiceMessageConstants.MessageAttributeName, out result))
             {
-                result = new ValidationResult(ValidationState.NotValid, string.Format("Tests' name are not equal: {0} and {1}", name1, name2));
+                return false;
+            }
+
+            if (!CheckAttr(message1, message2, ServiceMessageConstants.MessageAttributeFlowId, out result))
+            {
+                return false;
+            }
+
+            result = default(ValidationResult);
+            return true;
+        }
+
+        private bool CheckAttr([NotNull] IServiceMessage message1, [NotNull] IServiceMessage message2, [NotNull] string attributeName, out ValidationResult result)
+        {
+            Contract.Requires<ArgumentNullException>(message1 != null);
+            Contract.Requires<ArgumentNullException>(message2 != null);
+            Contract.Requires<ArgumentNullException>(attributeName != null);
+
+            var atr1 = GetAtr(message1, attributeName);
+            var atr2 = GetAtr(message2, attributeName);
+            if (atr1 != atr2)
+            {
+                result = new ValidationResult(
+                    ValidationState.NotValid,
+                    string.Format("Tests' {0}s are not equal: {1} and {2}", attributeName, atr1, atr2));
                 return false;
             }
 
