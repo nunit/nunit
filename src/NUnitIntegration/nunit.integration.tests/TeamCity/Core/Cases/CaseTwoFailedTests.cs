@@ -13,8 +13,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
     {
         public CaseTwoFailedTests()
             : base(CertType.TestFramework, "TwoFailedTests", "Two failed tests")
-        {
-            
+        {            
         }
 
         protected override ValidationResult ValidateCase(IEnumerable<IServiceMessage> messages)

@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OneIgnoredTest.cs" />
     <Compile Include="OneFailedTest.cs" />
+    <Compile Include="TwoIgnoredTests.cs" />
     <Compile Include="TwoFailedTests.cs" />
     <Compile Include="TwoSuccesfulTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

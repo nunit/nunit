@@ -94,7 +94,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
 
                     testResult = new TestResultDto(cmdLineTool.ToolId, caseInfo.CaseId, testState)
                     {
-                        Details = string.Join(Environment.NewLine,validationResult.Details)
+                        Details = string.Join(Environment.NewLine, validationResult.Details)
                     };
                 }
             }

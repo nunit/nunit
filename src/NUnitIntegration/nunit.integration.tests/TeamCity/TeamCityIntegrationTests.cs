@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 
@@ -17,9 +17,20 @@ namespace NUnit.Integration.Tests.TeamCity
             "TwoSuccesfulTests",
             "OneFailedTest",
             "TwoFailedTests",
+            "OneIgnoredTest",
+            "TwoIgnoredTests",
         };
 
-        private static readonly CertDto CertData = CreateCertData();
+        private static readonly CertDto Cert = new CertDto(
+        new[]
+        {
+            // CreateCmdLineToolDto("20", false),
+            // CreateCmdLineToolDto("20", true),
+            // CreateCmdLineToolDto("40", false),
+            // CreateCmdLineToolDto("40", true),
+            // CreateCmdLineToolDto("45", false),
+            CreateCmdLineToolDto("45", true),
+        });
         
         static TeamCityIntegrationTests()
         {
@@ -30,7 +41,7 @@ namespace NUnit.Integration.Tests.TeamCity
         {
             get
             {
-                return ServiceLocator.Root.GetService<ICertEngine>().Run(CertData).Select(i => (object)i).ToArray();
+                return ServiceLocator.Root.GetService<ICertEngine>().Run(Cert).Select(i => (object)i).ToArray();
             }
         }
 
@@ -73,20 +84,6 @@ namespace NUnit.Integration.Tests.TeamCity
             }
 
             return sb.ToString();
-        }
-
-        private static CertDto CreateCertData()
-        {
-            return new CertDto(
-                new[] 
-                {
-                    CreateCmdLineToolDto("20", false),
-                    CreateCmdLineToolDto("20", true),
-                    CreateCmdLineToolDto("40", false),
-                    CreateCmdLineToolDto("40", true),
-                    CreateCmdLineToolDto("45", false),
-                    CreateCmdLineToolDto("45", true),
-                });
         }
 
         private static CmdLineToolDto CreateCmdLineToolDto(string framework, bool useEnvVar)

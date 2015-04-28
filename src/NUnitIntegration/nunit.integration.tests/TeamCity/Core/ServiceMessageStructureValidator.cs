@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NUnit.Integration.Tests.TeamCity.Core.Common;
-
 namespace NUnit.Integration.Tests.TeamCity.Core
 {
     internal sealed class ServiceMessageStructureValidator : IServiceMessageStructureValidator
@@ -30,7 +28,8 @@ namespace NUnit.Integration.Tests.TeamCity.Core
 
                 var isStackPopMessage =
                     curMessage.Name == ServiceMessageConstants.TestSuiteFinishedMessageName
-                    || curMessage.Name == ServiceMessageConstants.TestFinishedMessageName;
+                    || curMessage.Name == ServiceMessageConstants.TestFinishedMessageName
+                    || curMessage.Name == ServiceMessageConstants.TestIgnoredMessageName;
 
                 if (isStackPopMessage && hasNameAttribute)
                 {
@@ -42,7 +41,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     var prevMessage = messageStack.Pop();
 
                     var prevName = prevMessage.Name.Replace("Started", string.Empty);
-                    var curName = curMessage.Name.Replace("Finished", string.Empty);
+                    var curName = curMessage.Name.Replace("Finished", string.Empty).Replace("Ignored", string.Empty);
                     if (prevName != curName)
                     {
                         return new ValidationResult(ValidationState.NotValid, string.Format("Message \"{0}\" has no corresponding message for start", curMessage));

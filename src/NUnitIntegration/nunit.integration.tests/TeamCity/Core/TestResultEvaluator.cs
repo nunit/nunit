@@ -9,8 +9,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
     internal sealed class TestResultEvaluator : ITestResultEvaluator
     {
         private readonly string _description;
-
-        private readonly Lazy<TestResultDto> lazyValue;
+        private Func<TestResultDto> _evaluator;
 
         public TestResultEvaluator([NotNull] Func<TestResultDto> evaluator, [NotNull] string description)
         {
@@ -18,7 +17,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             Contract.Requires<ArgumentNullException>(description != null);
 
             _description = description;
-            lazyValue = new Lazy<TestResultDto>(evaluator);
+            _evaluator = evaluator;
         }
 
         public TestResultEvaluator([NotNull] TestResultDto result, [NotNull] string description)
@@ -27,13 +26,13 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             Contract.Requires<ArgumentNullException>(description != null);
 
             _description = description;
-            lazyValue = new Lazy<TestResultDto>(() => result);
+            _evaluator = () => result;
         }
 
         public TestResultDto Evaluate()
         {
             Contract.Ensures(Contract.Result<TestResultDto>() != null);
-            return lazyValue.Value;
+            return _evaluator();
         }
 
         /// <summary>
