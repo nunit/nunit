@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
@@ -8,15 +9,16 @@ using NUnit.Integration.Tests.TeamCity.Core.Contracts;
 namespace NUnit.Integration.Tests.TeamCity
 {
     public sealed class TeamCityIntegrationTests
-    {
-        private static readonly CertDto Cert = new CertDtoFactory().CreateCert();       
-
+    {        
         public static object[] TestResults
         {
             get
             {
-                return ServiceLocator.Root.GetService<ICertEngine>().Run(Cert).Select(i => (object)i).ToArray();
-            }
+                using (ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension()))
+                {
+                    return ServiceLocator.Root.GetService<ICertEngine>().Run(new CertDtoFactory().CreateCert()).Select(i => (object)i).ToArray();
+                }
+            }        
         }
 
         [Test, TestCaseSource("TestResults"), Category("Integration")]

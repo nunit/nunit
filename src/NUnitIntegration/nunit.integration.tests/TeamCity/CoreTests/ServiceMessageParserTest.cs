@@ -5,7 +5,6 @@ using System.Text;
 
 using NUnit.Framework;
 using NUnit.Integration.Tests.TeamCity.Core;
-using NUnit.Integration.Tests.TeamCity.Core.Common;
 
 namespace NUnit.Integration.Tests.TeamCity.CoreTests
 {
