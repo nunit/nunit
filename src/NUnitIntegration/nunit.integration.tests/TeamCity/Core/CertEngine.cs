@@ -47,48 +47,38 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     {
                         var processManager = ServiceLocator.Root.GetService<IProcessManager>();
                         var output = processManager.StartProcess(cmdLineTool.CmdLineFileName, cmdLineTool.Args.Concat(curCase.Args), cmdLineTool.EnvironmentVariables);
-                        if (output.ExitCode != 0)
+                        var rawMessages = output.OutputLines.Select(line => ServiceLocator.Root.GetService<IServiceMessageParser>().ParseServiceMessages(new StringReader(line))).SelectMany(i => i).ToList();
+                        if (rawMessages.Count == 0)
                         {
-                            testResult = new TestResultDto(cmdLineTool.ToolId, curCase.CaseId, TestState.Failed)
-                            {
-                                Details = string.Join(Environment.NewLine, output)
-                            };
+                            testResult = new TestResultDto(cmdLineTool.ToolId, curCase.CaseId, TestState.UnknownCase) { Details = string.Join(Environment.NewLine, output.OutputLines) };
                         }
                         else
                         {
-                            var rawMessages = output.OutputLines.Select(line => ServiceLocator.Root.GetService<IServiceMessageParser>().ParseServiceMessages(new StringReader(line))).SelectMany(i => i).ToList();
-                            if (rawMessages.Count == 0)
+                            var validationResult = @case.Validate(rawMessages);
+                            TestState testState;
+                            switch (validationResult.State)
                             {
-                                testResult = new TestResultDto(cmdLineTool.ToolId, curCase.CaseId, TestState.UnknownCase) { Details = string.Join(Environment.NewLine, output.OutputLines) };
+                                case ValidationState.Valid:
+                                case ValidationState.HasWarning:
+                                    testState = TestState.Passed;
+                                    break;
+
+                                case ValidationState.NotValid:
+                                    testState = TestState.Failed;
+                                    break;
+
+                                case ValidationState.Unknown:
+                                    testState = TestState.Ignored;
+                                    break;
+
+                                default:
+                                    throw new NotImplementedException(string.Format("Unknown validation state \"{0}\"", validationResult.State));
                             }
-                            else
-                            {                                
-                                var validationResult = @case.Validate(rawMessages);
-                                TestState testState;
-                                switch (validationResult.State)
-                                {
-                                    case ValidationState.Valid:
-                                    case ValidationState.HasWarning:
-                                        testState = TestState.Passed;
-                                        break;
 
-                                    case ValidationState.NotValid:
-                                        testState = TestState.Failed;
-                                        break;
-
-                                    case ValidationState.Unknown:
-                                        testState = TestState.Ignored;
-                                        break;
-
-                                    default:
-                                        throw new NotImplementedException(string.Format("Unknown validation state \"{0}\"", validationResult.State));
-                                }
-
-                                testResult = new TestResultDto(cmdLineTool.ToolId, curCase.CaseId, testState)
-                                {
-                                    Details = string.Join(Environment.NewLine, validationResult.Details)
-                                };
-                            }
+                            testResult = new TestResultDto(cmdLineTool.ToolId, curCase.CaseId, testState)
+                            {
+                                Details = string.Join(Environment.NewLine, validationResult.Details)
+                            };
                         }
                     }
                     catch (Exception ex)

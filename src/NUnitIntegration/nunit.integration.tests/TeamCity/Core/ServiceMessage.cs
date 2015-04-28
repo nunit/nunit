@@ -14,8 +14,8 @@ namespace NUnit.Integration.Tests.TeamCity.Core
 
         public ServiceMessage(
             [NotNull] string name, 
-            [CanBeNull] string defaultValue = null, 
-            [NotNull] Dictionary<string, string> properties = null)
+            [CanBeNull] string defaultValue = null,
+            [CanBeNull] Dictionary<string, string> properties = null)
         {
             Contract.Requires<ArgumentNullException>(name != null);
 
@@ -51,8 +51,9 @@ namespace NUnit.Integration.Tests.TeamCity.Core
         public override string ToString()
         {
             return string.Format(
-                "{0} {1} {2}",
+                "{0}{1} {2} {3}",
                 ServiceMessageConstants.ServiceMessageOpen,
+                Name,
                 string.Join(" ", _properties.Select(i => string.Format("{0}=\"{1}\"", i.Key, i.Value)).ToArray()),
                 ServiceMessageConstants.ServiceMessageClose);
         }

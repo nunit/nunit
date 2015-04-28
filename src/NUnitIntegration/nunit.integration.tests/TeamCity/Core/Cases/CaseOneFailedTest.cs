@@ -9,10 +9,10 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
     /// <summary>
     /// The cmd line tool test two succesfull tests.
     /// </summary>
-    internal class CaseOneSuccesfulTest : CaseBase
+    internal class CaseOneFailedTest : CaseBase
     {
-        public CaseOneSuccesfulTest()
-            : base(CertType.TestFramework, "OneSuccesfulTest", "One succesful test")
+        public CaseOneFailedTest()
+            : base(CertType.TestFramework, "OneFailedTest", "One failed test")
         {
             
         }
@@ -24,15 +24,21 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
 
             var testMessages = GetTestMessages(messages).ToList();
             ValidationResult result;
-            if (!CheckCount(testMessages, 2, out result))
+            if (!CheckCount(testMessages, 3, out result))
             {
                 return result;
             }
 
             var testStarted1 = testMessages[0];
-            var testFinished1 = testMessages[1];
+            var testFailed1 = testMessages[1];
+            var testFinished1 = testMessages[2];
 
             if (!CheckNameOfPair(testStarted1, testFinished1, out result))
+            {
+                return result;
+            }
+
+            if (!CheckNameOfPair(testStarted1, testFailed1, out result))
             {
                 return result;
             }

@@ -22,9 +22,24 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             Contract.Requires<ArgumentNullException>(messages != null);
             Contract.Ensures(Contract.Result<ValidationResult>() != null);
 
-            var testMessages = messages.Where(i => i.Name == ServiceMessageConstants.TestStartedMessageName || i.Name == ServiceMessageConstants.TestFinishedMessageName).ToList();
+            var testMessages = GetTestMessages(messages).ToList();
             ValidationResult result;
             if (!CheckCount(testMessages, 4, out result))
+            {
+                return result;
+            }
+
+            var testStarted1 = testMessages[0];
+            var testFinished1 = testMessages[1];
+            var testStarted2 = testMessages[2];
+            var testFinished2 = testMessages[3];
+
+            if (!CheckNameOfPair(testStarted1, testFinished1, out result))
+            {
+                return result;
+            }
+
+            if (!CheckNameOfPair(testStarted2, testFinished2, out result))
             {
                 return result;
             }

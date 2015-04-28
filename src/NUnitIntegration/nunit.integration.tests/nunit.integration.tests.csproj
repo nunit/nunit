@@ -48,7 +48,9 @@
     <Compile Include="TeamCity\CoreTests\ServiceMessageStructureValidatorTest.cs" />
     <Compile Include="TeamCity\CoreTests\StringWrapper.cs" />
     <Compile Include="TeamCity\Core\Cases\CaseBase.cs" />
+    <Compile Include="TeamCity\Core\Cases\CaseOneFailedTest.cs" />
     <Compile Include="TeamCity\Core\Cases\CaseOneSuccesfulTest.cs" />
+    <Compile Include="TeamCity\Core\Cases\CaseTwoFailedTests.cs" />
     <Compile Include="TeamCity\Core\CertEngine.cs" />
     <Compile Include="TeamCity\Core\Common\Annotations.cs" />
     <Compile Include="TeamCity\Core\Common\CompositDisposable.cs" />

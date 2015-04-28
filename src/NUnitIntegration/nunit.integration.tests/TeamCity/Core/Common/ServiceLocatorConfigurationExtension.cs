@@ -16,9 +16,6 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Common
         private static readonly Lazy<IOutputValidator> OutputValidator = new Lazy<IOutputValidator>(() => new OutputValidator());
         private static readonly Lazy<IProcessManager> ProcessManager = new Lazy<IProcessManager>(() => new ProcessManager());
 
-        private static readonly Lazy<ICase> CaseOneSuccesfullTest = new Lazy<ICase>(() => new CaseOneSuccesfulTest());
-        private static readonly Lazy<ICase> CaseTwoSuccesfull = new Lazy<ICase>(() => new CaseTwoSuccesfulTests());
-
         public IDisposable Initialize(IServiceLocator serviceLocator)
         {
             Contract.Requires<ArgumentNullException>(serviceLocator != null);
@@ -36,9 +33,18 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Common
                 serviceLocator.AddMapping(() => ProcessManager.Value),
 
                 // Cases
-                serviceLocator.AddMapping(() => CaseTwoSuccesfull.Value, CaseTwoSuccesfull.Value.CaseId),
-                serviceLocator.AddMapping(() => CaseOneSuccesfullTest.Value, CaseOneSuccesfullTest.Value.CaseId),
+                AddCaseMapping<CaseOneSuccesfulTest>(serviceLocator),
+                AddCaseMapping<CaseTwoSuccesfulTests>(serviceLocator),
+                AddCaseMapping<CaseOneFailedTest>(serviceLocator),
+                AddCaseMapping<CaseTwoFailedTests>(serviceLocator),
             };
+        }
+
+        private IDisposable AddCaseMapping<TCase>(IServiceLocator serviceLocator)
+            where TCase : ICase, new()
+        {
+            var @case = new TCase();
+            return serviceLocator.AddMapping<ICase>(() => @case, @case.CaseId);
         }
     }
 }

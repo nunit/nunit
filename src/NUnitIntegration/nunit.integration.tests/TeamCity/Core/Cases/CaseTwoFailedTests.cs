@@ -9,10 +9,10 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
     /// <summary>
     /// The cmd line tool test two succesfull tests.
     /// </summary>
-    internal class CaseOneSuccesfulTest : CaseBase
+    internal class CaseTwoFailedTests : CaseBase
     {
-        public CaseOneSuccesfulTest()
-            : base(CertType.TestFramework, "OneSuccesfulTest", "One succesful test")
+        public CaseTwoFailedTests()
+            : base(CertType.TestFramework, "TwoFailedTests", "Two failed tests")
         {
             
         }
@@ -24,19 +24,38 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
 
             var testMessages = GetTestMessages(messages).ToList();
             ValidationResult result;
-            if (!CheckCount(testMessages, 2, out result))
+            if (!CheckCount(testMessages, 6, out result))
             {
                 return result;
             }
 
             var testStarted1 = testMessages[0];
-            var testFinished1 = testMessages[1];
+            var testFailed1 = testMessages[1];
+            var testFinished1 = testMessages[2];
+            var testStarted2 = testMessages[3];
+            var testFailed2 = testMessages[4];
+            var testFinished2 = testMessages[5];
 
             if (!CheckNameOfPair(testStarted1, testFinished1, out result))
             {
                 return result;
             }
 
+            if (!CheckNameOfPair(testStarted1, testFailed1, out result))
+            {
+                return result;
+            }
+
+            if (!CheckNameOfPair(testStarted2, testFinished2, out result))
+            {
+                return result;
+            }
+
+            if (!CheckNameOfPair(testStarted2, testFailed2, out result))
+            {
+                return result;
+            }
+            
             return new ValidationResult(ValidationState.Valid);
         }
     }

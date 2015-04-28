@@ -7,6 +7,7 @@ namespace NUnit.Integration.Mocks
         [Test, Category("TwoSuccesfulTests")]
         public void Test1()
         {
+            Assert.Pass("Reason");
         }
 
         [Test, Category("TwoSuccesfulTests")]

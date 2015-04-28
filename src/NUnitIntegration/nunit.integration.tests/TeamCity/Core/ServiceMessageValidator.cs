@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NUnit.Integration.Tests.TeamCity.Core.Common;
+using JetBrains.Annotations;
 
 namespace NUnit.Integration.Tests.TeamCity.Core
 {
@@ -33,9 +33,51 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestStartedMessageName:
+                    if (!HasAttributes(message, out result, "name"))
+                    {
+                        return result;
+                    }
+
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestFinishedMessageName:
+                    if (!HasAttributes(message, out result, "name", "duration"))
+                    {
+                        return result;
+                    }
+
+                    return new ValidationResult(ValidationState.Valid);
+
+                case ServiceMessageConstants.TestFailedMessageName:
+                    if (!HasAttributes(message, out result, "name", "message"))
+                    {
+                        return result;
+                    }
+
+                    return new ValidationResult(ValidationState.Valid);
+
+                case ServiceMessageConstants.TestIgnoredMessageName:
+                    if (!HasAttributes(message, out result, "name", "message"))
+                    {
+                        return result;
+                    }
+
+                    return new ValidationResult(ValidationState.Valid);
+
+                case ServiceMessageConstants.TestStdErrMessageName:
+                    if (!HasAttributes(message, out result, "name", "out"))
+                    {
+                        return result;
+                    }
+
+                    return new ValidationResult(ValidationState.Valid);
+
+                case ServiceMessageConstants.TestStdOutMessageName:
+                    if (!HasAttributes(message, out result, "name", "out"))
+                    {
+                        return result;
+                    }
+
                     return new ValidationResult(ValidationState.Valid);
 
                 default:
@@ -43,16 +85,13 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             }
         }
 
-        private bool HasAttributes(IServiceMessage message, out ValidationResult result, params string[] attributeNames)
+        private bool HasAttributes([NotNull] IServiceMessage message, out ValidationResult result, [NotNull] params string[] requiredAttributes)
         {
-            if (!attributeNames.Any() && message.Attributes.Any())
-            {
-                result = new ValidationResult(ValidationState.NotValid, "Message should not have any attributes");
-                return false;
-            }
+            Contract.Requires<ArgumentNullException>(message != null);
+            Contract.Requires<ArgumentNullException>(requiredAttributes != null);
 
             var missingAttributes = new List<string>();
-            foreach (var attributeName in attributeNames)
+            foreach (var attributeName in requiredAttributes)
             {
                 if (!message.Attributes.Contains(attributeName))
                 {

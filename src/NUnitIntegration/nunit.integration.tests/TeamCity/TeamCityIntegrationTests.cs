@@ -12,9 +12,12 @@ namespace NUnit.Integration.Tests.TeamCity
     {
         private static readonly IEnumerable<string> CaseIds = new[]
         {
-            "CaseOneSuccesfulTest",
-            "TwoSuccesfulTests"
+            "OneSuccesfulTest",
+            "TwoSuccesfulTests",
+            "OneFailedTest",
+            "TwoFailedTests",
         };
+
         private static readonly CertDto CertData = CreateCertData();
 
         public static object[] TestResults
@@ -23,33 +26,35 @@ namespace NUnit.Integration.Tests.TeamCity
             {
                 using (ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension()))
                 {
-                    return ServiceLocator.Root.GetService<ICertEngine>().Run(CertData).Select(i => new[] { string.Format("Case {0}", i), (object)i }).ToArray();
+                    return ServiceLocator.Root.GetService<ICertEngine>().Run(CertData).Select(i => (object)i).ToArray();
                 }
             }
         }
 
         [Test, TestCaseSource("TestResults"), Category("Integration")]
-        public void Case(string caseName, object testResultObj)
+        public void Case(object testResultObj)
         {
             var result = (TestResultDto)testResultObj;
+            var details = CreateDetails(result);
+            System.Diagnostics.Debug.WriteLine(details);
             if (result.State == TestState.Failed)
             {
-                Assert.Fail(CreateDetails(result));
+                Assert.Fail(details);
             }
 
             if (result.State == TestState.Ignored)
             {
-                Assert.Ignore(CreateDetails(result));
+                Assert.Ignore(details);
             }
 
             if (result.State == TestState.UnknownCase || result.State == TestState.Exception || result.State == TestState.NotImplemented)
             {
-                Assert.Inconclusive(CreateDetails(result));
+                Assert.Inconclusive(details);
             }
 
             if (result.State == TestState.Passed)
             {
-                Assert.Pass(CreateDetails(result));
+                Assert.Pass(details);
             }
         }
 
