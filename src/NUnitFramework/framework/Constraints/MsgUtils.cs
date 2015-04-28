@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// Static methods used in creating messages
     /// </summary>
-    internal static class MsgUtils
+    public static class MsgUtils
     {
         /// <summary>
         /// Static string used when strings are clipped
