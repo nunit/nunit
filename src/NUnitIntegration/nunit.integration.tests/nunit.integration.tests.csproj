@@ -45,7 +45,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCity\CaseLists.cs" />
     <Compile Include="TeamCity\CertDtoFactory.cs" />
-    <Compile Include="TeamCity\CoreTests\ServiceMessageParserPerformanceTest.cs" />
     <Compile Include="TeamCity\CoreTests\ServiceMessageParserTest.cs" />
     <Compile Include="TeamCity\CoreTests\ServiceMessageStructureValidatorTest.cs" />
     <Compile Include="TeamCity\CoreTests\StringWrapper.cs" />
