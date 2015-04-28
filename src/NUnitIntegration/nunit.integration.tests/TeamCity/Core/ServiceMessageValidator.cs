@@ -39,7 +39,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 default:
-                    return new ValidationResult(ValidationState.Unknow);
+                    return new ValidationResult(ValidationState.Unknown);
             }
         }
 

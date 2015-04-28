@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 using NUnit.Integration.Tests.TeamCity.Core.Common;
 
@@ -9,15 +7,13 @@ namespace NUnit.Integration.Tests.TeamCity.Core
 {
     internal sealed class OutputValidator : IOutputValidator
     {
-        public ValidationResult Validate(IEnumerable<string> output)
+        public ValidationResult Validate(IEnumerable<IServiceMessage> rawMessages)
         {
-            Contract.Requires<ArgumentNullException>(output != null);
+            Contract.Requires<ArgumentNullException>(rawMessages != null);
             Contract.Ensures(Contract.Result<ValidationResult>() != null);
 
             var isSuccess = true;
-            var details = new List<string>();
-
-            var rawMessages = output.Select(line => ServiceLocator.Root.GetService<IServiceMessageParser>().ParseServiceMessages(new StringReader(line))).SelectMany(i => i).ToList();
+            var details = new List<string>();            
             var validatedMessages = new List<IServiceMessage>();
             var messageValidator = ServiceLocator.Root.GetService<IServiceMessageValidator>();
             foreach (var message in rawMessages)
@@ -34,7 +30,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                         validatedMessages.Add(message);
                         break;
 
-                    case ValidationState.Unknow:
+                    case ValidationState.Unknown:
                         details.Add(string.Format("Message \"{0}\" is unknown", message.Name));
                         break;
 
@@ -62,7 +58,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     details.Add("Message structure validation has warning(s)");
                     break;
 
-                case ValidationState.Unknow:
+                case ValidationState.Unknown:
                     details.Add("Message structure validation result is unknown");
                     break;
 

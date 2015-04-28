@@ -2,7 +2,7 @@
 {
     internal enum ValidationState
     {
-        Unknow,
+        Unknown,
 
         Valid,
 

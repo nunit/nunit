@@ -17,7 +17,7 @@ namespace NUnit.Integration.Tests.TeamCity
             var certData = CreateCertData();
             using (ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension()))
             {
-                var results = ServiceLocator.Root.GetService<ICertEngine>().Run(certData);
+                var results = ServiceLocator.Root.GetService<ICertEngine>().Run(certData).ToList();
 
                 var fails = results.Where(i => i.State == TestState.Failed || i.State == TestState.Exception).ToList();
                 if (fails.Any())
@@ -25,7 +25,7 @@ namespace NUnit.Integration.Tests.TeamCity
                     Assert.Fail(CreateDetails(fails));                    
                 }
 
-                var inconclusive = results.Where(i => i.State == TestState.UnknownCase).ToList();
+                var inconclusive = results.Where(i => i.State == TestState.Ignored || i.State == TestState.UnknownCase).ToList();
                 if (inconclusive.Any())
                 {
                     Assert.Inconclusive(CreateDetails(inconclusive));
@@ -62,10 +62,10 @@ namespace NUnit.Integration.Tests.TeamCity
                         CertType.TestFramework, 
                         "NUnit v2.0", 
                         @"net20\nunit-console.exe",
-                        new[] { @"v2.0\NUnit.Tests.dll", "--teamcity" },
+                        new[] { @"net20\NUnit.Integration.Mocks.dll", "--teamcity" },
                         new[]
                         {
-                                new CaseDto("TwoSuccesfullTests", Enumerable.Empty<string>()), 
+                            new CaseDto("TwoSuccesfullTests", Enumerable.Empty<string>()), 
                         })
                 });
         }

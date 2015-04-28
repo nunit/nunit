@@ -5,6 +5,8 @@
         Passed,
         
         Failed,
+
+        Ignored,
         
         NotImplemented,
 
