@@ -12,7 +12,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
     internal class CaseOneIgnoredTest : CaseBase
     {
         public CaseOneIgnoredTest()
-            : base(CertType.TestFramework, "OneIgnoredTest", "One ignored test")
+            : base(CertType.TestFramework, "OneIgnoredTest", "1 ignored test")
         {            
         }
 

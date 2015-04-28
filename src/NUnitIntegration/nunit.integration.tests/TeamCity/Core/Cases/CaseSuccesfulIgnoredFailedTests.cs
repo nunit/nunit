@@ -9,10 +9,10 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
     /// <summary>
     /// The cmd line tool test two succesfull tests.
     /// </summary>
-    internal class CaseTwoIgnoredTests : CaseBase
+    internal class CaseSuccesfulIgnoredFailedTests : CaseBase
     {
-        public CaseTwoIgnoredTests()
-            : base(CertType.TestFramework, "TwoIgnoredTests", "2 ignored tests")
+        public CaseSuccesfulIgnoredFailedTests()
+            : base(CertType.TestFramework, "SuccesfulIgnoredFailedTests", "1 succesful 1 ignored 1 failed tests")
         {            
         }
 
@@ -23,22 +23,35 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
 
             var testMessages = GetTestMessages(messages).ToList();
             ValidationResult result;
-            if (!CheckCount(testMessages, 4, out result))
+            if (!CheckCount(testMessages, 7, out result))
             {
                 return result;
             }
 
             var testStarted1 = testMessages[0];
-            var testIgnored1 = testMessages[1];
+            var testFinished1 = testMessages[1];
             var testStarted2 = testMessages[2];
             var testIgnored2 = testMessages[3];
+            var testStarted3 = testMessages[4];
+            var testFailed3 = testMessages[5];
+            var testFinished3 = testMessages[6];
 
-            if (!CheckNameOfPair(testStarted1, testIgnored1, out result))
+            if (!CheckNameOfPair(testStarted1, testFinished1, out result))
             {
                 return result;
             }
 
             if (!CheckNameOfPair(testStarted2, testIgnored2, out result))
+            {
+                return result;
+            }
+
+            if (!CheckNameOfPair(testStarted3, testFinished3, out result))
+            {
+                return result;
+            }
+
+            if (!CheckNameOfPair(testStarted3, testFailed3, out result))
             {
                 return result;
             }

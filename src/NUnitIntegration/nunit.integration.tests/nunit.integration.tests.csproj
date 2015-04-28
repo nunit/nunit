@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TeamCity\CaseList.cs" />
+    <Compile Include="TeamCity\CertDtoFactory.cs" />
     <Compile Include="TeamCity\CoreTests\ServiceMessageParserPerformanceTest.cs" />
     <Compile Include="TeamCity\CoreTests\ServiceMessageParserTest.cs" />
     <Compile Include="TeamCity\CoreTests\ServiceMessageStructureValidatorTest.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="TeamCity\Core\Cases\CaseOneSuccesfulTest.cs" />
     <Compile Include="TeamCity\Core\Cases\CaseTwoIgnoredTests.cs" />
     <Compile Include="TeamCity\Core\Cases\CaseTwoFailedTests.cs" />
+    <Compile Include="TeamCity\Core\Cases\CaseSuccesfulIgnoredFailedTests.cs" />
     <Compile Include="TeamCity\Core\CertEngine.cs" />
     <Compile Include="TeamCity\Core\Common\Annotations.cs" />
     <Compile Include="TeamCity\Core\Common\CompositDisposable.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="TeamCity\Core\TestResultEvaluator.cs" />
     <Compile Include="TeamCity\Core\ValidationResult.cs" />
     <Compile Include="TeamCity\Core\ValidationState.cs" />
+    <Compile Include="TeamCity\IntegrationType.cs" />
     <Compile Include="TeamCity\TeamCityIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup />

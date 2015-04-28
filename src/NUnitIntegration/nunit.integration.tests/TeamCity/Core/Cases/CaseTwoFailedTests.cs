@@ -12,7 +12,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
     internal class CaseTwoFailedTests : CaseBase
     {
         public CaseTwoFailedTests()
-            : base(CertType.TestFramework, "TwoFailedTests", "Two failed tests")
+            : base(CertType.TestFramework, "TwoFailedTests", "2 failed tests")
         {            
         }
 

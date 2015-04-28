@@ -12,7 +12,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
     internal class CaseOneSuccesfulTest : CaseBase
     {
         public CaseOneSuccesfulTest()
-            : base(CertType.TestFramework, "OneSuccesfulTest", "One succesful test")
+            : base(CertType.TestFramework, "OneSuccesfulTest", "1 succesful test")
         {            
         }
 
