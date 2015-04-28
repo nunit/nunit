@@ -79,6 +79,7 @@
     <Compile Include="TeamCity\Core\IServiceMessageStructureValidator.cs" />
     <Compile Include="TeamCity\Core\IServiceMessageValidator.cs" />
     <Compile Include="TeamCity\Core\ICaseRepository.cs" />
+    <Compile Include="TeamCity\Core\Contracts\ITestResultEvaluator.cs" />
     <Compile Include="TeamCity\Core\OutputValidator.cs" />
     <Compile Include="TeamCity\Core\ProcessManager.cs" />
     <Compile Include="TeamCity\Core\ServiceMessage.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="TeamCity\Core\ServiceMessageValidator.cs" />
     <Compile Include="TeamCity\Core\Cases\CaseTwoSuccesfulTests.cs" />
     <Compile Include="TeamCity\Core\CaseRepository.cs" />
+    <Compile Include="TeamCity\Core\TestResultEvaluator.cs" />
     <Compile Include="TeamCity\Core\ValidationResult.cs" />
     <Compile Include="TeamCity\Core\ValidationState.cs" />
     <Compile Include="TeamCity\TeamCityIntegrationTests.cs" />

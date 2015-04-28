@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -19,22 +20,24 @@ namespace NUnit.Integration.Tests.TeamCity
         };
 
         private static readonly CertDto CertData = CreateCertData();
+        
+        static TeamCityIntegrationTests()
+        {
+            ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension());
+        }
 
         public static object[] TestResults
         {
             get
             {
-                using (ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension()))
-                {
-                    return ServiceLocator.Root.GetService<ICertEngine>().Run(CertData).Select(i => (object)i).ToArray();
-                }
+                return ServiceLocator.Root.GetService<ICertEngine>().Run(CertData).Select(i => (object)i).ToArray();
             }
         }
 
         [Test, TestCaseSource("TestResults"), Category("Integration")]
-        public void Case(object testResultObj)
+        public void Case(ITestResultEvaluator resultEvaluator)
         {
-            var result = (TestResultDto)testResultObj;
+            var result = resultEvaluator.Evaluate();
             var details = CreateDetails(result);
             System.Diagnostics.Debug.WriteLine(details);
             if (result.State == TestState.Failed)

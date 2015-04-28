@@ -23,6 +23,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
         public IEnumerable<IServiceMessage> ParseServiceMessages(string text)
         {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(text));
+
             return ParseServiceMessages(new StringReader(text));
         }
 
