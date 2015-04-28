@@ -2,8 +2,6 @@
 
 using JetBrains.Annotations;
 
-using NUnit.Integration.Tests.TeamCity.Core.Common;
-
 namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
     public sealed class TestResultDto
@@ -25,5 +23,16 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
         public TestState State { get; private set; }
 
         public string Details { [CanBeNull] get; [CanBeNull] set; }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format("{0} {1}", ToolId, CaseId);
+        }
     }
 }

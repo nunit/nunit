@@ -26,22 +26,22 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             Contract.Requires<ArgumentNullException>(cert != null);
             Contract.Ensures(Contract.Result<IEnumerable<TestResultDto>>() != null);
 
-            var testsRepository = ServiceLocator.Root.GetService<ICaseRepository>();
+            var caseRepository = ServiceLocator.Root.GetService<ICaseRepository>();
             foreach (var cmdLineTool in cert.CmdLineTools)
             {
                 var caseDict = cmdLineTool.Cases.ToDictionary(i => i.CaseId, i => i, StringComparer.CurrentCultureIgnoreCase);
 
-                var testList = testsRepository.GetCases(cmdLineTool.CertType);
-                foreach (var test in testList)
+                var cases = caseRepository.GetCases(cmdLineTool.CertType);
+                foreach (var @case in cases)
                 {
                     CaseDto curCase;
-                    if (!caseDict.TryGetValue(test.CaseId, out curCase))
+                    if (!caseDict.TryGetValue(@case.CaseId, out curCase))
                     {
-                        yield return new TestResultDto(cmdLineTool.ToolId, test.CaseId, TestState.NotImplemented);
+                        yield return new TestResultDto(cmdLineTool.ToolId, @case.CaseId, TestState.NotImplemented);
                         continue;
                     }
 
-                    caseDict.Remove(test.CaseId);
+                    caseDict.Remove(@case.CaseId);
                     TestResultDto testResult;
                     try
                     {
@@ -63,7 +63,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                             }
                             else
                             {                                
-                                var validationResult = test.Validate(rawMessages);
+                                var validationResult = @case.Validate(rawMessages);
                                 TestState testState;
                                 switch (validationResult.State)
                                 {
@@ -93,7 +93,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     }
                     catch (Exception ex)
                     {
-                        testResult = new TestResultDto(cmdLineTool.ToolId, test.CaseId, TestState.Exception)
+                        testResult = new TestResultDto(cmdLineTool.ToolId, @case.CaseId, TestState.Exception)
                         {
                             Details = ex.Message                                             
                         };

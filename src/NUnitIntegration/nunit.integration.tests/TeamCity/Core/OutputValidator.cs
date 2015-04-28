@@ -7,16 +7,16 @@ namespace NUnit.Integration.Tests.TeamCity.Core
 {
     internal sealed class OutputValidator : IOutputValidator
     {
-        public ValidationResult Validate(IEnumerable<IServiceMessage> rawMessages)
+        public ValidationResult Validate(IEnumerable<IServiceMessage> messages)
         {
-            Contract.Requires<ArgumentNullException>(rawMessages != null);
+            Contract.Requires<ArgumentNullException>(messages != null);
             Contract.Ensures(Contract.Result<ValidationResult>() != null);
 
             var isSuccess = true;
             var details = new List<string>();            
             var validatedMessages = new List<IServiceMessage>();
             var messageValidator = ServiceLocator.Root.GetService<IServiceMessageValidator>();
-            foreach (var message in rawMessages)
+            foreach (var message in messages)
             {
                 var messageValidationResult = messageValidator.Validate(message);
                 switch (messageValidationResult.State)
@@ -75,10 +75,10 @@ namespace NUnit.Integration.Tests.TeamCity.Core
 
             if (!isSuccess)
             {
-                return new ValidationResult(ValidationState.NotValid, details.ToString());
+                return new ValidationResult(ValidationState.NotValid, string.Join(Environment.NewLine, details));
             }
 
-            return new ValidationResult(ValidationState.Valid, details.ToString());
+            return new ValidationResult(ValidationState.Valid, string.Join(Environment.NewLine, details));
         }
     }
 }

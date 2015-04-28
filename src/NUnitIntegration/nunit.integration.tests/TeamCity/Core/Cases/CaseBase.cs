@@ -59,22 +59,36 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             }
         }
 
-        public ValidationResult Validate(IEnumerable<IServiceMessage> rawMessages)
+        public ValidationResult Validate(IEnumerable<IServiceMessage> messages)
         {
-            Contract.Requires<ArgumentNullException>(rawMessages != null);
+            Contract.Requires<ArgumentNullException>(messages != null);
 
             var outputValidator = ServiceLocator.Root.GetService<IOutputValidator>();
-            var validationResult = outputValidator.Validate(rawMessages);
+            var validationResult = outputValidator.Validate(messages);
+            var messagesStrs = Enumerable.Repeat("Messages:", 1).Concat(messages.Select(i => i.ToString()));
             if (validationResult.State == ValidationState.NotValid || validationResult.State == ValidationState.Unknown)
             {
-                return validationResult;
+                return new ValidationResult(validationResult.State, validationResult.Details.Concat(messagesStrs).ToArray());
             }
 
-            var validationCaseResult = ValidateCase(rawMessages);
-            return new ValidationResult(validationCaseResult.State, validationResult.Details.Concat(validationCaseResult.Details).ToArray());
+            var validationCaseResult = ValidateCase(messages);
+            return new ValidationResult(validationCaseResult.State, validationResult.Details.Concat(validationCaseResult.Details).Concat(messagesStrs).ToArray());
         }
 
         [NotNull]
-        protected abstract ValidationResult ValidateCase([NotNull] IEnumerable<IServiceMessage> rawMessages);
+        protected abstract ValidationResult ValidateCase([NotNull] IEnumerable<IServiceMessage> messages);
+
+        protected bool CheckCount(IEnumerable<IServiceMessage> messages, int expectedCount, out ValidationResult result)
+        {
+            var actualCount = messages.Count();
+            if (messages.Count() != expectedCount)
+            {
+                result = new ValidationResult(ValidationState.NotValid, string.Format("Invalid count of messages, expected {0}, actual {1}", expectedCount, actualCount));
+                return false;
+            }
+
+            result = default(ValidationResult);
+            return true;
+        }
     }
 }

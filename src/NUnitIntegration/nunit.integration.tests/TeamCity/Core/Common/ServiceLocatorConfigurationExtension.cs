@@ -16,8 +16,8 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Common
         private static readonly Lazy<IOutputValidator> OutputValidator = new Lazy<IOutputValidator>(() => new OutputValidator());
         private static readonly Lazy<IProcessManager> ProcessManager = new Lazy<IProcessManager>(() => new ProcessManager());
 
-
-        private static readonly Lazy<ICase> CaseTwoSuccesfull = new Lazy<ICase>(() => new CaseTwoSuccesfullTests());
+        private static readonly Lazy<ICase> CaseOneSuccesfullTest = new Lazy<ICase>(() => new CaseOneSuccesfulTest());
+        private static readonly Lazy<ICase> CaseTwoSuccesfull = new Lazy<ICase>(() => new CaseTwoSuccesfulTests());
 
         public IDisposable Initialize(IServiceLocator serviceLocator)
         {
@@ -37,6 +37,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Common
 
                 // Cases
                 serviceLocator.AddMapping(() => CaseTwoSuccesfull.Value, CaseTwoSuccesfull.Value.CaseId),
+                serviceLocator.AddMapping(() => CaseOneSuccesfullTest.Value, CaseOneSuccesfullTest.Value.CaseId),
             };
         }
     }

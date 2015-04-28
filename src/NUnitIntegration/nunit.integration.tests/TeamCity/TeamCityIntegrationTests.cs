@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
@@ -11,40 +9,50 @@ namespace NUnit.Integration.Tests.TeamCity
 {
     public sealed class TeamCityIntegrationTests
     {
-        [Test]
-        public void Tests()
+        private static readonly CertDto CertData = CreateCertData();
+
+        public static object[] TestResults
         {
-            var certData = CreateCertData();
-            using (ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension()))
+            get
             {
-                var results = ServiceLocator.Root.GetService<ICertEngine>().Run(certData).ToList();
-
-                var fails = results.Where(i => i.State == TestState.Failed || i.State == TestState.Exception).ToList();
-                if (fails.Any())
+                using (ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension()))
                 {
-                    Assert.Fail(CreateDetails(fails));                    
-                }
-
-                var inconclusive = results.Where(i => i.State == TestState.Ignored || i.State == TestState.UnknownCase).ToList();
-                if (inconclusive.Any())
-                {
-                    Assert.Inconclusive(CreateDetails(inconclusive));
-                }
-
-                var passed = results.Where(i => i.State == TestState.Passed || i.State == TestState.NotImplemented).ToList();
-                if (passed.Any())
-                {
-                    Assert.Pass(CreateDetails(passed));
+                    return ServiceLocator.Root.GetService<ICertEngine>().Run(CertData).Select(i => new[] { string.Format("Case {0}", i), (object)i }).ToArray();
                 }
             }
         }
 
-        private string CreateDetails(IEnumerable<TestResultDto> results)
+        [Test, TestCaseSource("TestResults")]
+        public void Case(string caseName, object testResultObj)
+        {
+            var result = (TestResultDto)testResultObj;
+            if (result.State == TestState.Failed)
+            {
+                Assert.Fail(CreateDetails(result));
+            }
+
+            if (result.State == TestState.Ignored)
+            {
+                Assert.Ignore(CreateDetails(result));
+            }
+
+            if (result.State == TestState.UnknownCase || result.State == TestState.Exception || result.State == TestState.NotImplemented)
+            {
+                Assert.Inconclusive(CreateDetails(result));
+            }
+
+            if (result.State == TestState.Passed)
+            {
+                Assert.Pass(CreateDetails(result));
+            }
+        }
+
+        private string CreateDetails(params TestResultDto[] results)
         {            
             var sb = new StringBuilder();
             foreach (var result in results)
             {
-                sb.AppendFormat("Case {0} {1} - {2}", result.ToolId, result.CaseId, result.State);
+                sb.AppendFormat("Case {0}", result);
                 sb.AppendLine();
                 sb.AppendLine(result.Details);
                 sb.AppendLine();
@@ -63,9 +71,9 @@ namespace NUnit.Integration.Tests.TeamCity
                         "NUnit v2.0", 
                         @"net20\nunit-console.exe",
                         new[] { @"net20\NUnit.Integration.Mocks.dll", "--teamcity" },
-                        new[]
-                        {
-                            new CaseDto("TwoSuccesfullTests", Enumerable.Empty<string>()), 
+                        new[] {
+                            new CaseDto("CaseOneSuccesfulTest", new[] { "--include=CaseOneSuccesfulTest" }), 
+                            new CaseDto("TwoSuccesfulTests", new[] { "--include=TwoSuccesfulTests" }),
                         })
                 });
         }

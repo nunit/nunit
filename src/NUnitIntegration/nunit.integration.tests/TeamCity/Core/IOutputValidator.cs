@@ -7,6 +7,6 @@ namespace NUnit.Integration.Tests.TeamCity.Core
     internal interface IOutputValidator
     {
         [NotNull]
-        ValidationResult Validate([NotNull] IEnumerable<IServiceMessage> rawMessages);
+        ValidationResult Validate([NotNull] IEnumerable<IServiceMessage> messages);
     }
 }

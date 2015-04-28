@@ -2,9 +2,9 @@
 
 namespace NUnit.Integration.Mocks
 {
-    public class UnitTests1
+    public class CaseOneSuccesfulTest
     {
-        [Test]
+        [Test, Category("CaseOneSuccesfulTest")]
         public void Test1()
         {
         }
