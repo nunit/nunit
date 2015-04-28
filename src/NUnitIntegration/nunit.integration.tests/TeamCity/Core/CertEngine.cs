@@ -46,7 +46,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     try
                     {
                         var processManager = ServiceLocator.Root.GetService<IProcessManager>();
-                        var output = processManager.StartProcess(cmdLineTool.CmdLineFileName, cmdLineTool.Args.Concat(curCase.Args));
+                        var output = processManager.StartProcess(cmdLineTool.CmdLineFileName, cmdLineTool.Args.Concat(curCase.Args), cmdLineTool.EnvironmentVariables);
                         if (output.ExitCode != 0)
                         {
                             testResult = new TestResultDto(cmdLineTool.ToolId, curCase.CaseId, TestState.Failed)

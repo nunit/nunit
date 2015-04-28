@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
@@ -9,6 +10,11 @@ namespace NUnit.Integration.Tests.TeamCity
 {
     public sealed class TeamCityIntegrationTests
     {
+        private static readonly IEnumerable<string> CaseIds = new[]
+        {
+            "CaseOneSuccesfulTest",
+            "TwoSuccesfulTests"
+        };
         private static readonly CertDto CertData = CreateCertData();
 
         public static object[] TestResults
@@ -22,7 +28,7 @@ namespace NUnit.Integration.Tests.TeamCity
             }
         }
 
-        [Test, TestCaseSource("TestResults")]
+        [Test, TestCaseSource("TestResults"), Category("Integration")]
         public void Case(string caseName, object testResultObj)
         {
             var result = (TestResultDto)testResultObj;
@@ -66,16 +72,44 @@ namespace NUnit.Integration.Tests.TeamCity
             return new CertDto(
                 new[] 
                 {
-                    new CmdLineToolDto(
-                        CertType.TestFramework, 
-                        "NUnit v2.0", 
-                        @"net20\nunit-console.exe",
-                        new[] { @"net20\NUnit.Integration.Mocks.dll", "--teamcity" },
-                        new[] {
-                            new CaseDto("CaseOneSuccesfulTest", new[] { "--include=CaseOneSuccesfulTest" }), 
-                            new CaseDto("TwoSuccesfulTests", new[] { "--include=TwoSuccesfulTests" }),
-                        })
+                    CreateCmdLineToolDto("20", false),
+                    CreateCmdLineToolDto("20", true),
+                    CreateCmdLineToolDto("40", false),
+                    CreateCmdLineToolDto("40", true),
+                    CreateCmdLineToolDto("45", false),
+                    CreateCmdLineToolDto("45", true),
                 });
+        }
+
+        private static CmdLineToolDto CreateCmdLineToolDto(string framework, bool useEnvVar)
+        {
+            var args = new List<string>
+            {
+                string.Format(@"net{0}\NUnit.Integration.Mocks.dll", framework)
+            };
+
+            var environmentVariables = new Dictionary<string, string>();
+            if (useEnvVar)
+            {
+                environmentVariables.Add("TEAMCITY_PROJECT_NAME", "Test");
+            }
+            else
+            {
+                args.Add("--teamcity");
+            }
+
+            return new CmdLineToolDto(
+                CertType.TestFramework,
+                string.Format("NUnit v{0} using {1}", framework, useEnvVar ? "env var" : "--teamcity"),
+                string.Format(@"net{0}\nunit-console.exe", framework),
+                args.ToArray(),
+                environmentVariables,
+                CaseIds.Select(CreateCaseDto));
+        }
+
+        private static CaseDto CreateCaseDto(string caseId)
+        {
+            return new CaseDto(caseId, new[] { string.Format("--include={0}", caseId) });
         }
     }
 }
