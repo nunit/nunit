@@ -37,7 +37,7 @@ namespace NUnit.Integration.Tests.TeamCity
         private const string MockTestsAssemblyName = "NUnit.Integration.Mocks.dll";
         private const string NUnitConsoleName = "nunit-console.exe";
 
-        public CertDto CreateCert()
+        public static CertDto CreateCert()
         {
             return new CertDto(CreateCmdLineToolDto());
         }
@@ -46,8 +46,8 @@ namespace NUnit.Integration.Tests.TeamCity
         {
             var frameworks = new[]
             {
-                // "20",
-                // "40",
+                "20",
+                "40",
                 "45",
             };
 
@@ -61,7 +61,7 @@ namespace NUnit.Integration.Tests.TeamCity
             var integrationTypes = new[]
             {
                 IntegrationType.CommandArg,
-                // IntegrationType.EnvironmentVar,
+                IntegrationType.EnvironmentVar,
             };
 
             var generalCases = CaseLists.GeneralCases.Select(CreateGeneralCreateCaseDto);
@@ -74,8 +74,8 @@ namespace NUnit.Integration.Tests.TeamCity
         }
 
         private static IEnumerable<CmdLineToolDto> CreateCmdLineToolDto(
-            string framework, 
-            IntegrationType integrationType, 
+            string framework,
+            IntegrationType integrationType,
             IEnumerable<CaseDto> cases)
         {
             var args = new List<string>

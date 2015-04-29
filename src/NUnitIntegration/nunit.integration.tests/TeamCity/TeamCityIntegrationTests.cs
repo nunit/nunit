@@ -31,16 +31,16 @@ using NUnit.Integration.Tests.TeamCity.Core.Contracts;
 namespace NUnit.Integration.Tests.TeamCity
 {
     public sealed class TeamCityIntegrationTests
-    {        
+    {
         public static object[] CaseSource
         {
             get
             {
                 using (ServiceLocator.Root.RegisterExtension(new ServiceLocatorConfigurationExtension()))
                 {
-                    return ServiceLocator.Root.GetService<ICertEngine>().Run(new CertDtoFactory().CreateCert()).Select(i => (object)i).ToArray();
+                    return ServiceLocator.Root.GetService<ICertEngine>().Run(CertDtoFactory.CreateCert()).Select(i => (object)i).ToArray();
                 }
-            }        
+            }
         }
 
         [Test, TestCaseSource("CaseSource"), Category("Integration")]

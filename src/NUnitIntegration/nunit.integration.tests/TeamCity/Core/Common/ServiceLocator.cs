@@ -37,7 +37,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Common
         private readonly Dictionary<ServiceKey, Func<object>> _instanceProviders = new Dictionary<ServiceKey, Func<object>>();
         
         private ServiceLocator()
-        {            
+        {
         }
         
         public static IServiceLocator Root
