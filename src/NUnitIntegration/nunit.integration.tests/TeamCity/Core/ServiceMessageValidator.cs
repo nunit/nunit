@@ -17,7 +17,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             switch (message.Name)
             {
                 case ServiceMessageConstants.TestSuiteStartedMessageName:
-                    if (!HasAttributes(message, out result, "name"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName))
                     {
                         return result;
                     }
@@ -25,7 +25,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestSuiteFinishedMessageName:
-                    if (!HasAttributes(message, out result, "name"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName))
                     {
                         return result;
                     }
@@ -33,7 +33,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestStartedMessageName:
-                    if (!HasAttributes(message, out result, "name"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName, ServiceMessageConstants.MessageAttributeCaptureStandardOutput))
                     {
                         return result;
                     }
@@ -41,7 +41,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestFinishedMessageName:
-                    if (!HasAttributes(message, out result, "name", "duration"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName, ServiceMessageConstants.MessageAttributeDuration))
                     {
                         return result;
                     }
@@ -49,7 +49,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestFailedMessageName:
-                    if (!HasAttributes(message, out result, "name", "message"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName, ServiceMessageConstants.MessageAttributeMessage, ServiceMessageConstants.MessageAttributeDetails))
                     {
                         return result;
                     }
@@ -57,7 +57,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestIgnoredMessageName:
-                    if (!HasAttributes(message, out result, "name", "message"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName, ServiceMessageConstants.MessageAttributeMessage))
                     {
                         return result;
                     }
@@ -65,7 +65,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestStdErrMessageName:
-                    if (!HasAttributes(message, out result, "name", "out"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName, ServiceMessageConstants.MessageAttributeOut))
                     {
                         return result;
                     }
@@ -73,7 +73,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     return new ValidationResult(ValidationState.Valid);
 
                 case ServiceMessageConstants.TestStdOutMessageName:
-                    if (!HasAttributes(message, out result, "name", "out"))
+                    if (!HasAttributes(message, out result, ServiceMessageConstants.MessageAttributeName, ServiceMessageConstants.MessageAttributeOut))
                     {
                         return result;
                     }

@@ -7,7 +7,12 @@ namespace NUnit.Integration.Tests.TeamCity
 {
     internal sealed class CertDtoFactory
     {
-        private const int MaxThreadsCount = 100;
+        private const string TeamCityArg = "--teamcity";
+        private const string IncludeArg = "--include";
+        private const string WorkersArg = "--workers";
+        private const string TeamCityEnvVar = "TEAMCITY_PROJECT_NAME";
+        private const string MockTestsAssemblyName = "NUnit.Integration.Mocks.dll";
+        private const string NUnitConsoleName = "nunit-console.exe";
 
         public CertDto CreateCert()
         {
@@ -36,22 +41,23 @@ namespace NUnit.Integration.Tests.TeamCity
                 IntegrationType.EnvironmentVar,
             };
 
-            var generalCases = (
-                from integrationType in integrationTypes
-                select CreateCmdLineToolDto(framework, integrationType, 1, CaseLists.GeneralCases)).SelectMany(i => i);
+            var generalCases = CaseLists.GeneralCases.Select(CreateGeneralCreateCaseDto);
+            var multithreadingCases = CaseLists.MultithreadingCases.Select(CreateMultithreadingCreateCaseDto);
+            var allCases = generalCases.Concat(multithreadingCases);
 
-            var multithreadingCases = (
+            return (
                 from integrationType in integrationTypes
-                select CreateCmdLineToolDto(framework, integrationType, 50, CaseLists.GeneralCases)).SelectMany(i => i);
-
-            return generalCases.Concat(multithreadingCases);
+                select CreateCmdLineToolDto(framework, integrationType, allCases)).SelectMany(i => i);
         }
 
-        private static IEnumerable<CmdLineToolDto> CreateCmdLineToolDto(string framework, IntegrationType integrationType, int threadsCount, IEnumerable<string> cases)
+        private static IEnumerable<CmdLineToolDto> CreateCmdLineToolDto(
+            string framework, 
+            IntegrationType integrationType, 
+            IEnumerable<CaseDto> cases)
         {
             var args = new List<string>
             {
-                string.Format(@"net{0}\NUnit.Integration.Mocks.dll", framework)
+                string.Format(@"net{0}\{1}", framework, MockTestsAssemblyName)
             };
 
             var environmentVariables = new Dictionary<string, string>();
@@ -59,33 +65,33 @@ namespace NUnit.Integration.Tests.TeamCity
             switch (integrationType)
             {
                 case IntegrationType.CommandArg:
-                    args.Add("--teamcity");
-                    integrationTypeInfo = "--teamcity";
+                    args.Add(TeamCityArg);
+                    integrationTypeInfo = TeamCityArg;
                     break;
 
                 case IntegrationType.EnvironmentVar:
-                    environmentVariables.Add("TEAMCITY_PROJECT_NAME", "Test");
+                    environmentVariables.Add(TeamCityEnvVar, "Test");
                     integrationTypeInfo = "env var";
                     break;
             }
 
-            if (threadsCount > 1)
-            {
-                args.Add(string.Format("--workers={0}", threadsCount));
-            }
-
             yield return new CmdLineToolDto(
                 CertType.TestFramework,
-                string.Format("NUnit for .Net{0} using {1} and {2} treads", framework, integrationTypeInfo, threadsCount),
-                string.Format(@"net{0}\nunit-console.exe", framework),
+                string.Format("NUnit for .Net{0} using {1}", framework, integrationTypeInfo),
+                string.Format(@"net{0}\{1}", framework, NUnitConsoleName),
                 args.ToArray(),
                 environmentVariables,
-                cases.Select(CreateCaseDto));
+                cases);
         }
 
-        private static CaseDto CreateCaseDto(string caseId)
+        private static CaseDto CreateGeneralCreateCaseDto(string caseId)
         {
-            return new CaseDto(caseId, new[] { string.Format("--include={0}", caseId) });
+            return new CaseDto(caseId, new[] { string.Format("{0}={1}", IncludeArg, caseId) });
+        }
+
+        private static CaseDto CreateMultithreadingCreateCaseDto(string caseId, int threadsCount = 20)
+        {
+            return new CaseDto(caseId, new[] { string.Format("{0}={1}", IncludeArg, caseId), string.Format("{0}={1}", WorkersArg, threadsCount) });
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
@@ -10,7 +9,7 @@ namespace NUnit.Integration.Tests.TeamCity
 {
     public sealed class TeamCityIntegrationTests
     {        
-        public static object[] TestResults
+        public static object[] CaseSource
         {
             get
             {
@@ -21,7 +20,7 @@ namespace NUnit.Integration.Tests.TeamCity
             }        
         }
 
-        [Test, TestCaseSource("TestResults"), Category("Integration")]
+        [Test, TestCaseSource("CaseSource"), Category("Integration")]
         public void Case(ITestResultEvaluator resultEvaluator)
         {
             var result = resultEvaluator.Evaluate();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Moq;
@@ -22,6 +23,7 @@ namespace NUnit.Integration.Tests.TeamCity.CoreTests
         {
         }
 
+        // Case format: [message] [name] {flowId}
         [Test]
         [TestCase("", "Valid")]
         [TestCase("ss 1, ss 2, sf 2, sf 1", "Valid")]
@@ -39,6 +41,10 @@ namespace NUnit.Integration.Tests.TeamCity.CoreTests
         [TestCase("ss 2, ts 1, tf 1", "NotValid")]
         [TestCase("ss 2, ts 1, sf 2", "NotValid")]
         [TestCase("ss 2, ts 1, sf 2, tf 1", "NotValid")]
+        [TestCase("ts 1, ts 2, tf 1, tf 1", "NotValid")]
+        [TestCase("ts 1 f1, ts 2 f2, tf 1 f1, tf 2 f2", "Valid")]
+        [TestCase("ts 1 f1, ts 1 f2, tf 1 f1, tf 1 f2", "Valid")]
+        [TestCase("ss 1 f1, ts 3 f3, ss 2 f2, sf 1 f1, sf 2 f2, tf 3 f3", "Valid")]
         public void ShouldCheckSuiteMessagesWhenAnyCases(string codes, string expectedValidationStateStr)
         {
             // Given
@@ -57,43 +63,64 @@ namespace NUnit.Integration.Tests.TeamCity.CoreTests
         private static Mock<IServiceMessage> CreateMessage(string code)
         {
             var items = code.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(i => i.Trim()).ToList();
-            if (items.Count != 2)
+            if (items.Count < 2)
             {
                 throw new InvalidOperationException(string.Format("Invalide test code \"{0}\"", code));
             }
 
-            switch (items[0].ToLowerInvariant())
+            var message = items[0];
+            var name = items[1];
+            string flowId = null;
+            if (items.Count > 2)
+            {
+                flowId = items[2];
+            }
+
+            switch (message.ToLowerInvariant())
             {
                 case "ss":
-                    return CreateMessageWithName(ServiceMessageConstants.TestSuiteStartedMessageName, items[1]);
+                    return CreateMessage(ServiceMessageConstants.TestSuiteStartedMessageName, name, flowId);
 
                 case "sf":
-                    return CreateMessageWithName(ServiceMessageConstants.TestSuiteFinishedMessageName, items[1]);
+                    return CreateMessage(ServiceMessageConstants.TestSuiteFinishedMessageName, name, flowId);
 
                 case "ts":
-                    return CreateMessageWithName(ServiceMessageConstants.TestStartedMessageName, items[1]);
+                    return CreateMessage(ServiceMessageConstants.TestStartedMessageName, name, flowId);
 
                 case "tf":
-                    return CreateMessageWithName(ServiceMessageConstants.TestFinishedMessageName, items[1]);
+                    return CreateMessage(ServiceMessageConstants.TestFinishedMessageName, name, flowId);
 
                 case "ti":
-                    return CreateMessageWithName(ServiceMessageConstants.TestIgnoredMessageName, items[1]);
+                    return CreateMessage(ServiceMessageConstants.TestIgnoredMessageName, name, flowId);
 
                 default:
                     throw new InvalidOperationException(string.Format("Invalide test code \"{0}\"", code));
             }
         }
 
-        private static Mock<IServiceMessage> CreateMessageWithName(string name, string nameAttrValue)
+        private static Mock<IServiceMessage> CreateMessage(string messageName, string nameAttr, string flowIdAttr)
         {
             var message = new Mock<IServiceMessage>();
-            message.SetupGet(i => i.Name).Returns(name);
-            message.SetupGet(i => i.Attributes).Returns(new[] { "name" });
+            message.SetupGet(i => i.Name).Returns(messageName);
+
+            var attrs = new List<string> { ServiceMessageConstants.MessageAttributeName };
+            if (!string.IsNullOrEmpty(flowIdAttr))
+            {
+                attrs.Add("flowId");
+            }
+
+            message.SetupGet(i => i.Attributes).Returns(attrs.ToArray());
             
             // ReSharper disable once RedundantAssignment
-            string attValue = nameAttrValue;
-            message.Setup(i => i.TryGetAttribute("name", out attValue)).Returns(true);
-            message.Setup(i => i.GetAttribute("name")).Returns(nameAttrValue);
+            var nameAttrValue = nameAttr;
+            message.Setup(i => i.TryGetAttribute(ServiceMessageConstants.MessageAttributeName, out nameAttrValue)).Returns(true);
+            message.Setup(i => i.GetAttribute(ServiceMessageConstants.MessageAttributeName)).Returns(nameAttr);
+
+            // ReSharper disable once RedundantAssignment
+            var flowIdAttrValue = flowIdAttr;
+            message.Setup(i => i.TryGetAttribute(ServiceMessageConstants.MessageAttributeFlowId, out flowIdAttrValue)).Returns(true);
+            message.Setup(i => i.GetAttribute(ServiceMessageConstants.MessageAttributeFlowId)).Returns(flowIdAttr);
+            
             return message;
         }
 

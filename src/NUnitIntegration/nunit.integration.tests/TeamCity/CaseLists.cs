@@ -13,6 +13,10 @@ namespace NUnit.Integration.Tests.TeamCity
             "OneIgnoredTest",
             "TwoIgnoredTests",
             "SuccesfulIgnoredFailedTests",
+        };
+
+        public static readonly IEnumerable<string> MultithreadingCases = new[]
+        {
             "MultithreadingTests",
         };
     }

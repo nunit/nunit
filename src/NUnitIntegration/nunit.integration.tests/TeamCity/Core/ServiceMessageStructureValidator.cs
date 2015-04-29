@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using JetBrains.Annotations;
+
 namespace NUnit.Integration.Tests.TeamCity.Core
 {
     internal sealed class ServiceMessageStructureValidator : IServiceMessageStructureValidator
@@ -11,12 +13,47 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             Contract.Requires<ArgumentNullException>(messages != null);
             Contract.Ensures(Contract.Result<ValidationResult>() != null);
 
+            // We take into account the presence of groups (flowId)
+            var goupedByFlowIdMessages =
+                from message in messages
+                let flowId = GetFlowIdAttr(message)
+                group message by flowId;
+
+            var validationResults = (
+                from goupedMessages in goupedByFlowIdMessages
+                select new { FlowId = goupedMessages.Key, Result = ValidateInternal(goupedMessages) }).ToList();
+
+            if (!validationResults.Any())
+            {
+                return new ValidationResult(ValidationState.Valid);
+            }
+
+            return validationResults.Aggregate(
+                new ValidationResult(ValidationState.Valid),
+                (acc, next) =>
+                    {
+                        var curState = acc.State;
+                        if (next.Result.State > acc.State)
+                        {
+                            curState = next.Result.State;
+                        }
+
+                        return new ValidationResult(curState, acc.Details.Concat(next.Result.Details).ToArray());
+                    });
+        }
+
+        [NotNull] 
+        private static ValidationResult ValidateInternal([NotNull] IEnumerable<IServiceMessage> messages)
+        {
+            Contract.Requires<ArgumentNullException>(messages != null);
+            Contract.Ensures(Contract.Result<ValidationResult>() != null);
+
             var messageStack = new Stack<IServiceMessage>();
             foreach (var curMessage in messages)
             {
                 string nameAttribute;
                 var hasNameAttribute = curMessage.TryGetAttribute(ServiceMessageConstants.MessageAttributeName, out nameAttribute) && !string.IsNullOrEmpty(nameAttribute);
-                var isStackPushMessage = 
+                var isStackPushMessage =
                     curMessage.Name == ServiceMessageConstants.TestSuiteStartedMessageName
                     || curMessage.Name == ServiceMessageConstants.TestStartedMessageName;
 
@@ -59,11 +96,26 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             if (messageStack.Count > 0)
             {
                 return new ValidationResult(
-                    ValidationState.NotValid, 
+                    ValidationState.NotValid,
                     messageStack.Select(curMessage => string.Format("Message \"{0}\" has no corresponding message for finish", curMessage)).ToArray());
             }
 
             return new ValidationResult(ValidationState.Valid);
+        }
+
+        [NotNull]
+        private static string GetFlowIdAttr([NotNull] IServiceMessage message)
+        {
+            Contract.Requires<ArgumentNullException>(message != null);
+            Contract.Ensures(Contract.Result<string>() != null);
+
+            string flowId;
+            if (message.TryGetAttribute(ServiceMessageConstants.MessageAttributeFlowId, out flowId))
+            {
+                return flowId ?? string.Empty;
+            }
+
+            return string.Empty;
         }
     }
 }

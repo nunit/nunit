@@ -16,5 +16,10 @@
 
         public const string MessageAttributeName = "name";
         public const string MessageAttributeFlowId = "flowId";
+        public const string MessageAttributeCaptureStandardOutput = "captureStandardOutput";
+        public const string MessageAttributeDuration = "duration";
+        public const string MessageAttributeMessage = "message";
+        public const string MessageAttributeDetails = "details";
+        public const string MessageAttributeOut = "out";
     }
 }

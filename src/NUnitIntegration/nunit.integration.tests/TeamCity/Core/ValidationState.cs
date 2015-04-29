@@ -1,12 +1,13 @@
 ﻿namespace NUnit.Integration.Tests.TeamCity.Core
 {
-    internal enum ValidationState
+    // Items should be orderer from successful to failed
+    internal enum ValidationState : byte
     {
-        Unknown,
-
         Valid,
 
         HasWarning,
+
+        Unknown,
         
         NotValid
     }
