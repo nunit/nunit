@@ -4,13 +4,11 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-using NUnit.Integration.Tests.TeamCity.Core.Common;
-
 namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
     public sealed class CertDto
     {
-        public CertDto(IEnumerable<CmdLineToolDto> cmdLineTools)
+        public CertDto([NotNull] IEnumerable<CmdLineToolDto> cmdLineTools)
         {
             Contract.Requires<ArgumentNullException>(cmdLineTools != null);
 

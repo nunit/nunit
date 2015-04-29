@@ -28,7 +28,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
                 return result;
             }
             
-            return new ValidationResult(ValidationState.Valid);
+            return new ValidationResult(ValidationState.Valid, new Details());
         }
     }
 }

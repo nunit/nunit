@@ -6,14 +6,16 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 {
     public sealed class TestResultDto
     {
-        public TestResultDto([NotNull] string toolId, [NotNull] string caseId, TestState state)
+        public TestResultDto([NotNull] string toolId, [NotNull] string caseId, TestState state, [NotNull] Details details)
         {
             Contract.Requires<ArgumentNullException>(toolId != null);
             Contract.Requires<ArgumentNullException>(caseId != null);
+            Contract.Requires<ArgumentNullException>(details != null);
 
             ToolId = toolId;
             CaseId = caseId;
             State = state;
+            Details = details;
         }
 
         public string ToolId { [NotNull] get; private set; }
@@ -22,7 +24,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Contracts
 
         public TestState State { get; private set; }
 
-        public string Details { [CanBeNull] get; [CanBeNull] set; }
+        public Details Details { [CanBeNull] get; private set; }
 
         /// <summary>
         /// Returns a string that represents the current object.

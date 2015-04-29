@@ -4,6 +4,8 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using NUnit.Integration.Tests.TeamCity.Core.Contracts;
+
 namespace NUnit.Integration.Tests.TeamCity.Core
 {
     internal sealed class ServiceMessageStructureValidator : IServiceMessageStructureValidator
@@ -25,11 +27,11 @@ namespace NUnit.Integration.Tests.TeamCity.Core
 
             if (!validationResults.Any())
             {
-                return new ValidationResult(ValidationState.Valid);
+                return new ValidationResult(ValidationState.Valid, new Details());
             }
 
             return validationResults.Aggregate(
-                new ValidationResult(ValidationState.Valid),
+                new ValidationResult(ValidationState.Valid, new Details()),
                 (acc, next) =>
                     {
                         var curState = acc.State;
@@ -38,7 +40,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                             curState = next.Result.State;
                         }
 
-                        return new ValidationResult(curState, acc.Details.Concat(next.Result.Details).ToArray());
+                        return new ValidationResult(curState, acc.Details.Combine(next.Result.Details));
                     });
         }
 
@@ -72,7 +74,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                 {
                     if (messageStack.Count == 0)
                     {
-                        return new ValidationResult(ValidationState.NotValid);
+                        return new ValidationResult(ValidationState.NotValid, new Details());
                     }
 
                     var prevMessage = messageStack.Pop();
@@ -81,14 +83,14 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     var curName = curMessage.Name.Replace("Finished", string.Empty).Replace("Ignored", string.Empty);
                     if (prevName != curName)
                     {
-                        return new ValidationResult(ValidationState.NotValid, string.Format("Message \"{0}\" has no corresponding message for start", curMessage));
+                        return new ValidationResult(ValidationState.NotValid, new Details(string.Format("Message \"{0}\" has no corresponding message for start", curMessage)));
                     }
 
                     var prevNameAttr = prevMessage.GetAttribute(ServiceMessageConstants.MessageAttributeName);
                     var curNameAttr = curMessage.GetAttribute(ServiceMessageConstants.MessageAttributeName);
                     if (prevNameAttr != curNameAttr)
                     {
-                        return new ValidationResult(ValidationState.NotValid, string.Format("Message \"{0}\" has no corresponding message for start with valid name", curMessage.Name));
+                        return new ValidationResult(ValidationState.NotValid, new Details(string.Format("Message \"{0}\" has no corresponding message for start with valid name", curMessage.Name)));
                     }
                 }
             }
@@ -97,10 +99,10 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             {
                 return new ValidationResult(
                     ValidationState.NotValid,
-                    messageStack.Select(curMessage => string.Format("Message \"{0}\" has no corresponding message for finish", curMessage)).ToArray());
+                    new Details(messageStack.Select(curMessage => string.Format("Message \"{0}\" has no corresponding message for finish", curMessage))));
             }
 
-            return new ValidationResult(ValidationState.Valid);
+            return new ValidationResult(ValidationState.Valid, new Details());
         }
 
         [NotNull]

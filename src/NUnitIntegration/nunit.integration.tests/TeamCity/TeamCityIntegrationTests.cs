@@ -25,7 +25,6 @@ namespace NUnit.Integration.Tests.TeamCity
         {
             var result = resultEvaluator.Evaluate();
             var details = CreateDetails(result);
-            System.Diagnostics.Debug.WriteLine(details);
             if (result.State == TestState.Failed)
             {
                 Assert.Fail(details);
@@ -47,14 +46,14 @@ namespace NUnit.Integration.Tests.TeamCity
             }
         }
 
-        private string CreateDetails(params TestResultDto[] results)
-        {            
+        private static string CreateDetails(params TestResultDto[] results)
+        {
             var sb = new StringBuilder();
             foreach (var result in results)
             {
                 sb.AppendFormat("Case {0} - {1}", result, result.State);
                 sb.AppendLine();
-                sb.AppendLine(result.Details);
+                sb.Append(result.Details);
                 sb.AppendLine();
             }
 

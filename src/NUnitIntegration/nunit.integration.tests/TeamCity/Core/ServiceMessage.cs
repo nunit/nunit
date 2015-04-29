@@ -51,7 +51,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
         public override string ToString()
         {
             return string.Format(
-                "{0}{1} {2} {3}",
+                "{0}{1} {2}{3}",
                 ServiceMessageConstants.ServiceMessageOpen,
                 Name,
                 string.Join(" ", _properties.Select(i => string.Format("{0}=\"{1}\"", i.Key, i.Value)).ToArray()),

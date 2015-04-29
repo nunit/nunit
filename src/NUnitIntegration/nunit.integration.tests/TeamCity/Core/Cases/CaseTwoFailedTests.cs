@@ -35,6 +35,36 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             var testFailed2 = testMessages[4];
             var testFinished2 = testMessages[5];
 
+            if (!CheckMessageType(testStarted1, ServiceMessageConstants.TestStartedMessageName, out result))
+            {
+                return result;
+            }
+
+            if (!CheckMessageType(testFailed1, ServiceMessageConstants.TestFailedMessageName, out result))
+            {
+                return result;
+            }
+
+            if (!CheckMessageType(testFinished1, ServiceMessageConstants.TestFinishedMessageName, out result))
+            {
+                return result;
+            }
+
+            if (!CheckMessageType(testStarted2, ServiceMessageConstants.TestStartedMessageName, out result))
+            {
+                return result;
+            }
+
+            if (!CheckMessageType(testFailed2, ServiceMessageConstants.TestFailedMessageName, out result))
+            {
+                return result;
+            }
+
+            if (!CheckMessageType(testFinished2, ServiceMessageConstants.TestFinishedMessageName, out result))
+            {
+                return result;
+            }
+
             if (!CheckPair(testStarted1, testFinished1, out result))
             {
                 return result;
@@ -55,7 +85,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
                 return result;
             }
             
-            return new ValidationResult(ValidationState.Valid);
+            return new ValidationResult(ValidationState.Valid, new Details());
         }
     }
 }

@@ -64,14 +64,14 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
 
             var outputValidator = ServiceLocator.Root.GetService<IOutputValidator>();
             var validationResult = outputValidator.Validate(messages);
-            var messagesStrs = Enumerable.Repeat("Messages:", 1).Concat(messages.Select(i => i.ToString()));
+            var messagesStrs = Enumerable.Repeat("Captured messages:", 1).Concat(messages.Select(i => i.ToString()));
             if (validationResult.State == ValidationState.NotValid || validationResult.State == ValidationState.Unknown)
             {
-                return new ValidationResult(validationResult.State, validationResult.Details.Concat(messagesStrs).ToArray());
+                return new ValidationResult(validationResult.State, validationResult.Details.Combine(messagesStrs));
             }
 
             var validationCaseResult = ValidateCase(messages);
-            return new ValidationResult(validationCaseResult.State, validationResult.Details.Concat(validationCaseResult.Details).Concat(messagesStrs).ToArray());
+            return new ValidationResult(validationCaseResult.State, validationResult.Details.Combine(validationCaseResult.Details).Combine(messagesStrs));
         }
 
         [NotNull]
@@ -91,31 +91,16 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
                 && i.Name != ServiceMessageConstants.TestStdOutMessageName).ToList();
         }
 
-        [NotNull]
-        protected string GetAtr(IServiceMessage message, string name, [NotNull] string defaultValue = "")
+        protected static bool CheckMessageType([NotNull] IServiceMessage message, string expectedMessageType, out ValidationResult result)
         {
             Contract.Requires<ArgumentNullException>(message != null);
-            Contract.Requires<ArgumentNullException>(name != null);
-            Contract.Requires<ArgumentNullException>(defaultValue != null);
-            Contract.Ensures(Contract.Result<string>() != null);
+            Contract.Requires<ArgumentNullException>(expectedMessageType != null);
 
-            string val;
-            if (message.TryGetAttribute(name, out val))
+            if (message.Name != expectedMessageType)
             {
-                return val;
-            }
-
-            return defaultValue;
-        }
-
-        protected bool CheckCount([NotNull] IEnumerable<IServiceMessage> messages, int expectedCount, out ValidationResult result)
-        {
-            Contract.Requires<ArgumentNullException>(messages != null);
-
-            var actualCount = messages.Count();
-            if (messages.Count() != expectedCount)
-            {
-                result = new ValidationResult(ValidationState.NotValid, string.Format("Invalid count of messages, expected {0}, actual {1}", expectedCount, actualCount));
+                result = new ValidationResult(
+                    ValidationState.NotValid,
+                    new Details(string.Format("Message types are not equal for message {0}: expected \"{1}\", actual \"{2}\"", message, expectedMessageType, message.Name)));
                 return false;
             }
 
@@ -123,7 +108,24 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             return true;
         }
 
-        protected bool CheckPair([NotNull] IServiceMessage message1, [NotNull] IServiceMessage message2, out ValidationResult result)
+        protected static bool CheckCount([NotNull] IEnumerable<IServiceMessage> messages, int expectedCount, out ValidationResult result)
+        {
+            Contract.Requires<ArgumentNullException>(messages != null);
+
+            var actualCount = messages.Count();
+            if (messages.Count() != expectedCount)
+            {
+                result = new ValidationResult(
+                    ValidationState.NotValid, 
+                    new Details(string.Format("Invalid count of messages, expected {0}, actual {1}", expectedCount, actualCount)));
+                return false;
+            }
+
+            result = default(ValidationResult);
+            return true;
+        }
+
+        protected static bool CheckPair([NotNull] IServiceMessage message1, [NotNull] IServiceMessage message2, out ValidationResult result)
         {
             Contract.Requires<ArgumentNullException>(message1 != null);
             Contract.Requires<ArgumentNullException>(message2 != null);
@@ -142,19 +144,19 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             return true;
         }
 
-        private bool CheckAttr([NotNull] IServiceMessage message1, [NotNull] IServiceMessage message2, [NotNull] string attributeName, out ValidationResult result)
+        private static bool CheckAttr([NotNull] IServiceMessage message1, [NotNull] IServiceMessage message2, [NotNull] string attributeName, out ValidationResult result)
         {
             Contract.Requires<ArgumentNullException>(message1 != null);
             Contract.Requires<ArgumentNullException>(message2 != null);
             Contract.Requires<ArgumentNullException>(attributeName != null);
 
-            var atr1 = GetAtr(message1, attributeName);
-            var atr2 = GetAtr(message2, attributeName);
+            var atr1 = message1.GetAttr(attributeName);
+            var atr2 = message2.GetAttr(attributeName);
             if (atr1 != atr2)
             {
                 result = new ValidationResult(
                     ValidationState.NotValid,
-                    string.Format("Tests' {0}s are not equal: {1} and {2}", attributeName, atr1, atr2));
+                    new Details(string.Format("Attributes \"{0}\" are not equal: \"{1}\" and \"{2}\"", attributeName, atr1, atr2)));
                 return false;
             }
 

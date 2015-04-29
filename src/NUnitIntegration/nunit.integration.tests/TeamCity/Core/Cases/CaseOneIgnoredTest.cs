@@ -29,14 +29,24 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             }
 
             var testStarted1 = testMessages[0];
-            var testIgnored1 = testMessages[1];            
+            var testIgnored1 = testMessages[1];
+
+            if (!CheckMessageType(testStarted1, ServiceMessageConstants.TestStartedMessageName, out result))
+            {
+                return result;
+            }
+
+            if (!CheckMessageType(testIgnored1, ServiceMessageConstants.TestIgnoredMessageName, out result))
+            {
+                return result;
+            }
 
             if (!CheckPair(testStarted1, testIgnored1, out result))
             {
                 return result;
             }
 
-            return new ValidationResult(ValidationState.Valid);
+            return new ValidationResult(ValidationState.Valid, new Details());
         }
     }
 }

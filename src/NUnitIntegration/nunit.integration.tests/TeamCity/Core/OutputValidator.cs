@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using NUnit.Integration.Tests.TeamCity.Core.Common;
+using NUnit.Integration.Tests.TeamCity.Core.Contracts;
 
 namespace NUnit.Integration.Tests.TeamCity.Core
 {
@@ -13,7 +14,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             Contract.Ensures(Contract.Result<ValidationResult>() != null);
 
             var isSuccess = true;
-            var details = new List<string>();            
+            var details = new Details();
             var validatedMessages = new List<IServiceMessage>();
             var messageValidator = ServiceLocator.Root.GetService<IServiceMessageValidator>();
             foreach (var message in messages)
@@ -40,15 +41,12 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                         break;
                 }
 
-                foreach (var validationDetail in messageValidationResult.Details)
-                {
-                    details.Add(string.Format("\t{0}", validationDetail));
-                }
+                details = details.Combine(messageValidationResult.Details, "\t");
             }
 
             if (!isSuccess)
             {
-                return new ValidationResult(ValidationState.NotValid, details.ToString());
+                return new ValidationResult(ValidationState.NotValid, details);
             }
 
             var structureValidationResult = ServiceLocator.Root.GetService<IServiceMessageStructureValidator>().Validate(validatedMessages);
@@ -68,17 +66,8 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     break;
             }
 
-            foreach (var validationDetail in structureValidationResult.Details)
-            {
-                details.Add(string.Format("\t{0}", validationDetail));
-            }
-
-            if (!isSuccess)
-            {
-                return new ValidationResult(ValidationState.NotValid, string.Join(Environment.NewLine, details));
-            }
-
-            return new ValidationResult(ValidationState.Valid, string.Join(Environment.NewLine, details));
+            details = details.Combine(structureValidationResult.Details, "\t");
+            return new ValidationResult(isSuccess ? ValidationState.Valid : ValidationState.NotValid, details);
         }
     }
 }

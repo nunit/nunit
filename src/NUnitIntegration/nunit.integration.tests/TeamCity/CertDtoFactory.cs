@@ -23,8 +23,8 @@ namespace NUnit.Integration.Tests.TeamCity
         {
             var frameworks = new[]
             {
-                "20",
-                "40",
+                // "20",
+                // "40",
                 "45",
             };
 
@@ -38,7 +38,7 @@ namespace NUnit.Integration.Tests.TeamCity
             var integrationTypes = new[]
             {
                 IntegrationType.CommandArg,
-                IntegrationType.EnvironmentVar,
+                // IntegrationType.EnvironmentVar,
             };
 
             var generalCases = CaseLists.GeneralCases.Select(CreateGeneralCreateCaseDto);

@@ -38,7 +38,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                     var description = string.Format("{0} {1}", cmdLineTool.ToolId, @case.CaseId);
                     if (!caseDict.TryGetValue(@case.CaseId, out curCase))
                     {
-                        yield return new TestResultEvaluator(new TestResultDto(cmdLineTool.ToolId, @case.CaseId, TestState.NotImplemented), description);
+                        yield return new TestResultEvaluator(new TestResultDto(cmdLineTool.ToolId, @case.CaseId, TestState.NotImplemented, new Details()), description);
                         continue;
                     }
 
@@ -49,7 +49,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                 foreach (var caseDto in caseDict)
                 {
                     var description = string.Format("{0} {1}", cmdLineTool.ToolId, caseDto.Key);
-                    yield return new TestResultEvaluator(new TestResultDto(cmdLineTool.ToolId, caseDto.Key, TestState.UnknownCase), description);
+                    yield return new TestResultEvaluator(new TestResultDto(cmdLineTool.ToolId, caseDto.Key, TestState.UnknownCase, new Details()), description);
                 }
             }
         }
@@ -64,10 +64,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                 var rawMessages = output.OutputLines.Select(line => ServiceLocator.Root.GetService<IServiceMessageParser>().ParseServiceMessages(new StringReader(line))).SelectMany(i => i).ToList();                
                 if (rawMessages.Count == 0)
                 {
-                    testResult = new TestResultDto(cmdLineTool.ToolId, caseInfo.CaseId, TestState.UnknownCase)
-                    {
-                        Details = string.Join(Environment.NewLine,output.OutputLines)
-                    };
+                    testResult = new TestResultDto(cmdLineTool.ToolId, caseInfo.CaseId, TestState.UnknownCase, new Details(string.Join(Environment.NewLine, output.OutputLines)));
                 }
                 else
                 {
@@ -92,15 +89,12 @@ namespace NUnit.Integration.Tests.TeamCity.Core
                             throw new NotImplementedException(string.Format("Unknown validation state \"{0}\"", validationResult.State));
                     }
 
-                    testResult = new TestResultDto(cmdLineTool.ToolId, caseInfo.CaseId, testState)
-                    {
-                        Details = string.Join(Environment.NewLine, validationResult.Details)
-                    };
+                    testResult = new TestResultDto(cmdLineTool.ToolId, caseInfo.CaseId, testState, new Details(string.Join(Environment.NewLine, validationResult.Details)));
                 }
             }
             catch (Exception ex)
             {
-                testResult = new TestResultDto(cmdLineTool.ToolId, @case.CaseId, TestState.Exception) { Details = ex.Message };
+                testResult = new TestResultDto(cmdLineTool.ToolId, @case.CaseId, TestState.Exception, new Details(ex.Message));
             }
 
             return testResult;
