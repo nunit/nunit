@@ -33,6 +33,7 @@ namespace NUnit.Integration.Tests.TeamCity
         private const string TeamCityArg = "--teamcity";
         private const string IncludeArg = "--include";
         private const string WorkersArg = "--workers";
+        private const string NoResultArg = "--noresult";
         private const string TeamCityEnvVar = "TEAMCITY_PROJECT_NAME";
         private const string MockTestsAssemblyName = "nunit.integration.mocks.dll";
         private const string NUnitConsoleName = "nunit-console.exe";
@@ -80,7 +81,8 @@ namespace NUnit.Integration.Tests.TeamCity
         {
             var args = new List<string>
             {
-                string.Format(@"net{0}\{1}", framework, MockTestsAssemblyName)
+                string.Format(@"net{0}\{1}", framework, MockTestsAssemblyName),
+                NoResultArg
             };
 
             var environmentVariables = new Dictionary<string, string>();

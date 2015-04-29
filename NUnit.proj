@@ -48,6 +48,7 @@
 		<FrameworkBuildDir>$(ConfigurationBuildDir)\$(Framework)</FrameworkBuildDir>
 		<EngineBuildDir>$(ConfigurationBuildDir)</EngineBuildDir>
 		<ConsoleBuildDir>$(ConfigurationBuildDir)</ConsoleBuildDir>
+		<IntegrationBuildDir>$(ConfigurationBuildDir)\IntegrationTests</IntegrationBuildDir>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Packaging Directories">
@@ -224,7 +225,7 @@
 	</Target>
 
 	<Target Name="BuildIntegration" Label="Build integration tests projects for the current config">
-		<MSBuild Targets="Build" Projects="@(IntegrationProjects)"
+		<MSBuild Targets="BuildAllVersions" Projects="@(IntegrationProjects)"
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
 	</Target>
 
@@ -248,10 +249,10 @@
 	<!-- *********************************************************************** -->
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-			DependsOnTargets="TestAllFrameworks;TestEngine;TestAddins;TestV2Driver;TestConsole" />
+			DependsOnTargets="TestAllFrameworks;TestEngine;TestAddins;TestV2Driver;TestConsole;TestIntegration" />
 	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
-			DependsOnTargets="TestFramework;TestEngine;TestAddins;TestV2Driver;TestConsole" />
+			DependsOnTargets="TestFramework;TestEngine;TestAddins;TestV2Driver;TestConsole;TestIntegration" />
 
 	<Target Name="TestAllFrameworks"
 			Label="Test the framework for the current config and all runtimes">
@@ -340,6 +341,20 @@
 		
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
 			  Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll "-result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat)" $(TestOptions)'
+			  ContinueOnError="$(ContinueOnFailure)" />
+		
+	</Target>
+
+	<Target Name="TestIntegration"
+			Label="Run the integration tests"
+			DependsOnTargets="_CreateResultDir">
+		
+		<Message Text="******************************************************************" />
+		<Message Text="* Testing the integration - $(Configuration)" />
+		<Message Text="******************************************************************" />
+		
+		<Exec WorkingDirectory="$(IntegrationBuildDir)"
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.integration.tests.dll "-result:$(ResultDir)/Integration.xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
