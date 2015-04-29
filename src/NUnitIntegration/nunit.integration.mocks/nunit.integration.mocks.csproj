@@ -15,7 +15,7 @@
     <RootNamespace>NUnit.Integration.Mocks</RootNamespace>
     <AssemblyName>nunit.integration.mocks</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <BaseOutputPath>..\..\..\bin\Debug</BaseOutputPath>
+    <BaseOutputPath>..\..\..\bin\$(Configuration)</BaseOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
