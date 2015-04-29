@@ -67,5 +67,12 @@ namespace NUnit.Framework.Attributes
 			Test test3 = (Test)fixture.Tests[2];
 			Assert.AreEqual( 5, test3.Properties.Get("Priority") );
 		}
-	}
+
+        [Test]
+        public void CustomPropertyAttribute()
+        {
+            Test test4 = (Test)fixture.Tests[3];
+            Assert.IsNotNull(test4.Properties.Get("CustomProperty"));
+        }
+    }
 }
