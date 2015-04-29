@@ -2,7 +2,7 @@ Intergation testing
 
 Project 'src\NUnitIntegration\nunit.integration.mocks' contains mocks of tests for specific scenarios of integration. 
 Project 'src\NUnitIntegration\nunit.integration.tests' contains a logic to check integration scenarios, 
-it is assumed that all integration tests, including for other products, will be located here.
+it is assumed that all integration tests, including other products, will be located here.
 
 Output directory for these tests is 'bin\IntegrationTests'. 
 It contains subfolders for each version of NUnit related to specific Net Framework.
