@@ -19,4 +19,4 @@ Integration tests for TeamCity are located in the
 These tests are run for each scenario from 
 'src\NUnitIntegration\nunit.integration.tests\TeamCity\CaseLists.cs' and for each .Net Framework 
 (also for some other combinations such as using '--teamcity' 
-command line argument or 'TEAMCITY_PROJECT_NAME' env variable).
+command line argument or 'TEAMCITY_PROJECT_NAME' environment variable).
