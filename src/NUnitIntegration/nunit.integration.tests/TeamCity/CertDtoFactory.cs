@@ -34,7 +34,7 @@ namespace NUnit.Integration.Tests.TeamCity
         private const string IncludeArg = "--include";
         private const string WorkersArg = "--workers";
         private const string TeamCityEnvVar = "TEAMCITY_PROJECT_NAME";
-        private const string MockTestsAssemblyName = "NUnit.Integration.Mocks.dll";
+        private const string MockTestsAssemblyName = "nunit.integration.mocks.dll";
         private const string NUnitConsoleName = "nunit-console.exe";
 
         public static CertDto CreateCert()

@@ -13,7 +13,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Integration.Mocks</RootNamespace>
-    <AssemblyName>NUnit.Integration.Mocks</AssemblyName>
+    <AssemblyName>nunit.integration.mocks</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <BaseOutputPath>..\..\..\bin\Debug</BaseOutputPath>
   </PropertyGroup>
