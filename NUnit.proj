@@ -30,6 +30,7 @@
 		<EngineSrcDir>$(ProjectSrcDir)\NUnitEngine</EngineSrcDir>
 		<AddinSrcDir>$(EngineSrcDir)\Addins</AddinSrcDir>
 		<ConsoleSrcDir>$(ProjectSrcDir)\NUnitConsole</ConsoleSrcDir>
+		<IntegrationSrcDir>$(ProjectSrcDir)\NUnitIntegration</IntegrationSrcDir>
 		<ProjectToolsDir>$(ProjectBaseDir)\tools</ProjectToolsDir>
 		<PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
 		<NuspecDirectory>$(ProjectBaseDir)\nuget</NuspecDirectory>
@@ -131,6 +132,7 @@
 		<Message Text="    Engine:          $(EngineSrcDir)" />
 		<Message Text="    Console:         $(ConsoleSrcDir)" />
 		<Message Text="  Tools:             $(ProjectToolsDir)" />
+		<Message Text="  Integration Tests: $(IntegrationSrcDir)" />
 		<Message Text="  NuSpecs:           $(NuspecDirectory)" />
 		<Message Text=" " />
 		<Message Text="Build Settings:" />
@@ -201,10 +203,10 @@
 	<!-- *********************************************************************** -->
 
 	<Target Name="Build" Label="Build the framework, engine and console for the current config"
-		DependsOnTargets="BuildFramework;BuildEngine;BuildConsole" />
+		DependsOnTargets="BuildFramework;BuildEngine;BuildConsole;BuildIntegration" />
 
 	<Target Name="BuildAll" Label="Build all frameworks, engine and console for the current config" 
-		DependsOnTargets="BuildAllFrameworks;BuildEngine;BuildConsole" />
+		DependsOnTargets="BuildAllFrameworks;BuildEngine;BuildConsole;BuildIntegration" />
 
 	<Target Name="BuildAllFrameworks" Label="Build the framework for the current config and all runtimes">
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildFramework"
@@ -221,7 +223,12 @@
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
 	</Target>
 
-	<!-- This target is kept separate from the engine because it can't be built on some systems -->
+	<Target Name="BuildIntegration" Label="Build integration tests projects for the current config">
+		<MSBuild Targets="Build" Projects="@(IntegrationProjects)"
+			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
+	</Target>
+
+    <!-- This target is kept separate from the engine because it can't be built on some systems -->
 	<Target Name="BuildCppTestFiles" Label="Build the C++ assemblies used in some engine tests">
 		<MSBuild Targets="Build" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x86.vcxproj" 
 			 Properties="Configuration=$(Configuration); Platform=Win32"
@@ -556,11 +563,16 @@
 		<!-- Addin tests -->
 		<EngineProjects Include="$(AddinSrcDir)\addin-tests\addin-tests.csproj" />
 		<EngineProjects Include="$(AddinSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
+	</ItemGroup>
 
+    <ItemGroup Label="Projects for building the integration projects">
+		<!-- Integration tests -->		
+		<IntegrationProjects Include="$(IntegrationSrcDir)\nunit.integration.mocks\nunit.integration.mocks.csproj" />
+		<IntegrationProjects Include="$(IntegrationSrcDir)\nunit.integration.tests\nunit.integration.tests.csproj" />        
 	</ItemGroup>
 
 	<ItemGroup Label="Projects for building the console runner">
-		<ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console\nunit-console.csproj" />
-		<ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console.tests\nunit-console.tests.csproj" />
+        <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console\nunit-console.csproj" />
+        <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console.tests\nunit-console.tests.csproj" />
 	</ItemGroup>
 </Project>

@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitFramework", "NUnitFramework", "{5D8A9D62-C11C-45B2-8965-43DE8160B558}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET-2.0", "NET-2.0", "{64FE69B2-CE0B-4A47-83A3-9DE803851447}"
@@ -127,6 +129,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.integration.tests", "src\NUnitIntegration\nunit.integration.tests\nunit.integration.tests.csproj", "{5B8B7C48-55B5-4587-B208-BF48C12B904D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.integration.mocks", "src\NUnitIntegration\nunit.integration.mocks\nunit.integration.mocks.csproj", "{837A02D2-3533-4354-9F33-24B77DD9EBAC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46} = {0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -28,6 +28,8 @@ using NUnit.Framework;
 using NUnit.Integration.Tests.TeamCity.Core.Common;
 using NUnit.Integration.Tests.TeamCity.Core.Contracts;
 
+using TestState = NUnit.Integration.Tests.TeamCity.Core.Contracts.TestState;
+
 namespace NUnit.Integration.Tests.TeamCity
 {
     public sealed class TeamCityIntegrationTests
