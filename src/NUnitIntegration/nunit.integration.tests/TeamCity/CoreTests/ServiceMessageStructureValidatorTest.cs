@@ -25,28 +25,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Moq;
+using JetBrains.Annotations;
 
 using NUnit.Framework;
 using NUnit.Integration.Tests.TeamCity.Core;
-
-using Shouldly;
 
 namespace NUnit.Integration.Tests.TeamCity.CoreTests
 {
     public sealed class ServiceMessageStructureValidatorTest
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
         // Case format: [message] [name] {flowId}
+        // Where message is: ss - testSuiteStarted, sf - testSuiteFinished, ts - testStarted, tf - testFinished, i - testIgnored
         [Test]
         [TestCase("", "Valid")]
         [TestCase("ss 1, ss 2, sf 2, sf 1", "Valid")]
@@ -77,14 +66,18 @@ namespace NUnit.Integration.Tests.TeamCity.CoreTests
             var messages = allCodes.Select(CreateMessage).ToList();
 
             // When
-            var validationResult = instance.Validate(messages.Select(i => i.Object));
+            var actualValidationResult = instance.Validate(messages);
 
             // Then
-            validationResult.State.ShouldBe(expectedValidationState);
+            Assert.AreEqual(actualValidationResult.State, expectedValidationState);
         }
 
-        private static Mock<IServiceMessage> CreateMessage(string code)
+        [NotNull] 
+        private static IServiceMessage CreateMessage([NotNull] string code)
         {
+            Contract.Requires<ArgumentNullException>(code != null);
+            Contract.Ensures(Contract.Result<IServiceMessage>() != null);
+
             var items = code.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(i => i.Trim()).ToList();
             if (items.Count < 2)
             {
@@ -121,36 +114,77 @@ namespace NUnit.Integration.Tests.TeamCity.CoreTests
             }
         }
 
-        private static Mock<IServiceMessage> CreateMessage(string messageName, string nameAttr, string flowIdAttr)
+        [NotNull]
+        private static IServiceMessage CreateMessage([NotNull] string messageName, [NotNull] string nameAttr, [CanBeNull] string flowIdAttr)
         {
-            var message = new Mock<IServiceMessage>();
-            message.SetupGet(i => i.Name).Returns(messageName);
+            Contract.Requires<ArgumentNullException>(messageName != null);
+            Contract.Requires<ArgumentNullException>(nameAttr != null);
+            Contract.Ensures(Contract.Result<IServiceMessage>() != null);
 
-            var attrs = new List<string> { ServiceMessageConstants.MessageAttributeName };
+            var attributes = new Dictionary<string, string>
+            {
+                { ServiceMessageConstants.MessageAttributeName, nameAttr }
+            };
+
             if (!string.IsNullOrEmpty(flowIdAttr))
             {
-                attrs.Add("flowId");
+                attributes.Add(ServiceMessageConstants.MessageAttributeFlowId, flowIdAttr);
             }
 
-            message.SetupGet(i => i.Attributes).Returns(attrs.ToArray());
-            
-            // ReSharper disable once RedundantAssignment
-            var nameAttrValue = nameAttr;
-            message.Setup(i => i.TryGetAttribute(ServiceMessageConstants.MessageAttributeName, out nameAttrValue)).Returns(true);
-            message.Setup(i => i.GetAttribute(ServiceMessageConstants.MessageAttributeName)).Returns(nameAttr);
-
-            // ReSharper disable once RedundantAssignment
-            var flowIdAttrValue = flowIdAttr;
-            message.Setup(i => i.TryGetAttribute(ServiceMessageConstants.MessageAttributeFlowId, out flowIdAttrValue)).Returns(true);
-            message.Setup(i => i.GetAttribute(ServiceMessageConstants.MessageAttributeFlowId)).Returns(flowIdAttr);
-            
-            return message;
+            return new ServiceMessageStub(messageName, attributes);
         }
 
         private ServiceMessageStructureValidator CreateInstance()
         {
             var instance = new ServiceMessageStructureValidator();
             return instance;
+        }
+
+        private sealed class ServiceMessageStub : IServiceMessage
+        {
+            private readonly IDictionary<string, string> _attributes;
+
+            public ServiceMessageStub([NotNull] string name, [NotNull] IDictionary<string, string> attributes)
+            {
+                Contract.Requires<ArgumentNullException>(name != null);
+
+                _attributes = attributes;
+                Name = name;
+            }
+
+            /// <summary>
+            /// Service message name, i.e. messageName in ##teamcity[messageName 'ddd']. 
+            /// </summary>
+            public string Name { get; private set; }
+
+            /// <summary>
+            /// For one-value service messages returns value, i.e. 'aaa' for ##teamcity[message 'aaa']
+            /// or <code>null</code> otherwise, i.e. ##teamcity[message aa='aaa']
+            /// </summary>
+            public string DefaultValue
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            /// <summary>
+            /// Emptry for one-value service messages, i.e. ##teamcity[message 'aaa'], returns all keys otherwise
+            /// </summary>
+            public IEnumerable<string> Attributes
+            {
+                get
+                {
+                    Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+                    return _attributes.Keys;
+                }
+            }
+
+            public bool TryGetAttribute(string attributeName, out string value)
+            {
+                return _attributes.TryGetValue(attributeName, out value);
+            }
         }
     }
 }

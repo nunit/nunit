@@ -30,7 +30,7 @@ namespace NUnit.Integration.Tests.TeamCity.Core
     internal static class ServiceMessageExtensions
     {
         [NotNull]
-        public static string GetAttr(this IServiceMessage message, string attrName, [NotNull] string defaultValue = "")
+        public static string GetAttribute(this IServiceMessage message, string attrName, [NotNull] string defaultValue = "")
         {
             Contract.Requires<ArgumentNullException>(message != null);
             Contract.Requires<ArgumentNullException>(attrName != null);

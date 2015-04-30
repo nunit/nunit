@@ -54,14 +54,6 @@ namespace NUnit.Integration.Tests.TeamCity.Core
             get { return _properties.Keys; }
         }
 
-        public string GetAttribute(string attributeName)
-        {
-            Contract.Requires<ArgumentNullException>(attributeName != null);
-
-            string value;
-            return _properties.TryGetValue(attributeName, out value) ? value : null;
-        }
-
         public bool TryGetAttribute(string attributeName, out string value)
         {
             Contract.Requires<ArgumentNullException>(attributeName != null);

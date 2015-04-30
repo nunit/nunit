@@ -173,8 +173,8 @@ namespace NUnit.Integration.Tests.TeamCity.Core.Cases
             Contract.Requires<ArgumentNullException>(message2 != null);
             Contract.Requires<ArgumentNullException>(attributeName != null);
 
-            var atr1 = message1.GetAttr(attributeName);
-            var atr2 = message2.GetAttr(attributeName);
+            var atr1 = message1.GetAttribute(attributeName);
+            var atr2 = message2.GetAttribute(attributeName);
             if (atr1 != atr2)
             {
                 result = new ValidationResult(

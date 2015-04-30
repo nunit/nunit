@@ -51,14 +51,6 @@ namespace NUnit.Integration.Tests.TeamCity.Core
         [NotNull]
         IEnumerable<string> Attributes { get; }
 
-        /// <summary>
-        /// Return a value for keys or <code>null</code>
-        /// </summary>
-        /// <param name="attributeName">Key to check for value</param>
-        /// <returns>value of available or <code>null</code></returns>
-        [CanBeNull]
-        string GetAttribute([NotNull] string attributeName);
-
         bool TryGetAttribute([NotNull] string attributeName, out string value);
     }
 }
