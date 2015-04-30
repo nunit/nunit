@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
@@ -471,6 +472,8 @@ namespace NUnit.Engine
                 foreach (string version in key.GetSubKeyNames())
                 {
                     RegistryKey subKey = key.OpenSubKey(version);
+                    if (subKey == null) continue;
+
                     string monoPrefix = subKey.GetValue("SdkInstallRoot") as string;
 
                     AppendMonoFramework(frameworks, monoPrefix, version);
@@ -572,8 +575,9 @@ namespace NUnit.Engine
                         if (name.StartsWith("v"))
                         {
                             var versionKey = key.OpenSubKey(name);
+                            if (versionKey == null) continue;
 
-                            if (name == "v4")
+                            if (name.StartsWith("v4", StringComparison.Ordinal))
                                 // Version 4 and 4.5
                                 AppendDotNetFourFrameworkVersions(frameworks, versionKey);
                             else
@@ -607,6 +611,8 @@ namespace NUnit.Engine
             foreach (string profile in new string[] { "Full", "Client" })
             {
                 var profileKey = versionKey.OpenSubKey(profile);
+                if (profileKey == null) continue;
+                
                 if (CheckInstallDword(profileKey))
                 {
                     var framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 0));
@@ -626,7 +632,7 @@ namespace NUnit.Engine
 
         private static bool CheckInstallDword(RegistryKey key)
         {
-            return (int)key.GetValue("Install", 0) == 1;
+            return ((int)key.GetValue("Install", 0) == 1);
         }
         
         #endregion
