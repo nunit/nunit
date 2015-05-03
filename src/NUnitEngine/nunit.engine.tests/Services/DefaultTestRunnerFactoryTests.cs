@@ -44,6 +44,12 @@ namespace NUnit.Engine.Services.Tests
             _services.ServiceManager.InitializeServices();
         }
 
+        [Test]
+        public void ServiceIsStarted()
+        {
+            Assert.That(_factory.Status, Is.EqualTo(ServiceStatus.Started));
+        }
+
         // Single file
         [TestCase("EngineTests.nunit", null,        typeof(ProcessRunner))] // Needs to exist because contents are checked
         [TestCase("x.dll",             null,        typeof(ProcessRunner))]

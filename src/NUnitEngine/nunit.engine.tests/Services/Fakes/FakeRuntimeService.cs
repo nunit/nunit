@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,53 +23,20 @@
 
 using System;
 using System.IO;
-using NUnit.Engine.Internal;
+using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Services
+namespace NUnit.Engine.Services.Tests.Fakes
 {
-    /// <summary>
-    /// Summary description for UserSettingsService.
-    /// </summary>
-    public class SettingsService : SettingsStore, IService
+    public class FakeRuntimeService : FakeService, IRuntimeFrameworkService
     {
-        private const string SETTINGS_FILE = "Nunit30Settings.xml";
-
-        public SettingsService(bool writeable)
-            : base(Path.Combine(NUnitConfiguration.ApplicationDirectory, SETTINGS_FILE), writeable) { }
-
-        #region IService Implementation
-
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StartService()
+        bool IRuntimeFrameworkService.IsAvailable(string framework)
         {
-            try
-            {
-                LoadSettings();
-
-                Status = ServiceStatus.Started;
-            }
-            catch
-            {
-                Status = ServiceStatus.Error;
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
-        public void StopService()
+        string IRuntimeFrameworkService.SelectRuntimeFramework(TestPackage package)
         {
-            try
-            {
-                SaveSettings();
-            }
-            finally
-            {
-                Status = ServiceStatus.Stopped;
-                Dispose();
-            }
+            throw new NotImplementedException();
         }
-        #endregion
     }
 }

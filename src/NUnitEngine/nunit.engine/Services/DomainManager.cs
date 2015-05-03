@@ -44,27 +44,11 @@ namespace NUnit.Engine.Services
     {
         static Logger log = InternalTrace.GetLogger(typeof(DomainManager));
 
-        #region Properties
+        static Type[] DEPENDENCIES = new[] { typeof(ISettings) };
 
-        private string shadowCopyPath;
-        private string ShadowCopyPath
-        {
-            get
-            {
-                if ( shadowCopyPath == null )
-                {
-                    shadowCopyPath = ServiceContext.UserSettings.GetSetting("Options.TestLoader.ShadowCopyPath", "");
-                    if (shadowCopyPath == "")
-                        shadowCopyPath = PathUtils.Combine(NUnitConfiguration.ApplicationDirectory, "ShadowCopyCache");
-                    else
-                        shadowCopyPath = Environment.ExpandEnvironmentVariables(shadowCopyPath);
-                }
-
-                return shadowCopyPath;
-            }
-        }
-
-        #endregion
+        private string _shadowCopyPath = Path.Combine(NUnitConfiguration.NUnitBinDirectory, "ShadowCopyCache");
+        private PrincipalPolicy _principalPolicy = PrincipalPolicy.UnauthenticatedPrincipal;
+        private bool _setPrincipalPolicy = false;
 
         #region Create and Unload Domains
         /// <summary>
@@ -107,9 +91,8 @@ namespace NUnit.Engine.Services
                 runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
             
             // Set PrincipalPolicy for the domain if called for in the settings
-                if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.SetPrincipalPolicy", false))
-                    runnerDomain.SetPrincipalPolicy((PrincipalPolicy)ServiceContext.UserSettings.GetSetting(
-                    "Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal));
+                if (_setPrincipalPolicy)
+                    runnerDomain.SetPrincipalPolicy(_principalPolicy);
 
             //// HACK: Only pass down our AddinRegistry one level so that tests of NUnit
             //// itself start without any addins defined.
@@ -264,7 +247,7 @@ namespace NUnit.Engine.Services
         {
             int processId = Process.GetCurrentProcess().Id;
             long ticks = DateTime.Now.Ticks;
-            string cachePath = Path.Combine( ShadowCopyPath, processId.ToString() + "_" + ticks.ToString() ); 
+            string cachePath = Path.Combine( _shadowCopyPath, processId.ToString() + "_" + ticks.ToString() ); 
                 
             try 
             {
@@ -393,26 +376,48 @@ namespace NUnit.Engine.Services
 
         public void DeleteShadowCopyPath()
         {
-            if ( Directory.Exists( ShadowCopyPath ) )
-                Directory.Delete( ShadowCopyPath, true );
+            if ( Directory.Exists( _shadowCopyPath ) )
+                Directory.Delete( _shadowCopyPath, true );
         }
         #endregion
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext
-        {
-            get { return services; }
-            set { services = value; }
-        }
+        public ServiceContext ServiceContext { get; set; }
 
-        public void UnloadService()
+        public ServiceStatus Status { get; private set; }
+
+        public void StopService()
         {
             // TODO:  Add DomainManager.UnloadService implementation
+            Status = ServiceStatus.Stopped;
         }
 
-        public void InitializeService() { }
+        public void StartService() 
+        {
+            try
+            {
+                // DomainManager has a soft dependency on the SettingsService.
+                // If it's not available, default values are used.
+                var settings = ServiceContext.GetService<ISettings>();
+                if (settings != null)
+                {
+                    var pathSetting = settings.GetSetting("Options.TestLoader.ShadowCopyPath", "");
+                    if (pathSetting != "")
+                        _shadowCopyPath = Environment.ExpandEnvironmentVariables(pathSetting);
+
+                    _setPrincipalPolicy = settings.GetSetting("Options.TestLoader.SetPrincipalPolicy", false);
+                    _principalPolicy = settings.GetSetting("Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal);
+                }
+
+                Status = ServiceStatus.Started;
+            }
+            catch
+            {
+                Status = ServiceStatus.Error;
+                throw;
+            }
+        }
 
         #endregion
     }

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,46 +21,39 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Services
 {
     /// <summary>
-    /// Enumeration representing the status of a service
+    /// The IProjectService interface is implemented by ProjectService.
+    /// It knows how to load projects in a specific format and can expand
+    /// TestPackages based on projects.
     /// </summary>
-    public enum ServiceStatus
-    {
-        /// <summary>Service was never started or has been stopped</summary>
-        Stopped,
-        /// <summary>Started successfully</summary>
-        Started,
-        /// <summary>Service failed to start and is unavailable</summary>
-        Error
-    }
-
-    /// <summary>
-    /// The IService interface is implemented by all Services.
-    /// </summary>
-    public interface IService
+    public interface IProjectService
     {
         /// <summary>
-        /// The ServiceContext
+        /// Returns true if the file indicated is one that this
+        /// loader knows how to load.
         /// </summary>
-        ServiceContext ServiceContext { get; set; }
+        /// <param name="path">The path of the project file</param>
+        /// <returns>True if the loader knows how to load this file, otherwise false</returns>
+        bool CanLoadFrom(string path);
 
         /// <summary>
-        /// Gets the ServiceStatus of this service
+        /// Loads a project of a known format.
         /// </summary>
-        ServiceStatus Status { get;  }
+        /// <param name="path">The path of the project file</param>
+        /// <returns>An IProject interface to the loaded project or null if the project cannot be loaded</returns>
+        IProject LoadFrom(string path);
 
         /// <summary>
-        /// Initialize the Service
+        /// Expands a TestPackage based on a known project format, populating it
+        /// with the project contents and any settings the project provides. 
+        /// Note that the package file path must be checked to ensure that it is
+        /// a known project format before calling this method.
         /// </summary>
-        void StartService();
-
-        /// <summary>
-        /// Do any cleanup needed before terminating the service
-        /// </summary>
-        void StopService();
+        /// <param name="package">The TestPackage to be expanded</param>
+        void ExpandProjectPackage(TestPackage package);
     }
 }

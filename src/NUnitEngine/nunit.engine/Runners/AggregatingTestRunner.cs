@@ -71,8 +71,8 @@ namespace NUnit.Engine.Runners
 
             foreach (var subPackage in TestPackage.SubPackages)
             {
-                if (Services.ProjectService.CanLoadFrom(subPackage.FullName))
-                    Services.ProjectService.ExpandProjectPackage(subPackage);
+                if (ProjectService.CanLoadFrom(subPackage.FullName))
+                    ProjectService.ExpandProjectPackage(subPackage);
 
                 var runner = CreateRunner(subPackage);
                 _runners.Add(runner);
@@ -165,7 +165,7 @@ namespace NUnit.Engine.Runners
 
         protected virtual ITestEngineRunner CreateRunner(TestPackage package)
         {
-            return Services.TestRunnerFactory.MakeTestRunner(package);
+            return TestRunnerFactory.MakeTestRunner(package);
         }
     }
 }

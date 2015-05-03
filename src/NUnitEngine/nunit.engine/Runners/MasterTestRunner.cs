@@ -61,7 +61,7 @@ namespace NUnit.Engine.Runners
             // in case the client runner missed them.
             ValidatePackageSettings();
 
-            _realRunner = Services.TestRunnerFactory.MakeTestRunner(TestPackage);
+            _realRunner = TestRunnerFactory.MakeTestRunner(TestPackage);
 
             return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
         }
