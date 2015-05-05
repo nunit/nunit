@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,55 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
-using NUnit.Engine.Internal;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {
     /// <summary>
-    /// Summary description for UserSettingsService.
+    /// The IProjectService interface is implemented by ProjectService.
+    /// It knows how to load projects in a specific format and can expand
+    /// TestPackages based on projects.
     /// </summary>
-    public class SettingsService : SettingsStore, IService
+    public interface IProjectService
     {
-        private const string SETTINGS_FILE = "Nunit30Settings.xml";
+        /// <summary>
+        /// Returns true if the file indicated is one that this
+        /// loader knows how to load.
+        /// </summary>
+        /// <param name="path">The path of the project file</param>
+        /// <returns>True if the loader knows how to load this file, otherwise false</returns>
+        bool CanLoadFrom(string path);
 
-        public SettingsService(bool writeable)
-            : base(Path.Combine(NUnitConfiguration.ApplicationDirectory, SETTINGS_FILE), writeable) { }
-
-        #region IService Implementation
-
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StartService()
-        {
-            try
-            {
-                LoadSettings();
-
-                Status = ServiceStatus.Started;
-            }
-            catch
-            {
-                Status = ServiceStatus.Error;
-                throw;
-            }
-        }
-
-        public void StopService()
-        {
-            try
-            {
-                SaveSettings();
-            }
-            finally
-            {
-                Status = ServiceStatus.Stopped;
-                Dispose();
-            }
-        }
-        #endregion
+        /// <summary>
+        /// Expands a TestPackage based on a known project format, populating it
+        /// with the project contents and any settings the project provides. 
+        /// Note that the package file path must be checked to ensure that it is
+        /// a known project format before calling this method.
+        /// </summary>
+        /// <param name="package">The TestPackage to be expanded</param>
+        void ExpandProjectPackage(TestPackage package);
     }
 }

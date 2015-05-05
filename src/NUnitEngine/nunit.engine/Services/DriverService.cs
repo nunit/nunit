@@ -78,23 +78,31 @@ namespace NUnit.Engine.Services
  
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext 
+        public ServiceContext ServiceContext { get; set; }
+
+        public ServiceStatus Status { get; private set; }
+
+        public void StartService()
         {
-            get { return services; }
-            set { services = value; }
+            try
+            {
+                _factories.Add(new NUnit3DriverFactory());
+
+                foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
+                    _factories.Add(factory);
+
+                Status = ServiceStatus.Started;
+            }
+            catch
+            {
+                Status = ServiceStatus.Error;
+                throw;
+            }
         }
 
-        public void InitializeService()
+        public void StopService()
         {
-            _factories.Add(new NUnit3DriverFactory());
-
-            foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
-                _factories.Add(factory);
-        }
-
-        public void UnloadService()
-        {
+            Status = ServiceStatus.Stopped;
         }
 
         #endregion

@@ -22,14 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml;
+using NUnit.Engine.Services;
 
 namespace NUnit.Engine.Runners
 {
-    using Internal;
-
     /// <summary>
     /// AbstractTestRunner is the base class for all runners
     /// within the NUnit Engine. It implements the ITestRunner
@@ -45,6 +42,8 @@ namespace NUnit.Engine.Runners
         {
             this.Services = services;
             this.TestPackage = package;
+            ProjectService = Services.GetService<IProjectService>();
+            TestRunnerFactory = Services.GetService<ITestRunnerFactory>();
         }
 
         #region Properties
@@ -53,6 +52,10 @@ namespace NUnit.Engine.Runners
         /// Our Service Context
         /// </summary>
         protected ServiceContext Services { get; private set; }
+
+        protected IProjectService ProjectService { get; private set; }
+
+        protected ITestRunnerFactory TestRunnerFactory { get; private set; }
 
         /// <summary>
         /// The TestPackage for which this is the runner
@@ -259,7 +262,7 @@ namespace NUnit.Engine.Runners
             return package != null
                 && package.FullName != null
                 && package.FullName != string.Empty
-                && Services.ProjectService.CanLoadFrom(package.FullName);
+                && ProjectService.CanLoadFrom(package.FullName);
         }
 
         private void EnsurePackageIsLoaded()

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,44 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Engine.Services;
+using NUnit.Framework;
 
-namespace NUnit.Engine.Runners
+namespace NUnit.Engine.Services.Tests
 {
-    /// <summary>
-    /// TestDomainRunner loads and runs tests in a separate
-    /// domain whose lifetime it controls.
-    /// </summary>
-    public class TestDomainRunner : DirectTestRunner
+    using Fakes;
+
+    public class TestAgencyTests
     {
-        private DomainManager _domainManager;
+        private TestAgency _testAgency;
 
-        public TestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) 
+        [SetUp]
+        public void CreateServiceContext()
         {
-            _domainManager = Services.GetService<DomainManager>();
+            var services = new ServiceContext();
+            services.Add(new FakeRuntimeService());
+            // Use a different URI to avoid conflicting with the "real" TestAgency
+            _testAgency = new TestAgency("TestAgencyTest", 0);
+            services.Add(_testAgency);
+            services.ServiceManager.StartServices();
         }
 
-        #region DirectTestRunner Overrides
-
-        protected override TestEngineResult LoadPackage()
+        [Test]
+        public void ServiceIsStarted()
         {
-            TestDomain = _domainManager.CreateDomain(TestPackage);
-
-            return base.LoadPackage();
+            Assert.That(_testAgency.Status, Is.EqualTo(ServiceStatus.Started));
         }
-
-        /// <summary>
-        /// Unload any loaded TestPackage as well as the AppDomain.
-        /// </summary>
-        public override void UnloadPackage()
-        {
-            if (this.TestDomain != null)
-            {
-                _domainManager.Unload(this.TestDomain);
-                this.TestDomain = null;
-            }
-        }
-
-        #endregion
     }
 }

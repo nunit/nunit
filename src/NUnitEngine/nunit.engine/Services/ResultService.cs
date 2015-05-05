@@ -70,18 +70,31 @@ namespace NUnit.Engine.Services
 
         public ServiceContext ServiceContext { get; set; }
 
-        public void InitializeService()
-        {
-            _factories.Add(new NUnit3ResultWriterFactory());
-            _factories.Add(new TestCaseResultWriterFactory());
-            _factories.Add(new XmlTransformResultWriterFactory());
+        public ServiceStatus Status { get; private set; }
 
-            foreach (var factory in AddinManager.GetExtensionObjects<IResultWriterFactory>())
-                _factories.Add(factory);
+        public void StartService()
+        {
+            try
+            {
+                _factories.Add(new NUnit3ResultWriterFactory());
+                _factories.Add(new TestCaseResultWriterFactory());
+                _factories.Add(new XmlTransformResultWriterFactory());
+
+                foreach (var factory in AddinManager.GetExtensionObjects<IResultWriterFactory>())
+                    _factories.Add(factory);
+
+                Status = ServiceStatus.Started;
+            }
+            catch
+            {
+                Status = ServiceStatus.Error;
+                throw;
+            }
         }
 
-        public void UnloadService()
+        public void StopService()
         {
+            Status = ServiceStatus.Stopped;
         }
 
         #endregion

@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,55 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
 using NUnit.Engine.Internal;
 
-namespace NUnit.Engine.Services
+namespace NUnit.Engine.Services.Tests.Fakes
 {
-    /// <summary>
-    /// Summary description for UserSettingsService.
-    /// </summary>
-    public class SettingsService : SettingsStore, IService
+    public class FakeSettingsService : SettingsStore, IService
     {
-        private const string SETTINGS_FILE = "Nunit30Settings.xml";
+        ServiceContext IService.ServiceContext { get; set; }
 
-        public SettingsService(bool writeable)
-            : base(Path.Combine(NUnitConfiguration.ApplicationDirectory, SETTINGS_FILE), writeable) { }
-
-        #region IService Implementation
-
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StartService()
+        private ServiceStatus _status;
+        ServiceStatus IService.Status
         {
-            try
-            {
-                LoadSettings();
-
-                Status = ServiceStatus.Started;
-            }
-            catch
-            {
-                Status = ServiceStatus.Error;
-                throw;
-            }
+            get { return _status; }
         }
 
-        public void StopService()
+        void IService.StartService()
         {
-            try
-            {
-                SaveSettings();
-            }
-            finally
-            {
-                Status = ServiceStatus.Stopped;
-                Dispose();
-            }
+            _status = FailToStart
+                ? ServiceStatus.Error
+                : ServiceStatus.Started;
         }
-        #endregion
+
+        void IService.StopService()
+        {
+            _status = ServiceStatus.Stopped;
+        }
+
+        public bool FailToStart { get; set; }
     }
 }

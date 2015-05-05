@@ -80,10 +80,12 @@ namespace NUnit.Engine.Runners
             if (packages.Count == 0)
                 packages.Add(TestPackage);
 
+            var driverService = Services.GetService<IDriverService>();
+
             foreach (var subPackage in packages)
             {
                 var testFile = subPackage.FullName;
-                IFrameworkDriver driver = Services.DriverService.GetDriver(TestDomain, testFile);
+                IFrameworkDriver driver = driverService.GetDriver(TestDomain, testFile);
                 driver.ID = TestPackage.ID;
                 result.Add(driver.Load(testFile, subPackage.Settings));
                 _drivers.Add(driver);

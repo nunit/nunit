@@ -31,16 +31,14 @@ namespace NUnit.Engine.Services
     /// <summary>
     /// Summary description for ProjectService.
     /// </summary>
-    public class ProjectService : IProjectLoader, IService
+    public class ProjectService : IProjectService, IService
     {
         /// <summary>
         /// List of all installed ProjectLoaders
         /// </summary>
         IList<IProjectLoader> _loaders = new List<IProjectLoader>();
 
-        bool _isInitialized;
-
-        #region IProjectLoader Members
+        #region IProjectService Members
 
         public bool CanLoadFrom(string path)
         {
@@ -50,19 +48,6 @@ namespace NUnit.Engine.Services
 
             return false;
         }
-
-        public IProject LoadFrom(string path)
-        {
-            foreach (IProjectLoader loader in _loaders)
-                if (loader.CanLoadFrom(path))
-                    return loader.LoadFrom(path);
-
-            return null;
-        }
-
-        #endregion
-        
-        #region Other Public Methods
 
         /// <summary>
         /// Expands a TestPackage based on a known project format, populating it
@@ -97,27 +82,47 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext
-        {
-            get { return services; }
-            set { services = value; }
-        }
+        public ServiceContext ServiceContext { get; set; }
 
-        public void InitializeService()
+        public ServiceStatus Status { get; private set; }
+
+        public void StartService()
         {
-            if (!_isInitialized)
+            if (Status == ServiceStatus.Stopped)
             {
-                _isInitialized = true;
+                try
+                {
+                    foreach (IProjectLoader loader in AddinManager.GetExtensionObjects<IProjectLoader>())
+                        _loaders.Add(loader);
 
-                foreach (IProjectLoader loader in AddinManager.GetExtensionObjects<IProjectLoader>())
-                    _loaders.Add(loader);
+                    Status = ServiceStatus.Started;
+                }
+                catch
+                {
+                    // TODO: We should really just ignore any addin that doesn't load
+                    Status = ServiceStatus.Error;
+                    throw;
+                }
             }
         }
 
-        public void UnloadService()
+        public void StopService()
         {
             // TODO:  Add ProjectLoader.UnloadService implementation
+            Status = ServiceStatus.Stopped;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private IProject LoadFrom(string path)
+        {
+            foreach (IProjectLoader loader in _loaders)
+                if (loader.CanLoadFrom(path))
+                    return loader.LoadFrom(path);
+
+            return null;
         }
 
         #endregion

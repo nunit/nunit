@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Runners;
@@ -80,19 +81,18 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext 
+        public ServiceContext ServiceContext { get; set; }
+
+        public ServiceStatus Status { get; protected set; }
+
+        public virtual void StartService()
         {
-            get { return services; }
-            set { services = value; }
+            Status = ServiceStatus.Started;
         }
 
-        public void InitializeService()
+        public void StopService()
         {
-        }
-
-        public void UnloadService()
-        {
+            Status = ServiceStatus.Stopped;
         }
 
         #endregion

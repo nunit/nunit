@@ -38,7 +38,13 @@ namespace NUnit.Engine.Services.Tests
         public void CreateService()
         {
             _resultService = new ResultService();
-            _resultService.InitializeService();
+            _resultService.StartService();
+        }
+
+        [Test]
+        public void ServiceIsStarted()
+        {
+            Assert.That(_resultService.Status, Is.EqualTo(ServiceStatus.Started));
         }
 
         [Test]
