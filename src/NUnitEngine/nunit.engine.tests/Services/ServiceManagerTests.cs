@@ -33,8 +33,11 @@ namespace NUnit.Engine.Services.Tests
     public class ServiceManagerTests
     {
         private IService _settingsService;
-        private IService _projectService;
         private ServiceManager _serviceManager;
+
+#if NUNIT_ENGINE
+        private IService _projectService;
+#endif
 
         [SetUp]
         public void SetUp()
@@ -44,8 +47,10 @@ namespace NUnit.Engine.Services.Tests
             _settingsService = new FakeSettingsService();
             _serviceManager.AddService(_settingsService);
 
+#if NUNIT_ENGINE
             _projectService = new FakeProjectService();
             _serviceManager.AddService(_projectService);
+#endif
         }
 
         [Test]
@@ -53,10 +58,12 @@ namespace NUnit.Engine.Services.Tests
         {
             _serviceManager.StartServices();
 
-            IService service = _serviceManager.GetService(typeof(IProjectService));
+            IService service = _serviceManager.GetService(typeof(ISettings));
             Assert.That(service.Status, Is.EqualTo(ServiceStatus.Started));
-            service = _serviceManager.GetService(typeof(ISettings));
+#if NUNIT_ENGINE
+            service = _serviceManager.GetService(typeof(IProjectService));
             Assert.That(service.Status, Is.EqualTo(ServiceStatus.Started));
+#endif
         }
 
         [Test]
@@ -70,15 +77,15 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void AccessServiceByClass()
         {
-            IService service = _serviceManager.GetService(typeof(FakeProjectService));
-            Assert.That(service, Is.SameAs(_projectService));
+            IService service = _serviceManager.GetService(typeof(FakeSettingsService));
+            Assert.That(service, Is.SameAs(_settingsService));
         }
 
         [Test]
         public void AccessServiceByInterface()
         {
-            IService service = _serviceManager.GetService(typeof(IProjectService));
-            Assert.That(service, Is.SameAs(_projectService));
+            IService service = _serviceManager.GetService(typeof(ISettings));
+            Assert.That(service, Is.SameAs(_settingsService));
         }
     }
 }

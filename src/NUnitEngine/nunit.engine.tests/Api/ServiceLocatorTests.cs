@@ -40,8 +40,7 @@ namespace NUnit.Engine.Api.Tests
         }
 
         [TestCase(typeof(ISettings))]
-        [TestCase(typeof(IRecentFiles))]
-        [TestCase(typeof(ITestAgency))]
+        [TestCase(typeof(IDriverService))]
         public void CanAccessService(Type serviceType)
         {
             IService service = _testEngine.Services.GetService(serviceType) as IService;

@@ -25,9 +25,12 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Mono.Addins;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
+
+#if NUNIT_ENGINE
+using Mono.Addins;
+#endif
 
 namespace NUnit.Engine
 {
@@ -65,10 +68,10 @@ namespace NUnit.Engine
         {
             get
             {
-                if(!this.Services.ServiceManager.ServicesInitialized)
+                if(!Services.ServiceManager.ServicesInitialized)
                     Initialize();
 
-                return this.Services;
+                return Services;
             }
         }
 
@@ -85,6 +88,7 @@ namespace NUnit.Engine
         /// </summary>
         public void Initialize()
         {
+#if NUNIT_ENGINE
             if (!AddinManager.IsInitialized)
             {
                 // Pass in the current nunit.engine assembly because mono.addins uses the executing assembly by
@@ -92,6 +96,7 @@ namespace NUnit.Engine
                 AddinManager.Initialize(Assembly.GetExecutingAssembly(), NUnitConfiguration.ApplicationDirectory);
                 AddinManager.Registry.Update(null);
             }
+#endif
 
             SettingsService settingsService = new SettingsService(true);
 
@@ -104,17 +109,22 @@ namespace NUnit.Engine
                 InternalTrace.Initialize(Path.Combine(WorkDirectory, logName), InternalTraceLevel);
             }
 
-            this.Services.Add(settingsService);
-            this.Services.Add(new RecentFilesService());
-            this.Services.Add(new DomainManager());
-            this.Services.Add(new ProjectService());
-            this.Services.Add(new RuntimeFrameworkService());
-            this.Services.Add(new DefaultTestRunnerFactory());
-            this.Services.Add(new DriverService());
-            this.Services.Add(new TestAgency());
-            this.Services.Add(new ResultService());
+            Services.Add(settingsService);
+            Services.Add(new DomainManager());
+            Services.Add(new DriverService());
 
-            this.Services.ServiceManager.StartServices();
+#if NUNIT_ENGINE
+            Services.Add(new RecentFilesService());
+            Services.Add(new ProjectService());
+            Services.Add(new RuntimeFrameworkService());
+            Services.Add(new DefaultTestRunnerFactory());
+            Services.Add(new TestAgency());
+            Services.Add(new ResultService());
+#else
+            Services.Add(new CoreTestRunnerFactory());
+#endif
+
+            Services.ServiceManager.StartServices();
         }
 
         /// <summary>
@@ -125,10 +135,10 @@ namespace NUnit.Engine
         /// <returns>An ITestRunner.</returns>
         public ITestRunner GetRunner(TestPackage package)
         {
-            if(!this.Services.ServiceManager.ServicesInitialized)
+            if(!Services.ServiceManager.ServicesInitialized)
                 Initialize();
 
-            return new Runners.MasterTestRunner(this.Services, package);
+            return new Runners.MasterTestRunner(Services, package);
         }
 
         #endregion

@@ -52,11 +52,11 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Packaging Directories">
-    <CurrentImageDir Condition="'$(CurrentImageDir)' == ''">$(ProjectImageDir)\$(PackageName)</CurrentImageDir>
-    <PackageBinDir>$(CurrentImageDir)\bin</PackageBinDir>
-    <PackageDocDir>$(CurrentImageDir)\doc</PackageDocDir>
-    <PackageSrcDir>$(CurrentImageDir)\src</PackageSrcDir>
-    <PackageLibDir>$(CurrentImageDir)\lib</PackageLibDir>
+    <PackageWorkingDir Condition="'$(PackageWorkingDir)' == ''">$(ProjectPackageDir)\$(PackageName)</PackageWorkingDir>
+    <PackageBinDir>$(PackageWorkingDir)\bin</PackageBinDir>
+    <PackageDocDir>$(PackageWorkingDir)\doc</PackageDocDir>
+    <PackageSrcDir>$(PackageWorkingDir)\src</PackageSrcDir>
+    <PackageLibDir>$(PackageWorkingDir)\lib</PackageLibDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
@@ -243,10 +243,10 @@
   <!-- *********************************************************************** -->
 
   <Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-      DependsOnTargets="TestAllFrameworks;TestEngine;TestAddins;TestV2Driver;TestConsole" />
+      DependsOnTargets="TestAllFrameworks;TestEngine;TestCoreEngine;TestAddins;TestV2Driver;TestConsole" />
     
   <Target Name="Test" Label="Run tests for the current framework, engine and console"
-      DependsOnTargets="TestFramework;TestEngine;TestAddins;TestV2Driver;TestConsole" />
+      DependsOnTargets="TestFramework;TestEngine;TestCoreEngine;TestAddins;TestV2Driver;TestConsole" />
 
   <Target Name="TestAllFrameworks"
       Label="Test the framework for the current config and all runtimes">
@@ -293,6 +293,20 @@
 
     <Exec WorkingDirectory="$(EngineBuildDir)"
         Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll "-result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat)" $(TestOptions)'
+        ContinueOnError="$(ContinueOnFailure)"/>
+
+  </Target>
+
+  <Target Name="TestCoreEngine"
+      Label ="Run the core engine tests"
+      DependsOnTargets="_CreateResultDir">
+
+    <Message Text="******************************************************************" />
+    <Message Text="* Testing the NUnit Core Engine - $(Configuration)" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(EngineBuildDir)"
+        Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.core.engine.tests.dll "-result:$(ResultDir)/CoreEngineResult.xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)"/>
 
   </Target>
@@ -549,12 +563,14 @@
     <!-- The engine and agent -->
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
+    <EngineProjects Include="$(EngineSrcDir)\nunit.core.engine\nunit.core.engine.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
 
     <!-- Test Assemblies -->
-    <EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
-
+    <EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />  
+    <EngineProjects Include="$(EngineSrcDir)\nunit.core.engine.tests\nunit.core.engine.tests.csproj" />  
+    
     <!-- Addins -->
     <EngineProjects Include="$(AddinSrcDir)\nunit-project-loader\nunit-project-loader.csproj" />
     <EngineProjects Include="$(AddinSrcDir)\vs-project-loader\vs-project-loader.csproj" />
