@@ -39,7 +39,7 @@ namespace NUnit.Engine.Services.Tests
             var context = new ServiceContext();
             _domainManager = new DomainManager();
             context.Add(_domainManager);
-            context.ServiceManager.InitializeServices();
+            context.ServiceManager.StartServices();
 
             _domain = _domainManager.CreateDomain(new TestPackage(MockAssembly.AssemblyPath));
         }

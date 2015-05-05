@@ -38,7 +38,7 @@ namespace NUnit.Engine.Services.Tests
             var services = new ServiceContext();
             _settingsService = new SettingsService(false);
             services.Add(_settingsService);
-            services.ServiceManager.InitializeServices();
+            services.ServiceManager.StartServices();
         }
 
         [Test]

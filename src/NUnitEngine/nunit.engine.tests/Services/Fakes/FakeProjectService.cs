@@ -38,10 +38,5 @@ namespace NUnit.Engine.Services.Tests.Fakes
         {
             return Path.GetExtension(path) == ".nunit";
         }
-
-        IProject IProjectService.LoadFrom(string path)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

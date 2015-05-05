@@ -41,7 +41,7 @@ namespace NUnit.Engine.Services.Tests
             var services = new ServiceContext();
             _factory = new InProcessTestRunnerFactory();
             services.Add(_factory);
-            services.ServiceManager.InitializeServices();
+            services.ServiceManager.StartServices();
         }
 
         [Test]

@@ -38,7 +38,7 @@ namespace NUnit.Engine.Services.Tests
             var services = new ServiceContext();
             _projectService = new ProjectService();
             services.Add(_projectService);
-            services.ServiceManager.InitializeServices();
+            services.ServiceManager.StartServices();
         }
 
         [Test]

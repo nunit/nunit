@@ -364,9 +364,10 @@ namespace NUnit.Engine.Services
         {
             try
             {
-                // TestAgency depends on the RuntimeFrameworkService.
-                // If it isn't available it will not start.
+                // TestAgency requires on the RuntimeFrameworkService.
                 _runtimeService = ServiceContext.GetService<IRuntimeFrameworkService>();
+
+                // Any object returned from ServiceContext is an IService
                 if (_runtimeService != null && ((IService)_runtimeService).Status == ServiceStatus.Started)
                 {
                     try

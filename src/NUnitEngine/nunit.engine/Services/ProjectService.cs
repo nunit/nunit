@@ -49,15 +49,6 @@ namespace NUnit.Engine.Services
             return false;
         }
 
-        public IProject LoadFrom(string path)
-        {
-            foreach (IProjectLoader loader in _loaders)
-                if (loader.CanLoadFrom(path))
-                    return loader.LoadFrom(path);
-
-            return null;
-        }
-
         /// <summary>
         /// Expands a TestPackage based on a known project format, populating it
         /// with the project contents and any settings the project provides. 
@@ -119,6 +110,19 @@ namespace NUnit.Engine.Services
         {
             // TODO:  Add ProjectLoader.UnloadService implementation
             Status = ServiceStatus.Stopped;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private IProject LoadFrom(string path)
+        {
+            foreach (IProjectLoader loader in _loaders)
+                if (loader.CanLoadFrom(path))
+                    return loader.LoadFrom(path);
+
+            return null;
         }
 
         #endregion

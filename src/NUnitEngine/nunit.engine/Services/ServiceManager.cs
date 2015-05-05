@@ -73,7 +73,7 @@ namespace NUnit.Engine.Services
             log.Debug("Added " + service.GetType().Name);
         }
 
-        public void InitializeServices()
+        public void StartServices()
         {
             foreach( IService service in _services )
             {
@@ -100,7 +100,7 @@ namespace NUnit.Engine.Services
             this.ServicesInitialized = true;
         }
 
-        public void StopAllServices()
+        public void StopServices()
         {
             // Stop services in reverse of initialization order
             int index = _services.Count;

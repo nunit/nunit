@@ -39,7 +39,10 @@ namespace NUnit.Engine.Services
 
         public override void StartService()
         {
+            // TestRunnerFactory requires the ProjectService
             _projectService = ServiceContext.GetService<IProjectService>();
+
+            // Anything returned from ServiceContext is known to be an IService
             Status = _projectService != null && ((IService)_projectService).Status == ServiceStatus.Started
                 ? ServiceStatus.Started
                 : ServiceStatus.Error;

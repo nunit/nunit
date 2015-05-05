@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -44,8 +44,7 @@ namespace NUnit.Engine.Services
     {
         static Logger log = InternalTrace.GetLogger(typeof(DomainManager));
 
-        static Type[] DEPENDENCIES = new[] { typeof(ISettings) };
-
+        // Default settings used if SettingsService is unavailable
         private string _shadowCopyPath = Path.Combine(NUnitConfiguration.NUnitBinDirectory, "ShadowCopyCache");
         private PrincipalPolicy _principalPolicy = PrincipalPolicy.UnauthenticatedPrincipal;
         private bool _setPrincipalPolicy = false;
@@ -75,39 +74,11 @@ namespace NUnit.Engine.Services
 
             log.Info("Creating AppDomain " + domainName);
 
-            AppDomain runnerDomain;
-            
-            // TODO: Find an approach that works across all platforms
-          
-            //// TODO: Try to eliminate this test. Currently, running on
-            //// Linux with the permission set specified causes an
-            //// unexplained crash when unloading the domain.
-            //if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            //{
-            //    PermissionSet permissionSet = new PermissionSet( PermissionState.Unrestricted );	
-            //    runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup, permissionSet, null);
-            //}
-            //else
-                runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
+            AppDomain runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
             
             // Set PrincipalPolicy for the domain if called for in the settings
-                if (_setPrincipalPolicy)
-                    runnerDomain.SetPrincipalPolicy(_principalPolicy);
-
-            //// HACK: Only pass down our AddinRegistry one level so that tests of NUnit
-            //// itself start without any addins defined.
-            //if ( !IsTestDomain( AppDomain.CurrentDomain ) )
-            //    runnerDomain.SetData("AddinRegistry", Services.AddinRegistry);
-
-            //// Inject DomainInitializer into the remote domain - there are other
-            //// approaches, but this works for all CLR versions.
-            //DomainInitializer initializer = DomainInitializer.CreateInstance(runnerDomain);
-
-            //// HACK: Under nunit-console, direct use of the enum fails
-            //int traceLevel = IsTestDomain(AppDomain.CurrentDomain)
-            //    ? (int)InternalTraceLevel.Off : (int)InternalTrace.Level;
-
-            //initializer.InitializeDomain(traceLevel);
+            if (_setPrincipalPolicy)
+                runnerDomain.SetPrincipalPolicy(_principalPolicy);
 
             return runnerDomain;
         }

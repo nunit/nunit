@@ -38,7 +38,7 @@ namespace NUnit.Engine.Services.Tests
             var services = new ServiceContext();
             _runtimeService = new RuntimeFrameworkService();
             services.Add(_runtimeService);
-            services.ServiceManager.InitializeServices();
+            services.ServiceManager.StartServices();
         }
 
         [Test]

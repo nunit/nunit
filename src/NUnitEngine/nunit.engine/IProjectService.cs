@@ -41,13 +41,6 @@ namespace NUnit.Engine.Services
         bool CanLoadFrom(string path);
 
         /// <summary>
-        /// Loads a project of a known format.
-        /// </summary>
-        /// <param name="path">The path of the project file</param>
-        /// <returns>An IProject interface to the loaded project or null if the project cannot be loaded</returns>
-        IProject LoadFrom(string path);
-
-        /// <summary>
         /// Expands a TestPackage based on a known project format, populating it
         /// with the project contents and any settings the project provides. 
         /// Note that the package file path must be checked to ensure that it is

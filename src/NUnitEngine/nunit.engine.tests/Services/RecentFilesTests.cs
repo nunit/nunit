@@ -49,7 +49,7 @@ namespace NUnit.Engine.Services.Tests
             services.Add(new FakeSettingsService());
             _recentFiles = new RecentFilesService();
             services.Add(_recentFiles);
-            services.ServiceManager.InitializeServices();
+            services.ServiceManager.StartServices();
         }
 
         [Test]

@@ -153,9 +153,10 @@ namespace NUnit.Engine.Services
         {
             try
             {
-                // RecentFilesService depends on SettingsService. If it's
-                // not available, then an error results.
+                // RecentFilesService requires SettingsService
                 _userSettings = ServiceContext.GetService<ISettings>();
+
+                // Anything returned from ServiceContext is an IService
                 if (_userSettings != null && ((IService)_userSettings).Status == ServiceStatus.Started)
                 {
                     LoadEntriesFromSettings();

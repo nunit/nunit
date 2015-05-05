@@ -22,10 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml;
-using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
 namespace NUnit.Engine.Runners

@@ -51,7 +51,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void InitializeServices()
         {
-            _serviceManager.InitializeServices();
+            _serviceManager.StartServices();
 
             IService service = _serviceManager.GetService(typeof(IProjectService));
             Assert.That(service.Status, Is.EqualTo(ServiceStatus.Started));
@@ -63,7 +63,7 @@ namespace NUnit.Engine.Services.Tests
         public void InitializationFailure()
         {
             ((FakeSettingsService)_settingsService).FailToStart = true;
-            Assert.That(() => _serviceManager.InitializeServices(), 
+            Assert.That(() => _serviceManager.StartServices(), 
                 Throws.InstanceOf<InvalidOperationException>().And.Message.Contains("FakeSettingsService"));
         }
 
