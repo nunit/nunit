@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -164,6 +163,23 @@ namespace NUnit.Framework.Constraints
 
             _tolerance = new Tolerance(amount);
             return this;
+        }
+
+        /// <summary>
+        /// Flags the constraint to include <see cref="DateTimeOffset.Offset"/>
+        /// property in comparison of two <see cref="DateTimeOffset"/> values.
+        /// </summary>
+        /// <remarks>
+        /// Using this modifier does not allow to use the <see cref="Within"/>
+        /// constraint modifier.
+        /// </remarks>
+        public EqualConstraint WithSameOffset
+        {
+            get 
+            { 
+                _comparer.WithSameOffset = true;
+                return this;
+            }
         }
 
         /// <summary>

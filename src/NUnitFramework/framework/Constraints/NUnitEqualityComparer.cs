@@ -112,6 +112,17 @@ namespace NUnit.Framework.Constraints
         {
             get { return failurePoints; }
         }
+
+        /// <summary>
+        /// Flags the comparer to include <see cref="DateTimeOffset.Offset"/>
+        /// property in comparison of two <see cref="DateTimeOffset"/> values.
+        /// </summary>
+        /// <remarks>
+        /// Using this modifier does not allow to use the <see cref="Tolerance"/>
+        /// modifier.
+        /// </remarks>
+        public bool WithSameOffset { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -187,17 +198,39 @@ namespace NUnit.Framework.Constraints
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.AreEqual(x, y, ref tolerance);
 
+#if !NETCF
+            if (x is DateTimeOffset && y is DateTimeOffset)
+            {
+                bool result;
+
+                DateTimeOffset xAsOffset = (DateTimeOffset)x;
+                DateTimeOffset yAsOffset = (DateTimeOffset)y;
+
+                if (tolerance != null && tolerance.Value is TimeSpan)
+                {
+                    TimeSpan amount = (TimeSpan)tolerance.Value;
+                    result = (xAsOffset - yAsOffset).Duration() <= amount;
+                }
+                else
+                {
+                    result = xAsOffset == yAsOffset;
+                }
+
+                if (result && WithSameOffset)
+                {
+                    result = xAsOffset.Offset == yAsOffset.Offset;
+                }
+
+                return result;
+            }
+#endif
+
             if (tolerance != null && tolerance.Value is TimeSpan)
             {
                 TimeSpan amount = (TimeSpan)tolerance.Value;
 
                 if (x is DateTime && y is DateTime)
                     return ((DateTime)x - (DateTime)y).Duration() <= amount;
-
-#if !NETCF
-                if (x is DateTimeOffset && y is DateTimeOffset)
-                    return ((DateTimeOffset)x - (DateTimeOffset)y).Duration() <= amount;
-#endif
 
                 if (x is TimeSpan && y is TimeSpan)
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
