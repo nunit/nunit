@@ -25,13 +25,12 @@ using System;
 using System.IO;
 using System.Xml;
 using NUnit.Common;
+using NUnit.ConsoleRunner.Utilities;
 using NUnit.Engine;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.ConsoleRunner
 {
-    using Utilities;
-    
     /// <summary>
     /// ConsoleRunner provides the nunit-console text-based
     /// user interface, running the tests and reporting the results.
@@ -125,7 +124,7 @@ namespace NUnit.ConsoleRunner
             {
                 foreach (OutputSpecification spec in _options.ExploreOutputSpecifications)
                 {
-                    _resultService.GetResultWriter(spec.Format, new object[] { spec.Transform }).WriteResultFile(result, spec.OutputPath);
+                    _resultService.GetResultWriter(spec.Format, new object[] {spec.Transform}).WriteResultFile(result, spec.OutputPath);
                     _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
                 }
             }
@@ -142,13 +141,11 @@ namespace NUnit.ConsoleRunner
                 GetResultWriter(spec).CheckWritability(spec.OutputPath);
 
             // TODO: Incorporate this in EventCollector?
-            RedirectOutputAsRequested();
+            RedirectErrorOutputAsRequested();
 
             var labels = _options.DisplayTestLabels != null
                 ? _options.DisplayTestLabels.ToUpperInvariant()
                 : "ON";
-
-            var eventHandler = new TestEventHandler(_outWriter, labels, _options.TeamCity);
 
             XmlNode result;
             try
@@ -156,13 +153,16 @@ namespace NUnit.ConsoleRunner
                 using (new SaveConsoleOutput())
                 using (new ColorConsole(ColorStyle.Output))
                 using (ITestRunner runner = _engine.GetRunner(package))
+                using (var output = CreateOutputWriter())
                 {
+                    var eventHandler = new TestEventHandler(output, labels, _options.TeamCity);
+
                     result = runner.Run(eventHandler, filter);
                 }
             }
             finally
             {
-                RestoreOutput();
+                RestoreErrorOutput();
             }
 
             var writer = new ColorConsoleWriter(!_options.NoColor);
@@ -210,22 +210,15 @@ namespace NUnit.ConsoleRunner
                         _outWriter.WriteLine("    " + testName);
             }
 
-            if (!string.IsNullOrEmpty( _options.Include ))
+            if (!string.IsNullOrEmpty(_options.Include))
                 _outWriter.WriteLabelLine("Included categories: ", _options.Include);
 
-            if (!string.IsNullOrEmpty( _options.Exclude ))
+            if (!string.IsNullOrEmpty(_options.Exclude))
                 _outWriter.WriteLabelLine("Excluded categories: ", _options.Exclude);
         }
 
-        private void RedirectOutputAsRequested()
+        private void RedirectErrorOutputAsRequested()
         {
-            if (_options.OutFile != null)
-            {
-                var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
-                outStreamWriter.AutoFlush = true;
-                _outWriter = new ExtendedTextWrapper(outStreamWriter);
-            }
-
             if (_options.ErrFile != null)
             {
                 var errorStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile));
@@ -234,12 +227,21 @@ namespace NUnit.ConsoleRunner
             }
         }
 
-        private void RestoreOutput()
+        private ExtendedTextWriter CreateOutputWriter()
         {
-            _outWriter.Flush();
             if (_options.OutFile != null)
-                _outWriter.Close();
+            {
+                var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
+                outStreamWriter.AutoFlush = true;
 
+                return new ExtendedTextWrapper(outStreamWriter);
+            }
+
+            return _outWriter;
+        }
+
+        private void RestoreErrorOutput()
+        {
             _errorWriter.Flush();
             if (_options.ErrFile != null)
                 _errorWriter.Close();
@@ -247,15 +249,15 @@ namespace NUnit.ConsoleRunner
 
         private IResultWriter GetResultWriter(OutputSpecification spec)
         {
-            return _resultService.GetResultWriter(spec.Format, new object[] { spec.Transform });
+            return _resultService.GetResultWriter(spec.Format, new object[] {spec.Transform});
         }
 
         // This is public static for ease of testing
-        public static TestPackage MakeTestPackage( ConsoleOptions options )
+        public static TestPackage MakeTestPackage(ConsoleOptions options)
         {
             TestPackage package = new TestPackage(options.InputFiles);
 
-            if (options.ProcessModel != null)//ProcessModel.Default)
+            if (options.ProcessModel != null) //ProcessModel.Default)
                 package.AddSetting(PackageSettings.ProcessModel, options.ProcessModel);
 
             if (options.DomainUsage != null)
@@ -281,7 +283,7 @@ namespace NUnit.ConsoleRunner
 
             if (options.ActiveConfig != null)
                 package.AddSetting(PackageSettings.ActiveConfig, options.ActiveConfig);
-            
+
             if (options.WorkDirectory != null)
                 package.AddSetting(PackageSettings.WorkDirectory, options.WorkDirectory);
 
@@ -302,7 +304,7 @@ namespace NUnit.ConsoleRunner
             //    if (!(entry.Value is string || entry.Value is int || entry.Value is bool))
             //        throw new Exception(string.Format("Package setting {0} is not a valid type", entry.Key));
 #endif
-            
+
             return package;
         }
 
@@ -325,6 +327,7 @@ namespace NUnit.ConsoleRunner
         }
 
         #endregion
+
     }
 }
 
