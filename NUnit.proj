@@ -25,6 +25,7 @@
   <PropertyGroup Label="Project Directories">
     <ProjectBaseDir>$(MSBuildProjectDirectory)</ProjectBaseDir>
     <ProjectBuildDir>$(ProjectBaseDir)\bin</ProjectBuildDir>
+    <ProjectImageDir>$(ProjectBaseDir)\images</ProjectImageDir>
     <ProjectPackageDir>$(ProjectBaseDir)\package</ProjectPackageDir>
     <ProjectSrcDir>$(ProjectBaseDir)\src</ProjectSrcDir>
     <FrameworkSrcDir>$(ProjectSrcDir)\NUnitFramework</FrameworkSrcDir>
@@ -51,11 +52,11 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Packaging Directories">
-    <PackageWorkingDir Condition="'$(PackageWorkingDir)' == ''">$(ProjectPackageDir)\$(PackageName)</PackageWorkingDir>
-    <PackageBinDir>$(PackageWorkingDir)\bin</PackageBinDir>
-    <PackageDocDir>$(PackageWorkingDir)\doc</PackageDocDir>
-    <PackageSrcDir>$(PackageWorkingDir)\src</PackageSrcDir>
-    <PackageLibDir>$(PackageWorkingDir)\lib</PackageLibDir>
+    <CurrentImageDir Condition="'$(CurrentImageDir)' == ''">$(ProjectImageDir)\$(PackageName)</CurrentImageDir>
+    <PackageBinDir>$(CurrentImageDir)\bin</PackageBinDir>
+    <PackageDocDir>$(CurrentImageDir)\doc</PackageDocDir>
+    <PackageSrcDir>$(CurrentImageDir)\src</PackageSrcDir>
+    <PackageLibDir>$(CurrentImageDir)\lib</PackageLibDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
@@ -153,7 +154,7 @@
     <Message Text="Packaging" />
     <Message Text="  Name:              $(PackageName)" />
     <Message Text="  Version:           $(PackageVersion)" />
-    <Message Text="  Work dir:          $(PackageWorkingDir)" />
+    <Message Text="  Work dir:          $(CurrentImageDir)" />
     <Message Text="    Bin:             $(PackageBinDir)" />
     <Message Text="    Source:          $(PackageSrcDir)" />
     <Message Text=" " />
@@ -340,7 +341,7 @@
   
   <Target Name="_CreateResultDir">
     
-    <MakeDir Directories="$(ResultDir)"  Condition="!Exists(ResultDir)"/>
+    <MakeDir Directories="$(ResultDir)"  Condition="!Exists('$(ResultDir)')"/>
     
   </Target>
 
@@ -380,17 +381,17 @@
     <Exec Command='git archive -o "$(ProjectPackageDir)\$(PackageName)-src.zip" HEAD' />
   </Target>
 
-  <Target Name="PackageBinaries" Label="Packages the binaries as a zip" DependsOnTargets="_CreatePackageImage">
+  <Target Name="PackageBinaries" Label="Packages the binaries as a zip" DependsOnTargets="_CreateImageIfNotPresent">
     <Message Text="******************************************************************" />
     <Message Text="* Creating the binary $(Configuration) package as $(PackageName)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
-    <Exec Command='git init "$(PackageWorkingDir)"' />
-    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git add -A' />
-    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git config user.name "temp"' />
-    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git config user.email "temp@temp.com"' />
-    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git commit -m "Export"' /> 
-    <Exec WorkingDirectory='$(PackageWorkingDir)' 
+    <Exec Command='git init "$(CurrentImageDir)"' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add -A' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.name "temp"' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.email "temp@temp.com"' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' /> 
+    <Exec WorkingDirectory='$(CurrentImageDir)' 
       Command='git archive -o "$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" HEAD'></Exec>
   </Target>
 
@@ -398,64 +399,64 @@
     DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
   
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
-      DependsOnTargets="_CreatePackageImage">
+      DependsOnTargets="_CreateImageIfNotPresent">
     <Message Text="******************************************************************" />
     <Message Text="* Creating the nunit Nuget $(Configuration) package" />
     <Message Text="******************************************************************" />
 
     <Exec WorkingDirectory="$(ProjectBaseDir)"
-        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(PackageWorkingDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
   
   <Target Name="PackageNuGetNUnitLite" Label="Creates the NUnitlite NuGet package"
-      DependsOnTargets="_CreatePackageImage">
+      DependsOnTargets="_CreateImageIfNotPresent">
     <Message Text="******************************************************************" />
     <Message Text="* Creating the nunitlite Nuget $(Configuration) package" />
     <Message Text="******************************************************************" />
 
     <Exec WorkingDirectory="$(ProjectBaseDir)"
-        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(PackageWorkingDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
   
   <Target Name="PackageNuGetConsole" Label="Creates the NUnit.Console NuGet package"
-      DependsOnTargets="_CreatePackageImage">
+      DependsOnTargets="_CreateImageIfNotPresent">
     <Message Text="******************************************************************" />
     <Message Text="* Creating the NUnit.Console Nuget $(Configuration) package" />
     <Message Text="******************************************************************" />
 
     <Exec WorkingDirectory="$(ProjectBaseDir)"
-        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.console.nuspec -NoPackageAnalysis -BasePath &quot;$(PackageWorkingDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.console.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
 
   <Target Name="PackageMasterMsi" Label="Creates the master MSI installer for NUnit"
-      DependsOnTargets="_CreatePackageImage">
+      DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\master\nunit.wixproj"
-      Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(PackageWorkingDir)" />
+      Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
   </Target>
 
   <Target Name="PackageFrameworkMsi" Label="Creates the MSI installer for the NUnit.Framework"
-      DependsOnTargets="_CreatePackageImage">
+      DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\framework\nunit-framework.wixproj"
-      Properties="Configuration=$(Configuration); Platform=x86; OutputPath=$(ProjectPackageDir) PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(PackageWorkingDir)" />
+      Properties="Configuration=$(Configuration); Platform=x86; OutputPath=$(ProjectPackageDir) PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
   </Target>
 
   <Target Name="PackageConsoleMsi" Label="Creates the MSI installer for the NUnit console runner and engine"
-      DependsOnTargets="_CreatePackageImage">
+      DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
-      Properties="Configuration=$(Configuration); Platform=x86;  PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(PackageWorkingDir)" />
+      Properties="Configuration=$(Configuration); Platform=x86;  PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
   </Target>
 
   <Target Name="PackageAllMsis" Label="Creates all of the MSI installers for NUnit"
       DependsOnTargets="PackageMasterMsi;PackageFrameworkMsi;PackageConsoleMsi">
   </Target>
   
-  <Target Name="_CreatePackageImage" DependsOnTargets="_CleanPackageWorkingDir">
+  <Target Name="CreateImage" DependsOnTargets="_CleanCurrentImageDir">
 
     <!-- Copy root txt files to root -->
-    <Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(RootFiles)" />
+    <Copy DestinationFolder="$(CurrentImageDir)" SourceFiles="@(RootFiles)" />
 
     <!-- Copy binaries to bin directory -->
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
@@ -463,13 +464,17 @@
 
   </Target>
 
-  <Target Name="_CreateProjectPackageDir">
-    <MakeDir Directories="$(ProjectPackageDir)"  Condition="!Exists(ProjectPackageDir)"/>
+  <Target Name="_CreateImageIfNotPresent">
+    <CallTarget Targets="CreateImage" Condition="!Exists('$(CurrentImageDir)')"/>
   </Target>
 
-  <Target Name="_CleanPackageWorkingDir">
-    <Exec Command="$(RemoveDir) $(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')" />
-    <MakeDir Directories="$(PackageWorkingDir)" />
+  <Target Name="_CreateProjectPackageDir">
+    <MakeDir Directories="$(ProjectPackageDir)"  Condition="!Exists('$(ProjectPackageDir)')"/>
+  </Target>
+
+  <Target Name="_CleanCurrentImageDir">
+    <Exec Command="$(RemoveDir) $(CurrentImageDir)" Condition="Exists('$(CurrentImageDir)')" />
+    <MakeDir Directories="$(CurrentImageDir)" />
   </Target>
   
   <!-- *********************************************************************** -->
