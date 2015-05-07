@@ -564,6 +564,7 @@
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit.core.engine\nunit.core.engine.csproj" />
+    <EngineProjects Include="$(EngineSrcDir)\core-runner\core-runner.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
 
