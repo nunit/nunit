@@ -91,9 +91,6 @@
     <Compile Include="..\nunit.engine.tests\Services\DriverServiceTests.cs">
       <Link>Services\DriverServiceTests.cs</Link>
     </Compile>
-    <Compile Include="..\nunit.engine.tests\Services\Fakes\FakeRuntimeService.cs">
-      <Link>Services\Fakes\FakeRuntimeService.cs</Link>
-    </Compile>
     <Compile Include="..\nunit.engine.tests\Services\Fakes\FakeService.cs">
       <Link>Services\Fakes\FakeService.cs</Link>
     </Compile>
@@ -124,10 +121,6 @@
     <ProjectReference Include="..\nunit.core.engine\nunit.core.engine.csproj">
       <Project>{cf9861f6-270b-4c90-9264-97f33e2df707}</Project>
       <Name>nunit.core.engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
-      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
