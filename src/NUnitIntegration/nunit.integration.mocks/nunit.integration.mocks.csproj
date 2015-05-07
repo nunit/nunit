@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="BuildAllVersions" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="BuildAllVersions">
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="TargetFrameworkVersion=v2.0;Version=net20;TargetFrameworkVersionNumber=2.0" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="TargetFrameworkVersion=v4.0;Version=net40;TargetFrameworkVersionNumber=4.0" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="TargetFrameworkVersion=v4.5;Version=net45;TargetFrameworkVersionNumber=4.5" />
+  </Target>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<TargetFrameworkVersionNumber Condition=" '$(TargetFrameworkVersionNumber)' == '' ">v4.0</TargetFrameworkVersionNumber>
+	<Version Condition=" '$(Version)' == '' ">net40</Version>
+	<TargetFrameworkVersionNumber Condition=" '$(TargetFrameworkVersionNumber)' == '' ">4.0</TargetFrameworkVersionNumber>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{837A02D2-3533-4354-9F33-24B77DD9EBAC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.Integration.Mocks</RootNamespace>
+    <AssemblyName>nunit.integration.mocks</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <BaseOutputPath>..\..\..\bin\$(Configuration)</BaseOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(BaseOutputPath)\IntegrationTests\$(Version)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(BaseOutputPath)\IntegrationTests\$(Version)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(BaseOutputPath)\net-$(TargetFrameworkVersionNumber)\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="OneIgnoredTest.cs" />
+    <Compile Include="OneFailedTest.cs" />
+    <Compile Include="MultithreadingTests.cs" />
+    <Compile Include="TwoIgnoredTests.cs" />
+    <Compile Include="TwoFailedTests.cs" />
+    <Compile Include="SuccesfulIgnoredFailedTests.cs" />
+    <Compile Include="TwoSuccesfulTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OneSuccesfulTest.cs" />
+    <Compile Include="Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Target Name="BeforeBuild">
+    <MSBuild Projects="CopyNUnit.target" Properties="OutputPath=$(OutputPath);BaseOutputPath=$(BaseOutputPath)" />
+  </Target>
+</Project>
