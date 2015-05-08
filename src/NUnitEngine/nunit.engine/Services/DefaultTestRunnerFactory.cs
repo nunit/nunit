@@ -35,6 +35,19 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class DefaultTestRunnerFactory : InProcessTestRunnerFactory, ITestRunnerFactory
     {
+        private IProjectService _projectService;
+
+        public override void StartService()
+        {
+            // TestRunnerFactory requires the ProjectService
+            _projectService = ServiceContext.GetService<IProjectService>();
+
+            // Anything returned from ServiceContext is known to be an IService
+            Status = _projectService != null && ((IService)_projectService).Status == ServiceStatus.Started
+                ? ServiceStatus.Started
+                : ServiceStatus.Error;
+        }
+
         /// <summary>
         /// Returns a test runner based on the settings in a TestPackage.
         /// Any setting that is "consumed" by the factory is removed, so
@@ -55,7 +68,7 @@ namespace NUnit.Engine.Services
 
                 if (PathUtils.IsAssemblyFileType(testFile))
                     assemblyCount++;
-                else if (ServiceContext.ProjectService.CanLoadFrom(testFile))
+                else if (_projectService.CanLoadFrom(testFile))
                     projectCount++;
             }
 
@@ -71,7 +84,7 @@ namespace NUnit.Engine.Services
             {
                 var p = package.SubPackages[0];
 
-                ServiceContext.ProjectService.ExpandProjectPackage(p);
+                _projectService.ExpandProjectPackage(p);
 
                 package = p;
             }

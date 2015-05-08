@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,44 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Engine.Services;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using NUnit.Framework;
 
-namespace NUnit.Engine.Runners
+namespace NUnit.Engine.Services.Tests
 {
-    /// <summary>
-    /// TestDomainRunner loads and runs tests in a separate
-    /// domain whose lifetime it controls.
-    /// </summary>
-    public class TestDomainRunner : DirectTestRunner
+    public class ProjectServiceTests
     {
-        private DomainManager _domainManager;
+        private ProjectService _projectService;
 
-        public TestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) 
+        [SetUp]
+        public void CreateServiceContext()
         {
-            _domainManager = Services.GetService<DomainManager>();
+            var services = new ServiceContext();
+            _projectService = new ProjectService();
+            services.Add(_projectService);
+            services.ServiceManager.StartServices();
         }
 
-        #region DirectTestRunner Overrides
-
-        protected override TestEngineResult LoadPackage()
+        [Test]
+        public void ServiceIsStarted()
         {
-            TestDomain = _domainManager.CreateDomain(TestPackage);
-
-            return base.LoadPackage();
+            Assert.That(_projectService.Status, Is.EqualTo(ServiceStatus.Started));
         }
-
-        /// <summary>
-        /// Unload any loaded TestPackage as well as the AppDomain.
-        /// </summary>
-        public override void UnloadPackage()
-        {
-            if (this.TestDomain != null)
-            {
-                _domainManager.Unload(this.TestDomain);
-                this.TestDomain = null;
-            }
-        }
-
-        #endregion
     }
 }

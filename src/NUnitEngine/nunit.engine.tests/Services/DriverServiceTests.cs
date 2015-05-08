@@ -30,33 +30,35 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.Tests
 {
-    [TestFixture, Ignore("DriverService currently only works in the primary AppDomain")]
+    [TestFixture]
     public class DriverServiceTests
     {
-        [Test]
-        public void AssemblyUsesNUnitFrameworkDriver()
+        private DriverService _service;
+
+        [SetUp]
+        public void CreateDriverFactory()
         {
-            Assert.That(GetDriver("mock-nunit-assembly.exe"), Is.InstanceOf<NUnit3FrameworkDriver>());
+            _service = new DriverService();
+            _service.StartService();
         }
 
         [Test]
-        public void MissingFileUsesNotRunnableFrameworkDriver()
+        public void ServiceIsStarted()
         {
-            Assert.That(GetDriver("junk.dll"), Is.InstanceOf<NotRunnableFrameworkDriver>());
+            Assert.That(_service.Status, Is.EqualTo(ServiceStatus.Started), "Failed to start service");
         }
 
-        [Test]
-        public void UnknownFileTypeUsesNotRunnableFrameworkDriver()
-        {
-            Assert.That(GetDriver("mock-nunit-assembly.pdb"), Is.InstanceOf<NotRunnableFrameworkDriver>());
-        }
 
-        private IFrameworkDriver GetDriver(string fileName)
+        [TestCase("mock-nunit-assembly.exe", typeof(NUnit3FrameworkDriver))]
+        [TestCase("mock-nunit-assembly.pdb", typeof(NotRunnableFrameworkDriver))]
+        [TestCase("junk.dll", typeof(NotRunnableFrameworkDriver))]
+        public void CorrectDriverIsUsed(string fileName, Type expectedType)
         {
-            var factory = new DriverService();
-            return factory.GetDriver(
+            var driver = _service.GetDriver(
                 AppDomain.CurrentDomain,
                 Path.Combine(TestContext.CurrentContext.TestDirectory, fileName));
+
+            Assert.That(driver, Is.InstanceOf(expectedType));
         }
     }
 }

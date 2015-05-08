@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,44 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Engine.Services;
-
-namespace NUnit.Engine.Runners
+namespace NUnit.Engine.Services.Tests.Fakes
 {
-    /// <summary>
-    /// TestDomainRunner loads and runs tests in a separate
-    /// domain whose lifetime it controls.
-    /// </summary>
-    public class TestDomainRunner : DirectTestRunner
+    public class FakeService : IService
     {
-        private DomainManager _domainManager;
+        ServiceContext IService.ServiceContext { get; set; }
 
-        public TestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) 
+        private ServiceStatus _status;
+        ServiceStatus IService.Status
         {
-            _domainManager = Services.GetService<DomainManager>();
+            get { return _status; }
         }
 
-        #region DirectTestRunner Overrides
-
-        protected override TestEngineResult LoadPackage()
+        void IService.StartService()
         {
-            TestDomain = _domainManager.CreateDomain(TestPackage);
-
-            return base.LoadPackage();
+            _status = FailToStart
+                ? ServiceStatus.Error
+                : ServiceStatus.Started;
         }
 
-        /// <summary>
-        /// Unload any loaded TestPackage as well as the AppDomain.
-        /// </summary>
-        public override void UnloadPackage()
+        void IService.StopService()
         {
-            if (this.TestDomain != null)
-            {
-                _domainManager.Unload(this.TestDomain);
-                this.TestDomain = null;
-            }
+            _status = ServiceStatus.Stopped;
         }
 
-        #endregion
+        // Set to true to cause the service to give
+        // an error result when started
+        public bool FailToStart { get; set; }
     }
 }

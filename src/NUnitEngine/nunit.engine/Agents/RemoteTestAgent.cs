@@ -131,7 +131,7 @@ namespace NUnit.Engine.Agents
         {
             //System.Diagnostics.Debug.Assert(false, "Attach debugger if desired");
 
-            _runner = Services.TestRunnerFactory.MakeTestRunner(_package);
+            _runner = Services.GetService<ITestRunnerFactory>().MakeTestRunner(_package);
             return _runner.Load();
         }
 

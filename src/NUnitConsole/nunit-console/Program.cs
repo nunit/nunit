@@ -37,7 +37,18 @@ namespace NUnit.ConsoleRunner
     {
         //static Logger log = InternalTrace.GetLogger(typeof(Runner));
         static ConsoleOptions Options = new ConsoleOptions(new DefaultOptionsProvider());
-        static ExtendedTextWriter OutWriter = new ColorConsoleWriter(!Options.NoColor);
+        private static ExtendedTextWriter _outWriter;
+
+        // This has to be lazy otherwise NoColor command line option is not applied correctly
+        private static ExtendedTextWriter OutWriter
+        {
+            get
+            {
+                if (_outWriter == null) _outWriter = new ColorConsoleWriter(!Options.NoColor);
+
+                return _outWriter;
+            }
+        }
 
         [STAThread]
         public static int Main(string[] args)
