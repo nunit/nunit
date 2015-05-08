@@ -391,7 +391,8 @@ namespace NUnit.Framework.Internal.Execution
             Result.EndTime = DateTime.UtcNow;
             
             long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
-            Result.Duration = (double)tickCount / Stopwatch.Frequency;
+            double seconds = (double)tickCount / Stopwatch.Frequency;
+            Result.Duration = seconds;
 
             // We add in the assert count from the context. If
             // this item is for a test case, we are adding the

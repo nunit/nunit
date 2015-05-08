@@ -230,6 +230,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, fixture.tearDownCount, "tearDownCount");
 
             Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE + Env.NewLine + "TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.TearDown));
             Assert.That(result.StackTrace, Does.Contain("--TearDown"));
         }
 

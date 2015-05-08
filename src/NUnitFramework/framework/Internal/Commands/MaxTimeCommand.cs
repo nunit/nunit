@@ -62,7 +62,8 @@ namespace NUnit.Framework.Internal.Commands
             TestResult testResult = innerCommand.Execute(context);
 
             long tickCount = Stopwatch.GetTimestamp() - startTicks;
-            testResult.Duration = (double)tickCount / Stopwatch.Frequency;
+            double seconds = (double)tickCount / Stopwatch.Frequency;
+            testResult.Duration = seconds;
 
             if (testResult.ResultState == ResultState.Success)
             {

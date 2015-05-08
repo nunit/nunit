@@ -371,6 +371,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
             Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
+            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
 
             Assert.AreEqual(0, suiteResult.PassCount);
             Assert.AreEqual(1, suiteResult.FailCount);
@@ -451,6 +452,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
             Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
+            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.Null(suiteResult.StackTrace);
 
             Assert.AreEqual(0, suiteResult.PassCount);
@@ -651,6 +653,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
             Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
+            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.Null(suiteResult.StackTrace, "There should be no stacktrace");
 
             Assert.AreEqual(2, suiteResult.PassCount);
