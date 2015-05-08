@@ -182,23 +182,14 @@ namespace NUnit.Framework.Internal
 
         #endregion
         
-        #region String & Guids
+        #region String
         
         /// <summary>
         /// Default characters for random functions.
         /// </summary>
         /// <remarks>Default characters are the English alphabet (uppercase &amp; lowercase), arabic numerals, and underscore</remarks>
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";        
-        
-        /// <summary>
-        /// Generate a random Guid
-        /// </summary>
-        /// <returns>Guid</returns>
-        public Guid GetGuid()
-        {
-            return Guid.NewGuid();
-        }
-        
+                
         /// <summary>
         /// Generate a random string based on the characters from the input string.
         /// </summary>

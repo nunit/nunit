@@ -135,20 +135,8 @@ namespace NUnit.Framework.Internal
         }
         #endregion
     
-        #region String & Guids
+        #region Strings
                 
-        [Test]
-        [Description("Test that all generated GUIDs are unique")]
-        public static void RandomGuidsAreUnique()
-        {
-            RandomGenerator r = new RandomGenerator(new Random().Next());
-            Guid[] guids = new Guid[10];
-            for (int i = 0; i < 10; i++)
-              guids[i] = r.GetGuid();
-
-            UniqueValues.Check(guids, 8); // Heuristic
-        }
-        
         [Test]
         [Description("Test that all generated strings are unique")]
         public static void RandomStringsAreUnique()
