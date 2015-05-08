@@ -134,5 +134,35 @@ namespace NUnit.Framework.Internal
             UniqueValues.Check(values, 8); // Heuristic
         }
         #endregion
+    
+        #region Strings
+                
+        [Test]
+        [Description("Test that all generated strings are unique")]
+        public static void RandomStringsAreUnique()
+        {
+            RandomGenerator r = new RandomGenerator(new Random().Next());
+            string[] values = new string[10];
+            for (int i = 0; i < 10; i++)
+              values[i] = r.GetString();
+
+            UniqueValues.Check(values, 8); // Heuristic
+        }
+        
+        [TestCase(30, "Tｈｅɋúｉｃｋƃｒòｗｎｆ߀хｊｕｍｐëԁoѵerｔհëｌａȥｙｄｏɢ", 8)]
+        [TestCase(200, "ａèí߀ù123456", 8)]
+        [TestCase(1000, RandomGenerator.DefaultStringChars, 8)]
+        [Description("Test that all generated strings are unique for varying output length")]
+        public static void RandomStringsAreUnique(int outputLength, string allowedChars, int min)
+        {
+            RandomGenerator r = new RandomGenerator(new Random().Next());
+            string[] values = new string[10];
+            for (int i = 0; i < 10; i++)
+              values[i] = r.GetString(outputLength, allowedChars);
+
+            UniqueValues.Check(values, min); // Heuristic
+        }
+        
+        #endregion
     }
 }
