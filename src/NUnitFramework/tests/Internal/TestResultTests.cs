@@ -37,8 +37,6 @@ namespace NUnit.Framework.Internal
         protected TestResult suiteResult;
         protected TestMethod test;
 
-        protected string ignoredChildMessage = "One or more child tests were ignored";
-
         protected double expectedDuration;
         protected DateTime expectedStart;
         protected DateTime expectedEnd;
@@ -297,7 +295,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.Ignored, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Skipped, suiteResult.ResultState.Status);
-            Assert.AreEqual(ignoredChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_IGNORE_MESSAGE, suiteResult.Message);
 
             Assert.AreEqual(0, suiteResult.PassCount);
             Assert.AreEqual(0, suiteResult.FailCount);
