@@ -37,9 +37,9 @@ namespace NUnit.TestData.PropertyAttributeTests
 
 		[Test, Priority(5)]
 		public void Test3() { }
-
-        [Test, CustomProperty]
-        public void Test4() { }
+		
+		[Test, CustomProperty]	
+		public void Test4() { }
 	}
 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
