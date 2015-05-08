@@ -37,6 +37,9 @@ namespace NUnit.TestData.PropertyAttributeTests
 
 		[Test, Priority(5)]
 		public void Test3() { }
+
+        [Test, CustomProperty]
+        public void Tes4() { }
 	}
 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
@@ -44,4 +47,15 @@ namespace NUnit.TestData.PropertyAttributeTests
 	{
 		public PriorityAttribute( int level ) : base( level ) { }
 	}
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class CustomPropertyAttribute : PropertyAttribute
+    {
+        public CustomPropertyAttribute() :base(new SomeClass())
+        {
+        }
+    }
+    public class SomeClass
+    {
+    }
 }
