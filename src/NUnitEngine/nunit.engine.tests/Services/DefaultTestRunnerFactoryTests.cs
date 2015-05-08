@@ -41,7 +41,13 @@ namespace NUnit.Engine.Services.Tests
             _services.Add(new ProjectService());
             _factory = new DefaultTestRunnerFactory();
             _services.Add(_factory);
-            _services.ServiceManager.InitializeServices();
+            _services.ServiceManager.StartServices();
+        }
+
+        [Test]
+        public void ServiceIsStarted()
+        {
+            Assert.That(_factory.Status, Is.EqualTo(ServiceStatus.Started));
         }
 
         // Single file
@@ -82,7 +88,8 @@ namespace NUnit.Engine.Services.Tests
         {
             var package = new TestPackage(files.Split(new char[] { ' ' }));
             if (processModel != null)
-                package.Settings["ProcessModel"] = processModel;
+                package.AddSetting("ProcessModel", processModel);
+
             var runner = _factory.MakeTestRunner(package);
 
             Assert.That(runner, Is.TypeOf(expectedType));

@@ -152,7 +152,7 @@ namespace NUnit.ConsoleRunner
                         else
                         {
                             var site = result.GetAttribute("site");
-                            if (site == "SetUp" || site == "TearDown")
+                            if (site != "Parent" && site != "Child")
                                 WriteSingleResult(result, ColorStyle.Failure);
                             if (site == "SetUp") return;
                         }

@@ -59,7 +59,7 @@ namespace NUnit.Engine.Internal.Tests
 		}
 
 		[Test]
-		public void CanGetTcpChannelOnUnpecifiedPort()
+		public void CanGetTcpChannelOnUnspecifiedPort()
 		{
 			channel1 = ServerUtilities.GetTcpChannel( "test", 0 );
 			Assert.AreEqual( "test", channel1.ChannelName );

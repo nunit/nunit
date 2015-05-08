@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Common;
 using NUnit.Engine.Internal;
@@ -103,50 +102,47 @@ namespace NUnit.Engine.Services
 
             if (targetVersion == RuntimeFramework.DefaultVersion)
             {
-                if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
+                foreach (var subPackage in package.SubPackages)
                 {
-                    foreach (string assembly in package.TestFiles)
+                    var assembly = subPackage.FullName;
+
+                    // If the file is not an assembly or doesn't exist, then it can't
+                    // contribute any information to the decision, so we skip it.
+                    if (PathUtils.IsAssemblyFileType(assembly) && File.Exists(assembly))
                     {
-                        // If the file is not an assembly or doesn't exist, then it can't
-                        // contribute any information to the decision, so we skip it.
-                        if (PathUtils.IsAssemblyFileType(assembly) && File.Exists(assembly))
+                        using (var reader = new AssemblyReader(assembly))
                         {
-                            using (var reader = new AssemblyReader(assembly))
+                            if (!reader.IsValidPeFile)
+                                log.Debug("{0} is not a valid PE file", assembly);
+                            else if (!reader.IsDotNetFile)
+                                log.Debug("{0} is not a managed assembly", assembly);
+                            else
                             {
-                                if (!reader.IsValidPeFile)
-                                    log.Debug("{0} is not a valid PE file", assembly);
-                                else if (!reader.IsDotNetFile)
-                                    log.Debug("{0} is not a managed assembly", assembly);
-                                else
+                                if (reader.ShouldRun32Bit)
                                 {
-                                    if (reader.ShouldRun32Bit)
-                                    {
-                                        package.Settings[PackageSettings.RunAsX86] = true;
-                                        log.Debug("Assembly {0} will be run x86", assembly);
-                                    }
+                                    package.Settings[PackageSettings.RunAsX86] = true;
+                                    log.Debug("Assembly {0} will be run x86", assembly);
+                                }
 
-                                    var imageRuntimeVersion = reader.ImageRuntimeVersion;
-                                    if (imageRuntimeVersion != null)
-                                    {
-                                        var v = new Version(imageRuntimeVersion.Substring(1));
-                                        log.Debug("Assembly {0} uses version {1}", assembly, v);
+                                var imageRuntimeVersion = reader.ImageRuntimeVersion;
+                                if (imageRuntimeVersion != null)
+                                {
+                                    var v = new Version(imageRuntimeVersion.Substring(1));
+                                    log.Debug("Assembly {0} uses version {1}", assembly, v);
 
-                                        // TODO: We are doing two jobs here: (1) getting the
-                                        // target version and (2) applying a policy that says
-                                        // we run under the highest version of all assemblies.
-                                        // We should implement the policy at a higher level.
-                                        if (v > targetVersion) targetVersion = v;
-                                    }
+                                    // TODO: We are doing two jobs here: (1) getting the
+                                    // target version and (2) applying a policy that says
+                                    // we run under the highest version of all assemblies.
+                                    // We should implement the policy at a higher level.
+                                    if (v > targetVersion) targetVersion = v;
                                 }
                             }
                         }
                     }
                 }
-                else
-                    targetVersion = RuntimeFramework.CurrentFramework.ClrVersion;
-
+                
                 RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
-                if (!checkFramework.IsAvailable || !ServiceContext.TestAgency.IsRuntimeVersionSupported(targetVersion))
+                if (!checkFramework.IsAvailable)
                 {
                     log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
                     if (targetVersion < currentFramework.FrameworkVersion)
@@ -164,19 +160,18 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext
+        public ServiceContext ServiceContext { get; set; }
+
+        public ServiceStatus Status { get; private set; }
+
+        public void StartService()
         {
-            get { return services; }
-            set { services = value; }
+            Status = ServiceStatus.Started;
         }
 
-        public void InitializeService()
+        public void StopService()
         {
-        }
-
-        public void UnloadService()
-        {
+            Status = ServiceStatus.Stopped;
         }
 
         #endregion

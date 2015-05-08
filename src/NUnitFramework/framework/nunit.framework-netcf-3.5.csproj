@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;PARALLEL</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -38,7 +38,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;PARALLEL</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -202,6 +202,7 @@
     <Compile Include="Constraints\ContainsConstraint.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraint.cs" />
+    <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EmptyCollectionConstraint.cs" />
     <Compile Include="Constraints\EmptyConstraint.cs" />
     <Compile Include="Constraints\EmptyDirectoryConstraint.cs" />

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework
 {
@@ -29,7 +30,7 @@ namespace NUnit.Framework
     /// Used to mark a field, property or method providing a set of datapoints to 
     /// be used in executing any theories within the same fixture that require an 
     /// argument of the Type provided. The data source may provide an array of
-    /// the required Type or an IEnumerable&lt;T&gt;.
+    /// the required Type or an <see cref="IEnumerable{T}"/>.
     /// Synonymous with DatapointsAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]

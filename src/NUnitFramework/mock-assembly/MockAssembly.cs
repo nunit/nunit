@@ -48,7 +48,8 @@ namespace NUnit.Tests
                         + FixtureWithTestCases.Tests
                         + ParameterizedFixture.Tests
                         + GenericFixtureConstants.Tests
-                        + CDataTestFixure.Tests;
+                        + CDataTestFixure.Tests
+                        + TestNameEscaping.Tests;
             
             public const int Suites = MockTestFixture.Suites 
                         + Singletons.OneTestCase.Suites
@@ -60,6 +61,7 @@ namespace NUnit.Tests
                         + ParameterizedFixture.Suites
                         + GenericFixtureConstants.Suites
                         + CDataTestFixure.Suites
+                        + TestNameEscaping.Suites
                         + NamespaceSuites;
             
             public const int Nodes = Tests + Suites;
@@ -338,5 +340,26 @@ namespace NUnit.Tests
         {
             Assert.Fail("The CDATA was: <![CDATA[ My <xml> ]]>");
         }
+    }
+
+    [TestFixture]
+    public class TestNameEscaping
+    {
+        public const int Tests = 10;
+        public const int Suites = 2;
+
+        [TestCase("< left bracket")]
+        [TestCase("> right bracket")]
+        [TestCase("'single quote'")]
+        [TestCase("\"double quote\"")]
+        [TestCase("&amp")]
+        public void MustBeEscaped(string str) { }
+
+        [TestCase("< left bracket", TestName = "<")]
+        [TestCase("> right bracket", TestName = ">")]
+        [TestCase("'single quote'", TestName = "'")]
+        [TestCase("double quote", TestName = "\"")]
+        [TestCase("amp", TestName = "&")]
+        public void MustBeEscaped_CustomName(string str) { }
     }
 }

@@ -173,4 +173,5 @@ deploy
 lib
 test-results
 package
+images
 MockAssemblyResult.xml

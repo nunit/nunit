@@ -100,7 +100,7 @@ namespace NUnit.Framework
 #endif
 
         /// <summary>
-        /// Gets the directory to be used for outputing files created
+        /// Gets the directory to be used for outputting files created
         /// by this test run.
         /// </summary>
         public string WorkDirectory
@@ -256,7 +256,7 @@ namespace NUnit.Framework
             /// <summary>
             /// Gets the unique Id of a test
             /// </summary>
-            public int ID
+            public String ID
             {
                 get { return _test.Id; }
             }
@@ -289,6 +289,14 @@ namespace NUnit.Framework
             public string FullName
             {
                 get { return _test.FullName; }
+            }
+
+            /// <summary>
+            /// The ClassName of the test
+            /// </summary>
+            public string ClassName
+            {
+                get { return _test.ClassName;  }
             }
 
             /// <summary>

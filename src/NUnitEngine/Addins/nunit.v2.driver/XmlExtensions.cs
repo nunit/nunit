@@ -46,7 +46,7 @@ namespace NUnit.Engine.Drivers
     //   4. output element
     //   5. totals are all set to 0 in the test-suite element
     // The last item can be corrected if we decide to, but it will require
-    // decending the tree to calculate the totals at each node.
+    // descending the tree to calculate the totals at each node.
 
     public static class XmlExtensions
     {
@@ -95,9 +95,11 @@ namespace NUnit.Engine.Drivers
 
             if (test.IsSuite)
                 thisNode.AddAttribute("type", test.TestType);
-            thisNode.AddAttribute("id", test.TestName.TestID.ToString());
-            thisNode.AddAttribute("name", Escape(test.TestName.Name));
-            thisNode.AddAttribute("fullname", Escape(test.TestName.FullName));
+
+            var tn = test.TestName;
+            thisNode.AddAttribute("id", string.Format("{0}-{1}", tn.RunnerID, tn.TestID));
+            thisNode.AddAttribute("name", tn.Name);
+            thisNode.AddAttribute("fullname", tn.FullName);
             thisNode.AddAttribute("runstate", test.RunState.ToString());
 
             if (test.IsSuite)
@@ -256,17 +258,6 @@ namespace NUnit.Engine.Drivers
         #endregion
 
         #region Helper Methods
-
-        // Escapes a string for use in the XML
-        private static string Escape(string original)
-        {
-            return original
-                .Replace("&", "&amp;")
-                .Replace("\"", "&quot;")
-                .Replace("'", "&apos;")
-                .Replace("<", "&lt;")
-                .Replace(">", "&gt;");
-        }
 
         // Returns ResultState translated to a v3 string representation
         private static string GetTranslatedResultState(ResultState resultState)

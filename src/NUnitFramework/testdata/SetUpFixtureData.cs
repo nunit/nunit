@@ -122,7 +122,7 @@ namespace NUnit.TestUtilities
         private static Queue<string> _events;
 
         /// <summary>
-        /// Initializes the <see cref="T:EventRegistrar"/> 'static' class.
+        /// Initializes the <see cref="SimpleEventRecorder"/> 'static' class.
         /// </summary>
         static SimpleEventRecorder()
         {

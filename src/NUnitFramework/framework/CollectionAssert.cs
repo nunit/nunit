@@ -29,7 +29,7 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// A set of Assert methods operationg on one or more collections
+    /// A set of Assert methods operating on one or more collections
     /// </summary>
     public class CollectionAssert
     {

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,21 +34,23 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class ParallelWorkItemDispatcher : IWorkItemDispatcher
     {
-        static Logger log = InternalTrace.GetLogger("WorkItemDispatcher");
+        private static Logger log = InternalTrace.GetLogger("WorkItemDispatcher");
 
         private int _levelOfParallelism;
         private int _itemsDispatched;
 
-        // Our Shifts
+        // Non-STA
         private WorkShift _parallelShift = new WorkShift("Parallel");
         private WorkShift _nonParallelShift = new WorkShift("NonParallel");
-        private WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
-
-        // Our Queues
         private WorkItemQueue _parallelQueue;
-        private WorkItemQueue _parallelSTAQueue;
         private WorkItemQueue _nonParallelQueue;
+
+        // STA
+#if !NETCF
+        private WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
+        private WorkItemQueue _parallelSTAQueue;
         private WorkItemQueue _nonParallelSTAQueue;
+#endif
 
         // The first WorkItem to be dispatched, assumed to be top-level item
         private WorkItem _topLevelWorkItem;
@@ -61,7 +63,14 @@ namespace NUnit.Framework.Internal.Execution
         {
             _levelOfParallelism = levelOfParallelism;
 
-            Shifts = new WorkShift[] { _parallelShift, _nonParallelShift, _nonParallelSTAShift };
+            Shifts = new WorkShift[]
+            {
+                _parallelShift,
+                _nonParallelShift,
+#if !NETCF
+                _nonParallelSTAShift
+#endif
+            };
             foreach (var shift in Shifts)
                 shift.EndOfShift += OnEndOfShift;
         }
@@ -112,12 +121,18 @@ namespace NUnit.Framework.Internal.Execution
             log.Debug("Enqueuing {0}", work.Test.Name);
 
             if (work.IsParallelizable)
+            {
+#if !NETCF
                 if (work.TargetApartment == ApartmentState.STA)
                     ParallelSTAQueue.Enqueue(work);
                 else
-                    ParallelQueue.Enqueue(work);
+#endif
+                ParallelQueue.Enqueue(work);
+            }
+#if !NETCF
             else if (work.TargetApartment == ApartmentState.STA)
                 NonParallelSTAQueue.Enqueue(work);
+#endif
             else
                 NonParallelQueue.Enqueue(work);
         }
@@ -151,7 +166,11 @@ namespace NUnit.Framework.Internal.Execution
                     for (int i = 1; i <= _levelOfParallelism; i++)
                     {
                         string name = string.Format("Worker#" + i.ToString());
+#if NETCF
+                        _parallelShift.Assign(new TestWorker(_parallelQueue, name));
+#else
                         _parallelShift.Assign(new TestWorker(_parallelQueue, name, ApartmentState.MTA));
+#endif
                     }
                 }
 
@@ -159,6 +178,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
+#if !NETCF
         private WorkItemQueue ParallelSTAQueue
         {
             get
@@ -173,6 +193,7 @@ namespace NUnit.Framework.Internal.Execution
                 return _parallelSTAQueue;
             }
         }
+#endif
 
         private WorkItemQueue NonParallelQueue
         {
@@ -182,13 +203,18 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     _nonParallelQueue = new WorkItemQueue("NonParallelQueue");
                     _nonParallelShift.AddQueue(_nonParallelQueue);
+#if NETCF
+                    _nonParallelShift.Assign(new TestWorker(_nonParallelQueue, "Worker#NP"));
+#else
                     _nonParallelShift.Assign(new TestWorker(_nonParallelQueue, "Worker#STA_NP", ApartmentState.MTA));
+#endif
                 }
 
                 return _nonParallelQueue;
             }
         }
 
+#if !NETCF
         private WorkItemQueue NonParallelSTAQueue
         {
             get
@@ -203,7 +229,7 @@ namespace NUnit.Framework.Internal.Execution
                 return _nonParallelSTAQueue;
             }
         }
-
+#endif
         #endregion
 
         #region Helper Methods
@@ -211,8 +237,10 @@ namespace NUnit.Framework.Internal.Execution
         private void OnEndOfShift(object sender, EventArgs ea)
         {
             if (!StartNextShift())
+            {
                 foreach (var shift in Shifts)
                     shift.ShutDown();
+            }
         }
 
         private bool StartNextShift()
@@ -232,4 +260,5 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
+
 #endif

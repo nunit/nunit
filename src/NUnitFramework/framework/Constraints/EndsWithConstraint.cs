@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     public class EndsWithConstraint : StringConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:EndsWithConstraint"/> class.
+        /// Initializes a new instance of the <see cref="EndsWithConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected string</param>
         public EndsWithConstraint(string expected) : base(expected) 

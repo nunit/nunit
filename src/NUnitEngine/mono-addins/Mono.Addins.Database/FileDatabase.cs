@@ -327,7 +327,7 @@ namespace Mono.Addins.Database
 
 		
 		// The ReadSharedObject and WriteSharedObject methods can be used to read/write objects from/to files.
-		// What's special about those methods is that they handle file name colisions.
+		// What's special about those methods is that they handle file name collisions.
 		
 		public string[] GetObjectSharedFiles (string directory, string sharedFileName, string extension)
 		{
@@ -369,7 +369,7 @@ namespace Mono.Addins.Database
 				return result;
 			}
 		
-			// The file is not the one we expected. There has been a name colision
+			// The file is not the one we expected. There has been a name collision
 			
 			foreach (string f in GetDirectoryFiles (directory, name + "*" + extension)) {
 				if (f != file && OpenFileForPath (f, objectId, typeMap, checkOnly, out result)) {

@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Commands
         private readonly List<TestActionItem> _actions;
 
         /// <summary>
-        /// Constructs a OneTimeSetUpComand for a suite
+        /// Constructs a OneTimeSetUpCommand for a suite
         /// </summary>
         /// <param name="suite">The suite to which the command applies</param>
         /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
@@ -66,7 +66,14 @@ namespace NUnit.Framework.Internal.Commands
             {
                 // Use pre-constructed fixture if available, otherwise construct it
                 if (!IsStaticClass(_fixtureType))
+                {
                     context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType, _arguments);
+                    if (_suite.Fixture == null)
+                    {
+                        _suite.Fixture = context.TestObject;
+                    }
+                    Test.Fixture = _suite.Fixture;
+                }
 
                 for (int i = _setUpTearDown.Count; i > 0; )
                     _setUpTearDown[--i].RunSetUp(context);

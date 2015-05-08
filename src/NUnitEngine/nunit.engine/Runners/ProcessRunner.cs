@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Engine.Internal;
+using NUnit.Engine.Services;
 
 namespace NUnit.Engine.Runners
 {
@@ -35,8 +36,12 @@ namespace NUnit.Engine.Runners
 
         private ITestAgent _agent;
         private ITestEngineRunner _remoteRunner;
+        private TestAgency _agency;
 
-        public ProcessRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+        public ProcessRunner(ServiceContext services, TestPackage package) : base(services, package) 
+        {
+            _agency = Services.GetService<TestAgency>();
+        }
 
         #region Properties
 
@@ -70,7 +75,7 @@ namespace NUnit.Engine.Runners
             {
                 if (_agent == null)
                 {
-                    _agent = Services.TestAgency.GetAgent(TestPackage, 30000);
+                    _agent = _agency.GetAgent(TestPackage, 30000);
 
                     if (_agent == null)
                         throw new Exception("Unable to acquire remote process agent");

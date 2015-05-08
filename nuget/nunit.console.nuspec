@@ -8,37 +8,37 @@
     <owners>Charlie Poole</owners>
     <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
-    <iconUrl>http://nunit.org/nuget/nunit_32x32.png</iconUrl>
+    <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Console runner for version 3.0 of the NUnit unit-testing framework.</summary>
-    <description>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. Currently, the runner will not run 2.6 tests at all, but a plugin will be available in a future release.&#10;&#13;&#10;&#13;This is an alpha release and is not intended for production use.</description>
-    <releaseNotes>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. Currently, the runner will not run 2.6 tests at all, but a plugin will be available in a future release.&#10;&#13;&#10;&#13;This is an alpha release and is not intended for production use.</releaseNotes>
+    <description>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. The runner will run 2.6 tests using a plugin.&#10;&#13;&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</description>
+    <releaseNotes>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. The runner will run 2.6 tests using a plugin.&#10;&#13;&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd runner</tags>
-    <copyright>Copyright (c) 2014 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
   </metadata>
   <files>
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
-    <file src="$builddir$\nunit-agent.exe" target="tools" />
-    <file src="$builddir$\nunit-agent.exe.config" target="tools" />
-    <file src="$builddir$\nunit-agent-x86.exe" target="tools" />
-    <file src="$builddir$\nunit-agent-x86.exe.config" target="tools" />
-    <file src="$builddir$\nunit-console.exe" target="tools" />
-    <file src="$builddir$\nunit-console.exe.config" target="tools" />
-    <file src="$builddir$\nunit.engine.api.dll" target="tools" />
-    <file src="$builddir$\nunit.engine.api.xml" target="tools" />
-    <file src="$builddir$\nunit.engine.dll" target="tools" />
-    <file src="$builddir$\nunit.engine.addins" target="tools" />
-    <file src="$builddir$\nunit.engine.addin.xml" target="tools" />
-    <file src="$builddir$\Mono.Addins.dll" target="tools" />
-    <file src="$builddir$\addins\nunit.v2.driver.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit.engine.api.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit.core.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit.core.interfaces.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit-v2-result-writer.dll" target="tools\addins" />
-    <file src="$builddir$\addins\nunit-project-loader.dll" target="tools\addins" />
-    <file src="$builddir$\addins\vs-project-loader.dll" target="tools\addins" />
+    <file src="bin\nunit-agent.exe" target="tools" />
+    <file src="bin\nunit-agent.exe.config" target="tools" />
+    <file src="bin\nunit-agent-x86.exe" target="tools" />
+    <file src="bin\nunit-agent-x86.exe.config" target="tools" />
+    <file src="bin\nunit-console.exe" target="tools" />
+    <file src="bin\nunit-console.exe.config" target="tools" />
+    <file src="bin\nunit.engine.api.dll" target="tools" />
+    <file src="bin\nunit.engine.api.xml" target="tools" />
+    <file src="bin\nunit.engine.dll" target="tools" />
+    <file src="bin\nunit.engine.addins" target="tools" />
+    <file src="bin\nunit.engine.addin.xml" target="tools" />
+    <file src="bin\Mono.Addins.dll" target="tools" />
+    <file src="bin\addins\nunit.v2.driver.dll" target="tools\addins" />
+    <file src="bin\addins\nunit.engine.api.dll" target="tools\addins" />
+    <file src="bin\addins\nunit.core.dll" target="tools\addins" />
+    <file src="bin\addins\nunit.core.interfaces.dll" target="tools\addins" />
+    <file src="bin\addins\nunit-v2-result-writer.dll" target="tools\addins" />
+    <file src="bin\addins\nunit-project-loader.dll" target="tools\addins" />
+    <file src="bin\addins\vs-project-loader.dll" target="tools\addins" />
   </files>
 </package>

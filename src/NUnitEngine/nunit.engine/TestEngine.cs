@@ -114,7 +114,7 @@ namespace NUnit.Engine
             this.Services.Add(new TestAgency());
             this.Services.Add(new ResultService());
 
-            this.Services.ServiceManager.InitializeServices();
+            this.Services.ServiceManager.StartServices();
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace NUnit.Engine
 
         public void Dispose()
         {
-            Services.ServiceManager.StopAllServices();
+            Services.ServiceManager.StopServices();
         }
 
         #endregion

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,19 +29,25 @@ using NUnit.Framework;
 
 namespace NUnit.Engine.Services.Tests
 {
+    using Fakes;
+
     public class InProcessTestRunnerFactoryTests
     {
-        private ServiceContext _services;
         private InProcessTestRunnerFactory _factory;
 
         [SetUp]
         public void CreateServiceContext()
         {
-            _services = new ServiceContext();
-            _services.Add(new ProjectService());
+            var services = new ServiceContext();
             _factory = new InProcessTestRunnerFactory();
-            _services.Add(_factory);
-            _services.ServiceManager.InitializeServices();
+            services.Add(_factory);
+            services.ServiceManager.StartServices();
+        }
+
+        [Test]
+        public void ServiceIsStarted()
+        {
+            Assert.That(_factory.Status, Is.EqualTo(ServiceStatus.Started), "Failed to start service");
         }
 
         // Single file

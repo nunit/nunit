@@ -29,6 +29,7 @@ using NUnit.Common;
 
 namespace NUnit.ConsoleRunner.Tests
 {
+    using System.Collections.Generic;
     using Engine;
     using Framework;
 
@@ -230,10 +231,10 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void InvalidOption()
         {
-            ConsoleOptions options = new ConsoleOptions("-asembly:nunit.tests.dll");
+            ConsoleOptions options = new ConsoleOptions("-assembly:nunit.tests.dll");
             Assert.False(options.Validate());
             Assert.AreEqual(1, options.ErrorMessages.Count);
-            Assert.AreEqual("Invalid argument: -asembly:nunit.tests.dll", options.ErrorMessages[0]);
+            Assert.AreEqual("Invalid argument: -assembly:nunit.tests.dll", options.ErrorMessages[0]);
         }
 
 
@@ -470,6 +471,39 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
 
+        [Test]
+        [TestCase(true, null, true)]
+        [TestCase(false, null, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, false, false)]
+        [TestCase(true, true, true)]
+        [TestCase(false, true, true)]
+        public void ShouldSetTeamCityFlagAccordingToArgsAndDefauls(bool hasTeamcityInCmd, bool? defaultTeamcity, bool expectedTeamCity)
+        {
+            // Given
+            List<string> args = new List<string> { "tests.dll" };
+            if (hasTeamcityInCmd)
+            {
+                args.Add("--teamcity");
+            }
+
+            ConsoleOptions options;
+            if (defaultTeamcity.HasValue)
+            {
+                options = new ConsoleOptions(new DefaultOptionsProviderStub(defaultTeamcity.Value), args.ToArray());
+            }
+            else
+            {
+                options = new ConsoleOptions(args.ToArray());
+            }
+
+            // When
+            var actualTeamCity = options.TeamCity;
+
+            // Then
+            Assert.AreEqual(actualTeamCity, expectedTeamCity);
+        }
+
         #endregion
 
         #region Helper Methods
@@ -489,5 +523,15 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         #endregion
+
+        internal sealed class DefaultOptionsProviderStub : IDefaultOptionsProvider
+        {
+            public DefaultOptionsProviderStub(bool teamCity)
+            {
+                TeamCity = teamCity;
+            }
+
+            public bool TeamCity { get; private set; }
+        }
     }
 }

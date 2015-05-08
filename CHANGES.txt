@@ -1,4 +1,67 @@
-﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the first Beta release.
+﻿NUnit 3.0.0 Beta 1 - March 25, 2015
+
+General
+
+ * There is now a master windows installer for the framework, engine and console runner.
+
+Framework
+
+ * We no longer create a separate framework build for .NET 3.5. The 2.0 and
+   3.5 builds were essentially the same, so the former should now be used 
+   under both runtimes.
+ * A new Constraint, DictionaryContainsKeyConstraint, may be used to test
+   that a specified key is present in a dictionary.
+ * LevelOfParallelizationAttribute has been renamed to LevelOfParallelismAttribute.
+ * The Silverlight runner now displays output in color and includes any
+   text output created by the tests.
+ * The class and method names of each test are included in the output xml
+   where applicable.
+ * String arguments used in test case names are now truncated to 40 rather
+   than 20 characters.
+
+Engine
+
+ * The engine API has now been finalized. It permits specifying a minimum 
+   version of the engine that a runner is able to use. The best installed 
+   version of the engine will be loaded. Third-party runners may override
+   the selection process by including a copy of the engine in their 
+   installation directory and specifying that it must be used.
+ * The V2 framework driver now uses the event listener and test listener
+   passed to it by the runner. This corrects several outstanding issues
+   caused by events not being received and allows selecting V2 tests to
+   be run from the command-line, in the same way that V3 tests are selected.
+
+Console
+
+ * The console now defaults to not using shadowcopy. There is a new option 
+   --shadowcopy to turn it on if needed.
+
+Issues Resolved
+
+ * 224	Silverlight Support
+ * 318	TestActionAttribute: Retrieving the TestFixture
+ * 428	Add ExpectedExceptionAttribute to C# samples
+ * 440	Automatic selection of Test Engine to use
+ * 450	Create master install that includes the framework, engine and console installs
+ * 477	Assert does not work with ArraySegment
+ * 482	nunit-console has multiple errors related to -framework option
+ * 483	Adds constraint for asserting that a dictionary contains a particular key
+ * 484	Missing file in NUnit.Console nuget package
+ * 485	Can't run v2 tests with nunit-console 3.0
+ * 487	NUnitLite can't load assemblies by their file name
+ * 488	Async setup and teardown still don't work
+ * 497	Framework installer shold register the portable framework
+ * 504	Option --workers:0 is ignored
+ * 508	Travis builds with failure in engine tests show as successful
+ * 509	Under linux, not all mono profiles are listed as available
+ * 512	Drop the .NET 3.5 build
+ * 517	V2 FrameworkDriver does not make use of passed in TestEventListener
+ * 523	Provide an option to disable shadowcopy in NUnit v3
+ * 528	V2 FrameworkDriver does not make use of passed in TestFilter
+ * 530	Color display for Silverlight runner
+ * 531	Display text output from tests in Silverlight runner
+ * 534	Add classname and methodname to test result xml
+ * 541	Console help doesn't indicate defaults
 
 NUnit 3.0.0 Alpha 5 - January 30, 2015
 

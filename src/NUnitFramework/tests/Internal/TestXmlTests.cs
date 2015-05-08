@@ -108,6 +108,16 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
+            if (test.FixtureType != null)
+            {
+                Assert.NotNull(test.ClassName);
+                Assert.That(topNode.Attributes["classname"], Is.EqualTo(test.ClassName));
+            }
+            if (test is TestMethod)
+            {
+                Assert.NotNull(test.MethodName);
+                Assert.That(topNode.Attributes["methodname"], Is.EqualTo(test.MethodName));
+            }
             Assert.That(topNode.Attributes["runstate"], Is.EqualTo(test.RunState.ToString()));
 
             if (test.Properties.Keys.Count > 0)

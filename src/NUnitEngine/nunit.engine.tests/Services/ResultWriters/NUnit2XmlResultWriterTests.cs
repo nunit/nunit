@@ -43,7 +43,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         {
             StringBuilder sb = new StringBuilder();
             ResultService service = new ResultService();
-            service.InitializeService();
+            service.StartService();
             using (StringWriter writer = new StringWriter(sb))
             {
                 service.GetResultWriter("nunit2", null).WriteResultFile(EngineResult.Xml, writer);

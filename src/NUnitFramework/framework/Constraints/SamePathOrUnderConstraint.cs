@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     public class SamePathOrUnderConstraint : PathConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SamePathOrUnderConstraint"/> class.
+        /// Initializes a new instance of the <see cref="SamePathOrUnderConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected path</param>
         public SamePathOrUnderConstraint(string expected) : base(expected) { }

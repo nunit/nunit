@@ -98,7 +98,7 @@ namespace NUnit.Framework.Constraints
         #region Properties
 
         /// <summary>
-        /// The actual value that was passed to the <see cref="Constraint.ApplyTo&lt;TActual&gt;(TActual)"/> method.
+        /// The actual value that was passed to the <see cref="Constraint.ApplyTo{TActual}(TActual)"/> method.
         /// </summary>
         public object ActualValue { get; private set; }
 
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Description of the constraint may be affected by the state the constraint had
-        /// when <see cref="Constraint.ApplyTo&lt;TActual&gt;(TActual)"/> was performed against the actual value.
+        /// when <see cref="Constraint.ApplyTo{TActual}(TActual)"/> was performed against the actual value.
         /// </summary>
         public string Description { get; private set; }
 

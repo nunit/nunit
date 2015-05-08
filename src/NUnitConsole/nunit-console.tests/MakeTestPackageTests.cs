@@ -35,23 +35,21 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll");
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(1, package.TestFiles.Count);
-            Assert.AreEqual(Path.GetFullPath("test.dll"), package.TestFiles[0]);
+            Assert.AreEqual(1, package.SubPackages.Count);
+            Assert.AreEqual(Path.GetFullPath("test.dll"), package.SubPackages[0].FullName);
         }
 
         [Test]
         public void MultipleAssemblies()
         {
             var names = new [] { "test1.dll", "test2.dll", "test3.dll" };
-            var expected = new[] {
-                Path.GetFullPath("test1.dll"),
-                Path.GetFullPath("test2.dll"),
-                Path.GetFullPath("test3.dll")
-            };
             var options = new ConsoleOptions(names);
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(expected, package.TestFiles);
+            Assert.AreEqual(3, package.SubPackages.Count);
+            Assert.AreEqual(Path.GetFullPath("test1.dll"), package.SubPackages[0].FullName);
+            Assert.AreEqual(Path.GetFullPath("test2.dll"), package.SubPackages[1].FullName);
+            Assert.AreEqual(Path.GetFullPath("test3.dll"), package.SubPackages[2].FullName);
         }
 
         [TestCase("--timeout=50", "DefaultTimeout", 50)]

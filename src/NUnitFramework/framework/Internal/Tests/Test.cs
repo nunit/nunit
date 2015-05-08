@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// Static value to seed ids. It's started at 1000 so any
         /// uninitialized ids will stand out.
         /// </summary>
-        private static int nextID = 1000;
+        private static int _nextID = 1000;
 
         /// <summary>
         /// The SetUp methods.
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
         {
             this.FullName = name;
             this.Name = name;
-            this.Id = unchecked(nextID++);
+            this.Id = GetNextId();
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal
             this.FullName = pathName == null || pathName == string.Empty 
                 ? name : pathName + "." + name;
             this.Name = name;
-            this.Id = unchecked(nextID++);
+            this.Id = GetNextId();
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
@@ -106,6 +106,11 @@ namespace NUnit.Framework.Internal
             this.Method = method;
         }
 
+        private static string GetNextId()
+        {
+            return IdPrefix + unchecked(_nextID++).ToString();
+        }
+
         #endregion
 
         #region ITest Members
@@ -114,7 +119,7 @@ namespace NUnit.Framework.Internal
         /// Gets or sets the id of the test
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the test
@@ -126,6 +131,35 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <value></value>
         public string FullName { get; set; }
+
+        /// <summary>
+        /// Gets the name of the class containing this test. Returns
+        /// null if the test is not associated with a class.
+        /// </summary>
+        public string ClassName
+        { 
+            get
+            {
+                Type type = FixtureType;
+
+                if (type == null)
+                    return null;
+
+                if (type.IsGenericType)
+                    type = type.GetGenericTypeDefinition();
+
+                return type.FullName;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the method implementing this test.
+        /// Returns null if the test is not implemented as a method.
+        /// </summary>
+        public virtual string MethodName
+        {
+            get { return null; }
+        }
 
         /// <summary>
         /// Gets the Type of the fixture used in running this test
@@ -200,14 +234,20 @@ namespace NUnit.Framework.Internal
         /// <value>A list of child tests</value>
         public abstract System.Collections.Generic.IList<ITest> Tests { get; }
 
+        /// <summary>
+        /// Gets or sets a fixture object for running this test.
+        /// </summary>
+        public virtual object Fixture { get; set; }
+
         #endregion
 
         #region Other Public Properties
 
         /// <summary>
-        /// Gets or sets a fixture object for running this test.
+        /// Static prefix used for ids in this AppDomain.
+        /// Set by FrameworkController.
         /// </summary>
-        public object Fixture { get; set; }
+        public static string IdPrefix { get; set; }
 
         /// <summary>
         /// Gets or Sets the Int value representing the seed for the RandomGenerator
@@ -289,6 +329,10 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("id", this.Id.ToString());
             thisNode.AddAttribute("name", this.Name);
             thisNode.AddAttribute("fullname", this.FullName);
+            if (this.MethodName != null)
+                thisNode.AddAttribute("methodname", this.MethodName);
+            if (this.ClassName != null)
+                thisNode.AddAttribute("classname", this.ClassName);
             thisNode.AddAttribute("runstate", this.RunState.ToString());
 
             if (Properties.Keys.Count > 0)

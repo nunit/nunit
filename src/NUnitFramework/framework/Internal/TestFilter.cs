@@ -157,7 +157,7 @@ namespace NUnit.Framework.Internal
                 case "id":
                     var idFilter = new IdFilter();
                     foreach (string id in xmlNode.InnerText.Split(COMMA))
-                        idFilter.Add(int.Parse(id));
+                        idFilter.Add(id);
                     return idFilter;
 
                 case "tests":

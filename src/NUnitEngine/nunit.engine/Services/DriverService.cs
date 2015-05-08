@@ -25,26 +25,29 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Mono.Addins;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {
+    /// <summary>
+    /// The DriverService provides drivers able to load and run tests
+    /// using various frameworks.
+    /// </summary>
     public class DriverService : IDriverService, IService
     {
-        private const string NUNIT_FRAMEWORK = "nunit.framework";
-        private const string NUNITLITE_FRAMEWORK = "nunitlite";
-
-        private const string OLDER_NUNIT_NOT_SUPPORTED_MESSAGE =
-            "Unable to load {0}. This runner only supports tests written for NUnit 3.0 or higher.";
-
         IList<IDriverFactory> _factories = new List<IDriverFactory>();
 
         #region IDriverService Members
 
-        public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings)
+        /// <summary>
+        /// Get a driver suitable for use with a particular test assembly.
+        /// </summary>
+        /// <param name="domain">The AppDomain to use for the tests</param>
+        /// <param name="assemblyPath">The full path to the test assembly</param>
+        /// <returns></returns>
+        public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath)
         {
             if (!File.Exists(assemblyPath))
                 return new NotRunnableFrameworkDriver(assemblyPath, "File not found: " + assemblyPath);
@@ -59,7 +62,7 @@ namespace NUnit.Engine.Services
                     foreach (var reference in references)
                     {
                         if (factory.IsSupportedFramework(reference))
-                            return factory.GetDriver(domain, reference.Name, assemblyPath, settings);
+                            return factory.GetDriver(domain, reference);
                     }
                 }
             }
@@ -75,23 +78,31 @@ namespace NUnit.Engine.Services
  
         #region IService Members
 
-        private ServiceContext services;
-        public ServiceContext ServiceContext 
+        public ServiceContext ServiceContext { get; set; }
+
+        public ServiceStatus Status { get; private set; }
+
+        public void StartService()
         {
-            get { return services; }
-            set { services = value; }
+            try
+            {
+                _factories.Add(new NUnit3DriverFactory());
+
+                foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
+                    _factories.Add(factory);
+
+                Status = ServiceStatus.Started;
+            }
+            catch
+            {
+                Status = ServiceStatus.Error;
+                throw;
+            }
         }
 
-        public void InitializeService()
+        public void StopService()
         {
-            _factories.Add(new NUnit3DriverFactory());
-
-            foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
-                _factories.Add(factory);
-        }
-
-        public void UnloadService()
-        {
+            Status = ServiceStatus.Stopped;
         }
 
         #endregion

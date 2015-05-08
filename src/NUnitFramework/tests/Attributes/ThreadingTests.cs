@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,28 +21,34 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT
 using System.Threading;
 
 namespace NUnit.Framework.Attributes
 {
-    //[Platform(Exclude = "Mono", Reason = "Runner hangs at end when these are run")]
+    // [Platform(Exclude = "Mono", Reason = "Runner hangs at end when these are run")]
     public class ThreadingTests
     {
         protected Thread ParentThread { get; private set; }
+#if !NETCF
         protected ApartmentState ParentThreadApartment { get; private set; }
+#endif
 
         [OneTimeSetUp]
         public void GetParentThreadInfo()
         {
             ParentThread = Thread.CurrentThread;
+#if !NETCF
             ParentThreadApartment = GetApartmentState(ParentThread);
+#endif
         }
 
+#if !NETCF
         protected static ApartmentState GetApartmentState(Thread thread)
-        { 
+        {
             return thread.GetApartmentState();
         }
+#endif
     }
 }
 #endif

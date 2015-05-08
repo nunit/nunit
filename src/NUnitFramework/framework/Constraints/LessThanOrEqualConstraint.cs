@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     public class LessThanOrEqualConstraint : ComparisonConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:LessThanOrEqualConstraint"/> class.
+        /// Initializes a new instance of the <see cref="LessThanOrEqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
         public LessThanOrEqualConstraint(object expected) : base(expected, true, true, false, "less than or equal to") { }

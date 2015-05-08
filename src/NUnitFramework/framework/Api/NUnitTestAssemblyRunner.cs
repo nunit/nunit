@@ -189,7 +189,7 @@ namespace NUnit.Framework.Api
         /// <param name="filter">A test filter used to select tests to be run</param>
         /// <remarks>
         /// RunAsync is a template method, calling various abstract and
-        /// virtual methods to be overriden by derived classes.
+        /// virtual methods to be overridden by derived classes.
         /// </remarks>
         public void RunAsync(ITestListener listener, ITestFilter filter)
         {
@@ -352,7 +352,7 @@ namespace NUnit.Framework.Api
                 : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
 #if NETCF
-                   : 1);
+                   : 2);
 #else
                    : Math.Max(Environment.ProcessorCount, 2));
 #endif

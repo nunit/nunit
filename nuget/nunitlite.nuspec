@@ -8,14 +8,14 @@
     <owners>Charlie Poole</owners>
     <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
-    <iconUrl>http://nunit.org/nuget/nunit_32x32.png</iconUrl>
+    <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
-    <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner. This package contains builds of the NUnitLite runner for .NET 2.0, 3.5, 4.0 and 4.5 as well as Silverlight 5.0.&#10;&#13;&#10;&#13;How to use this package:&#10;&#13;&#10;&#13;1. Create a console application for your tests and delete the generated class containing Main().&#10;&#13;2. Install the NUnitLite package, which creates a new Main() as well as adding a reference to NUnitLite. This will also bring in the NUnit package, which adds a reference to the nunit framework to your project.&#10;&#13;3. Add your tests to the test project and simply start the project to execute them.</description>
-    <releaseNotes>This is an alpha release and is not intended for production use.</releaseNotes>
+    <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner. This package contains builds of the NUnitLite runner for .NET 2.0, 4.0 and 4.5 as well as Silverlight 5.0.&#10;&#13;&#10;&#13;How to use this package:&#10;&#13;&#10;&#13;1. Create a console application for your tests and delete the generated class containing Main().&#10;&#13;2. Install the NUnitLite package, which creates a new Main() as well as adding a reference to NUnitLite. This will also bring in the NUnit package, which adds a reference to the nunit framework to your project.&#10;&#13;3. Add your tests to the test project and simply start the project to execute them.</description>
+    <releaseNotes>This is an beta release, but is ready for production use for people with prior NUnit experience.</releaseNotes>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
-    <copyright>Copyright (c) 2014 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
     <dependencies>
       <group>
         <dependency id="NUnit" version="[$version$]" />
@@ -32,10 +32,12 @@
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
-    <file src="$builddir$\net-2.0\nunitlite.dll" target="lib\net20" />
-    <file src="$builddir$\net-4.0\nunitlite.dll" target="lib\net40" />
-    <file src="$builddir$\net-4.5\nunitlite.dll" target="lib\net45" />
-    <file src="$builddir$\sl-5.0\nunitlite.dll" target="lib\sl5" />
+    <file src="bin\net-2.0\nunitlite.dll" target="lib\net20" />
+    <file src="bin\net-4.0\nunitlite.dll" target="lib\net40" />
+    <file src="bin\net-4.5\nunitlite.dll" target="lib\net45" />
+    <file src="bin\sl-5.0\nunitlite.dll" target="lib\sl5" />
     <file src="nuget\Program.cs" target="content" />
+    <file src="nuget\Program.vb" target="content" />
+    <file src="nuget\install.ps1" target="tools" />
   </files>
 </package>

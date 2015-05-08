@@ -1,4 +1,27 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2013 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -7,34 +30,24 @@ namespace NUnit.Engine.Api.Tests
 {
     public class ServiceLocatorTests
     {
-        private ITestEngine testEngine;
+        private ITestEngine _testEngine;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void CreateEngine()
         {
-            testEngine = new TestEngine();
-            testEngine.InternalTraceLevel = InternalTraceLevel.Off;
-        }
-
-        private void CheckAccessToService(Type serviceType)
-        {
-            object service = testEngine.Services.GetService(serviceType);
-            Assert.NotNull(service, "GetService(Type) returned null");
-            Assert.That(service, Is.InstanceOf(serviceType));
-        }
-
-        private void CheckAccessToService<T>() where T: class
-        {
-            T service = testEngine.Services.GetService<T>();
-            Assert.NotNull(service, "GetService<T>() returned null");
+            _testEngine = new TestEngine();
+            _testEngine.InternalTraceLevel = InternalTraceLevel.Off;
         }
 
         [TestCase(typeof(ISettings))]
         [TestCase(typeof(IRecentFiles))]
         [TestCase(typeof(ITestAgency))]
-        public void CanAccessUserSettings(Type serviceType)
+        public void CanAccessService(Type serviceType)
         {
-            CheckAccessToService(serviceType);
+            IService service = _testEngine.Services.GetService(serviceType) as IService;
+            Assert.NotNull(service, "GetService(Type) returned null");
+            Assert.That(service, Is.InstanceOf(serviceType));
+            Assert.That(service.Status, Is.EqualTo(ServiceStatus.Started));
         }
     }
 }

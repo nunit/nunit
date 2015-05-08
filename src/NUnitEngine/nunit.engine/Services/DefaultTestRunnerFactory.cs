@@ -35,6 +35,19 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class DefaultTestRunnerFactory : InProcessTestRunnerFactory, ITestRunnerFactory
     {
+        private IProjectService _projectService;
+
+        public override void StartService()
+        {
+            // TestRunnerFactory requires the ProjectService
+            _projectService = ServiceContext.GetService<IProjectService>();
+
+            // Anything returned from ServiceContext is known to be an IService
+            Status = _projectService != null && ((IService)_projectService).Status == ServiceStatus.Started
+                ? ServiceStatus.Started
+                : ServiceStatus.Error;
+        }
+
         /// <summary>
         /// Returns a test runner based on the settings in a TestPackage.
         /// Any setting that is "consumed" by the factory is removed, so
@@ -45,13 +58,19 @@ namespace NUnit.Engine.Services
         /// <returns>A TestRunner</returns>
         public override ITestEngineRunner MakeTestRunner(TestPackage package)
         {
+
             int assemblyCount = 0;
             int projectCount = 0;
-            foreach (var testFile in package.TestFiles)
+
+            foreach (var subPackage in package.SubPackages)
+            {
+                var testFile = subPackage.FullName;
+
                 if (PathUtils.IsAssemblyFileType(testFile))
                     assemblyCount++;
-                else if (ServiceContext.ProjectService.CanLoadFrom(testFile))
+                else if (_projectService.CanLoadFrom(testFile))
                     projectCount++;
+            }
 
             // If we have multiple projects or a project plus assemblies
             // then defer to the AggregatingTestRunner, which will make
@@ -63,12 +82,9 @@ namespace NUnit.Engine.Services
             // If we have a single project by itself, expand it here.
             if (projectCount > 0 && assemblyCount == 0)
             {
-                var p = new TestPackage(package.TestFiles[0]);
+                var p = package.SubPackages[0];
 
-                foreach (var key in package.Settings.Keys)
-                    p.Settings[key] = package.Settings[key];
-
-                ServiceContext.ProjectService.ExpandProjectPackage(p);
+                _projectService.ExpandProjectPackage(p);
 
                 package = p;
             }
@@ -82,7 +98,7 @@ namespace NUnit.Engine.Services
             {
                 default:
                 case ProcessModel.Default:
-                    if (package.TestFiles.Count > 1)
+                    if (package.SubPackages.Count > 1)
                         return new MultipleTestProcessRunner(this.ServiceContext, package);
                     else
                         return new ProcessRunner(this.ServiceContext, package);

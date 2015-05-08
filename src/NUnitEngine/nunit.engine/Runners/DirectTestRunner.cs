@@ -74,10 +74,20 @@ namespace NUnit.Engine.Runners
         {
             var result = new TestEngineResult();
 
-            foreach (string testFile in TestPackage.TestFiles)
+            // DirectRunner may be called with a single-assembly package
+            // or a set of assemblies as subpackages.
+            var packages = TestPackage.SubPackages;
+            if (packages.Count == 0)
+                packages.Add(TestPackage);
+
+            var driverService = Services.GetService<IDriverService>();
+
+            foreach (var subPackage in packages)
             {
-                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, TestPackage.Settings);
-                result.Add(driver.Load());
+                var testFile = subPackage.FullName;
+                IFrameworkDriver driver = driverService.GetDriver(TestDomain, testFile);
+                driver.ID = TestPackage.ID;
+                result.Add(driver.Load(testFile, subPackage.Settings));
                 _drivers.Add(driver);
             }
 

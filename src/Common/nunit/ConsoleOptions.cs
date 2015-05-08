@@ -41,166 +41,24 @@ namespace NUnit.Common
 
         #region Constructor
 
-        public ConsoleOptions(params string[] args)
+        internal ConsoleOptions(IDefaultOptionsProvider defaultOptionsProvider, params string[] args)
         {
-            // NOTE: The order in which patterns are added
-            // determines the display order for the help.
-
-            // Old Options no longer supported:
-            //   fixture
-            //   xmlConsole
-            //   noshadow
-            //   nothread
-            //   nodots
-
-            // Options to be added:
-            //   teamcity
-            //   workers
-
-            // Select Tests
-            this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
-                v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
-
-            this.Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
-                v =>
-            {
-                string testListFile = RequiredValue(v, "--testlist");
-
-                var fullTestListPath = ExpandToFullPath(testListFile);
-
-                if (!File.Exists(fullTestListPath))
-                    ErrorMessages.Add("Unable to locate file: " + testListFile);
-                else
-                {
-                    try
-                    {
-                        using (var rdr = new StreamReader(fullTestListPath))
-                        {
-                            while (!rdr.EndOfStream)
-                            {
-                                var line = rdr.ReadLine().Trim();
-
-                                if (line[0] != '#')
-                                    ((List<string>)TestList).Add(line);
-                            }
-                        }
-                    }
-                    catch (IOException)
-                    {
-                        ErrorMessages.Add("Unable to read file: " + testListFile);
-                    }
-                }
-            });
-
-            this.Add("include=", "Test {CATEGORIES} to be included. May be a single category, a comma-separated list of categories or a category expression.",
-                v => Include = RequiredValue(v, "--include"));
-
-            this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
-                v => Exclude = RequiredValue(v, "--exclude"));
-
-#if !NUNITLITE
-            this.Add("config=", "{NAME} of a project configuration to load (e.g.: Debug).",
-                v => ActiveConfig = RequiredValue(v, "--config"));
-
-            // Where to Run Tests
-            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple",
-                v => ProcessModel = RequiredValue(v, "--process", "Single", "Separate", "Multiple"));
-
-            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
-                v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
-
-            // How to Run Tests
-            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0",
-                v => Framework = RequiredValue(v, "--framework"));
-
-            this.Add("x86", "Run tests in an x86 process on 64 bit systems",
-                v => RunAsX86 = v != null);
-
-            this.Add("dispose-runners", "Dispose each test runner after it has finished running its tests.",
-                v => DisposeRunners = v != null);
-
-            this.Add("shadowcopy", "Shadow copy test files",
-                v => ShadowCopyFiles = v != null);
-#endif
-
-            this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
-                v => defaultTimeout = RequiredInt(v, "--timeout"));
-
-            this.Add("seed=", "Set the random {SEED} used to generate test cases.",
-                v => randomSeed = RequiredInt(v, "--seed"));
-
-            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests.",
-                v => numWorkers = RequiredInt(v, "--workers"));
-
-            this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
-                v => StopOnError = v != null);
-
-            this.Add("wait", "Wait for input before closing console window.",
-                v => WaitBeforeExit = v != null);
-
-            this.Add("pause", "Pause before run to allow debugging.",
-                v => PauseBeforeRun = v != null);
-
-            // Output Control
-            this.Add("work=", "{PATH} of the directory to use for output files.",
-                v => workDirectory = RequiredValue(v, "--work"));
-
-            this.Add("output|out=", "File {PATH} to contain text output from the tests.",
-                v => OutFile = RequiredValue(v, "--output"));
-
-            this.Add("err=", "File {PATH} to contain error output from the tests.",
-                v => ErrFile = RequiredValue(v, "--err"));
-
-            this.Add("full", "Prints full report of all test results.",
-                v => Full = v != null);
-
-            this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.",
-                v => resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--resultxml"))));
-
-            this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v =>
-            {
-                Explore = true;
-                if (v != null)
-                    ExploreOutputSpecifications.Add(new OutputSpecification(v));
-            });
-
-            this.Add("noresult", "Don't save any test results.",
-                v => noresult = v != null);
-
-            this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
-                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
-
-            this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
-                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
-
-            this.Add("teamcity", "Turns on use of TeamCity service messages.",
-                v => TeamCity = v != null);
-
-            this.Add("noheader|noh", "Suppress display of program information at start of run.",
-                v => NoHeader = v != null);
-
-            this.Add("nocolor|noc", "Displays console output without color.",
-                v => NoColor = v != null);
-
-            this.Add("verbose|v", "Display additional information as the test runs.",
-                v => Verbose = v != null);
-
-            this.Add("help|h", "Display this message and exit.",
-                v => ShowHelp = v != null);
-
-            // Default
-            this.Add("<>", v =>
-            {
-                if (v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/')
-                    ErrorMessages.Add("Invalid argument: " + v);
-                else
-                    InputFiles.Add(v);
-            });
-
+            // Apply default oprions
+            if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
+            TeamCity = defaultOptionsProvider.TeamCity;
+            
+            ConfigureOptions();            
             if (args != null)
-                this.Parse(args);
+                Parse(args);
         }
 
+        public ConsoleOptions(params string[] args)
+        {
+            ConfigureOptions();
+            if (args != null)
+                Parse(args);
+        }
+        
         #endregion
 
         #region Properties
@@ -394,6 +252,161 @@ namespace NUnit.Common
 #else
             return Path.GetFullPath(path);
 #endif
+        }
+
+        private void ConfigureOptions()
+        {
+            // NOTE: The order in which patterns are added
+            // determines the display order for the help.
+
+            // Old Options no longer supported:
+            //   fixture
+            //   xmlConsole
+            //   noshadow
+            //   nothread
+            //   nodots
+           
+            // Select Tests
+            this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
+                v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
+
+            this.Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
+                v =>
+                {
+                    string testListFile = RequiredValue(v, "--testlist");
+
+                    var fullTestListPath = ExpandToFullPath(testListFile);
+
+                    if (!File.Exists(fullTestListPath))
+                        ErrorMessages.Add("Unable to locate file: " + testListFile);
+                    else
+                    {
+                        try
+                        {
+                            using (var rdr = new StreamReader(fullTestListPath))
+                            {
+                                while (!rdr.EndOfStream)
+                                {
+                                    var line = rdr.ReadLine().Trim();
+
+                                    if (line[0] != '#')
+                                        ((List<string>)TestList).Add(line);
+                                }
+                            }
+                        }
+                        catch (IOException)
+                        {
+                            ErrorMessages.Add("Unable to read file: " + testListFile);
+                        }
+                    }
+                });
+
+            this.Add("include=", "Test {CATEGORIES} to be included. May be a single category, a comma-separated list of categories or a category expression.",
+                v => Include = RequiredValue(v, "--include"));
+
+            this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
+                v => Exclude = RequiredValue(v, "--exclude"));
+
+#if !NUNITLITE
+            this.Add("config=", "{NAME} of a project configuration to load (e.g.: Debug).",
+                v => ActiveConfig = RequiredValue(v, "--config"));
+
+            // Where to Run Tests
+            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple. If not specified, defaults to Separate for a single assembly or Multiple for more than one.",
+                v => ProcessModel = RequiredValue(v, "--process", "Single", "Separate", "Multiple"));
+
+            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple. If not specified, defaults to Separate for a single assembly or Multiple for more than one.",
+                v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
+
+            // How to Run Tests
+            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0. If not specified, tests will run under the framework they are compiled with.",
+                v => Framework = RequiredValue(v, "--framework"));
+
+            this.Add("x86", "Run tests in an x86 process on 64 bit systems",
+                v => RunAsX86 = v != null);
+
+            this.Add("dispose-runners", "Dispose each test runner after it has finished running its tests.",
+                v => DisposeRunners = v != null);
+
+            this.Add("shadowcopy", "Shadow copy test files",
+                v => ShadowCopyFiles = v != null);
+#endif
+
+            this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
+                v => defaultTimeout = RequiredInt(v, "--timeout"));
+
+            this.Add("seed=", "Set the random {SEED} used to generate test cases.",
+                v => randomSeed = RequiredInt(v, "--seed"));
+
+            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
+                v => numWorkers = RequiredInt(v, "--workers"));
+
+            this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
+                v => StopOnError = v != null);
+
+            this.Add("wait", "Wait for input before closing console window.",
+                v => WaitBeforeExit = v != null);
+
+            this.Add("pause", "Pause before run to allow debugging.",
+                v => PauseBeforeRun = v != null);
+
+            // Output Control
+            this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
+                v => workDirectory = RequiredValue(v, "--work"));
+
+            this.Add("output|out=", "File {PATH} to contain text output from the tests.",
+                v => OutFile = RequiredValue(v, "--output"));
+
+            this.Add("err=", "File {PATH} to contain error output from the tests.",
+                v => ErrFile = RequiredValue(v, "--err"));
+
+            this.Add("full", "Prints full report of all test results.",
+                v => Full = v != null);
+
+            this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.",
+                v => resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--resultxml"))));
+
+            this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v =>
+            {
+                Explore = true;
+                if (v != null)
+                    ExploreOutputSpecifications.Add(new OutputSpecification(v));
+            });
+
+            this.Add("noresult", "Don't save any test results.",
+                v => noresult = v != null);
+
+            this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
+                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
+
+            this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
+                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
+
+#if !NETCF
+            this.Add("teamcity", "Turns on use of TeamCity service messages.",
+                v => TeamCity = v != null);
+#endif
+
+            this.Add("noheader|noh", "Suppress display of program information at start of run.",
+                v => NoHeader = v != null);
+
+            this.Add("nocolor|noc", "Displays console output without color.",
+                v => NoColor = v != null);
+
+            this.Add("verbose|v", "Display additional information as the test runs.",
+                v => Verbose = v != null);
+
+            this.Add("help|h", "Display this message and exit.",
+                v => ShowHelp = v != null);
+
+            // Default
+            this.Add("<>", v =>
+            {
+                if (v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/')
+                    ErrorMessages.Add("Invalid argument: " + v);
+                else
+                    InputFiles.Add(v);
+            });
         }
 
         #endregion

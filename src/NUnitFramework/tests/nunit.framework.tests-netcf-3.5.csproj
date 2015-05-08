@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;NUNITLITE;PARALLEL</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -37,7 +37,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;WindowsCE;NETCF;NETCF_3_5;NUNITLITE;PARALLEL</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -125,6 +125,7 @@
     <Compile Include="Attributes\TestMethodBuilderTests.cs" />
     <Compile Include="Attributes\TestOfTests.cs" />
     <Compile Include="Attributes\TheoryTests.cs" />
+    <Compile Include="Attributes\ThreadingTests.cs" />
     <Compile Include="Attributes\TimeoutTests.cs" />
     <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Constraints\ConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
+    <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Constraints\EmptyConstraintTest.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\EqualConstraintTests.cs" />

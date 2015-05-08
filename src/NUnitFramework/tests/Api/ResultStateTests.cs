@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal
         [TestCase(TestStatus.Skipped, SpecialValue.Null, "Skipped")]
         [TestCase(TestStatus.Passed, "", "Passed")]
         [TestCase(TestStatus.Passed, "testLabel", "Passed:testLabel")]
-        public void ToString_Constructor_ReturnsExepectedString(TestStatus status, string label, string expected)
+        public void ToString_Constructor_ReturnsExpectedString(TestStatus status, string label, string expected)
         {
             ResultState resultState = new ResultState(status, label);
 

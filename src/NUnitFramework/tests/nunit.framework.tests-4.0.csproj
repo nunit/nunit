@@ -51,6 +51,9 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
+      <Link>Runner\DefaultOptionsProviderTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
       <Link>Runner\ExtendedTextWrapperTests.cs</Link>
     </Compile>
@@ -139,6 +142,7 @@
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
+    <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
     <Compile Include="Constraints\FileOrDirectoryExistsConstraintTests.cs" />

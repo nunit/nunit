@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 #if NET_4_5
 [assembly: AssemblyTitle("NUnitLite Runner .NET 4.5")]
@@ -38,3 +39,4 @@ using System.Reflection;
 #endif
 
 [assembly: AssemblyDescription("")]
+[assembly: InternalsVisibleTo("nunit.framework.tests")]

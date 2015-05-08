@@ -53,6 +53,9 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
+      <Link>Runner\DefaultOptionsProviderTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
       <Link>Runner\ExtendedTextWrapperTests.cs</Link>
     </Compile>
@@ -65,6 +68,7 @@
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Attributes\CommandWrapperTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
+    <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
@@ -257,6 +261,7 @@
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
+    <Compile Include="ThrowsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

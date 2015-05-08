@@ -37,7 +37,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the id of the test
         /// </summary>
-        int Id { get; }
+        string Id { get; }
 
         /// <summary>
         /// Gets the name of the test
@@ -48,6 +48,18 @@ namespace NUnit.Framework.Interfaces
         /// Gets the fully qualified name of the test
         /// </summary>
         string FullName { get; }
+
+        /// <summary>
+        /// Gets the name of the class containing this test. Returns
+        /// null if the test is not associated with a class.
+        /// </summary>
+        string ClassName { get; }
+
+        /// <summary>
+        /// Gets the name of the method implementing this test.
+        /// Returns null if the test is not implemented as a method.
+        /// </summary>
+        string MethodName { get; }
 
         /// <summary>
         /// Gets the Type of the test fixture, if applicable, or
@@ -98,6 +110,11 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <value>A list of child tests</value>
         System.Collections.Generic.IList<ITest> Tests { get; }
+
+        /// <summary>
+        /// Gets a fixture object for running this test.
+        /// </summary>
+        object Fixture { get; }
     }
 }
 

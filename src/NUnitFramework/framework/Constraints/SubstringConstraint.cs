@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     public class SubstringConstraint : StringConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SubstringConstraint"/> class.
+        /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected.</param>
         public SubstringConstraint(string expected) : base(expected) 

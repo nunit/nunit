@@ -68,23 +68,38 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns></returns>
         public Test BuildFrom(Type type)
         {
-            IFixtureBuilder[] attrs = GetFixtureBuilderAttributes(type);
-
-            if (type.IsGenericType)
-                return BuildMultipleFixtures(type, attrs);
-
-            switch (attrs.Length)
+            try
             {
-                case 0:
-                    return defaultBuilder.BuildFrom(type);
-                case 1:
-                    return attrs[0].BuildFrom(type);
+                IFixtureBuilder[] attrs = GetFixtureBuilderAttributes(type);
+
+                if (type.IsGenericType)
+                    return BuildMultipleFixtures(type, attrs);
+
+                switch (attrs.Length)
+                {
+                    case 0:
+                        return defaultBuilder.BuildFrom(type);
+                    case 1:
+                        return attrs[0].BuildFrom(type);
                     //object[] args = attrs[0].Arguments;
                     //return args == null || args.Length == 0
                     //    ? attrs[0].BuildFrom(type)
                     //    : BuildMultipleFixtures(type, attrs);
-                default:
-                    return BuildMultipleFixtures(type, attrs);
+                    default:
+                        return BuildMultipleFixtures(type, attrs);
+                }
+            }
+            catch (Exception ex)
+            {
+                var fixture = new TestFixture(type);
+                fixture.RunState = RunState.NotRunnable;
+
+                if (ex is System.Reflection.TargetInvocationException)
+                    ex = ex.InnerException;
+                var msg = "An exception was thrown while loading the test." + Env.NewLine + ex.ToString();
+                fixture.Properties.Add(PropertyNames.SkipReason, msg);
+
+                return fixture;
             }
         }
         #endregion
