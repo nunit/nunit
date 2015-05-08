@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 using System;
+using System.Text;
 
 namespace NUnit.Framework.Internal
 {
@@ -180,5 +181,46 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+        
+        #region String
+        
+        /// <summary>
+        /// Default characters for random functions.
+        /// </summary>
+        /// <remarks>Default characters are the English alphabet (uppercase &amp; lowercase), arabic numerals, and underscore</remarks>
+        public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";        
+                
+        /// <summary>
+        /// Generate a random string based on the characters from the input string.
+        /// </summary>
+        /// <param name="outputLength">desired length of output string.</param>
+        /// <param name="allowedChars">string representing the set of characters from which to construct the resulting string</param>
+        /// <returns>A random string of arbitrary length</returns>
+        public string GetString(int outputLength, string allowedChars)
+        {
+
+            var sb = new StringBuilder(outputLength);
+
+            for (int i = 0; i < outputLength ; i++)
+            {
+                sb.Append(allowedChars[GetInt(0,allowedChars.Length)]);
+            }
+        
+            return sb.ToString();
+        }
+        
+        /// <summary>
+        /// Generate a random string based on the characters from the input string.
+        /// </summary>
+        /// <param name="outputLength">desired length of output string. The default is 20 characters.</param>
+        /// <returns>A random string of arbitrary length</returns>
+        /// <remarks>Uses <see cref="DefaultStringChars">DefaultStringChars</see> as the input character set </remarks>
+        public string GetString(int outputLength=20)
+        {
+            return GetString(outputLength, DefaultStringChars);
+        }
+        
+        #endregion
+        
     }
 }
