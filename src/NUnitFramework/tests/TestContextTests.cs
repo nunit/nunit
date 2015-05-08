@@ -25,6 +25,7 @@ using System.IO;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests
 {
@@ -208,7 +209,7 @@ namespace NUnit.Framework.Tests
             Assert.That(fixture.FailCount, Is.EqualTo(1));
             Assert.That(fixture.SkipCount, Is.EqualTo(3));
             Assert.That(fixture.InconclusiveCount, Is.EqualTo(4));
-            Assert.That(fixture.Message, Is.EqualTo("One or more child tests had errors"));
+            Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(fixture.StackTrace, Is.Null);
         }
     }

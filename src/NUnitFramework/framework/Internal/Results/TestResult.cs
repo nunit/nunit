@@ -39,12 +39,17 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Error message for when child tests have errors
         /// </summary>
-        public static readonly string CHILD_ERRORS_MESSAGE = "One or more child tests had errors";
+        internal static readonly string CHILD_ERRORS_MESSAGE = "One or more child tests had errors";
 
         /// <summary>
         /// Error message for when child tests are ignored
         /// </summary>
-        public static readonly string CHILD_IGNORE_MESSAGE = "One or more child tests were ignored";
+        internal static readonly string CHILD_IGNORE_MESSAGE = "One or more child tests were ignored";
+
+        /// <summary>
+        /// The minimum duration for tests
+        /// </summary>
+        internal const double MIN_DURATION = 0.000001d;
 
 //        static Logger log = InternalTrace.GetLogger("TestResult");
 
@@ -54,6 +59,7 @@ namespace NUnit.Framework.Internal
         private System.Collections.Generic.List<ITestResult> _children;
 
         private StringWriter _outWriter;
+        private double _duration;
 
         #endregion
 
@@ -103,7 +109,11 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets the elapsed time for running the test in seconds
         /// </summary>
-        public double Duration { get; set; }
+        public double Duration
+        {
+            get { return _duration; }
+            set { _duration = value >= MIN_DURATION ? value : MIN_DURATION; }
+        }
 
         /// <summary>
         /// Gets or sets the time the test started running.

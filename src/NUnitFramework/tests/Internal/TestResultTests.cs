@@ -38,7 +38,6 @@ namespace NUnit.Framework.Internal
         protected TestMethod test;
 
         protected string ignoredChildMessage = "One or more child tests were ignored";
-        protected string failingChildMessage = "One or more child tests had errors";
 
         protected double expectedDuration;
         protected DateTime expectedStart;
@@ -373,7 +372,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual(failingChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
 
             Assert.AreEqual(0, suiteResult.PassCount);
             Assert.AreEqual(1, suiteResult.FailCount);
@@ -453,7 +452,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual(failingChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
             Assert.Null(suiteResult.StackTrace);
 
             Assert.AreEqual(0, suiteResult.PassCount);
@@ -532,7 +531,7 @@ namespace NUnit.Framework.Internal
 
             XmlNode messageNode = failureNode.FindDescendant("message");
             Assert.NotNull(messageNode, "No <message> element found");
-            Assert.AreEqual(failingChildMessage, messageNode.TextContent);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, messageNode.TextContent);
 
             XmlNode stacktraceNode = failureNode.FindDescendant("stacktrace");
             Assert.Null(stacktraceNode, "Unexpected <stack-trace> element found");
@@ -653,7 +652,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual(failingChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
             Assert.Null(suiteResult.StackTrace, "There should be no stacktrace");
 
             Assert.AreEqual(2, suiteResult.PassCount);
@@ -674,7 +673,7 @@ namespace NUnit.Framework.Internal
 
             XmlNode messageNode = failureNode.FindDescendant("message");
             Assert.NotNull(messageNode, "No message element found");
-            Assert.AreEqual(failingChildMessage, messageNode.TextContent);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, messageNode.TextContent);
 
             XmlNode stacktraceNode = failureNode.FindDescendant("stacktrace");
             Assert.Null(stacktraceNode, "There should be no stacktrace");
@@ -694,4 +693,36 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(4, suiteNode.FindDescendants("test-case").Count);
         }
     }
-}
+
+    public class MinimumDurationResultTests : TestResultTests
+    {
+        protected override ResultState ResultState
+        {
+            get { return ResultState.Success; }
+        }
+
+        protected override void SimulateTestRun()
+        {
+            // Change the duration from that provided in the base
+            expectedDuration = TestResult.MIN_DURATION - 0.0000001d;
+            expectedEnd = expectedStart.AddSeconds(expectedDuration);
+
+            testResult.SetResult(ResultState.Success, "Test passed!");
+            testResult.StartTime = expectedStart;
+            testResult.EndTime = expectedEnd;
+            testResult.Duration = expectedDuration;
+            suiteResult.StartTime = expectedStart;
+            suiteResult.EndTime = expectedEnd;
+            suiteResult.Duration = expectedDuration;
+            testResult.AssertCount = 2;
+            suiteResult.AddResult(testResult);
+        }
+
+        [Test]
+        public void TestResultHasMinimumDuration()
+        {
+            Assert.That(testResult.Duration, Is.EqualTo(TestResult.MIN_DURATION));
+            Assert.That(suiteResult.Duration, Is.EqualTo(TestResult.MIN_DURATION));
+        }
+    }
+ }
