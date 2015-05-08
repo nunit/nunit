@@ -3,10 +3,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <PackageVersion Condition=" '$(PackageVersion)' == '' ">3.0.0</PackageVersion>
+    <DisplayVersion Condition=" '$(DisplayVersion)' == '' ">3.0</DisplayVersion>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <Binaries Condition=" '$(InstallImage)' == '' ">..\..\bin\$(Configuration)</Binaries>
+    <Binaries Condition=" '$(InstallImage)' != '' ">$(InstallImage)\bin</Binaries>
+    <RootFiles Condition=" '$(InstallImage)' == '' ">..\..</RootFiles>
+    <RootFiles Condition=" '$(InstallImage)' != '' ">$(InstallImage)</RootFiles>
     <ProductVersion>3.9</ProductVersion>
+    <WixVariables>Build=$(Configuration)</WixVariables>
+    <SuppressIces>ICE61</SuppressIces>
     <ProjectGuid>809C00DC-3FD3-45BF-BC0E-E284F314D306</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit</OutputName>
+    <OutputName>NUnit.$(PackageVersion)</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -14,17 +24,10 @@
     <Name>nunit</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
-    <WixVariables>Build=$(Configuration)</WixVariables>
-    <SuppressIces>ICE61</SuppressIces>
+    <DefineConstants>Debug;DisplayVersion=$(DisplayVersion);Binaries=$(Binaries);RootFiles=$(RootFiles)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <WixVariables>Build=$(Configuration)</WixVariables>
-    <SuppressIces>ICE61</SuppressIces>
+    <DefineConstants>DisplayVersion=$(DisplayVersion);Binaries=$(Binaries);RootFiles=$(RootFiles)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="nunit.wxs" />
@@ -75,18 +78,18 @@
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
-	To modify your build process, add your task inside one of the targets below and uncomment it.
-	Other similar extension points exist, see Wix.targets.
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	-->
-  <Target Name="BeforeBuild">
+    To modify your build process, add your task inside one of the targets below and uncomment it.
+    Other similar extension points exist, see Wix.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+  <!--<Target Name="BeforeBuild">
     <GetAssemblyIdentity AssemblyFiles="..\..\bin\$(Configuration)\net-4.5\nunit.framework.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
     </GetAssemblyIdentity>
-    <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">
+    <CreateProperty Value="$(OutputName).$([System.Version]::new(%(AssemblyVersions.Version)).ToString(2))-beta-1">
       <Output TaskParameter="Value" PropertyName="TargetName" />
     </CreateProperty>
     <CreateProperty Value="$(TargetName)$(TargetExt)">
@@ -95,5 +98,5 @@
     <CreateProperty Value="$(TargetDir)$(TargetFileName)">
       <Output TaskParameter="Value" PropertyName="TargetPath" />
     </CreateProperty>
-  </Target>
+  </Target>-->
 </Project>
