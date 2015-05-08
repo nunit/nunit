@@ -62,12 +62,11 @@ namespace NUnit.Framework.Internal.Commands
             TestResult testResult = innerCommand.Execute(context);
 
             long tickCount = Stopwatch.GetTimestamp() - startTicks;
-            double seconds = (double)tickCount / Stopwatch.Frequency;
-            testResult.Duration = TimeSpan.FromSeconds(seconds);
+            testResult.Duration = (double)tickCount / Stopwatch.Frequency;
 
             if (testResult.ResultState == ResultState.Success)
             {
-                double elapsedTime = testResult.Duration.TotalMilliseconds;
+                double elapsedTime = testResult.Duration * 1000d;
 
                 if (elapsedTime > maxTime)
                     testResult.SetResult(ResultState.Failure,

@@ -101,9 +101,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets or sets the elapsed time for running the test
+        /// Gets or sets the elapsed time for running the test in seconds
         /// </summary>
-        public TimeSpan Duration { get; set; }
+        public double Duration { get; set; }
 
         /// <summary>
         /// Gets or sets the time the test started running.
@@ -255,7 +255,7 @@ namespace NUnit.Framework.Internal
 
             thisNode.AddAttribute("start-time", StartTime.ToString("u"));
             thisNode.AddAttribute("end-time", EndTime.ToString("u"));
-            thisNode.AddAttribute("duration", Duration.TotalSeconds.ToString("0.000000", NumberFormatInfo.InvariantInfo));
+            thisNode.AddAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             if (this.Test is TestSuite)
             {

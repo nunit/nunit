@@ -57,7 +57,7 @@ namespace NUnit.TestUtilities
                 name = result.Name;
                 startTime = result.StartTime;
                 endTime = result.EndTime;
-                duration = result.Duration.TotalSeconds;
+                duration = result.Duration;
             }
 
             if (result.HasChildren)
@@ -167,7 +167,7 @@ namespace NUnit.TestUtilities
         }
 
         /// <summary>
-        /// Gets the duration of the test run.
+        /// Gets the duration of the test run in seconds.
         /// </summary>
         public double Duration
         {

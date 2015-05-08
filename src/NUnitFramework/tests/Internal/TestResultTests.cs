@@ -40,16 +40,16 @@ namespace NUnit.Framework.Internal
         protected string ignoredChildMessage = "One or more child tests were ignored";
         protected string failingChildMessage = "One or more child tests had errors";
 
-        protected TimeSpan expectedDuration;
+        protected double expectedDuration;
         protected DateTime expectedStart;
         protected DateTime expectedEnd;
 
         [SetUp]
         public void SetUp()
         {
-            expectedDuration = TimeSpan.FromMilliseconds(125);
+            expectedDuration = 0.125;
             expectedStart = new DateTime(1968, 4, 8, 15, 05, 30, 250, DateTimeKind.Utc);
-            expectedEnd = expectedStart + expectedDuration;
+            expectedEnd = expectedStart.AddSeconds(expectedDuration);
 
             test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
             test.Properties.Set(PropertyNames.Description, "Test description");
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(ResultState.Inconclusive, testResult.ResultState);
             Assert.AreEqual(TestStatus.Inconclusive, testResult.ResultState.Status);
             Assert.That(testResult.ResultState.Label, Is.Empty);
-            Assert.AreEqual(TimeSpan.Zero, testResult.Duration);
+            Assert.That(testResult.Duration, Is.EqualTo(0d));
         }
 
         [Test]

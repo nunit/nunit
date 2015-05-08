@@ -104,13 +104,26 @@ namespace NUnitLite.Runner
         /// </summary>
         public int IgnoreCount { get; private set; }
 
+        /// <summary>
+        /// Gets the ResultState of the test result, which 
+        /// indicates the success or failure of the test.
+        /// </summary>
         public ResultState ResultState { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the time the test started running.
+        /// </summary>
         public DateTime StartTime { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the time the test finished running.
+        /// </summary>
         public DateTime EndTime { get; private set; }
 
-        public TimeSpan Duration { get; private set; }
+        /// <summary>
+        /// Gets or sets the elapsed time for running the test in seconds
+        /// </summary>
+        public double Duration { get; private set; }
 
         #endregion
 
