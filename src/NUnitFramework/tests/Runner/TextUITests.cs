@@ -57,7 +57,7 @@ namespace NUnitLite.Runner.Tests
             Assert.NotNull(_result, "Unable to run fixture");
 
             _result.StartTime = _result.EndTime = new DateTime(2014, 12, 2, 12, 34, 56, DateTimeKind.Utc);
-            _result.Duration = TimeSpan.FromSeconds(0.123);
+            _result.Duration = 0.123;
         }
 #endif
 

@@ -25,14 +25,13 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Globalization;
-using System.Reflection;
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// Static methods used in creating messages
     /// </summary>
-    public static class MsgUtils
+    internal static class MsgUtils
     {
         /// <summary>
         /// Static string used when strings are clipped

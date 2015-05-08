@@ -56,9 +56,9 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// Gets the elapsed time for running the test
+        /// Gets the elapsed time for running the test in seconds
         /// </summary>
-        TimeSpan Duration
+        double Duration
         {
             get;
         }

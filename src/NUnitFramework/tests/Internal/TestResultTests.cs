@@ -37,19 +37,16 @@ namespace NUnit.Framework.Internal
         protected TestResult suiteResult;
         protected TestMethod test;
 
-        protected string ignoredChildMessage = "One or more child tests were ignored";
-        protected string failingChildMessage = "One or more child tests had errors";
-
-        protected TimeSpan expectedDuration;
+        protected double expectedDuration;
         protected DateTime expectedStart;
         protected DateTime expectedEnd;
 
         [SetUp]
         public void SetUp()
         {
-            expectedDuration = TimeSpan.FromMilliseconds(125);
+            expectedDuration = 0.125;
             expectedStart = new DateTime(1968, 4, 8, 15, 05, 30, 250, DateTimeKind.Utc);
-            expectedEnd = expectedStart + expectedDuration;
+            expectedEnd = expectedStart.AddSeconds(expectedDuration);
 
             test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
             test.Properties.Set(PropertyNames.Description, "Test description");
@@ -143,7 +140,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(ResultState.Inconclusive, testResult.ResultState);
             Assert.AreEqual(TestStatus.Inconclusive, testResult.ResultState.Status);
             Assert.That(testResult.ResultState.Label, Is.Empty);
-            Assert.AreEqual(TimeSpan.Zero, testResult.Duration);
+            Assert.That(testResult.Duration, Is.EqualTo(0d));
         }
 
         [Test]
@@ -298,7 +295,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.Ignored, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Skipped, suiteResult.ResultState.Status);
-            Assert.AreEqual(ignoredChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_IGNORE_MESSAGE, suiteResult.Message);
 
             Assert.AreEqual(0, suiteResult.PassCount);
             Assert.AreEqual(0, suiteResult.FailCount);
@@ -373,7 +370,8 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual(failingChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
+            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
 
             Assert.AreEqual(0, suiteResult.PassCount);
             Assert.AreEqual(1, suiteResult.FailCount);
@@ -453,7 +451,8 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual(failingChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
+            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.Null(suiteResult.StackTrace);
 
             Assert.AreEqual(0, suiteResult.PassCount);
@@ -532,7 +531,7 @@ namespace NUnit.Framework.Internal
 
             XmlNode messageNode = failureNode.FindDescendant("message");
             Assert.NotNull(messageNode, "No <message> element found");
-            Assert.AreEqual(failingChildMessage, messageNode.TextContent);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, messageNode.TextContent);
 
             XmlNode stacktraceNode = failureNode.FindDescendant("stacktrace");
             Assert.Null(stacktraceNode, "Unexpected <stack-trace> element found");
@@ -653,7 +652,8 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual(failingChildMessage, suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, suiteResult.Message);
+            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.Null(suiteResult.StackTrace, "There should be no stacktrace");
 
             Assert.AreEqual(2, suiteResult.PassCount);
@@ -674,7 +674,7 @@ namespace NUnit.Framework.Internal
 
             XmlNode messageNode = failureNode.FindDescendant("message");
             Assert.NotNull(messageNode, "No message element found");
-            Assert.AreEqual(failingChildMessage, messageNode.TextContent);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, messageNode.TextContent);
 
             XmlNode stacktraceNode = failureNode.FindDescendant("stacktrace");
             Assert.Null(stacktraceNode, "There should be no stacktrace");
@@ -694,4 +694,36 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(4, suiteNode.FindDescendants("test-case").Count);
         }
     }
-}
+
+    public class MinimumDurationResultTests : TestResultTests
+    {
+        protected override ResultState ResultState
+        {
+            get { return ResultState.Success; }
+        }
+
+        protected override void SimulateTestRun()
+        {
+            // Change the duration from that provided in the base
+            expectedDuration = TestResult.MIN_DURATION - 0.0000001d;
+            expectedEnd = expectedStart.AddSeconds(expectedDuration);
+
+            testResult.SetResult(ResultState.Success, "Test passed!");
+            testResult.StartTime = expectedStart;
+            testResult.EndTime = expectedEnd;
+            testResult.Duration = expectedDuration;
+            suiteResult.StartTime = expectedStart;
+            suiteResult.EndTime = expectedEnd;
+            suiteResult.Duration = expectedDuration;
+            testResult.AssertCount = 2;
+            suiteResult.AddResult(testResult);
+        }
+
+        [Test]
+        public void TestResultHasMinimumDuration()
+        {
+            Assert.That(testResult.Duration, Is.EqualTo(TestResult.MIN_DURATION));
+            Assert.That(suiteResult.Duration, Is.EqualTo(TestResult.MIN_DURATION));
+        }
+    }
+ }

@@ -58,7 +58,7 @@ namespace NUnitLite.Runner.Tests
         {
             var result = Fakes.GetTestMethod(this, "FakeTestMethod").MakeTestResult();
             result.SetResult(ResultState.Success);
-            result.Duration = TimeSpan.FromMilliseconds(1234);
+            result.Duration = 1.234;
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(
@@ -92,7 +92,7 @@ namespace NUnitLite.Runner.Tests
         {
             var result = Fakes.GetTestMethod(this, "FakeTestMethod").MakeTestResult();
             result.SetResult(ResultState.Failure, "Error message", "Stack trace");
-            result.Duration = TimeSpan.FromMilliseconds(1234);
+            result.Duration = 1.234;
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(

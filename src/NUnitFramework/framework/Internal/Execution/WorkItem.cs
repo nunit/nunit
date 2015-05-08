@@ -392,7 +392,7 @@ namespace NUnit.Framework.Internal.Execution
             
             long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
             double seconds = (double)tickCount / Stopwatch.Frequency;
-            Result.Duration = TimeSpan.FromSeconds(seconds);
+            Result.Duration = seconds;
 
             // We add in the assert count from the context. If
             // this item is for a test case, we are adding the

@@ -220,7 +220,7 @@ namespace NUnit.Engine.Addins
         }
 
         /// <summary>
-        /// Gets the duration of the test run.
+        /// Gets the duration of the test run in seconds.
         /// </summary>
         public double Duration
         {
