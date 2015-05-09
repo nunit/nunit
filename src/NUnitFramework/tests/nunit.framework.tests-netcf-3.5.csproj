@@ -19,6 +19,8 @@
     <FormFactorID>
     </FormFactorID>
     <IntermediateOutputPath>obj\$(Configuration)\netcf-3.5\</IntermediateOutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -163,7 +165,9 @@
     <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
     <Compile Include="Constraints\LessThanConstraintTests.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
-    <Compile Include="Constraints\MsgUtilTests.cs" />
+    <Compile Include="Constraints\MsgUtilTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Constraints\NotConstraintTests.cs" />
     <Compile Include="Constraints\NumericsTest.cs" />
     <Compile Include="Constraints\NUnitComparerTests.cs" />
