@@ -483,7 +483,7 @@ namespace NUnit.Common.Tests
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
 
-        [Test]
+#if !SILVERLIGHT && !NETCF
         [TestCase(true, null, true)]
         [TestCase(false, null, false)]
         [TestCase(true, false, true)]
@@ -515,6 +515,7 @@ namespace NUnit.Common.Tests
             // Then
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
         }
+#endif
         
         #endregion
 

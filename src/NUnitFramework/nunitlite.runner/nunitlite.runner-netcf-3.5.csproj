@@ -19,6 +19,8 @@
     <FormFactorID>
     </FormFactorID>
     <IntermediateOutputPath>obj\$(Configuration)\netcf-3.5\</IntermediateOutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

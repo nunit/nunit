@@ -89,7 +89,7 @@ namespace NUnit.Framework.Constraints
                 return string.Format(Fmt_ValueType, val);
 
 #if NETCF
-            var vi = val as MethodInfo;
+            var vi = val as System.Reflection.MethodInfo;
             if (vi != null && vi.IsGenericMethodDefinition)
                 return string.Format(Fmt_Default, vi.Name + "<>");
 #endif

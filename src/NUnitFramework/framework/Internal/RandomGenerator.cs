@@ -188,7 +188,9 @@ namespace NUnit.Framework.Internal
         /// Default characters for random functions.
         /// </summary>
         /// <remarks>Default characters are the English alphabet (uppercase &amp; lowercase), arabic numerals, and underscore</remarks>
-        public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";        
+        public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
+
+        private const int DefaultStringLength = 25;
                 
         /// <summary>
         /// Generate a random string based on the characters from the input string.
@@ -208,18 +210,28 @@ namespace NUnit.Framework.Internal
         
             return sb.ToString();
         }
-        
+
         /// <summary>
         /// Generate a random string based on the characters from the input string.
         /// </summary>
-        /// <param name="outputLength">desired length of output string. The default is 20 characters.</param>
+        /// <param name="outputLength">desired length of output string.</param>
         /// <returns>A random string of arbitrary length</returns>
         /// <remarks>Uses <see cref="DefaultStringChars">DefaultStringChars</see> as the input character set </remarks>
-        public string GetString(int outputLength=20)
+        public string GetString(int outputLength)
         {
             return GetString(outputLength, DefaultStringChars);
         }
-        
+
+        /// <summary>
+        /// Generate a random string based on the characters from the input string.
+        /// </summary>
+        /// <returns>A random string of the default length</returns>
+        /// <remarks>Uses <see cref="DefaultStringChars">DefaultStringChars</see> as the input character set </remarks>
+        public string GetString()
+        {
+            return GetString(DefaultStringLength, DefaultStringChars);
+        }
+
         #endregion
         
     }
