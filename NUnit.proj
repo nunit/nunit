@@ -12,6 +12,7 @@
     <PackageModifier>-beta-1</PackageModifier>
     <DisplayVersion>3.0 Beta 1</DisplayVersion>
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
+    <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
   </PropertyGroup>
 
   <PropertyGroup Label="Platform-specific properties">
@@ -369,7 +370,7 @@
   <!--   creates the package to first make sure that the build is up to date.  -->
   <!-- *********************************************************************** -->
   
-  <Target Name="Package" Label="Packages the source code and binaries already built"
+  <Target Name="Package" Label="Packages the source code and standard binaries. Excludes CF."
     DependsOnTargets="@(AllPackages)">
   </Target>
 
@@ -388,18 +389,21 @@
 
     <Exec Command='git init "$(CurrentImageDir)"' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add -A' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git rm --cached bin\netcf-3.5\*' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.name "temp"' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.email "temp@temp.com"' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' /> 
     <Exec WorkingDirectory='$(CurrentImageDir)' 
       Command='git archive -o "$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" HEAD'></Exec>
+    <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" />
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all NuGet packages"
+  <Target Name="PackageNuGet" Label="Creates all standard NuGet packages"
     DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
-  
+
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
+
     <Message Text="******************************************************************" />
     <Message Text="* Creating the nunit Nuget $(Configuration) package" />
     <Message Text="******************************************************************" />
@@ -408,9 +412,10 @@
         Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
-  
+
   <Target Name="PackageNuGetNUnitLite" Label="Creates the NUnitlite NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
+
     <Message Text="******************************************************************" />
     <Message Text="* Creating the nunitlite Nuget $(Configuration) package" />
     <Message Text="******************************************************************" />
@@ -419,7 +424,7 @@
         Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
-  
+
   <Target Name="PackageNuGetConsole" Label="Creates the NUnit.Console NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
     <Message Text="******************************************************************" />
@@ -452,7 +457,51 @@
   <Target Name="PackageAllMsis" Label="Creates all of the MSI installers for NUnit"
       DependsOnTargets="PackageMasterMsi;PackageFrameworkMsi;PackageConsoleMsi">
   </Target>
-  
+
+  <!-- Packaging for the Compact framework -->
+  <Target Name="PackageCF" Label="Creates all packages for the compact framework"
+    DependsOnTargets="PackageBinariesCF;PackageNuGetNUnitCF;PackageNuGetNUnitLiteCF" />
+
+  <Target Name="PackageBinariesCF" Label="Packages the CF binaries as a zip" DependsOnTargets="_CreateImageIfNotPresent">
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the binary $(Configuration) package as $(PackageNameCF)$(ConfigSuffix).zip" />
+    <Message Text="******************************************************************" />
+
+    <Exec Command='git init "$(CurrentImageDir)"' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add *.txt nunit.ico' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add bin\netcf-3.5\*' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.name "temp"' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.email "temp@temp.com"' />
+    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' />
+    <Exec WorkingDirectory='$(CurrentImageDir)'
+      Command='git archive -o "$(ProjectPackageDir)\$(PackageNameCF)$(ConfigSuffix).zip" HEAD'></Exec>
+    <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" />
+  </Target>
+
+  <Target Name="PackageNuGetNUnitCF" Label="Creates the NUnit Framework NuGet package for compact framework"
+      DependsOnTargets="_CreateImageIfNotPresent">
+
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the nunit Nuget $(Configuration) package" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitcf.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+  </Target>
+
+  <Target Name="PackageNuGetNUnitLiteCF" Label="Creates the NUnitlite NuGet package for compact framework"
+      DependsOnTargets="_CreateImageIfNotPresent">
+
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the nunitlite Nuget $(Configuration) package" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlitecf.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+  </Target>
+
   <Target Name="CreateImage" DependsOnTargets="_CleanCurrentImageDir">
 
     <!-- Copy root txt files to root -->
@@ -519,6 +568,10 @@
     <!-- Include pdp files for Debug -->
     <BinFiles Include="$(ConfigurationBuildDir)\**\*.pdb"
       Condition="'$(Configuration)' == 'Debug'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ZipFiles Include="*.*" />
   </ItemGroup>
 
   <ItemGroup Label="Supported Frameworks">
