@@ -52,11 +52,11 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Packaging Directories">
-    <PackageWorkingDir Condition="'$(PackageWorkingDir)' == ''">$(ProjectPackageDir)\$(PackageName)</PackageWorkingDir>
-    <PackageBinDir>$(PackageWorkingDir)\bin</PackageBinDir>
-    <PackageDocDir>$(PackageWorkingDir)\doc</PackageDocDir>
-    <PackageSrcDir>$(PackageWorkingDir)\src</PackageSrcDir>
-    <PackageLibDir>$(PackageWorkingDir)\lib</PackageLibDir>
+    <CurrentImageDir Condition="'$(CurrentImageDir)' == ''">$(ProjectImageDir)\$(PackageName)</CurrentImageDir>
+    <PackageBinDir>$(CurrentImageDir)\bin</PackageBinDir>
+    <PackageDocDir>$(CurrentImageDir)\doc</PackageDocDir>
+    <PackageSrcDir>$(CurrentImageDir)\src</PackageSrcDir>
+    <PackageLibDir>$(CurrentImageDir)\lib</PackageLibDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">

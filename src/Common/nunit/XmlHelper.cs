@@ -26,11 +26,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 
+#if !CORE_RUNNER
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
     public sealed class ExtensionAttribute : Attribute { }
 }
+#endif
 
 #if NUNIT_CONSOLE
 namespace NUnit.ConsoleRunner.Utilities
