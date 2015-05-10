@@ -28,7 +28,7 @@ using NUnit.Framework;
 
 #if NUNIT_CONSOLE
 namespace NUnit.ConsoleRunner.Utilities.Tests
-#elif NUNIT_ENGINE
+#elif NUNIT_ENGINE || CORE_ENGINE
 namespace NUnit.Engine.Internal.Tests
 #else
 namespace NUnit.Common.Tests

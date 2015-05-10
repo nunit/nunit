@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,22 +27,22 @@ using Microsoft.Win32;
 
 namespace NUnit.Engine.Internal.Tests
 {
-	[TestFixture]
-	public class SettingsGroupTests
-	{
-		private SettingsGroup settings;
+    [TestFixture]
+    public class SettingsGroupTests
+    {
+        private SettingsGroup settings;
 
-		[SetUp]
-		public void BeforeEachTest()
-		{
-			settings = new SettingsGroup();
-		}
+        [SetUp]
+        public void BeforeEachTest()
+        {
+            settings = new SettingsGroup();
+        }
 
-		[TearDown]
-		public void AfterEachTest()
-		{
-			settings.Dispose();
-		}
+        [TearDown]
+        public void AfterEachTest()
+        {
+            settings.Dispose();
+        }
 
         [Test]
         public void WhenSettingIsNotInitialized_NullIsReturned()
@@ -85,23 +85,23 @@ namespace NUnit.Engine.Internal.Tests
             Assert.IsNull(settings.GetSetting("NAME"), "NAME not removed");
         }
 
-		[Test]
-		public void WhenSettingIsNotInitialized_DefaultValueIsReturned()
-		{
+        [Test]
+        public void WhenSettingIsNotInitialized_DefaultValueIsReturned()
+        {
 
-			Assert.AreEqual( 5, settings.GetSetting( "X", 5 ) );
-			Assert.AreEqual( 6, settings.GetSetting( "X", 6 ) );
-			Assert.AreEqual( "7", settings.GetSetting( "X", "7" ) );
+            Assert.AreEqual( 5, settings.GetSetting( "X", 5 ) );
+            Assert.AreEqual( 6, settings.GetSetting( "X", 6 ) );
+            Assert.AreEqual( "7", settings.GetSetting( "X", "7" ) );
 
-			Assert.AreEqual( "Charlie", settings.GetSetting( "NAME", "Charlie" ) );
-			Assert.AreEqual( "Fred", settings.GetSetting( "NAME", "Fred" ) );
-		}
+            Assert.AreEqual( "Charlie", settings.GetSetting( "NAME", "Charlie" ) );
+            Assert.AreEqual( "Fred", settings.GetSetting( "NAME", "Fred" ) );
+        }
 
-		[Test]
-		public void WhenSettingIsNotValid_DefaultSettingIsReturned()
-		{
-			settings.SaveSetting( "X", "1y25" );
-			Assert.AreEqual( 42, settings.GetSetting( "X", 42 ) );
-		}
-	}
+        [Test]
+        public void WhenSettingIsNotValid_DefaultSettingIsReturned()
+        {
+            settings.SaveSetting( "X", "1y25" );
+            Assert.AreEqual( 42, settings.GetSetting( "X", 42 ) );
+        }
+    }
 }

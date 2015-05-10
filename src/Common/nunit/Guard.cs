@@ -1,6 +1,6 @@
 ﻿using System;
 
-#if NUNIT_ENGINE
+#if NUNIT_ENGINE || CORE_ENGINE
 namespace NUnit.Engine
 #elif NUNIT_FRAMEWORK
 namespace NUnit.Framework

@@ -25,9 +25,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Mono.Addins;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
+
+#if NUNIT_ENGINE
+using Mono.Addins;
+#endif
 
 namespace NUnit.Engine.Services
 {
@@ -88,8 +91,10 @@ namespace NUnit.Engine.Services
             {
                 _factories.Add(new NUnit3DriverFactory());
 
+#if NUNIT_ENGINE
                 foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
                     _factories.Add(factory);
+#endif
 
                 Status = ServiceStatus.Started;
             }
