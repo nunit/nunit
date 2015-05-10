@@ -1,7 +1,5 @@
 ﻿NUnit 3.0.0 Beta 2 - May 12, 2015
 
-General
-
 Framework
 
  * The Compact Framework version of the framework is now packaged separately
@@ -22,8 +20,6 @@ Engine
    devices and similar situations where reduced functionality is compensated 
    for by reduced size and simplicity of usage. See
    https://github.com/nunit/dev/wiki/Core-Engine for more information.
-
-Console
 
 Issues Resolved
 
