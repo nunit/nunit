@@ -1,4 +1,70 @@
-﻿NUnit 3.0.0 Beta 1 - March 25, 2015
+﻿NUnit 3.0.0 Beta 2 - May 12, 2015
+
+General
+
+Framework
+
+ * The Compact Framework version of the framework is now packaged separately
+   and will be distributed as a ZIP file and as a NuGet package.
+ * The NUnit 2.x RepeatAttribute was added back into the framework.
+ * Added Throws.ArgumentNullException
+ * Added GetString methods to NUnit.Framework.Internal.RandomGenerator to 
+   create repeatable random strings for testing
+ * When checking the equality of DateTimeOffset, you can now use the 
+   WithSameOffset modifier
+ * Some classes intended for internal usage that were public for testing
+   have now been made internal. Additional classes will be made internal
+   for the final 3.0 release.
+
+Engine
+
+ * Added a core engine which is a non-extensible, minimal engine for use by 
+   devices and similar situations where reduced functionality is compensated 
+   for by reduced size and simplicity of usage. See
+   https://github.com/nunit/dev/wiki/Core-Engine for more information.
+
+Console
+
+Issues Resolved
+
+ *  22  Add OSArchitecture Attribute to Environment node in result xml
+ *  24  Assert on Dictionary Content
+ *  48  Explicit seems to conflict with Ignore
+ * 168  Create NUnit 3.0 documentation
+ * 196  Compare DateTimeOffsets including the offset in the comparison 
+ * 217  New icon for the 3.0 release
+ * 316  NUnitLite TextUI Runner
+ * 360  Better exception message when using non-BCL class in property
+ * 454  Rare registry configurations may cause NUnit to fail
+ * 478  RepeatAttribute
+ * 481  Testing multiple assemblies in nunitlite
+ * 538  Potential bug using TestContext in constructors
+ * 546  Enable Parallel in NUnitLite/CF (or more) builds
+ * 551  TextRunner not passing the NumWorkers option to the ITestAssemblyRunner
+ * 556  Executed tests should always return a non-zero duration
+ * 559  Fix text of NuGet packages
+ * 560  Fix PackageVersion property on wix install projects
+ * 562  Program.cs in NUnitLite NuGet package is incorrect
+ * 564  NUnitLite Nuget package is Beta 1a, Framework is Beta 1
+ * 565  NUnitLite Nuget package adds Program.cs to a VB Project
+ * 568  Isolate packaging from building
+ * 570  ThrowsConstraint failure message should include stack trace of actual exception
+ * 576  Throws.ArgumentNullException would be nice
+ * 577  Documentation on some members of Throws falsely claims that they return `TargetInvocationException` constraints
+ * 579  No documentation for recommended usage of TestCaseSourceAttribute
+ * 580  TeamCity Service Message Uses Incorrect Test Name with NUnit2Driver
+ * 582  Test Ids Are Not Unique
+ * 583  TeamCity service messages to support parallel test execution
+ * 584  Non-runnable assembly has incorrect ResultState
+ * 609  Add support for integration with TeamCity
+ * 611  Remove unused --teamcity option from CF build of NUnitLite
+ * 612  MaxTime doesn't work when used for TestCase
+ * 621  Core Engine
+ * 622  nunit-console fails when use --output
+ * 628  Modify IService interface and simplify ServiceContext
+ * 631  Separate packaging for the compact framework
+
+NUnit 3.0.0 Beta 1 - March 25, 2015
 
 General
 
