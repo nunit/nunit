@@ -61,6 +61,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{A972031D
 	ProjectSection(SolutionItems) = preProject
 		nuget\install.ps1 = nuget\install.ps1
 		nuget\nunit.console.nuspec = nuget\nunit.console.nuspec
+		nuget\nunit.core.engine.nuspec = nuget\nunit.core.engine.nuspec
 		nuget\nunit.nuspec = nuget\nunit.nuspec
 		nuget\nunitlite.nuspec = nuget\nunitlite.nuspec
 		nuget\Program.cs = nuget\Program.cs
