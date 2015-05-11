@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Configuration;
 using System.IO;
 using NUnit.Framework;
 
@@ -80,6 +82,19 @@ namespace NUnit.Engine.Services.Tests
             Assert.AreEqual(
                 TestPath("/test"),
                 DomainManager.GetCommonAppBase(assemblies));
+        }
+
+        [Test]
+        public static void ProperConfigFileIsUsed()
+        {
+            var expectedPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "nunit.engine.tests.dll.config");
+            Assert.That(expectedPath, Is.EqualTo(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile));
+        }
+
+        [Test]
+        public static void CanReadConfigFile()
+        {
+            Assert.That(ConfigurationManager.AppSettings.Get("test.setting"), Is.EqualTo("54321"));
         }
 
         /// <summary>
