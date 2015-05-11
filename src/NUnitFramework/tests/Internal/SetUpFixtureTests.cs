@@ -251,6 +251,53 @@ namespace NUnit.Framework.Internal
                                                      "Assembly.OneTimeTearDown");
         }
         #endregion NoNamespaceSetupFixture
-    }
+
+		#region ExceptionsSetUpTearDowwn
+	    [NUnit.Framework.Test]
+	    public void SingleTestWrapperBaseFixture_BaseSetUpException()
+	    {
+			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeBaseFixture"));
+			//Assert.AreEqual(1, result.PassCount);
+			//Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+			Assert.AreEqual(0, result.PassCount);
+			Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+			TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+													 "SomeBaseFixture.TestFixtureSetUp",
+													 "SomeBaseFixture.SetUp_Exception",
+													 //"SomeBaseFixture.TestBase",
+													 "SomeBaseFixture.TearDown",
+													 "SomeBaseFixture.TestFixtureTearDown",
+													 "Assembly.OneTimeTearDown");
+	    }
+		[NUnit.Framework.Test]
+		public void SingleTestWrapperDerivedFixture_BaseSetUpException()
+		{
+			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeDerivedFixture"));
+			//Assert.AreEqual(2, result.PassCount);
+			//Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+			Assert.AreEqual(0, result.PassCount);
+			Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+			TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+													 "SomeBaseFixture.TestFixtureSetUp",
+													 "SomeDerivedFixture.TestFixtureSetUp",
+
+													 "SomeBaseFixture.SetUp_Exception",													 
+													 //"SomeDerivedFixture.SetUp",
+													 //"SomeBaseFixture.TestBase",
+													 //"SomeDerivedFixture.TearDown",
+													 "SomeBaseFixture.TearDown",
+
+													 "SomeBaseFixture.SetUp_Exception",
+													 //"SomeDerivedFixture.SetUp",
+													 //"SomeDerivedFixture.TestDerived",
+													 //"SomeDerivedFixture.TearDown",
+													 "SomeBaseFixture.TearDown",
+
+													 "SomeDerivedFixture.TestFixtureTearDown",
+													 "SomeBaseFixture.TestFixtureTearDown",
+													 "Assembly.OneTimeTearDown");
+		}
+		#endregion
+	}
 }
 #endif

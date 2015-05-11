@@ -610,3 +610,65 @@ public class SomeFixture
     }
 }
 #endregion
+
+#region SomeBaseFixture
+[TestFixture]
+public class SomeBaseFixture
+{
+	[TestFixtureSetUp]
+	public void TestFixtureSetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.TestFixtureSetUp");
+	}
+	[SetUp]
+	public void SetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.SetUp_Exception");
+		throw new Exception("Exception in SomeBaseFixture.SetUp()");
+	}
+	[Test]
+	public void TestBase()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.TestBase");
+	}
+	[TearDown]
+	public void TearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.TearDown");
+	}
+	[TestFixtureTearDown]
+	public void TestFixtureTearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.TestFixtureTearDown");
+	}
+}
+[TestFixture]
+public class SomeDerivedFixture : SomeBaseFixture
+{
+	[TestFixtureSetUp]
+	public new void TestFixtureSetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TestFixtureSetUp");
+	}
+	[SetUp]
+	public new void SetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.SetUp");
+	}
+	[Test]
+	public void TestDerived()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TestDerived");
+	}
+	[TearDown]
+	public new void TearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TearDown");
+	}
+	[TestFixtureTearDown]
+	public new void TestFixtureTearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TestFixtureTearDown");
+	}
+}
+#endregion
