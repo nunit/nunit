@@ -254,11 +254,9 @@ namespace NUnit.Framework.Internal
 
 		#region ExceptionsSetUpTearDowwn
 	    [NUnit.Framework.Test]
-	    public void SingleTestWrapperBaseFixture_BaseSetUpException()
+		public void SetUpException_SomeBaseFixtureExceptionInSetUp()
 	    {
-			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeBaseFixture"));
-			//Assert.AreEqual(1, result.PassCount);
-			//Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeBaseFixtureExceptionInSetUp"));
 			Assert.AreEqual(0, result.PassCount);
 			Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
 			TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
@@ -270,30 +268,46 @@ namespace NUnit.Framework.Internal
 													 "Assembly.OneTimeTearDown");
 	    }
 		[NUnit.Framework.Test]
-		public void SingleTestWrapperDerivedFixture_BaseSetUpException()
+		public void SetUpException_SomeDerivedFixtureExceptionInBaseSetUp()
 		{
-			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeDerivedFixture"));
-			//Assert.AreEqual(2, result.PassCount);
-			//Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeDerivedFixtureExceptionInBaseSetUp"));
 			Assert.AreEqual(0, result.PassCount);
 			Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
 			TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
 													 "SomeBaseFixture.TestFixtureSetUp",
-													 "SomeDerivedFixture.TestFixtureSetUp",
+													 "SomeDerivedFixtureExceptionInBaseSetUp.TestFixtureSetUp",
 
-													 "SomeBaseFixture.SetUp_Exception",													 
-													 //"SomeDerivedFixture.SetUp",
-													 //"SomeBaseFixture.TestBase",
-													 //"SomeDerivedFixture.TearDown",
+													 "SomeBaseFixture.SetUp_Exception",
 													 "SomeBaseFixture.TearDown",
 
 													 "SomeBaseFixture.SetUp_Exception",
-													 //"SomeDerivedFixture.SetUp",
-													 //"SomeDerivedFixture.TestDerived",
-													 //"SomeDerivedFixture.TearDown",
 													 "SomeBaseFixture.TearDown",
 
-													 "SomeDerivedFixture.TestFixtureTearDown",
+													 "SomeDerivedFixtureExceptionInBaseSetUp.TestFixtureTearDown",
+													 "SomeBaseFixture.TestFixtureTearDown",
+													 "Assembly.OneTimeTearDown");
+		}
+		[NUnit.Framework.Test]
+		public void SetUpException_SomeDerivedFixtureExceptionInBaseFixtureSetUp()
+		{
+			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeDerivedFixtureExceptionInBaseFixtureSetUp"));
+			Assert.AreEqual(0, result.PassCount);
+			Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+			TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+													 "SomeBaseFixture.TestFixtureSetUp_Exception",
+
+													 "SomeBaseFixture.TestFixtureTearDown",
+													 "Assembly.OneTimeTearDown");
+		}
+		[NUnit.Framework.Test]
+		public void SetUpException_SomeDerivedFixtureOneTimeExceptionInBaseFixtureSetUp()
+		{
+			ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeDerivedFixtureOneTimeExceptionInBaseFixtureSetUp"));
+			Assert.AreEqual(0, result.PassCount);
+			Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+			TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+													 "SomeBaseFixture.TestFixtureSetUp_Exception",
+
 													 "SomeBaseFixture.TestFixtureTearDown",
 													 "Assembly.OneTimeTearDown");
 		}

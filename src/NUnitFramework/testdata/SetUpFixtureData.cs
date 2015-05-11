@@ -611,21 +611,41 @@ public class SomeFixture
 }
 #endregion
 
-#region SomeBaseFixture
+#region SomeFixtureWithExceptions
 [TestFixture]
-public class SomeBaseFixture
+public class SomeBaseFixtureExceptionInSetUp
 {
+	private readonly bool exceptionInFixtureSetUp;
+	private readonly bool exceptionInSetUp;
+	public SomeBaseFixtureExceptionInSetUp(): this(false, true)
+	{		
+	}
+	public SomeBaseFixtureExceptionInSetUp(bool exceptionInFixtureSetUp, bool exceptionInSetUp)
+	{
+		this.exceptionInFixtureSetUp = exceptionInFixtureSetUp;
+		this.exceptionInSetUp = exceptionInSetUp;
+	}
 	[TestFixtureSetUp]
 	public void TestFixtureSetUp()
 	{
+		if (exceptionInFixtureSetUp)
+		{
+			NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.TestFixtureSetUp_Exception");
+			throw new Exception("Exception in SomeBaseFixture.TestFixtureSetUp()");
+		}
 		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.TestFixtureSetUp");
 	}
 	[SetUp]
 	public void SetUp()
 	{
-		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.SetUp_Exception");
-		throw new Exception("Exception in SomeBaseFixture.SetUp()");
+		if (exceptionInSetUp)
+		{
+			NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.SetUp_Exception");
+			throw new Exception("Exception in SomeBaseFixture.SetUp()");
+		}
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeBaseFixture.SetUp");
 	}
+
 	[Test]
 	public void TestBase()
 	{
@@ -643,32 +663,101 @@ public class SomeBaseFixture
 	}
 }
 [TestFixture]
-public class SomeDerivedFixture : SomeBaseFixture
+public class SomeDerivedFixtureExceptionInBaseSetUp : SomeBaseFixtureExceptionInSetUp
 {
+	public SomeDerivedFixtureExceptionInBaseSetUp(): base(exceptionInFixtureSetUp: false, exceptionInSetUp: true)
+	{		
+	}
 	[TestFixtureSetUp]
-	public new void TestFixtureSetUp()
+	public void TestFixtureSetUp()
 	{
-		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TestFixtureSetUp");
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseSetUp.TestFixtureSetUp");
 	}
 	[SetUp]
-	public new void SetUp()
+	public void SetUp()
 	{
-		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.SetUp");
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseSetUp.SetUp");
 	}
 	[Test]
 	public void TestDerived()
 	{
-		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TestDerived");
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseSetUp.TestDerived");
 	}
 	[TearDown]
-	public new void TearDown()
+	public void TearDown()
 	{
-		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TearDown");
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseSetUp.TearDown");
 	}
 	[TestFixtureTearDown]
-	public new void TestFixtureTearDown()
+	public void TestFixtureTearDown()
 	{
-		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixture.TestFixtureTearDown");
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseSetUp.TestFixtureTearDown");
+	}
+}
+[TestFixture]
+public class SomeDerivedFixtureExceptionInBaseFixtureSetUp : SomeBaseFixtureExceptionInSetUp
+{
+	public SomeDerivedFixtureExceptionInBaseFixtureSetUp()
+		: base(exceptionInFixtureSetUp: true, exceptionInSetUp: false)
+	{
+	}
+	[TestFixtureSetUp]
+	public void TestFixtureSetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.TestFixtureSetUp");
+	}
+	[SetUp]
+	public void SetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.SetUp");
+	}
+	[Test]
+	public void TestDerived()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.TestDerived");
+	}
+	[TearDown]
+	public void TearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.TearDown");
+	}
+	[TestFixtureTearDown]
+	public void TestFixtureTearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.TestFixtureTearDown");
+	}
+}
+[TestFixture]
+public class SomeDerivedFixtureOneTimeExceptionInBaseFixtureSetUp : SomeBaseFixtureExceptionInSetUp
+{
+	public SomeDerivedFixtureOneTimeExceptionInBaseFixtureSetUp()
+		: base(exceptionInFixtureSetUp: true, exceptionInSetUp: false)
+	{
+	}
+	[OneTimeSetUp]
+	public void OneTimeSetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.OneTimeSetUp");
+	}
+	[SetUp]
+	public void SetUp()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.SetUp");
+	}
+	[Test]
+	public void TestDerived()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.TestDerived");
+	}
+	[TearDown]
+	public void TearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.TearDown");
+	}
+	[OneTimeTearDown]
+	public void OneTimeTearDown()
+	{
+		NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("SomeDerivedFixtureExceptionInBaseFixtureSetUp.OneTimeTearDown");
 	}
 }
 #endregion
