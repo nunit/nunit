@@ -9,7 +9,7 @@ Other members of the NUnit team are;
 
 - [Simone Busoli](https://github.com/simoneb)
 - [Andreas Schlapsi](https://github.com/aschlapsi)
-- [Igor](https://github.com/constructor-igor)
+- [Igor Ziselman](https://github.com/constructor-igor)
 - [Vladimir Kloz](https://github.com/voloda)
 - [Matthew Moore](https://github.com/acco32)
 - [Andrew Gray](https://github.com/agray)
