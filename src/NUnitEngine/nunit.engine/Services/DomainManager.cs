@@ -88,6 +88,9 @@ namespace NUnit.Engine.Services
         {
             AppDomainSetup setup = new AppDomainSetup();
 
+            if (package.SubPackages.Count == 1)
+                package = package.SubPackages[0];
+
             //For parallel tests, we need to use distinct application name
             setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
 
@@ -105,13 +108,15 @@ namespace NUnit.Engine.Services
                     appBase = testFile.DirectoryName;
 
                 if (configFile == null || configFile == string.Empty)
-                    //configFile = Services.ProjectService.CanLoadProject(testFile.Name)
-                    //    ? Path.GetFileNameWithoutExtension(testFile.Name) + ".config"
-                    //    : testFile.Name + ".config";
                     configFile = testFile.Name + ".config";
             }
-            else if (appBase == null || appBase == string.Empty)
-                appBase = GetCommonAppBase(package.SubPackages);
+            else
+            {
+                if (appBase == null || appBase == string.Empty)
+                    appBase = GetCommonAppBase(package.SubPackages);
+
+                // TODO: What about config file for multiple assemblies?
+            }
 
             char lastChar = appBase[appBase.Length - 1];
             if (lastChar != Path.DirectorySeparatorChar && lastChar != Path.AltDirectorySeparatorChar)
