@@ -537,10 +537,14 @@
 
     <!-- Copy root txt files to root -->
     <Copy DestinationFolder="$(CurrentImageDir)" SourceFiles="@(RootFiles)" />
+    
+    <!-- Copy the NuGet files to the nuget directory -->
+    <Copy DestinationFiles="@(NuGetFiles->'$(CurrentImageDir)\nuget\%(Filename)%(Extension)')" 
+        SourceFiles="@(NuGetFiles)" />
 
     <!-- Copy binaries to bin directory -->
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
-        SourceFiles="@(BinFiles)"></Copy>
+        SourceFiles="@(BinFiles)" />
 
   </Target>
 
@@ -578,6 +582,12 @@
   
   <ItemGroup Label="Files for packaging in root">
     <RootFiles Include="LICENSE.txt;NOTICES.txt;CHANGES.txt;nunit.ico" />
+  </ItemGroup>
+  
+  <ItemGroup Label="Files for packaging the NUnitLite NuGet package">
+    <NuGetFiles Include="nuget\Program.cs" />
+    <NuGetFiles Include="nuget\Program.vb" />
+    <NuGetFiles Include="nuget\install.ps1" />
   </ItemGroup>
 
   <ItemGroup Label="Files for packaging in bin directory">

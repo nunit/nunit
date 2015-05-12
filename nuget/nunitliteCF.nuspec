@@ -11,7 +11,7 @@
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
-    <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner. This package contains a build of the NUnitLite runner for the .NET compact framework 3.5.&#10;&#13;&#10;&#13;How to use this package:&#10;&#13;&#10;&#13;1. Create a console application for your tests and delete the generated class containing Main().&#10;&#13;2. Install the NUnitLite package, which creates a new Main() as well as adding a reference to NUnitLite. This will also bring in the NUnit package, which adds a reference to the nunit framework to your project.&#10;&#13;3. Add your tests to the test project and simply start the project to execute them.</description>
+    <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. This package contains a build of the NUnitLite runner for the .NET compact framework 3.5.</description>
     <releaseNotes>This is an beta release, but is ready for production use for people with prior NUnit experience.</releaseNotes>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded cf compact</tags>
@@ -27,8 +27,8 @@
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
     <file src="bin\netcf-3.5\nunitlite.dll" target="lib\net35-cf" />
-    <file src="..\..\nuget\Program.cs" target="content" />
-    <file src="..\..\nuget\Program.vb" target="content" />
-    <file src="..\..\nuget\install.ps1" target="tools" />
+    <file src="nuget\Program.cs" target="content" />
+    <file src="nuget\Program.vb" target="content" />
+    <file src="nuget\install.ps1" target="tools" />
   </files>
 </package>

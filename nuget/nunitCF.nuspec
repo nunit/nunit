@@ -11,8 +11,8 @@
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnit is a unit-testing framework for all .Net languages with a strong TDD focus.</summary>
-    <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible. A number of runners, both from the NUnit project and by third parties, are able to execute NUnit tests.&#10;&#13;&#10;&#13;This package includes the NUnit 3.0 framework assembly, which is referenced by your tests. You will need to install version 3.0 of the nunit-console program or a third-party runner that supports NUnit 3.0 in order to execute tests. Runners intended for use with NUnit 2.x will not run 3.0 tests correctly.&#10;&#13;&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</description>
-    <releaseNotes>This package includes the NUnit 3.0 framework assembly for .NET Compact Framework 3.5, which is referenced by your tests. You will need to install the NUnitLiteCF package in order to run the tests. Two separate packages are used because future versions will be supported by additional runners.</releaseNotes>
+    <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.&#10;&#13;This package includes the NUnit 3.0 framework assembly for .NET Compact Framework 3.5, which is referenced by your tests. You will need to install the NUnitLiteCF package in order to run the tests. Two separate packages are used because future versions will be supported by additional runners.</description>
+    <releaseNotes>This is an beta release, but is ready for production use for people with prior NUnit experience.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin cf compact framework</tags>
     <copyright>Copyright (c) 2015 Charlie Poole</copyright>
