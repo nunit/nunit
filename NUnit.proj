@@ -53,7 +53,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Packaging Directories">
-    <CurrentImageDir Condition="'$(CurrentImageDir)' == ''">$(ProjectImageDir)\$(PackageName)</CurrentImageDir>
+    <CurrentImageDir Condition="'$(CurrentImageDir)' == ''">$(ProjectImageDir)\$(PackageName)$(ConfigSuffix)</CurrentImageDir>
     <PackageBinDir>$(CurrentImageDir)\bin</PackageBinDir>
     <PackageDocDir>$(CurrentImageDir)\doc</PackageDocDir>
     <PackageSrcDir>$(CurrentImageDir)\src</PackageSrcDir>
@@ -401,6 +401,8 @@
     <Message Text="* Creating the binary $(Configuration) package as $(PackageName)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
+    <CallTarget Targets="_RemoveGitDirFromImage" />
+
     <Exec Command='git init "$(CurrentImageDir)"' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add -A' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git rm --cached bin\netcf-3.5\*' />
@@ -409,12 +411,13 @@
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' /> 
     <Exec WorkingDirectory='$(CurrentImageDir)' 
       Command='git archive -o "$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" HEAD'></Exec>
-    <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" />
+
+    <CallTarget Targets="_RemoveGitDirFromImage" />
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all standard NuGet packages"
-    DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
-
+  <Target Name="PackageNuGet" Label="Creates all NuGet packages"
+    DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetCoreEngine" />
+  
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
 
@@ -450,22 +453,33 @@
 
   </Target>
 
+  <Target Name="PackageNuGetCoreEngine" Label="Creates the NUnit.Core.Engine NuGet package"
+      DependsOnTargets="_CreateImageIfNotPresent">
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the NUnit.Core.Engine Nuget $(Configuration) package" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.core.engine.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+  </Target>
+
   <Target Name="PackageMasterMsi" Label="Creates the master MSI installer for NUnit"
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\master\nunit.wixproj"
-      Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
+      Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier)$(ConfigSuffix); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
   </Target>
 
   <Target Name="PackageFrameworkMsi" Label="Creates the MSI installer for the NUnit.Framework"
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\framework\nunit-framework.wixproj"
-      Properties="Configuration=$(Configuration); Platform=x86; OutputPath=$(ProjectPackageDir) PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
+      Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier)$(ConfigSuffix); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
   </Target>
 
   <Target Name="PackageConsoleMsi" Label="Creates the MSI installer for the NUnit console runner and engine"
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
-      Properties="Configuration=$(Configuration); Platform=x86;  PackageVersion=$(PackageVersion)$(PackageModifier); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
+      Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier)$(ConfigSuffix); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
   </Target>
 
   <Target Name="PackageAllMsis" Label="Creates all of the MSI installers for NUnit"
@@ -481,6 +495,8 @@
     <Message Text="* Creating the binary $(Configuration) package as $(PackageNameCF)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
+    <CallTarget Targets="_RemoveGitDirFromImage" />
+
     <Exec Command='git init "$(CurrentImageDir)"' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add *.txt nunit.ico' />
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add bin\netcf-3.5\*' />
@@ -489,7 +505,8 @@
     <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' />
     <Exec WorkingDirectory='$(CurrentImageDir)'
       Command='git archive -o "$(ProjectPackageDir)\$(PackageNameCF)$(ConfigSuffix).zip" HEAD'></Exec>
-    <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" />
+
+    <CallTarget Targets="_RemoveGitDirFromImage" />
   </Target>
 
   <Target Name="PackageNuGetNUnitCF" Label="Creates the NUnit Framework NuGet package for compact framework"
@@ -539,7 +556,11 @@
     <Exec Command="$(RemoveDir) $(CurrentImageDir)" Condition="Exists('$(CurrentImageDir)')" />
     <MakeDir Directories="$(CurrentImageDir)" />
   </Target>
-  
+
+  <Target Name="_RemoveGitDirFromImage">
+    <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" Condition="Exists('$(CurrentImageDir)\.git')" />
+  </Target>
+                                       
   <!-- *********************************************************************** -->
   <!--                       Lists For Use by Targets                          -->
   <!-- *********************************************************************** -->
