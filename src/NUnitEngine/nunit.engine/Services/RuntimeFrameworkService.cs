@@ -102,7 +102,11 @@ namespace NUnit.Engine.Services
 
             if (targetVersion == RuntimeFramework.DefaultVersion)
             {
-                foreach (var subPackage in package.SubPackages)
+                var packages = package.SubPackages;
+                if (packages.Count == 0)
+                    packages.Add(package);
+
+                foreach (var subPackage in packages)
                 {
                     var assembly = subPackage.FullName;
 
