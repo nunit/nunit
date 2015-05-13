@@ -60,6 +60,7 @@ Issues Resolved
  * 628  Modify IService interface and simplify ServiceContext
  * 631  Separate packaging for the compact framework
  * 646  ConfigurationManager.AppSettings Params Return Null under Beta 1
+ * 648  Passing 2 or more test assemblies targeting > .NET 2.0 to nunit-console fails
 
 NUnit 3.0.0 Beta 1 - March 25, 2015
 
