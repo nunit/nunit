@@ -27,8 +27,8 @@
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
     <file src="bin\netcf-3.5\nunitlite.dll" target="lib\net35-cf" />
-    <file src="nuget\Program.cs" target="content" />
-    <file src="nuget\Program.vb" target="content" />
-    <file src="nuget\install.ps1" target="tools" />
+    <file src="..\..\nuget\Program.cs" target="content" />
+    <file src="..\..\nuget\Program.vb" target="content" />
+    <file src="..\..\nuget\install.ps1" target="tools" />
   </files>
 </package>
