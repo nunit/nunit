@@ -30,6 +30,7 @@ Issues Resolved
  * 196  Compare DateTimeOffsets including the offset in the comparison 
  * 217  New icon for the 3.0 release
  * 316  NUnitLite TextUI Runner
+ * 320	No Tests found: Using parametrized Fixture and TestCaseSource
  * 360  Better exception message when using non-BCL class in property
  * 454  Rare registry configurations may cause NUnit to fail
  * 478  RepeatAttribute
