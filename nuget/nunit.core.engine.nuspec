@@ -11,7 +11,7 @@
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>The NUnit Core Engine handles is used by runners to load and execute tests within a process.</summary>
-    <description>This package includes the nunit.core.engine assembly, which may be used by runner programs that need to load and run tests within the same process as an alternative to the full engine.&#10;&#13;&#10;&#13;It is particularly suited for use by device runners. Third party runners that set up their own process for execution may also find this useful.&#10;&#13;&#10;&#13;This package is not intended for direct use by users who simply want to run tests.</description>
+    <description>This package includes the nunit.core.engine assembly, which may be used by runner programs that need to load and run tests within the same process as an alternative to the full engine.&#10;&#13;It is particularly suited for use by device runners. Third party runners that set up their own process for execution may also find this useful.&#10;&#13;This package is not intended for direct use by users who simply want to run tests.</description>
     <releaseNotes>This is an beta release. However, the interface to the engine is considered stable at this point.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd engine</tags>

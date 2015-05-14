@@ -540,7 +540,7 @@
 
     <!-- Copy binaries to bin directory -->
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
-        SourceFiles="@(BinFiles)"></Copy>
+        SourceFiles="@(BinFiles)" />
 
   </Target>
 
