@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -63,10 +63,17 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void StopQueue_WithWorkers()
         {
-            var workers = new TestWorker[] {
+            var workers = new TestWorker[]
+            {
+#if NETCF
+                new TestWorker(_queue, "1"),
+                new TestWorker(_queue, "2"),
+                new TestWorker(_queue, "3")
+#else
                 new TestWorker(_queue, "1", ApartmentState.MTA),
                 new TestWorker(_queue, "2", ApartmentState.MTA),
                 new TestWorker(_queue, "3", ApartmentState.MTA)
+#endif
             };
 
             foreach (var worker in workers)
@@ -79,7 +86,7 @@ namespace NUnit.Framework.Internal.Execution
             _queue.Stop();
             Assert.That(_queue.State, Is.EqualTo(WorkItemQueueState.Stopped));
 
-            Thread.Sleep(20); // Allow time for workers to stop
+            Thread.Sleep(20);  // Allow time for workers to stop
 
             foreach (var worker in workers)
                 Assert.False(worker.IsAlive, "Worker thread {0} did not stop", worker.Name);
@@ -142,9 +149,19 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo("Test2"));
             Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo("Test3"));
         }
-        private void Test1() { }
-        private void Test2() { }
-        private void Test3() { }
+
+        private void Test1()
+        {
+        }
+
+        private void Test2()
+        {
+        }
+
+        private void Test3()
+        {
+        }
     }
 }
+
 #endif

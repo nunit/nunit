@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
         /// test method of some kind. The method must normally be marked
-        /// with an identifying attriute for this to be true.
+        /// with an identifying attribute for this to be true.
         /// 
         /// Note that this method does not check that the signature
         /// of the method for validity. If we did that here, any
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
         /// test method of some kind. The method must normally be marked
-        /// with an identifying attriute for this to be true.
+        /// with an identifying attribute for this to be true.
         /// 
         /// Note that this method does not check that the signature
         /// of the method for validity. If we did that here, any
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal.Builders
         #region Helper Methods
 
         /// <summary>
-        /// Builds a ParameterizedMetodSuite containing individual test cases.
+        /// Builds a ParameterizedMethodSuite containing individual test cases.
         /// </summary>
         /// <param name="method">The MethodInfo for which a test is to be built.</param>
         /// <param name="tests">The list of test cases to include.</param>

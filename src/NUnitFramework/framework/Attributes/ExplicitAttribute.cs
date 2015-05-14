@@ -63,7 +63,7 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (test.RunState != RunState.NotRunnable)
+            if (test.RunState != RunState.NotRunnable && test.RunState != RunState.Ignored)
             {
                 test.RunState = RunState.Explicit;
                 test.Properties.Set(PropertyNames.SkipReason, reason);

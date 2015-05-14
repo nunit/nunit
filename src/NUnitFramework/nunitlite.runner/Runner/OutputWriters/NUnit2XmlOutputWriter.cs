@@ -217,7 +217,7 @@ namespace NUnitLite.Runner
                 xmlWriter.WriteAttributeString("executed", "True");
                 xmlWriter.WriteAttributeString("result", translatedResult);
                 xmlWriter.WriteAttributeString("success", status == TestStatus.Passed ? "True" : "False");
-                xmlWriter.WriteAttributeString("time", result.Duration.TotalSeconds.ToString("0.000", NumberFormatInfo.InvariantInfo));
+                xmlWriter.WriteAttributeString("time", result.Duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
                 xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
             }
             else
@@ -347,7 +347,7 @@ namespace NUnitLite.Runner
         //{
         //    /*The default code page for the system will be used.
         //    Since all code pages use the same lower 128 bytes, this should be sufficient
-        //    for finding uprintable control characters that make the xslt processor error.
+        //    for finding unprintable control characters that make the xslt processor error.
         //    We use characters encoded by the default code page to avoid mistaking bytes as
         //    individual characters on non-latin code pages.*/
         //    char[] encodedChars = System.Text.Encoding.Default.GetChars(System.Text.Encoding.Default.GetBytes(encodedString));

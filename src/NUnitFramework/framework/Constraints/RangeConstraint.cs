@@ -28,7 +28,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// RangeConstraint tests whethe two _values are within a 
+    /// RangeConstraint tests whether two _values are within a 
     /// specified range.
     /// </summary>
     public class RangeConstraint : Constraint
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         private ComparisonAdapter comparer = ComparisonAdapter.Default;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:RangeConstraint"/> class.
+        /// Initializes a new instance of the <see cref="RangeConstraint"/> class.
         /// </summary>
         /// <remarks>from must be less than or equal to true</remarks> 
         /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use an IComparer and returns self.
+        /// Modifies the constraint to use an <see cref="IComparer"/> and returns self.
         /// </summary>
         public RangeConstraint Using(IComparer comparer)
         {
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use an IComparer&lt;T&gt; and returns self.
+        /// Modifies the constraint to use an <see cref="IComparer{T}"/> and returns self.
         /// </summary>
         public RangeConstraint Using<T>(IComparer<T> comparer)
         {
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modifies the constraint to use a Comparison&lt;T&gt; and returns self.
+        /// Modifies the constraint to use a <see cref="Comparison{T}"/> and returns self.
         /// </summary>
         public RangeConstraint Using<T>(Comparison<T> comparer)
         {

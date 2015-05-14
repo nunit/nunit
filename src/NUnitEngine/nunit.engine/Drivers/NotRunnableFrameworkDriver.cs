@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Engine.Extensibility;
 
@@ -30,19 +31,19 @@ namespace NUnit.Engine.Drivers
     {
         // TODO: The id should not be hard-coded
         private const string LOAD_RESULT_FORMAT =
-            "<test-suite type='Assembly' id='2' name='{0}' fullname='{1}' testcasecount='0' runstate='NotRunnable'>" +
+            "<test-suite type='Assembly' id='{0}' name='{1}' fullname='{2}' testcasecount='0' runstate='NotRunnable'>" +
                 "<properties>" +
-                    "<property name='_SKIPREASON' value='{2}'/>" +
+                    "<property name='_SKIPREASON' value='{3}'/>" +
                 "</properties>" +
             "</test-suite>";
 
         private const string RUN_RESULT_FORMAT =
-            "<test-suite type='Assembly' id='2' name='{0}' fullname='{1}' testcasecount='0' runstate='NotRunnable' result='Skipped' label='NotRunnable'>" +
+            "<test-suite type='Assembly' id='{0}' name='{1}' fullname='{2}' testcasecount='0' runstate='NotRunnable' result='Failed' label='Invalid'>" +
                 "<properties>" +
-                    "<property name='_SKIPREASON' value='{2}'/>" +
+                    "<property name='_SKIPREASON' value='{3}'/>" +
                 "</properties>" +
                 "<reason>" +
-                    "<message>{2}</message>" +
+                    "<message>{3}</message>" +
                 "</reason>" +
             "</test-suite>";
 
@@ -53,13 +54,15 @@ namespace NUnit.Engine.Drivers
         public NotRunnableFrameworkDriver(string assemblyPath, string message)
         {
             _name = Escape(Path.GetFileName(assemblyPath));
-            _fullname = Escape(assemblyPath);
+            _fullname = Escape(Path.GetFullPath(assemblyPath));
             _message = Escape(message);
         }
 
-        public string Load()
+        public string ID { get; set; }
+
+        public string Load(string assemblyPath, IDictionary<string, object> settings)
         {
-            return string.Format(LOAD_RESULT_FORMAT, _name, _fullname, _message);
+            return string.Format(LOAD_RESULT_FORMAT, TestID, _name, _fullname, _message);
         }
 
         public int CountTestCases(TestFilter filter)
@@ -69,12 +72,12 @@ namespace NUnit.Engine.Drivers
 
         public string Run(ITestEventListener listener, TestFilter filter)
         {
-            return string.Format(RUN_RESULT_FORMAT, _name, _fullname, _message);
+            return string.Format(RUN_RESULT_FORMAT, TestID, _name, _fullname, _message);
         }
 
         public string Explore(TestFilter filter)
         {
-            return string.Format(LOAD_RESULT_FORMAT, _name, _fullname, _message);
+            return string.Format(LOAD_RESULT_FORMAT, TestID, _name, _fullname, _message);
         }
 
         public void StopRun(bool force)
@@ -89,6 +92,16 @@ namespace NUnit.Engine.Drivers
                 .Replace("'", "&apos;")
                 .Replace("<", "&lt;")
                 .Replace(">", "&gt;");
+        }
+
+        private string TestID
+        {
+            get
+            {
+                return string.IsNullOrEmpty(ID)
+                    ? "1"
+                    : ID + "-1";
+            }
         }
     }
 }

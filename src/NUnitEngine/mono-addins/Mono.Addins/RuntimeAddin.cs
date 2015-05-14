@@ -286,7 +286,7 @@ namespace Mono.Addins
 		/// </returns>
 		/// <remarks>
 		/// The type will be looked up in the assemblies that implement the add-in,
-		/// and recursivelly in all add-ins on which it depends.
+		/// and recursively in all add-ins on which it depends.
 		/// 
 		/// This method throws an InvalidOperationException if the type can't be found.
 		/// </remarks>
@@ -309,7 +309,7 @@ namespace Mono.Addins
 		/// </returns>
 		/// <remarks>
 		/// The type will be looked up in the assemblies that implement the add-in,
-		/// and recursivelly in all add-ins on which it depends.
+		/// and recursively in all add-ins on which it depends.
 		/// 
 		/// If the type can't be found, this method throw a InvalidOperationException if
 		/// 'throwIfNotFound' is 'true', or 'null' otherwise.
@@ -390,7 +390,7 @@ namespace Mono.Addins
 		/// </returns>
 		/// <remarks>
 		/// The type will be looked up in the assemblies that implement the add-in,
-		/// and recursivelly in all add-ins on which it depends.
+		/// and recursively in all add-ins on which it depends.
 		/// 
 		/// This method throws an InvalidOperationException if the type can't be found.
 		/// 
@@ -415,7 +415,7 @@ namespace Mono.Addins
 		/// </returns>
 		/// <remarks>
 		/// The type will be looked up in the assemblies that implement the add-in,
-		/// and recursivelly in all add-ins on which it depends.
+		/// and recursively in all add-ins on which it depends.
 		/// 
 		/// If the type can't be found, this method throw a InvalidOperationException if
 		/// 'throwIfNotFound' is 'true', or 'null' otherwise.

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 
 namespace NUnit.Engine.Internal
@@ -45,26 +44,37 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
-        /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project.</param>
+        /// <param name="elementName">The root node name under which to aggregate the nodes.</param>
+        /// <param name="suiteType">The suite type to associate with the <see cref="TestEngineResult"/>.</param>
+        /// <param name="name">The name of the <see cref="TestEngineResult"/>.</param>
+        /// <param name="fullName">The full name of the <see cref="TestEngineResult"/>.</param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
-        public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string suiteType, string name, string fullname)
+        public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string suiteType, string name, string fullName)
         {
-            return new TestEngineResult(Aggregate(elementName, suiteType, name, fullname, result.XmlNodes));
+            return new TestEngineResult(Aggregate(elementName, suiteType, name, fullName, result.XmlNodes));
         }
 
         /// <summary>
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
-        /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project.</param>
+        /// <param name="elementName">The root node name under which to aggregate the results.</param>
+        /// <param name="name">The name of the <see cref="TestEngineResult"/>.</param>
+        /// <param name="fullName">The full name of the <see cref="TestEngineResult"/>.</param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
-        public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string name, string fullname)
+        public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string name, string fullName)
         {
-            return new TestEngineResult(Aggregate(elementName, name, fullname, result.XmlNodes));
+            return new TestEngineResult(Aggregate(elementName, name, fullName, result.XmlNodes));
         }
 
         /// <summary>
         /// Aggregate all the separate assembly results of a project as a single node.
         /// </summary>
+        /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project.</param>
+        /// <param name="name">The name of the <see cref="TestEngineResult"/>.</param>
+        /// <param name="fullName">The full name of the <see cref="TestEngineResult"/>.</param>
+        /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult MakePackageResult(this TestEngineResult result, string name, string fullName)
         {
             return Aggregate(result, TEST_SUITE_ELEMENT, PROJECT_SUITE_TYPE, name, fullName);
@@ -78,12 +88,12 @@ namespace NUnit.Engine.Internal
         /// Merges multiple test engine results into a single result. The
         /// result element contains all the XML nodes found in the input.
         /// </summary>
-        /// <param name="results">A list of TestEngineResults</param>
-        /// <returns>A TestEngineResult merging all the imput results</returns>
+        /// <param name="results">A collection of <see cref="TestEngineResult"/> to merge.</param>
+        /// <returns>A TestEngineResult merging all the input results.</returns>
         /// <remarks>Used by AbstractTestRunner MakePackageResult method.</remarks>
-        public static TestEngineResult Merge(IList<TestEngineResult> results)
+        public static TestEngineResult Merge(IList<TestEngineResult> results) 
         {
-            TestEngineResult mergedResult = new TestEngineResult();
+            var mergedResult = new TestEngineResult();
 
             foreach (TestEngineResult result in results)
                 foreach (XmlNode node in result.XmlNodes)
@@ -99,7 +109,7 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Insert an environment element as a child of the node provided.
         /// </summary>
-        /// <param name="resultNode"></param>
+        /// <param name="resultNode">The node under which the environment element is placed.</param>
         public static void InsertEnvironmentElement(this XmlNode resultNode)
         {
             XmlNode env = resultNode.OwnerDocument.CreateElement("environment");
@@ -112,20 +122,42 @@ namespace NUnit.Engine.Internal
             env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
-            env.AddAttribute("culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
-            env.AddAttribute("uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("os-architecture", GetProcessorArchitecture());
+        }
+
+        private static string GetProcessorArchitecture() {
+            return IntPtr.Size == 8 ? "x64" : "x86";
         }
 
         #endregion
 
         #region Methods that operate on a list of XmlNodes
 
-        public static XmlNode Aggregate(string elementName, string name, string fullname, IList<XmlNode> resultNodes)
+        /// <summary>
+        /// Aggregates a collection of XmlNodes under a single XmlNode.
+        /// </summary>
+        /// <param name="elementName">The root node name under which to aggregate the results.</param>
+        /// <param name="name">The name to associated with the root node.</param>
+        /// <param name="fullName">The full name to associated with the root node.</param>
+        /// <param name="resultNodes">A collection of XmlNodes to aggregate</param>
+        /// <returns>A single XmlNode containing the aggregated list of XmlNodes.</returns>
+        public static XmlNode Aggregate(string elementName, string name, string fullName, IList<XmlNode> resultNodes)
         {
-            return Aggregate(elementName, null, name, fullname, resultNodes);
+            return Aggregate(elementName, null, name, fullName, resultNodes);
         }
 
-        public static XmlNode Aggregate(string elementName, string testType, string name, string fullname, IList<XmlNode> resultNodes)
+        /// <summary>
+        /// Aggregates a collection of XmlNodes under a single XmlNode.
+        /// </summary>
+        /// <param name="elementName">The root node name under which to aggregate the results.</param>
+        /// <param name="testType">The type to associated with the root node.</param>
+        /// <param name="name">The name to associated with the root node.</param>
+        /// <param name="fullName">The full name to associated with the root node.</param>
+        /// <param name="resultNodes">A collection of XmlNodes to aggregate</param>
+        /// <returns>A single XmlNode containing the aggregated list of XmlNodes.</returns>
+        public static XmlNode Aggregate(string elementName, string testType, string name, string fullName, IList<XmlNode> resultNodes)
         {
             XmlNode combinedNode = XmlHelper.CreateTopLevelElement(elementName);
             if (testType != null)
@@ -133,8 +165,8 @@ namespace NUnit.Engine.Internal
             combinedNode.AddAttribute("id", "2"); // TODO: Should not be hard-coded
             if (name != null && name != string.Empty)
                 combinedNode.AddAttribute("name", name);
-            if (fullname != null && fullname != string.Empty)
-                combinedNode.AddAttribute("fullname", fullname);
+            if (fullName != null && fullName != string.Empty)
+                combinedNode.AddAttribute("fullname", fullName);
 
             string status = "Inconclusive";
             //double totalDuration = 0.0d;

@@ -30,16 +30,25 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-    using Utilities;
-
     /// <summary>
     /// This class provides the entry point for the console runner.
     /// </summary>
     public class Program
     {
         //static Logger log = InternalTrace.GetLogger(typeof(Runner));
-        static ConsoleOptions Options = new ConsoleOptions();
-        static ExtendedTextWriter OutWriter = new ColorConsoleWriter(!Options.NoColor);
+        static ConsoleOptions Options = new ConsoleOptions(new DefaultOptionsProvider());
+        private static ExtendedTextWriter _outWriter;
+
+        // This has to be lazy otherwise NoColor command line option is not applied correctly
+        private static ExtendedTextWriter OutWriter
+        {
+            get
+            {
+                if (_outWriter == null) _outWriter = new ColorConsoleWriter(!Options.NoColor);
+
+                return _outWriter;
+            }
+        }
 
         [STAThread]
         public static int Main(string[] args)

@@ -65,7 +65,6 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Writes the header.
         /// </summary>
-        /// <param name="writer">The writer.</param>
         public void DisplayHeader()
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
@@ -317,7 +316,7 @@ namespace NUnitLite.Runner
 
             WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
             WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
-            WriteLabelLine("    Duration: ", summary.Duration.TotalSeconds.ToString("0.000") + " seconds");
+            WriteLabelLine("    Duration: ", summary.Duration.ToString("0.000") + " seconds");
             SkipLine();
         }
 

@@ -213,7 +213,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than the suppled argument
+        /// actual value is greater than the supplied argument
         /// </summary>
         public static GreaterThanConstraint GreaterThan(object expected)
         {
@@ -226,7 +226,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than or equal to the suppled argument
+        /// actual value is greater than or equal to the supplied argument
         /// </summary>
         public static GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
         {
@@ -235,7 +235,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than or equal to the suppled argument
+        /// actual value is greater than or equal to the supplied argument
         /// </summary>
         public static GreaterThanOrEqualConstraint AtLeast(object expected)
         {
@@ -248,7 +248,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than the suppled argument
+        /// actual value is less than the supplied argument
         /// </summary>
         public static LessThanConstraint LessThan(object expected)
         {
@@ -261,7 +261,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than or equal to the suppled argument
+        /// actual value is less than or equal to the supplied argument
         /// </summary>
         public static LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
         {
@@ -270,7 +270,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than or equal to the suppled argument
+        /// actual value is less than or equal to the supplied argument
         /// </summary>
         public static LessThanOrEqualConstraint AtMost(object expected)
         {

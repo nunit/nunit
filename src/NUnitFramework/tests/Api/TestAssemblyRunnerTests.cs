@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-// TODO: Get to work in Portable and Silverlight - will require buiding mock-assembly
+// TODO: Get to work in Portable and Silverlight - will require building mock-assembly
 #if !SILVERLIGHT && !PORTABLE
 
 using System;
@@ -35,7 +35,7 @@ using NUnit.Tests.Assemblies;
 
 namespace NUnit.Framework.Api
 {
-    // Functional tests of the TestAssenblyRunner and all subordinate classes
+    // Functional tests of the TestAssemblyRunner and all subordinate classes
     public class TestAssemblyRunnerTests
     {
         private const string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";

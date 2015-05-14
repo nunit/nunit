@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if false
 // TODO: Rework this
 // RepeatAttribute should either
 //  1) Apply at load time to create the exact number of tests, or
@@ -39,10 +38,10 @@ namespace NUnit.Framework
     /// RepeatAttribute may be applied to test case in order
     /// to run it multiple times.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
-    public class RepeatAttribute : PropertyAttribute, ICommandDecorator
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    public class RepeatAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
-        private int count;
+        private int _count;
 
         /// <summary>
         /// Construct a RepeatAttribute
@@ -50,29 +49,21 @@ namespace NUnit.Framework
         /// <param name="count">The number of times to run the test</param>
         public RepeatAttribute(int count) : base(count)
         {
-            this.count = count;
+            _count = count;
         }
 
-        #region ICommandDecorator Members
+        #region IWrapSetUpTearDown Members
 
-        CommandStage ICommandDecorator.Stage
+        /// <summary>
+        /// Wrap a command and return the result.
+        /// </summary>
+        /// <param name="command">The command to be wrapped</param>
+        /// <returns>The wrapped command</returns>
+        public TestCommand Wrap(TestCommand command)
         {
-            // TODO: Check this
-            get { return CommandStage.AboveSetUpTearDown; }
-        }
-
-        int ICommandDecorator.Priority
-        {
-            // TODO: Check this
-            get { return 0; }
-        }
-
-        TestCommand ICommandDecorator.Decorate(TestCommand command)
-        {
-            return new RepeatedTestCommand(command, count);
+            return new RepeatedTestCommand(command, _count);
         }
 
         #endregion
     }
 }
-#endif

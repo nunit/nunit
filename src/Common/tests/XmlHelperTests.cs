@@ -28,7 +28,7 @@ using NUnit.Framework;
 
 #if NUNIT_CONSOLE
 namespace NUnit.ConsoleRunner.Utilities.Tests
-#elif NUNIT_ENGINE
+#elif NUNIT_ENGINE || CORE_ENGINE
 namespace NUnit.Engine.Internal.Tests
 #else
 namespace NUnit.Common.Tests
@@ -90,14 +90,14 @@ namespace NUnit.Common.Tests
         }
 
         [Test]
-        public void SafeAttributeAcessWithIntDefaultValue()
+        public void SafeAttributeAccessWithIntDefaultValue()
         {
             XmlNode node = XmlHelper.CreateTopLevelElement("top");
             Assert.That(XmlHelper.GetAttribute(node, "junk", 42), Is.EqualTo(42));
         }
 
         [Test]
-        public void SafeAttributeAcessWithDoubleDefaultValue()
+        public void SafeAttributeAccessWithDoubleDefaultValue()
         {
             XmlNode node = XmlHelper.CreateTopLevelElement("top");
             Assert.That(node.GetAttribute("junk", 1.234), Is.EqualTo(1.234));

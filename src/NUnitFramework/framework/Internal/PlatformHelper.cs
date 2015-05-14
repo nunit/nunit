@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Contruct a PlatformHelper for a particular operating
+        /// Construct a PlatformHelper for a particular operating
         /// system and common language runtime. Used in testing.
         /// </summary>
         /// <param name="os">OperatingSystem to be used</param>

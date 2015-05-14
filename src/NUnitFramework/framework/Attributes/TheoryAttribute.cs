@@ -47,7 +47,7 @@ namespace NUnit.Framework
     ///   {}
     ///   
     ///   [Test(Description = "more detailed description")]
-    ///   publc void TestDescriptionMethod()
+    ///   public void TestDescriptionMethod()
     ///   {}
     /// }
     /// </example>

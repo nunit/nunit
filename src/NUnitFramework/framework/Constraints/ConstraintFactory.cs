@@ -351,7 +351,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than the suppled argument
+        /// actual value is greater than the supplied argument
         /// </summary>
         public GreaterThanConstraint GreaterThan(object expected)
         {
@@ -364,7 +364,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than or equal to the suppled argument
+        /// actual value is greater than or equal to the supplied argument
         /// </summary>
         public GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
         {
@@ -373,7 +373,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than or equal to the suppled argument
+        /// actual value is greater than or equal to the supplied argument
         /// </summary>
         public GreaterThanOrEqualConstraint AtLeast(object expected)
         {
@@ -386,7 +386,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than the suppled argument
+        /// actual value is less than the supplied argument
         /// </summary>
         public LessThanConstraint LessThan(object expected)
         {
@@ -399,7 +399,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than or equal to the suppled argument
+        /// actual value is less than or equal to the supplied argument
         /// </summary>
         public LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
         {
@@ -408,7 +408,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than or equal to the suppled argument
+        /// actual value is less than or equal to the supplied argument
         /// </summary>
         public LessThanOrEqualConstraint AtMost(object expected)
         {

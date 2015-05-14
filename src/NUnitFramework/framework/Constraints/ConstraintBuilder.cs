@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     /// ConstraintBuilder maintains the stacks that are used in
     /// processing a ConstraintExpression. An OperatorStack
     /// is used to hold operators that are waiting for their
-    /// operands to be reognized. a ConstraintStack holds 
+    /// operands to be reorganized. a ConstraintStack holds 
     /// input constraints as well as the results of each
     /// operator applied.
     /// </summary>
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
             private readonly Stack<ConstraintOperator> stack = new Stack<ConstraintOperator>();
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="T:OperatorStack"/> class.
+            /// Initializes a new instance of the <see cref="OperatorStack"/> class.
             /// </summary>
             /// <param name="builder">The ConstraintBuilder using this stack.</param>
             public OperatorStack(ConstraintBuilder builder)
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
             }
 
             /// <summary>
-            /// Gets a value indicating whether this <see cref="T:OpStack"/> is empty.
+            /// Gets a value indicating whether this <see cref="OperatorStack"/> is empty.
             /// </summary>
             /// <value><c>true</c> if empty; otherwise, <c>false</c>.</value>
             public bool Empty
@@ -65,7 +65,6 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Gets the topmost operator without modifying the stack.
             /// </summary>
-            /// <value>The top.</value>
             public ConstraintOperator Top
             {
                 get { return stack.Peek(); }
@@ -74,7 +73,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Pushes the specified operator onto the stack.
             /// </summary>
-            /// <param name="op">The op.</param>
+            /// <param name="op">The operator to put onto the stack.</param>
             public void Push(ConstraintOperator op)
             {
                 stack.Push(op);
@@ -83,7 +82,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Pops the topmost operator from the stack.
             /// </summary>
-            /// <returns></returns>
+            /// <returns>The topmost operator on the stack</returns>
             public ConstraintOperator Pop()
             {
                 return stack.Pop();
@@ -103,7 +102,7 @@ namespace NUnit.Framework.Constraints
             private readonly ConstraintBuilder builder;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="T:ConstraintStack"/> class.
+            /// Initializes a new instance of the <see cref="ConstraintStack"/> class.
             /// </summary>
             /// <param name="builder">The ConstraintBuilder using this stack.</param>
             public ConstraintStack(ConstraintBuilder builder)
@@ -112,7 +111,7 @@ namespace NUnit.Framework.Constraints
             }
 
             /// <summary>
-            /// Gets a value indicating whether this <see cref="T:ConstraintStack"/> is empty.
+            /// Gets a value indicating whether this <see cref="ConstraintStack"/> is empty.
             /// </summary>
             /// <value><c>true</c> if empty; otherwise, <c>false</c>.</value>
             public bool Empty
@@ -125,7 +124,7 @@ namespace NUnit.Framework.Constraints
             /// the constraint's Builder field is set to the 
             /// ConstraintBuilder owning this stack.
             /// </summary>
-            /// <param name="constraint">The constraint.</param>
+            /// <param name="constraint">The constraint to put onto the stack</param>
             public void Push(IConstraint constraint)
             {
                 stack.Push(constraint);
@@ -137,7 +136,7 @@ namespace NUnit.Framework.Constraints
             /// As a side effect, the constraint's Builder
             /// field is set to null.
             /// </summary>
-            /// <returns></returns>
+            /// <returns>The topmost contraint on the stack</returns>
             public IConstraint Pop()
             {
                 IConstraint constraint = stack.Pop();
@@ -161,7 +160,7 @@ namespace NUnit.Framework.Constraints
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ConstraintBuilder"/> class.
+        /// Initializes a new instance of the <see cref="ConstraintBuilder"/> class.
         /// </summary>
         public ConstraintBuilder()
         {
@@ -193,7 +192,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Appends the specified constraint to the expresson by pushing
+        /// Appends the specified constraint to the expression by pushing
         /// it on the constraint stack.
         /// </summary>
         /// <param name="constraint">The constraint to push.</param>

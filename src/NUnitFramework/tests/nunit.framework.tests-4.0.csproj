@@ -36,6 +36,12 @@
     <DebugSymbols>true</DebugSymbols>
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -50,6 +56,9 @@
     </Compile>
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
+      <Link>Runner\DefaultOptionsProviderTests.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
       <Link>Runner\ExtendedTextWrapperTests.cs</Link>
@@ -139,6 +148,7 @@
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
+    <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
     <Compile Include="Constraints\FileOrDirectoryExistsConstraintTests.cs" />
@@ -287,6 +297,9 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\framework\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

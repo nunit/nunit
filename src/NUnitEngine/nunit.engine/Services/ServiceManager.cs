@@ -33,8 +33,8 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class ServiceManager
     {
-        private List<IService> services = new List<IService>();
-        private Dictionary<Type, IService> serviceIndex = new Dictionary<Type, IService>();
+        private List<IService> _services = new List<IService>();
+        private Dictionary<Type, IService> _serviceIndex = new Dictionary<Type, IService>();
 
         static Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
 
@@ -46,15 +46,14 @@ namespace NUnit.Engine.Services
         {
             IService theService = null;
 
-            if (serviceIndex.ContainsKey(serviceType))
-                theService = serviceIndex[serviceType];
+            if (_serviceIndex.ContainsKey(serviceType))
+                theService = _serviceIndex[serviceType];
             else
-                foreach( IService service in services )
+                foreach( IService service in _services )
                 {
-                    // TODO: Does this work on Mono?
                     if( serviceType.IsInstanceOfType( service ) )
                     {
-                        serviceIndex[serviceType] = service;
+                        _serviceIndex[serviceType] = service;
                         theService = service;
                         break;
                     }
@@ -70,45 +69,57 @@ namespace NUnit.Engine.Services
 
         public void AddService(IService service)
         {
-            services.Add(service);
+            _services.Add(service);
             log.Debug("Added " + service.GetType().Name);
         }
 
-        public void InitializeServices()
+        public void StartServices()
         {
-            foreach( IService service in services )
+            foreach( IService service in _services )
             {
-                log.Info( "Initializing " + service.GetType().Name );
-                try
+                if (service.Status == ServiceStatus.Stopped)
                 {
-                    service.InitializeService();
-                }
-                catch (Exception ex)
-                {
-                    // TODO: Should we pass this exception through?
-                    log.Error("Failed to initialize service", ex);
+                    string name = service.GetType().Name;
+                    log.Info("Initializing " + name);
+                    try
+                    {
+                        service.StartService();
+                        if (service.Status == ServiceStatus.Error)
+                            throw new InvalidOperationException("Service failed to initialize " + name);
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Should we pass this exception through?
+                        log.Error("Failed to initialize " + name );
+                        log.Error(ex.ToString());
+                        throw;
+                    }
                 }
             }
 
             this.ServicesInitialized = true;
         }
 
-        public void StopAllServices()
+        public void StopServices()
         {
             // Stop services in reverse of initialization order
-            // TODO: Deal with dependencies explicitly
-            int index = services.Count;
+            int index = _services.Count;
             while (--index >= 0)
             {
-                IService service = services[index];
-                log.Info("Stopping " + service.GetType().Name);
-                try
+                IService service = _services[index];
+                if (service.Status == ServiceStatus.Started)
                 {
-                    service.UnloadService();
-                }
-                catch (Exception ex)
-                {
-                    log.Error("Failure stopping service", ex);
+                    string name = service.GetType().Name;
+                    log.Info("Stopping " + name);
+                    try
+                    {
+                        service.StopService();
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error("Failure stopping service " + name);
+                        log.Error(ex.ToString());
+                    }
                 }
             }
         }
@@ -116,7 +127,7 @@ namespace NUnit.Engine.Services
         public void ClearServices()
         {
             log.Info("Clearing Service list");
-            services.Clear();
+            _services.Clear();
         }
 
         #endregion

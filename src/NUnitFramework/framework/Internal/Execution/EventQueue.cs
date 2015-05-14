@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -31,11 +31,12 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+
     #region Individual Event Classes
 
     /// <summary>
     /// NUnit.Core.Event is the abstract base for all stored events.
-    /// An Event is the stored representation of a call to the 
+    /// An Event is the stored representation of a call to the
     /// ITestListener interface and is used to record such calls
     /// or to queue them for forwarding on another thread or at
     /// a later time.
@@ -46,33 +47,30 @@ namespace NUnit.Framework.Internal.Execution
         /// The Send method is implemented by derived classes to send the event to the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
-        abstract public void Send( ITestListener listener );
-    
+        public abstract void Send(ITestListener listener);
+
         /// <summary>
         /// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
         /// <para>
-        /// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to 
+        /// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to
         /// set a WaitHandle, <see cref="EventQueue.Enqueue"/> blocks its calling thread until the <see cref="EventPump"/>
         /// thread has delivered the event and sets the WaitHandle.
         /// </para>
         /// </summary>
         public virtual bool IsSynchronous
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
-        //protected static Exception WrapUnserializableException(Exception ex)
-        //{
+        // protected static Exception WrapUnserializableException(Exception ex)
+        // {
         //    string message = string.Format(
         //        CultureInfo.InvariantCulture,
         //        "(failed to serialize original Exception - original Exception follows){0}{1}",
         //        Environment.NewLine,
         //        ex);
         //    return new Exception(message);
-        //}
+        // }
     }
 
     /// <summary>
@@ -80,13 +78,13 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestStartedEvent : Event
     {
-        ITest test;
+        private ITest test;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestStartedEvent"/> class.
         /// </summary>
         /// <param name="test">The test.</param>
-        public TestStartedEvent( ITest test )
+        public TestStartedEvent(ITest test)
         {
             this.test = test;
         }
@@ -94,19 +92,19 @@ namespace NUnit.Framework.Internal.Execution
         ///// <summary>
         ///// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
         ///// <para>
-        ///// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to 
+        ///// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to
         ///// set a WaitHandle, <see cref="EventQueue.Enqueue"/> blocks its calling thread until the <see cref="EventPump"/>
         ///// thread has delivered the event and sets the WaitHandle.
         ///// </para>
         ///// </summary>
         // Keeping this as a synchronous until we rewrite using multiple autoresetevents
-        //public override bool IsSynchronous
-        //{
+        // public override bool IsSynchronous
+        // {
         //    get
         //    {
         //        return true;
         //    }
-        //}
+        // }
 
         /// <summary>
         /// Calls TestStarted on the specified listener.
@@ -114,7 +112,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
-            listener.TestStarted( this.test );
+            listener.TestStarted(test);
         }
     }
 
@@ -123,13 +121,13 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestFinishedEvent : Event
     {
-        ITestResult result;
+        private ITestResult result;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestFinishedEvent"/> class.
         /// </summary>
         /// <param name="result">The result.</param>
-        public TestFinishedEvent( ITestResult result )
+        public TestFinishedEvent(ITestResult result)
         {
             this.result = result;
         }
@@ -140,7 +138,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
-            listener.TestFinished( this.result );
+            listener.TestFinished(result);
         }
     }
 
@@ -157,19 +155,23 @@ namespace NUnit.Framework.Internal.Execution
         private readonly Queue queue = new Queue();
         private readonly object syncRoot;
         private bool stopped;
+#if NETCF
+        private ManualResetEvent syncEvent = new ManualResetEvent(false);
+        private int waitCount = 0;
+#endif
 
         /// <summary>
         /// Construct a new EventQueue
         /// </summary>
         public EventQueue()
         {
-            this.syncRoot = queue.SyncRoot;
+            syncRoot = queue.SyncRoot;
         }
 
         /// <summary>
         /// WaitHandle for synchronous event delivery in <see cref="Enqueue"/>.
         /// <para>
-        /// Having just one handle for the whole <see cref="EventQueue"/> implies that 
+        /// Having just one handle for the whole <see cref="EventQueue"/> implies that
         /// there may be only one producer (the test thread) for synchronous events.
         /// If there can be multiple producers for synchronous events, one would have
         /// to introduce one WaitHandle per event.
@@ -182,11 +184,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public int Count
         {
-            get 
+            get
             {
-                lock( this.syncRoot )
+                lock (syncRoot)
                 {
-                    return this.queue.Count; 
+                    return queue.Count;
                 }
             }
         }
@@ -202,30 +204,35 @@ namespace NUnit.Framework.Internal.Execution
         /// </param>
         public void SetWaitHandleForSynchronizedEvents(AutoResetEvent synchronousEventWaitHandle)
         {
-            this.synchronousEventSent = synchronousEventWaitHandle;
+            synchronousEventSent = synchronousEventWaitHandle;
         }
 
         /// <summary>
         /// Enqueues the specified event
         /// </summary>
         /// <param name="e">The event to enqueue.</param>
-        public void Enqueue( Event e )
+        public void Enqueue(Event e)
         {
-            lock( this.syncRoot )
+            lock (syncRoot)
             {
-                this.queue.Enqueue( e );
-                
-                Monitor.Pulse( this.syncRoot );
+                queue.Enqueue(e);
+
+#if NETCF
+                syncEvent.Set();
+
+                while (waitCount != 0)
+                    Thread.Sleep(0);
+
+                syncEvent.Reset();
+#else
+                Monitor.Pulse(syncRoot);
+#endif
             }
 
-            if (this.synchronousEventSent != null && e.IsSynchronous)
-            {
-                this.synchronousEventSent.WaitOne();
-            }
+            if (synchronousEventSent != null && e.IsSynchronous)
+                synchronousEventSent.WaitOne();
             else
-            {
-                Thread.Sleep(0); // give EventPump thread a chance to process the event
-            }
+                Thread.Sleep(0);  // give EventPump thread a chance to process the event
         }
 
         /// <summary>
@@ -242,7 +249,7 @@ namespace NUnit.Framework.Internal.Execution
         ///     <description>the first element.</description>
         ///   </item>
         ///   <item>
-        ///     <term>otherwise, if <paramref name="blockWhenEmpty"/>==<c>false</c> 
+        ///     <term>otherwise, if <paramref name="blockWhenEmpty"/>==<c>false</c>
         ///       or <see cref="Stop"/> has been called</term>
         ///     <description><c>null</c>.</description>
         ///   </item>
@@ -250,21 +257,27 @@ namespace NUnit.Framework.Internal.Execution
         /// </returns>
         public Event Dequeue(bool blockWhenEmpty)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                while (this.queue.Count == 0)
+                while (queue.Count == 0)
                 {
-                    if (blockWhenEmpty && !this.stopped)
+                    if (blockWhenEmpty && !stopped)
+#if NETCF
                     {
-                        Monitor.Wait(this.syncRoot);
+                        Monitor.Exit(syncRoot);
+                        Interlocked.Increment(ref waitCount);
+                        syncEvent.WaitOne();
+                        Interlocked.Decrement(ref waitCount);
+                        Monitor.Enter(syncRoot);
                     }
+#else
+                        Monitor.Wait(syncRoot);
+#endif
                     else
-                    {
                         return null;
-                    }
                 }
 
-                return (Event)this.queue.Dequeue();
+                return (Event)queue.Dequeue();
             }
         }
 
@@ -273,15 +286,25 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                if (!this.stopped)
+                if (!stopped)
                 {
-                    this.stopped = true;
-                    Monitor.Pulse(this.syncRoot);
+                    stopped = true;
+#if NETCF
+                    syncEvent.Set();
+
+                    while (waitCount != 0)
+                        Thread.Sleep(0);
+
+                    syncEvent.Reset();
+#else
+                    Monitor.PulseAll(syncRoot);
+#endif
                 }
             }
         }
     }
 }
+
 #endif

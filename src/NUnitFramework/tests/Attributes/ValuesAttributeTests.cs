@@ -57,7 +57,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void CanConverDoubleToDecimal([Values(12.5)]decimal x)
+        public void CanConvertDoubleToDecimal([Values(12.5)]decimal x)
         {
         }
 

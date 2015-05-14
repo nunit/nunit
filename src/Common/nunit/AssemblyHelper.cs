@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-#if NUNIT_ENGINE
+#if NUNIT_ENGINE || CORE_ENGINE
 namespace NUnit.Engine.Internal
 #elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Internal

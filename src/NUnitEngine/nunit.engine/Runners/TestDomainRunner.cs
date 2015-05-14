@@ -31,13 +31,18 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class TestDomainRunner : DirectTestRunner
     {
-        public TestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+        private DomainManager _domainManager;
+
+        public TestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) 
+        {
+            _domainManager = Services.GetService<DomainManager>();
+        }
 
         #region DirectTestRunner Overrides
 
         protected override TestEngineResult LoadPackage()
         {
-            this.TestDomain = Services.DomainManager.CreateDomain(TestPackage);
+            TestDomain = _domainManager.CreateDomain(TestPackage);
 
             return base.LoadPackage();
         }
@@ -49,7 +54,7 @@ namespace NUnit.Engine.Runners
         {
             if (this.TestDomain != null)
             {
-                Services.DomainManager.Unload(this.TestDomain);
+                _domainManager.Unload(this.TestDomain);
                 this.TestDomain = null;
             }
         }

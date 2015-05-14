@@ -39,10 +39,9 @@ namespace NUnit.Engine
         private TestEngineResult _result;
 
         /// <summary>
-        /// Construct a new TestRun
+        /// Initializes a new instance of the <see cref="TestRun"/> class.
         /// </summary>
-        /// <param name="listener">The ITestEventListener to use for this run</param>
-        /// <param name="filter">The TestFilter to use for this run</param>
+        /// <param name="runner">The <see cref="ITestEngineRunner"/> to use for this run.</param>
         public TestRun(ITestEngineRunner runner)
         {
             _runner = runner;
@@ -52,6 +51,10 @@ namespace NUnit.Engine
             _worker.WorkerReportsProgress = true; // ?
         }
 
+        /// <summary>
+        /// Get the result of this run.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Cannot retrieve Result from an incomplete or cancelled TestRun.</exception>
         public XmlNode Result
         {
             get

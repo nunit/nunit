@@ -61,7 +61,7 @@ namespace NUnit.Engine.Runners
             // in case the client runner missed them.
             ValidatePackageSettings();
 
-            _realRunner = Services.TestRunnerFactory.MakeTestRunner(TestPackage);
+            _realRunner = TestRunnerFactory.MakeTestRunner(TestPackage);
 
             return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
         }
@@ -149,7 +149,7 @@ namespace NUnit.Engine.Runners
 
         /// <summary>
         /// Load a TestPackage for possible execution. The 
-        /// explicit implemenation returns an ITestEngineResult
+        /// explicit implementation returns an ITestEngineResult
         /// for consumption by clients.
         /// </summary>
         /// <returns>An XmlNode representing the loaded assembly.</returns>
@@ -214,6 +214,7 @@ namespace NUnit.Engine.Runners
         // runner is putting invalid values into the package.
         private void ValidatePackageSettings()
         {
+#if NUNIT_ENGINE
             var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
             if (frameworkSetting.Length > 0)
             {
@@ -230,6 +231,7 @@ namespace NUnit.Engine.Runners
                             "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
                 }
             }
+#endif
         }
 
         #endregion

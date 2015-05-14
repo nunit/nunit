@@ -154,7 +154,7 @@ namespace NUnit.Framework
         #region IFixtureBuilder Members
 
         /// <summary>
-        /// Build a SetUpFixture from type provided. Normally called for a Type
+        /// Build a fixture from type provided. Normally called for a Type
         /// on which the attribute has been placed.
         /// </summary>
         /// <param name="type">The type of the fixture to be used.</param>

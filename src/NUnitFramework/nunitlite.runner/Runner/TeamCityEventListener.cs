@@ -81,7 +81,7 @@ namespace NUnitLite.Runner
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
-                        TC_TestFinished(testName, result.Duration.TotalSeconds);
+                        TC_TestFinished(testName, result.Duration);
                         break;
                     case TestStatus.Inconclusive:
                         TC_TestIgnored(testName, "Inconclusive");
@@ -91,7 +91,7 @@ namespace NUnitLite.Runner
                         break;
                     case TestStatus.Failed:
                         TC_TestFailed(testName, result.Message, result.StackTrace);
-                        TC_TestFinished(testName, result.Duration.TotalSeconds);
+                        TC_TestFinished(testName, result.Duration);
                         break;
                 }
         }

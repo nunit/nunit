@@ -371,7 +371,7 @@ namespace Mono.Addins
 		/// The element containing the extension data
 		/// </param>
 		/// <remarks>
-		/// This method can be overriden to provide a custom method for reading extension node data from an element.
+		/// This method can be overridden to provide a custom method for reading extension node data from an element.
 		/// The default implementation reads the attributes if the element and assigns the values to the fields
 		/// and properties of the extension node that have the corresponding [NodeAttribute] decoration.
 		/// </remarks>

@@ -30,6 +30,8 @@ using NUnit.Framework;
 
 namespace NUnit.Common.Tests
 {
+    using System.Collections.Generic;
+
     [TestFixture]
     public class CommandLineTests
     {
@@ -481,6 +483,40 @@ namespace NUnit.Common.Tests
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
 
+#if !SILVERLIGHT && !NETCF
+        [TestCase(true, null, true)]
+        [TestCase(false, null, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, false, false)]
+        [TestCase(true, true, true)]
+        [TestCase(false, true, true)]
+        public void ShouldSetTeamCityFlagAccordingToArgsAndDefauls(bool hasTeamcityInCmd, bool? defaultTeamcity, bool expectedTeamCity)
+        {
+            // Given
+            List<string> args = new List<string> { "tests.dll" };
+            if (hasTeamcityInCmd)
+            {
+                args.Add("--teamcity");
+            }
+
+            ConsoleOptions options;
+            if (defaultTeamcity.HasValue)
+            {
+                options = new ConsoleOptions(new DefaultOptionsProviderStub(defaultTeamcity.Value), args.ToArray());
+            }
+            else
+            {
+                options = new ConsoleOptions(args.ToArray());
+            }
+
+            // When
+            var actualTeamCity = options.TeamCity;
+
+            // Then
+            Assert.AreEqual(actualTeamCity, expectedTeamCity);
+        }
+#endif
+        
         #endregion
 
         #region Helper Methods
@@ -500,6 +536,16 @@ namespace NUnit.Common.Tests
         }
 
         #endregion
+
+        internal sealed class DefaultOptionsProviderStub : IDefaultOptionsProvider
+        {
+            public DefaultOptionsProviderStub(bool teamCity)
+            {
+                TeamCity = teamCity;
+            }
+
+            public bool TeamCity { get; private set; }
+        }
     }
 }
 #endif

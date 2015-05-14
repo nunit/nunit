@@ -19,6 +19,8 @@
     <FormFactorID>
     </FormFactorID>
     <IntermediateOutputPath>obj\$(Configuration)\netcf-3.5\</IntermediateOutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,11 +74,17 @@
     <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>Runner\ConsoleOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
+      <Link>Runner\DefaultOptionsProvider.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
       <Link>Runner\ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>Runner\ExtendedTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
+      <Link>Runner\IDefaultOptionsProvider.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Options.cs">
       <Link>Runner\Options.cs</Link>

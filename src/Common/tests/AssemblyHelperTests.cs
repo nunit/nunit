@@ -27,7 +27,7 @@ using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 
-#if NUNIT_ENGINE
+#if NUNIT_ENGINE || CORE_ENGINE
 namespace NUnit.Engine.Internal.Tests
 #elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Internal.Tests
@@ -41,6 +41,9 @@ namespace NUnit.Common.Tests
 #if NUNIT_ENGINE
         private static readonly string THIS_ASSEMBLY_PATH = "nunit.engine.tests.dll";
         private static readonly string THIS_ASSEMBLY_NAME = "nunit.engine.tests";
+#elif CORE_ENGINE
+        private static readonly string THIS_ASSEMBLY_PATH = "nunit.core.engine.tests.dll";
+        private static readonly string THIS_ASSEMBLY_NAME = "nunit.core.engine.tests";
 #else
 #if NETCF
         private static readonly string THIS_ASSEMBLY_PATH = "nunit.framework.tests.exe";

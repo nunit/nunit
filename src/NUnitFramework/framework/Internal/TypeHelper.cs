@@ -217,11 +217,11 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Convert an argument list to the required paramter types.
+        /// Convert an argument list to the required parameter types.
         /// Currently, only widening numeric conversions are performed.
         /// </summary>
         /// <param name="arglist">An array of args to be converted</param>
-        /// <param name="parameters">A ParamterInfo[] whose types will be used as targets</param>
+        /// <param name="parameters">A ParameterInfo[] whose types will be used as targets</param>
         public static void ConvertArgumentList(object[] arglist, ParameterInfo[] parameters)
         {
             System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);

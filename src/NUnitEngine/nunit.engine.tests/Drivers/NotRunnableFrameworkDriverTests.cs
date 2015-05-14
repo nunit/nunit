@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.UI;
 using System.Xml;
 using NUnit.Engine.Internal;
@@ -45,15 +46,19 @@ namespace NUnit.Engine.Drivers.Tests
         public void CreateDriver()
         {
             _driver = new NotRunnableFrameworkDriver( BAD_FILE, REASON);
+            _driver.ID = "99";
         }
 
         [Test]
         public void Load_ReturnsNonRunnableSuite()
         {
-            var result = XmlHelper.CreateXmlNode(_driver.Load());
+            var result = XmlHelper.CreateXmlNode(_driver.Load(BAD_FILE, new Dictionary<string, object>()));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
+            Assert.That(result.GetAttribute("id"), Is.EqualTo("99-1"));
+            Assert.That(result.GetAttribute("name"), Is.EqualTo(BAD_FILE));
+            Assert.That(result.GetAttribute("fullname"), Is.EqualTo(Path.GetFullPath(BAD_FILE)));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo("0"));
             Assert.That(GetSkipReason(result), Is.EqualTo(REASON));
@@ -66,6 +71,9 @@ namespace NUnit.Engine.Drivers.Tests
             var result = XmlHelper.CreateXmlNode(_driver.Explore(TestFilter.Empty));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
+            Assert.That(result.GetAttribute("id"), Is.EqualTo("99-1"));
+            Assert.That(result.GetAttribute("name"), Is.EqualTo(BAD_FILE));
+            Assert.That(result.GetAttribute("fullname"), Is.EqualTo(Path.GetFullPath(BAD_FILE)));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo("0"));
@@ -83,15 +91,17 @@ namespace NUnit.Engine.Drivers.Tests
         public void Run_ReturnsNonRunnableSuite()
         {
             var result = XmlHelper.CreateXmlNode(_driver.Run(new NullListener(), TestFilter.Empty));
-
             Assert.That(result.Name, Is.EqualTo("test-suite"));
+            Assert.That(result.GetAttribute("id"), Is.EqualTo("99-1"));
+            Assert.That(result.GetAttribute("name"), Is.EqualTo(BAD_FILE));
+            Assert.That(result.GetAttribute("fullname"), Is.EqualTo(Path.GetFullPath(BAD_FILE)));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo("0"));
             Assert.That(GetSkipReason(result), Is.EqualTo(REASON));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
-            Assert.That(result.GetAttribute("result"), Is.EqualTo("Skipped"));
-            Assert.That(result.GetAttribute("label"), Is.EqualTo("NotRunnable"));
+            Assert.That(result.GetAttribute("result"), Is.EqualTo("Failed"));
+            Assert.That(result.GetAttribute("label"), Is.EqualTo("Invalid"));
             Assert.That(result.SelectSingleNode("reason/message").InnerText, Is.EqualTo(REASON));
         }
 

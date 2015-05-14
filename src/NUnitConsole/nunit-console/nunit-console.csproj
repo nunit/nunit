@@ -62,6 +62,9 @@
     <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>ConsoleOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
+      <Link>DefaultOptionsProvider.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
@@ -70,6 +73,9 @@
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>ExtendedTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
+      <Link>IDefaultOptionsProvider.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Options.cs">
       <Link>Options.cs</Link>

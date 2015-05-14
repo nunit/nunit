@@ -84,15 +84,16 @@ namespace NUnitLite.Runner
 
         #region Constructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextRunner"/> class.
-        /// </summary>
-        /// <param name="writer">The TextWriter to use.</param>
+        //// <summary>
+        //// Initializes a new instance of the <see cref="TextRunner"/> class.
+        //// </summary>
+        //// <param name="writer">The TextWriter to use.</param>
         //public TextRunner(ConsoleOptions options) : this(null, options) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRunner"/> class.
         /// </summary>
+        /// <param name="textUI">The text-based user interface to output results of the run</param>
 #if SILVERLIGHT
         public TextRunner(TextUI textUI)
         {
@@ -100,6 +101,7 @@ namespace NUnitLite.Runner
             //_workDirectory = NUnit.Env.DefaultWorkDirectory;
         }
 #else
+        /// <param name="options">The options to use when running the test</param>
         public TextRunner(TextUI textUI, ConsoleOptions options)
         {
             _textUI = textUI;

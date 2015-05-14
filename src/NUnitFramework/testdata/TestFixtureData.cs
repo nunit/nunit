@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -36,19 +36,27 @@ namespace NUnit.TestData.TestFixtureData
     [TestFixture]
     public class NoDefaultCtorFixture
     {
-        public NoDefaultCtorFixture(int index) { }
+        public NoDefaultCtorFixture(int index)
+        {
+        }
 
         [Test]
-        public void OneTest() { }
+        public void OneTest()
+        {
+        }
     }
 
     [TestFixture(7,3)]
     public class FixtureWithArgsSupplied
     {
-        public FixtureWithArgsSupplied(int x, int y) { }
+        public FixtureWithArgsSupplied(int x, int y)
+        {
+        }
 
         [Test]
-        public void OneTest() { }
+        public void OneTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -60,44 +68,57 @@ namespace NUnit.TestData.TestFixtureData
         }
 
         [Test] public void OneTest()
-        {}
+        {
+        }
     }
 
     [TestFixture]
     public class FixtureWithTestFixtureAttribute
     {
         [Test]
-        public void SomeTest() { }
+        public void SomeTest()
+        {
+        }
     }
 
     public class FixtureWithoutTestFixtureAttributeContainingTest
     {
         [Test]
-        public void SomeTest() { }
+        public void SomeTest()
+        {
+        }
     }
 
     public class FixtureWithoutTestFixtureAttributeContainingTestCase
     {
         [TestCase(42)]
-        public void SomeTest(int x) { }
+        public void SomeTest(int x)
+        {
+        }
     }
- 
+
     public class FixtureWithoutTestFixtureAttributeContainingTestCaseSource
     {
         [TestCaseSource("data")]
-        public void SomeTest(int x) { }
+        public void SomeTest(int x)
+        {
+        }
     }
- 
+
     public class FixtureWithoutTestFixtureAttributeContainingTheory
     {
         [Theory]
-        public void SomeTest(int x) { }
+        public void SomeTest(int x)
+        {
+        }
     }
- 
+
     public static class StaticFixtureWithoutTestFixtureAttribute
     {
         [Test]
-        public static void StaticTest() { }
+        public static void StaticTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -105,14 +126,17 @@ namespace NUnit.TestData.TestFixtureData
     {
         [SetUp]
         public void Init1()
-        {}
+        {
+        }
 
         [SetUp]
         public void Init2()
-        {}
+        {
+        }
 
         [Test] public void OneTest()
-        {}
+        {
+        }
     }
 
     [TestFixture]
@@ -120,14 +144,17 @@ namespace NUnit.TestData.TestFixtureData
     {
         [TearDown]
         public void Destroy1()
-        {}
+        {
+        }
 
         [TearDown]
         public void Destroy2()
-        {}
+        {
+        }
 
         [Test] public void OneTest()
-        {}
+        {
+        }
     }
 
     [TestFixture]
@@ -136,7 +163,8 @@ namespace NUnit.TestData.TestFixtureData
     {
         [Test]
         public void Success()
-        { }
+        {
+        }
     }
 
     [TestFixture(Ignore = "testing ignore a fixture")]
@@ -144,7 +172,8 @@ namespace NUnit.TestData.TestFixtureData
     {
         [Test]
         public void Success()
-        { }
+        {
+        }
     }
 
     [TestFixture(IgnoreReason = "testing ignore a fixture")]
@@ -152,7 +181,8 @@ namespace NUnit.TestData.TestFixtureData
     {
         [Test]
         public void Success()
-        { }
+        {
+        }
     }
 
     [TestFixture]
@@ -162,7 +192,7 @@ namespace NUnit.TestData.TestFixtureData
         public class NestedTestFixture
         {
             [TestFixture]
-                public class DoublyNestedTestFixture
+            public class DoublyNestedTestFixture
             {
                 [Test]
                 public void Test()
@@ -177,7 +207,8 @@ namespace NUnit.TestData.TestFixtureData
     {
         [TearDown]
         public void Destroy1()
-        {}
+        {
+        }
 
         [Test]
         public void SomeTest()
@@ -193,9 +224,11 @@ namespace NUnit.TestData.TestFixtureData
     public class BaseClassTestFixture
     {
         [Test]
-        public void Success() { }
+        public void Success()
+        {
+        }
     }
-    
+
     public abstract class AbstractDerivedTestFixture : BaseClassTestFixture
     {
         [Test]
@@ -214,13 +247,11 @@ namespace NUnit.TestData.TestFixtureData
     }
 
     [TestFixture]
-    public abstract class AbstractDerivedFixtureWithSecondAttribute
-        : AbstractBaseFixtureWithAttribute
+    public abstract class AbstractDerivedFixtureWithSecondAttribute : AbstractBaseFixtureWithAttribute
     {
     }
 
-    public class DoubleDerivedClassWithTwoInheritedAttributes
-        : AbstractDerivedFixtureWithSecondAttribute
+    public class DoubleDerivedClassWithTwoInheritedAttributes : AbstractDerivedFixtureWithSecondAttribute
     {
     }
 
@@ -229,14 +260,17 @@ namespace NUnit.TestData.TestFixtureData
     {
         [OneTimeSetUp]
         public void Init1()
-        {}
+        {
+        }
 
         [OneTimeSetUp]
         public void Init2()
-        {}
+        {
+        }
 
         [Test] public void OneTest()
-        {}
+        {
+        }
     }
 
     [TestFixture]
@@ -244,161 +278,210 @@ namespace NUnit.TestData.TestFixtureData
     {
         [OneTimeTearDown]
         public void Destroy1()
-        {}
+        {
+        }
 
         [OneTimeTearDown]
         public void Destroy2()
-        {}
+        {
+        }
 
         [Test] public void OneTest()
-        {}
+        {
+        }
     }
 
     // Base class used to ensure following classes
     // all have at least one test
     public class OneTestBase
     {
-        [Test] public void OneTest() { }
+        [Test] public void OneTest()
+        {
+        }
     }
 
     [TestFixture]
     public class PrivateSetUp : OneTestBase
     {
         [SetUp]
-        private void Setup()	{}
+        private void Setup()
+        {
+        }
     }
 
     [TestFixture]
     public class ProtectedSetUp : OneTestBase
     {
         [SetUp]
-        protected void Setup()	{}
+        protected void Setup()
+        {
+        }
     }
 
     [TestFixture]
     public class StaticSetUp : OneTestBase
     {
         [SetUp]
-        public static void Setup() {}
+        public static void Setup()
+        {
+        }
     }
 
     [TestFixture]
     public class SetUpWithReturnValue : OneTestBase
     {
         [SetUp]
-        public int Setup() { return 0; }
+        public int Setup()
+        {
+            return 0;
+        }
     }
 
     [TestFixture]
     public class SetUpWithParameters : OneTestBase
     {
         [SetUp]
-        public void Setup(int j) { }
+        public void Setup(int j)
+        {
+        }
     }
 
     [TestFixture]
     public class PrivateTearDown : OneTestBase
     {
         [TearDown]
-        private void Teardown()	{}
+        private void Teardown()
+        {
+        }
     }
 
     [TestFixture]
     public class ProtectedTearDown : OneTestBase
     {
         [TearDown]
-        protected void Teardown()	{}
+        protected void Teardown()
+        {
+        }
     }
 
     [TestFixture]
     public class StaticTearDown : OneTestBase
     {
         [SetUp]
-        public static void TearDown() {}
+        public static void TearDown()
+        {
+        }
     }
 
     [TestFixture]
     public class TearDownWithReturnValue : OneTestBase
     {
         [TearDown]
-        public int Teardown() { return 0; }
+        public int Teardown()
+        {
+            return 0;
+        }
     }
 
     [TestFixture]
     public class TearDownWithParameters : OneTestBase
     {
         [TearDown]
-        public void Teardown(int j) { }
+        public void Teardown(int j)
+        {
+        }
     }
 
     [TestFixture]
     public class PrivateFixtureSetUp : OneTestBase
     {
         [OneTimeSetUp]
-        private void Setup()	{}
+        private void Setup()
+        {
+        }
     }
 
     [TestFixture]
     public class ProtectedFixtureSetUp : OneTestBase
     {
         [OneTimeSetUp]
-        protected void Setup()	{}
+        protected void Setup()
+        {
+        }
     }
 
     [TestFixture]
     public class StaticFixtureSetUp : OneTestBase
     {
         [OneTimeSetUp]
-        public static void Setup() {}
+        public static void Setup()
+        {
+        }
     }
 
     [TestFixture]
     public class FixtureSetUpWithReturnValue : OneTestBase
     {
         [OneTimeSetUp]
-        public int Setup() { return 0; }
+        public int Setup()
+        {
+            return 0;
+        }
     }
 
     [TestFixture]
     public class FixtureSetUpWithParameters : OneTestBase
     {
         [SetUp]
-        public void Setup(int j) { }
+        public void Setup(int j)
+        {
+        }
     }
 
     [TestFixture]
     public class PrivateFixtureTearDown : OneTestBase
     {
         [OneTimeTearDown]
-        private void Teardown()	{}
+        private void Teardown()
+        {
+        }
     }
 
     [TestFixture]
     public class ProtectedFixtureTearDown : OneTestBase
     {
         [OneTimeTearDown]
-        protected void Teardown()	{}
+        protected void Teardown()
+        {
+        }
     }
 
     [TestFixture]
     public class StaticFixtureTearDown : OneTestBase
     {
         [OneTimeTearDown]
-        public static void Teardown() {}
+        public static void Teardown()
+        {
+        }
     }
 
     [TestFixture]
     public class FixtureTearDownWithReturnValue : OneTestBase
     {
         [OneTimeTearDown]
-        public int Teardown() { return 0; }
+        public int Teardown()
+        {
+            return 0;
+        }
     }
 
     [TestFixture]
     public class FixtureTearDownWithParameters : OneTestBase
     {
         [OneTimeTearDown]
-        public void Teardown(int j) { }
+        public void Teardown(int j)
+        {
+        }
     }
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
@@ -415,33 +498,40 @@ namespace NUnit.TestData.TestFixtureData
     }
 #endif
 
-#if !NETCF
     [TestFixture(typeof(int))]
     [TestFixture(typeof(string))]
     public class GenericFixtureWithProperArgsProvided<T>
     {
         [Test]
-        public void SomeTest() { }
+        public void SomeTest()
+        {
+        }
     }
 
     public class GenericFixtureWithNoTestFixtureAttribute<T>
     {
         [Test]
-        public void SomeTest() { }
+        public void SomeTest()
+        {
+        }
     }
 
     [TestFixture]
     public class GenericFixtureWithNoArgsProvided<T>
     {
         [Test]
-        public void SomeTest() { }
+        public void SomeTest()
+        {
+        }
     }
 
     [TestFixture]
     public abstract class AbstractFixtureBase
     {
         [Test]
-        public void SomeTest() { }
+        public void SomeTest()
+        {
+        }
     }
 
     public class GenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided<T> : AbstractFixtureBase
@@ -453,5 +543,4 @@ namespace NUnit.TestData.TestFixtureData
     public class GenericFixtureDerivedFromAbstractFixtureWithArgsProvided<T> : AbstractFixtureBase
     {
     }
-#endif
 }

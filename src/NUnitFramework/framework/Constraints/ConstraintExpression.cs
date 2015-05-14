@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// process of being constructed from a series of syntactic elements.
     /// 
     /// Individual elements are appended to the expression as they are
-    /// reognized. When a constraint is appended, it is returned as the
+    /// reorganized. When a constraint is appended, it is returned as the
     /// value of the operation so that modifiers may be applied. However,
     /// any partially built expression is attached to the constraint for
     /// later resolution. When an operator is appended, the partial
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ConstraintExpression"/> class.
+        /// Initializes a new instance of the <see cref="ConstraintExpression"/> class.
         /// </summary>
         public ConstraintExpression() 
         {
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ConstraintExpression"/> 
+        /// Initializes a new instance of the <see cref="ConstraintExpression"/> 
         /// class passing in a ConstraintBuilder, which may be pre-populated.
         /// </summary>
         /// <param name="builder">The builder.</param>
@@ -480,7 +480,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than the suppled argument
+        /// actual value is greater than the supplied argument
         /// </summary>
         public GreaterThanConstraint GreaterThan(object expected)
         {
@@ -493,7 +493,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than or equal to the suppled argument
+        /// actual value is greater than or equal to the supplied argument
         /// </summary>
         public GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
         {
@@ -502,7 +502,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is greater than or equal to the suppled argument
+        /// actual value is greater than or equal to the supplied argument
         /// </summary>
         public GreaterThanOrEqualConstraint AtLeast(object expected)
         {
@@ -515,7 +515,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than the suppled argument
+        /// actual value is less than the supplied argument
         /// </summary>
         public LessThanConstraint LessThan(object expected)
         {
@@ -528,7 +528,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than or equal to the suppled argument
+        /// actual value is less than or equal to the supplied argument
         /// </summary>
         public LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
         {
@@ -537,7 +537,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the
-        /// actual value is less than or equal to the suppled argument
+        /// actual value is less than or equal to the supplied argument
         /// </summary>
         public LessThanOrEqualConstraint AtMost(object expected)
         {

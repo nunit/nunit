@@ -40,7 +40,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    public class AfterTest_ProperyTest : SyntaxTest
+    public class AfterTest_PropertyTest : SyntaxTest
     {
         [SetUp]
         public void SetUp()

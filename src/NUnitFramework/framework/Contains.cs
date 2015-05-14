@@ -59,6 +59,19 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Value
+
+        /// <summary>
+        /// Returns a new DictionaryContainsValueConstraint checking for the
+        /// presence of a particular value in the dictionary.
+        /// </summary>
+        public static DictionaryContainsValueConstraint Value(object expected)
+        {
+            return new DictionaryContainsValueConstraint(expected);
+        }
+
+        #endregion
+
         #region Substring
 
         /// <summary>

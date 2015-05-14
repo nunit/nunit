@@ -62,6 +62,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System.Windows" />
@@ -168,6 +174,7 @@
     <Compile Include="Constraints\ConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
+    <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Constraints\EmptyConstraintTest.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\EqualConstraintTests.cs" />
@@ -299,6 +306,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\framework\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>

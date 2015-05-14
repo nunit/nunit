@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,41 +23,28 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Text;
 using NUnit.Framework;
-using NUnit.Engine.Drivers;
-using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.Tests
 {
-    [TestFixture, Ignore("DriverFactory currently only works in the primary AppDomain")]
-    public class DriverFactoryTests
+    public class SettingsServiceTests
     {
-        [Test]
-        public void AssemblyUsesNUnitFrameworkDriver()
+        private SettingsService _settingsService;
+
+        [SetUp]
+        public void CreateServiceContext()
         {
-            Assert.That(GetDriver("mock-nunit-assembly.exe"), Is.InstanceOf<NUnit3FrameworkDriver>());
+            var services = new ServiceContext();
+            _settingsService = new SettingsService(false);
+            services.Add(_settingsService);
+            services.ServiceManager.StartServices();
         }
 
         [Test]
-        public void MissingFileUsesNotRunnableFrameworkDriver()
+        public void ServiceIsStarted()
         {
-            Assert.That(GetDriver("junk.dll"), Is.InstanceOf<NotRunnableFrameworkDriver>());
-        }
-
-        [Test]
-        public void UnknownFileTypeUsesNotRunnableFrameworkDriver()
-        {
-            Assert.That(GetDriver("mock-nunit-assembly.pdb"), Is.InstanceOf<NotRunnableFrameworkDriver>());
-        }
-
-        private IFrameworkDriver GetDriver(string fileName)
-        {
-            var factory = new DriverService();
-            return factory.GetDriver(
-                AppDomain.CurrentDomain,
-                Path.Combine(TestContext.CurrentContext.TestDirectory, fileName),
-                new Dictionary<string, object>());
+            Assert.That(_settingsService.Status, Is.EqualTo(ServiceStatus.Started));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,45 +22,43 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using NUnit.Engine.Drivers;
+using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Internal.Tests
+namespace NUnit.Engine.Services.Tests
 {
     [TestFixture]
-    public class AssemblyHelperTests
+    public class DriverServiceTests
     {
-        private static readonly string THIS_ASSEMBLY_NAME = "nunit.engine.tests";
-        private static readonly string THIS_ASSEMBLY_PATH = THIS_ASSEMBLY_NAME + ".dll";
+        private DriverService _service;
 
-        public void GetNameForAssembly()
+        [SetUp]
+        public void CreateDriverFactory()
         {
-            var assemblyName = AssemblyHelper.GetAssemblyName(this.GetType().Assembly);
-            Assert.That(assemblyName.Name, Is.EqualTo(THIS_ASSEMBLY_NAME).IgnoreCase);
-            Assert.That(assemblyName.FullName, Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
+            _service = new DriverService();
+            _service.StartService();
         }
 
         [Test]
-        public void GetPathForAssembly()
+        public void ServiceIsStarted()
         {
-            string path = AssemblyHelper.GetAssemblyPath(this.GetType().Assembly);
-            Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
-            Assert.That(File.Exists(path));
+            Assert.That(_service.Status, Is.EqualTo(ServiceStatus.Started), "Failed to start service");
         }
 
-        [Test]
-        public void GetPathForType()
-        {
-            string path = AssemblyHelper.GetAssemblyPath(this.GetType());
-            Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
-            Assert.That(File.Exists(path));
-        }
 
-        [Test]
-        public void GetDirectoryName()
+        [TestCase("mock-nunit-assembly.exe", typeof(NUnit3FrameworkDriver))]
+        [TestCase("mock-nunit-assembly.pdb", typeof(NotRunnableFrameworkDriver))]
+        [TestCase("junk.dll", typeof(NotRunnableFrameworkDriver))]
+        public void CorrectDriverIsUsed(string fileName, Type expectedType)
         {
-            string path = AssemblyHelper.GetDirectoryName(this.GetType().Assembly);
-            Assert.That(File.Exists(Path.Combine(path, THIS_ASSEMBLY_PATH)));
+            var driver = _service.GetDriver(
+                AppDomain.CurrentDomain,
+                Path.Combine(TestContext.CurrentContext.TestDirectory, fileName));
+
+            Assert.That(driver, Is.InstanceOf(expectedType));
         }
     }
 }

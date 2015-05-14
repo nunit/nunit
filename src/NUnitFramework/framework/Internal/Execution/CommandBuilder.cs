@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal.Execution
             // Wrap in SetUpTearDownCommand
             command = new SetUpTearDownCommand(command);
 
-            // Add wrapppers that apply before setup and after teardown
+            // Add wrappers that apply before setup and after teardown
             foreach (ICommandWrapper decorator in test.Method.GetCustomAttributes(typeof(IWrapSetUpTearDown), true))
                 command = decorator.Wrap(command);
 

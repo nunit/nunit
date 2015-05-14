@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -56,11 +62,17 @@
     <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>Runner\ConsoleOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
+      <Link>Runner\DefaultOptionsProvider.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
       <Link>Runner\ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>Runner\ExtendedTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
+      <Link>Runner\IDefaultOptionsProvider.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Options.cs">
       <Link>Runner\Options.cs</Link>
@@ -101,7 +113,11 @@
       <Name>nunit.framework-4.5</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="..\framework\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

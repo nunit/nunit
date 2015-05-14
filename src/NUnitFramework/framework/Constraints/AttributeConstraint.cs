@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
         private Attribute attrFound;
 
         /// <summary>
-        /// Constructs an AttributeConstraint for a specified attriute
+        /// Constructs an AttributeConstraint for a specified attribute
         /// Type and base constraint.
         /// </summary>
         /// <param name="type"></param>

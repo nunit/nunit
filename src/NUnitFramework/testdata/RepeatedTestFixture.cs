@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if false
 // TODO: Rework this
 // RepeatAttribute should either
 //  1) Apply at load time to create the exact number of tests, or
@@ -43,7 +42,7 @@ namespace NUnit.TestData.RepeatedTestFixture
         private int teardownCount;
         protected int count;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetUp()
         {
             fixtureSetupCount++;
@@ -140,4 +139,3 @@ namespace NUnit.TestData.RepeatedTestFixture
         }
     }
 }
-#endif

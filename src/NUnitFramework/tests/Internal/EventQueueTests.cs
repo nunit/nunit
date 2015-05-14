@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,8 +29,6 @@ using System.IO;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 
-using ThreadState = System.Threading.ThreadState;
-
 namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
@@ -39,14 +37,15 @@ namespace NUnit.Framework.Internal.Execution
     [TestFixture]
     public class EventQueueTests
     {
-        static readonly Event[] events = {
-                new TestStartedEvent( null ),
-                new TestStartedEvent( null ),
-                new TestFinishedEvent( null ),
-                new TestStartedEvent( null ),
-                new TestFinishedEvent( null ),
-                new TestFinishedEvent( null ),
-            };
+        private static readonly Event[] events =
+        {
+            new TestStartedEvent(null),
+            new TestStartedEvent(null),
+            new TestFinishedEvent(null),
+            new TestStartedEvent(null),
+            new TestFinishedEvent(null),
+            new TestFinishedEvent(null),
+        };
 
         private static void EnqueueEvents(EventQueue q)
         {
@@ -65,8 +64,7 @@ namespace NUnit.Framework.Internal.Execution
             for (int index = 0; index < events.Length; index++)
             {
                 Event e = q.Dequeue(false);
-                Assert.AreEqual(events[index].GetType(), e.GetType(),
-                    string.Format("Event {0}", index));
+                Assert.AreEqual(events[index].GetType(), e.GetType(), string.Format("Event {0}", index));
             }
         }
 
@@ -137,9 +135,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 EnqueueEvents(this.q);
                 while (this.receivedEvents < events.Length)
-                {
                     Thread.Sleep(30);
-                }
 
                 this.q.Stop();
             }
@@ -260,9 +256,7 @@ namespace NUnit.Framework.Internal.Execution
                     {
                         q.Enqueue(e);
                         if (e.IsSynchronous)
-                        {
                             Assert.That(q.Count, Is.EqualTo(0));
-                        }
                         else
                         {
                             sumOfAsynchronousQueueLength += q.Count;
@@ -275,8 +269,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-
-        /// <summary> 
+        /// <summary>
         /// Floods the queue of an EventPump with multiple concurrent event producers.
         /// Prints the maximum queue length to Console, but does not implement an
         /// oracle on what the maximum queue length should be.
@@ -294,9 +287,7 @@ namespace NUnit.Framework.Internal.Execution
             EventQueue q = new EventQueue();
             EventProducer[] producers = new EventProducer[numberOfProducers];
             for (int i = 0; i < numberOfProducers; i++)
-            {
                 producers[i] = new EventProducer(q, i, producerDelay);
-            }
 
             using (EventPump pump = new EventPump(TestListener.NULL, q))
             {
@@ -304,21 +295,16 @@ namespace NUnit.Framework.Internal.Execution
                 pump.Start();
 
                 foreach (EventProducer p in producers)
-                {
                     p.ProducerThread.Start();
-                }
                 foreach (EventProducer p in producers)
-                {
                     p.ProducerThread.Join();
-                }
                 pump.Stop();
             }
             Assert.That(q.Count, Is.EqualTo(0));
 
             foreach (EventProducer p in producers)
             {
-                Console.WriteLine(
-                    "#Events: {0}, MaxQueueLength: {1}", p.SentEventsCount, p.MaxQueueLength);
+                Console.WriteLine("#Events: {0}, MaxQueueLength: {1}", p.SentEventsCount, p.MaxQueueLength);
                 Assert.IsNull(p.Exception, "{0}", p.Exception);
             }
         }
@@ -358,9 +344,11 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     this.Consumer();
                 }
-                catch (ThreadAbortException)
+                catch (System.Threading.ThreadAbortException)
                 {
+#if !NETCF
                     Thread.ResetAbort();
+#endif
                 }
                 catch (Exception ex)
                 {
@@ -400,9 +388,7 @@ namespace NUnit.Framework.Internal.Execution
 
                         // without Sleep or with just a Sleep(0), the EventPump thread does not keep up and the queue gets very long
                         if (this.delay)
-                        {
                             Thread.Sleep(1);
-                        }
                     }
                 }
                 catch (Exception ex)
@@ -413,4 +399,5 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 }
+
 #endif
