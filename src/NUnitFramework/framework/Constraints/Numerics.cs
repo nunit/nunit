@@ -76,6 +76,7 @@ namespace NUnit.Framework.Constraints
                 if (obj is System.UInt64) return true;
                 if (obj is System.Int16) return true;
                 if (obj is System.UInt16) return true;
+                if (obj is System.Char) return true;
             }
             return false;
         }

@@ -54,6 +54,9 @@ namespace NUnit.Framework.Constraints
             else if (y == null)
                 return +1;
 
+            if (x is char && y is char)
+                return (char)x == (char)y ? 0 : 1;
+
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.Compare(x, y);
 

@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2004 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -55,7 +55,28 @@ namespace NUnit.Framework.Assertions
             int i32 = 0;
             Assert.AreEqual(i32, l64);
         }
-        
+
+        [Test]
+        public void Bug524CharIntComparision()
+        {
+            char c = '\u0000';
+            Assert.AreEqual(0, c);
+        }
+
+        [Test]
+        public void Bug524CharIntWithoutOverload()
+        {
+            char c = '\u0000';
+            Assert.That(c, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CharCharComparision()
+        {
+            char c = 'a';
+            Assert.That(c, Is.EqualTo('a'));
+        }
+
         [Test]
         public void IntegerLongComparison()
         {
@@ -281,6 +302,8 @@ namespace NUnit.Framework.Assertions
             long      l9 = 35;
             short    s10 = 35;
             ushort  us11 = 35;
+            char      c1 = '3';
+            char      c2 = 'a';
         
             System.Byte    b12  = 35;  
             System.SByte   sb13 = 35; 
@@ -293,6 +316,8 @@ namespace NUnit.Framework.Assertions
             System.UInt64  ui20 = 35; 
             System.Int16   i21  = 35; 
             System.UInt16  i22  = 35;
+            System.Char    c12 = '3';
+            System.Char    c22 = 'a';
 
             Assert.AreEqual(35, b1);
             Assert.AreEqual(35, sb2);
@@ -304,6 +329,8 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual(35, l9);
             Assert.AreEqual(35, s10);
             Assert.AreEqual(35, us11);
+            Assert.AreEqual('3', c1);
+            Assert.AreEqual('a', c2);
         
             Assert.AreEqual( 35, b12  );
             Assert.AreEqual( 35, sb13 );
@@ -316,6 +343,8 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual( 35, ui20 );
             Assert.AreEqual( 35, i21  );
             Assert.AreEqual( 35, i22  );
+            Assert.AreEqual('3', c12);
+            Assert.AreEqual('a', c22);
 
             byte? b23 = 35;
             sbyte? sb24 = 35;
@@ -327,6 +356,8 @@ namespace NUnit.Framework.Assertions
             long? l30 = 35;
             short? s31 = 35;
             ushort? us32 = 35;
+            char? c3 = '3';
+            char? c4 = 'a';
 
             Assert.AreEqual(35, b23);
             Assert.AreEqual(35, sb24);
@@ -338,6 +369,8 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual(35, l30);
             Assert.AreEqual(35, s31);
             Assert.AreEqual(35, us32);
+            Assert.AreEqual('3', c3);
+            Assert.AreEqual('a', c4);
         }
 
         [Test]
