@@ -97,9 +97,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Construct a test from a MethodInfo
         /// </summary>
+        /// <param name="fixtureType"></param>
         /// <param name="method"></param>
-        protected Test(MethodInfo method)
-            : this(method.ReflectedType)
+        protected Test(Type fixtureType, MethodInfo method)
+            : this(fixtureType)
         {
             this.Name = method.Name;
             this.FullName += "." + this.Name;

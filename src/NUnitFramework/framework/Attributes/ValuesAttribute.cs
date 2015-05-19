@@ -96,7 +96,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of _values to be used as arguments
         /// </summary>
-        public IEnumerable GetData(ParameterInfo parameter)
+        public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
             Type targetType = parameter.ParameterType;
 

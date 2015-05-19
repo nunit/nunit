@@ -83,24 +83,26 @@ namespace NUnit.Framework
         /// Gets an enumeration of data items for use as arguments
         /// for a test method parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">The parameter for which data is needed</param>
         /// <returns>
         /// An enumeration containing individual data items
         /// </returns>
-        public IEnumerable GetData(ParameterInfo parameter)
+        public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
-            return GetDataSource(parameter);
+            return GetDataSource(fixtureType);
         }
 
         #endregion
 
         #region Helper Methods
 
-        private IEnumerable GetDataSource(ParameterInfo parameter)
+        private IEnumerable GetDataSource(Type fixtureType)
         {
             Type sourceType = this.sourceType;
             if (sourceType == null)
-                sourceType = parameter.Member.ReflectedType;
+                sourceType = fixtureType;
 
             // TODO: Test this
             if (sourceName == null)

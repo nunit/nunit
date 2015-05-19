@@ -14,19 +14,20 @@ namespace NUnit.Framework.Internal
         [SetUp]
         public void SetUp()
         {
-            testMethod = new TestMethod(typeof(DummyFixture).GetMethod("DummyMethod"));
+            Type fixtureType = typeof(DummyFixture);
+            testMethod = new TestMethod(fixtureType, fixtureType.GetMethod("DummyMethod"));
             testMethod.Properties.Set(PropertyNames.Description, "Test description");
             testMethod.Properties.Add(PropertyNames.Category, "Dubious");
             testMethod.Properties.Set("Priority", "low");
 
-            testFixture = new TestFixture(typeof(DummyFixture));
+            testFixture = new TestFixture(fixtureType);
             testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
             testFixture.Properties.Add(PropertyNames.Category, "Fast");
             testFixture.Properties.Add("Value", 3);
 
             testFixture.Tests.Add(testMethod);
 
-            testSuite = new TestSuite(typeof(DummyFixture));
+            testSuite = new TestSuite(fixtureType);
             testSuite.Properties.Set(PropertyNames.Description, "Suite description");
         }
 
@@ -41,11 +42,12 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("TestSuite"));
             Assert.That(new TestAssembly("junk").TestType, 
                 Is.EqualTo("Assembly"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).TestType,
+            Type type = typeof(DummyFixture);
+            Assert.That(new ParameterizedMethodSuite(type, type.GetMethod("GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(type, type.GetMethod("ParameterizedMethod")).TestType,
                 Is.EqualTo("ParameterizedMethod"));
-            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
+            Assert.That(new ParameterizedFixtureSuite(type).TestType,
                 Is.EqualTo("ParameterizedFixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
             Assert.That(new ParameterizedFixtureSuite(genericType).TestType,

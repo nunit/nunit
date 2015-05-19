@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
@@ -38,9 +39,11 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Build one or more TestMethods from the provided MethodInfo.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The method to be used as a test</param>
         /// <param name="suite">The TestSuite to which the method will be added</param>
         /// <returns>A TestMethod object</returns>
-        IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite);
+        IEnumerable<TestMethod> BuildFrom(Type fixtureType, MethodInfo method, Test suite);
     }
 }

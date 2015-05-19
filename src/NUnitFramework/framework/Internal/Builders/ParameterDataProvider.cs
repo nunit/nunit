@@ -40,12 +40,14 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determine whether any data is available for a parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>
         /// True if any data is available, otherwise false.
         /// </returns>
-        public bool HasDataFor(ParameterInfo parameter)
+        public bool HasDataFor(Type fixtureType, ParameterInfo parameter)
         {
             return parameter.IsDefined(typeof(IParameterDataSource), false);
         }
@@ -54,18 +56,20 @@ namespace NUnit.Framework.Internal.Builders
         /// Return an IEnumerable providing data for use with the
         /// supplied parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>
         /// An IEnumerable providing the required data
         /// </returns>
-        public IEnumerable GetDataFor(ParameterInfo parameter)
+        public IEnumerable GetDataFor(Type fixtureType, ParameterInfo parameter)
         {
             var data = new List<object>();
 
             foreach (IParameterDataSource source in parameter.GetCustomAttributes(typeof(IParameterDataSource), false))
             {
-                foreach (object item in source.GetData(parameter))
+                foreach (object item in source.GetData(fixtureType, parameter))
                 data.Add(item);
             }
 

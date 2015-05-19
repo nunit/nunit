@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Reflection;
 
@@ -36,8 +37,10 @@ namespace NUnit.Framework.Interfaces
         /// Gets an enumeration of data items for use as arguments
         /// for a test method parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">The parameter for which data is needed</param>
         /// <returns>An enumeration containing individual data items</returns>
-        IEnumerable GetData(ParameterInfo parameter);
+        IEnumerable GetData(Type fixtureType, ParameterInfo parameter);
     }
 }

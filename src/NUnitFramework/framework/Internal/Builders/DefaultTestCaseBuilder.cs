@@ -58,9 +58,11 @@ namespace NUnit.Framework.Internal.Builders
         /// methods to be reported, the check for validity is made
         /// in BuildFrom rather than here.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">A MethodInfo for the method being used as a test method</param>
         /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(MethodInfo method)
+        public bool CanBuildFrom(Type fixtureType, MethodInfo method)
         {
             return method.IsDefined(typeof(ITestBuilder), false)
                 || method.IsDefined(typeof(ISimpleTestBuilder), false);
@@ -72,11 +74,13 @@ namespace NUnit.Framework.Internal.Builders
         /// of test case data, this method may return a single test
         /// or a group of tests contained in a ParameterizedMethodSuite.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The MethodInfo for which a test is to be built</param>
         /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(MethodInfo method)
+        public Test BuildFrom(Type fixtureType, MethodInfo method)
         {
-            return BuildFrom(method, null);
+            return BuildFrom(fixtureType, method, null);
         }
 
         #endregion
@@ -98,9 +102,9 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">A MethodInfo for the method being used as a test method</param>
         /// <param name="parentSuite">The test suite being built, to which the new test would be added</param>
         /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(MethodInfo method, Test parentSuite)
+        public bool CanBuildFrom(Type fixtureType, MethodInfo method, Test parentSuite)
         {
-            return CanBuildFrom(method);
+            return CanBuildFrom(fixtureType, method);
         }
 
         /// <summary>
@@ -112,7 +116,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">The MethodInfo for which a test is to be built</param>
         /// <param name="parentSuite">The test fixture being populated, or null</param>
         /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(MethodInfo method, Test parentSuite)
+        public Test BuildFrom(Type fixtureType, MethodInfo method, Test parentSuite)
         {
             var tests = new List<TestMethod>();
 
@@ -138,13 +142,13 @@ namespace NUnit.Framework.Internal.Builders
 
             foreach (var attr in builders)
             {
-                foreach (var test in attr.BuildFrom(method, parentSuite))
+                foreach (var test in attr.BuildFrom(fixtureType, method, parentSuite))
                     tests.Add(test);
             }
 
             return tests.Count > 0
-                ? BuildParameterizedMethodSuite(method, tests)
-                : BuildSingleTestMethod(method, parentSuite);
+                ? BuildParameterizedMethodSuite(fixtureType, method, tests)
+                : BuildSingleTestMethod(fixtureType, method, parentSuite);
         }
 
         #endregion
@@ -154,12 +158,14 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Builds a ParameterizedMethodSuite containing individual test cases.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The MethodInfo for which a test is to be built.</param>
         /// <param name="tests">The list of test cases to include.</param>
         /// <returns>A ParameterizedMethodSuite populated with test cases</returns>
-        private Test BuildParameterizedMethodSuite(MethodInfo method, IEnumerable<TestMethod> tests)
+        private Test BuildParameterizedMethodSuite(Type fixtureType, MethodInfo method, IEnumerable<TestMethod> tests)
         {
-            ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
+            ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(fixtureType, method);
             methodSuite.ApplyAttributesToTest(method);
 
             foreach (TestMethod test in tests)
@@ -174,12 +180,12 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">The MethodInfo for which a test is to be built</param>
         /// <param name="suite">The test suite for which the method is being built</param>
         /// <returns>A TestMethod.</returns>
-        private Test BuildSingleTestMethod(MethodInfo method, Test suite)
+        private Test BuildSingleTestMethod(Type fixtureType, MethodInfo method, Test suite)
         {
             var builders = (ISimpleTestBuilder[])method.GetCustomAttributes(typeof(ISimpleTestBuilder), false);
             return builders.Length > 0
-                ? builders[0].BuildFrom(method, suite)
-                : _nunitTestCaseBuilder.BuildTestMethod(method, suite, null);
+                ? builders[0].BuildFrom(fixtureType, method, suite)
+                : _nunitTestCaseBuilder.BuildTestMethod(fixtureType, method, suite, null);
         }
 
         #endregion

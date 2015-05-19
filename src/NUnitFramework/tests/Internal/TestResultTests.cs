@@ -48,13 +48,15 @@ namespace NUnit.Framework.Internal
             expectedStart = new DateTime(1968, 4, 8, 15, 05, 30, 250, DateTimeKind.Utc);
             expectedEnd = expectedStart.AddSeconds(expectedDuration);
 
-            test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
+            Type fixtureType = typeof(DummySuite);
+
+            test = new TestMethod(fixtureType, fixtureType.GetMethod("DummyMethod"));
             test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
             test.Properties.Set("Priority", "low");
             testResult = test.MakeTestResult();
 
-            TestSuite suite = new TestSuite(typeof(DummySuite));
+            TestSuite suite = new TestSuite(fixtureType);
             suite.Properties.Set(PropertyNames.Description, "Suite description");
             suite.Properties.Add(PropertyNames.Category, "Fast");
             suite.Properties.Add("Value", 3);
