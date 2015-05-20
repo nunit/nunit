@@ -147,7 +147,7 @@ namespace NUnit.Agent
                 catch (Exception ex)
                 {
                     //log.Error("Exception in RemoteTestAgent", ex);
-                    Console.WriteLine("Exception in RemoteTestAgent", ex);
+                    Console.WriteLine("Exception in RemoteTestAgent\r\n{0}", ex);
                 }
 
                 //log.Info("Unregistering Channel");
