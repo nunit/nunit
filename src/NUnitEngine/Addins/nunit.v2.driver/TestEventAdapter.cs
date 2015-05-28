@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using NUnit.Core;
 
@@ -135,8 +136,9 @@ namespace NUnit.Engine.Drivers
         private void OnTestStarted(TestName testName, bool isSuite)
         {
             string report = string.Format(
-                "<{0} id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
+                "<{0} id=\"{1}-{2}\" name=\"{3}\" fullname=\"{4}\"/>",
                 isSuite ? "start-suite" : "start-test",
+                testName.RunnerID,
                 testName.TestID,
                 FormatAttributeValue(testName.Name),
                 FormatAttributeValue(testName.FullName));
