@@ -86,6 +86,7 @@ namespace NUnit.Engine.Services
         // Made separate and public for testing
         public AppDomainSetup CreateAppDomainSetup(TestPackage package)
         {
+            // Debugger.Launch();
             AppDomainSetup setup = new AppDomainSetup();
 
             if (package.SubPackages.Count == 1)
@@ -99,23 +100,17 @@ namespace NUnit.Engine.Services
                 : null;
 
             string appBase = package.GetSetting(PackageSettings.BasePath, string.Empty);
-            string configFile = package.GetSetting(PackageSettings.ConfigurationFile, string.Empty);
             string binPath = package.GetSetting(PackageSettings.PrivateBinPath, string.Empty);
 
             if (testFile != null)
             {
                 if (appBase == null || appBase == string.Empty)
                     appBase = testFile.DirectoryName;
-
-                if (configFile == null || configFile == string.Empty)
-                    configFile = testFile.Name + ".config";
             }
             else
             {
                 if (appBase == null || appBase == string.Empty)
                     appBase = GetCommonAppBase(package.SubPackages);
-
-                // TODO: What about config file for multiple assemblies?
             }
 
             char lastChar = appBase[appBase.Length - 1];
@@ -123,11 +118,19 @@ namespace NUnit.Engine.Services
                 appBase += Path.DirectorySeparatorChar;
 
             setup.ApplicationBase = appBase;
-            // TODO: Check whether Mono still needs full path to config file...
-            setup.ConfigurationFile = appBase != null && configFile != null
-                ? Path.Combine(appBase, configFile)
-                : configFile;
 
+            // TODO: Check whether Mono still needs full path to config file...
+            string configurationFile;
+            if (TryGetConfigFileName(
+                package.GetSetting(PackageSettings.ConfigurationFile, string.Empty),
+                testFile != null ? testFile.FullName : string.Empty,
+                appBase,
+                out configurationFile))
+            {
+                // TODO: What about config file for multiple assemblies?
+                setup.ConfigurationFile = configurationFile;
+            }
+            
             if (package.GetSetting(PackageSettings.AutoBinPath, binPath == string.Empty))
                 binPath = GetPrivateBinPath(appBase, package.SubPackages);
 
@@ -147,6 +150,38 @@ namespace NUnit.Engine.Services
         public void Unload(AppDomain domain)
         {
             new DomainUnloader(domain).Unload();
+        }
+
+        public static bool TryGetConfigFileName(string settingsConfigFile, string testFile, string appBaseDir, out string config)
+        {
+            if (string.IsNullOrEmpty(testFile))
+            {
+                config = null;
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(settingsConfigFile))
+            {
+                config = settingsConfigFile;
+                return true;
+            }
+
+            var configFile = testFile + ".config";
+            var configFileName = Path.GetFileName(configFile);
+            if (!StringComparer.InvariantCultureIgnoreCase.Equals(configFile, configFileName))
+            {
+                config = configFile;
+                return true;
+            }
+
+            if (!string.IsNullOrEmpty(appBaseDir))
+            {
+                config = Path.Combine(appBaseDir, Path.GetFileName(configFile));
+                return true;
+            }
+
+            config = configFile;
+            return true;
         }
 
         #endregion
