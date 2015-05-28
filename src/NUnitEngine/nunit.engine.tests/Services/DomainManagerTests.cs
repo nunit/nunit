@@ -87,8 +87,8 @@ namespace NUnit.Engine.Services.Tests
 
         [Test]
         [TestCase(@"file.config", @"file.dll", @"d:\", true, @"file.config")]
-        [TestCase(@"file.config", @"", @"d:\", false, null)]
-        [TestCase(@"file.config", null, @"d:\", false, null)]
+        [TestCase(@"file.config", @"", @"d:\", true, "file.config")]
+        [TestCase(@"file.config", null, @"d:\", true, "file.config")]
         [TestCase(@"", @"c:\file.dll", @"d:\", true, @"c:\file.dll.config")]
         [TestCase(null, @"c:\file.dll", @"d:\", true, @"c:\file.dll.config")]
         [TestCase(null, @"c:\file.dll", @"", true, @"c:\file.dll.config")]

@@ -154,16 +154,16 @@ namespace NUnit.Engine.Services
 
         public static bool TryGetConfigFileName(string settingsConfigFile, string testFile, string appBaseDir, out string config)
         {
-            if (string.IsNullOrEmpty(testFile))
-            {
-                config = null;
-                return false;
-            }
-
             if (!string.IsNullOrEmpty(settingsConfigFile))
             {
                 config = settingsConfigFile;
                 return true;
+            }
+
+            if (string.IsNullOrEmpty(testFile))
+            {
+                config = null;
+                return false;
             }
 
             var configFile = testFile + ".config";
