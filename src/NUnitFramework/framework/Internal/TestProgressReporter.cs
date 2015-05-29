@@ -137,20 +137,26 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            string startElement = test is TestSuite
+            string startElementName = test is TestSuite
                 ? "start-suite"
                 : "start-test";
 
             try
             {
-                string report = string.Format(
-                    "<{0} id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
-                    startElement,
-                    test.Id,
-                    FormatAttributeValue(test.Name),
-                    FormatAttributeValue(test.FullName));
+                var doc = new XmlDocument();
+                var startElement = doc.CreateElement(startElementName);
+                startElement.SetAttribute("id", test.Id);
+                startElement.SetAttribute("name", FormatAttributeValue(test.Name));
+                startElement.SetAttribute("fullname", FormatAttributeValue(test.FullName));
+                var curItem = GetTestAssembly(test);
 
-                handler.RaiseCallbackEvent(report);
+                if (curItem != null)
+                {
+                    startElement.SetAttribute("assembly", FormatAttributeValue(curItem.FullName));
+                }
+
+                doc.AppendChild(startElement);
+                handler.RaiseCallbackEvent(doc.OuterXml);
             }
             catch (Exception ex)
             {
@@ -173,6 +179,17 @@ namespace NUnit.Framework.Internal
             {
                 log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
             }
+        }
+
+        private static ITest GetTestAssembly(ITest test)
+        {
+            var curItem = test;
+            while (curItem != null && !(curItem is TestAssembly))
+            {
+                curItem = curItem.Parent;
+            }
+
+            return curItem;
         }
 
         #endregion

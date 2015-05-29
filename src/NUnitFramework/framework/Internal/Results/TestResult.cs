@@ -266,6 +266,11 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("start-time", StartTime.ToString("u"));
             thisNode.AddAttribute("end-time", EndTime.ToString("u"));
             thisNode.AddAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
+            var testAssembly = GetTestAssembly(Test);
+            if (testAssembly != null)
+            {
+                thisNode.AddAttribute("assembly", testAssembly.FullName);
+            }
 
             if (this.Test is TestSuite)
             {
@@ -302,6 +307,17 @@ namespace NUnit.Framework.Internal
                     child.AddToXml(thisNode, recursive);
 
             return thisNode;
+        }
+
+        private static ITest GetTestAssembly(ITest test)
+        {
+            var curItem = test;
+            while (curItem != null && !(curItem is TestAssembly))
+            {
+                curItem = curItem.Parent;
+            }
+
+            return curItem;
         }
 
         #endregion
