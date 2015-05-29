@@ -100,10 +100,25 @@ namespace NUnit.Engine.Services.Tests
         [TestCase(null, null, null, false, null)]
         public void ShouldProvideConfigFileName(string settingsConfigFile, string testFile, string appBaseDir, bool expectedResult, string expectedConfigFileName)
         {
+            settingsConfigFile = ConvertFileName(settingsConfigFile);
+            testFile = ConvertFileName(testFile);
+            appBaseDir = ConvertFileName(appBaseDir);
+            expectedConfigFileName = ConvertFileName(expectedConfigFileName);
+
             string actualConfigFileName;
             var actualResult = DomainManager.TryGetConfigFileName(settingsConfigFile, testFile, appBaseDir, out actualConfigFileName);
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedConfigFileName, actualConfigFileName);
+        }
+
+        private string ConvertFileName(string fileName)
+        {
+            if (fileName == null)
+            {
+                return null;
+            }
+
+            return fileName.Replace('\\', Path.DirectorySeparatorChar);
         }
 
         #region Helper Methods
