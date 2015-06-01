@@ -49,12 +49,14 @@ namespace NUnit.Framework.Internal
             expectedEnd = expectedStart.AddSeconds(expectedDuration);
 
             test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
+            test.Parent = new TestAssembly("foo.dll");
             test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
             test.Properties.Set("Priority", "low");
             testResult = test.MakeTestResult();
 
             TestSuite suite = new TestSuite(typeof(DummySuite));
+            suite.Parent = new TestAssembly("foo2.dll");
             suite.Properties.Set(PropertyNames.Description, "Suite description");
             suite.Properties.Add(PropertyNames.Category, "Fast");
             suite.Properties.Add("Value", 3);
@@ -85,6 +87,7 @@ namespace NUnit.Framework.Internal
             Assert.NotNull(testNode.Attributes["id"]);
             Assert.AreEqual("test-case", testNode.Name);
             Assert.AreEqual("DummyMethod", testNode.Attributes["name"]);
+            Assert.AreEqual("foo.dll", testNode.Attributes["assembly"]);
             Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite.DummyMethod", testNode.Attributes["fullname"]);
 
             Assert.AreEqual("Test description", testNode.FindDescendant("properties/property[@name='Description']").Attributes["value"]);
@@ -102,6 +105,7 @@ namespace NUnit.Framework.Internal
             Assert.NotNull(suiteNode.Attributes["id"]);
             Assert.AreEqual("test-suite", suiteNode.Name);
             Assert.AreEqual("TestResultTests+DummySuite", suiteNode.Attributes["name"]);
+            Assert.AreEqual("foo2.dll", suiteNode.Attributes["assembly"]);
             Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite", suiteNode.Attributes["fullname"]);
 
             Assert.AreEqual("Suite description", suiteNode.FindDescendant("properties/property[@name='Description']").Attributes["value"]);
