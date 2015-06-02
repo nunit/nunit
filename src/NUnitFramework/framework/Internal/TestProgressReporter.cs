@@ -148,7 +148,7 @@ namespace NUnit.Framework.Internal
                 startElement.SetAttribute("id", test.Id);
                 startElement.SetAttribute("name", FormatAttributeValue(test.Name));
                 startElement.SetAttribute("fullname", FormatAttributeValue(test.FullName));
-                var curItem = GetTestAssembly(test);
+                var curItem = TestUtility.GetTestAssembly(test);
 
                 if (curItem != null)
                 {
@@ -179,17 +179,6 @@ namespace NUnit.Framework.Internal
             {
                 log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
             }
-        }
-
-        private static ITest GetTestAssembly(ITest test)
-        {
-            var curItem = test;
-            while (curItem != null && !(curItem is TestAssembly))
-            {
-                curItem = curItem.Parent;
-            }
-
-            return curItem;
         }
 
         #endregion
