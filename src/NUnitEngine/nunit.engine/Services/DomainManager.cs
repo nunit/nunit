@@ -120,16 +120,11 @@ namespace NUnit.Engine.Services
             setup.ApplicationBase = appBase;
 
             // TODO: Check whether Mono still needs full path to config file...
-            string configurationFile;
-            if (TryGetConfigFileName(
+            // TODO: What about config file for multiple assemblies?
+            setup.ConfigurationFile = TryGetConfigFileName(
                 package.GetSetting(PackageSettings.ConfigurationFile, string.Empty),
                 testFile != null ? testFile.FullName : string.Empty,
-                appBase,
-                out configurationFile))
-            {
-                // TODO: What about config file for multiple assemblies?
-                setup.ConfigurationFile = configurationFile;
-            }
+                appBase);
             
             if (package.GetSetting(PackageSettings.AutoBinPath, binPath == string.Empty))
                 binPath = GetPrivateBinPath(appBase, package.SubPackages);
@@ -152,36 +147,31 @@ namespace NUnit.Engine.Services
             new DomainUnloader(domain).Unload();
         }
 
-        public static bool TryGetConfigFileName(string settingsConfigFile, string testFile, string appBaseDir, out string config)
+        internal static string TryGetConfigFileName(string settingsConfigFile, string testFile, string appBaseDir)
         {
             if (!string.IsNullOrEmpty(settingsConfigFile))
             {
-                config = settingsConfigFile;
-                return true;
+                return settingsConfigFile;
             }
 
             if (string.IsNullOrEmpty(testFile))
             {
-                config = null;
-                return false;
+                return string.Empty;
             }
 
             var configFile = testFile + ".config";
             var configFileName = Path.GetFileName(configFile);
             if (!StringComparer.InvariantCultureIgnoreCase.Equals(configFile, configFileName))
             {
-                config = configFile;
-                return true;
+                return configFile;
             }
 
             if (!string.IsNullOrEmpty(appBaseDir))
             {
-                config = Path.Combine(appBaseDir, Path.GetFileName(configFile));
-                return true;
+                return Path.Combine(appBaseDir, configFileName);
             }
 
-            config = configFile;
-            return true;
+            return configFile;
         }
 
         #endregion
