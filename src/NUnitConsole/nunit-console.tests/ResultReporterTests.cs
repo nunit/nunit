@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -9,8 +8,7 @@ using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
 {
-    using Utilities;
-
+    [Culture("en-US")]
     public class ResultReporterTests
     {
         private const string MOCK_TEST_RESULT = "NUnit.ConsoleRunner.Tests.MockTestResult.xml";

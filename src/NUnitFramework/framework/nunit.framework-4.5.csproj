@@ -384,6 +384,7 @@
     <Compile Include="Internal\Tests\TestFixture.cs" />
     <Compile Include="Internal\Tests\TestMethod.cs" />
     <Compile Include="Internal\Tests\TestSuite.cs" />
+    <Compile Include="Internal\TestUtility.cs" />
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
     <Compile Include="Is.cs" />

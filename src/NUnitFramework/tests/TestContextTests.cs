@@ -173,21 +173,21 @@ namespace NUnit.Framework.Tests
         public void TestContextOut_WritesToResult()
         {
             TestContext.Out.WriteLine(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]
         public void TestContextWrite_WritesToResult()
         {
             TestContext.Write(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT));
         }
 
         [Test]
         public void TestContextWriteLine_WritesToResult()
         {
             TestContext.WriteLine(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]
