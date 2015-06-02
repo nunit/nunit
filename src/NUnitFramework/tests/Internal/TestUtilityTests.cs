@@ -92,5 +92,22 @@ namespace NUnit.Framework.Tests.Internal
             // Then
             Assert.AreEqual(null, actualTest);
         }
+
+        [Test]
+        public void ShouldRetNullWhenHasNotTestAssemblyInTheParents()
+        {
+            // Given
+            var test = new TestDummy();
+            var test2 = new TestDummy();
+            var test3 = new TestDummy();
+
+            // When
+            test.Parent = test2;
+            test2.Parent = test3;
+            var actualTest = TestUtility.GetTestAssembly(test);
+
+            // Then
+            Assert.AreEqual(null, actualTest);
+        }
     }
 }
