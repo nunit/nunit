@@ -42,6 +42,7 @@ namespace NUnit.TestUtilities
             Assume.That(_testDir.Exists, Is.False, _testDir + " should not already exist");
 
             _testDir.Create();
+            _testDir.Refresh();
             Assume.That(_testDir.Exists, Is.True, "Failed to create test dir " + _testDir);
         }
 
