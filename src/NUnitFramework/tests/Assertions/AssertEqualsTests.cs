@@ -417,9 +417,12 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DirectoryInfoEqual()
         {
-            var one = new DirectoryInfo(Env.DocumentFolder);
-            var two = new DirectoryInfo(Env.DocumentFolder);
-            Assert.AreEqual(one, two);
+            using (var testDir = new TestDirectory())
+            {
+                var one = new DirectoryInfo(testDir.Directory.FullName);
+                var two = new DirectoryInfo(testDir.Directory.FullName);
+                Assert.AreEqual(one, two);
+            }
         }
 
         [Test]
