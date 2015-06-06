@@ -57,8 +57,7 @@ namespace NUnit.Engine.Services
 
             try
             {
-                var testAssembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
-                var references = testAssembly.GetReferencedAssemblies();
+                var references = GetAssemblyReferences(assemblyPath);
 
                 foreach (var factory in _factories)
                 {
@@ -75,6 +74,32 @@ namespace NUnit.Engine.Services
             }
 
             return new NotRunnableFrameworkDriver(assemblyPath, "Unable to locate a driver for " + assemblyPath);
+        }
+
+        private static AssemblyName[] GetAssemblyReferences(string assemblyPath)
+        {
+            var reflectionDomain = AppDomain.CreateDomain("ReflectionDomain");
+
+            try
+            {
+                var agentType = typeof(ReflectionAgent);
+                var agent = reflectionDomain.CreateInstanceAndUnwrap(agentType.Assembly.FullName, agentType.FullName) as ReflectionAgent;
+                return agent.GetReferencedAssemblies(assemblyPath);
+            }
+            finally
+            {
+                AppDomain.Unload(reflectionDomain);
+            }
+        }
+
+        private class ReflectionAgent : MarshalByRefObject
+        {
+            public AssemblyName[] GetReferencedAssemblies(string assemblyPath)
+            {
+                var testAssembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
+                var references = testAssembly.GetReferencedAssemblies();
+                return references;
+            }
         }
 
         #endregion
