@@ -145,9 +145,24 @@ namespace NUnit.Engine
 
         #region IDisposable Members
 
+        private bool _disposed = false;
+
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
             Services.ServiceManager.StopServices();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                    Services.ServiceManager.Dispose();
+
+                _disposed = true;
+            }
         }
 
         #endregion

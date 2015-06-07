@@ -109,12 +109,27 @@ namespace NUnit.Engine.Agents
         #endregion
 
         #region IDisposable Members
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            Dispose(true);
+        }
+
+        private bool _disposed = false;
+
         /// <summary>
         /// Dispose is overridden to stop the agent
         /// </summary>
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            this.Stop();
+            if (!_disposed)
+            {
+                if (disposing)
+                    Stop();
+
+                _disposed = true;
+            }
         }
         #endregion
 

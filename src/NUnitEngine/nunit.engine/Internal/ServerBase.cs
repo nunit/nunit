@@ -120,7 +120,21 @@ namespace NUnit.Engine.Internal
 
         public void Dispose()
         {
-            this.Stop();
+            GC.SuppressFinalize(this);
+            Dispose(true);
+        }
+
+        private bool _disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                    Stop();
+
+                _disposed = true;
+            }
         }
 
         #endregion

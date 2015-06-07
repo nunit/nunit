@@ -31,7 +31,7 @@ namespace NUnit.Engine.Services
     /// ServiceManager handles access to all services - global
     /// facilities shared by all instances of TestEngine.
     /// </summary>
-    public class ServiceManager
+    public class ServiceManager : IDisposable
     {
         private List<IService> _services = new List<IService>();
         private Dictionary<Type, IService> _serviceIndex = new Dictionary<Type, IService>();
@@ -128,6 +128,36 @@ namespace NUnit.Engine.Services
         {
             log.Info("Clearing Service list");
             _services.Clear();
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                StopServices();
+
+                if (disposing)
+                    foreach (IService service in _services)
+                    {
+                        IDisposable disposable = service as IDisposable;
+                        if (disposable != null)
+                            disposable.Dispose();
+                    }
+
+                _disposed = true;
+            }
         }
 
         #endregion

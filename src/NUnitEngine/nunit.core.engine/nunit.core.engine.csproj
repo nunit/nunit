@@ -177,6 +177,9 @@
     <Compile Include="..\nunit.engine\Services\DriverService.cs">
       <Link>Services\DriverService.cs</Link>
     </Compile>
+    <Compile Include="..\nunit.engine\Services\Service.cs">
+      <Link>Services\Service.cs</Link>
+    </Compile>
     <Compile Include="..\nunit.engine\Services\ServiceManager.cs">
       <Link>Services\ServiceManager.cs</Link>
     </Compile>

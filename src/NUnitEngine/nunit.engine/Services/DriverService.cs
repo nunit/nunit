@@ -38,7 +38,7 @@ namespace NUnit.Engine.Services
     /// The DriverService provides drivers able to load and run tests
     /// using various frameworks.
     /// </summary>
-    public class DriverService : IDriverService, IService
+    public class DriverService : Service, IDriverService
     {
         IList<IDriverFactory> _factories = new List<IDriverFactory>();
 
@@ -104,13 +104,9 @@ namespace NUnit.Engine.Services
 
         #endregion
  
-        #region IService Members
+        #region Service Overrides
 
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StartService()
+        public override void StartService()
         {
             try
             {
@@ -128,11 +124,6 @@ namespace NUnit.Engine.Services
                 Status = ServiceStatus.Error;
                 throw;
             }
-        }
-
-        public void StopService()
-        {
-            Status = ServiceStatus.Stopped;
         }
 
         #endregion

@@ -40,7 +40,7 @@ namespace NUnit.Engine.Services
     /// The DomainManager class handles the creation and unloading
     /// of domains as needed and keeps track of all existing domains.
     /// </summary>
-    public class DomainManager : IService
+    public class DomainManager : Service
     {
         static Logger log = InternalTrace.GetLogger(typeof(DomainManager));
 
@@ -357,19 +357,9 @@ namespace NUnit.Engine.Services
         }
         #endregion
 
-        #region IService Members
+        #region Service Overrides
 
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StopService()
-        {
-            // TODO:  Add DomainManager.UnloadService implementation
-            Status = ServiceStatus.Stopped;
-        }
-
-        public void StartService() 
+        public override void StartService() 
         {
             try
             {

@@ -38,12 +38,6 @@ namespace NUnit.Engine.Internal.Tests
             settings = new SettingsGroup();
         }
 
-        [TearDown]
-        public void AfterEachTest()
-        {
-            settings.Dispose();
-        }
-
         [Test]
         public void WhenSettingIsNotInitialized_NullIsReturned()
         {

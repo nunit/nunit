@@ -31,7 +31,7 @@ namespace NUnit.Engine.Services
     /// <summary>
     /// Summary description for ProjectService.
     /// </summary>
-    public class ProjectService : IProjectService, IService
+    public class ProjectService : Service, IProjectService
     {
         /// <summary>
         /// List of all installed ProjectLoaders
@@ -80,13 +80,9 @@ namespace NUnit.Engine.Services
 
         #endregion
 
-        #region IService Members
+        #region Service Overrides
 
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StartService()
+        public override void StartService()
         {
             if (Status == ServiceStatus.Stopped)
             {
@@ -104,12 +100,6 @@ namespace NUnit.Engine.Services
                     throw;
                 }
             }
-        }
-
-        public void StopService()
-        {
-            // TODO:  Add ProjectLoader.UnloadService implementation
-            Status = ServiceStatus.Stopped;
         }
 
         #endregion

@@ -29,7 +29,7 @@ namespace NUnit.Engine.Services
     /// <summary>
     /// Summary description for RecentFilesService.
     /// </summary>
-    public class RecentFilesService : IRecentFiles, IService
+    public class RecentFilesService : Service, IRecentFiles
     {
         private IList<string> _fileEntries = new List<string>();
         private ISettings _userSettings;
@@ -131,13 +131,9 @@ namespace NUnit.Engine.Services
         }
         #endregion
 
-        #region IService Members
+        #region Service Overrides
 
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StopService()
+        public override void StopService()
         {
             try
             {
@@ -149,7 +145,7 @@ namespace NUnit.Engine.Services
             }
         }
 
-        public void StartService()
+        public override void StartService()
         {
             try
             {
