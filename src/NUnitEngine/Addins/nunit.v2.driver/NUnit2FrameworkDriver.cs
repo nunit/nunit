@@ -93,13 +93,13 @@ namespace NUnit.Engine.Drivers
             return test.ToXml(false).OuterXml;
         }
 
-        public int CountTestCases(TestFilter filter)
+        public int CountTestCases(string filter)
         {
             ITestFilter v2Filter = CreateNUnit2TestFilter(filter);
             return _runner.CountTestCases(v2Filter);
         }
 
-        public string Run(ITestEventListener listener, TestFilter filter)
+        public string Run(ITestEventListener listener, string filter)
         {
             if (_runner.Test == null)
                 return String.Format(LOAD_RESULT_FORMAT, TestID, _name, _fullname, "Error loading test");
@@ -111,7 +111,7 @@ namespace NUnit.Engine.Drivers
             return result.ToXml(true).OuterXml;
         }
 
-        public string Explore(TestFilter filter)
+        public string Explore(string filter)
         {
             if (_runner.Test == null)
                 return String.Format(LOAD_RESULT_FORMAT, TestID, _name, _fullname, "Error loading test");
@@ -139,12 +139,14 @@ namespace NUnit.Engine.Drivers
             get { return string.IsNullOrEmpty(ID) ? "1" : ID + "-1";}
         }
 
-        private static ITestFilter CreateNUnit2TestFilter(TestFilter filter)
+        private static ITestFilter CreateNUnit2TestFilter(string filter)
         {
-            if (filter == null || filter.Xml == null)
+            if (string.IsNullOrEmpty(filter))
                 return Core.TestFilter.Empty;
 
-            var topNode = filter.Xml;
+            var doc = new XmlDocument();
+            doc.LoadXml(filter);
+            var topNode = doc.FirstChild;
             if (topNode.Name != "filter")
                 throw new Exception("Expected filter element at top level");
 

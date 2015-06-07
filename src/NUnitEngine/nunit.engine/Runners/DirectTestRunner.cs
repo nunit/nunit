@@ -59,7 +59,7 @@ namespace NUnit.Engine.Runners
             var result = new TestEngineResult();
 
             foreach (IFrameworkDriver driver in _drivers)
-                result.Add(driver.Explore(filter));
+                result.Add(driver.Explore(filter.Text));
 
 #if NUNIT_ENGINE
             if (IsProjectPackage(TestPackage))
@@ -113,7 +113,7 @@ namespace NUnit.Engine.Runners
             int count = 0;
 
             foreach (IFrameworkDriver driver in _drivers)
-                count += driver.CountTestCases(filter);
+                count += driver.CountTestCases(filter.Text);
 
             return count;
         }
@@ -132,7 +132,7 @@ namespace NUnit.Engine.Runners
             var result = new TestEngineResult();
 
             foreach (IFrameworkDriver driver in _drivers)
-                result.Add(driver.Run(listener, filter));
+                result.Add(driver.Run(listener, filter.Text));
 
 #if NUNIT_ENGINE
             if (IsProjectPackage(TestPackage))

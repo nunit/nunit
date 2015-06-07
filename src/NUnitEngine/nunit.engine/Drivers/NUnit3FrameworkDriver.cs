@@ -83,13 +83,13 @@ namespace NUnit.Engine.Drivers
             return handler.Result;
         }
 
-        public int CountTestCases(TestFilter filter)
+        public int CountTestCases(string filter)
         {
             CheckLoadWasCalled();
 
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject(COUNT_ACTION, _frameworkController, filter.Text, handler);
+            CreateObject(COUNT_ACTION, _frameworkController, filter, handler);
 
             return int.Parse(handler.Result);
         }
@@ -100,14 +100,14 @@ namespace NUnit.Engine.Drivers
         /// <param name="listener">An ITestEventHandler that receives progress notices</param>
         /// <param name="filter">A filter that controls which tests are executed</param>
         /// <returns>An Xml string representing the result</returns>
-        public string Run(ITestEventListener listener, TestFilter filter)
+        public string Run(ITestEventListener listener, string filter)
         {
             CheckLoadWasCalled();
 
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
             log.Info("Running {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
-            CreateObject(RUN_ACTION, _frameworkController, filter.Text, handler);
+            CreateObject(RUN_ACTION, _frameworkController, filter, handler);
 
             return handler.Result;
         }
@@ -126,14 +126,14 @@ namespace NUnit.Engine.Drivers
         /// </summary>
         /// <param name="filter">A filter indicating which tests to include</param>
         /// <returns>An Xml string representing the tests</returns>
-        public string Explore(TestFilter filter)
+        public string Explore(string filter)
         {
             CheckLoadWasCalled();
 
             CallbackHandler handler = new CallbackHandler();
 
             log.Info("Exploring {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
-            CreateObject(EXPLORE_ACTION, _frameworkController, filter.Text, handler);
+            CreateObject(EXPLORE_ACTION, _frameworkController, filter, handler);
 
             return handler.Result;
         }

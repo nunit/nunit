@@ -68,7 +68,7 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void Explore_ReturnsNonRunnableSuite()
         {
-            var result = XmlHelper.CreateXmlNode(_driver.Explore(TestFilter.Empty));
+            var result = XmlHelper.CreateXmlNode(_driver.Explore(TestFilter.Empty.Text));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("id"), Is.EqualTo("99-1"));
@@ -84,13 +84,13 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void CountTestCases_ReturnsZero()
         {
-            Assert.That(_driver.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
+            Assert.That(_driver.CountTestCases(TestFilter.Empty.Text), Is.EqualTo(0));
         }
 
         [Test]
         public void Run_ReturnsNonRunnableSuite()
         {
-            var result = XmlHelper.CreateXmlNode(_driver.Run(new NullListener(), TestFilter.Empty));
+            var result = XmlHelper.CreateXmlNode(_driver.Run(new NullListener(), TestFilter.Empty.Text));
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("id"), Is.EqualTo("99-1"));
             Assert.That(result.GetAttribute("name"), Is.EqualTo(BAD_FILE));

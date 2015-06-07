@@ -65,17 +65,17 @@ namespace NUnit.Engine.Drivers
             return string.Format(LOAD_RESULT_FORMAT, TestID, _name, _fullname, _message);
         }
 
-        public int CountTestCases(TestFilter filter)
+        public int CountTestCases(string filter)
         {
             return 0;
         }
 
-        public string Run(ITestEventListener listener, TestFilter filter)
+        public string Run(ITestEventListener listener, string filter)
         {
             return string.Format(RUN_RESULT_FORMAT, TestID, _name, _fullname, _message);
         }
 
-        public string Explore(TestFilter filter)
+        public string Explore(string filter)
         {
             return string.Format(LOAD_RESULT_FORMAT, TestID, _name, _fullname, _message);
         }
