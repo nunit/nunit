@@ -86,7 +86,7 @@ namespace NUnit.Engine.Drivers.Tests
         public void Explore_AfterLoad_ReturnsRunnableSuite()
         {
             _driver.Load(_mockAssemblyPath, _settings);
-            var result = XmlHelper.CreateXmlNode(_driver.Explore(TestFilter.Empty));
+            var result = XmlHelper.CreateXmlNode(_driver.Explore(TestFilter.Empty.Text));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
@@ -98,7 +98,7 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void ExploreTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
-            var ex = Assert.Catch(() => _driver.Explore(TestFilter.Empty));
+            var ex = Assert.Catch(() => _driver.Explore(TestFilter.Empty.Text));
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
@@ -111,13 +111,13 @@ namespace NUnit.Engine.Drivers.Tests
         public void CountTestsAction_AfterLoad_ReturnsCorrectCount()
         {
             _driver.Load(_mockAssemblyPath, _settings);
-            Assert.That(_driver.CountTestCases(TestFilter.Empty), Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
+            Assert.That(_driver.CountTestCases(TestFilter.Empty.Text), Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
         }
 
         [Test]
         public void CountTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
-            var ex = Assert.Catch(() => _driver.CountTestCases(TestFilter.Empty));
+            var ex = Assert.Catch(() => _driver.CountTestCases(TestFilter.Empty.Text));
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
@@ -130,7 +130,7 @@ namespace NUnit.Engine.Drivers.Tests
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite()
         {
             _driver.Load(_mockAssemblyPath, _settings);
-            var result = XmlHelper.CreateXmlNode(_driver.Run(new NullListener(), TestFilter.Empty));
+            var result = XmlHelper.CreateXmlNode(_driver.Run(new NullListener(), TestFilter.Empty.Text));
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
@@ -147,7 +147,7 @@ namespace NUnit.Engine.Drivers.Tests
         [Test]
         public void RunTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
-            var ex = Assert.Catch(() => _driver.Run(new NullListener(), TestFilter.Empty));
+            var ex = Assert.Catch(() => _driver.Run(new NullListener(), TestFilter.Empty.Text));
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
