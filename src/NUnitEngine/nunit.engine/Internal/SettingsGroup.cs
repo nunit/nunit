@@ -35,7 +35,7 @@ namespace NUnit.Engine.Internal
     /// SettingsGroup is the base class representing a group
     /// of user or system settings.
     /// </summary>
-    public class SettingsGroup : ISettings, IDisposable
+    public class SettingsGroup : ISettings
     {
         static Logger log = InternalTrace.GetLogger("SettingsGroup");
 
@@ -147,20 +147,6 @@ namespace NUnit.Engine.Internal
                 Changed(this, new SettingsEventArgs(settingName));
         }
 
-        #endregion
-
-        #region IDisposable Members
-        /// <summary>
-        /// Dispose of this group by disposing of it's settings
-        /// </summary>
-        public void Dispose()
-        {
-            if (_settings != null)
-            {
-                //_settings.Dispose();
-                _settings = null;
-            }
-        }
         #endregion
     }
 }

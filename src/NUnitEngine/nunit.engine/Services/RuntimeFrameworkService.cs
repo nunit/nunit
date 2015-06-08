@@ -28,7 +28,7 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-    public class RuntimeFrameworkService : IRuntimeFrameworkService, IService
+    public class RuntimeFrameworkService : Service, IRuntimeFrameworkService
     {
         static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
 
@@ -161,23 +161,5 @@ namespace NUnit.Engine.Services
 
             return targetFramework.ToString();
         }
-
-        #region IService Members
-
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StartService()
-        {
-            Status = ServiceStatus.Started;
-        }
-
-        public void StopService()
-        {
-            Status = ServiceStatus.Stopped;
-        }
-
-        #endregion
     }
 }

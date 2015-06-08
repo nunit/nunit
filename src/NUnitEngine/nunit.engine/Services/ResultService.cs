@@ -31,7 +31,7 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {
-    public class ResultService : IResultService, IService
+    public class ResultService : Service, IResultService
     {
         IList<IResultWriterFactory> _factories = new List<IResultWriterFactory>();
 
@@ -68,11 +68,7 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; private set; }
-
-        public void StartService()
+        public override void StartService()
         {
             try
             {
@@ -90,11 +86,6 @@ namespace NUnit.Engine.Services
                 Status = ServiceStatus.Error;
                 throw;
             }
-        }
-
-        public void StopService()
-        {
-            Status = ServiceStatus.Stopped;
         }
 
         #endregion

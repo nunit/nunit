@@ -37,6 +37,8 @@ namespace NUnit.Engine.Services
     {
         private IProjectService _projectService;
 
+        #region Service Overrides
+
         public override void StartService()
         {
             // TestRunnerFactory requires the ProjectService
@@ -48,6 +50,10 @@ namespace NUnit.Engine.Services
                 : ServiceStatus.Error;
         }
 
+        #endregion
+
+        #region InProcessTestRunnerFactory Overrides
+        
         /// <summary>
         /// Returns a test runner based on the settings in a TestPackage.
         /// Any setting that is "consumed" by the factory is removed, so
@@ -131,11 +137,17 @@ namespace NUnit.Engine.Services
             }
         }
 
+        #endregion
+
+        #region Helper Methods
+
         private ProcessModel GetTargetProcessModel(TestPackage package)
         {
             return (ProcessModel)System.Enum.Parse(
                 typeof(ProcessModel),
                 package.GetSetting(PackageSettings.ProcessModel, "Default"));
         }
+
+        #endregion
     }
 }

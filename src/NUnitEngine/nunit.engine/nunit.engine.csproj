@@ -112,6 +112,7 @@
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
     <Compile Include="Services\ResultWriters\XmlTransformResultWriter.cs" />
     <Compile Include="Services\ResultService.cs" />
+    <Compile Include="Services\Service.cs" />
     <Compile Include="TestRun.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
     <Compile Include="RuntimeFramework.cs" />

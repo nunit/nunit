@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,53 +22,60 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using NUnit.Engine.Internal;
+using System.Collections.Generic;
+using System.Text;
 
 namespace NUnit.Engine.Services
 {
     /// <summary>
-    /// Summary description for UserSettingsService.
+    /// Abstract base class for services that can use it. Some Services
+    /// already inherit from a different class and can't use this, which
+    /// is why we define the IService interface as well.
     /// </summary>
-    public class SettingsService : SettingsStore, IService
+    public abstract class Service : IService, IDisposable
     {
-        private const string SETTINGS_FILE = "Nunit30Settings.xml";
+        #region IService Default Implementation
 
-        public SettingsService(bool writeable)
-            : base(Path.Combine(NUnitConfiguration.ApplicationDirectory, SETTINGS_FILE), writeable) { }
-
-        #region IService Implementation
-
+        /// <summary>
+        /// The ServiceContext
+        /// </summary>
         public ServiceContext ServiceContext { get; set; }
 
-        public ServiceStatus Status { get; private set; }
+        /// <summary>
+        /// Gets the ServiceStatus of this service
+        /// </summary>
+        public ServiceStatus Status { get; protected set;  }
 
-        public void StartService()
+        /// <summary>
+        /// Initialize the Service
+        /// </summary>
+        public virtual void StartService()
         {
-            try
-            {
-                LoadSettings();
-
-                Status = ServiceStatus.Started;
-            }
-            catch
-            {
-                Status = ServiceStatus.Error;
-                throw;
-            }
+            Status = ServiceStatus.Started;
         }
 
-        public void StopService()
+        /// <summary>
+        /// Do any cleanup needed before terminating the service
+        /// </summary>
+        public virtual void StopService()
         {
-            try
-            {
-                SaveSettings();
-            }
-            finally
-            {
-                Status = ServiceStatus.Stopped;
-            }
+            Status = ServiceStatus.Stopped;
         }
+
+        #endregion
+
+        #region IDisposable Default Implementation
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            Dispose(true);
+        }
+
+        protected bool _disposed = false;
+
+        protected virtual void Dispose(bool disposing) { }
+
         #endregion
     }
 }

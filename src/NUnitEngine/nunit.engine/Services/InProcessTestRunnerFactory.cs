@@ -33,7 +33,7 @@ namespace NUnit.Engine.Services
     /// runner for a given package to be loaded and run within the
     /// same process.
     /// </summary>
-    public class InProcessTestRunnerFactory : ITestRunnerFactory, IService
+    public class InProcessTestRunnerFactory : Service, ITestRunnerFactory
     {
         #region ITestRunnerFactory Members
 
@@ -75,24 +75,6 @@ namespace NUnit.Engine.Services
         public virtual bool CanReuse(ITestEngineRunner runner, TestPackage package)
         {
             return false;
-        }
-
-        #endregion
-
-        #region IService Members
-
-        public ServiceContext ServiceContext { get; set; }
-
-        public ServiceStatus Status { get; protected set; }
-
-        public virtual void StartService()
-        {
-            Status = ServiceStatus.Started;
-        }
-
-        public void StopService()
-        {
-            Status = ServiceStatus.Stopped;
         }
 
         #endregion
