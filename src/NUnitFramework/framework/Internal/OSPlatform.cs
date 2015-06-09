@@ -433,9 +433,17 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return true if the platform is Windows 8
+        /// Return true if the platform is Windows 8.1
         /// </summary>
         public bool IsWindows81
+        {
+            get { return IsNT63 && Product == ProductType.WorkStation; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is Windows 10
+        /// </summary>
+        public bool IsWindows10
         {
             get { return IsNT63 && Product == ProductType.WorkStation; }
         }
