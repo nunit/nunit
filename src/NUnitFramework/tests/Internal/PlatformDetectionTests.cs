@@ -233,6 +233,22 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void DetectWindows10()
+        {
+            CheckOSPlatforms(
+                new OSPlatform(PlatformID.Win32NT, new Version(10, 0), OSPlatform.ProductType.WorkStation),
+                "Win10,Windows10,Win32NT,Win32,Win");
+        }
+
+        [Test]
+        public void DetectWindowsServer()
+        {
+            CheckOSPlatforms(
+                new OSPlatform(PlatformID.Win32NT, new Version(10, 0), OSPlatform.ProductType.Server),
+                "WindowsServer,Win32NT,Win32,Win");
+        }
+
+        [Test]
         public void DetectUnixUnderMicrosoftDotNet()
         {
             CheckOSPlatforms(

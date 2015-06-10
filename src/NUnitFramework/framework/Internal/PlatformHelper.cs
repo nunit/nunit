@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
             "Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
             "Win2008Server,Win2008ServerR2,Win2012Server,Win2012ServerR2," +
             "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8,"+
-            "Win8.1,Windows8.1,Win10,Windows10,Unix,Linux";
+            "Win8.1,Windows8.1,Win10,Windows10,WindowsServer,Unix,Linux";
 
         /// <summary>
         /// Comma-delimited list of all supported OS platform constants
@@ -249,6 +249,9 @@ namespace NUnit.Framework.Internal
                 case "WINDOWS10":
                 case "WIN10":
                     isSupported = os.IsWindows10;
+                    break;
+                case "WINDOWSSERVER":
+                    isSupported = os.IsWindowsServer10;
                     break;
                 case "UNIX":
                 case "LINUX":
