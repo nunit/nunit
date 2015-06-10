@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 #if !PORTABLE
+using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;
 
@@ -70,6 +71,8 @@ namespace NUnit.Framework.Internal
                         OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
                         osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
                         GetVersionEx(ref osvi);
+                        if (os.Version.Major == 6 && os.Version.Minor >= 2)
+                            os = new OperatingSystem(os.Platform, GetWindows81PlusVersion(os.Version));
                         currentPlatform = new OSPlatform(os.Platform, os.Version, (ProductType)osvi.ProductType);
                     }
                     else
@@ -80,6 +83,58 @@ namespace NUnit.Framework.Internal
                 return currentPlatform;
             }
         }
+
+#if !SILVERLIGHT
+        /// <summary>
+        /// Gets the actual OS Version, not the incorrect value that might be 
+        /// returned for Win 8.1 and Win 10
+        /// </summary>
+        /// <remarks>
+        /// If an application is not manifested as Windows 8.1 or Windows 10,
+        /// the version returned from Environment.OSVersion will not be 6.3 and 10.0
+        /// respectively, but will be 6.2 and 6.3. The correct value can be found in
+        /// the registry.
+        /// </remarks>
+        /// <param name="version">The original version</param>
+        /// <returns>The correct OS version</returns>
+        private static Version GetWindows81PlusVersion(Version version)
+        {
+            try
+            {
+                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                {
+                    if (key != null)
+                    {
+                        var buildStr = key.GetValue("CurrentBuildNumber") as string;
+                        int build = 0;
+                        int.TryParse(buildStr, out build);
+
+                        // These two keys are in Windows 10 only and are DWORDS
+                        var major = key.GetValue("CurrentMajorVersionNumber") as int?;
+                        var minor = key.GetValue("CurrentMinorVersionNumber") as int?;
+                        if (major.HasValue && minor.HasValue)
+                        {
+                            return new Version(major.Value, minor.Value, build);
+                        }
+
+                        // If we get here, we are not Windows 10, so we are Windows 8
+                        // or 8.1. 8.1 might report itself as 6.2, but will have 6.3
+                        // in the registry. We can't do this earlier because for backwards
+                        // compatibility, Windows 10 also has 6.3 for this key.
+                        var currentVersion = key.GetValue("CurrentVersion") as string;
+                        if(currentVersion == "6.3")
+                        {
+                            return new Version(6, 3, build);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return version;
+        }
+#endif
         #endregion
 
         #region Members used for Win32NT platform only
@@ -433,11 +488,28 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return true if the platform is Windows 8
+        /// Return true if the platform is Windows 8.1
         /// </summary>
         public bool IsWindows81
         {
             get { return IsNT63 && Product == ProductType.WorkStation; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is Windows 10
+        /// </summary>
+        public bool IsWindows10
+        {
+            get { return platform == PlatformID.Win32NT && version.Major == 10 && Product == ProductType.WorkStation; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is Windows Server. This is named Windows
+        /// Server 10 to distinguish it from previous versions of Windows Server.
+        /// </summary>
+        public bool IsWindowsServer10
+        {
+            get { return platform == PlatformID.Win32NT && version.Major == 10 && Product == ProductType.Server; }
         }
     }
 }

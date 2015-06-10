@@ -151,6 +151,7 @@ namespace NUnit.Framework.Internal
 
 #if !PORTABLE
         [Test]
+        [Platform(Exclude = "Windows10,WindowsServer10", Reason = "An unknown culture string creates a user defined culture in Windows 10")]
         public void SettingInvalidCultureOnFixtureGivesError()
         {
             ITestResult result = TestBuilder.RunTestFixture(typeof(FixtureWithInvalidSetCultureAttribute));
@@ -164,6 +165,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        [Platform(Exclude = "Windows10,WindowsServer10", Reason = "An unknown culture string creates a user defined culture in Windows 10")]
         public void SettingInvalidCultureOnTestGivesError()
         {
             ITestResult result = TestBuilder.RunTestCase(typeof(FixtureWithInvalidSetCultureAttributeOnTest), "InvalidCultureSet");
