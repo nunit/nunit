@@ -245,7 +245,7 @@ namespace NUnit.Framework.Internal
         {
             CheckOSPlatforms(
                 new OSPlatform(PlatformID.Win32NT, new Version(10, 0), OSPlatform.ProductType.Server),
-                "WindowsServer,Win32NT,Win32,Win");
+                "WindowsServer10,Win32NT,Win32,Win");
         }
 
         [Test]
