@@ -34,6 +34,7 @@ namespace NUnit.ConsoleRunner.Utilities
     /// </summary>
     public class TeamCityEventHandler
     {
+        private readonly TeamCityAssemblyResolver _asemblyResolver = new TeamCityAssemblyResolver();
         private TextWriter _outWriter;
 
         /// <summary>
@@ -45,10 +46,20 @@ namespace NUnit.ConsoleRunner.Utilities
             _outWriter = outWriter;
         }
 
-        public void TestStarted(XmlNode node)
+        public void SuiteStarted(XmlNode testEvent)
         {
-            string name = node.GetAttribute("fullname");
-            string testId = node.GetAttribute("id");
+            _asemblyResolver.RegisterSuite(testEvent.GetAttribute("id"), testEvent.GetAttribute("fullname"));
+        }
+
+        public void SuiteFinished(XmlNode testEvent)
+        {
+            _asemblyResolver.UnregisterSuite(testEvent.GetAttribute("id"), testEvent.GetAttribute("fullname"));
+        }
+
+        public void TestStarted(XmlNode testEvent)
+        {
+            string testId = testEvent.GetAttribute("id");
+            string name = this.EnrichTestName(testId, testEvent.GetAttribute("fullname"));
 
             _outWriter.WriteLine("##teamcity[testStarted name='{0}' captureStandardOutput='true' flowId='{1}']", Escape(name), Escape(testId));
         }
@@ -56,14 +67,14 @@ namespace NUnit.ConsoleRunner.Utilities
         /// <summary>
         /// Called when a test has finished
         /// </summary>
-        /// <param name="result">The result of the test</param>
-        public void TestFinished(XmlNode result)
+        /// <param name="testEvent">The testEvent of the test</param>
+        public void TestFinished(XmlNode testEvent)
         {
-            string name = result.GetAttribute("fullname");
-            double duration = result.GetAttribute("duration", 0.0);
-            string testId = result.GetAttribute("id");
+            string testId = testEvent.GetAttribute("id");
+            string name = EnrichTestName(testId, testEvent.GetAttribute("fullname"));
+            double duration = testEvent.GetAttribute("duration", 0.0);
 
-            switch (result.GetAttribute("result"))
+            switch (testEvent.GetAttribute("result"))
             {
                 case "Passed":
                     TC_TestFinished(name, duration, testId);
@@ -72,12 +83,12 @@ namespace NUnit.ConsoleRunner.Utilities
                     TC_TestIgnored(name, "Inconclusive", testId);
                     break;
                 case "Skipped":
-                    XmlNode reason = result.SelectSingleNode("reason/message");
+                    XmlNode reason = testEvent.SelectSingleNode("reason/message");
                     TC_TestIgnored(name, reason == null ? "" : reason.InnerText, testId);
                     break;
                 case "Failed":
-                    XmlNode message = result.SelectSingleNode("failure/message");
-                    XmlNode stackTrace = result.SelectSingleNode("failure/stack-trace");
+                    XmlNode message = testEvent.SelectSingleNode("failure/message");
+                    XmlNode stackTrace = testEvent.SelectSingleNode("failure/stack-trace");
                     TC_TestFailed(name, message == null ? "" : message.InnerText, stackTrace == null ? "" : stackTrace.InnerText, testId);
                     TC_TestFinished(name, duration, testId);
                     break;
@@ -85,6 +96,21 @@ namespace NUnit.ConsoleRunner.Utilities
         }
 
         #region Helper Methods
+        private string EnrichTestName(string testId, string name)
+        {
+            if (name == null)
+            {
+                return null;
+            }
+
+            string assemblyName;
+            if (_asemblyResolver.TryResolveAssembly(testId, out assemblyName))
+            {
+                name = string.Format("{0}: {1}", assemblyName, name);
+            }
+
+            return name;
+        }
 
         private void TC_TestFinished(string name, double duration, string flowId)
         {

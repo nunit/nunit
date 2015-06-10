@@ -73,9 +73,13 @@ namespace NUnit.ConsoleRunner
                     break;
 
                 case "start-suite":
+                    if (_teamCity != null)
+                        _teamCity.SuiteStarted(testEvent);
                     break;
 
                 case "test-suite":
+                    if (_teamCity != null)
+                        _teamCity.SuiteFinished(testEvent);
                     break;
 
                 case "start-run":
