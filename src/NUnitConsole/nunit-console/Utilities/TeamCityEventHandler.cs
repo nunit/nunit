@@ -34,7 +34,7 @@ namespace NUnit.ConsoleRunner.Utilities
     /// </summary>
     public class TeamCityEventHandler
     {
-        private readonly TeamCityAssemblyResolver _asemblyResolver = new TeamCityAssemblyResolver();
+        private readonly TeamCityAssemblyRegistry _asemblyRegistry = new TeamCityAssemblyRegistry();
         private TextWriter _outWriter;
 
         /// <summary>
@@ -48,12 +48,12 @@ namespace NUnit.ConsoleRunner.Utilities
 
         public void SuiteStarted(XmlNode testEvent)
         {
-            _asemblyResolver.RegisterSuite(testEvent.GetAttribute("id"), testEvent.GetAttribute("fullname"));
+            this._asemblyRegistry.RegisterSuite(testEvent.GetAttribute("id"), testEvent.GetAttribute("fullname"));
         }
 
         public void SuiteFinished(XmlNode testEvent)
         {
-            _asemblyResolver.UnregisterSuite(testEvent.GetAttribute("id"), testEvent.GetAttribute("fullname"));
+            this._asemblyRegistry.UnregisterSuite(testEvent.GetAttribute("id"), testEvent.GetAttribute("fullname"));
         }
 
         public void TestStarted(XmlNode testEvent)
@@ -104,7 +104,7 @@ namespace NUnit.ConsoleRunner.Utilities
             }
 
             string assemblyName;
-            if (_asemblyResolver.TryResolveAssembly(testId, out assemblyName))
+            if (this._asemblyRegistry.TryResolveAssembly(testId, out assemblyName))
             {
                 name = string.Format("{0}: {1}", assemblyName, name);
             }

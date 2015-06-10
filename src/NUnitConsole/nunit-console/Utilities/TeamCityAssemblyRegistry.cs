@@ -27,7 +27,7 @@ using System.IO;
 
 namespace NUnit.ConsoleRunner.Utilities
 {
-    internal class TeamCityAssemblyResolver
+    internal class TeamCityAssemblyRegistry
     {
         private static readonly char[] Separator = { '-' };
         private readonly object lockObject = new object();

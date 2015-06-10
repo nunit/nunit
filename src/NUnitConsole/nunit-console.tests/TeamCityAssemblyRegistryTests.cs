@@ -29,7 +29,7 @@ using NUnit.Framework;
 namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]
-    public class TeamCityAssemblyResolverTests
+    public class TeamCityAssemblyRegistryTests
     {
         [Test]
         [TestCase("123-dwdwd", true, "123")]
@@ -47,7 +47,7 @@ namespace NUnit.ConsoleRunner.Tests
 
             // When
             string actualFlowId;
-            var actualResolved = TeamCityAssemblyResolver.TryGetFlowId(id, out actualFlowId);
+            var actualResolved = TeamCityAssemblyRegistry.TryGetFlowId(id, out actualFlowId);
 
             // Then
             Assert.AreEqual(expectedResolved, actualResolved);
@@ -71,7 +71,7 @@ namespace NUnit.ConsoleRunner.Tests
 
             // When
             string actualAssemblyName;
-            var actualResolved = TeamCityAssemblyResolver.TryGetAssemblyName(fullName, out actualAssemblyName);
+            var actualResolved = TeamCityAssemblyRegistry.TryGetAssemblyName(fullName, out actualAssemblyName);
 
             // Then
             Assert.AreEqual(expectedResolved, actualResolved);
@@ -82,7 +82,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void ShouldResolveAssemblyWhenAssemblySuteRegistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyRegistry();
 
             // When
             resolver.RegisterSuite(@"0-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
@@ -98,7 +98,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void ShouldNotResolveAssemblyWhenHasNoAssemblySuteWithCorrectFlowIdRegistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyRegistry();
 
             // When
             resolver.RegisterSuite(@"2-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
@@ -114,7 +114,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void ShouldNotResolveAssemblyWhenHasNoAssemblySuteRegistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyRegistry();
 
             // When
             string assemblyName;
@@ -129,7 +129,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void ShouldNotResolveAssemblyWhenSuteUnregistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyRegistry();
 
             // When
             resolver.RegisterSuite(@"2-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
@@ -146,7 +146,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void ShouldNotResolveAssemblyWhenUnregisteredForOtherAssembly()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyRegistry();
 
             // When
             resolver.RegisterSuite(@"0-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
