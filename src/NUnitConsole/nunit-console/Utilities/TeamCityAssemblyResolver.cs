@@ -30,6 +30,7 @@ namespace NUnit.ConsoleRunner.Utilities
     internal class TeamCityAssemblyResolver
     {
         private static readonly char[] Separator = { '-' };
+        private readonly object lockObject = new object();
         private readonly Dictionary<string, string> _assemblyNames = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
         public void RegisterSuite(string suiteId, string fullName)
@@ -41,7 +42,10 @@ namespace NUnit.ConsoleRunner.Utilities
                 return;
             }
 
-            this._assemblyNames[flowId] = assemblyName;
+            lock (lockObject)
+            {
+                this._assemblyNames[flowId] = assemblyName;
+            }
         }
 
         public void UnregisterSuite(string suiteId, string fullName)
@@ -53,7 +57,10 @@ namespace NUnit.ConsoleRunner.Utilities
                 return;
             }
 
-            this._assemblyNames.Remove(flowId);
+            lock (lockObject)
+            {
+                this._assemblyNames.Remove(flowId);
+            }
         }
 
         public bool TryResolveAssembly(string testId, out string assemblyName)
@@ -65,7 +72,10 @@ namespace NUnit.ConsoleRunner.Utilities
                 return false;
             }
 
-            return this._assemblyNames.TryGetValue(flowId, out assemblyName);
+            lock (lockObject)
+            {
+                return this._assemblyNames.TryGetValue(flowId, out assemblyName);
+            }
         }
 
         internal static bool TryGetFlowId(string id, out string flowId)
