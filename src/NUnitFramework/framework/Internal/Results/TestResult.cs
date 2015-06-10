@@ -266,6 +266,11 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("start-time", StartTime.ToString("u"));
             thisNode.AddAttribute("end-time", EndTime.ToString("u"));
             thisNode.AddAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
+            var testAssembly = TestUtility.GetTestAssembly(Test);
+            if (testAssembly != null)
+            {
+                thisNode.AddAttribute("assembly", testAssembly.FullName);
+            }
 
             if (this.Test is TestSuite)
             {
