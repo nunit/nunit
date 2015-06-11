@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -81,6 +83,23 @@ namespace NUnit.ConsoleRunner.Utilities
                     TC_TestFailed(name, message == null ? "" : message.InnerText, stackTrace == null ? "" : stackTrace.InnerText, testId);
                     TC_TestFinished(name, duration, testId);
                     break;
+            }
+        }
+
+        public void BuildEvent(XmlNode testEvent)
+        {
+            foreach (XmlNode suiteElement in ((IEnumerable)testEvent.SelectNodes("//test-suite[@result='Failed' or @result='Error']")) ?? new XmlNode[0])
+            {
+                var nameAttr = suiteElement.GetAttribute("name") ?? string.Empty;
+                var resultAttr = suiteElement.GetAttribute("result") ?? string.Empty;
+
+                var messageElement = suiteElement.SelectSingleNode("//reason/message");
+                if (messageElement != null && !string.IsNullOrEmpty(messageElement.InnerText))
+                {
+                    var identity = string.Format("{0} {1}", nameAttr, resultAttr.ToLowerInvariant());
+                    var description = string.Format("{0}: {1}", identity, messageElement.InnerText);
+                    _outWriter.WriteLine("##teamcity[buildProblem description='{0}' identity='{1}']", Escape(description), Escape(identity));
+                }
             }
         }
 

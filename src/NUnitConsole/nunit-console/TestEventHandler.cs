@@ -80,6 +80,11 @@ namespace NUnit.ConsoleRunner
 
                 case "start-run":
                     break;
+
+                case "test-run":
+                    if (_teamCity != null)
+                        _teamCity.BuildEvent(testEvent);
+                    break;
             }
 
         }
