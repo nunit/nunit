@@ -105,8 +105,8 @@ namespace NUnit.ConsoleRunner.Utilities
                 return false;
             }
 
-            var curAassemblyName = Path.GetFileName(fullName);
-            var res = !StringComparer.InvariantCultureIgnoreCase.Equals(fullName, curAassemblyName);
+            var curAssemblyName = Path.GetFileName(fullName);
+            var res = !StringComparer.InvariantCultureIgnoreCase.Equals(fullName, curAssemblyName);
 
             if (!res)
             {
@@ -114,7 +114,7 @@ namespace NUnit.ConsoleRunner.Utilities
                 return false;
             }
 
-            assemblyName = curAassemblyName;
+            assemblyName = curAssemblyName;
             return true;
         }
     }

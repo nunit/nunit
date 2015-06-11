@@ -64,10 +64,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void ShouldResolveAssemblyName(string fullName, bool expectedResolved, string expectedAssemblyName)
         {
             // Given
-            if (fullName != null)
-            {
-                fullName = fullName.Replace('\\', Path.DirectorySeparatorChar);
-            }
+            fullName = NormalizePath(fullName);
 
             // When
             string actualAssemblyName;
@@ -79,13 +76,13 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldResolveAssemblyWhenAssemblySuteRegistered()
+        public void ShouldResolveAssemblyWhenAssemblySuiteRegistered()
         {
             // Given
             var resolver = new TeamCityAssemblyResolver();
 
             // When
-            resolver.RegisterSuite(@"0-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
+            resolver.RegisterSuite(@"0-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             string assemblyName;
             var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
 
@@ -95,13 +92,13 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldNotResolveAssemblyWhenHasNoAssemblySuteWithCorrectFlowIdRegistered()
+        public void ShouldNotResolveAssemblyWhenHasNoAssemblySuiteWithCorrectFlowIdRegistered()
         {
             // Given
             var resolver = new TeamCityAssemblyResolver();
 
             // When
-            resolver.RegisterSuite(@"2-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
+            resolver.RegisterSuite(@"2-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             string assemblyName;
             var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
 
@@ -111,7 +108,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldNotResolveAssemblyWhenHasNoAssemblySuteRegistered()
+        public void ShouldNotResolveAssemblyWhenHasNoAssemblySuiteRegistered()
         {
             // Given
             var resolver = new TeamCityAssemblyResolver();
@@ -126,14 +123,14 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldNotResolveAssemblyWhenSuteUnregistered()
+        public void ShouldNotResolveAssemblyWhenSuiteUnregistered()
         {
             // Given
             var resolver = new TeamCityAssemblyResolver();
 
             // When
-            resolver.RegisterSuite(@"2-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
-            resolver.UnregisterSuite(@"2-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
+            resolver.RegisterSuite(@"2-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
+            resolver.UnregisterSuite(@"2-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             string assemblyName;
             var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
 
@@ -149,14 +146,23 @@ namespace NUnit.ConsoleRunner.Tests
             var resolver = new TeamCityAssemblyResolver();
 
             // When
-            resolver.RegisterSuite(@"0-1186", @"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll");
-            resolver.UnregisterSuite(@"0-1186", @"C:\Projects\GitHub\nunit\bin\Debug\foo.dll");
+            resolver.RegisterSuite(@"0-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
+            resolver.UnregisterSuite(@"0-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\foo.dll"));
             string assemblyName;
             var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
 
             // Then
             Assert.AreEqual(false, res);
             Assert.AreEqual(null, assemblyName);
+        }
+
+        private static string NormalizePath(string fullName)
+        {
+            if (fullName != null)
+            {
+                fullName = fullName.Replace('\\', Path.DirectorySeparatorChar);
+            }
+            return fullName;
         }
     }
 }
