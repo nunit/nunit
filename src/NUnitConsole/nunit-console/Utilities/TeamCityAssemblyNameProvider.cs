@@ -27,7 +27,7 @@ using System.IO;
 
 namespace NUnit.ConsoleRunner.Utilities
 {
-    internal class TeamCityAssemblyResolver
+    internal class TeamCityAssemblyNameProvider
     {
         private static readonly char[] Separator = { '-' };
         private readonly object lockObject = new object();
@@ -37,7 +37,7 @@ namespace NUnit.ConsoleRunner.Utilities
         {
             string flowId;
             string assemblyName;
-            if (!TryGetFlowId(suiteId, out flowId) || !TryGetAssemblyName(fullName, out assemblyName))
+            if (!TryGetFlowId(suiteId, out flowId) || !TryGetAssemblyNameFromFullname(fullName, out assemblyName))
             {
                 return;
             }
@@ -52,7 +52,7 @@ namespace NUnit.ConsoleRunner.Utilities
         {
             string flowId;
             string assemblyName;
-            if (!TryGetFlowId(suiteId, out flowId) || !TryGetAssemblyName(fullName, out assemblyName))
+            if (!TryGetFlowId(suiteId, out flowId) || !TryGetAssemblyNameFromFullname(fullName, out assemblyName))
             {
                 return;
             }
@@ -63,7 +63,7 @@ namespace NUnit.ConsoleRunner.Utilities
             }
         }
 
-        public bool TryResolveAssembly(string testId, out string assemblyName)
+        public bool TryGetAssemblyName(string testId, out string assemblyName)
         {
             string flowId;
             if (!TryGetFlowId(testId, out flowId))
@@ -97,7 +97,7 @@ namespace NUnit.ConsoleRunner.Utilities
             return true;
         }
 
-        internal static bool TryGetAssemblyName(string fullName, out string assemblyName)
+        internal static bool TryGetAssemblyNameFromFullname(string fullName, out string assemblyName)
         {
             if (string.IsNullOrEmpty(fullName))
             {

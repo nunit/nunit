@@ -29,7 +29,7 @@ using NUnit.Framework;
 namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]
-    public class TeamCityAssemblyResolverTests
+    public class TeamCityAssemblyNameProviderTests
     {
         [Test]
         [TestCase("123-dwdwd", true, "123")]
@@ -41,13 +41,13 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("323-", false, null)]
         [TestCase("-", false, null)]
         [TestCase(" - ", false, null)]
-        public void ShouldResolveFlowId(string id, bool expectedResolved, string expectedFlowId)
+        public void ShouldProvideFlowId(string id, bool expectedResolved, string expectedFlowId)
         {
             // Given
 
             // When
             string actualFlowId;
-            var actualResolved = TeamCityAssemblyResolver.TryGetFlowId(id, out actualFlowId);
+            var actualResolved = TeamCityAssemblyNameProvider.TryGetFlowId(id, out actualFlowId);
 
             // Then
             Assert.AreEqual(expectedResolved, actualResolved);
@@ -61,14 +61,14 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("", false, null)]
         [TestCase("bb", false, null)]
         [TestCase("foo.dll", false, null)]
-        public void ShouldResolveAssemblyName(string fullName, bool expectedResolved, string expectedAssemblyName)
+        public void ShouldProvideAssemblyName(string fullName, bool expectedResolved, string expectedAssemblyName)
         {
             // Given
             fullName = NormalizePath(fullName);
 
             // When
             string actualAssemblyName;
-            var actualResolved = TeamCityAssemblyResolver.TryGetAssemblyName(fullName, out actualAssemblyName);
+            var actualResolved = TeamCityAssemblyNameProvider.TryGetAssemblyNameFromFullname(fullName, out actualAssemblyName);
 
             // Then
             Assert.AreEqual(expectedResolved, actualResolved);
@@ -76,15 +76,15 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldResolveAssemblyWhenAssemblySuiteRegistered()
+        public void ShouldProvideAssemblyNameWhenAssemblySuiteRegistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyNameProvider();
 
             // When
             resolver.RegisterSuite(@"0-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             string assemblyName;
-            var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
+            var res = resolver.TryGetAssemblyName("0-1004", out assemblyName);
 
             // Then
             Assert.AreEqual(true, res);
@@ -92,15 +92,15 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldNotResolveAssemblyWhenHasNoAssemblySuiteWithCorrectFlowIdRegistered()
+        public void ShouldNotProvideAssemblyNameWhenHasNoAssemblySuiteWithCorrectFlowIdRegistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyNameProvider();
 
             // When
             resolver.RegisterSuite(@"2-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             string assemblyName;
-            var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
+            var res = resolver.TryGetAssemblyName("0-1004", out assemblyName);
 
             // Then
             Assert.AreEqual(false, res);
@@ -108,14 +108,14 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldNotResolveAssemblyWhenHasNoAssemblySuiteRegistered()
+        public void ShouldNotProvideAssemblyNameWhenHasNoAssemblySuiteRegistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyNameProvider();
 
             // When
             string assemblyName;
-            var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
+            var res = resolver.TryGetAssemblyName("0-1004", out assemblyName);
 
             // Then
             Assert.AreEqual(false, res);
@@ -123,16 +123,16 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldNotResolveAssemblyWhenSuiteUnregistered()
+        public void ShouldNotProvideAssemblyNameWhenSuiteUnregistered()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyNameProvider();
 
             // When
             resolver.RegisterSuite(@"2-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             resolver.UnregisterSuite(@"2-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             string assemblyName;
-            var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
+            var res = resolver.TryGetAssemblyName("0-1004", out assemblyName);
 
             // Then
             Assert.AreEqual(false, res);
@@ -140,16 +140,16 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void ShouldNotResolveAssemblyWhenUnregisteredForOtherAssembly()
+        public void ShouldNotProvideAssemblyNameWhenUnregisteredForOtherAssembly()
         {
             // Given
-            var resolver = new TeamCityAssemblyResolver();
+            var resolver = new TeamCityAssemblyNameProvider();
 
             // When
             resolver.RegisterSuite(@"0-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\nunit-console.tests.dll"));
             resolver.UnregisterSuite(@"0-1186", NormalizePath(@"C:\Projects\GitHub\nunit\bin\Debug\foo.dll"));
             string assemblyName;
-            var res = resolver.TryResolveAssembly("0-1004", out assemblyName);
+            var res = resolver.TryGetAssemblyName("0-1004", out assemblyName);
 
             // Then
             Assert.AreEqual(false, res);
