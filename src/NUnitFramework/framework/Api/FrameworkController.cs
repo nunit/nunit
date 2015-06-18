@@ -21,18 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Xml;
 using System.Web.UI;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Builders;
+
+#if PORTABLE
+using Path = NUnit.Framework.Compatibility.Path;
+#endif
+
+#if NETCF
+using Activator = NUnit.Framework.Compatibility.Activator;
+#endif
 
 namespace NUnit.Framework.Api
 {
@@ -51,23 +56,25 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class FrameworkController : MarshalByRefObject
     {
+#if !PORTABLE && !SILVERLIGHT
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
+#endif
 
         #region Constructors
 
         /// <summary>
         /// Construct a FrameworkController using the default builder and runner.
         /// </summary>
-        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="assemblyNameOrPath">The AssemblyName or path to the test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
-        public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings)
+        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
         {
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
             Test.IdPrefix = idPrefix;
-            Initialize(assemblyPath, settings);
+            Initialize(assemblyNameOrPath, settings);
         }
 
         /// <summary>
@@ -75,25 +82,23 @@ namespace NUnit.Framework.Api
         /// for the runner and builder. This constructor is provided for
         /// purposes of development.
         /// </summary>
-        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="assemblyNameOrPath">The full AssemblyName or the path to the test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
+        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
-            Assembly myAssembly = Assembly.GetExecutingAssembly();
-            this.Builder = (ITestAssemblyBuilder)myAssembly.CreateInstance(builderType);
-            this.Runner = (ITestAssemblyRunner)myAssembly.CreateInstance(
-                runnerType, false, 0, null, new object[] { this.Builder }, null, null);
+            Builder = (ITestAssemblyBuilder)Activator.CreateInstance(Type.GetType(builderType));
+            Runner = (ITestAssemblyRunner)Activator.CreateInstance(Type.GetType(runnerType), new object[] { Builder });
 
             Test.IdPrefix = idPrefix ?? "";
-            Initialize(assemblyPath, settings);
+            Initialize(assemblyNameOrPath, settings);
         }
 
         private void Initialize(string assemblyPath, IDictionary settings)
         {
-            AssemblyPath = assemblyPath;
+            AssemblyNameOrPath = assemblyPath;
             Settings = settings;
 
             if (settings.Contains(PackageSettings.InternalTraceLevel))
@@ -102,12 +107,14 @@ namespace NUnit.Framework.Api
 
                 if (settings.Contains(PackageSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)settings[PackageSettings.InternalTraceWriter], traceLevel);
+#if !PORTABLE && !SILVERLIGHT
                 else
                 {
-                    var workDirectory = settings.Contains(PackageSettings.WorkDirectory) ? (string)settings[PackageSettings.WorkDirectory] : Environment.CurrentDirectory;
+                    var workDirectory = settings.Contains(PackageSettings.WorkDirectory) ? (string)settings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
                     var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
+#endif
             }
         }
 
@@ -128,9 +135,9 @@ namespace NUnit.Framework.Api
         public ITestAssemblyRunner Runner { get; private set; }
 
         /// <summary>
-        /// Gets the path to the assembly for this FrameworkController
+        /// Gets the AssemblyName or the path for which this FrameworkController was created
         /// </summary>
-        public string AssemblyPath { get; private set; }
+        public string AssemblyNameOrPath { get; private set; }
 
         /// <summary>
         /// Gets a dictionary of settings for the FrameworkController
@@ -141,6 +148,7 @@ namespace NUnit.Framework.Api
 
         #region InitializeLifetimeService
 
+#if !NETCF
         /// <summary>
         /// InitializeLifetimeService returns null, allowing the instance to live indefinitely.
         /// </summary>
@@ -148,6 +156,7 @@ namespace NUnit.Framework.Api
         {
             return null;
         }
+#endif
 
         #endregion
 
@@ -155,7 +164,7 @@ namespace NUnit.Framework.Api
 
         private void LoadTests(ICallbackEventHandler handler)
         {
-            Runner.Load(AssemblyPath, Settings);
+            Runner.Load(AssemblyNameOrPath, Settings);
             handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
         }
 
@@ -217,6 +226,7 @@ namespace NUnit.Framework.Api
         {
             #region InitializeLifetimeService
 
+#if !NETCF
             /// <summary>
             /// Initialize lifetime service to null so that the instance lives indefinitely.
             /// </summary>
@@ -224,6 +234,7 @@ namespace NUnit.Framework.Api
             {
                 return null;
             }
+#endif
 
             #endregion
         }
@@ -361,4 +372,3 @@ namespace NUnit.Framework.Api
         #endregion
     }
 }
-#endif

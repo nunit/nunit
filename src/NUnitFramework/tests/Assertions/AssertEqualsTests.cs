@@ -439,7 +439,7 @@ namespace NUnit.Framework.Assertions
                     "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.ToString(), Env.NewLine, two.ToString());
 #endif
 
-                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one, two));
+                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one.Directory, two.Directory));
                 Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }

@@ -86,11 +86,11 @@ namespace NUnit.Framework.Internal
 
         private void CheckXmlForTest(Test test, bool recursive)
         {
-            XmlNode topNode = test.ToXml(true);
+            TNode topNode = test.ToXml(true);
             CheckXmlForTest(test, topNode, recursive);
         }
 
-        private void CheckXmlForTest(Test test, XmlNode topNode, bool recursive)
+        private void CheckXmlForTest(Test test, TNode topNode, bool recursive)
         {
             Assert.NotNull(topNode);
 
@@ -127,11 +127,11 @@ namespace NUnit.Framework.Internal
                     foreach (object value in test.Properties[key])
                         expectedProps.Add(key + "=" + value.ToString());
 
-                XmlNode propsNode = topNode.FindDescendant("properties");
+                TNode propsNode = topNode.SelectSingleNode("properties");
                 Assert.NotNull(propsNode);
 
                 var actualProps = new List<string>();
-                foreach (XmlNode node in propsNode.ChildNodes)
+                foreach (TNode node in propsNode.ChildNodes)
                 {
                     string name = node.Attributes["name"];
                     string value = node.Attributes["value"];
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Internal
                     foreach (Test child in suite.Tests)
                     {
                         string xpathQuery = string.Format("{0}[@id={1}]", child.XmlElementName, child.Id);
-                        XmlNode childNode = topNode.FindDescendant(xpathQuery);
+                        TNode childNode = topNode.SelectSingleNode(xpathQuery);
                         Assert.NotNull(childNode, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
 
                         CheckXmlForTest(child, childNode, recursive);

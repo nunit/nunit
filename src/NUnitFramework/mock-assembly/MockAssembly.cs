@@ -25,7 +25,9 @@ using System;
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+#if !SILVERLIGHT && !PORTABLE
 using NUnitLite.Runner;
+#endif
 
 namespace NUnit.Tests
 {
@@ -84,14 +86,14 @@ namespace NUnit.Tests
 
             public const int Categories = MockTestFixture.Categories;
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
-#endif
 
             public static void Main(string[] args)
             {
                 new AutoRun().Execute(args);
             }
+#endif
         }
 
         [TestFixture(Description="Fake Test Fixture")]

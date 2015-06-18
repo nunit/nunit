@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void IfNothingIsWritten_XmlOutputIsEmpty()
         {
-            Assert.That(_result.ToXml(false).FindDescendant("output"), Is.Null);
+            Assert.That(_result.ToXml(false).SelectSingleNode("output"), Is.Null);
         }
 
         [Test]
@@ -77,9 +77,9 @@ namespace NUnit.Framework.Internal
         {
             _result.OutWriter.WriteLine(SOME_TEXT);
 
-            var outputNode = _result.ToXml(false).FindDescendant("output");
+            var outputNode = _result.ToXml(false).SelectSingleNode("output");
             Assert.NotNull(outputNode, "No output node found in XML");
-            Assert.That(outputNode.TextContent, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]
@@ -92,9 +92,9 @@ namespace NUnit.Framework.Internal
             _result.OutWriter.WriteLine();
             _result.OutWriter.WriteLine("Last line!");
 
-            var outputNode = _result.ToXml(false).FindDescendant("output");
+            var outputNode = _result.ToXml(false).SelectSingleNode("output");
             Assert.NotNull(outputNode, "No output node found in XML");
-            Assert.That(outputNode.TextContent, Is.EqualTo(SOME_TEXT + NL +
+            Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL +
                 "More text written in segments." + NL + "Last line!" + NL));
         }
 
