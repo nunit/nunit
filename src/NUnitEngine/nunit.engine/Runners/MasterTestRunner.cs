@@ -230,8 +230,9 @@ namespace NUnit.Engine.Runners
                 var processModel = TestPackage.GetSetting(PackageSettings.ProcessModel, "Default");
                 if (processModel.ToLower() == "single")
                 {
-                    var currentFramework = RuntimeFramework.CurrentFramework.ToString();
-                    if (currentFramework != frameworkSetting)
+                    var currentFramework = RuntimeFramework.CurrentFramework;
+                    var requestedFramework = RuntimeFramework.Parse(frameworkSetting);
+                    if (!currentFramework.Supports(requestedFramework))
                         throw new NUnitEngineException(string.Format(
                             "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
                 }

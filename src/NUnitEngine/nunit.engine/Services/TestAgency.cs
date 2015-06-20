@@ -164,6 +164,9 @@ namespace NUnit.Engine.Services
                     ? runtimeSetting
                     : _runtimeService.SelectRuntimeFramework(package));
 
+            if (targetRuntime.Runtime == RuntimeType.Any)
+                targetRuntime = new RuntimeFramework(RuntimeFramework.CurrentFramework.Runtime, targetRuntime.ClrVersion);
+
             bool useX86Agent = package.GetSetting(PackageSettings.RunAsX86, false);
             bool enableDebug = package.GetSetting("AgentDebug", false);
             bool verbose = package.GetSetting("Verbose", false);
