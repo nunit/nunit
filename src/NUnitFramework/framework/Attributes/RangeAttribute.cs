@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,7 +37,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public RangeAttribute(int from, int to) : this(from, to, 1) { }
+        public RangeAttribute(int from, int to) : this(from, to, from > to ? -1 : 1) { }
 
         /// <summary>
         /// Construct a range of ints specifying the step size 
@@ -47,6 +47,9 @@ namespace NUnit.Framework
         /// <param name="step"></param>
         public RangeAttribute(int from, int to, int step)
         {
+            Guard.ArgumentValid(step > 0 && to >= from || step < 0 && to <= from,
+                "Step must be positive with to >= from or negative with to <= from", "step");
+
             int count = (to - from) / step + 1;
             this.data = new object[count];
             int index = 0;
@@ -62,6 +65,9 @@ namespace NUnit.Framework
         /// <param name="step"></param>
         public RangeAttribute(long from, long to, long step)
         {
+            Guard.ArgumentValid(step > 0L && to >= from || step < 0L && to <= from,
+                "Step must be positive with to >= from or negative with to <= from", "step");
+
             long count = (to - from) / step + 1;
             this.data = new object[count];
             int index = 0;
@@ -77,6 +83,9 @@ namespace NUnit.Framework
         /// <param name="step"></param>
         public RangeAttribute(double from, double to, double step)
         {
+            Guard.ArgumentValid(step > 0.0D && to >= from || step < 0.0D && to <= from,
+                "Step must be positive with to >= from or negative with to <= from", "step");
+
             double tol = step / 1000;
             int count = (int)((to - from) / step + tol + 1);
             this.data = new object[count];
@@ -93,6 +102,9 @@ namespace NUnit.Framework
         /// <param name="step"></param>
         public RangeAttribute(float from, float to, float step)
         {
+            Guard.ArgumentValid(step > 0.0F && to >= from || step < 0.0F && to <= from,
+                "Step must be positive with to >= from or negative with to <= from", "step");
+
             float tol = step / 1000;
             int count = (int)((to - from) / step + tol + 1);
             this.data = new object[count];
