@@ -236,13 +236,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns>An XmlNode representing the result</returns>
-        public XmlNode ToXml(bool recursive)
+        public TNode ToXml(bool recursive)
         {
-            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
-
-            AddToXml(topNode, recursive);
-
-            return topNode.FirstChild;
+            return AddToXml(new TNode("dummy"), recursive);
         }
 
         /// <summary>
@@ -252,10 +248,10 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public virtual TNode AddToXml(TNode parentNode, bool recursive)
         {
             // A result node looks like a test node with extra info added
-            XmlNode thisNode = this.Test.AddToXml(parentNode, false);
+            TNode thisNode = this.Test.AddToXml(parentNode, false);
 
             thisNode.AddAttribute("result", ResultState.Status.ToString());
             if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
@@ -502,11 +498,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="targetNode">The target node.</param>
         /// <returns>The new reason element.</returns>
-        private XmlNode AddReasonElement(XmlNode targetNode)
+        private TNode AddReasonElement(TNode targetNode)
         {
-            XmlNode reasonNode = targetNode.AddElement("reason");
-            reasonNode.AddElement("message").TextContent = this.EscapedMessage;
-            return reasonNode;
+            TNode reasonNode = targetNode.AddElement("reason");
+            return reasonNode.AddElement("message", EscapedMessage);
         }
 
         /// <summary>
@@ -514,29 +509,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="targetNode">The target node.</param>
         /// <returns>The new failure element.</returns>
-        private XmlNode AddFailureElement(XmlNode targetNode)
+        private TNode AddFailureElement(TNode targetNode)
         {
-            XmlNode failureNode = targetNode.AddElement("failure");
+            TNode failureNode = targetNode.AddElement("failure");
 
-            if (this.Message != null)
-            {
-                failureNode.AddElement("message").TextContent = this.EscapedMessage;
-            }
+            if (Message != null)
+                failureNode.AddElement("message", EscapedMessage);
 
-            if (this.StackTrace != null)
-            {
-                failureNode.AddElement("stack-trace").TextContent = this.StackTrace;
-            }
+            if (StackTrace != null)
+                failureNode.AddElement("stack-trace", StackTrace);
 
             return failureNode;
         }
 
-        private XmlNode AddOutputElement(XmlNode targetNode)
+        private TNode AddOutputElement(TNode targetNode)
         {
-            XmlNode outputNode = targetNode.AddElement("output");
-            outputNode.TextContent = this.Output;
-
-            return outputNode;
+            return targetNode.AddElement("output", Output);
         }
 
         static string EscapeInvalidXmlCharacters(string str)

@@ -70,7 +70,7 @@ namespace NUnitLite.Runner
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
-            string copyright = "Copyright (C) 2012, Charlie Poole";
+            string copyright = "Copyright (C) 2015, Charlie Poole";
             string build = "";
 
             object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,54 +22,44 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
+
+#if PORTABLE || SILVERLIGHT
+using System.Xml.Linq;
+#endif
 
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// XmlNode represents a single node in the XML representation
+    /// TNode represents a single node in the XML representation
     /// of a Test or TestResult. It replaces System.Xml.XmlNode and
-    /// provides a minimal set of methods for operating on the XML 
-    /// in a platform-independent manner.
+    /// System.Xml.Linq.XElement, providing a minimal set of methods 
+    /// for operating on the XML in a platform-independent manner.
     /// </summary>
-    public class XmlNode
+    public class TNode
     {
-        #region Private Fields
-
-        private string name;
-
-        private AttributeDictionary attributes;
-        
-        private NodeList childNodes;
-
-        private string textContent;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
-        /// Constructs a new instance of XmlNode
+        /// Constructs a new instance of TNode
         /// </summary>
         /// <param name="name">The name of the node</param>
-        public XmlNode(string name)
+        public TNode(string name)
         {
-            this.name = name;
-            this.attributes = new AttributeDictionary();
-            this.childNodes = new NodeList();
+            Name = name;
+            Attributes = new AttributeDictionary();
+            ChildNodes = new NodeList();
         }
 
-        #endregion
-
-        #region Static Methods
-
         /// <summary>
-        /// Creates a new top level element node.
+        /// Constructs a new instance of TNode with a value
         /// </summary>
-        /// <param name="name">The element name.</param>
-        /// <returns></returns>
-        public static XmlNode CreateTopLevelElement(string name)
+        /// <param name="name">The name of the node</param>
+        /// <param name="value">The text content of the node</param>
+        public TNode(string name, string value)
+            : this(name)
         {
-            return new XmlNode(name);
+            Value = value;
         }
 
         #endregion
@@ -79,79 +69,69 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the name of the node
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
-        /// Gets the text content of the node
+        /// Gets the value of the node
         /// </summary>
-        public string TextContent
-        {
-            get { return textContent; }
-            set { textContent = value; }
-        }
-
-        /// <summary>
-        /// Gets the text content of the node escaped as needed.
-        /// This is for use in writing out the XML representation.
-        /// </summary>
-        public string EscapedTextContent
-        {
-            get { return Escape(textContent); }
-        }
+        public string Value { get; set; }
 
         /// <summary>
         /// Gets the dictionary of attributes
         /// </summary>
-        public AttributeDictionary Attributes
-        {
-            get { return attributes; }
-        }
+        public AttributeDictionary Attributes { get; private set; }
 
         /// <summary>
         /// Gets a list of child nodes
         /// </summary>
-        public NodeList ChildNodes
+        public NodeList ChildNodes { get; private set; }
+
+        /// <summary>
+        /// Gets the first ChildNode
+        /// </summary>
+        public TNode FirstChild
         {
-            get { return childNodes; }
+            get { return ChildNodes.Count == 0 ? null : ChildNodes[0]; }
         }
 
         /// <summary>
-        /// Gets the first child of this node, or null
+        /// Gets the XML representation of this node.
         /// </summary>
-        public XmlNode FirstChild
-        {
-            get
-            {
-                return ChildNodes.Count > 0
-                    ? ChildNodes[0] as XmlNode
-                    : null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the outer XML.
-        /// </summary>
-        /// <value>
-        /// The outer XML.
-        /// </value>
         public string OuterXml
         {
             get
             {
                 var stringWriter = new System.IO.StringWriter();
-                var settings = new System.Xml.XmlWriterSettings();
-                settings.ConformanceLevel = System.Xml.ConformanceLevel.Fragment;
+                var settings = new XmlWriterSettings();
+                settings.ConformanceLevel = ConformanceLevel.Fragment;
                 
-                using (System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(stringWriter, settings))
+                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))
                 {
-                    this.WriteTo(xmlWriter);
+                    WriteTo(xmlWriter);
                 }
 
                 return stringWriter.ToString();
             }
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Create a TNode from it's XML text representation
+        /// </summary>
+        /// <param name="xmlText">The XML text to be parsed</param>
+        /// <returns>A TNode</returns>
+        public static TNode FromXml(string xmlText)
+        {
+#if PORTABLE || SILVERLIGHT
+            return FromXml(XElement.Parse(xmlText));
+#else
+            var doc = new XmlDocument();
+            doc.LoadXml(xmlText);
+            return FromXml(doc.FirstChild);
+#endif
         }
 
         #endregion
@@ -163,9 +143,22 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="name">The element name.</param>
         /// <returns>The newly created child element</returns>
-        public XmlNode AddElement(string name)
+        public TNode AddElement(string name)
         {
-            XmlNode childResult = new XmlNode(name);
+            TNode childResult = new TNode(name);
+            ChildNodes.Add(childResult);
+            return childResult;
+        }
+
+        /// <summary>
+        /// Adds a new element with a value as a child of the current node and returns it.
+        /// </summary>
+        /// <param name="name">The element name</param>
+        /// <param name="value">The text content of the new element</param>
+        /// <returns>The newly created child element</returns>
+        public TNode AddElement(string name, string value)
+        {
+            TNode childResult = new TNode(name, value);
             ChildNodes.Add(childResult);
             return childResult;
         }
@@ -177,7 +170,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="value">The value of the attribute.</param>
         public void AddAttribute(string name, string value)
         {
-            this.Attributes.Add(name, value);
+            Attributes.Add(name, value);
         }
 
         /// <summary>
@@ -187,12 +180,12 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="xpath"></param>
         /// <returns></returns>
-        public XmlNode FindDescendant(string xpath)
+        public TNode SelectSingleNode(string xpath)
         {
-            NodeList nodes = FindDescendants(xpath);
+            NodeList nodes = SelectNodes(xpath);
 
             return nodes.Count > 0
-                ? nodes[0] as XmlNode
+                ? nodes[0] as TNode
                 : null;
         }
 
@@ -201,9 +194,7 @@ namespace NUnit.Framework.Interfaces
         /// specification. The format of the specification is
         /// limited to what is needed by NUnit and its tests.
         /// </summary>
-        /// <param name="xpath"></param>
-        /// <returns></returns>
-        public NodeList FindDescendants(string xpath)
+        public NodeList SelectNodes(string xpath)
         {
             NodeList nodeList = new NodeList();
             nodeList.Add(this);
@@ -215,18 +206,18 @@ namespace NUnit.Framework.Interfaces
         /// Writes the XML representation of the node to an XmlWriter
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteTo(System.Xml.XmlWriter writer)
+        public void WriteTo(XmlWriter writer)
         {
-            writer.WriteStartElement(this.Name);
+            writer.WriteStartElement(Name);
 
-            foreach (string name in this.Attributes.Keys)
+            foreach (string name in Attributes.Keys)
                 writer.WriteAttributeString(name, Attributes[name]);
 
-            if (this.TextContent != null)
-                //writer.WriteChars(this.TextContent.ToCharArray(), 0, this.TextContent.Length);
-                writer.WriteString(this.TextContent);
+            if (Value != null)
+                //writer.WriteChars(TextContent.ToCharArray(), 0, TextContent.Length);
+                writer.WriteString(Value);
 
-            foreach (XmlNode node in this.ChildNodes)
+            foreach (TNode node in ChildNodes)
                 node.WriteTo(writer);
 
             writer.WriteEndElement();
@@ -235,6 +226,35 @@ namespace NUnit.Framework.Interfaces
         #endregion
 
         #region Helper Methods
+
+#if PORTABLE || SILVERLIGHT
+        private static TNode FromXml(XElement xElement)
+        {
+            TNode tNode = new TNode(xElement.Name.ToString(), xElement.Value);
+
+            foreach (var attr in xElement.Attributes())
+                tNode.AddAttribute(attr.Name.ToString(), attr.Value);
+
+            foreach (var child in xElement.Elements())
+                tNode.ChildNodes.Add(FromXml(child));
+
+            return tNode;
+        }
+#else
+        private static TNode FromXml(XmlNode xmlNode)
+        {
+            TNode tNode = new TNode(xmlNode.Name, xmlNode.InnerText);
+
+            foreach (XmlAttribute attr in xmlNode.Attributes)
+                tNode.AddAttribute(attr.Name, attr.Value);
+
+            foreach (XmlNode child in xmlNode.ChildNodes)
+                if (child.NodeType == XmlNodeType.Element)
+                    tNode.ChildNodes.Add(FromXml(child));
+
+            return tNode;
+        }
+#endif
 
         private static NodeList ApplySelection(NodeList nodeList, string xpath)
         {
@@ -257,8 +277,8 @@ namespace NUnit.Framework.Interfaces
             NodeList resultNodes = new NodeList();
             NodeFilter filter = new NodeFilter(head);
 
-            foreach(XmlNode node in nodeList)
-                foreach (XmlNode childNode in node.ChildNodes)
+            foreach(TNode node in nodeList)
+                foreach (TNode childNode in node.ChildNodes)
                     if (filter.Pass(childNode))
                         resultNodes.Add(childNode);
 
@@ -267,29 +287,19 @@ namespace NUnit.Framework.Interfaces
                 : resultNodes;
         }
 
-        private static string Escape(string original)
-        {
-            return original
-                .Replace("&", "&amp;")
-                .Replace("\"", "&quot;")
-                .Replace("'", "&apos;")
-                .Replace("<", "&lt;")
-                .Replace(">", "&gt;");
-        }
-
         #endregion
 
         #region Nested NodeFilter class
 
         class NodeFilter
         {
-            private string nodeName;
-            private string propName;
-            private string propValue;
+            private string _nodeName;
+            private string _propName;
+            private string _propValue;
 
             public NodeFilter(string xpath)
             {
-                this.nodeName = xpath;
+                _nodeName = xpath;
                 
                 int lbrack = xpath.IndexOf('[');
                 if (lbrack >= 0)
@@ -297,27 +307,27 @@ namespace NUnit.Framework.Interfaces
                     if (!xpath.EndsWith("]"))
                         throw new ArgumentException("Invalid property expression", "xpath");
 
-                    nodeName = xpath.Substring(0, lbrack);
+                    _nodeName = xpath.Substring(0, lbrack);
                     string filter = xpath.Substring(lbrack+1, xpath.Length - lbrack - 2);
 
                     int equals = filter.IndexOf('=');
                     if (equals < 0 || filter[0] != '@')
                         throw new ArgumentException("Invalid property expression", "xpath");
 
-                    this.propName = filter.Substring(1, equals - 1).Trim();
-                    this.propValue = filter.Substring(equals + 1).Trim(new char[] { ' ', '"', '\'' });
+                    _propName = filter.Substring(1, equals - 1).Trim();
+                    _propValue = filter.Substring(equals + 1).Trim(new char[] { ' ', '"', '\'' });
                 }
             }
 
-            public bool Pass(XmlNode node)
+            public bool Pass(TNode node)
             {
-                if (node.Name != nodeName)
+                if (node.Name != _nodeName)
                     return false;
                 
-                if (propName == null)
+                if (_propName == null)
                     return true;
                 
-                return node.Attributes[propName] == propValue;
+                return node.Attributes[_propName] == _propValue;
             }
         }
 
@@ -327,7 +337,7 @@ namespace NUnit.Framework.Interfaces
     /// <summary>
     /// Class used to represent a list of XmlResults
     /// </summary>
-    public class NodeList : System.Collections.Generic.List<XmlNode>
+    public class NodeList : System.Collections.Generic.List<TNode>
     {
     }
 
@@ -338,9 +348,10 @@ namespace NUnit.Framework.Interfaces
     {
         /// <summary>
         /// Gets or sets the value associated with the specified key.
+        /// Overridden to return null if attribute is not found.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <returns></returns>
+        /// <returns>Value of the attribute or null</returns>
         public new string this[string key]
         {
             get

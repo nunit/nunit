@@ -29,7 +29,6 @@ using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Tests.Assemblies;
-using XmlNode = System.Xml.XmlNode;
 
 namespace NUnitLite.Runner.Tests
 {

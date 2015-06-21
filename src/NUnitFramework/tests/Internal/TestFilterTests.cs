@@ -68,13 +68,13 @@ namespace NUnit.Framework.Internal
         private static readonly string anotherName = anotherFixture.FullName;
 
         #region EmptyFilter
+
         [Test]
         public void EmptyFilterIsEmpty()
         {
             Assert.That(TestFilter.Empty.IsEmpty);
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         [Test]
         public void EmptyFilter_BuildFromXml()
         {
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
 
             Assert.That(filter.IsEmpty);
         }
-#endif
+
         #endregion
 
         #region IdFilter
@@ -121,7 +121,6 @@ namespace NUnit.Framework.Internal
             Assert.False(filter.Match(yetAnotherFixture));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         [Test]
         public void IdFilter_BuildFromXml_SingleId()
         {
@@ -144,7 +143,6 @@ namespace NUnit.Framework.Internal
             Assert.That(filter.Match(anotherFixture));
             Assert.False(filter.Match(yetAnotherFixture));
         }
-#endif
 
         #endregion
 
@@ -184,7 +182,6 @@ namespace NUnit.Framework.Internal
             Assert.False(filter.Match(yetAnotherFixture));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         [Test]
         public void SimpleNameFilter_BuildFromXml_SingleTest()
         {
@@ -207,7 +204,6 @@ namespace NUnit.Framework.Internal
             Assert.That(filter.Match(anotherFixture));
             Assert.False(filter.Match(yetAnotherFixture));
         }
-#endif
 
         #endregion
 
@@ -247,7 +243,6 @@ namespace NUnit.Framework.Internal
             Assert.False(filter.Match(yetAnotherFixture));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         [Test]
         public void CategoryFilter_BuildFromXml_SingleCategory()
         {
@@ -270,7 +265,6 @@ namespace NUnit.Framework.Internal
             Assert.That(filter.Match(anotherFixture));
             Assert.False(filter.Match(yetAnotherFixture));
         }
-#endif
 
         [Category("Dummy")]
         private class DummyFixture
@@ -300,7 +294,6 @@ namespace NUnit.Framework.Internal
             Assert.True(filter.Match(anotherFixture));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         [Test]
         public void NotFilter_BuildFromXml()
         {
@@ -311,7 +304,6 @@ namespace NUnit.Framework.Internal
             Assert.False(filter.Match(dummyFixture));
             Assert.True(filter.Match(anotherFixture));
         }
-#endif
         
         #endregion
 
@@ -327,7 +319,6 @@ namespace NUnit.Framework.Internal
             Assert.That(filter.Match(anotherFixture));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         [Test]
         public void OrFilter_BuildFromXml()
         {
@@ -338,7 +329,6 @@ namespace NUnit.Framework.Internal
             Assert.That(filter.Match(dummyFixture));
             Assert.That(filter.Match(anotherFixture));
         }
-#endif
 
         #endregion
 
@@ -354,7 +344,6 @@ namespace NUnit.Framework.Internal
             Assert.False(filter.Match(anotherFixture));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         [Test]
         public void AndFilter_BuildFromXml()
         {
@@ -376,7 +365,6 @@ namespace NUnit.Framework.Internal
             Assert.That(filter.Match(dummyFixture));
             Assert.False(filter.Match(anotherFixture));
         }
-#endif
 
         #endregion
     }

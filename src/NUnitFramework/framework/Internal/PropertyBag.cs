@@ -115,13 +115,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="recursive">Not used</param>
         /// <returns>An XmlNode representing the PropertyBag</returns>
-        public XmlNode ToXml(bool recursive)
+        public TNode ToXml(bool recursive)
         {
-            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
-
-            XmlNode thisNode = AddToXml(topNode, recursive);
-
-            return thisNode;
+            return AddToXml(new TNode("dummy"), recursive);
         }
 
         /// <summary>
@@ -131,15 +127,15 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">Not used</param>
         /// <returns></returns>
-        public XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public TNode AddToXml(TNode parentNode, bool recursive)
         {
-            XmlNode properties = parentNode.AddElement("properties");
+            TNode properties = parentNode.AddElement("properties");
 
             foreach (string key in Keys)
             {
                 foreach (object value in this[key])
                 {
-                    XmlNode prop = properties.AddElement("property");
+                    TNode prop = properties.AddElement("property");
 
                     // TODO: Format as string
                     prop.AddAttribute("name", key.ToString());

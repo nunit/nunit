@@ -109,13 +109,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void XmlIsProducedCorrectly()
         {
-            XmlNode topNode = bag.ToXml(true);
+            TNode topNode = bag.ToXml(true);
             Assert.That(topNode.Name, Is.EqualTo("properties"));
 
             string[] props = new string[topNode.ChildNodes.Count];
             for (int i = 0; i < topNode.ChildNodes.Count; i++)
             {
-                XmlNode node = topNode.ChildNodes[i];
+                TNode node = topNode.ChildNodes[i];
 
                 Assert.That(node.Name, Is.EqualTo("property"));
                 

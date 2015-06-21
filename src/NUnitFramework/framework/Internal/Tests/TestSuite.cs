@@ -210,9 +210,9 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public override TNode AddToXml(TNode parentNode, bool recursive)
         {
-            XmlNode thisNode = parentNode.AddElement("test-suite");
+            TNode thisNode = parentNode.AddElement("test-suite");
             thisNode.AddAttribute("type", this.TestType);
 
             PopulateTestNode(thisNode, recursive);

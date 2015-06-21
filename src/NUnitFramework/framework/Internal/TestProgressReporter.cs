@@ -21,12 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System;
-using System.IO;
-using System.Text;
 using System.Web.UI;
-using System.Xml;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -199,4 +195,3 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 }
-#endif

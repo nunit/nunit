@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,59 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-
-namespace NUnit.Framework.Attributes
+#if PORTABLE || SILVERLIGHT || NETCF
+namespace System.Web.UI
 {
-    public class TestDummy : Test
+    public interface ICallbackEventHandler
     {
-        public TestDummy() : base("TestDummy") { }
+        void RaiseCallbackEvent(string report);
 
-        #region Overrides
-
-        public string TestKind
-        {
-            get { return "dummy-test"; }
-        }
-
-        public override bool HasChildren
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override System.Collections.Generic.IList<ITest> Tests
-        {
-            get
-            {
-                return new ITest[0];
-            }
-        }
-
-        public override TNode AddToXml(TNode parentNode, bool recursive)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Internal.Commands.TestCommand MakeTestCommand()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override TestResult MakeTestResult()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string XmlElementName
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        #endregion
+        string GetCallbackResult();
     }
 }
+#endif

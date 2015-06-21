@@ -324,7 +324,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="thisNode"></param>
         /// <param name="recursive"></param>
-        protected void PopulateTestNode(XmlNode thisNode, bool recursive)
+        protected void PopulateTestNode(TNode thisNode, bool recursive)
         {
             thisNode.AddAttribute("id", this.Id.ToString());
             thisNode.AddAttribute("name", this.Name);
@@ -348,13 +348,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="recursive">If true, include child tests recursively</param>
         /// <returns></returns>
-        public XmlNode ToXml(bool recursive)
+        public TNode ToXml(bool recursive)
         {
-            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
-
-            XmlNode thisNode = AddToXml(topNode, recursive);
-
-            return thisNode;
+            return AddToXml(new TNode("dummy"), recursive);
         }
 
         /// <summary>
@@ -364,7 +360,7 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public abstract XmlNode AddToXml(XmlNode parentNode, bool recursive);
+        public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
         #endregion
 

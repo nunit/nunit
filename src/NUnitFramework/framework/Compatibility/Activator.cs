@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,59 +21,43 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if NETCF
 using System;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
+using System.Reflection;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Compatibility
 {
-    public class TestDummy : Test
+    /// <summary>
+    /// Replacement for System.Activator used in the CF build
+    /// </summary>
+    public static class Activator
     {
-        public TestDummy() : base("TestDummy") { }
-
-        #region Overrides
-
-        public string TestKind
+        /// <summary>
+        /// Create an instance of a type using the default constructor
+        /// </summary>
+        public static object CreateInstance(Type type)
         {
-            get { return "dummy-test"; }
+            return System.Activator.CreateInstance(type);
         }
 
-        public override bool HasChildren
+        /// <summary>
+        /// Create an instance of a type using a constructor taking arguments
+        /// </summary>
+        public static object CreateInstance(Type type, object[] args)
         {
-            get
-            {
-                return false;
-            }
-        }
+            Type[] argTypes = new Type[args.Length];
 
-        public override System.Collections.Generic.IList<ITest> Tests
-        {
-            get
-            {
-                return new ITest[0];
-            }
-        }
+            for (int i = 0; i < args.Length; i++)
+                argTypes[i] = args[i] == null ? null : args[i].GetType();
 
-        public override TNode AddToXml(TNode parentNode, bool recursive)
-        {
-            throw new NotImplementedException();
-        }
+            ConstructorInfo ci = type.GetConstructor(argTypes);
 
-        public Internal.Commands.TestCommand MakeTestCommand()
-        {
-            throw new NotImplementedException();
-        }
+            if (ci == null)
+                throw new MissingMethodException();
 
-        public override TestResult MakeTestResult()
-        {
-            throw new NotImplementedException();
+            return ci.Invoke(args);
         }
-
-        public override string XmlElementName
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        #endregion
     }
 }
+#endif
+

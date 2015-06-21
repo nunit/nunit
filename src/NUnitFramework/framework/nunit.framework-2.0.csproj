@@ -100,7 +100,10 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
+    <Compile Include="Compatibility\Activator.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
+    <Compile Include="Compatibility\ICallbackEventHandler.cs" />
+    <Compile Include="Compatibility\MarshalByRefObject.cs" />
     <Compile Include="Compatibility\Path.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
@@ -159,7 +162,7 @@
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
-    <Compile Include="Interfaces\XmlNode.cs" />
+    <Compile Include="Interfaces\TNode.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />

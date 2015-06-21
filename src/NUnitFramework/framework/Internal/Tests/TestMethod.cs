@@ -118,15 +118,15 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Returns an XmlNode representing the current result after
+        /// Returns a TNode representing the current result after
         /// adding it as a child of the supplied parent node.
         /// </summary>
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public override TNode AddToXml(TNode parentNode, bool recursive)
         {
-            XmlNode thisNode = parentNode.AddElement(XmlElementName);
+            TNode thisNode = parentNode.AddElement(XmlElementName);
 
             PopulateTestNode(thisNode, recursive);
 

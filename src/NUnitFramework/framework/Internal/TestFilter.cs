@@ -22,12 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
-
-#if !NETCF && !SILVERLIGHT && !PORTABLE
-using XmlNode = System.Xml.XmlNode;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -104,7 +101,8 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+        private static readonly char[] COMMA = new char[] { ',' };
+
         /// <summary>
         /// Create a TestFilter instance from an xml representation.
         /// </summary>
@@ -112,9 +110,10 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static TestFilter FromXml(string xmlText)
         {
-            var doc = new System.Xml.XmlDocument();
-            doc.LoadXml(xmlText);
-            var topNode = doc.FirstChild;
+            TNode topNode = TNode.FromXml(xmlText);
+            //XmlDocument doc = new System.Xml.XmlDocument();
+            //doc.LoadXml(xmlText);
+            //XmlNode topNode = doc.FirstChild;
 
             if (topNode.Name != "filter")
                 throw new Exception("Expected filter element at top level");
@@ -132,51 +131,50 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private static readonly char[] COMMA = new char[] { ',' };
-
-        private static TestFilter FromXml(XmlNode xmlNode)
+        private static TestFilter FromXml(TNode node)
         {
-            switch (xmlNode.Name)
+            switch (node.Name)
             {
                 case "filter":
                 case "and":
                     var andFilter = new AndFilter();
-                    foreach (XmlNode childNode in xmlNode.ChildNodes)
+                    foreach (var childNode in node.ChildNodes)
                         andFilter.Add(FromXml(childNode));
                     return andFilter;
 
                 case "or":
                     var orFilter = new OrFilter();
-                    foreach (System.Xml.XmlNode childNode in xmlNode.ChildNodes)
+                    foreach (var childNode in node.ChildNodes)
                         orFilter.Add(FromXml(childNode));
                     return orFilter;
 
                 case "not":
-                    return new NotFilter(FromXml(xmlNode.FirstChild));
+                    return new NotFilter(FromXml(node.FirstChild));
 
                 case "id":
                     var idFilter = new IdFilter();
-                    foreach (string id in xmlNode.InnerText.Split(COMMA))
-                        idFilter.Add(id);
+                    if (node.Value != null)
+                        foreach (string id in node.Value.Split(COMMA))
+                            idFilter.Add(id);
                     return idFilter;
 
                 case "tests":
                     var testFilter = new SimpleNameFilter();
-                    foreach (XmlNode childNode in xmlNode.SelectNodes("test"))
-                        testFilter.Add(childNode.InnerText);
+                    foreach (var childNode in node.SelectNodes("test"))
+                        testFilter.Add(childNode.Value);
                     return testFilter;
 
                 case "cat":
                     var catFilter = new CategoryFilter();
-                    foreach (string cat in xmlNode.InnerText.Split(COMMA))
-                        catFilter.AddCategory(cat);
+                    if (node.Value != null)
+                        foreach (string cat in node.Value.Split(COMMA))
+                            catFilter.AddCategory(cat);
                     return catFilter;
 
                 default:
-                    throw new ArgumentException("Invalid filter element: " + xmlNode.Name, "xmlNode");
+                    throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
             }
         }
-#endif
 
         /// <summary>
         /// Nested class provides an empty filter - one that always
