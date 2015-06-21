@@ -60,6 +60,9 @@ namespace NUnit.Framework.Api
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 #endif
 
+        // Pre-loaded test assembly, if passed in constructor
+        private Assembly _testAssembly;
+
         #region Constructors
 
         /// <summary>
@@ -75,6 +78,18 @@ namespace NUnit.Framework.Api
 
             Test.IdPrefix = idPrefix;
             Initialize(assemblyNameOrPath, settings);
+        }
+
+        /// <summary>
+        /// Construct a FrameworkController using the default builder and runner.
+        /// </summary>
+        /// <param name="assembly">The test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
+        public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings)
+            : this(assembly.FullName, idPrefix, settings)
+        {
+            _testAssembly = assembly;
         }
 
         /// <summary>
@@ -94,6 +109,22 @@ namespace NUnit.Framework.Api
 
             Test.IdPrefix = idPrefix ?? "";
             Initialize(assemblyNameOrPath, settings);
+        }
+
+        /// <summary>
+        /// Construct a FrameworkController, specifying the types to be used
+        /// for the runner and builder. This constructor is provided for
+        /// purposes of development.
+        /// </summary>
+        /// <param name="assembly">The test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
+        /// <param name="runnerType">The Type of the test runner</param>
+        /// <param name="builderType">The Type of the test builder</param>
+        public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings, string runnerType, string builderType)
+            : this(assembly.FullName, idPrefix, settings, runnerType, builderType)
+        {
+            _testAssembly = assembly;
         }
 
         private void Initialize(string assemblyPath, IDictionary settings)
@@ -140,6 +171,11 @@ namespace NUnit.Framework.Api
         public string AssemblyNameOrPath { get; private set; }
 
         /// <summary>
+        /// Gets the Assembly for which this
+        /// </summary>
+        public Assembly Assembly { get; private set; }
+
+        /// <summary>
         /// Gets a dictionary of settings for the FrameworkController
         /// </summary>
         public IDictionary Settings { get; private set; }
@@ -164,7 +200,11 @@ namespace NUnit.Framework.Api
 
         private void LoadTests(ICallbackEventHandler handler)
         {
-            Runner.Load(AssemblyNameOrPath, Settings);
+            if (_testAssembly != null)
+                Runner.Load(_testAssembly, Settings);
+            else
+                Runner.Load(AssemblyNameOrPath, Settings);
+
             handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
         }
 

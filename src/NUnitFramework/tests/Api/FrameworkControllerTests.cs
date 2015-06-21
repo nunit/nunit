@@ -95,6 +95,22 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
+        public void LoadTestsAction_Assembly_ReturnsRunnableSuite()
+        {
+            _controller = new FrameworkController(typeof(MockAssembly).Assembly, "ID", _settings);
+            new FrameworkController.LoadTestsAction(_controller, _handler);
+            var result = TNode.FromXml(_handler.GetCallbackResult());
+
+            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
+            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
+            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+        }
+
+        [Test]
         public void LoadTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
             new FrameworkController.LoadTestsAction(new FrameworkController(MISSING_FILE, "ID", _settings), _handler);
