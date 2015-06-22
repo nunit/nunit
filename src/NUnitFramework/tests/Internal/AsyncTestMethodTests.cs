@@ -23,7 +23,7 @@ namespace NUnit.Framework.Internal
             _testObject = new AsyncRealFixture();
         }
 
-        public IEnumerable TestCases
+        public static IEnumerable TestCases
         {
             get
             {
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal
         /// Private method to return a test case, optionally ignored on the Linux platform.
         /// We use this since the Platform attribute is not supported on TestCaseData.
         /// </summary>
-        private TestCaseData GetTestCase(MethodInfo method, ResultState resultState, int assertionCount, bool ignoreOnLinux)
+        private static TestCaseData GetTestCase(MethodInfo method, ResultState resultState, int assertionCount, bool ignoreOnLinux)
         {
             var data = new TestCaseData(method, resultState, assertionCount);
             if (ON_LINUX && ignoreOnLinux)

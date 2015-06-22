@@ -40,9 +40,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<equal 4>";
         }
 
-        private object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
+        static object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
 
-        private object[] FailureData = new object[]
+        static object[] FailureData = new object[]
             {
                 new TestCaseData(5, "5"),
                 new TestCaseData(null, "null"),

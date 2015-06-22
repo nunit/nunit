@@ -34,10 +34,10 @@ namespace NUnit.Framework.Internal
             RuntimeType.Silverlight;
 #else
             Type.GetType("Mono.Runtime", false) != null
-				? RuntimeType.Mono
-				: Environment.OSVersion.Platform == PlatformID.WinCE
-					? RuntimeType.NetCF
-					: RuntimeType.Net;
+                ? RuntimeType.Mono
+                : Environment.OSVersion.Platform == PlatformID.WinCE
+                    ? RuntimeType.NetCF
+                    : RuntimeType.Net;
 #endif
 
         [Test]
@@ -210,7 +210,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        internal FrameworkData[] frameworkData = new FrameworkData[] {
+        internal static FrameworkData[] frameworkData = new FrameworkData[] {
             new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
             // new FrameworkData(RuntimeType.Net, new Version(1,0,3705), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
             // new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),

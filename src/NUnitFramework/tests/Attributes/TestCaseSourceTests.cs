@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -45,15 +45,11 @@ namespace NUnit.Framework.Attributes
             get { return new object[] { new object[] { "StaticProperty" } }; }
         }
 
-        [Test, TestCaseSource("InstanceProperty")]
-        public void SourceCanBeInstanceProperty(string source)
+        [Test]
+        public void SourceUsingInstancePropertyIsNotRunnable()
         {
-            Assert.AreEqual("InstanceProperty", source);
-        }
-
-        IEnumerable InstanceProperty
-        {
-            get { return new object[] { new object[] { "InstanceProperty" } }; }
+            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstancePropertyAsSource");
+            Assert.AreEqual(result.Children[0].ResultState, ResultState.NotRunnable);
         }
 
         [Test, TestCaseSource("StaticMethod")]
@@ -67,10 +63,11 @@ namespace NUnit.Framework.Attributes
             return new object[] { new object[] { "StaticMethod" } };
         }
 
-        [Test, TestCaseSource("InstanceMethod")]
-        public void SourceCanBeInstanceMethod(string source)
+        [Test]
+        public void SourceUsingInstanceMethodIsNotRunnable()
         {
-            Assert.AreEqual("InstanceMethod", source);
+            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstanceMethodAsSource");
+            Assert.AreEqual(result.Children[0].ResultState, ResultState.NotRunnable);
         }
 
         IEnumerable InstanceMethod()
@@ -87,25 +84,17 @@ namespace NUnit.Framework.Attributes
         static object[] StaticField =
             { new object[] { "StaticField" } };
 
-        [Test, TestCaseSource("InstanceField")]
-        public void SourceCanBeInstanceField(string source)
+        [Test]
+        public void SourceUsingInstanceFieldIsNotRunnable()
         {
-            Assert.AreEqual("InstanceField", source);
+            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstanceFieldAsSource");
+            Assert.AreEqual(result.Children[0].ResultState, ResultState.NotRunnable);
         }
-
-        static object[] InstanceField =
-            { new object[] { "InstanceField" } };
 
         [Test, TestCaseSource(typeof(DataSourceClass))]
         public void SourceCanBeInstanceOfIEnumerable(string source)
         {
             Assert.AreEqual("DataSourceClass", source);
-        }
-
-        [Test, TestCaseSource(typeof(DataSourceClass), null, "foo")]
-        public void SourceCanBeInstanceOfIEnumerableWithParameters(string source)
-        {
-            Assert.AreEqual("foo", source);
         }
 
         class DataSourceClass : IEnumerable
@@ -114,45 +103,9 @@ namespace NUnit.Framework.Attributes
             {
             }
 
-            private readonly string enumeratorOverride;
-
-            public DataSourceClass(string enumeratorOverride)
-            {
-                this.enumeratorOverride = enumeratorOverride;
-            }
-
             public IEnumerator GetEnumerator()
             {
-                yield return this.enumeratorOverride ?? "DataSourceClass";
-            }
-        }
-
-        [Test, TestCaseSource(typeof(DataSourceClassWithMethod), "GetStuff", "foo")]
-        public void SourceCanHaveMethodProducingIEnumerableWithParameters(string source)
-        {
-            string[] items = new[] { "foo1", "foo2", "foo3" };
-            bool found = false;
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (items[i] == source)
-                {
-                    found = true;
-                }
-            }
-            Assert.IsTrue(found);
-        }
-
-        class DataSourceClassWithMethod
-        {
-            private readonly string enumeratorPrepend;
-
-            public DataSourceClassWithMethod(string enumeratorPrepend)
-            {
-                this.enumeratorPrepend = enumeratorPrepend;
-            }
-            public IEnumerable<string> GetStuff()
-            {
-                return new[] { enumeratorPrepend + "1", enumeratorPrepend + "2", enumeratorPrepend + "3" };
+                yield return "DataSourceClass";
             }
         }
 
@@ -271,7 +224,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(lhs, rhs);
         }
 
-        object[] testCases =
+        static object[] testCases =
         {
             new TestCaseData(
                 new string[] { "A" },

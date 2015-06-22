@@ -198,6 +198,7 @@
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Interfaces\IApplyToContext.cs" />
     <Compile Include="Interfaces\IApplyToTest.cs" />
+    <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\StackFilter.cs" />

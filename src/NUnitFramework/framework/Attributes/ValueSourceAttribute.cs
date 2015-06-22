@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
@@ -34,10 +35,9 @@ namespace NUnit.Framework
     /// provide data for one parameter of a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]
-    public class ValueSourceAttribute : DataAttribute, Interfaces.IParameterDataSource
+    public class ValueSourceAttribute : DataAttribute, IParameterDataSource
     {
-        private readonly string sourceName;
-        private readonly Type sourceType;
+        #region Constructors
 
         /// <summary>
         /// Construct with the name of the factory - for use with languages
@@ -46,7 +46,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of the data source to be used</param>
         public ValueSourceAttribute(string sourceName)
         {
-            this.sourceName = sourceName;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -57,25 +57,25 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of the method, property or field that will provide data</param>
         public ValueSourceAttribute(Type sourceType, string sourceName)
         {
-            this.sourceType = sourceType;
-            this.sourceName = sourceName;
+            SourceType = sourceType;
+            SourceName = sourceName;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
-        public string SourceName
-        {
-            get { return sourceName; }
-        }
+        public string SourceName { get; private set; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType
-        {
-            get { return sourceType; }
-        }
+        public Type SourceType { get; private set; }
+
+        #endregion
 
         #region IParameterDataSource Members
 
@@ -98,35 +98,55 @@ namespace NUnit.Framework
 
         private IEnumerable GetDataSource(ParameterInfo parameter)
         {
-            Type sourceType = this.sourceType;
+            Type sourceType = SourceType;
             if (sourceType == null)
                 sourceType = parameter.Member.ReflectedType;
 
             // TODO: Test this
-            if (sourceName == null)
-            {
+            if (SourceName == null)
                 return Reflect.Construct(sourceType) as IEnumerable;
-            }
 
-            MemberInfo[] members = sourceType.GetMember(sourceName,
+            MemberInfo[] members = sourceType.GetMember(SourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
-                object sourceobject = Reflect.Construct(sourceType);
+
                 var field = member as FieldInfo;
                 if (field != null)
-                    return (IEnumerable)field.GetValue(sourceobject);
+                {
+                    if (field.IsStatic)
+                        return (IEnumerable)field.GetValue(null);
+
+                    ThrowInvalidDataSourceException();
+                }
 
                 var property = member as PropertyInfo;
                 if (property != null)
-                    return (IEnumerable)property.GetValue(sourceobject, null);
+                {
+                    if (property.GetGetMethod(true).IsStatic)
+                        return (IEnumerable)property.GetValue(null, null);
+
+                    ThrowInvalidDataSourceException();
+                }
 
                 var m = member as MethodInfo;
                 if (m != null)
-                    return (IEnumerable)m.Invoke(sourceobject, null);
+                {
+                    if (m.IsStatic)
+                        return (IEnumerable)m.Invoke(null, null);
+
+                    ThrowInvalidDataSourceException();
+                }
             }
+
             return null;
+        }
+
+        private static void ThrowInvalidDataSourceException()
+        {
+            throw new InvalidDataSourceException("The name specified on a ValueSourceAttribute must refer to a static field, property or method.");
         }
 
         #endregion

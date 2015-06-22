@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -122,8 +122,20 @@ namespace NUnit.Framework
             if (parameters.Length > 0)
             {
                 IEnumerable[] sources = new IEnumerable[parameters.Length];
-                for (int i = 0; i < parameters.Length; i++)
-                    sources[i] = _dataProvider.GetDataFor(parameters[i]);
+
+                try
+                {
+                    for (int i = 0; i < parameters.Length; i++)
+                        sources[i] = _dataProvider.GetDataFor(parameters[i]);
+                }
+                catch (InvalidDataSourceException ex)
+                {
+                    var parms = new ParameterSet();
+                    parms.RunState = RunState.NotRunnable;
+                    parms.Properties.Set(PropertyNames.SkipReason, ex.Message);
+                    tests.Add(_builder.BuildTestMethod(method, suite, parms));
+                    return tests;
+                }
 
                 foreach (var parms in _strategy.GetTestCases(sources))
                     tests.Add(_builder.BuildTestMethod(method, suite, (ParameterSet)parms));
