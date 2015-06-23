@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
                 {
                     OperatingSystem os = Environment.OSVersion;
 
-#if SILVERLIGHT
+#if SILVERLIGHT || NETCF
                     // TODO: Runtime silverlight detection?
                     currentPlatform = new OSPlatform(os.Platform, os.Version);
 #else
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
         /// <summary>
         /// Gets the actual OS Version, not the incorrect value that might be 
         /// returned for Win 8.1 and Win 10

@@ -368,6 +368,7 @@
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
+    <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NetCFExtensions.cs" />

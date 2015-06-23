@@ -36,9 +36,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<not <equal null>>";
         }
 
-        object[] SuccessData = new object[] { 42, "Hello" };
+        static object[] SuccessData = new object[] { 42, "Hello" };
             
-        object[] FailureData = new object [] { new object[] { null, "null" } };
+        static object[] FailureData = new object [] { new object[] { null, "null" } };
 
         [Test]
         public void NotHonorsIgnoreCaseUsingConstructors()

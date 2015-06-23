@@ -38,9 +38,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<binaryserializable>";
         }
 
-        object[] SuccessData = new object[] { 1, "a", new List<int>(), new InternalWithSerializableAttributeClass() };
+        static object[] SuccessData = new object[] { 1, "a", new List<int>(), new InternalWithSerializableAttributeClass() };
         
-        object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.InternalClass>" ) };
+        static object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.InternalClass>" ) };
 
         [Test]
         public void NullArgumentThrowsException()

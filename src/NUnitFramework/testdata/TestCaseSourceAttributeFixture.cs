@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -50,6 +50,36 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         public void MethodWithExplicitTestCases(int num)
         {
         }
+
+        [Test, TestCaseSource("InstanceProperty")]
+        public void MethodWithInstancePropertyAsSource(string source)
+        {
+            Assert.AreEqual("InstanceProperty", source);
+        }
+
+        IEnumerable InstanceProperty
+        {
+            get { return new object[] { new object[] { "InstanceProperty" } }; }
+        }
+
+        [Test, TestCaseSource("InstanceMethod")]
+        public void MethodWithInstanceMethodAsSource(string source)
+        {
+            Assert.AreEqual("InstanceMethod", source);
+        }
+
+        IEnumerable InstanceMethod()
+        {
+            return new object[] { new object[] { "InstanceMethod" } };
+        }
+
+        [Test, TestCaseSource("InstanceField")]
+        public void MethodWithInstanceFieldAsSource(string source)
+        {
+            Assert.AreEqual("InstanceField", source);
+        }
+
+        object[] InstanceField = { new object[] { "InstanceField" } };
 
         private static IEnumerable ignored_source
         {

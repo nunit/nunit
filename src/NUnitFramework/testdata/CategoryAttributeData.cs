@@ -46,7 +46,7 @@ namespace NUnit.TestData.CategoryAttributeData
         public void Test4() { }
 
 #pragma warning disable 414
-        private TestCaseData[] Test3Data = new TestCaseData[] {
+        private static TestCaseData[] Test3Data = new TestCaseData[] {
             new TestCaseData(5).SetCategory("Bottom")
         };
 #pragma warning restore 414

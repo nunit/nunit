@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
         }
 
-        object[] SuccessData = new object[] { 42 };
+        static object[] SuccessData = new object[] { 42 };
 
-        object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
+        static object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
 
         [Test]
         public void CanCombineTestsWithAndOperator()

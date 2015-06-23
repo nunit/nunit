@@ -37,9 +37,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<substring \"hello\">";
         }
 
-        object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
+        static object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
         
-        object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] { 
             new TestCaseData( "goodbye", "\"goodbye\"" ), 
             new TestCaseData( "HELLO", "\"HELLO\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
@@ -58,9 +58,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<substring \"hello\">";
         }
 
-        object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
+        static object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
         
-        object[] FailureData = new object[] {
+        static object[] FailureData = new object[] {
             new TestCaseData( "goodbye", "\"goodbye\"" ), 
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
@@ -77,9 +77,9 @@ namespace NUnit.Framework.Constraints
     //        Description = "\"Hello World!\", ignoring case";
     //    }
 
-    //    object[] SuccessData = new object[] { "hello world!", "Hello World!", "HELLO world!" };
+    //    static object[] SuccessData = new object[] { "hello world!", "Hello World!", "HELLO world!" };
             
-    //    object[] FailureData = new object[] { "goodbye", "Hello Friends!", string.Empty, null };
+    //    static object[] FailureData = new object[] { "goodbye", "Hello Friends!", string.Empty, null };
 
 
     //    string[] ActualValues = new string[] { "\"goodbye\"", "\"Hello Friends!\"", "<string.Empty>", "null" };

@@ -55,16 +55,31 @@ namespace NUnit.Framework.Constraints
             //SetValueTrueAfterDelay(300);
         }
 
-        object[] SuccessData = new object[] { true };
-        object[] FailureData = new object[] { 
+        static object[] SuccessData = new object[] { true };
+        static object[] FailureData = new object[] { 
             new TestCaseData( false, "False" ),
             new TestCaseData( 0, "0" ),
             new TestCaseData( null, "null" ) };
 
-        object[] InvalidData = new object[] { InvalidDelegate };
+        static ActualValueDelegate DelegateReturningValue;
+        static ActualValueDelegate DelegateReturningFalse;
+        static ActualValueDelegate DelegateReturningZero;
 
-        ActualValueDelegate<object>[] SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
-        ActualValueDelegate<object>[] FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
+        static ActualValueDelegate<object>[] SuccessDelegates;
+        static ActualValueDelegate<object>[] FailureDelegates;
+
+        // Initialize static fields that are sensitive to order of initialization.
+        // Most compilers would probably intialize these in lexical order but it
+        // may not be guaranteed in all cases so we do it directly.
+        static DelayedConstraintTests()
+        {
+            DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
+            DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
+            DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
+
+            SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
+            FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
+        }
 
         [Test, TestCaseSource("SuccessDelegates")]
         public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
@@ -227,16 +242,12 @@ namespace NUnit.Framework.Constraints
         private static int setValuesDelay;
 
         private static void MethodReturningVoid() { }
-        private static TestDelegate InvalidDelegate = new TestDelegate(MethodReturningVoid);
 
         private static object MethodReturningValue() { return boolValue; }
-        private static ActualValueDelegate DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
 
         private static object MethodReturningFalse() { return false; }
-        private static ActualValueDelegate DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
 
         private static object MethodReturningZero() { return 0; }
-        private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
 
         private static AutoResetEvent waitEvent = new AutoResetEvent(false);
 
