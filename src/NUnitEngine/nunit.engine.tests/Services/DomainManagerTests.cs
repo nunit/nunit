@@ -85,6 +85,40 @@ namespace NUnit.Engine.Services.Tests
             CheckDomainIsUnloaded();
         }
 
+        [Test]
+        [TestCase(@"file.config", @"file.dll", @"d:\", @"file.config")]
+        [TestCase(@"file.config", @"", @"d:\", "file.config")]
+        [TestCase(@"file.config", null, @"d:\", "file.config")]
+        [TestCase(@"", @"c:\file.dll", @"d:\", @"c:\file.dll.config")]
+        [TestCase(null, @"c:\file.dll", @"d:\", @"c:\file.dll.config")]
+        [TestCase(null, @"c:\file.dll", @"", @"c:\file.dll.config")]
+        [TestCase(null, @"c:\file.dll", null, @"c:\file.dll.config")]
+        [TestCase(@"", @"file.dll", @"d:\", @"d:\file.dll.config")]
+        [TestCase(@"", @"file.dll", @"", @"file.dll.config")]
+        [TestCase(null, @"file.dll", null, @"file.dll.config")]
+        [TestCase(null, @"", null, "")]
+        [TestCase(null, null, null, "")]
+        public void ShouldProvideConfigFileName(string settingsConfigFile, string testFile, string appBaseDir, string expectedConfigFileName)
+        {
+            settingsConfigFile = ConvertFileName(settingsConfigFile);
+            testFile = ConvertFileName(testFile);
+            appBaseDir = ConvertFileName(appBaseDir);
+            expectedConfigFileName = ConvertFileName(expectedConfigFileName);
+
+            var actualConfigFileName = DomainManager.TryGetConfigFileName(settingsConfigFile, testFile, appBaseDir);
+            Assert.AreEqual(expectedConfigFileName, actualConfigFileName);
+        }
+
+        private string ConvertFileName(string fileName)
+        {
+            if (fileName == null)
+            {
+                return null;
+            }
+
+            return fileName.Replace('\\', Path.DirectorySeparatorChar);
+        }
+
         #region Helper Methods
 
         private void CheckDomainIsUnloaded()
