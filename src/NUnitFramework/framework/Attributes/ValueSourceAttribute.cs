@@ -43,7 +43,7 @@ namespace NUnit.Framework
         /// Construct with the name of the factory - for use with languages
         /// that don't support params arrays.
         /// </summary>
-        /// <param name="sourceName">The name of the data source to be used</param>
+        /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public ValueSourceAttribute(string sourceName)
         {
             SourceName = sourceName;
@@ -54,7 +54,7 @@ namespace NUnit.Framework
         /// that don't support params arrays.
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
-        /// <param name="sourceName">The name of the method, property or field that will provide data</param>
+        /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public ValueSourceAttribute(Type sourceType, string sourceName)
         {
             SourceType = sourceType;
@@ -146,7 +146,7 @@ namespace NUnit.Framework
 
         private static void ThrowInvalidDataSourceException()
         {
-            throw new InvalidDataSourceException("The name specified on a ValueSourceAttribute must refer to a static field, property or method.");
+            throw new InvalidDataSourceException("The sourceName specified on a ValueSourceAttribute must refer to a static field, property or method.");
         }
 
         #endregion

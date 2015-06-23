@@ -45,7 +45,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Construct with the name of the method, property or field that will provide data
         /// </summary>
-        /// <param name="sourceName">The name of the method, property or field that will provide data</param>
+        /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestCaseSourceAttribute(string sourceName)
         {
             this.SourceName = sourceName;
@@ -55,7 +55,7 @@ namespace NUnit.Framework
         /// Construct with a Type and name
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
-        /// <param name="sourceName">The name of the method, property or field that will provide data</param>
+        /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName)
         {
             this.SourceType = sourceType;
@@ -263,7 +263,7 @@ namespace NUnit.Framework
         {
             var parms = new ParameterSet();
             parms.RunState = RunState.NotRunnable;
-            parms.Properties.Set(PropertyNames.SkipReason, "The name specified on a TestCaseSourceAttribute must refer to a static field, property or method.");
+            parms.Properties.Set(PropertyNames.SkipReason, "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.");
             return new ParameterSet[] { parms };
         }
 
