@@ -92,18 +92,22 @@ namespace NUnit.Framework.Attributes
         #region Helper Methods
         private void CheckValues(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            Type type = GetType();
+
+            MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             ParameterInfo param = method.GetParameters()[0];
             ValuesAttribute attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
-            Assert.That(attr.GetData(param), Is.EqualTo(expected));
+            Assert.That(attr.GetData(type, param), Is.EqualTo(expected));
         }
 
         private void CheckValuesWithinTolerance(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            Type type = GetType();
+
+            MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             ParameterInfo param = method.GetParameters()[0];
             ValuesAttribute attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
-            Assert.That(attr.GetData(param), Is.EqualTo(expected).Within(0.000001));
+            Assert.That(attr.GetData(type, param), Is.EqualTo(expected).Within(0.000001));
         }
         #endregion
     }

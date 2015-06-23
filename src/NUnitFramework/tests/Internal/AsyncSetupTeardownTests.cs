@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
         public void Setup()
         {
             _testObject = new AsyncSetupTearDownFixture();
-            _context = new TestExecutionContext {TestObject = _testObject, CurrentResult = new TestCaseResult(new TestMethod(Success.ElementAt(0)))};
+            _context = new TestExecutionContext {TestObject = _testObject, CurrentResult = new TestCaseResult(new TestMethod(_testObject.GetType(), Success.ElementAt(0)))};
         }
 
         [Test]

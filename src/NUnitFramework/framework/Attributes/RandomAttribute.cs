@@ -91,7 +91,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of _values to be used as arguments
         /// </summary>
-        public new IEnumerable GetData(ParameterInfo parameter)
+        public new IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
             Randomizer r = Randomizer.GetRandomizer(parameter);
             IList values;
@@ -120,7 +120,7 @@ namespace NUnit.Framework
             for (int i = 0; i < values.Count; i++)
                 this.data[i] = values[i];
  
-            return base.GetData(parameter);
+            return base.GetData(fixtureType, parameter);
         }
     }
 }

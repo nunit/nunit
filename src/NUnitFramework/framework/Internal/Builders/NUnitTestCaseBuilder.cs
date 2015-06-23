@@ -42,18 +42,20 @@ namespace NUnit.Framework.Internal.Builders
         /// Builds a single NUnitTestMethod, either as a child of the fixture
         /// or as one of a set of test cases under a ParameterizedTestMethodSuite.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The MethodInfo from which to construct the TestMethod</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
         /// <returns></returns>
-        public TestMethod BuildTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
+        public TestMethod BuildTestMethod(Type fixtureType, MethodInfo method, Test parentSuite, ParameterSet parms)
         {
-            var testMethod = new TestMethod(method, parentSuite)
+            var testMethod = new TestMethod(fixtureType, method, parentSuite)
             {
                 Seed = randomizer.Next()
             };
 
-            string prefix = method.ReflectedType.FullName;
+            string prefix = fixtureType.FullName;
 
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.

@@ -394,12 +394,14 @@ namespace NUnit.Framework
         /// Construct one or more TestMethods from a given MethodInfo,
         /// using available parameter data.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(Type fixtureType, MethodInfo method, Test suite)
         {
-            TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
+            TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(fixtureType, method, suite, GetParametersForTestCase(method));
             
 #if !PORTABLE
             if (test.RunState != RunState.NotRunnable && 

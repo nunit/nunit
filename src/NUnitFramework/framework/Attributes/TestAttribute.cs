@@ -121,10 +121,12 @@ namespace NUnit.Framework
         /// <summary>
         /// Construct a TestMethod from a given MethodInfo.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The MethodInfo for which a test is to be constructed.</param>
         /// <param name="suite">The suite to which the test will be added.</param>
         /// <returns>A TestMethod</returns>
-        public TestMethod BuildFrom(MethodInfo method, Test suite)
+        public TestMethod BuildFrom(Type fixtureType, MethodInfo method, Test suite)
         {
             ParameterSet parms = null;
 
@@ -134,7 +136,7 @@ namespace NUnit.Framework
                 parms.ExpectedResult = this.ExpectedResult;
             }
 
-            return _builder.BuildTestMethod(method, suite, parms);
+            return _builder.BuildTestMethod(fixtureType, method, suite, parms);
         }
         
         #endregion

@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Reflection;
 using NUnit.Framework.Internal.Commands;
 
@@ -37,9 +38,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Construct from a MethodInfo
         /// </summary>
+        /// <param name="fixtureType"></param>
         /// <param name="method"></param>
-        public ParameterizedMethodSuite(MethodInfo method)
-            : base(method.ReflectedType.FullName, method.Name)
+        public ParameterizedMethodSuite(Type fixtureType, MethodInfo method)
+            : base(fixtureType.FullName, method.Name)
         {
             Method = method;
 #if PORTABLE

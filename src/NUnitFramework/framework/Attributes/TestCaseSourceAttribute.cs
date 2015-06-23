@@ -94,12 +94,14 @@ namespace NUnit.Framework
         /// Returns a set of ITestCaseDataItems for use as arguments
         /// to a parameterized test method.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The method for which data is needed.</param>
         /// <returns></returns>
-        public IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+        public IEnumerable<ITestCaseData> GetTestCasesFor(Type fixtureType, MethodInfo method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
-            IEnumerable source = GetTestCaseSource(method);
+            IEnumerable source = GetTestCaseSource(fixtureType);
 
             if (source != null)
             {
@@ -190,11 +192,11 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestCaseSource(MethodInfo method)
+        private IEnumerable GetTestCaseSource(Type fixtureType)
         {
             Type sourceType = this.SourceType;
             if (sourceType == null)
-                sourceType = method.ReflectedType;
+                sourceType = fixtureType;
 
             if (SourceName == null)
                 return Reflect.Construct(sourceType, _sourceConstructorParameters) as IEnumerable;
@@ -232,12 +234,12 @@ namespace NUnit.Framework
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(Type fixtureType, MethodInfo method, Test suite)
         {
             List<TestMethod> tests = new List<TestMethod>();
 
-            foreach (ParameterSet parms in GetTestCasesFor(method))
-                tests.Add(_builder.BuildTestMethod(method, suite, parms));
+            foreach (ParameterSet parms in GetTestCasesFor(fixtureType, method))
+                tests.Add(_builder.BuildTestMethod(fixtureType, method, suite, parms));
 
             return tests;
         }

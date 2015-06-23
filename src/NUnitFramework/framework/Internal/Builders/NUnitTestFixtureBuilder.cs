@@ -181,7 +181,7 @@ namespace NUnit.Framework.Internal.Builders
 
             foreach (MethodInfo method in methods)
             {
-                Test test = BuildTestCase(method, this.fixture);
+                Test test = BuildTestCase(fixtureType, method, this.fixture);
 
                 if (test != null)
                 {
@@ -201,13 +201,15 @@ namespace NUnit.Framework.Internal.Builders
         /// Derived classes should add builders to the collection
         /// in their constructor.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="method">The MethodInfo for which a test is to be created</param>
         /// <param name="suite">The test suite being built.</param>
         /// <returns>A newly constructed Test</returns>
-        private Test BuildTestCase(MethodInfo method, TestSuite suite)
+        private Test BuildTestCase(Type fixtureType, MethodInfo method, TestSuite suite)
         {
-            return testBuilder.CanBuildFrom(method, suite)
-                ? testBuilder.BuildFrom(method, suite)
+            return testBuilder.CanBuildFrom(fixtureType, method, suite)
+                ? testBuilder.BuildFrom(fixtureType, method, suite)
                 : null;
         }
 

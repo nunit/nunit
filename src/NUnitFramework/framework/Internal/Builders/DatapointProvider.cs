@@ -39,16 +39,17 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determine whether any data is available for a parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>
         /// True if any data is available, otherwise false.
         /// </returns>
-        public bool HasDataFor(System.Reflection.ParameterInfo parameter)
+        public bool HasDataFor(Type fixtureType, System.Reflection.ParameterInfo parameter)
         {
             Type parameterType = parameter.ParameterType;
             MemberInfo method = parameter.Member;
-            Type fixtureType = method.ReflectedType;
 
             if (!method.IsDefined(typeof(TheoryAttribute), true))
                 return false;
@@ -73,17 +74,17 @@ namespace NUnit.Framework.Internal.Builders
         /// Return an IEnumerable providing data for use with the
         /// supplied parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>
         /// An IEnumerable providing the required data
         /// </returns>
-        public System.Collections.IEnumerable GetDataFor(System.Reflection.ParameterInfo parameter)
+        public System.Collections.IEnumerable GetDataFor(Type fixtureType, System.Reflection.ParameterInfo parameter)
         {
             var datapoints = new List<object>();
-
             Type parameterType = parameter.ParameterType;
-            Type fixtureType = parameter.Member.ReflectedType;
 
             foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
             {

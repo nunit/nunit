@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Reflection;
 
@@ -35,18 +36,22 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Determine whether any data is available for a parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>True if any data is available, otherwise false.</returns>
-        bool HasDataFor(ParameterInfo parameter);
+        bool HasDataFor(Type fixtureType, ParameterInfo parameter);
 
         /// <summary>
         /// Return an IEnumerable providing data for use with the
         /// supplied parameter.
         /// </summary>
+        /// <param name="fixtureType">The parameter containing type of the test fixture class. 
+        /// This may be different from the reflected member info</param>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>An IEnumerable providing the required data</returns>
-        IEnumerable GetDataFor(ParameterInfo parameter);
+        IEnumerable GetDataFor(Type fixtureType, ParameterInfo parameter);
     }
 }
