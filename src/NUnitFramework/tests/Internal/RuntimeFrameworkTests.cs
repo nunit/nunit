@@ -69,6 +69,7 @@ namespace NUnit.Framework.Internal
         }
 #elif NET_4_0
         [Test]
+        [Platform(Exclude = "Mono", Reason = "Mono does not run assemblies targeting 4.0 in compatibility mode")]
         public void RunsIn40CompatibilityModeWhenCompiled40()
         {
             var uri = new Uri("http://host.com/path./");
