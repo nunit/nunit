@@ -402,7 +402,7 @@ namespace NUnit.Engine.Services
                 try
                 {
                     var agentType = typeof(TargetFrameworkAgent);
-                    var agent = domain.CreateInstanceAndUnwrap(agentType.Assembly.FullName, agentType.FullName) as TargetFrameworkAgent;
+                    var agent = domain.CreateInstanceFromAndUnwrap(agentType.Assembly.CodeBase, agentType.FullName) as TargetFrameworkAgent;
                     var targetFramework = agent.GetTargetFrameworkName(assemblyPath);
                     if(!string.IsNullOrEmpty(targetFramework))
                     {
@@ -423,17 +423,17 @@ namespace NUnit.Engine.Services
                 // You can't get custom attributes when the assembly is loaded reflection only
                 var testAssembly = Assembly.LoadFrom(assemblyPath);
 
-                var attrs = testAssembly.GetCustomAttributes(false);
-                foreach (Attribute attr in attrs)
+                // This type exists on .NET 4.0+
+                var attrType = typeof(object).Assembly.GetType("System.Runtime.Versioning.TargetFrameworkAttribute");
+                var attrs = testAssembly.GetCustomAttributes(attrType, false);
+                if (attrs.Length > 0)
                 {
+                    var attr = attrs[0];
                     var type = attr.GetType();
-                    if (type.Name == "TargetFrameworkAttribute")
+                    var property = type.GetProperty("FrameworkName");
+                    if (property != null)
                     {
-                        var property = type.GetProperty("FrameworkName", BindingFlags.Public | BindingFlags.Instance);
-                        if (property != null)
-                        {
-                            return property.GetValue(attr, null) as string;
-                        }
+                        return property.GetValue(attr, null) as string;
                     }
                 }
                 return null;
