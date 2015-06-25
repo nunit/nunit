@@ -109,6 +109,10 @@ namespace NUnit.Engine.Services
 
                 if (configFile == null || configFile == string.Empty)
                     configFile = testFile.Name + ".config";
+
+                // Setting the target framework is only supported when running with
+                // multiple AppDomains, one per assembly.
+                SetTargetFramework(testFile.FullName, setup);
             }
             else
             {
@@ -382,6 +386,57 @@ namespace NUnit.Engine.Services
             {
                 Status = ServiceStatus.Error;
                 throw;
+            }
+        }
+
+        // .NET versions greater than v4.0 report as v4.0, so look at
+        // the TargetFrameworkAttribute on the assembly if it exists
+        private static void SetTargetFramework(string assemblyPath, AppDomainSetup setup)
+        {
+            var property = typeof(AppDomainSetup).GetProperty("TargetFrameworkName", BindingFlags.Public | BindingFlags.Instance);
+
+            // If property is null, .NET 4.5+ is not installed, so there is no need
+            if (property != null)
+            {
+                var domain = AppDomain.CreateDomain("TargetFrameworkDomain");
+                try
+                {
+                    var agentType = typeof(TargetFrameworkAgent);
+                    var agent = domain.CreateInstanceFromAndUnwrap(agentType.Assembly.CodeBase, agentType.FullName) as TargetFrameworkAgent;
+                    var targetFramework = agent.GetTargetFrameworkName(assemblyPath);
+                    if(!string.IsNullOrEmpty(targetFramework))
+                    {
+                        property.SetValue(setup, targetFramework, null);
+                    }
+                }
+                finally
+                {
+                    AppDomain.Unload(domain);
+                }
+            }
+        }
+
+        private class TargetFrameworkAgent : MarshalByRefObject
+        {
+            public string GetTargetFrameworkName(string assemblyPath)
+            {
+                // You can't get custom attributes when the assembly is loaded reflection only
+                var testAssembly = Assembly.LoadFrom(assemblyPath);
+
+                // This type exists on .NET 4.0+
+                var attrType = typeof(object).Assembly.GetType("System.Runtime.Versioning.TargetFrameworkAttribute");
+                var attrs = testAssembly.GetCustomAttributes(attrType, false);
+                if (attrs.Length > 0)
+                {
+                    var attr = attrs[0];
+                    var type = attr.GetType();
+                    var property = type.GetProperty("FrameworkName");
+                    if (property != null)
+                    {
+                        return property.GetValue(attr, null) as string;
+                    }
+                }
+                return null;
             }
         }
 
