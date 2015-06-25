@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
 #region Using Directives
 
 using System;
@@ -55,9 +55,9 @@ namespace NUnit.Framework.Assertions
             if (_goodDir2 != null) _goodDir2.Dispose();
         }
 
-        #region AreEqual
+#region AreEqual
 
-        #region Success Tests
+#region Success Tests
 
         [Test]
         public void AreEqualPassesWithDirectoryInfos()
@@ -68,9 +68,9 @@ namespace NUnit.Framework.Assertions
             DirectoryAssert.AreEqual(expected, actual);
         }
 
-        #endregion
+#endregion
 
-        #region Failure Tests
+#region Failure Tests
 
         [Test]
         public void AreEqualFailsWithDirectoryInfos()
@@ -84,13 +84,13 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region AreNotEqual
+#region AreNotEqual
 
-        #region Success Tests
+#region Success Tests
         [Test]
         public void AreNotEqualPassesIfExpectedIsNull()
         {
@@ -110,9 +110,9 @@ namespace NUnit.Framework.Assertions
             var actual = _goodDir2.Directory;
             DirectoryAssert.AreNotEqual(expected, actual);
         }
-        #endregion
+#endregion
 
-        #region Failure Tests
+#region Failure Tests
 
         [Test]
         public void AreNotEqualFailsWithDirectoryInfos()
@@ -128,11 +128,11 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Exists
+#region Exists
 
         [Test]
         public void ExistsPassesWhenDirectoryInfoExists()
@@ -181,9 +181,9 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
-        #endregion
+#endregion
 
-        #region DoesNotExist
+#region DoesNotExist
 
         [Test]
         public void DoesNotExistFailsWhenDirectoryInfoExists()
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

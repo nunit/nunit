@@ -1,37 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{08D0F53A-CD37-4060-B5A2-BCC202F0DE46}</ProjectGuid>
+    <ProjectGuid>{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
     <AssemblyName>nunit.framework.tests</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile344</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_5;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
-    <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_5;PORTABLE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
@@ -44,14 +43,6 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
@@ -74,7 +65,6 @@
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
-    <Compile Include="Assertions\AssertEqualsTests.cs" />
     <Compile Include="Assertions\AssertFailTests.cs" />
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
@@ -85,6 +75,7 @@
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
+    <Compile Include="Assertions\AssertEqualsTests.cs" />
     <Compile Include="Assertions\DirectoryAssertTests.cs" />
     <Compile Include="Assertions\FileAssertTests.cs" />
     <Compile Include="Assertions\GreaterEqualFixture.cs" />
@@ -122,7 +113,6 @@
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />
-    <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TestMethodBuilderTests.cs" />
     <Compile Include="Attributes\TestOfTests.cs" />
@@ -143,12 +133,14 @@
     <Compile Include="Constraints\BinarySerializableTest.cs" />
     <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
     <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
-    <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
-    <Compile Include="Constraints\DelayedConstraintTests.cs" />
+    <Compile Include="Constraints\DelayedConstraintTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
@@ -186,6 +178,7 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
@@ -199,7 +192,6 @@
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomGeneratorTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
-    <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpFixtureTests.cs" />
     <Compile Include="Internal\SetUpTearDownTests.cs" />
@@ -244,6 +236,7 @@
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestContextTests.cs" />
+    <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectCollection.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
     <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />
@@ -265,39 +258,6 @@
     <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net" />
-    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />
     <EmbeddedResource Include="TestImage2.jpg" />
     <EmbeddedResource Include="TestText1.txt" />
@@ -308,32 +268,51 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\framework\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-4.0.csproj">
-      <Project>{6A281C98-B74D-403B-8536-966871B992E3}</Project>
-      <Name>nunit.framework-4.0</Name>
+    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
+      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Name>nunit.framework-portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-4.0.csproj">
-      <Project>{DDCE1AE3-AA0D-4E2D-AD1B-8CA322AFA7DD}</Project>
-      <Name>mock-nunit-assembly-4.0</Name>
+    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-portable.csproj">
+      <Project>{8c53c716-3e54-4dfe-8cd9-f4099042fcfa}</Project>
+      <Name>mock-nunit-assembly-portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-4.0.csproj">
-      <Project>{DBD0C8B0-BE4E-4CBF-AAD4-44BEA2EA830B}</Project>
-      <Name>nunitlite.runner-4.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-4.0.csproj">
-      <Project>{A35E6AD6-6D46-41E1-8DB1-A41086793893}</Project>
-      <Name>nunit.testdata-4.0</Name>
+    <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
+      <Project>{9ed200e4-2026-4955-87e0-d8cea7bd9e7f}</Project>
+      <Name>nunit.testdata-portable</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net40+sl4+win8+wp71+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net40+sl4+win8+wp71+wpa81\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO, Version=1.5.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\portable-net40+sl5+win8+wp8+wpa81\System.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\portable-net40+sl5+win8+wp8+wpa81\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\portable-net40+sl5+win8+wp8+wpa81\System.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -341,4 +320,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

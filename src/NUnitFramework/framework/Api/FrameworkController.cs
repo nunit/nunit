@@ -54,6 +54,7 @@ namespace NUnit.Framework.Api
     /// other actions. The driver may support other actions, such as
     /// reload on run, by combining these calls.
     /// </summary>
+    [Serializable]
     public class FrameworkController : MarshalByRefObject
     {
 #if !PORTABLE && !SILVERLIGHT

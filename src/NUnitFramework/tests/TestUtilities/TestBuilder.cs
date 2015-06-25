@@ -121,7 +121,13 @@ namespace NUnit.TestUtilities
 
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
+            {
+#if !PORTABLE
                 Thread.Sleep(1);
+#else
+                System.Threading.Tasks.TaskEx.Delay(1);
+#endif
+            }
 
             return work.Result;
         }
@@ -181,12 +187,18 @@ namespace NUnit.TestUtilities
 
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
+            {
+#if !PORTABLE
                 Thread.Sleep(1);
+#else
+                System.Threading.Tasks.TaskEx.Delay(1);
+#endif
+            }
 
             return work.Result;
         }
 
-        #endregion
+#endregion
 
         private static bool IsStaticClass(Type type)
         {

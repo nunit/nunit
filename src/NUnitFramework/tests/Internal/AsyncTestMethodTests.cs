@@ -11,7 +11,11 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
+#if PORTABLE
+        private static readonly bool ON_LINUX = true;   // We don't know what platform we are running under in portable
+#else
         private static readonly bool ON_LINUX = OSPlatform.CurrentPlatform.IsUnix;
+#endif
 
         private DefaultTestCaseBuilder _builder;
         private object _testObject;

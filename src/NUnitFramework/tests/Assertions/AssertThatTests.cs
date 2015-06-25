@@ -32,7 +32,7 @@ using System;
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET_4_0 || PORTABLE
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 
@@ -237,6 +237,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
+#if !PORTABLE
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
@@ -250,6 +251,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionTask"));
 #endif
         }
+#endif
 
         [Test]
         public void AssertThatErrorGenericTask()

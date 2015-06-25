@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal.Builders
             Type returnType = testMethod.Method.ReturnType;
 #endif
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
             {
                 if (returnType == typeof(void))

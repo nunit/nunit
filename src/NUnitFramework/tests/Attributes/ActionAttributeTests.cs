@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // TODO: Test uses features not available in Silverlight
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Tests
             CheckActionsOnTestCase(testName);
         }
 
-        #region Helper Methods
+#region Helper Methods
 
         private void CheckActionsOnSuite(string suiteName, int firstEvent, int lastEvent, params string[] tags)
         {
@@ -214,9 +214,9 @@ namespace NUnit.Framework.Tests
             Assert.That(event2, Does.EndWith(target1), "Event mismatch");
         }
 
-        #endregion
+#endregion
 
-        #region Expected Attributes and Events
+#region Expected Attributes and Events
 
         private static readonly string[] ExpectedAssemblyActions = new string[] { 
                         "OnAssembly", "OnAssembly", "OnAssembly" };
@@ -413,7 +413,7 @@ namespace NUnit.Framework.Tests
         private static readonly int NumSetUpFixtureActions = ExpectedSetUpFixtureActions.Length;
         private static readonly int NumAssemblyActions = ExpectedAssemblyActions.Length;
 
-        #endregion
+#endregion
     }
 }
 #endif

@@ -28,7 +28,7 @@ using NUnit.Framework.Constraints;
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET_4_0 || PORTABLE
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 

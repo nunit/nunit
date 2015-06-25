@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !PORTABLE
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +30,7 @@ using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
 using NUnit.Tests.Assemblies;
 #endif
 
@@ -41,7 +42,7 @@ namespace NUnitLite.Runner.Tests
 
         private TextUI _textUI;
         private StringBuilder _reportBuilder;
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
         private TestResult _result;
 
         private static readonly string[] REPORT_SEQUENCE = new string[] {
@@ -66,7 +67,7 @@ namespace NUnitLite.Runner.Tests
         {
             _reportBuilder = new StringBuilder();
             var writer = new ExtendedTextWrapper(new StringWriter(_reportBuilder));
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
             var options = new ConsoleOptions();
             _textUI = new TextUI(writer, options);
 #else
@@ -158,7 +159,7 @@ namespace NUnitLite.Runner.Tests
 
         private void MyFakeMethod() { }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
         [Test]
         public void DisplayHelp()
         {
@@ -246,7 +247,7 @@ namespace NUnitLite.Runner.Tests
         }
 #endif
 
-        #region Private Properties and Methods
+#region Private Properties and Methods
 
         private string Report
         {
@@ -265,6 +266,7 @@ namespace NUnitLite.Runner.Tests
             return lines;
         }
 
-        #endregion
+#endregion
     }
 }
+#endif
