@@ -32,6 +32,8 @@ namespace NUnit.Framework
     /// </summary>
     public class RangeAttribute : ValuesAttribute
     {
+        #region Ints
+
         /// <summary>
         /// Construct a range of ints using default step of 1
         /// </summary>
@@ -57,6 +59,17 @@ namespace NUnit.Framework
                 this.data[index++] = val;
         }
 
+        #endregion
+
+        #region Longs
+
+        /// <summary>
+        /// Construct a range of longs using a default step of 1
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public RangeAttribute(long from, long to) : this(from, to, from > to ? -1L : 1L) { }
+
         /// <summary>
         /// Construct a range of longs
         /// </summary>
@@ -75,6 +88,10 @@ namespace NUnit.Framework
                 this.data[index++] = val;
         }
 
+        #endregion
+
+        #region Doubles
+
         /// <summary>
         /// Construct a range of doubles
         /// </summary>
@@ -86,13 +103,18 @@ namespace NUnit.Framework
             Guard.ArgumentValid(step > 0.0D && to >= from || step < 0.0D && to <= from,
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
-            double tol = step / 1000;
-            int count = (int)((to - from) / step + tol + 1);
+            double aStep = Math.Abs(step);
+            double tol = aStep / 1000;
+            int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
             this.data = new object[count];
             int index = 0;
             for (double val = from; index < count; val += step)
                 this.data[index++] = val;
         }
+
+        #endregion
+
+        #region Floats
 
         /// <summary>
         /// Construct a range of floats
@@ -105,12 +127,15 @@ namespace NUnit.Framework
             Guard.ArgumentValid(step > 0.0F && to >= from || step < 0.0F && to <= from,
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
-            float tol = step / 1000;
-            int count = (int)((to - from) / step + tol + 1);
+            float aStep = Math.Abs(step);
+            float tol = aStep / 1000;
+            int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
             this.data = new object[count];
             int index = 0;
             for (float val = from; index < count; val += step)
                 this.data[index++] = val;
         }
+
+        #endregion
     }
 }
