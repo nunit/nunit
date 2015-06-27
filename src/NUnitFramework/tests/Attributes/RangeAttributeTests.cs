@@ -96,6 +96,58 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
+        #region Unsigned Ints
+
+        [Test]
+        public void UintRange()
+        {
+            CheckValues("MethodWithUintRange", 11u, 12u, 13u, 14u, 15u);
+        }
+
+        private void MethodWithUintRange([Range(11u, 15u)] uint x) { }
+
+        [Test]
+        public void UintRange_Reversed()
+        {
+            Assert.Throws<ArgumentException>(() => CheckValues("MethodWithUintRange_Reversed", 15u, 14u, 13u, 12u, 11u));
+        }
+
+        private void MethodWithUintRange_Reversed([Range(15u, 11u)] uint x) { }
+
+        [Test]
+        public void UintRange_FromEqualsTo()
+        {
+            CheckValues("MethodWithUintRange_FromEqualsTo", 11u);
+        }
+
+        private void MethodWithUintRange_FromEqualsTo([Range(11u, 11u)] uint x) { }
+
+        [Test]
+        public void UintRangeAndStep()
+        {
+            CheckValues("MethodWithUintRangeAndStep", 11u, 13u, 15u);
+        }
+
+        private void MethodWithUintRangeAndStep([Range(11u, 15u, 2u)] uint x) { }
+
+        [Test]
+        public void UintRangeAndZeroStep()
+        {
+            Assert.Throws<ArgumentException>(() => CheckValues("MethodWithUintRangeAndZeroStep", 11u, 12u, 13u));
+        }
+
+        private void MethodWithUintRangeAndZeroStep([Range(11u, 15u, 0u)] uint x) { }
+
+        [Test]
+        public void UintRangeAndStep_Reversed()
+        {
+            Assert.Throws<ArgumentException>(() => CheckValues("MethodWithUintRangeAndStep_Reversed", 11u, 13u, 15u));
+        }
+
+        private void MethodWithUintRangeAndStep_Reversed([Range(15u, 11u, 2u)] uint x) { }
+
+        #endregion
+
         #region Longs
 
         [Test]
@@ -161,6 +213,58 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithLongRangeAndNegativeStep_Reversed([Range(15L, 11L, -2L)] long x) { }
+
+        #endregion
+
+        #region Unsigned Longs
+
+        [Test]
+        public void UlongRange()
+        {
+            CheckValues("MethodWithUlongRange", 11ul, 12ul, 13ul, 14ul, 15ul);
+        }
+
+        private void MethodWithUlongRange([Range(11ul, 15ul)] ulong x) { }
+
+        [Test]
+        public void UlongRange_Reversed()
+        {
+            Assert.Throws<ArgumentException>(() => CheckValues("MethodWithUlongRange_Reversed", 15ul, 14ul, 13ul, 12ul, 11ul));
+        }
+
+        private void MethodWithUlongRange_Reversed([Range(15ul, 11ul)] ulong x) { }
+
+        [Test]
+        public void UlongRange_FromEqualsTo()
+        {
+            CheckValues("MethodWithUlongRange_FromEqualsTo", 11ul);
+        }
+
+        private void MethodWithUlongRange_FromEqualsTo([Range(11ul, 11ul)] ulong x) { }
+
+        [Test]
+        public void UlongRangeAndStep()
+        {
+            CheckValues("MethodWithUlongRangeAndStep", 11ul, 13ul, 15ul);
+        }
+
+        private void MethodWithUlongRangeAndStep([Range(11ul, 15ul, 2ul)] ulong x) { }
+
+        [Test]
+        public void UlongRangeAndZeroStep()
+        {
+            Assert.Throws<ArgumentException>(() => CheckValues("MethodWithUlongRangeAndZeroStep", 11ul, 12ul, 13ul));
+        }
+
+        private void MethodWithUlongRangeAndZeroStep([Range(11ul, 15ul, 0ul)] ulong x) { }
+
+        [Test]
+        public void UlongRangeAndStep_Reversed()
+        {
+            Assert.Throws<ArgumentException>(() => CheckValues("MethodWithUlongRangeAndStep_Reversed", 11ul, 13ul, 15ul));
+        }
+
+        private void MethodWithUlongRangeAndStep_Reversed([Range(15ul, 11ul, 2ul)] ulong x) { }
 
         #endregion
 
