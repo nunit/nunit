@@ -124,7 +124,7 @@ namespace NUnit.Framework
         #region Unsigned Longs
 
         /// <summary>
-        /// Construct a range of unsigned ints using default step of 1
+        /// Construct a range of unsigned longs using default step of 1
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -132,7 +132,7 @@ namespace NUnit.Framework
         public RangeAttribute(ulong from, ulong to) : this(from, to, 1ul) { }
 
         /// <summary>
-        /// Construct a range of unsigned ints specifying the step size 
+        /// Construct a range of unsigned longs specifying the step size 
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
