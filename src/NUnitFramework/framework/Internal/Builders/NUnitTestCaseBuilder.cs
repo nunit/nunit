@@ -213,7 +213,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
-                var typeArguments = GetTypeArgumentsForMethod(testMethod.Method, arglist);
+                var typeArguments = new GenericMethodHelper(testMethod.Method).GetTypeArguments(arglist);
                 foreach (Type o in typeArguments)
                     if (o == null || o == TypeHelper.NonmatchingType)
                         return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
@@ -227,34 +227,6 @@ namespace NUnit.Framework.Internal.Builders
                 TypeHelper.ConvertArgumentList(arglist, parameters);
 
             return true;
-        }
-
-        private static Type[] GetTypeArgumentsForMethod(MethodInfo method, object[] arglist)
-        {
-            Type[] typeParameters = method.GetGenericArguments();
-            Type[] typeArguments = new Type[typeParameters.Length];
-            ParameterInfo[] parameters = method.GetParameters();
-
-            for (int argIndex = 0; argIndex < parameters.Length; argIndex++)
-            {
-                var pi = parameters[argIndex];
-                var arg = arglist[argIndex];
-
-                if (pi.ParameterType.IsGenericParameter)
-                {
-                    // If a null arg is provided, pass null as the Type
-                    // BestCommonType knows how to deal with this
-#if NETCF
-                    var typeArgIndex = Array.IndexOf(typeParameters, pi.ParameterType);
-#else
-                    var typeArgIndex = pi.ParameterType.GenericParameterPosition;
-#endif
-                    var argType = arg != null ? arg.GetType() : null;
-                    typeArguments[typeArgIndex] = TypeHelper.BestCommonType(typeArguments[typeArgIndex], argType);
-                }
-            }
-
-            return typeArguments;
         }
 
         private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)

@@ -240,7 +240,6 @@ namespace NUnit.Framework.Internal.Execution
 
         private void SkipChildren(TestSuite suite, ResultState resultState, string message)
         {
-            // TODO: Extend this to skip recursively?
             foreach (Test child in suite.Tests)
             {
                 if (_childFilter.Pass(child))
