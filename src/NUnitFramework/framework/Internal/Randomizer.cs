@@ -191,7 +191,33 @@ namespace NUnit.Framework.Internal
         {
             return (short)Next(min, max);
         }
-       
+
+        /// <summary>
+        /// Return an array of random non-negative shorts
+        /// </summary>
+        public short[] GetShorts(int count)
+        {
+            short[] shorts = new short[count];
+
+            for (int index = 0; index < count; index++)
+                shorts[index] = NextShort();
+
+            return shorts;
+        }
+
+        /// <summary>
+        /// Return an array of random shorts with values in a specified range.
+        /// </summary>
+        public short[] GetShorts(short min, short max, int count)
+        {
+            short[] shorts = new short[count];
+
+            for (int index = 0; index < count; index++)
+                shorts[index] = NextShort(min, max);
+
+            return shorts;
+        }
+
         #endregion
 
         #region Bytes
@@ -218,6 +244,32 @@ namespace NUnit.Framework.Internal
         public byte NextByte(byte min, byte max)
         {
             return (byte)Next(min, max);
+        }
+
+        /// <summary>
+        /// Return an array of random bytes
+        /// </summary>
+        public byte[] GetBytes(int count)
+        {
+            byte[] bytes = new byte[count];
+
+            for (int i = 0; i < count; i++)
+                bytes[i] = NextByte();
+
+            return bytes;
+        }
+
+        /// <summary>
+        /// Return an array of random bytes within a specified range.
+        /// </summary>
+        public byte[] GetBytes(byte min, byte max, int count)
+        {
+            byte[] bytes = new byte[count];
+
+            for (int i = 0; i < count; i++)
+                bytes[i] = NextByte(min, max);
+
+            return bytes;
         }
 
         #endregion
@@ -273,12 +325,12 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public double[] GetDoubles(int count)
         {
-            double[] rvals = new double[count];
+            double[] doubles = new double[count];
 
             for (int index = 0; index < count; index++)
-                rvals[index] = NextDouble();
+                doubles[index] = NextDouble();
 
-            return rvals;
+            return doubles;
         }
 
         /// <summary>
@@ -286,12 +338,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public double[] GetDoubles(double min, double max, int count)
         {
-            double[] rvals = new double[count];
+            double[] doubles = new double[count];
 
             for (int index = 0; index < count; index++)
-                rvals[index] = NextDouble(min, max);
+                doubles[index] = NextDouble(min, max);
 
-            return rvals;
+            return doubles;
         }
 
         #endregion
@@ -321,6 +373,32 @@ namespace NUnit.Framework.Internal
         public float NextFloat(float min, float max)
         {
             return (float)NextDouble(min, max);
+        }
+
+        /// <summary>
+        /// Return an array of random floats between 0.0 and 1.0.
+        /// </summary>
+        public float[] GetFloats(int count)
+        {
+            float[] floats = new float[count];
+
+            for (int index = 0; index < count; index++)
+                floats[index] = (float)NextDouble();
+
+            return floats;
+        }
+
+        /// <summary>
+        /// Return an array of random floats with values in a specified range.
+        /// </summary>
+        public float[] GetFloats(float min, float max, int count)
+        {
+            float[] floats = new float[count];
+
+            for (int index = 0; index < count; index++)
+                floats[index] = NextFloat(min, max);
+
+            return floats;
         }
 
         #endregion
