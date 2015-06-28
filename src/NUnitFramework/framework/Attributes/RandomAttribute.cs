@@ -35,18 +35,18 @@ namespace NUnit.Framework
     /// </summary>
     public class RandomAttribute : ValuesAttribute, IParameterDataSource
     {
-        enum SampleType
+        private enum SampleType
         {
             Auto,
-            Raw,
             IntRange,
-            DoubleRange
+            DoubleRange,
         }
 
-        SampleType sampleType;
-        private int count;
-        private int min, max;
-        private double dmin, dmax;
+        private SampleType _sampleType;
+
+        private int _count;
+        private int _min, _max;
+        private double _dmin, _dmax;
 
         /// <summary>
         /// Construct a set of Enums if the type is an Enum otherwise
@@ -56,8 +56,8 @@ namespace NUnit.Framework
         /// <param name="count"></param>
         public RandomAttribute(int count)
         {
-            this.count = count;
-            this.sampleType = SampleType.Raw;
+            _count = count;
+            _sampleType = SampleType.Auto;
         }
 
         /// <summary>
@@ -68,10 +68,10 @@ namespace NUnit.Framework
         /// <param name="count"></param>
         public RandomAttribute(double min, double max, int count)
         {
-            this.count = count;
-            this.dmin = min;
-            this.dmax = max;
-            this.sampleType = SampleType.DoubleRange;
+            _count = count;
+            _dmin = min;
+            _dmax = max;
+            _sampleType = SampleType.DoubleRange;
         }
 
         /// <summary>
@@ -82,34 +82,39 @@ namespace NUnit.Framework
         /// <param name="count"></param>
         public RandomAttribute(int min, int max, int count)
         {
-            this.count = count;
-            this.min = min;
-            this.max = max;
-            this.sampleType = SampleType.IntRange;
+            _count = count;
+            _min = min;
+            _max = max;
+            _sampleType = SampleType.IntRange;
         }
 
         /// <summary>
-        /// Get the collection of _values to be used as arguments
+        /// Get the collection of _values to be used as arguments.
         /// </summary>
         public new IEnumerable GetData(ParameterInfo parameter)
         {
+            // Since a separate Randomizer is used for each parameter,
+            // we can't fill in the data in the constructor of the
+            // attribute. Only now, when GetData is called, do we have
+            // sufficient information to create the values in a 
+            // repeatable manner.
             Randomizer r = Randomizer.GetRandomizer(parameter);
             IList values;
 
-            switch (sampleType)
+            switch (_sampleType)
             {
                 default:
-                case SampleType.Raw:
+                case SampleType.Auto:
                     if (parameter.ParameterType.IsEnum)
-                        values = r.GetEnums(count, parameter.ParameterType);
+                        values = r.GetEnums(_count, parameter.ParameterType);
                     else
-                    values = r.GetDoubles(count);
+                        values = r.GetDoubles(_count);
                     break;
                 case SampleType.IntRange:
-                    values = r.GetInts(min, max, count);
+                    values = r.GetInts(_min, _max, _count);
                     break;
                 case SampleType.DoubleRange:
-                    values = r.GetDoubles(dmin, dmax, count);
+                    values = r.GetDoubles(_dmin, _dmax, _count);
                     break;
             }
 
@@ -119,7 +124,7 @@ namespace NUnit.Framework
             this.data = new object[values.Count];
             for (int i = 0; i < values.Count; i++)
                 this.data[i] = values[i];
- 
+
             return base.GetData(parameter);
         }
     }

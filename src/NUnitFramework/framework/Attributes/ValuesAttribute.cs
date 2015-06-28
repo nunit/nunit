@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
@@ -33,7 +34,7 @@ namespace NUnit.Framework
     /// an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public class ValuesAttribute : DataAttribute, Interfaces.IParameterDataSource
+    public class ValuesAttribute : DataAttribute, IParameterDataSource
     {
         /// <summary>
         /// The collection of data to be returned. Must

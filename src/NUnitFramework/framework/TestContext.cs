@@ -114,7 +114,7 @@ namespace NUnit.Framework
         /// <value>
         /// The random generator.
         /// </value>
-        public RandomGenerator Random
+        public Randomizer Random
         {
             get { return _testExecutionContext.RandomGenerator; }
         }

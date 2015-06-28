@@ -230,9 +230,6 @@
     <Compile Include="Internal\PropertyBagTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Internal\RandomGeneratorTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Internal\RandomizerTests.cs">
       <SubType>Code</SubType>
     </Compile>
