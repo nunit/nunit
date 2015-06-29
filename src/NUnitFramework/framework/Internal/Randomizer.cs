@@ -166,6 +166,76 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region Unsigned Ints
+
+        /// <summary>
+        /// Returns a random unsigned int.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint NextUInt()
+        {
+            return NextUInt(0u, uint.MaxValue);
+        }
+
+        /// <summary>
+        /// Returns a random unsigned int less than the specified maximum.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint NextUInt(uint max)
+        {
+            return NextUInt(0u, max);
+        }
+
+        /// <summary>
+        /// Returns a random unsigned int within a specified range.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint NextUInt(uint min, uint max)
+        {
+            uint range = max - min;
+
+            // Avoid introduction of modulo bias
+            uint limit = uint.MaxValue - uint.MaxValue % range;
+            uint raw;
+            do
+            {
+                raw = RawUInt();
+            }
+            while (raw > limit);
+            
+            return unchecked(raw % range + min);
+        }
+
+        /// <summary>
+        /// Return an array of random unsigned ints
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint[] GetUInts(int count)
+        {
+            uint[] uints = new uint[count];
+
+            for (int index = 0; index < count; index++)
+                uints[index] = NextUInt();
+
+            return uints;
+        }
+
+        /// <summary>
+        /// Return an array of random unsigned ints with values in a specified range.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint[] GetUInts(uint min, uint max, int count)
+        {
+            uint[] uints = new uint[count];
+
+            for (int index = 0; index < count; index++)
+                uints[index] = NextUInt(min, max);
+
+            return uints;
+        }
+
+        #endregion
+
         #region Shorts
 
         /// <summary>
@@ -216,6 +286,216 @@ namespace NUnit.Framework.Internal
                 shorts[index] = NextShort(min, max);
 
             return shorts;
+        }
+
+        #endregion
+
+        #region UnsignedShorts
+
+        /// <summary>
+        /// Returns a random unsigned short.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ushort NextUShort()
+        {
+            return NextUShort((ushort)0, ushort.MaxValue);
+        }
+
+        /// <summary>
+        /// Returns a random unsigned short less than the specified maximum.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ushort NextUShort(ushort max)
+        {
+            return NextUShort((ushort)0, max);
+        }
+
+        /// <summary>
+        /// Returns a random unsigned short within a specified range.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ushort NextUShort(ushort min, ushort max)
+        {
+            return (ushort)Next(min, max);
+        }
+
+        /// <summary>
+        /// Return an array of random unsigned shorts
+        /// </summary>
+        [CLSCompliant(false)]
+        public ushort[] GetUShorts(int count)
+        {
+            ushort[] ushorts = new ushort[count];
+
+            for (int index = 0; index < count; index++)
+                ushorts[index] = NextUShort();
+
+            return ushorts;
+        }
+
+        /// <summary>
+        /// Return an array of random unsigned shorts with values in a specified range.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ushort[] GetUShorts(ushort min, ushort max, int count)
+        {
+            ushort[] ushorts = new ushort[count];
+
+            for (int index = 0; index < count; index++)
+                ushorts[index] = NextUShort(min, max);
+
+            return ushorts;
+        }
+
+        #endregion
+
+        #region Longs
+
+        /// <summary>
+        /// Returns a random long.
+        /// </summary>
+        public long NextLong()
+        {
+            long result;
+
+            do
+            {
+                result = RawLong();
+            }
+            while (result == long.MaxValue);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a random long less than the specified maximum.
+        /// </summary>
+        public long NextLong(long max)
+        {
+            return NextLong(0L, max);
+        }
+
+        /// <summary>
+        /// Returns a non-negative random long within a specified range.
+        /// </summary>
+        public long NextLong(long min, long max)
+        {
+            ulong range = (ulong)(max - min);
+
+            // Avoid introduction of modulo bias
+            ulong limit = ulong.MaxValue - ulong.MaxValue % range;
+            ulong raw;
+            do
+            {
+                raw = RawULong();
+            }
+            while (raw > limit);
+
+            return (long)(raw % range + (ulong)min);
+        }
+
+        /// <summary>
+        /// Return an array of random ulongs.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ulong[] GetULongs(int count)
+        {
+            ulong[] ulongs = new ulong[count];
+
+            for (int index = 0; index < count; index++)
+                ulongs[index] = NextULong();
+
+            return ulongs;
+        }
+
+        /// <summary>
+        /// Return an array of random ulongs with values in a specified range.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ulong[] GetULongs(ulong min, ulong max, int count)
+        {
+            ulong[] ulongs = new ulong[count];
+
+            for (int index = 0; index < count; index++)
+                ulongs[index] = NextULong(min, max);
+
+            return ulongs;
+        }
+
+        #endregion
+
+        #region Unsigned Longs
+
+        /// <summary>
+        /// Returns a random ulong.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ulong NextULong()
+        {
+            ulong result;
+
+            do
+            {
+                result = RawULong();
+            }
+            while (result == ulong.MaxValue);
+            
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a random ulong less than the specified maximum.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ulong NextULong(ulong max)
+        {
+            return NextULong(0ul, max);
+        }
+
+        /// <summary>
+        /// Returns a non-negative random long within a specified range.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ulong NextULong(ulong min, ulong max)
+        {
+            ulong range = max - min;
+
+            // Avoid introduction of modulo bias
+            ulong limit = ulong.MaxValue - ulong.MaxValue % range;
+            ulong raw;
+            do
+            {
+                raw = RawULong();
+            }
+            while (raw > limit);
+            
+            return unchecked(raw % range + min);
+        }
+
+        /// <summary>
+        /// Return an array of random longs.
+        /// </summary>
+        public long[] GetLongs(int count)
+        {
+            long[] longs = new long[count];
+
+            for (int index = 0; index < count; index++)
+                longs[index] = NextLong();
+
+            return longs;
+        }
+
+        /// <summary>
+        /// Return an array of random longs with values in a specified range.
+        /// </summary>
+        public long[] GetLongs(long min, long max, int count)
+        {
+            long[] longs = new long[count];
+
+            for (int index = 0; index < count; index++)
+                longs[index] = NextLong(min, max);
+
+            return longs;
         }
 
         #endregion
@@ -489,6 +769,31 @@ namespace NUnit.Framework.Internal
         public string GetString()
         {
             return GetString(DefaultStringLength, DefaultStringChars);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private uint RawUInt()
+        {
+            var buffer = new byte[sizeof(uint)];
+            NextBytes(buffer);
+            return BitConverter.ToUInt32(buffer, 0);
+        }
+
+        private ulong RawULong()
+        {
+            var buffer = new byte[sizeof(ulong)];
+            NextBytes(buffer);
+            return BitConverter.ToUInt64(buffer, 0);
+        }
+
+        private long RawLong()
+        {
+            var buffer = new byte[sizeof(long)];
+            NextBytes(buffer);
+            return BitConverter.ToInt64(buffer, 0);
         }
 
         #endregion
