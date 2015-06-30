@@ -104,6 +104,30 @@ namespace NUnit.ConsoleRunner.Tests
             return node;
         }
 
+        [Test]
+        public void TestBuildProblem()
+        {
+            var testEvent = CreateXmlNode("test-run");
+            
+            var suite1 = testEvent.AddElement("test-suite");
+            suite1.AddAttribute("result", "Failed");
+            suite1.AddAttribute("name", "suite1");
+            var message1 = suite1.AddElement("reason").AddElement("message");
+            message1.InnerText = "reason1";
+
+            var suite2 = suite1.AddElement("test-suite");
+            suite2.AddAttribute("result", "Error");
+            suite2.AddAttribute("name", "suite2");
+            var message2 = suite2.AddElement("reason").AddElement("message");
+            message2.InnerText = "reason2";
+
+            _teamCity.BuildEvent(testEvent);
+
+            Assert.That(_output.ToString(), Is.EqualTo(
+                "##teamcity[buildProblem description='suite1 failed: reason1' identity='suite1 failed']" + NL +
+                "##teamcity[buildProblem description='suite2 error: reason1' identity='suite2 error']" + NL));
+        }
+
         private void FakeTestMethod() { }
     }
 }
