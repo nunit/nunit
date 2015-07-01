@@ -179,7 +179,7 @@ namespace NUnit.Framework.Constraints
 
         #region DateTimeOffsetEquality
 
-#if !NETCF
+#if !NETCF && !PORTABLE
 
         public class DateTimeOffsetShouldBeSame
         {
