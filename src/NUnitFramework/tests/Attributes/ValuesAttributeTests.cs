@@ -36,7 +36,11 @@ namespace NUnit.Framework.Attributes
             CheckValues("MethodWithValues", 1, 2, 3);
         }
 
-        private void MethodWithValues( [Values(1, 2, 3)] int x) { }
+        private void MethodWithValues([Values(1, 2, 3)] int x) { }
+
+        #endregion
+
+        #region Conversion Tests
 
         [Test]
         public void CanConvertSmallIntsToShort([Values(5)]short x)
@@ -70,26 +74,8 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-        #region RandomAttribute
-
-        [Test]
-        public void CanConvertRandomIntToShort([Random(1, 10, 3)] short x) { }
-
-        [Test]
-        public void CanConvertRandomIntToByte([Random(1, 10, 3)] byte x) { }
-
-        [Test]
-        public void CanConvertRandomIntToSByte([Random(1, 10, 3)] sbyte x) { }
-
-        [Test]
-        public void CanConvertRandomIntToDecimal([Random(1, 10, 3)] decimal x) { }
-
-        [Test]
-        public void CanConvertRandomDoubleToDecimal([Random(1.0, 10.0, 3)] decimal x) { }
-
-        #endregion
-
         #region Helper Methods
+
         private void CheckValues(string methodName, params object[] expected)
         {
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
@@ -98,13 +84,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(attr.GetData(param), Is.EqualTo(expected));
         }
 
-        private void CheckValuesWithinTolerance(string methodName, params object[] expected)
-        {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-            ParameterInfo param = method.GetParameters()[0];
-            ValuesAttribute attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
-            Assert.That(attr.GetData(param), Is.EqualTo(expected).Within(0.000001));
-        }
         #endregion
     }
 }

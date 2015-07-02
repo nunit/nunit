@@ -2,12 +2,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.TestUtilities
 {
+    /// <summary>
+    /// UniqueValues is used to check a set of values to ensure
+    /// that all values are unique or close enough to it. We
+    /// specify how close as a ratio.
+    /// </summary>
     public class UniqueValues
     {
-        public static int Count(IEnumerable actual)
+        /// <summary>
+        /// Call a delegate a specified number of times and check that
+        /// the returned values are more or less unique.
+        /// </summary>
+        public static void Check<T>(ActualValueDelegate<T> del, int count, double successRatio)
+        {
+            int minExpected = (int)(count * successRatio);
+
+            int unique = CountUniqueValues(del, count);
+            Assert.That(unique, Is.Not.EqualTo(1), "All values were the same!");
+
+            // TODO: Change to an actual warning once we implement them
+            Assert.That(unique, Is.GreaterThanOrEqualTo(minExpected), "WARNING: The number of unique values less than expected.");
+        }
+
+        public static void Check<T>(ActualValueDelegate<T> del, int count)
+        {
+            Check(del, count, 0.8);
+        }
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Count the number of actually unique values in an IEnumerable
+        /// </summary>
+        private static int CountUniqueValues(IEnumerable actual)
         {
             var list = new List<object>();
 
@@ -18,13 +49,21 @@ namespace NUnit.TestUtilities
             return list.Count;
         }
 
-        public static void Check(IEnumerable values, int minExpected)
+        private static int CountUniqueValues<T>(ActualValueDelegate<T> del, int count)
         {
-            int count = Count(values);
-            Assert.That(count, Is.Not.EqualTo(1), "All values were the same!");
-            // TODO: Change to an actual warning once we implement them
-            Assert.That(count, Is.GreaterThanOrEqualTo(minExpected), "WARNING: The number of unique values less than expected.");
+            var list = new List<T>();
+
+            while (count-- > 0)
+            {
+                T item = del();
+                if (!list.Contains(item))
+                    list.Add(item);
+            }
+
+            return list.Count;
         }
+
+        #endregion
 
         #region Self-test
 
@@ -36,7 +75,7 @@ namespace NUnit.TestUtilities
         [TestCase(ExpectedResult = 0)]
         public static int CountUniqueValuesTest(params int[] values)
         {
-            return UniqueValues.Count(values);
+            return UniqueValues.CountUniqueValues(values);
         }
 
         #endregion

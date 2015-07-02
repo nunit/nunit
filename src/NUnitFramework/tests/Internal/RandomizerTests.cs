@@ -1,7 +1,29 @@
-﻿using System;
-using System.Collections;
+﻿// ***********************************************************************
+// Copyright (c) 2013-2015 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
+using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
@@ -19,31 +41,15 @@ namespace NUnit.Framework.Internal
         #region Ints
 
         [Test]
-        public void CanGetArrayOfRandomInts()
-        {
-            int[] ints = _randomizer.GetInts(10);
-            Assert.That(ints.Length, Is.EqualTo(10));
-        }
-
-        [Test]
-        public void CanGetArrayOfRandomIntsInRange()
-        {
-            int[] ints = _randomizer.GetInts(1, 100, 10);
-            Assert.That(ints.Length, Is.EqualTo(10));
-            foreach (int i in ints)
-                Assert.That(i, Is.InRange(1, 100));
-        }
-
-        [Test]
         public void RandomIntsAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetInts(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.Next(), 10, 1.0);
         }
 
         [Test]
         public void RandomIntsInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetInts(-300, 300, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.Next(-300, 300), 10, 1.0);
         }
 
         #endregion
@@ -51,52 +57,48 @@ namespace NUnit.Framework.Internal
         #region Unsigned Ints
 
         [Test]
-        public void CanGetRandomUInt()
+        public void RandomUInt()
         {
             uint u = _randomizer.NextUInt();
             Assert.That(u, Is.GreaterThan(0u));
         }
 
         [Test]
-        public void CanGetRandomUIntWithMaximum()
+        public void RandomUIntWithMaximum()
         {
             uint val = _randomizer.NextUInt(100u);
             Assert.That(val >= 0u && val < 100u, "Out of range");
         }
 
         [Test]
-        public void CanGetRandomUIntInRange()
+        public void RandomUIntInRange()
         {
             uint val = _randomizer.NextUInt(42u, 99u);
             Assert.That(val >= 42u && val < 99u, "Out of range");
         }
 
         [Test]
-        public void CanGetArrayOfRandomUInts()
+        public void RandomUintInRange_Reversed()
         {
-            uint[] uints = _randomizer.GetUInts(10);
-            Assert.That(uints.Length, Is.EqualTo(10));
+            Assert.That(() => _randomizer.NextUInt(99u, 42u), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomUIntsInRange()
+        public void RandomUintInRange_MinEqualsMax()
         {
-            uint[] uints = _randomizer.GetUInts(212u, 999u, 10);
-            Assert.That(uints.Length, Is.EqualTo(10));
-            foreach (ushort val in uints)
-                Assert.That(val, Is.InRange(212u, 999u));
+            Assert.That(_randomizer.NextUInt(42u, 42u), Is.EqualTo(42u));
         }
 
         [Test]
         public void RandomUIntsAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetUInts(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextUInt(), 10);
         }
 
         [Test]
         public void RandomUIntsInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetUInts(27u, 777u, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextUInt(27u, 777u), 10);
         }
 
         #endregion
@@ -104,14 +106,14 @@ namespace NUnit.Framework.Internal
         #region Shorts
 
         [Test]
-        public void CanGetRandomShort()
+        public void RandomShort()
         {
             short s = _randomizer.NextShort();
             Assert.That(s, Is.GreaterThan((short)0));
         }
 
         [Test]
-        public void CanGetRandomShortWithMaximum()
+        public void RandomShortWithMaximum()
         {
             short zero = 0;
             short max = 100;
@@ -120,7 +122,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanGetRandomShortInRange()
+        public void RandomShortInRange()
         {
             short min = -10;
             short max = 100;
@@ -129,31 +131,30 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanGetArrayOfRandomShorts()
+        public void RandomShortInRange_Reversed()
         {
-            short[] shorts = _randomizer.GetShorts(10);
-            Assert.That(shorts.Length, Is.EqualTo(10));
+            short min = 100;
+            short max = -10;
+            Assert.That(() => _randomizer.NextShort(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomShortsInRange()
+        public void RandomShortInRange_MinEqualsMax()
         {
-            short[] shorts = _randomizer.GetShorts(1, 100, 10);
-            Assert.That(shorts.Length, Is.EqualTo(10));
-            foreach (int i in shorts)
-                Assert.That(i, Is.InRange(1, 100));
+            short s = 42;
+            Assert.That(_randomizer.NextShort(s, s), Is.EqualTo(s));
         }
 
         [Test]
         public void RandomShortsAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetShorts(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextShort(), 10);
         }
 
         [Test]
         public void RandomShortsInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetShorts(-300, 300, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextShort(-300, 300), 10);
         }
 
         #endregion
@@ -161,14 +162,14 @@ namespace NUnit.Framework.Internal
         #region Unsigned Shorts
 
         [Test]
-        public void CanGetRandomUShort()
+        public void RandomUShort()
         {
             ushort us = _randomizer.NextUShort();
             Assert.That(us, Is.GreaterThan((ushort)0));
         }
 
         [Test]
-        public void CanGetRandomUShortWithMaximum()
+        public void RandomUShortWithMaximum()
         {
             ushort zero = 0;
             ushort max = 100;
@@ -177,7 +178,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanGetRandomUShortInRange()
+        public void RandomUShortInRange()
         {
             ushort min = 42;
             ushort max = 99;
@@ -186,33 +187,30 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanGetArrayOfRandomUShorts()
+        public void RandomUShortInRange_Reversed()
         {
-            ushort[] ushorts = _randomizer.GetUShorts(10);
-            Assert.That(ushorts.Length, Is.EqualTo(10));
+            ushort min = 99;
+            ushort max = 42;
+            Assert.That(() => _randomizer.NextUShort(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomUShortsInRange()
+        public void RandomUShortInRange_MinEqualsMax()
         {
-            ushort min = 212;
-            ushort max = 999;
-            ushort[] ushorts = _randomizer.GetUShorts(min, max, 10);
-            Assert.That(ushorts.Length, Is.EqualTo(10));
-            foreach (ushort val in ushorts)
-                Assert.That(val, Is.InRange(min, max));
+            ushort val = 42;
+            Assert.That(_randomizer.NextUShort(val, val), Is.EqualTo(val));
         }
 
         [Test]
         public void RandomUShortsAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetUShorts(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextUShort(), 10);
         }
 
         [Test]
         public void RandomUShortsInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetUShorts((ushort)27, (ushort)200, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextUShort((ushort)27, (ushort)200), 10);
         }
 
         #endregion
@@ -220,7 +218,7 @@ namespace NUnit.Framework.Internal
         #region Longs
 
         [Test]
-        public void CanGetRandomLong()
+        public void RandomLong()
         {
             long val = _randomizer.NextLong();
             Assert.That(val, Is.GreaterThan(0L));
@@ -228,33 +226,42 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanGetRandomLongWithMaximum()
+        public void RandomLongWithMaximum()
         {
             long val = _randomizer.NextLong(1066L);
             Assert.That(val >= 0L && val < 1066L, "Out of range");
         }
 
         [Test]
-        public void CanGetRandomLongInRange()
+        public void RandomLongInRange()
         {
             long val = _randomizer.NextLong(1066L, 1942L);
             Assert.That(val >= 1066L && val < 1942L, "Out of range");
         }
 
         [Test]
-        public void CanGetArrayOfRandomLongs()
+        public void RandomLongInRange_Reversed()
         {
-            long[] longs = _randomizer.GetLongs(10);
-            Assert.That(longs.Length, Is.EqualTo(10));
+            Assert.That(() => _randomizer.NextLong(1942L, 1066L), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomLongsInRange()
+        public void RandomLongInRange_MinEqualsMax()
         {
-            long[] longs = _randomizer.GetLongs(1066L, 1984L, 10);
-            Assert.That(longs.Length, Is.EqualTo(10));
-            foreach (ulong val in longs)
-                Assert.That(val, Is.InRange(1066L, 1984L));
+            long val = 42L;
+            Assert.That(_randomizer.NextLong(val, val), Is.EqualTo(val));
+        }
+
+        [Test]
+        public void RandomLongsAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextLong(), 10);
+        }
+
+        [Test]
+        public void RandomLongsInRangeAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextLong(1066L, 2010L), 10);
         }
 
         #endregion
@@ -262,52 +269,49 @@ namespace NUnit.Framework.Internal
         #region Unsigned Longs
 
         [Test]
-        public void CanGetRandomULong()
+        public void RandomULong()
         {
             ulong val = _randomizer.NextULong();
             Assert.That(val, Is.Not.EqualTo(ulong.MaxValue)); // Not much of a test!
         }
 
         [Test]
-        public void CanGetRandomULongWithMaximum()
+        public void RandomULongWithMaximum()
         {
             ulong val = _randomizer.NextULong(1066UL);
             Assert.That(val < 1066UL, "Out of range");
         }
 
         [Test]
-        public void CanGetRandomULongInRange()
+        public void RandomULongInRange()
         {
             ulong val = _randomizer.NextULong(1066UL, 1942UL);
             Assert.That(val >= 1066UL && val < 1942UL, "Out of range");
         }
 
         [Test]
-        public void CanGetArrayOfRandomULongs()
+        public void RandomULongInRange_Reversed()
         {
-            ulong[] ulongs = _randomizer.GetULongs(10);
-            Assert.That(ulongs.Length, Is.EqualTo(10));
+            Assert.That(() => _randomizer.NextULong(1942UL, 1066UL), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomULongsInRange()
+        public void RandomULongInRange_MinEqualsMax()
         {
-            ulong[] ulongs = _randomizer.GetULongs(1066UL, 1984UL, 10);
-            Assert.That(ulongs.Length, Is.EqualTo(10));
-            foreach (ulong ul in ulongs)
-                Assert.That(ul, Is.InRange(1066UL, 1984UL));
+            ulong val = 42ul;
+            Assert.That(_randomizer.NextULong(val, val), Is.EqualTo(val));
         }
 
         [Test]
         public void RandomULongsAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetULongs(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextULong(), 10);
         }
 
         [Test]
         public void RandomULongsInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetULongs(1066UL, 2010UL, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextULong(1066UL, 2010UL), 10);
         }
 
         #endregion
@@ -315,57 +319,109 @@ namespace NUnit.Framework.Internal
         #region Bytes
 
         [Test]
-        public void CanGetRandomByte()
+        public void RandomByte()
         {
             byte b = _randomizer.NextByte();
             Assert.That(b >= byte.MinValue && b < byte.MaxValue);
         }
 
         [Test]
-        public void CanGetRandomByteWithMaximum()
+        public void RandomByteWithMaximum()
         {
             byte max = (byte)96;
             byte b = _randomizer.NextByte(max);
             Assert.That(b >= byte.MinValue && b < max);
         }
 
-        public void CanGetRandomByteInRange()
+        [Test]
+        public void RandomByteInRange()
         {
             byte min = (byte)16;
             byte max = (byte)96;
-            byte b = _randomizer.NextByte();
+            byte b = _randomizer.NextByte(min, max);
             Assert.That(b >= min && b < max);
         }
 
         [Test]
-        public void CanGetArrayOfRandomBytes()
+        public void RandomByteInRange_Reversed()
         {
-            byte[] bytes = _randomizer.GetBytes(10);
-            Assert.That(bytes.Length, Is.EqualTo(10));
+            byte min = (byte)96;
+            byte max = (byte)16;
+            Assert.That(() => _randomizer.NextByte(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomBytesInRange()
+        public void RandomByteInRange_MinEqualsMax()
         {
-            byte min = (byte)16;
-            byte max = (byte)96;
-            byte[] bytes = _randomizer.GetBytes(min, max, 10);
-            Assert.That(bytes.Length, Is.EqualTo(10));
-            foreach (byte b in bytes)
-                Assert.That(b, Is.InRange(min, max));
+            byte val = 42;
+            Assert.That(_randomizer.NextByte(val, val), Is.EqualTo(val));
         }
 
         [Test]
         public void RandomBytesAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetBytes(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextByte(), 10);
         }
 
         [Test]
         public void RandomBytesInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetBytes(
-                byte.MinValue, byte.MaxValue, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextByte(byte.MinValue, byte.MaxValue), 10);
+        }
+
+        #endregion
+
+        #region SBytes
+
+        [Test]
+        public void RandomSByte()
+        {
+            sbyte b = _randomizer.NextSByte();
+            Assert.That(b >= sbyte.MinValue && b < sbyte.MaxValue);
+        }
+
+        [Test]
+        public void RandomSByteWithMaximum()
+        {
+            sbyte max = (sbyte)96;
+            sbyte b = _randomizer.NextSByte(max);
+            Assert.That(b >= 0 && b < max);
+        }
+
+        [Test]
+        public void RandomSByteInRange()
+        {
+            sbyte min = (sbyte)16;
+            sbyte max = (sbyte)96;
+            sbyte b = _randomizer.NextSByte(min, max);
+            Assert.That(b >= min && b < max);
+        }
+
+        [Test]
+        public void RandomSByteInRange_Reversed()
+        {
+            sbyte min = (sbyte)96;
+            sbyte max = (sbyte)16;
+            Assert.That(() => _randomizer.NextSByte(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void RandomSbyteInRange_MinEqualsMax()
+        {
+            sbyte val = 42;
+            Assert.That(_randomizer.NextSByte(val, val), Is.EqualTo(val));
+        }
+
+        [Test]
+        public void RandomSBytesAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextSByte(), 10);
+        }
+
+        [Test]
+        public void RandomSBytesInRangeAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextSByte(sbyte.MinValue, sbyte.MaxValue), 10);
         }
 
         #endregion
@@ -373,7 +429,7 @@ namespace NUnit.Framework.Internal
         #region Bool
 
         [Test]
-        public void CanGetRandomBool()
+        public void RandomBool()
         {
             bool haveTrue = false;
             bool haveFalse = false;
@@ -392,7 +448,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanGetRandomBoolWithProbability()
+        public void RandomBoolWithProbability()
         {
             bool haveTrue = false;
             bool haveFalse = false;
@@ -408,6 +464,12 @@ namespace NUnit.Framework.Internal
                 else
                     haveFalse = true;
             }
+        }
+
+        [Test]
+        public void RandomBoolWithProbabilityOutOfRange()
+        {
+            Assert.That(() => _randomizer.NextBool(2.0), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -428,52 +490,49 @@ namespace NUnit.Framework.Internal
         #region Doubles
 
         [Test]
-        public void CanGetRandomDouble()
+        public void RandomDouble()
         {
             double d = _randomizer.NextDouble();
             Assert.That(d, Is.GreaterThan(0.0));
         }
 
         [Test]
-        public void CanGetRandomDoubleWithMaximum()
+        public void RandomDoubleWithMaximum()
         {
             double d = _randomizer.NextDouble(100.0);
             Assert.That(d >= 0.0 && d < 100.0, "Out of range");
         }
 
         [Test]
-        public void CanGetRandomDoubleInRange()
+        public void RandomDoubleInRange()
         {
             double d = _randomizer.NextDouble(0.2, 0.7);
             Assert.That(d >= 0.2 && d < 0.7, "Out of range");
         }
 
         [Test]
-        public void CanGetArrayOfRandomDoubles()
+        public void RandomDoubleInRange_Reversed()
         {
-            double[] doubles = _randomizer.GetDoubles(10);
-            Assert.That(doubles.Length, Is.EqualTo(10));
+            Assert.That(() => _randomizer.NextDouble(0.7, 0.2), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomDoublesInRange()
+        public void RandomDoubleInRange_MinEqualsMax()
         {
-            double[] doubles = _randomizer.GetDoubles(0.5, 2.5, 10);
-            Assert.That(doubles.Length, Is.EqualTo(10));
-            foreach (double d in doubles)
-                Assert.That(d, Is.InRange(0.5, 2.5));
+            double val = 42.0;
+            Assert.That(_randomizer.NextDouble(val, val), Is.EqualTo(val));
         }
 
         [Test]
         public void RandomDoublesAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetDoubles(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextDouble(), 10);
         }
 
         [Test]
         public void RandomDoublesInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetDoubles(0.1, 0.7, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextDouble(0.1, 0.7), 10);
         }
 
         #endregion
@@ -481,80 +540,159 @@ namespace NUnit.Framework.Internal
         #region Floats
 
         [Test]
-        public void CanGetRandomFloat()
+        public void RandomFloat()
         {
             float f = _randomizer.NextFloat();
             Assert.That(f, Is.GreaterThan(0.0f));
         }
 
         [Test]
-        public void CanGetRandomFloatWithMaximum()
+        public void RandomFloatWithMaximum()
         {
             float f = _randomizer.NextFloat(100.0f);
             Assert.That(f >= 0.0f && f < 100.0f, "Out of range");
         }
 
         [Test]
-        public void CanGetRandomFloatInRange()
+        public void RandomFloatInRange()
         {
             float f = _randomizer.NextFloat(0.2f, 0.7f);
             Assert.That(f >= 0.2f && f < 0.7f, "Out of range");
         }
 
         [Test]
-        public void CanGetArrayOfRandomFloats()
+        public void RandomFloatInRange_Reversed()
         {
-            float[] floats = _randomizer.GetFloats(10);
-            Assert.That(floats.Length, Is.EqualTo(10));
+            Assert.That(() => _randomizer.NextFloat(0.7f, 0.2f), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        public void CanGetArrayOfRandomFloatsInRange()
+        public void RandomFloatInRange_MinEqualsMax()
         {
-            float[] floats = _randomizer.GetFloats(0.5f, 2.5f, 10);
-            Assert.That(floats.Length, Is.EqualTo(10));
-            foreach (float f in floats)
-                Assert.That(f, Is.InRange(0.5f, 2.5f));
+            float val = 42.0f;
+            Assert.That(_randomizer.NextFloat(val, val), Is.EqualTo(val));
         }
 
         [Test]
         public void RandomFloatsAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetFloats(10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextFloat(), 10);
         }
 
         [Test]
-        public void RandomFloatsInRamgeAreUnique()
+        public void RandomFloatsInRangeAreUnique()
         {
-            UniqueValues.Check(_randomizer.GetFloats(0.5f, 1.5f, 10), 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.NextFloat(0.5f, 1.5f), 10);
+        }
+
+        /// <summary>
+        /// Return an array of random floats between 0.0 and 1.0.
+        /// </summary>
+        public float[] GetFloats(int count)
+        {
+            float[] floats = new float[count];
+
+            for (int index = 0; index < count; index++)
+                floats[index] = _randomizer.NextFloat();
+
+            return floats;
+        }
+
+        /// <summary>
+        /// Return an array of random floats with values in a specified range.
+        /// </summary>
+        public float[] GetFloats(float min, float max, int count)
+        {
+            float[] floats = new float[count];
+
+            for (int index = 0; index < count; index++)
+                floats[index] = _randomizer.NextFloat(min, max);
+
+            return floats;
         }
 
         #endregion
-    
+
+        #region Decimals
+
+        [Test]
+        public void RandomDecimal()
+        {
+            decimal d = _randomizer.NextDecimal();
+            Assert.That(d, Is.InRange(0M, decimal.MaxValue));
+            CheckScaleIsZero(d);
+        }
+
+        private static void CheckScaleIsZero(decimal d)
+        {
+            int[] bits = decimal.GetBits(d);
+            Assert.That(bits[3] & 0x00ff0000, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RandomDecimalWithMaximum()
+        {
+            decimal d = _randomizer.NextDecimal(1000M);
+            Assert.That(d, Is.InRange(0M, 999M));
+            CheckScaleIsZero(d);
+        }
+
+        [Test]
+        public void RandomDecimalInRange()
+        {
+            decimal d = _randomizer.NextDecimal(-500M, 500M);
+            Assert.That(d, Is.InRange(-500M, 499M));
+            CheckScaleIsZero(d);
+        }
+
+        [Test]
+        public void RandomDecimalInRange_Reversed()
+        {
+            Assert.That(() => _randomizer.NextDecimal(1000M, 100M), Throws.InstanceOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void RandomDecimalInRange_MinEqualsMax()
+        {
+            Assert.That(_randomizer.NextDecimal(42M, 42M), Is.EqualTo(42M));
+        }
+
+        [Test]
+        public void RandomDecimalRangeTooGreat()
+        {
+            Assert.That(() => _randomizer.NextDecimal(-1M, decimal.MaxValue), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public void RandomDecimalsAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextDecimal(), 10);
+        }
+
+        [Test]
+        public void RandomDecimalsInRangeAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextDecimal(1066M, 2010M), 10);
+        }
+
+        #endregion
+
         #region Strings
                 
         [Test]
         [Description("Test that all generated strings are unique")]
         public void RandomStringsAreUnique()
         {
-            string[] values = new string[10];
-            for (int i = 0; i < 10; i++)
-              values[i] = _randomizer.GetString();
-
-            UniqueValues.Check(values, 8); // Heuristic
+            UniqueValues.Check(() => _randomizer.GetString(), 10, 1.0);
         }
         
-        [TestCase(30, "Tｈｅɋúｉｃｋƃｒòｗｎｆ߀хｊｕｍｐëԁoѵerｔհëｌａȥｙｄｏɢ", 8)]
-        [TestCase(200, "ａèí߀ù123456", 8)]
-        [TestCase(1000, Randomizer.DefaultStringChars, 8)]
+        [TestCase(30, "Tｈｅɋúｉｃｋƃｒòｗｎｆ߀хｊｕｍｐëԁoѵerｔհëｌａȥｙｄｏɢ")]
+        [TestCase(200, "ａèí߀ù123456")]
+        [TestCase(1000, Randomizer.DefaultStringChars)]
         [Description("Test that all generated strings are unique for varying output length")]
-        public void RandomStringsAreUnique(int outputLength, string allowedChars, int min)
+        public void RandomStringsAreUnique(int outputLength, string allowedChars)
         {
-            string[] values = new string[10];
-            for (int i = 0; i < 10; i++)
-              values[i] = _randomizer.GetString(outputLength, allowedChars);
-
-            UniqueValues.Check(values, min); // Heuristic
+            UniqueValues.Check(() => _randomizer.GetString(outputLength, allowedChars), 10, 1.0);
         }
         
         #endregion
@@ -562,25 +700,16 @@ namespace NUnit.Framework.Internal
         #region Enums
 
         [Test]
-        public void CanGetRandomEnum()
+        public void RandomEnum()
         {
             object e = _randomizer.NextEnum(typeof(AttributeTargets));
             Assert.That(e, Is.TypeOf<AttributeTargets>());
         }
 
         [Test]
-        public void CanGetRandomEnum_Generic()
+        public void RandomEnum_Generic()
         {
             AttributeTargets at = _randomizer.NextEnum<AttributeTargets>();
-        }
-
-        [Test]
-        public void CanGetArrayOfRandomEnums()
-        {
-            object[] enums = _randomizer.GetEnums(10, typeof(AttributeTargets));
-            Assert.That(enums.Length, Is.EqualTo(10));
-            foreach (object e in enums)
-                Assert.That(e, Is.TypeOf(typeof(AttributeTargets)));
         }
 
         #endregion

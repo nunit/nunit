@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+// Copyright (c) 2013-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -136,34 +137,6 @@ namespace NUnit.Framework.Internal
         // NOTE: Next(), Next(int max) and Next(int min, int max) are
         // inherited from Random.
 
-        /// <summary>
-        /// Return an array of random non-negative ints
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public int[] GetInts(int count)
-        {
-            int[] ivals = new int[count];
-
-            for (int index = 0; index < count; index++)
-                ivals[index] = Next();
-
-            return ivals;
-        }
-
-        /// <summary>
-        /// Return an array of random ints with _values in a specified range.
-        /// </summary>
-        public int[] GetInts(int min, int max, int count)
-        {
-            int[] ivals = new int[count];
-
-            for (int index = 0; index < count; index++)
-                ivals[index] = Next(min, max);
-
-            return ivals;
-        }
-
         #endregion
 
         #region Unsigned Ints
@@ -192,6 +165,11 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public uint NextUInt(uint min, uint max)
         {
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+
+            if (min == max)
+                return min;
+
             uint range = max - min;
 
             // Avoid introduction of modulo bias
@@ -204,34 +182,6 @@ namespace NUnit.Framework.Internal
             while (raw > limit);
             
             return unchecked(raw % range + min);
-        }
-
-        /// <summary>
-        /// Return an array of random unsigned ints
-        /// </summary>
-        [CLSCompliant(false)]
-        public uint[] GetUInts(int count)
-        {
-            uint[] uints = new uint[count];
-
-            for (int index = 0; index < count; index++)
-                uints[index] = NextUInt();
-
-            return uints;
-        }
-
-        /// <summary>
-        /// Return an array of random unsigned ints with values in a specified range.
-        /// </summary>
-        [CLSCompliant(false)]
-        public uint[] GetUInts(uint min, uint max, int count)
-        {
-            uint[] uints = new uint[count];
-
-            for (int index = 0; index < count; index++)
-                uints[index] = NextUInt(min, max);
-
-            return uints;
         }
 
         #endregion
@@ -262,35 +212,9 @@ namespace NUnit.Framework.Internal
             return (short)Next(min, max);
         }
 
-        /// <summary>
-        /// Return an array of random non-negative shorts
-        /// </summary>
-        public short[] GetShorts(int count)
-        {
-            short[] shorts = new short[count];
-
-            for (int index = 0; index < count; index++)
-                shorts[index] = NextShort();
-
-            return shorts;
-        }
-
-        /// <summary>
-        /// Return an array of random shorts with values in a specified range.
-        /// </summary>
-        public short[] GetShorts(short min, short max, int count)
-        {
-            short[] shorts = new short[count];
-
-            for (int index = 0; index < count; index++)
-                shorts[index] = NextShort(min, max);
-
-            return shorts;
-        }
-
         #endregion
 
-        #region UnsignedShorts
+        #region Unsigned Shorts
 
         /// <summary>
         /// Returns a random unsigned short.
@@ -319,34 +243,6 @@ namespace NUnit.Framework.Internal
             return (ushort)Next(min, max);
         }
 
-        /// <summary>
-        /// Return an array of random unsigned shorts
-        /// </summary>
-        [CLSCompliant(false)]
-        public ushort[] GetUShorts(int count)
-        {
-            ushort[] ushorts = new ushort[count];
-
-            for (int index = 0; index < count; index++)
-                ushorts[index] = NextUShort();
-
-            return ushorts;
-        }
-
-        /// <summary>
-        /// Return an array of random unsigned shorts with values in a specified range.
-        /// </summary>
-        [CLSCompliant(false)]
-        public ushort[] GetUShorts(ushort min, ushort max, int count)
-        {
-            ushort[] ushorts = new ushort[count];
-
-            for (int index = 0; index < count; index++)
-                ushorts[index] = NextUShort(min, max);
-
-            return ushorts;
-        }
-
         #endregion
 
         #region Longs
@@ -356,15 +252,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public long NextLong()
         {
-            long result;
-
-            do
-            {
-                result = RawLong();
-            }
-            while (result == long.MaxValue);
-
-            return result;
+            return NextLong(0L, long.MaxValue);
         }
 
         /// <summary>
@@ -380,6 +268,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public long NextLong(long min, long max)
         {
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+
+            if (min == max)
+                return min;
+
             ulong range = (ulong)(max - min);
 
             // Avoid introduction of modulo bias
@@ -394,34 +287,6 @@ namespace NUnit.Framework.Internal
             return (long)(raw % range + (ulong)min);
         }
 
-        /// <summary>
-        /// Return an array of random ulongs.
-        /// </summary>
-        [CLSCompliant(false)]
-        public ulong[] GetULongs(int count)
-        {
-            ulong[] ulongs = new ulong[count];
-
-            for (int index = 0; index < count; index++)
-                ulongs[index] = NextULong();
-
-            return ulongs;
-        }
-
-        /// <summary>
-        /// Return an array of random ulongs with values in a specified range.
-        /// </summary>
-        [CLSCompliant(false)]
-        public ulong[] GetULongs(ulong min, ulong max, int count)
-        {
-            ulong[] ulongs = new ulong[count];
-
-            for (int index = 0; index < count; index++)
-                ulongs[index] = NextULong(min, max);
-
-            return ulongs;
-        }
-
         #endregion
 
         #region Unsigned Longs
@@ -432,15 +297,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ulong NextULong()
         {
-            ulong result;
-
-            do
-            {
-                result = RawULong();
-            }
-            while (result == ulong.MaxValue);
-            
-            return result;
+            return NextULong(0ul, ulong.MaxValue);
         }
 
         /// <summary>
@@ -458,7 +315,12 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ulong NextULong(ulong min, ulong max)
         {
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+
             ulong range = max - min;
+
+            if (range == 0)
+                return min;
 
             // Avoid introduction of modulo bias
             ulong limit = ulong.MaxValue - ulong.MaxValue % range;
@@ -470,32 +332,6 @@ namespace NUnit.Framework.Internal
             while (raw > limit);
             
             return unchecked(raw % range + min);
-        }
-
-        /// <summary>
-        /// Return an array of random longs.
-        /// </summary>
-        public long[] GetLongs(int count)
-        {
-            long[] longs = new long[count];
-
-            for (int index = 0; index < count; index++)
-                longs[index] = NextLong();
-
-            return longs;
-        }
-
-        /// <summary>
-        /// Return an array of random longs with values in a specified range.
-        /// </summary>
-        public long[] GetLongs(long min, long max, int count)
-        {
-            long[] longs = new long[count];
-
-            for (int index = 0; index < count; index++)
-                longs[index] = NextLong(min, max);
-
-            return longs;
         }
 
         #endregion
@@ -526,30 +362,35 @@ namespace NUnit.Framework.Internal
             return (byte)Next(min, max);
         }
 
+        #endregion
+
+        #region SBytes
+
         /// <summary>
-        /// Return an array of random bytes
+        /// Returns a random SByte
         /// </summary>
-        public byte[] GetBytes(int count)
+        [CLSCompliant(false)]
+        public sbyte NextSByte()
         {
-            byte[] bytes = new byte[count];
-
-            for (int i = 0; i < count; i++)
-                bytes[i] = NextByte();
-
-            return bytes;
+            return NextSByte((sbyte)0, SByte.MaxValue);
         }
 
         /// <summary>
-        /// Return an array of random bytes within a specified range.
+        /// Returns a random sbyte less than the specified maximum.
         /// </summary>
-        public byte[] GetBytes(byte min, byte max, int count)
+        [CLSCompliant(false)]
+        public sbyte NextSByte(sbyte max)
         {
-            byte[] bytes = new byte[count];
+            return NextSByte((sbyte)0, max);
+        }
 
-            for (int i = 0; i < count; i++)
-                bytes[i] = NextByte(min, max);
-
-            return bytes;
+        /// <summary>
+        /// Returns a random sbyte within a specified range
+        /// </summary>
+        [CLSCompliant(false)]
+        public sbyte NextSByte(sbyte min, sbyte max)
+        {
+            return (sbyte)Next(min, max);
         }
 
         #endregion
@@ -569,8 +410,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool NextBool(double probability)
         {
-            if (probability < 0.0 || probability > 1.0)
-                throw new ArgumentException("Probability must be from 0.0 to 1.0", "probability");
+            Guard.ArgumentInRange(probability >= 0.0 && probability <= 1.0, "Probability must be from 0.0 to 1.0", "probability");
 
             return NextDouble() < probability;
         }
@@ -594,36 +434,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public double NextDouble(double min, double max)
         {
-            double range = max = min;
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+
+            if (max == min)
+                return min;
+
+            double range = max - min;
             return NextDouble() * range + min;
-        }
-
-        /// <summary>
-        /// Return an array of random doubles between 0.0 and 1.0.
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public double[] GetDoubles(int count)
-        {
-            double[] doubles = new double[count];
-
-            for (int index = 0; index < count; index++)
-                doubles[index] = NextDouble();
-
-            return doubles;
-        }
-
-        /// <summary>
-        /// Return an array of random doubles with _values in a specified range.
-        /// </summary>
-        public double[] GetDoubles(double min, double max, int count)
-        {
-            double[] doubles = new double[count];
-
-            for (int index = 0; index < count; index++)
-                doubles[index] = NextDouble(min, max);
-
-            return doubles;
         }
 
         #endregion
@@ -633,7 +450,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns a random float.
         /// </summary>
-        /// <returns></returns>
         public float NextFloat()
         {
             return (float)NextDouble();
@@ -655,32 +471,6 @@ namespace NUnit.Framework.Internal
             return (float)NextDouble(min, max);
         }
 
-        /// <summary>
-        /// Return an array of random floats between 0.0 and 1.0.
-        /// </summary>
-        public float[] GetFloats(int count)
-        {
-            float[] floats = new float[count];
-
-            for (int index = 0; index < count; index++)
-                floats[index] = (float)NextDouble();
-
-            return floats;
-        }
-
-        /// <summary>
-        /// Return an array of random floats with values in a specified range.
-        /// </summary>
-        public float[] GetFloats(float min, float max, int count)
-        {
-            float[] floats = new float[count];
-
-            for (int index = 0; index < count; index++)
-                floats[index] = NextFloat(min, max);
-
-            return floats;
-        }
-
         #endregion
 
         #region Enums
@@ -700,23 +490,6 @@ namespace NUnit.Framework.Internal
         public T NextEnum<T>()
         {
             return (T)NextEnum(typeof(T));
-        }
-
-        /// <summary>
-        /// Return an array of random enum values of the specified Type.
-        /// </summary>
-        public object[] GetEnums(int count, Type enumType)
-        {
-            if (!enumType.IsEnum)
-                throw new ArgumentException(string.Format("The specified type: {0} was not an enum", enumType));
-
-            Array values = TypeHelper.GetEnumValues(enumType);
-            object[] rvals = new Enum[count];
-
-            for (int index = 0; index < count; index++)
-                rvals[index] = values.GetValue(Next(values.Length));
-
-            return rvals;
         }
 
         #endregion
@@ -773,9 +546,76 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region Decimal
+
+        // We treat decimal as an integral type for now.
+        // The scaling factor is always zero.
+
+        /// <summary>
+        /// Returns a random decimal.
+        /// </summary>
+        public decimal NextDecimal()
+        {
+            int low = Next(0, int.MaxValue);
+            int mid = Next(0, int.MaxValue);
+            int high = Next(0, int.MaxValue);
+            return new Decimal(low, mid, high, false, 0);
+        }
+
+        /// <summary>
+        /// Returns a random decimal between positive zero and the specified maximum.
+        /// </summary>
+        public decimal NextDecimal(decimal max)
+        {
+            return NextDecimal() % max;
+        }
+
+        /// <summary>
+        /// Returns a random decimal within a specified range, which is not
+        /// permitted to exceed decimal.MaxVal in the current implementation.
+        /// </summary>
+        /// <remarks>
+        /// A limitation of this implementation is that the range from min
+        /// to max must not exceed decimal.MaxVal.
+        /// </remarks>
+        public decimal NextDecimal(decimal min, decimal max)
+        {
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+
+            // Check that the range is not greater than MaxValue without 
+            // first calculating it, since this would cause overflow
+            Guard.ArgumentValid(max < 0M == min < 0M || min + decimal.MaxValue >= max,
+                "Range too great for decimal data, use double range", "max");
+
+            if (min == max)
+                return min;
+
+            decimal range = max - min;
+
+            // Avoid introduction of modulo bias
+            decimal limit = decimal.MaxValue - decimal.MaxValue % range;
+            decimal raw;
+            do
+            {
+                raw = NextDecimal();
+            }
+            while (raw > limit);
+
+            return unchecked(raw % range + min);
+        }
+
+        #endregion
+
         #region Helper Methods
 
         private uint RawUInt()
+        {
+            var buffer = new byte[sizeof(uint)];
+            NextBytes(buffer);
+            return BitConverter.ToUInt32(buffer, 0);
+        }
+
+        private uint RawUShort()
         {
             var buffer = new byte[sizeof(uint)];
             NextBytes(buffer);
@@ -794,6 +634,16 @@ namespace NUnit.Framework.Internal
             var buffer = new byte[sizeof(long)];
             NextBytes(buffer);
             return BitConverter.ToInt64(buffer, 0);
+        }
+
+        private decimal RawDecimal()
+        {
+            int low = Next(0, int.MaxValue);
+            int mid = Next(0, int.MaxValue);
+            int hi = Next(0, int.MaxValue);
+            bool isNegative = NextBool();
+            byte scale = NextByte(29);
+            return new Decimal(low, mid, hi, isNegative, scale);
         }
 
         #endregion
