@@ -42,6 +42,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
+        /// <exception cref="AssertionException">Assert.Equals should not be used for Assertions</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
@@ -55,6 +56,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
+        /// <exception cref="AssertionException">Assert.ReferenceEquals should not be used for Assertions</exception>
         public static new void ReferenceEquals(object a, object b)
         {
             throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");

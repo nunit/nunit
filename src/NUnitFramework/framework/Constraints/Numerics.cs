@@ -91,6 +91,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="tolerance">A reference to the tolerance in effect</param>
+        /// <exception cref="InvalidOperationException">Ulps may only be specified for floating point arguments</exception>
         /// <returns>True if the _values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {

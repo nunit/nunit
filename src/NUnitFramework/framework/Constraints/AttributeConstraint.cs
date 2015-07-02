@@ -41,6 +41,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="type"></param>
         /// <param name="baseConstraint"></param>
+        /// <exception cref="ArgumentException">Type is not an attribute</exception>
         public AttributeConstraint(Type type, IConstraint baseConstraint)
             : base(baseConstraint)
         {
@@ -57,6 +58,10 @@ namespace NUnit.Framework.Constraints
         /// expected attribute and if its value matches the
         /// additional constraint specified.
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
+        /// <param name="actual">The value to be tested</param>
+        /// <exception cref="ArgumentException">Attribute was not found</exception>
+        /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             Guard.ArgumentNotNull(actual, "actual");

@@ -44,6 +44,7 @@ namespace NUnit.Framework.Constraints
         /// <remarks>from must be less than or equal to true</remarks> 
         /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
         /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
+        /// <exception cref="ArgumentException">from must be less than to</exception>
         public RangeConstraint(IComparable from, IComparable to) : base( from, to )
         {
             // Issue #21 - https://github.com/nunit/nunit-framework/issues/21
@@ -66,7 +67,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
         /// <param name="actual">The value to be tested</param>
+        /// <exception cref="ArgumentException">Cannot compare using a null reference</exception>
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {

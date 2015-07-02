@@ -122,6 +122,9 @@ namespace NUnit.Framework.Constraints
         /// Test whether the collection is ordered
         /// </summary>
         /// <param name="actual"></param>
+        /// <exception cref="ArgumentNullException">
+        /// Either a null value or a null property value was encountered while traversing <paramref name="actual"/>
+        /// </exception>
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {

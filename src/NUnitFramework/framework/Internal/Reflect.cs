@@ -137,6 +137,7 @@ namespace NUnit.Framework.Internal
         /// Invoke the default constructor on a Type
         /// </summary>
         /// <param name="type">The Type to be constructed</param>
+        /// <exception cref="InvalidTestFixtureException"><paramref name="type"/> does not have a default constructor</exception>
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type)
         {
@@ -152,6 +153,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="type">The Type to be constructed</param>
         /// <param name="arguments">Arguments to the constructor</param>
+        /// <exception cref="InvalidTestFixtureException"><paramref name="type"/> does not have a suitable constructor</exception>
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type, object[] arguments)
         {

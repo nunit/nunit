@@ -247,6 +247,7 @@ namespace NUnit.Framework.Constraints
         /// Resolves this instance, returning a Constraint. If the Builder
         /// is not currently in a resolvable state, an exception is thrown.
         /// </summary>
+        /// <exception cref="InvalidOperationException">A partial expression may not be resolved</exception>
         /// <returns>The resolved constraint</returns>
         public IConstraint Resolve()
         {

@@ -100,7 +100,14 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
+        /// <typeparam name="TActual"></typeparam>
         /// <param name="actual">The value to be tested</param>
+        /// <exception cref="ArgumentNullException">
+        /// The actual value must be a non-null <see cref="String"/>, <see cref="FileInfo"/> or <see cref="DirectoryInfo"/>
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// The actual value must be a <see cref="String"/>, <see cref="FileInfo"/> or <see cref="DirectoryInfo"/>
+        /// </exception>
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {

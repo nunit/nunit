@@ -38,7 +38,8 @@ namespace NUnit.Framework.Compatibility
         /// <param name="actual">The actual.</param>
         /// <param name="attributeType">Type of the attribute.</param>
         /// <param name="inherit">if set to <c>true</c> [inherit].</param>
-        /// <returns>A list of the given attribute on the given object.</returns>
+        /// <exception cref="ArgumentException">Actual value does not implement ICustomAttributeProvider</exception>
+        /// <returns>An array of the given attribute on the given object.</returns>
         public static Attribute[] GetCustomAttributes(object actual, Type attributeType, bool inherit)
         {
 #if !PORTABLE

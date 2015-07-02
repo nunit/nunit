@@ -130,6 +130,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="count"></param>
         /// <param name="enumType"></param>
+        /// <exception cref="ArgumentException">The specified type <paramref name="enumType"/> was not an enum</exception>
         /// <returns></returns>
         public object[] GetEnums(int count, Type enumType)
         {
