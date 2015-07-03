@@ -43,13 +43,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomIntsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.Next(), 10, 1.0);
+            UniqueValues.Check(() => _randomizer.Next(), 10);
         }
 
         [Test]
         public void RandomIntsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.Next(-300, 300), 10, 1.0);
+            UniqueValues.Check(() => _randomizer.Next(-300, 300), 10);
         }
 
         #endregion
