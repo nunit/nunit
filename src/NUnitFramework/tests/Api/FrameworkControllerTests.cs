@@ -104,7 +104,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
+#if SILVERLIGHT
+            Assert.That(result.Attributes["name"], Is.EqualTo("mock-nunit-assembly"));
+#else
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
+#endif
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
