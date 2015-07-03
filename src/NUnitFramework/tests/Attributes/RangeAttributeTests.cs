@@ -359,19 +359,45 @@ namespace NUnit.Framework.Attributes
         #region Conversions
 
         [Test]
-        public void CanConvertIntRangeToShort([Range(1, 3)] short x) { }
+        public void CanConvertIntRangeToShort()
+        {
+            CheckValues("MethodWithIntRangeAndShortArgument", (short)1, (short)2, (short)3);
+        }
+
+        private void MethodWithIntRangeAndShortArgument([Range(1, 3)] short x) { }
 
         [Test]
-        public void CanConvertIntRangeToByte([Range(1, 3)] byte x) { }
+        public void CanConvertIntRangeToByte() 
+        {
+            CheckValues("MethodWithIntRangeAndByteArgument", (byte)1, (byte)2, (byte)3);
+        }
+        
+        private void MethodWithIntRangeAndByteArgument([Range(1, 3)] byte x) { }
 
         [Test]
-        public void CanConvertIntRangeToSByte([Range(1, 3)] sbyte x) { }
+        public void CanConvertIntRangeToSByte() 
+        {
+            CheckValues("MethodWithIntRangeAndSByteArgument", (sbyte)1, (sbyte)2, (sbyte)3);
+        }
+        
+        private void MethodWithIntRangeAndSByteArgument([Range(1, 3)] sbyte x) { }
 
         [Test]
-        public void CanConvertIntRangeToDecimal([Range(1, 3)] decimal x) { }
+        public void CanConvertIntRangeToDecimal()
+        {
+            CheckValues("MethodWithIntRangeAndDecimalArgument", 1M, 2M, 3M);
+        }
+        
+        private void MethodWithIntRangeAndDecimalArgument([Range(1, 3)] decimal x) { }
 
         [Test]
-        public void CanConvertDoubleRangeToDecimal([Range(1.0, 1.3, 0.1)] decimal x) { }
+        public void CanConvertDoubleRangeToDecimal() 
+        {
+            CheckValues("MethodWithDoubleRangeAndDecimalArgument", 1.0M, 1.1M, 1.2M);
+        }
+
+        // Use max of 1.21 rather than 1.3 so rounding won't give an extra value
+        private void MethodWithDoubleRangeAndDecimalArgument([Range(1.0, 1.21, 0.1)] decimal x) { }
 
         #endregion
 
