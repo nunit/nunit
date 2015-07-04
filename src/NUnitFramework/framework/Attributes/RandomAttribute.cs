@@ -136,14 +136,6 @@ namespace NUnit.Framework
             _source = new SByteDataSource(min, max, count);
         }
 
-        /// <summary>
-        /// Construct a set of decimals within a specified range
-        /// </summary>
-        public RandomAttribute(decimal min, decimal max, int count)
-        {
-            _source = new DecimalDataSource(min, max, count);
-        }
-
         #endregion
 
         #region IParameterDataSource Interface
