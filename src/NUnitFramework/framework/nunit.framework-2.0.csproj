@@ -147,6 +147,8 @@
     <Compile Include="Interfaces\ITest.cs" />
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
+    <Compile Include="Interfaces\ITestData.cs" />
+    <Compile Include="Interfaces\ITestFixtureData.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
@@ -204,6 +206,8 @@
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
+    <Compile Include="Internal\TestFixtureParameters.cs" />
+    <Compile Include="Internal\TestParameters.cs" />
     <Compile Include="Internal\TestExecutionStatus.cs" />
     <Compile Include="ITestAction.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
@@ -369,7 +373,7 @@
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
-    <Compile Include="Internal\ParameterSet.cs" />
+    <Compile Include="Internal\TestCaseParameters.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
     <Compile Include="Internal\Reflect.cs" />

@@ -126,11 +126,11 @@ namespace NUnit.Framework
         /// <returns>A TestMethod</returns>
         public TestMethod BuildFrom(MethodInfo method, Test suite)
         {
-            ParameterSet parms = null;
+            TestCaseParameters parms = null;
 
             if (this.HasExpectedResult)
             {
-                parms = new ParameterSet();
+                parms = new TestCaseParameters();
                 parms.ExpectedResult = this.ExpectedResult;
             }
 

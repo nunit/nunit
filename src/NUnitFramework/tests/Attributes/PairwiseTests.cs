@@ -112,7 +112,7 @@ namespace NUnit.Framework.Attributes
 
             PairCounter pairs = new PairCounter();
             int cases = 0;
-            foreach (NUnit.Framework.Internal.ParameterSet parms in strategy.GetTestCases(sources))
+            foreach (NUnit.Framework.Internal.TestCaseParameters parms in strategy.GetTestCases(sources))
             {
                 for (int i = 1; i < features; i++)
                     for (int j = 0; j < i; j++)

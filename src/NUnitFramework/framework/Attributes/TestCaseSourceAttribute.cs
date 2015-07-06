@@ -93,14 +93,36 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region ITestCaseSource Members
+        #region ITestBuilder Members
+
+        /// <summary>
+        /// Construct one or more TestMethods from a given MethodInfo,
+        /// using available parameter data.
+        /// </summary>
+        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
+        /// <param name="suite">The suite to which the tests will be added.</param>
+        /// <returns>One or more TestMethods</returns>
+        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        {
+            List<TestMethod> tests = new List<TestMethod>();
+
+            foreach (TestCaseParameters parms in GetTestCasesFor(method))
+                tests.Add(_builder.BuildTestMethod(method, suite, parms));
+
+            return tests;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
         /// <summary>
         /// Returns a set of ITestCaseDataItems for use as arguments
         /// to a parameterized test method.
         /// </summary>
         /// <param name="method">The method for which data is needed.</param>
         /// <returns></returns>
-        public IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+        private IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
 
@@ -118,11 +140,11 @@ namespace NUnit.Framework
 
                     foreach (object item in source)
                     {
-                        ParameterSet parms;
+                        TestCaseParameters parms;
                         ITestCaseData testCaseData = item as ITestCaseData;
 
                         if (testCaseData != null)
-                            parms = new ParameterSet(testCaseData);
+                            parms = new TestCaseParameters(testCaseData);
                         else
                         {
                             object[] args = item as object[];
@@ -175,7 +197,7 @@ namespace NUnit.Framework
                                 args = new object[] { item };
                             }
 
-                            parms = new ParameterSet(args);
+                            parms = new TestCaseParameters(args);
                         }
 
                         if (this.Category != null)
@@ -184,41 +206,16 @@ namespace NUnit.Framework
 
                         data.Add(parms);
                     }
-               }
+                }
             }
             catch (Exception ex)
             {
                 data.Clear();
-                data.Add(new ParameterSet(ex));
+                data.Add(new TestCaseParameters(ex));
             }
 
             return data;
         }
-
-        #endregion
-
-        #region ITestBuilder Members
-
-        /// <summary>
-        /// Construct one or more TestMethods from a given MethodInfo,
-        /// using available parameter data.
-        /// </summary>
-        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
-        /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
-        {
-            List<TestMethod> tests = new List<TestMethod>();
-
-            foreach (ParameterSet parms in GetTestCasesFor(method))
-                tests.Add(_builder.BuildTestMethod(method, suite, parms));
-
-            return tests;
-        }
-
-        #endregion
-
-        #region Helper Methods
 
         private IEnumerable GetTestCaseSource(MethodInfo method)
         {
@@ -261,10 +258,10 @@ namespace NUnit.Framework
 
         private static IEnumerable SourceMustBeStaticError()
         {
-            var parms = new ParameterSet();
+            var parms = new TestCaseParameters();
             parms.RunState = RunState.NotRunnable;
             parms.Properties.Set(PropertyNames.SkipReason, "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.");
-            return new ParameterSet[] { parms };
+            return new TestCaseParameters[] { parms };
         }
 
         #endregion

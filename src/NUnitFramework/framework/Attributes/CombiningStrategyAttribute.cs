@@ -90,10 +90,20 @@ namespace NUnit.Framework
 
                 var o = new object();
                 var tryArgs = Enumerable.Repeat(o, numGenericParams).ToArray();
+                MethodInfo mi;
 
-                var mi = method.MakeGenericMethodEx(tryArgs);
-                if (mi == null)
+                try
+                {
+                    // This fails if the generic method has constraints
+                    // that are not met by object.
+                    mi = method.MakeGenericMethodEx(tryArgs);
+                    if (mi == null)
+                        return tests;
+                }
+                catch
+                {
                     return tests;
+                }
 
                 var par = mi.GetParameters();
                 if (par.Length == 0)
@@ -111,7 +121,7 @@ namespace NUnit.Framework
                         tests.Add(tm);
                     }
                     else
-                        tests.Add(_builder.BuildTestMethod(mi, suite, (ParameterSet)parms));
+                        tests.Add(_builder.BuildTestMethod(mi, suite, (TestCaseParameters)parms));
                 }
 
                 return tests;
@@ -130,7 +140,7 @@ namespace NUnit.Framework
                 }
                 catch (InvalidDataSourceException ex)
                 {
-                    var parms = new ParameterSet();
+                    var parms = new TestCaseParameters();
                     parms.RunState = RunState.NotRunnable;
                     parms.Properties.Set(PropertyNames.SkipReason, ex.Message);
                     tests.Add(_builder.BuildTestMethod(method, suite, parms));
@@ -138,7 +148,7 @@ namespace NUnit.Framework
                 }
 
                 foreach (var parms in _strategy.GetTestCases(sources))
-                    tests.Add(_builder.BuildTestMethod(method, suite, (ParameterSet)parms));
+                    tests.Add(_builder.BuildTestMethod(method, suite, (TestCaseParameters)parms));
             }
 
             return tests;

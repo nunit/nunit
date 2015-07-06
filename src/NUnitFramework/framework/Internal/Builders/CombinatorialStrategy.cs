@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Builders
                 for (int i = 0; i < sources.Length; i++)
                     testdata[i] = enumerators[i].Current;
 
-                ParameterSet parms = new ParameterSet(testdata);
+                TestCaseParameters parms = new TestCaseParameters(testdata);
                 testCases.Add(parms);
 
                 index = sources.Length;

@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
         /// <returns></returns>
-        public TestMethod BuildTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
+        public TestMethod BuildTestMethod(MethodInfo method, Test parentSuite, TestCaseParameters parms)
         {
             var testMethod = new TestMethod(method, parentSuite)
             {
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal.Builders
         /// is found to be non-runnable, it will be modified.</param>
         /// <param name="parms">Parameters to be used for this test, or null</param>
         /// <returns>True if the method signature is valid, false if not</returns>
-        private static bool CheckTestMethodSignature(TestMethod testMethod, ParameterSet parms)
+        private static bool CheckTestMethodSignature(TestMethod testMethod, TestCaseParameters parms)
         {
             if (testMethod.Method.IsAbstract)
                 return MarkAsNotRunnable(testMethod, "Method is abstract");

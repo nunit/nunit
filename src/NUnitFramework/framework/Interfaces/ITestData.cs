@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,20 +27,29 @@ using System.Collections;
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestCaseData interface is implemented by a class
-    /// that is able to return complete testcases for use by
-    /// a parameterized test method.
+    /// The ITestData interface is implemented by a class that
+    /// represents a single instance of a parameterized test.
     /// </summary>
-    public interface ITestCaseData : ITestData
+    public interface ITestData
     {
         /// <summary>
-        /// Gets the expected result of the test case
+        /// Gets the name to be used for the test
         /// </summary>
-        object ExpectedResult { get; }
+        string TestName { get; }
 
         /// <summary>
-        /// Returns true if an expected result has been set
+        /// Gets the RunState for this test case.
         /// </summary>
-        bool HasExpectedResult { get; }
+        RunState RunState { get; }
+
+        /// <summary>
+        /// Gets the argument list to be provided to the test
+        /// </summary>
+        object[] Arguments { get; }
+
+        /// <summary>
+        /// Gets the property dictionary for the test case
+        /// </summary>
+        IPropertyBag Properties { get; }
     }
 }

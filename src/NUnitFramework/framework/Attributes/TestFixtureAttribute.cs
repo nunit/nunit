@@ -161,7 +161,12 @@ namespace NUnit.Framework
         /// <returns>A SetUpFixture object as a TestSuite.</returns>
         public TestSuite BuildFrom(Type type)
         {
-            return builder.BuildFrom(type, this);
+            var parms = new TestFixtureParameters(Arguments)
+            {
+                TypeArgs = this.TypeArgs
+            };
+
+            return builder.BuildFrom(type, parms);
         }
 
         #endregion

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -89,24 +89,24 @@ namespace NUnit.Framework.Internal.Builders
         #region Other Public Methods
 
         /// <summary>
-        /// Overload of BuildFrom called by TestFixtureAttribute. Builds
-        /// a fixture using the provided type and information in the
-        /// properties of the attribute.
+        /// Overload of BuildFrom called by tests that have arguments.
+        /// Builds a fixture using the provided type and information 
+        /// in the ITestFixtureData object.
         /// </summary>
         /// <param name="type">The Type for which to construct a fixture.</param>
-        /// <param name="attr">The attribute marking the fixture Type.</param>
+        /// <param name="data">An object implementing ITestFixtureData or null.</param>
         /// <returns></returns>
-        public TestSuite BuildFrom(Type type, TestFixtureAttribute attr)
+        public TestSuite BuildFrom(Type type, ITestFixtureData data)
         {
             object[] arguments = null;
 
-            if (attr != null)
+            if (data != null)
             {
-                arguments = attr.Arguments;
+                arguments = data.Arguments;
 
                 if (type.ContainsGenericParameters)
                 {
-                    Type[] typeArgs = attr.TypeArgs;
+                    Type[] typeArgs = data.TypeArgs;
                     if (typeArgs.Length == 0)
                     {
                         int cnt = 0;

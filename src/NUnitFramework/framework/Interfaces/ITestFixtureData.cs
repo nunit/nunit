@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,19 +28,11 @@ namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The ITestCaseData interface is implemented by a class
-    /// that is able to return complete testcases for use by
-    /// a parameterized test method.
+    /// that is able to return the data required to create an
+    /// instance of a parameterized test fixture.
     /// </summary>
-    public interface ITestCaseData : ITestData
+    public interface ITestFixtureData : ITestData
     {
-        /// <summary>
-        /// Gets the expected result of the test case
-        /// </summary>
-        object ExpectedResult { get; }
-
-        /// <summary>
-        /// Returns true if an expected result has been set
-        /// </summary>
-        bool HasExpectedResult { get; }
+        Type[] TypeArgs { get;  }
     }
 }

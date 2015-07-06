@@ -259,9 +259,9 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private ParameterSet GetParametersForTestCase(MethodInfo method)
+        private TestCaseParameters GetParametersForTestCase(MethodInfo method)
         {
-            ParameterSet parms;
+            TestCaseParameters parms;
 
             try
             {
@@ -276,7 +276,7 @@ namespace NUnit.Framework
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
 
-                parms = new ParameterSet(this);
+                parms = new TestCaseParameters(this);
 
                 // Special handling for params arguments
                 if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
@@ -333,7 +333,7 @@ namespace NUnit.Framework
             }
             catch (Exception ex)
             {
-                parms = new ParameterSet(ex);
+                parms = new TestCaseParameters(ex);
             }
 
             return parms;

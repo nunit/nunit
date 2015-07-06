@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// test case. It is derived from ParameterSet and adds a
     /// fluent syntax for use in initializing the test case.
     /// </summary>
-    public class TestCaseData : ParameterSet
+    public class TestCaseData : TestCaseParameters
     {
 
         #region Constructors
