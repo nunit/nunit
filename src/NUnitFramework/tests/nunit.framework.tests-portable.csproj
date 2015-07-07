@@ -29,7 +29,7 @@
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_5;PORTABLE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE</DefineConstants>
     <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>
