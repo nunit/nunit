@@ -144,6 +144,7 @@
     <Compile Include="Attributes\PairwiseTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
+    <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
@@ -231,9 +232,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\PropertyBagTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Internal\RandomGeneratorTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\RandomizerTests.cs">

@@ -72,6 +72,7 @@
     <Compile Include="MaxTimeFixture.cs" />
     <Compile Include="ParameterizedTestFixture.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
+    <Compile Include="RandomAttributeFixture.cs" />
     <Compile Include="RepeatedTestFixture.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
