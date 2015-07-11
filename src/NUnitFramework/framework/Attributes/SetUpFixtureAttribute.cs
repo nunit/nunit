@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Framework
@@ -43,7 +44,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="type">The type of the fixture to be used.</param>
         /// <returns>A SetUpFixture object as a TestSuite.</returns>
-        public TestSuite BuildFrom(Type type)
+        public IEnumerable<TestSuite> BuildFrom(Type type)
         {
             SetUpFixture fixture = new SetUpFixture(type);
 
@@ -57,7 +58,7 @@ namespace NUnit.Framework
                 }
             }
 
-            return fixture;
+            return new TestSuite[] { fixture };
         }
 
         #endregion

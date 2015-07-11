@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Builders
     /// called by the attribute and in the second directly by
     /// NUnitSuiteBuilder.
     /// </summary>
-    public class NUnitTestFixtureBuilder : IFixtureBuilder
+    public class NUnitTestFixtureBuilder
     {
         #region Static Fields
 
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns></returns>
         public TestSuite BuildFrom(Type type, ITestFixtureData data)
         {
-            object[] arguments = null;
+            object[] arguments = new object[0];
 
             if (data != null)
             {
@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal.Builders
 
             this.fixture = new TestFixture(type);
             
-            if (arguments != null)
+            if (arguments != null && arguments.Length > 0)
             {
                 string name = fixture.Name = TypeHelper.GetDisplayName(type, arguments);
                 string nspace = type.Namespace;
@@ -148,6 +148,17 @@ namespace NUnit.Framework.Internal.Builders
                 fixture.Arguments = arguments;
             }
 
+            if (fixture.RunState != RunState.NotRunnable)
+            {
+                fixture.RunState = data.RunState;
+
+                if (fixture.RunState == RunState.NotRunnable)
+                {
+                    var reason = data.Properties.Get(PropertyNames.SkipReason);
+                    fixture.Properties.Set(PropertyNames.SkipReason, reason);
+                }
+            }
+            
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 

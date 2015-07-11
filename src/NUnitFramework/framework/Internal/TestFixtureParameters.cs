@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public TestFixtureParameters(object[] args) : base(args) { }
+        public TestFixtureParameters(params object[] args) : base(args) { }
 
         /// <summary>
         /// Construct a ParameterSet from an object implementing ITestCaseData

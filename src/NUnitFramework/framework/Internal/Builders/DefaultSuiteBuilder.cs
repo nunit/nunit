@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -68,26 +69,45 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns></returns>
         public Test BuildFrom(Type type)
         {
+            var fixtures = new List<TestSuite>();
+
             try
             {
-                IFixtureBuilder[] attrs = GetFixtureBuilderAttributes(type);
+                IFixtureBuilder[] builders = GetFixtureBuilderAttributes(type);
+
+                //if (builders.Length == 0)
+                //    return defaultBuilder.BuildFrom(type);
+
+                foreach (var builder in builders)
+                    foreach (var fixture in builder.BuildFrom(type))
+                        fixtures.Add(fixture);
 
                 if (type.IsGenericType)
-                    return BuildMultipleFixtures(type, attrs);
+                    return BuildMultipleFixtures(type, fixtures);
 
-                switch (attrs.Length)
+                switch (fixtures.Count)
                 {
                     case 0:
                         return defaultBuilder.BuildFrom(type);
                     case 1:
-                        return attrs[0].BuildFrom(type);
-                    //object[] args = attrs[0].Arguments;
-                    //return args == null || args.Length == 0
-                    //    ? attrs[0].BuildFrom(type)
-                    //    : BuildMultipleFixtures(type, attrs);
+                        return fixtures[0];
                     default:
-                        return BuildMultipleFixtures(type, attrs);
+                        return BuildMultipleFixtures(type, fixtures);
                 }
+
+                //switch (builders.Length)
+                //{
+                //    case 0:
+                //        return defaultBuilder.BuildFrom(type);
+                //    case 1:
+                //        return builders[0].BuildFrom(type);
+                //    //object[] args = attrs[0].Arguments;
+                //    //return args == null || args.Length == 0
+                //    //    ? attrs[0].BuildFrom(type)
+                //    //    : BuildMultipleFixtures(type, attrs);
+                //    default:
+                //        return BuildMultipleFixtures(type, builders);
+                //}
             }
             catch (Exception ex)
             {
@@ -106,15 +126,26 @@ namespace NUnit.Framework.Internal.Builders
 
         #region Helper Methods
 
-        private Test BuildMultipleFixtures(Type type, IFixtureBuilder[] attrs)
+        private Test BuildMultipleFixtures(Type type, IEnumerable<TestSuite> fixtures)
         {
             TestSuite suite = new ParameterizedFixtureSuite(type);
 
-            foreach (IFixtureBuilder attr in attrs)
-                suite.Add(attr.BuildFrom(type));
+            foreach (var fixture in fixtures)
+                suite.Add(fixture);
 
             return suite;
         }
+
+        //private Test BuildMultipleFixtures(Type type, IFixtureBuilder[] attrs)
+        //{
+        //    TestSuite suite = new ParameterizedFixtureSuite(type);
+
+        //    foreach (IFixtureBuilder attr in attrs)
+        //        foreach (var fixture in attr.BuildFrom(type))
+        //            suite.Add(fixture);
+
+        //    return suite;
+        //}
 
         /// <summary>
         /// We look for attributes implementing IFixtureBuilder at one level 
@@ -133,12 +164,48 @@ namespace NUnit.Framework.Internal.Builders
                 attrs = (IFixtureBuilder[])type.GetCustomAttributes(typeof(IFixtureBuilder), false);
 
                 if (attrs.Length > 0)
-                    return attrs;
+                {
+                    // We want to eliminate duplicates that have no args.
+                    // If there is just one, no duplication is possible.
+                    if (attrs.Length == 1)
+                        return attrs;
+
+                    // Count how many have arguments
+                    int withArgs = 0;
+                    foreach (var attr in attrs)
+                        if (HasArguments(attr))
+                            withArgs++;
+
+                    // If all have args, just return them
+                    if (withArgs == attrs.Length)
+                        return attrs;
+
+                    // If none of them have args, return the first one
+                    if (withArgs == 0)
+                        return new IFixtureBuilder[] { attrs[0] };
+                    
+                    // Some of each - extract those with args
+                    var result = new IFixtureBuilder[withArgs];
+                    int count = 0;
+                    foreach (var attr in attrs)
+                        if (HasArguments(attr))
+                            result[count++] = attr;
+
+                    return result;
+                }
 
                 type = type.BaseType;
             }
 
             return attrs;
+        }
+
+        private bool HasArguments(IFixtureBuilder attr)
+        {
+            // Only TestFixtureAttribute can be used without arguments
+            var temp = attr as TestFixtureAttribute;
+
+            return temp == null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
         }
 
         #endregion

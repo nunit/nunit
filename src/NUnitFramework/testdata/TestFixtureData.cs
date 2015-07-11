@@ -432,7 +432,7 @@ namespace NUnit.TestData.TestFixtureData
     [TestFixture]
     public class FixtureSetUpWithParameters : OneTestBase
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup(int j)
         {
         }

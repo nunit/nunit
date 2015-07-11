@@ -99,6 +99,7 @@
     <Compile Include="Attributes\ParallelScope.cs" />
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
+    <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
     <Compile Include="Compatibility\Activator.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />

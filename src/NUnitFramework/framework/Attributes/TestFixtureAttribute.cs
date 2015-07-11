@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -114,7 +114,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets a list of categories for this fixture
         /// </summary>
-        public IList Categories
+        public IList<string> Categories // TODO: Unused?
         {
             get { return Category == null ? null : Category.Split(','); }
         }
@@ -158,15 +158,15 @@ namespace NUnit.Framework
         /// on which the attribute has been placed.
         /// </summary>
         /// <param name="type">The type of the fixture to be used.</param>
-        /// <returns>A SetUpFixture object as a TestSuite.</returns>
-        public TestSuite BuildFrom(Type type)
+        /// <returns>A an IEnumerable holding one TestFixture object.</returns>
+        public IEnumerable<TestSuite> BuildFrom(Type type)
         {
             var parms = new TestFixtureParameters(Arguments)
             {
                 TypeArgs = this.TypeArgs
             };
 
-            return builder.BuildFrom(type, parms);
+            yield return builder.BuildFrom(type, parms);
         }
 
         #endregion

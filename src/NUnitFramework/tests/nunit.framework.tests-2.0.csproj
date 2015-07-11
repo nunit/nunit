@@ -75,6 +75,7 @@
     <Compile Include="Attributes\CommandWrapperTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
+    <Compile Include="Attributes\TestFixtureSourceTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
