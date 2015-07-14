@@ -16,13 +16,6 @@
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
     <copyright>Copyright (c) 2015 Charlie Poole</copyright>
-    <dependencies>
-      <group targetFramework="net40">
-        <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
-      </group>
-      <!-- This is required otherwise 4.5 will pull in the 4.0 dependencies -->
-      <group targetFramework="net45" />
-    </dependencies>
   </metadata>
   <files>
     <file src="LICENSE.txt" />
