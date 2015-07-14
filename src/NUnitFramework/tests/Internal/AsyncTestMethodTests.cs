@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal
                 yield return GetTestCase(Method("AsyncTaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
                 yield return GetTestCase(Method("TaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
                 
-                yield return GetTestCase(Method("NestedAsyncTaskSuccess"), ResultState.Success, 1, false);
+                yield return GetTestCase(Method("NestedAsyncTaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskError"), ResultState.Error, 0, false);
 
