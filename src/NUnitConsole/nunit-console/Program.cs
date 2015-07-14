@@ -86,7 +86,7 @@ namespace NUnit.ConsoleRunner
                 if (!Options.NoHeader)
                     WriteHeader();
 
-                if (Options.ShowHelp)
+                if (Options.ShowHelp || args.Length == 0)
                 {
                     WriteHelpText();
                     return ConsoleRunner.OK;
