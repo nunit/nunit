@@ -25,13 +25,12 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-// TODO: Remove conditional code
 namespace NUnit.Framework
 {
     /// <summary>
     /// The TestCaseData class represents a set of arguments
     /// and other parameter info to be used for a parameterized
-    /// test case. It is derived from ParameterSet and adds a
+    /// test case. It is derived from TestCaseParameters and adds a
     /// fluent syntax for use in initializing the test case.
     /// </summary>
     public class TestCaseData : TestCaseParameters

@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// SetUpFixtureAttribute is used to identify a SetUpFixture
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
-    public class SetUpFixtureAttribute : FixtureBuilderAttribute, IFixtureBuilder
+    public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
 

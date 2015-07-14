@@ -209,18 +209,6 @@ namespace NUnit.TestData.TestFixtureSourceData
             new object[] { 12, 2, 6 } };
     }
 
-    // NYI
-    //[TestFixtureSource("IgnoredData")]
-    //public class TestFixtureMayBeIgnored : TestFixtureSourceTest
-    //{
-    //    public TestFixtureMayBeIgnored(string arg) : base(arg, "IgnoredData") { }
-
-    //    static IEnumerable IgnoredData()
-    //    {
-    //        yield return new TestFixtureParameters("IgnoredData").Ignore("There must be a reason");
-    //    }
-    //}
-
     #region Source Data Classes
 
     class SourceData_IEnumerable : IEnumerable

@@ -43,6 +43,10 @@ namespace NUnit.Framework.Internal
         /// <param name="value"></param>
         public void Set(string key, object value)
         {
+            // Guard against mystery exceptions later!
+            Guard.ArgumentNotNull(key, "key");
+            Guard.ArgumentNotNull(value, "value");
+
             IList list = new List<object>();
             list.Add(value);
             inner[key] = list;

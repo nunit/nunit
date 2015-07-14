@@ -134,7 +134,6 @@
     <Compile Include="Attributes\DatapointSourceAttribute.cs" />
     <Compile Include="Attributes\DescriptionAttribute.cs" />
     <Compile Include="Attributes\ExplicitAttribute.cs" />
-    <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelismAttribute.cs" />
@@ -162,7 +161,6 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />
     <Compile Include="Attributes\TestCaseAttribute.cs" />
-    <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\TestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\TestFixtureAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />

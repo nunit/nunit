@@ -33,6 +33,9 @@ namespace NUnit.Framework.Interfaces
     /// </summary>
     public interface ITestFixtureData : ITestData
     {
+        /// <summary>
+        /// Get the TypeArgs if separately set
+        /// </summary>
         Type[] TypeArgs { get;  }
     }
 }

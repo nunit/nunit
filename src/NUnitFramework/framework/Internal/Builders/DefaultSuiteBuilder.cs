@@ -32,7 +32,8 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DefaultSuiteBuilder : ISuiteBuilder
     {
-        private NUnitTestFixtureBuilder defaultBuilder = new NUnitTestFixtureBuilder();
+        // Builder we use for fixtures without any fixture attribute specified
+        private NUnitTestFixtureBuilder _defaultBuilder = new NUnitTestFixtureBuilder();
 
         #region ISuiteBuilder Methods
         /// <summary>
@@ -75,9 +76,6 @@ namespace NUnit.Framework.Internal.Builders
             {
                 IFixtureBuilder[] builders = GetFixtureBuilderAttributes(type);
 
-                //if (builders.Length == 0)
-                //    return defaultBuilder.BuildFrom(type);
-
                 foreach (var builder in builders)
                     foreach (var fixture in builder.BuildFrom(type))
                         fixtures.Add(fixture);
@@ -88,26 +86,12 @@ namespace NUnit.Framework.Internal.Builders
                 switch (fixtures.Count)
                 {
                     case 0:
-                        return defaultBuilder.BuildFrom(type);
+                        return _defaultBuilder.BuildFrom(type);
                     case 1:
                         return fixtures[0];
                     default:
                         return BuildMultipleFixtures(type, fixtures);
                 }
-
-                //switch (builders.Length)
-                //{
-                //    case 0:
-                //        return defaultBuilder.BuildFrom(type);
-                //    case 1:
-                //        return builders[0].BuildFrom(type);
-                //    //object[] args = attrs[0].Arguments;
-                //    //return args == null || args.Length == 0
-                //    //    ? attrs[0].BuildFrom(type)
-                //    //    : BuildMultipleFixtures(type, attrs);
-                //    default:
-                //        return BuildMultipleFixtures(type, builders);
-                //}
             }
             catch (Exception ex)
             {

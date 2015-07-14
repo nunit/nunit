@@ -112,9 +112,10 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CannotRunBadConstructor()
+        public void BadConstructorRunsWithSetUpError()
         {
-            TestAssert.IsNotRunnable(typeof(BadCtorFixture));
+            var result = TestBuilder.RunTestFixture(typeof(BadCtorFixture));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError));
         }
 
         [Test]

@@ -48,16 +48,11 @@ namespace NUnit.Framework.Internal.Builders
 
         #region Instance Fields
 
-        /// <summary>
-        /// The NUnitTestFixture being constructed;
-        /// </summary>
-        private TestFixture fixture;
-
-        private ITestCaseBuilder testBuilder = new DefaultTestCaseBuilder();
+        private ITestCaseBuilder _testBuilder = new DefaultTestCaseBuilder();
 
         #endregion
 
-        #region IFixtureBuilder Members
+        #region Public Methods
 
         /// <summary>
         /// Build a TestFixture from type provided. A non-null TestSuite
@@ -71,7 +66,7 @@ namespace NUnit.Framework.Internal.Builders
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
         public TestSuite BuildFrom(Type type)
         {
-            this.fixture = new TestFixture(type);
+            var fixture = new TestFixture(type);
 
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
@@ -79,14 +74,10 @@ namespace NUnit.Framework.Internal.Builders
             fixture.ApplyAttributesToTest(type);
 
 
-            AddTestCases(type);
+            AddTestCasesToFixture(fixture);
 
-            return this.fixture;
+            return fixture;
         }
-
-        #endregion
-
-        #region Other Public Methods
 
         /// <summary>
         /// Overload of BuildFrom called by tests that have arguments.
@@ -94,49 +85,46 @@ namespace NUnit.Framework.Internal.Builders
         /// in the ITestFixtureData object.
         /// </summary>
         /// <param name="type">The Type for which to construct a fixture.</param>
-        /// <param name="data">An object implementing ITestFixtureData or null.</param>
+        /// <param name="testFixtureData">An object implementing ITestFixtureData or null.</param>
         /// <returns></returns>
-        public TestSuite BuildFrom(Type type, ITestFixtureData data)
+        public TestSuite BuildFrom(Type type, ITestFixtureData testFixtureData)
         {
-            object[] arguments = new object[0];
+            Guard.ArgumentNotNull(testFixtureData, "testFixtureData");
 
-            if (data != null)
+            object[] arguments = testFixtureData.Arguments;
+
+            if (type.ContainsGenericParameters)
             {
-                arguments = data.Arguments;
-
-                if (type.ContainsGenericParameters)
+                Type[] typeArgs = testFixtureData.TypeArgs;
+                if (typeArgs.Length == 0)
                 {
-                    Type[] typeArgs = data.TypeArgs;
-                    if (typeArgs.Length == 0)
+                    int cnt = 0;
+                    foreach (object o in arguments)
+                        if (o is Type) cnt++;
+                        else break;
+
+                    typeArgs = new Type[cnt];
+                    for (int i = 0; i < cnt; i++)
+                        typeArgs[i] = (Type)arguments[i];
+
+                    if (cnt > 0)
                     {
-                        int cnt = 0;
-                        foreach (object o in arguments)
-                            if (o is Type) cnt++;
-                            else break;
+                        object[] args = new object[arguments.Length - cnt];
+                        for (int i = 0; i < args.Length; i++)
+                            args[i] = arguments[cnt + i];
 
-                        typeArgs = new Type[cnt];
-                        for (int i = 0; i < cnt; i++)
-                            typeArgs[i] = (Type)arguments[i];
-
-                        if (cnt > 0)
-                        {
-                            object[] args = new object[arguments.Length - cnt];
-                            for (int i = 0; i < args.Length; i++)
-                                args[i] = arguments[cnt + i];
-
-                            arguments = args;
-                        }
+                        arguments = args;
                     }
+                }
 
-                    if (typeArgs.Length > 0 ||
-                        TypeHelper.CanDeduceTypeArgsFromArgs(type, arguments, ref typeArgs))
-                    {
-                        type = TypeHelper.MakeGenericType(type, typeArgs);
-                    }
+                if (typeArgs.Length > 0 ||
+                    TypeHelper.CanDeduceTypeArgsFromArgs(type, arguments, ref typeArgs))
+                {
+                    type = TypeHelper.MakeGenericType(type, typeArgs);
                 }
             }
 
-            this.fixture = new TestFixture(type);
+            var fixture = new TestFixture(type);
             
             if (arguments != null && arguments.Length > 0)
             {
@@ -150,11 +138,11 @@ namespace NUnit.Framework.Internal.Builders
 
             if (fixture.RunState != RunState.NotRunnable)
             {
-                fixture.RunState = data.RunState;
+                fixture.RunState = testFixtureData.RunState;
 
                 if (fixture.RunState == RunState.NotRunnable)
                 {
-                    var reason = data.Properties.Get(PropertyNames.SkipReason);
+                    var reason = testFixtureData.Properties.Get(PropertyNames.SkipReason);
                     fixture.Properties.Set(PropertyNames.SkipReason, reason);
                 }
             }
@@ -164,9 +152,9 @@ namespace NUnit.Framework.Internal.Builders
 
             fixture.ApplyAttributesToTest(type);
 
-            AddTestCases(type);
+            AddTestCasesToFixture(fixture);
 
-            return this.fixture;
+            return fixture;
         }
 
         #endregion
@@ -177,8 +165,11 @@ namespace NUnit.Framework.Internal.Builders
         /// Method to add test cases to the newly constructed fixture.
         /// </summary>
         /// <param name="fixtureType"></param>
-        private void AddTestCases(Type fixtureType)
+        /// <param name="fixture">The fixture to which cases should be added</param>
+        private void AddTestCasesToFixture(TestFixture fixture)
         {
+            Type fixtureType = fixture.FixtureType;
+
             // TODO: Check this logic added from Neil's build.
             if (fixtureType.ContainsGenericParameters)
             {
@@ -192,11 +183,11 @@ namespace NUnit.Framework.Internal.Builders
 
             foreach (MethodInfo method in methods)
             {
-                Test test = BuildTestCase(method, this.fixture);
+                Test test = BuildTestCase(method, fixture);
 
                 if (test != null)
                 {
-                    this.fixture.Add(test);
+                    fixture.Add(test);
                 }
             }
         }
@@ -217,12 +208,12 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>A newly constructed Test</returns>
         private Test BuildTestCase(MethodInfo method, TestSuite suite)
         {
-            return testBuilder.CanBuildFrom(method, suite)
-                ? testBuilder.BuildFrom(method, suite)
+            return _testBuilder.CanBuildFrom(method, suite)
+                ? _testBuilder.BuildFrom(method, suite)
                 : null;
         }
 
-        private void CheckTestFixtureIsValid(TestFixture fixture)
+        private static void CheckTestFixtureIsValid(TestFixture fixture)
         {
             Type fixtureType = fixture.FixtureType;
 
@@ -240,16 +231,11 @@ namespace NUnit.Framework.Internal.Builders
                 // Note: This could be done more simply using
                 // Type.EmptyTypes and Type.GetTypeArray() but
                 // they don't exist in all runtimes we support.
-                if (args == null)
-                    argTypes = new Type[0];
-                else
-                {
-                    argTypes = new Type[args.Length];
+                argTypes = new Type[args.Length];
 
-                    int index = 0;
-                    foreach (object arg in args)
-                        argTypes[index++] = arg.GetType();
-                }
+                int index = 0;
+                foreach (object arg in args)
+                    argTypes[index++] = arg.GetType();
 
                 ConstructorInfo ctor = fixtureType.GetConstructor(argTypes);
 

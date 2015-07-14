@@ -41,7 +41,7 @@ namespace NUnit.Framework
     /// attribute is optional.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public abstract class CombiningStrategyAttribute : TestCaseBuilderAttribute, ITestBuilder, IApplyToTest
+    public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest
     {
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
         private IParameterDataProvider _dataProvider = new ParameterDataProvider();

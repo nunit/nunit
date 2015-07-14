@@ -62,7 +62,7 @@ namespace NUnit.TestData.TestFixtureData
     [TestFixture]
     public class BadCtorFixture
     {
-        BadCtorFixture()
+        public BadCtorFixture()
         {
             throw new Exception();
         }

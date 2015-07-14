@@ -36,7 +36,7 @@ namespace NUnit.Framework
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class TestCaseSourceAttribute : TestCaseBuilderAttribute, ITestBuilder, IImplyFixture
+    public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
     {
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
@@ -86,8 +86,8 @@ namespace NUnit.Framework
         public Type SourceType { get; private set; }
 
         /// <summary>
-        /// Gets or sets the category associated with this test.
-        /// May be a single category or a comma-separated list.
+        /// Gets or sets the category associated with every fixture created from
+        /// this attribute. May be a single category or a comma-separated list.
         /// </summary>
         public string Category { get; set; }
 
@@ -104,12 +104,8 @@ namespace NUnit.Framework
         /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
         {
-            List<TestMethod> tests = new List<TestMethod>();
-
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
-                tests.Add(_builder.BuildTestMethod(method, suite, parms));
-
-            return tests;
+                yield return _builder.BuildTestMethod(method, suite, parms);
         }
 
         #endregion
@@ -140,12 +136,9 @@ namespace NUnit.Framework
 
                     foreach (object item in source)
                     {
-                        TestCaseParameters parms;
-                        ITestCaseData testCaseData = item as ITestCaseData;
+                        var parms = item as ITestCaseData;
 
-                        if (testCaseData != null)
-                            parms = new TestCaseParameters(testCaseData);
-                        else
+                        if (parms == null)
                         {
                             object[] args = item as object[];
                             if (args != null)

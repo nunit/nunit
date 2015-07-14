@@ -53,7 +53,7 @@ namespace NUnit.Framework
     /// </example>
     /// 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
-    public class TheoryAttribute : TestCaseBuilderAttribute, ITestBuilder, IImplyFixture
+    public class TheoryAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
     {
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
         private IParameterDataProvider _dataProvider = new DatapointProvider();

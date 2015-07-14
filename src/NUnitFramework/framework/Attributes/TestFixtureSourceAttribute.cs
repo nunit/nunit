@@ -33,10 +33,10 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// TestCaseSourceAttribute indicates the source to be used to
-    /// provide test cases for a test method.
+    /// provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public class TestFixtureSourceAttribute : FixtureBuilderAttribute, IFixtureBuilder
+    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder
     {
         private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
 
@@ -91,8 +91,8 @@ namespace NUnit.Framework
         public Type SourceType { get; private set; }
 
         /// <summary>
-        /// Gets or sets the category associated with this test.
-        /// May be a single category or a comma-separated list.
+        /// Gets or sets the category associated with every fixture created from 
+        /// this attribute. May be a single category or a comma-separated list.
         /// </summary>
         public string Category { get; set; }
 
@@ -105,16 +105,11 @@ namespace NUnit.Framework
         /// using available parameter data.
         /// </summary>
         /// <param name="type">The Type for which fixures are to be constructed.</param>
-        /// <param name="suite">The suite to which the fixtures will be added.</param>
         /// <returns>One or more TestFixtures as TestSuite</returns>
         public IEnumerable<TestSuite> BuildFrom(Type type)
         {
-            var fixtures = new List<TestSuite>();
-
             foreach (TestFixtureParameters parms in GetParametersFor(type))
-                fixtures.Add(_builder.BuildFrom(type, parms));
-
-            return fixtures;
+                yield return _builder.BuildFrom(type, parms);
         }
 
         #endregion
@@ -133,7 +128,7 @@ namespace NUnit.Framework
 
             try
             {
-                IEnumerable source = GetTestCaseSource(type);
+                IEnumerable source = GetTestFixtureSource(type);
 
                 if (source != null)
                 {
@@ -169,7 +164,7 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestCaseSource(Type type)
+        private IEnumerable GetTestFixtureSource(Type type)
         {
             Type sourceType = this.SourceType;
             if (sourceType == null)
