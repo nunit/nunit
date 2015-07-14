@@ -14,4 +14,5 @@ env:
     - Framework="net-2.0" Targets="Build;Test"
     - Framework="net-4.0" Targets="Build;TestFramework"
     - Framework="net-4.5" Targets="Build;TestFramework"
+    - Framework="portable" Targets="Build;TestFramework"
     

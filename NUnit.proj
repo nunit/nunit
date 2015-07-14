@@ -275,10 +275,16 @@
     <Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
     <Message Text="******************************************************************" />
 
-    <Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight' Or '$(Runtime)' == 'portable'"
+    <Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
       Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
-    <Exec WorkingDirectory="$(ConsoleBuildDir)" 
+    <Exec Condition="'$(Runtime)' == 'portable'" 
+				WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
+        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunitlite.exe nunit.framework.tests "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml" $(TestOptions)'
+        ContinueOnError="$(ContinueOnFailure)" />
+
+		<Exec Condition="'$(Runtime)' != 'portable'"
+				WorkingDirectory="$(ConsoleBuildDir)"
         Command='$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
     
@@ -620,8 +626,7 @@
   
   <ItemGroup Label="Projects for building the framework">
     <NUnitProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"></NUnitProjects>
-    <NUnitProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite.runner-$(ProjectSuffix).csproj"
-      Condition="'$(Runtime)' != 'portable'"></NUnitProjects>
+    <NUnitProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite.runner-$(ProjectSuffix).csproj"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-$(ProjectSuffix).csproj"
       Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
