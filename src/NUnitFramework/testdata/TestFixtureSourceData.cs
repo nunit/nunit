@@ -209,6 +209,32 @@ namespace NUnit.TestData.TestFixtureSourceData
             new object[] { 12, 2, 6 } };
     }
 
+    [TestFixtureSource("IgnoredData")]
+    public class IndividualInstancesMayBeIgnored : TestFixtureSourceTest
+    {
+        public IndividualInstancesMayBeIgnored(string arg) : base(arg, "IgnoredData") { }
+
+        static IEnumerable IgnoredData()
+        {
+            yield return new TestFixtureData("GoodData");
+            yield return new TestFixtureData("IgnoredData").Ignore("There must be a reason");
+            yield return new TestFixtureData("MoreGoodData");
+        }
+    }
+
+    [TestFixtureSource("ExplicitData")]
+    public class IndividualInstancesMayBeExplicit : TestFixtureSourceTest
+    {
+        public IndividualInstancesMayBeExplicit(string arg) : base(arg, "ExplicitData") { }
+
+        static IEnumerable ExplicitData()
+        {
+            yield return new TestFixtureData("GoodData");
+            yield return new TestFixtureData("ExplicitData").Explicit("Runs long");
+            yield return new TestFixtureData("MoreExplicitData").Explicit();
+        }
+    }
+
     #region Source Data Classes
 
     class SourceData_IEnumerable : IEnumerable

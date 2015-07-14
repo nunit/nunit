@@ -416,6 +416,7 @@
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
+    <Compile Include="TestFixtureData.cs" />
     <Compile Include="Throws.cs" />
   </ItemGroup>
   <ItemGroup>

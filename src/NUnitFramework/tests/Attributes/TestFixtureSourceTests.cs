@@ -30,7 +30,7 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
-    public class TestFixtureSourceTest
+    public class TestFixtureSourceTests
     {
         [TestCase(typeof(StaticField_SameClass))]
         [TestCase(typeof(StaticProperty_SameClass))]
@@ -59,6 +59,30 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(TestFixtureSourceAttribute.MUST_BE_STATIC));
             //var result = TestBuilder.RunTestSuite(suite, null);
             //Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+        }
+
+        [Test]
+        public void CanIgnoreIndividualFixtures()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayBeIgnored));
+
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.Tests[1].RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(suite.Tests[1].Properties.Get(PropertyNames.SkipReason), Is.EqualTo("There must be a reason"));
+            Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Runnable));
+        }
+
+        [Test]
+        public void CanMarkIndividualFixturesExplicit()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayBeExplicit));
+
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.Tests[1].RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(suite.Tests[1].Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Runs long"));
+            Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Explicit));
         }
     }
 }

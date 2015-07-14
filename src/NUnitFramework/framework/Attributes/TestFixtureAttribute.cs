@@ -33,7 +33,7 @@ namespace NUnit.Framework
     /// TestFixtureAttribute is used to mark a class that represents a TestFixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
-    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder, ITestFixtureData, IApplyToTest
+    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder, ITestFixtureData
     {
         private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
 
@@ -212,36 +212,6 @@ namespace NUnit.Framework
             }
         }
  
-        #endregion
-
-        #region IApplyToTest Members
-
-        /// <summary>
-        /// Modifies a test by adding a description, if not already set.
-        /// </summary>
-        /// <param name="test">The test to modify</param>
-        public void ApplyToTest(Test test)
-        {
-            if (!string.IsNullOrEmpty(IgnoreReason) && test.RunState != RunState.NotRunnable)
-            {
-                test.Properties.Set(PropertyNames.SkipReason, IgnoreReason);
-                test.RunState = RunState.Ignored;
-            }
-
-            if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
-                test.Properties.Set(PropertyNames.Description, Description);
-
-            if (!test.Properties.ContainsKey(PropertyNames.Author) && Author != null)
-                test.Properties.Set(PropertyNames.Author, Author);
-
-            if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
-                test.Properties.Set(PropertyNames.TestOf, TestOf.FullName);
-            
-            if (Category != null)
-                foreach (string cat in Category.Split(new[] { ',' }) )
-                    test.Properties.Add(PropertyNames.Category, cat);
-        }
-
         #endregion
 
         #region IFixtureBuilder Members

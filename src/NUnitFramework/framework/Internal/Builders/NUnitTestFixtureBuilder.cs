@@ -137,16 +137,12 @@ namespace NUnit.Framework.Internal.Builders
             }
 
             if (fixture.RunState != RunState.NotRunnable)
-            {
                 fixture.RunState = testFixtureData.RunState;
 
-                if (fixture.RunState == RunState.NotRunnable)
-                {
-                    var reason = testFixtureData.Properties.Get(PropertyNames.SkipReason);
-                    fixture.Properties.Set(PropertyNames.SkipReason, reason);
-                }
-            }
-            
+            foreach (string key in testFixtureData.Properties.Keys)
+                foreach (object val in testFixtureData.Properties[key])
+                    fixture.Properties.Add(key, val);
+
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 

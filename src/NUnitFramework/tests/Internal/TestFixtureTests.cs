@@ -25,7 +25,7 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
-using NUnit.TestData.TestFixtureData;
+using NUnit.TestData.TestFixtureTests;
 
 namespace NUnit.Framework.Internal
 {

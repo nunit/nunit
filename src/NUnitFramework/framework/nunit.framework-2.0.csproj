@@ -134,6 +134,7 @@
     <Compile Include="Assert.Conditions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="TestFixtureData.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
