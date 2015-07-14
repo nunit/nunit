@@ -1,4 +1,4 @@
-﻿#if NET_4_0 || NET_4_5
+﻿#if NET_4_0 || NET_4_5 || PORTABLE
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -11,7 +11,11 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
+#if PORTABLE
+        private static readonly bool ON_LINUX = true;   // We don't know what platform we are running under in portable
+#else
         private static readonly bool ON_LINUX = OSPlatform.CurrentPlatform.IsUnix;
+#endif
 
         private DefaultTestCaseBuilder _builder;
         private object _testObject;
@@ -52,7 +56,7 @@ namespace NUnit.Framework.Internal
                 yield return GetTestCase(Method("AsyncTaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
                 yield return GetTestCase(Method("TaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
                 
-                yield return GetTestCase(Method("NestedAsyncTaskSuccess"), ResultState.Success, 1, false);
+                yield return GetTestCase(Method("NestedAsyncTaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskError"), ResultState.Error, 0, false);
 

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
 using System;
 using System.IO;
 using System.Text;
@@ -224,7 +224,7 @@ namespace NUnitLite.Runner.Tests
         {
         }
 
-        #region Helper Methods
+#region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
         {
@@ -234,7 +234,7 @@ namespace NUnitLite.Runner.Tests
             return attr.Value;
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

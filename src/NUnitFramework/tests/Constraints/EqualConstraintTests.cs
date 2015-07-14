@@ -179,7 +179,7 @@ namespace NUnit.Framework.Constraints
 
         #region DateTimeOffsetEquality
 
-#if !NETCF
+#if !NETCF && !PORTABLE
 
         public class DateTimeOffsetShouldBeSame
         {
@@ -358,7 +358,7 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
             [Test]
             public void CanMatchHashtables_SameOrder()
             {

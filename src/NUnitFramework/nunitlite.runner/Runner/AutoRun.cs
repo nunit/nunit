@@ -94,11 +94,13 @@ namespace NUnitLite.Runner
                 return TextRunner.INVALID_ARG;
             }
 
+#if !PORTABLE
             if (options.InputFiles.Count > 0)
             {
                 _textUI.DisplayError("Input assemblies may not be specified when using the NUnitLite AutoRunner");
                 return TextRunner.INVALID_ARG;
             }
+#endif
 
             _textUI.DisplayTestFiles(new string[] { callingAssembly.GetName().Name });
             _textUI.DisplayRuntimeEnvironment();

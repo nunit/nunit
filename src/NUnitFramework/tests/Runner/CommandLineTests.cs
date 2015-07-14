@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
 using System;
 using System.Reflection;
 using System.Text;
@@ -35,7 +35,7 @@ namespace NUnit.Common.Tests
     [TestFixture]
     public class CommandLineTests
     {
-        #region General Tests
+#region General Tests
 
         [Test]
         public void NoInputFiles()
@@ -267,9 +267,9 @@ namespace NUnit.Common.Tests
             Assert.AreEqual("Invalid argument: -assembly:Tests.dll", options.ErrorMessages[1]);
         }
 
-        #endregion
+#endregion
 
-        #region Timeout Option
+#region Timeout Option
 
         [Test]
         public void TimeoutIsMinusOneIfNoOptionIsProvided()
@@ -301,9 +301,9 @@ namespace NUnit.Common.Tests
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
 
-        #endregion
+#endregion
 
-        #region EngineResult Option
+#region EngineResult Option
 
         [Test]
         public void ResultOptionWithFilePath()
@@ -415,9 +415,9 @@ namespace NUnit.Common.Tests
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
 
-        #endregion
+#endregion
 
-        #region Explore Option
+#region Explore Option
 
         [Test]
         public void ExploreOptionWithoutPath()
@@ -517,9 +517,9 @@ namespace NUnit.Common.Tests
         }
 #endif
         
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private static FieldInfo GetFieldInfo(string fieldName)
         {
@@ -535,7 +535,7 @@ namespace NUnit.Common.Tests
             return property;
         }
 
-        #endregion
+#endregion
 
         internal sealed class DefaultOptionsProviderStub : IDefaultOptionsProvider
         {

@@ -7,7 +7,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT && !NETCF && !PORTABLE
 namespace NUnitLite.Runner.Tests
 {
     public class TeamCityEventListenerTests

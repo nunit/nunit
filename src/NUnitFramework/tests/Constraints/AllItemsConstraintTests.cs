@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void AllItemsAreNotNull()
         {
-            object[] c = new object[] { 1, "hello", 3, Environment.OSVersion };
+            object[] c = new object[] { 1, "hello", 3, Environment.NewLine };
             Assert.That(c, new AllItemsConstraint(Is.Not.Null));
         }
 

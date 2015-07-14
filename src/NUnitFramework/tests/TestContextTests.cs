@@ -126,7 +126,7 @@ namespace NUnit.Framework.Tests
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             Assert.NotNull(workDirectory);
             // SL tests may be running on the desktop
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
 #endif
         }

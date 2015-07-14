@@ -24,11 +24,11 @@
 using System;
 using NUnit.Framework.Constraints;
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET_4_0 || PORTABLE
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 
@@ -246,7 +246,7 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
         [Test]
         public void AssumeThatSuccess()
         {

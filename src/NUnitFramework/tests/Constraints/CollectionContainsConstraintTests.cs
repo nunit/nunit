@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(list, new CollectionContainsConstraint(item));
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
         [Test]
         public void CanTestContentsOfSortedList()
         {

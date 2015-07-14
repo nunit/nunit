@@ -151,9 +151,7 @@
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
-    <Compile Include="Constraints\DelayedConstraintTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />

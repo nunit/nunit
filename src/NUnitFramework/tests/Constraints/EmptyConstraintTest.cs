@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
             new ArrayList(),
 #endif
             new System.Collections.Generic.List<int>()
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         };
     }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
     [TestFixture]
     public class EmptyDirectoryConstraintTest
     {

@@ -8,7 +8,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class NUnitTestCaseBuilderTests
     {
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
         private readonly Type fixtureType = typeof(AsyncDummyFixture);
 
         [TestCase("AsyncVoid", RunState.NotRunnable)]

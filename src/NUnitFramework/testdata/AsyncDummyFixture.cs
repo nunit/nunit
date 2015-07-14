@@ -1,9 +1,9 @@
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System.Threading.Tasks;
 using NUnit.Framework;
 using System;
 
-#if NET_4_0
+#if NET_4_0 || PORTABLE
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 

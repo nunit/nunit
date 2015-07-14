@@ -24,8 +24,15 @@
 #if PORTABLE || SILVERLIGHT
 namespace System
 {
+    /// <summary>
+    /// A shim of the .NET class for platforms that do not support it.
+    /// </summary>
     public class MarshalByRefObject
     {
+        /// <summary>
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
+        /// </summary>
+        /// <returns>null</returns>
         public virtual object InitializeLifetimeService()
         {
             return null;

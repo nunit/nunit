@@ -150,12 +150,14 @@ namespace NUnit.Framework.Constraints
         [TestCase(s52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
         public static void TestClipString(string input, int max, int start, string result)
         {
+#if !PORTABLE
             System.Console.WriteLine("input=  \"{0}\"", input);
             System.Console.WriteLine("result= \"{0}\"", result);
+#endif
             Assert.That(MsgUtils.ClipString(input, max, start), Is.EqualTo(result));
         }
 
-        #endregion
+#endregion
 
         //[TestCase('\0')]
         //[TestCase('\r')]
@@ -163,7 +165,7 @@ namespace NUnit.Framework.Constraints
         //{
         //}
 
-        #region ClipExpectedAndActual
+#region ClipExpectedAndActual
 
         [Test]
         public static void ClipExpectedAndActual_StringsFitInLine()
@@ -206,6 +208,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(s2, Is.EqualTo("...efghijklmno?qrstuvwxyz"));
         }
 
-        #endregion
+#endregion
     }
 }

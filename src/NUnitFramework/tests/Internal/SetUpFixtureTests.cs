@@ -5,7 +5,7 @@
 // ****************************************************************
 
 // TODO: Figure out how to make test work in SILVERLIGHT, since they support SetUpFixture
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
 using System.Collections;
 using NUnit.Common;
 using NUnit.Framework.Api;
@@ -21,7 +21,7 @@ namespace NUnit.Framework.Internal
         ITestAssemblyBuilder builder;
         ITestAssemblyRunner runner;
 
-        #region SetUp
+#region SetUp
         [SetUp]
         public void SetUp()
         {
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
             builder = new DefaultTestAssemblyBuilder();
             runner = new NUnitTestAssemblyRunner(builder);
         }
-        #endregion SetUp
+#endregion SetUp
 
         private ITestResult runTests(string nameSpace)
         {
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        #region Builder Tests
+#region Builder Tests
 
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interperets a SetupFixture class as a 'virtual namespace' into which 
@@ -136,9 +136,9 @@ namespace NUnit.Framework.Internal
             Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
         }
 
-        #endregion
+#endregion
 
-        #region Simple
+#region Simple
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfSingleTest()
         {
@@ -151,9 +151,9 @@ namespace NUnit.Framework.Internal
                                                      "NS1.Fixture.TearDown",
                                                      "NS1.OneTimeTearDown");
         }
-        #endregion Simple
+#endregion Simple
 
-        #region Static
+#region Static
         [Test]
         public void NamespaceSetUpMethodsMayBeStatic()
         {
@@ -166,9 +166,9 @@ namespace NUnit.Framework.Internal
                                                      "NS5.Fixture.TearDown",
                                                      "NS5.OneTimeTearDown");
         }
-        #endregion
+#endregion
 
-        #region TwoTestFixtures
+#region TwoTestFixtures
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfTwoTests()
         {
@@ -188,9 +188,9 @@ namespace NUnit.Framework.Internal
                                                      "NS2.Fixture.TearDown",
                                                      "NS2.OneTimeTearDown");
         }
-        #endregion TwoTestFixtures
+#endregion TwoTestFixtures
 
-        #region SubNamespace
+#region SubNamespace
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsNestedNamespaceSetUpFixture()
         {
@@ -210,9 +210,9 @@ namespace NUnit.Framework.Internal
                                                      "NS3.SubNamespace.OneTimeTearDown",
                                                      "NS3.OneTimeTearDown");
         }
-        #endregion SubNamespace
+#endregion SubNamespace
 
-        #region TwoSetUpFixtures
+#region TwoSetUpFixtures
         [NUnit.Framework.Test]
         public void WithTwoSetUpFixturesBothAreUsed()
         {
@@ -226,9 +226,9 @@ namespace NUnit.Framework.Internal
                                              .AndThen("NS4.OneTimeTearDown1", "NS4.OneTimeTearDown2")
                                              .Verify();
         }
-        #endregion TwoSetUpFixtures
+#endregion TwoSetUpFixtures
 
-        #region InvalidSetUpFixture
+#region InvalidSetUpFixture
 
         [Test]
         public void InvalidSetUpFixtureTest()
@@ -237,9 +237,9 @@ namespace NUnit.Framework.Internal
             TestUtilities.SimpleEventRecorder.Verify(new string[0]);
         }
 
-        #endregion
+#endregion
 
-        #region NoNamespaceSetupFixture
+#region NoNamespaceSetupFixture
         [NUnit.Framework.Test]
         public void AssemblySetupFixtureWrapsExecutionOfTest()
         {
@@ -250,7 +250,7 @@ namespace NUnit.Framework.Internal
                                                      "NoNamespaceTest",
                                                      "Assembly.OneTimeTearDown");
         }
-        #endregion NoNamespaceSetupFixture
+#endregion NoNamespaceSetupFixture
     }
 }
 #endif

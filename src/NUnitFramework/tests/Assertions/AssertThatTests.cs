@@ -27,12 +27,12 @@ using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System;
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET_4_0 || PORTABLE
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
         [Test]
         public void AssertThatSuccess()
         {
@@ -237,6 +237,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
+#if !PORTABLE
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
@@ -250,6 +251,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionTask"));
 #endif
         }
+#endif
 
         [Test]
         public void AssertThatErrorGenericTask()

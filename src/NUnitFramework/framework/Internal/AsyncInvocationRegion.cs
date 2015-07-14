@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal
         private const string TaskTypeName = "System.Threading.Tasks.Task";
         private const string AsyncAttributeTypeName = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
 
-#if NET_4_0
+#if NET_4_0 || PORTABLE
         private static readonly Action<Exception> PreserveStackTrace;
 
         static AsyncInvocationRegion()
@@ -106,7 +106,7 @@ at wrapping a non-async method invocation in an async region was done");
             private const string TaskResultProperty = "Result";
             private const string SystemAggregateException = "System.AggregateException";
             private const string InnerExceptionsProperty = "InnerExceptions";
-            private const BindingFlags TaskResultPropertyBindingFlags = BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public;
+            private const BindingFlags TaskResultPropertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
             public override object WaitForPendingOperationsToComplete(object invocationResult)
             {
@@ -120,7 +120,7 @@ at wrapping a non-async method invocation in an async region was done");
 
 #if NET_4_5
                     ExceptionDispatchInfo.Capture(innerExceptions[0]).Throw();
-#elif NET_4_0
+#elif NET_4_0 || PORTABLE
                     PreserveStackTrace(innerExceptions[0]);
                     throw innerExceptions[0];
 #endif

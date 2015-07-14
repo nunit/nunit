@@ -94,8 +94,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-portable", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-sl-5.0", "src\NUnitFramework\testdata\nunit.testdata-sl-5.0.csproj", "{A76794DA-29A4-4D63-9850-E0E363A2FAFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-portable-sl-5.0", "src\NUnitFramework\tests\nunit.framework.tests-portable-sl-5.0.csproj", "{AAABA65D-7BB9-45FB-B953-C7820E67810E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-2.0", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-2.0.csproj", "{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-4.0", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-4.0.csproj", "{DBD0C8B0-BE4E-4CBF-AAD4-44BEA2EA830B}"
@@ -103,8 +101,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-4.5", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-4.5.csproj", "{46EC0BC1-8F51-4B4D-B967-2EE452EA68FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-sl-5.0", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-sl-5.0.csproj", "{0A5F920A-1BF5-4DAC-B799-0C618B203797}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-portable-sl-5.0", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-portable-sl-5.0.csproj", "{9EFAD088-713E-4269-ADFC-1F21CA872A94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-sl-5.0", "src\NUnitFramework\tests\nunit.framework.tests-sl-5.0.csproj", "{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}"
 EndProject
@@ -133,6 +129,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-nunit-assembly-portable", "src\NUnitFramework\mock-assembly\mock-nunit-assembly-portable.csproj", "{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-nunit-assembly-sl-5.0", "src\NUnitFramework\mock-assembly\mock-nunit-assembly-sl-5.0.csproj", "{C4D16DF1-B6FA-42F5-834E-B01DA1BAA1FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-portable", "src\NUnitFramework\tests\nunit.framework.tests-portable.csproj", "{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-portable", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-portable.csproj", "{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -244,10 +244,6 @@ Global
 		{A76794DA-29A4-4D63-9850-E0E363A2FAFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A76794DA-29A4-4D63-9850-E0E363A2FAFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A76794DA-29A4-4D63-9850-E0E363A2FAFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AAABA65D-7BB9-45FB-B953-C7820E67810E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AAABA65D-7BB9-45FB-B953-C7820E67810E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AAABA65D-7BB9-45FB-B953-C7820E67810E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AAABA65D-7BB9-45FB-B953-C7820E67810E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -264,10 +260,6 @@ Global
 		{0A5F920A-1BF5-4DAC-B799-0C618B203797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A5F920A-1BF5-4DAC-B799-0C618B203797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A5F920A-1BF5-4DAC-B799-0C618B203797}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9EFAD088-713E-4269-ADFC-1F21CA872A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9EFAD088-713E-4269-ADFC-1F21CA872A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9EFAD088-713E-4269-ADFC-1F21CA872A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9EFAD088-713E-4269-ADFC-1F21CA872A94}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -320,6 +312,14 @@ Global
 		{C4D16DF1-B6FA-42F5-834E-B01DA1BAA1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4D16DF1-B6FA-42F5-834E-B01DA1BAA1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4D16DF1-B6FA-42F5-834E-B01DA1BAA1FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -368,9 +368,9 @@ Global
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30} = {576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}
 		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
-		{AAABA65D-7BB9-45FB-B953-C7820E67810E} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
-		{9EFAD088-713E-4269-ADFC-1F21CA872A94} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 		{8C53C716-3E54-4DFE-8CD9-F4099042FCFA} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
+		{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
+		{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 		{96181317-7B6F-49F0-B283-6E804D41C8AF} = {B923C1E7-54DD-4E79-A1A9-B21123863B04}
 		{E71A76CA-0089-4E1A-A7FB-210429DBED6E} = {B923C1E7-54DD-4E79-A1A9-B21123863B04}
 		{793CEC1B-D44D-4162-BE03-913BF1FDB458} = {B923C1E7-54DD-4E79-A1A9-B21123863B04}
