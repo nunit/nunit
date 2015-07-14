@@ -141,6 +141,8 @@
     <Compile Include="Attributes\PairwiseTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
+    <Compile Include="Attributes\RandomAttributeTests.cs" />
+    <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
@@ -219,6 +221,7 @@
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
+    <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
@@ -226,9 +229,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\PropertyBagTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Internal\RandomGeneratorTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\RandomizerTests.cs">
@@ -253,6 +253,7 @@
     <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
+    <Compile Include="Internal\TypeHelperTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="Internal\UnexpectedExceptionTests.cs" />
     <Compile Include="Internal\UnhandledExceptionTests.cs" />

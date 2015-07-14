@@ -156,5 +156,14 @@ namespace NUnit.Framework.Internal
             new object[] { 5, 2.0, "ABC" },
             new object[] { 5.0, 2L, "ABC" }
         };
+
+        //[TestCaseSource("SequenceCases")]
+        //public void SequenceEquality<TSource>(IEnumerable<TSource> left, IEnumerable<TSource> right)
+        //{
+        //    Assert.That(left, Is.EqualTo(right));
+        //}
+
+        //static ITestCaseData[] SequenceCases = {
+        //    new TestCaseData(new List<int> { 1, 2 }, new List<int> { 1, 2 }) };
     }
 }

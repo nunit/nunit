@@ -332,6 +332,7 @@
     <Compile Include="Internal\Commands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
+    <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
@@ -368,7 +369,6 @@
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
-    <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\Reflect.cs" />
     <Compile Include="Internal\Results\TestResult.cs" />

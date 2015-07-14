@@ -353,6 +353,7 @@
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
+    <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
@@ -363,7 +364,6 @@
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
-    <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\Reflect.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />

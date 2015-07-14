@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         {
             // Issue #21 - https://github.com/nunit/nunit-framework/issues/21
             // from must be less than or equal to to
-            if ( from.CompareTo( to ) > 0 )
+            if (comparer.Compare(from, to) > 0)
                 throw new ArgumentException( "from must be less than to" );
 
             this.from = from;

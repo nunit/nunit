@@ -198,9 +198,10 @@
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Interfaces\IApplyToContext.cs" />
     <Compile Include="Interfaces\IApplyToTest.cs" />
+    <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\NetCFExtensions.cs" />
-    <Compile Include="Internal\RandomGenerator.cs" />
+    <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\TestExecutionStatus.cs" />
@@ -371,7 +372,6 @@
     <Compile Include="Internal\ParameterSet.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
-    <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\Reflect.cs" />
     <Compile Include="Internal\Results\TestResult.cs" />
     <Compile Include="Internal\RuntimeFramework.cs" />

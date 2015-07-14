@@ -59,6 +59,25 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
+#if NET_4_5
+        [Test]
+        public void DoesNotRunIn40CompatibilityModeWhenCompiled45()
+        {
+            var uri = new Uri( "http://host.com/path./" );
+            var uriStr = uri.ToString();
+            Assert.AreEqual( "http://host.com/path./", uriStr );
+        }
+#elif NET_4_0
+        [Test]
+        [Platform(Exclude = "Mono", Reason = "Mono does not run assemblies targeting 4.0 in compatibility mode")]
+        public void RunsIn40CompatibilityModeWhenCompiled40()
+        {
+            var uri = new Uri("http://host.com/path./");
+            var uriStr = uri.ToString();
+            Assert.AreEqual("http://host.com/path/", uriStr);
+        }
+#endif
+
         [Test]
         public void CurrentFrameworkHasBuildSpecified()
         {

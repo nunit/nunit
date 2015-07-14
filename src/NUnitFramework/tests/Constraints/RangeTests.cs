@@ -92,5 +92,15 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That( actual, Is.InRange(from, to) );
         }
+
+        [TestCase(5, (short)10, (short)7)]
+        [TestCase((short)5, 10, (short)7)]
+        [TestCase(5, 10.0, 7)]
+        [TestCase(5.0, 10, 7.0)]
+        public void MixedRangeTests<TMin, TMax, TVal>(TMin min, TMax max, TVal val) 
+            where TMin : IComparable where TMax : IComparable where TVal : IComparable
+        {
+            Assert.That(val, Is.InRange(min, max));
+        }
     }
 }

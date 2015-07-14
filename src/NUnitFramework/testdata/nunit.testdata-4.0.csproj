@@ -99,6 +99,7 @@
     <Compile Include="ParameterizedTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
+    <Compile Include="RandomAttributeFixture.cs" />
     <Compile Include="RepeatedTestFixture.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="SetUpFixtureData.cs" />

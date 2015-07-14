@@ -73,14 +73,17 @@
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Attributes\CommandWrapperTests.cs" />
+    <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
+    <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />
+    <Compile Include="Internal\TypeHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -201,7 +204,6 @@
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
-    <Compile Include="Internal\RandomGeneratorTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpFixtureTests.cs" />

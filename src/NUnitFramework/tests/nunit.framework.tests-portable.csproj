@@ -106,6 +106,8 @@
     <Compile Include="Attributes\PairwiseTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
+    <Compile Include="Attributes\RandomAttributeTests.cs" />
+    <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
@@ -138,9 +140,7 @@
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
-    <Compile Include="Constraints\DelayedConstraintTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
@@ -185,12 +185,12 @@
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
+    <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
-    <Compile Include="Internal\RandomGeneratorTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpFixtureTests.cs" />
@@ -206,6 +206,7 @@
     <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
+    <Compile Include="Internal\TypeHelperTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="Internal\UnexpectedExceptionTests.cs" />
     <Compile Include="Internal\UnhandledExceptionTests.cs" />
