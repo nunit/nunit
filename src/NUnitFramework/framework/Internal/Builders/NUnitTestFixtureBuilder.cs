@@ -160,7 +160,6 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Method to add test cases to the newly constructed fixture.
         /// </summary>
-        /// <param name="fixtureType"></param>
         /// <param name="fixture">The fixture to which cases should be added</param>
         private void AddTestCasesToFixture(TestFixture fixture)
         {
