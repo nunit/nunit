@@ -33,12 +33,17 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// TestCaseSourceAttribute indicates the source to be used to
-    /// provide test cases for a test method.
+    /// provide test fixture instances for a test class.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder
     {
-        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
+
+        /// <summary>
+        /// Error message string is public so the tests can use it
+        /// </summary>
+        public const string MUST_BE_STATIC = "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.";
 
         #region Constructors
 
@@ -46,7 +51,7 @@ namespace NUnit.Framework
         /// Construct with the name of the method, property or field that will provide data
         /// </summary>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        public TestCaseSourceAttribute(string sourceName)
+        public TestFixtureSourceAttribute(string sourceName)
         {
             this.SourceName = sourceName;
         }
@@ -56,7 +61,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        public TestCaseSourceAttribute(Type sourceType, string sourceName)
+        public TestFixtureSourceAttribute(Type sourceType, string sourceName)
         {
             this.SourceType = sourceType;
             this.SourceName = sourceName;
@@ -66,7 +71,7 @@ namespace NUnit.Framework
         /// Construct with a Type
         /// </summary>
         /// <param name="sourceType">The type that will provide data</param>
-        public TestCaseSourceAttribute(Type sourceType)
+        public TestFixtureSourceAttribute(Type sourceType)
         {
             this.SourceType = sourceType;
         }
@@ -86,26 +91,25 @@ namespace NUnit.Framework
         public Type SourceType { get; private set; }
 
         /// <summary>
-        /// Gets or sets the category associated with every fixture created from
+        /// Gets or sets the category associated with every fixture created from 
         /// this attribute. May be a single category or a comma-separated list.
         /// </summary>
         public string Category { get; set; }
 
         #endregion
 
-        #region ITestBuilder Members
+        #region IFixtureBuilder Members
 
         /// <summary>
-        /// Construct one or more TestMethods from a given MethodInfo,
+        /// Construct one or more TestFixtures from a given Type,
         /// using available parameter data.
         /// </summary>
-        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
-        /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        /// <param name="type">The Type for which fixures are to be constructed.</param>
+        /// <returns>One or more TestFixtures as TestSuite</returns>
+        public IEnumerable<TestSuite> BuildFrom(Type type)
         {
-            foreach (TestCaseParameters parms in GetTestCasesFor(method))
-                yield return _builder.BuildTestMethod(method, suite, parms);
+            foreach (TestFixtureParameters parms in GetParametersFor(type))
+                yield return _builder.BuildFrom(type, parms);
         }
 
         #endregion
@@ -113,84 +117,34 @@ namespace NUnit.Framework
         #region Helper Methods
 
         /// <summary>
-        /// Returns a set of ITestCaseDataItems for use as arguments
-        /// to a parameterized test method.
+        /// Returns a set of ITestFixtureData items for use as arguments
+        /// to a parameterized test fixture.
         /// </summary>
-        /// <param name="method">The method for which data is needed.</param>
+        /// <param name="type">The type for which data is needed.</param>
         /// <returns></returns>
-        private IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+        public IEnumerable<ITestFixtureData> GetParametersFor(Type type)
         {
-            List<ITestCaseData> data = new List<ITestCaseData>();
+            List<ITestFixtureData> data = new List<ITestFixtureData>();
 
             try
             {
-                IEnumerable source = GetTestCaseSource(method);
+                IEnumerable source = GetTestFixtureSource(type);
 
                 if (source != null)
                 {
-#if NETCF
-                    ParameterInfo[] parameters = method.IsGenericMethodDefinition ? new ParameterInfo[0] : method.GetParameters();
-#else
-                    ParameterInfo[] parameters = method.GetParameters();
-#endif
-
                     foreach (object item in source)
                     {
-                        var parms = item as ITestCaseData;
+                        var parms = item as ITestFixtureData;
 
                         if (parms == null)
                         {
                             object[] args = item as object[];
-                            if (args != null)
-                            {
-#if NETCF
-                                if (method.IsGenericMethodDefinition)
-                                {
-                                    var mi = method.MakeGenericMethodEx(args);
-                                    parameters = mi == null ? new ParameterInfo[0] : mi.GetParameters();
-                                }
-#endif
-                                if (args.Length != parameters.Length)
-                                    args = new object[] { item };
-                            }
-                            // else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
-                            // {
-                            //    args = new object[] { item };
-                            // }
-                            else if (item is Array)
-                            {
-                                Array array = item as Array;
-
-#if NETCF
-                                if (array.Rank == 1 && (method.IsGenericMethodDefinition || array.Length == parameters.Length))
-#else
-                                if (array.Rank == 1 && array.Length == parameters.Length)
-#endif
-                                {
-                                    args = new object[array.Length];
-                                    for (int i = 0; i < array.Length; i++)
-                                        args[i] = array.GetValue(i);
-#if NETCF
-                                    if (method.IsGenericMethodDefinition)
-                                    {
-                                        var mi = method.MakeGenericMethodEx(args);
-
-                                        if (mi == null || array.Length != mi.GetParameters().Length)
-                                            args = new object[] {item};
-                                    }
-#endif
-                                }
-                                else
-                                {
-                                    args = new object[] { item };
-                                }
-                            }
-                            else
+                            if (args == null)
                             {
                                 args = new object[] { item };
                             }
 
-                            parms = new TestCaseParameters(args);
+                            parms = new TestFixtureParameters(args);
                         }
 
                         if (this.Category != null)
@@ -204,17 +158,17 @@ namespace NUnit.Framework
             catch (Exception ex)
             {
                 data.Clear();
-                data.Add(new TestCaseParameters(ex));
+                data.Add(new TestFixtureParameters(ex));
             }
 
             return data;
         }
 
-        private IEnumerable GetTestCaseSource(MethodInfo method)
+        private IEnumerable GetTestFixtureSource(Type type)
         {
             Type sourceType = this.SourceType;
             if (sourceType == null)
-                sourceType = method.ReflectedType;
+                sourceType = type;
 
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)
@@ -251,10 +205,10 @@ namespace NUnit.Framework
 
         private static IEnumerable SourceMustBeStaticError()
         {
-            var parms = new TestCaseParameters();
+            var parms = new TestFixtureParameters();
             parms.RunState = RunState.NotRunnable;
-            parms.Properties.Set(PropertyNames.SkipReason, "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.");
-            return new TestCaseParameters[] { parms };
+            parms.Properties.Set(PropertyNames.SkipReason, MUST_BE_STATIC);
+            return new TestFixtureParameters[] { parms };
         }
 
         #endregion

@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
-        internal ParameterSet parms;
+        internal TestCaseParameters parms;
 
         #endregion
 

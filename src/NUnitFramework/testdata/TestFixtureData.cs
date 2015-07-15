@@ -27,7 +27,7 @@ using NUnit.Framework;
 using System.Security.Principal;
 #endif
 
-namespace NUnit.TestData.TestFixtureData
+namespace NUnit.TestData.TestFixtureTests
 {
     /// <summary>
     /// Classes used for testing NUnit
@@ -62,7 +62,7 @@ namespace NUnit.TestData.TestFixtureData
     [TestFixture]
     public class BadCtorFixture
     {
-        BadCtorFixture()
+        public BadCtorFixture()
         {
             throw new Exception();
         }
@@ -432,7 +432,7 @@ namespace NUnit.TestData.TestFixtureData
     [TestFixture]
     public class FixtureSetUpWithParameters : OneTestBase
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup(int j)
         {
         }

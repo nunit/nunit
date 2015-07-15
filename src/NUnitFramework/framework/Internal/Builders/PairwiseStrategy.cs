@@ -642,7 +642,7 @@ namespace NUnit.Framework.Internal.Builders
                     testData[i] = valueSet[i][pairwiseTestCase.Features[i]];
                 }
 
-                ParameterSet parms = new ParameterSet(testData);
+                TestCaseParameters parms = new TestCaseParameters(testData);
                 testCases.Add(parms);
             }
 

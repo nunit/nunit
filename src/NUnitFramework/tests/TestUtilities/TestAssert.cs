@@ -66,9 +66,9 @@ namespace NUnit.TestUtilities
         public static void IsNotRunnable(Test test)
         {
             Assert.AreEqual(RunState.NotRunnable, test.RunState);
-            ITestResult result = TestBuilder.RunTest(test, null);
-            Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
-            Assert.AreEqual("Invalid", result.ResultState.Label);
+            //ITestResult result = TestBuilder.RunTest(test, null);
+            //Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
+            //Assert.AreEqual("Invalid", result.ResultState.Label);
         }
 
         public static void IsNotRunnable(Type type)

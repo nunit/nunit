@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,18 +22,20 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The abstract base class for all NUnit attributes that build test cases.
-    /// The derived class should implement one of the test builder interfaces.
+    /// The ITestCaseData interface is implemented by a class
+    /// that is able to return the data required to create an
+    /// instance of a parameterized test fixture.
     /// </summary>
-    public abstract class TestCaseBuilderAttribute : NUnitAttribute
+    public interface ITestFixtureData : ITestData
     {
         /// <summary>
-        /// Default constructor
+        /// Get the TypeArgs if separately set
         /// </summary>
-        public TestCaseBuilderAttribute() { }
+        Type[] TypeArgs { get;  }
     }
 }

@@ -25,7 +25,7 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
-using NUnit.TestData.TestFixtureData;
+using NUnit.TestData.TestFixtureTests;
 
 namespace NUnit.Framework.Internal
 {
@@ -112,9 +112,10 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CannotRunBadConstructor()
+        public void BadConstructorRunsWithSetUpError()
         {
-            TestAssert.IsNotRunnable(typeof(BadCtorFixture));
+            var result = TestBuilder.RunTestFixture(typeof(BadCtorFixture));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError));
         }
 
         [Test]
