@@ -1,4 +1,59 @@
-﻿NUnit 3.0.0 Beta 2 - May 12, 2015
+﻿NUnit 3.0.0 Beta 3 - July ??, 2015
+
+Framework
+
+ * The RangeAttribute has been extended to support more data types including 
+   uint, long and ulong
+ * Added platform support for Windows 10 and fixed issues with Windows 8 and
+   8.1 support
+ * Added async support to the portable version of NUnit Framework
+ * Several TestCaseSourceAttribute constructors have been deprecated, see the
+   documentation for more information
+ * RandomAttribute has been extended to add support for new data types including 
+   uint, long, ulong, short, ushort, float, byte and sbyte
+ * Removed the dependency on Microsoft.Bcl.Async from the NUnit Framework assembly
+   targeting .NET 4.0. If you want to write async tests in .NET 4.0, you will need
+   to reference the NuGet package yourself.
+ 
+Engine
+
+ * If the target framework is not specified, test assemblies that are compiled
+   to target .NET 4.5 will no longer run in .NET 4.0 compatibility mode 
+   
+ Console
+ 
+ * If the console is run without arguments, it will now display help
+
+Issues Resolved
+
+ *  47 Extensions to RangeAttribute
+ * 237 System.Uri .ctor works not properly under Nunit
+ * 244 NUnit should properly distinguish between .NET 4.0 and 4.5
+ * 310 Target framework not specified on the AppDomain when running against .Net 4.5
+ * 321 Rationalize how we count tests
+ * 472 Overflow exception and DivideByZero exception from the RangeAttribute
+ * 524 int and char do not compare correctly?
+ * 539 Truncation of string arguments
+ * 544 AsyncTestMethodTests for 4.5 Framework fails frequently on Travis CI
+ * 656 Unused parameter in Console.WriteLine found
+ * 670 Failing Tests in TeamCity Build
+ * 673 Ensure proper disposal of engine objects
+ * 674 Engine does not release test assemblies
+ * 679 Windows 10 Support
+ * 682 Add Async Support to Portable Framework
+ * 683 Make FrameworkController available in portable build
+ * 687 TestAgency does not launch agent process correctly if runtime type is not specified (i.e. v4.0)
+ * 692 PlatformAttribute_OperatingSystemBitNess fails when running in 32-bit process
+ * 693 Generic Test<T> Method cannot determine type arguments for fixture when passed as IEnumerable<T>
+ * 698 Deprecate / Remove TestCaseSourceAttribute Constructors
+ * 703 TeamCity non-equal flowid for 'testStarted' and 'testFinished' messages
+ * 712 Extensions to RandomAttribute
+ * 718 RangeConstraint gives error with from and two args of differing types
+ * 723 Does nunit.nuspec require dependency on Microsoft.Bcl.Async? 
+ * 724 Adds support for Nullable<bool> to Assert.IsTrue and Assert.IsFalse
+ * 734 Console without parameters doesn't show help
+
+NUnit 3.0.0 Beta 2 - May 12, 2015
 
 Framework
 
