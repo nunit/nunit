@@ -120,17 +120,6 @@ namespace NUnit.Framework.Internal.Builders
             return suite;
         }
 
-        //private Test BuildMultipleFixtures(Type type, IFixtureBuilder[] attrs)
-        //{
-        //    TestSuite suite = new ParameterizedFixtureSuite(type);
-
-        //    foreach (IFixtureBuilder attr in attrs)
-        //        foreach (var fixture in attr.BuildFrom(type))
-        //            suite.Add(fixture);
-
-        //    return suite;
-        //}
-
         /// <summary>
         /// We look for attributes implementing IFixtureBuilder at one level 
         /// of inheritance at a time. Attributes on base classes are not used 
