@@ -120,8 +120,6 @@
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
     <Compile Include="Attributes\TestActionAttribute.cs" />
-    <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
-    <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
     <Compile Include="Attributes\CultureAttribute.cs" />
     <Compile Include="Attributes\DataAttribute.cs" />
@@ -155,6 +153,7 @@
     <Compile Include="Attributes\TestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\TestFixtureAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />
+    <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
     <Compile Include="Attributes\TheoryAttribute.cs" />
@@ -292,7 +291,9 @@
     <Compile Include="Interfaces\ITestBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
+    <Compile Include="Interfaces\ITestData.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
+    <Compile Include="Interfaces\ITestFixtureData.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
@@ -361,7 +362,6 @@
     <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
-    <Compile Include="Internal\ParameterSet.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
@@ -371,10 +371,13 @@
     <Compile Include="Internal\RuntimeFramework.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
+    <Compile Include="Internal\TestCaseParameters.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestExecutionStatus.cs" />
     <Compile Include="Internal\TestFilter.cs" />
+    <Compile Include="Internal\TestFixtureParameters.cs" />
     <Compile Include="Internal\TestListener.cs" />
+    <Compile Include="Internal\TestParameters.cs" />
     <Compile Include="Internal\TestProgressReporter.cs" />
     <Compile Include="Internal\Tests\ParameterizedFixtureSuite.cs" />
     <Compile Include="Internal\Tests\ParameterizedMethodSuite.cs" />
@@ -396,6 +399,7 @@
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
+    <Compile Include="TestFixtureData.cs" />
     <Compile Include="Throws.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />

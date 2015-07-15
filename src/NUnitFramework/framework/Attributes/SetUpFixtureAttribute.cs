@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Framework
@@ -33,7 +34,7 @@ namespace NUnit.Framework
     /// SetUpFixtureAttribute is used to identify a SetUpFixture
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
-    public class SetUpFixtureAttribute : FixtureBuilderAttribute, IFixtureBuilder
+    public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
 
@@ -43,7 +44,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="type">The type of the fixture to be used.</param>
         /// <returns>A SetUpFixture object as a TestSuite.</returns>
-        public TestSuite BuildFrom(Type type)
+        public IEnumerable<TestSuite> BuildFrom(Type type)
         {
             SetUpFixture fixture = new SetUpFixture(type);
 
@@ -57,7 +58,7 @@ namespace NUnit.Framework
                 }
             }
 
-            return fixture;
+            return new TestSuite[] { fixture };
         }
 
         #endregion

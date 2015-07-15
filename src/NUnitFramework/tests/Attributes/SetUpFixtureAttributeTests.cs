@@ -36,8 +36,9 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(Class4))]
         public void CertainAttributesAreNotAllowed(Type type)
         {
-            var fixture = new SetUpFixtureAttribute().BuildFrom(type);
-            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(type);
+            foreach (var fixture in fixtures)
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
 #pragma warning disable 618 // Obsolete Attributes

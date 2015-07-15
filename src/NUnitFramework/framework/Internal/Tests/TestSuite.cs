@@ -54,7 +54,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="name">The name of the suite.</param>
         public TestSuite( string name ) 
-            : base( name ) { }
+            : base( name ) 
+        {
+            Arguments = new object[0];
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
@@ -62,7 +65,10 @@ namespace NUnit.Framework.Internal
         /// <param name="parentSuiteName">Name of the parent suite.</param>
         /// <param name="name">The name of the suite.</param>
         public TestSuite( string parentSuiteName, string name ) 
-            : base( parentSuiteName, name ) { }
+            : base( parentSuiteName, name ) 
+        { 
+            Arguments = new object[0];
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
@@ -70,11 +76,12 @@ namespace NUnit.Framework.Internal
         /// <param name="fixtureType">Type of the fixture.</param>
         public TestSuite(Type fixtureType) : base(fixtureType)
         {
-            string name = this.Name = TypeHelper.GetDisplayName(fixtureType);
+            Name = TypeHelper.GetDisplayName(fixtureType);
             string nspace = fixtureType.Namespace;
-            this.FullName = nspace != null && nspace != ""
-                ? nspace + "." + name
-                : name;
+            FullName = nspace != null && nspace != ""
+                ? nspace + "." + Name
+                : Name;
+            Arguments = new object[0];
         }
 
         #endregion
