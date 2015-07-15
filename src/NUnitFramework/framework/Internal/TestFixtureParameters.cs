@@ -33,15 +33,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestFixtureParameters : TestParameters, ITestFixtureData
     {
-        #region Instance Fields
-
-        /// <summary>
-        /// The expected result to be returned
-        /// </summary>
-        private object _expectedResult;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
