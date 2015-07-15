@@ -1,4 +1,4 @@
-﻿NUnit 3.0.0 Beta 3 - July ??, 2015
+﻿NUnit 3.0.0 Beta 3 - July 15, 2015
 
 Framework
 
@@ -14,6 +14,8 @@ Framework
  * Removed the dependency on Microsoft.Bcl.Async from the NUnit Framework assembly
    targeting .NET 4.0. If you want to write async tests in .NET 4.0, you will need
    to reference the NuGet package yourself.
+ * Added a new TestFixtureSource attribute which is the equivalent to TestCaseSource
+   but provides for instantiation of fixtures.
  
 Engine
 
@@ -48,6 +50,7 @@ Issues Resolved
  * 698 Deprecate / Remove TestCaseSourceAttribute Constructors
  * 703 TeamCity non-equal flowid for 'testStarted' and 'testFinished' messages
  * 712 Extensions to RandomAttribute
+ * 715 Provide a data source attribute at TestFixture Level
  * 718 RangeConstraint gives error with from and two args of differing types
  * 723 Does nunit.nuspec require dependency on Microsoft.Bcl.Async? 
  * 724 Adds support for Nullable<bool> to Assert.IsTrue and Assert.IsFalse
