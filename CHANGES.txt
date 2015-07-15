@@ -7,15 +7,19 @@ Framework
  * Added platform support for Windows 10 and fixed issues with Windows 8 and
    8.1 support
  * Added async support to the portable version of NUnit Framework
- * Several TestCaseSourceAttribute constructors have been deprecated, see the
-   documentation for more information
+ * The named members of the TestCaseSource and ValueSource attributes must now be
+   static.
  * RandomAttribute has been extended to add support for new data types including 
    uint, long, ulong, short, ushort, float, byte and sbyte
+ * TestContext.Random has also been extended to add support for new data types including 
+   uint, long, ulong, short, ushort, float, byte, sbyte and decimal
  * Removed the dependency on Microsoft.Bcl.Async from the NUnit Framework assembly
    targeting .NET 4.0. If you want to write async tests in .NET 4.0, you will need
    to reference the NuGet package yourself.
  * Added a new TestFixtureSource attribute which is the equivalent to TestCaseSource
    but provides for instantiation of fixtures.
+ * Significant improvements have been made in how NUnit deduces the type arguments of 
+   generic methods based on the arguments provided.
  
 Engine
 
