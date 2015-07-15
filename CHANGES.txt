@@ -47,7 +47,7 @@ Issues Resolved
  * 687 TestAgency does not launch agent process correctly if runtime type is not specified (i.e. v4.0)
  * 692 PlatformAttribute_OperatingSystemBitNess fails when running in 32-bit process
  * 693 Generic Test<T> Method cannot determine type arguments for fixture when passed as IEnumerable<T>
- * 698 Deprecate / Remove TestCaseSourceAttribute Constructors
+ * 698 Require TestCaseSource and ValueSource named members to be static
  * 703 TeamCity non-equal flowid for 'testStarted' and 'testFinished' messages
  * 712 Extensions to RandomAttribute
  * 715 Provide a data source attribute at TestFixture Level
