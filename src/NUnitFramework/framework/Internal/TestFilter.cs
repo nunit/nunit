@@ -50,6 +50,12 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Indicates whether this is a top-level filter,
+        /// not contained in any other filter.
+        /// </summary>
+        public bool TopLevel { get; set; }
+
+        /// <summary>
         /// Determine if a particular test passes the filter criteria. The default 
         /// implementation checks the test itself, its parents and any descendants.
         /// 
@@ -111,24 +117,21 @@ namespace NUnit.Framework.Internal
         public static TestFilter FromXml(string xmlText)
         {
             TNode topNode = TNode.FromXml(xmlText);
-            //XmlDocument doc = new System.Xml.XmlDocument();
-            //doc.LoadXml(xmlText);
-            //XmlNode topNode = doc.FirstChild;
 
             if (topNode.Name != "filter")
                 throw new Exception("Expected filter element at top level");
 
-            switch (topNode.ChildNodes.Count)
-            {
-                case 0:
-                    return TestFilter.Empty;
+            int count = topNode.ChildNodes.Count;
 
-                case 1:
-                    return FromXml(topNode.FirstChild);
+            TestFilter filter = count == 0
+                ? TestFilter.Empty
+                : count == 1
+                    ? FromXml(topNode.FirstChild)
+                    : FromXml(topNode);
 
-                default:
-                    return FromXml(topNode);
-            }
+            filter.TopLevel = true;
+
+            return filter;
         }
 
         private static TestFilter FromXml(TNode node)
