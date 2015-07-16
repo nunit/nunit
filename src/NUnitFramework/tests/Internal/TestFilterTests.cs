@@ -226,6 +226,7 @@ namespace NUnit.Framework.Internal
 
             Assert.False(filter.IsEmpty);
             Assert.That(filter.Match(dummyFixture));
+            Assert.False(filter.Match(dummyFixture.Tests[0]));
             Assert.That(filter.Match(anotherFixture));
             Assert.False(filter.Match(yetAnotherFixture));
         }
@@ -269,6 +270,9 @@ namespace NUnit.Framework.Internal
         [Category("Dummy")]
         private class DummyFixture
         {
+            [Test, Explicit]
+            public void ExplicitTest() { }
+
         }
 
         [Category("Another")]
@@ -291,6 +295,19 @@ namespace NUnit.Framework.Internal
 
             Assert.False(filter.IsEmpty);
             Assert.False(filter.Match(dummyFixture));
+            Assert.True(filter.Match(dummyFixture.Tests[0]));
+            Assert.True(filter.Match(anotherFixture));
+        }
+
+        [Test]
+        public void NotFilter_Constructor_TopLevel()
+        {
+            var filter = new NotFilter(new CategoryFilter("Dummy"));
+            filter.TopLevel = true;
+
+            Assert.False(filter.IsEmpty);
+            Assert.False(filter.Match(dummyFixture));
+            Assert.False(filter.Match(dummyFixture.Tests[0]));
             Assert.True(filter.Match(anotherFixture));
         }
 
@@ -301,6 +318,7 @@ namespace NUnit.Framework.Internal
                 "<filter><not><cat>Dummy</cat></not></filter>");
 
             Assert.That(filter, Is.TypeOf<NotFilter>());
+            Assert.That(filter, Has.Property("TopLevel").EqualTo(true));
             Assert.False(filter.Match(dummyFixture));
             Assert.True(filter.Match(anotherFixture));
         }

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,35 +32,19 @@ namespace NUnit.Framework.Internal.Filters
     [Serializable]
     public class NotFilter : TestFilter
     {
-        ITestFilter baseFilter;
-        bool topLevel = false;
-
         /// <summary>
         /// Construct a not filter on another filter
         /// </summary>
         /// <param name="baseFilter">The filter to be negated</param>
         public NotFilter( ITestFilter baseFilter)
         {
-            this.baseFilter = baseFilter;
-        }
-
-        /// <summary>
-        /// Indicates whether this is a top-level NotFilter,
-        /// requiring special handling of Explicit
-        /// </summary>
-        public bool TopLevel
-        {
-            get { return topLevel; }
-            set { topLevel = value; }
+            BaseFilter = baseFilter;
         }
 
         /// <summary>
         /// Gets the base filter
         /// </summary>
-        public ITestFilter BaseFilter
-        {
-            get { return baseFilter; }
-        }
+        public ITestFilter BaseFilter { get; private set; }
 
         /// <summary>
         /// Check whether the filter matches a test
@@ -69,10 +53,10 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if it matches, otherwise false</returns>
         public override bool Match( ITest test )
         {
-            if (topLevel && test.RunState == RunState.Explicit)
+            if (TopLevel && test.RunState == RunState.Explicit)
                 return false;
 
-            return !baseFilter.Pass( test );
+            return !BaseFilter.Pass( test );
         }
 
         /// <summary>
@@ -82,7 +66,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if at least one descendant matches the filter criteria</returns>
         protected override bool MatchDescendant(ITest test)
         {
-            if (!test.HasChildren || test.Tests == null || topLevel && test.RunState == RunState.Explicit)
+            if (!test.HasChildren || test.Tests == null || TopLevel && test.RunState == RunState.Explicit)
                 return false;
 
             foreach (ITest child in test.Tests)
