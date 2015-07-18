@@ -39,6 +39,15 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void ThrowsAssertionException_MessageSpecified()
+        {
+            Assert.That(
+                () => Assert.Fail(),
+                Throws.TypeOf<AssertionException>(),
+                "My Message");
+        }
+
+        [Test]
         public void ThrowsAssertionExceptionWithMessage()
         {
             Assert.That(
