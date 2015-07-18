@@ -130,7 +130,20 @@ namespace NUnit.Framework
         /// <param name="constraint">A ThrowsConstraint used in the test</param>
         static public void That(TestDelegate code, IResolveConstraint constraint)
         {
-            Assert.That((object)code, constraint);
+            Assert.That(code, constraint, null, null);
+        }
+
+        /// <summary>
+        /// Asserts that the code represented by a delegate throws an exception
+        /// that satisfies the constraint provided.
+        /// </summary>
+        /// <param name="code">A TestDelegate to be executed</param>
+        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void That(TestDelegate code, IResolveConstraint constraint, string message, params string[] args)
+        {
+            Assert.That((object)code, constraint, message, args);
         }
 
         #endregion
