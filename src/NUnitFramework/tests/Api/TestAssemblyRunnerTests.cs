@@ -31,12 +31,13 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Tests;
 using NUnit.Tests.Assemblies;
 
 namespace NUnit.Framework.Api
 {
     // Functional tests of the TestAssemblyRunner and all subordinate classes
-    public class TestAssemblyRunnerTests
+    public class TestAssemblyRunnerTests : ITestListener
     {
         private const string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
         private const string BAD_FILE = "mock-nunit-assembly.pdb";
@@ -48,12 +49,26 @@ namespace NUnit.Framework.Api
         private string _mockAssemblyPath;
         private string _slowTestsPath;
 
+        private int _testStartedCount;
+        private int _testFinishedCount;
+        private int _successCount;
+        private int _failCount;
+        private int _skipCount;
+        private int _inconclusiveCount;
+
         [SetUp]
         public void CreateRunner()
         {
             _mockAssemblyPath = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
             _slowTestsPath = Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS);
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+
+            _testStartedCount = 0;
+            _testFinishedCount = 0;
+            _successCount = 0;
+            _failCount = 0;
+            _skipCount = 0;
+            _inconclusiveCount = 0;
         }
 
         #region Load
@@ -154,6 +169,21 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
+        public void Run_AfterLoad_SendsExpectedEvents()
+        {
+            _runner.Load(_mockAssemblyPath, _settings);
+            var result = _runner.Run(this, TestFilter.Empty);
+
+            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - MockAssembly.Explicit));
+            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
+
+            Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
+            Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
+            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored));
+            Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+        }
+
+        [Test]
         public void Run_WithoutLoad_ReturnsError()
         {
             var ex = Assert.Throws<InvalidOperationException>(
@@ -216,6 +246,22 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
             Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Ignored));
             Assert.That(_runner.Result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+        }
+
+        [Test]
+        public void RunAsync_AfterLoad_SendsExpectedEvents()
+        {
+            _runner.Load(_mockAssemblyPath, _settings);
+            _runner.RunAsync(this, TestFilter.Empty);
+            _runner.WaitForCompletion(Timeout.Infinite);
+
+            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - MockAssembly.Explicit));
+            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
+
+            Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
+            Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
+            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored));
+            Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 
         [Test]
@@ -320,6 +366,40 @@ namespace NUnit.Framework.Api
             {
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled));
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count));
+            }
+        }
+
+        #endregion
+
+        #region ITestListener Implementation
+
+        void ITestListener.TestStarted(ITest test)
+        {
+            if (!test.IsSuite)
+                _testStartedCount++;
+        }
+
+        void ITestListener.TestFinished(ITestResult result)
+        {
+            if (!result.Test.IsSuite)
+            {
+                _testFinishedCount++;
+
+                switch (result.ResultState.Status)
+                {
+                    case TestStatus.Passed:
+                        _successCount++;
+                        break;
+                    case TestStatus.Failed:
+                        _failCount++;
+                        break;
+                    case TestStatus.Skipped:
+                        _skipCount++;
+                        break;
+                    case TestStatus.Inconclusive:
+                        _inconclusiveCount++;
+                        break;
+                }
             }
         }
 
