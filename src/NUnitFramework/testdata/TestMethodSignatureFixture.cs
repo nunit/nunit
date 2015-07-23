@@ -29,9 +29,9 @@ namespace NUnit.TestData.TestMethodSignatureFixture
     [TestFixture]
     public class TestMethodSignatureFixture
     {
-        public static int Tests = 20;
+        public static int Tests = 21;
         public static int Runnable = 12;
-        public static int NotRunnable = 8;
+        public static int NotRunnable = 9;
         public static int Errors = 3;
         public static int Failures = 0;
 
@@ -43,6 +43,9 @@ namespace NUnit.TestData.TestMethodSignatureFixture
 
         [Test]
         public void TestMethodWithArgumentsNotProvided(int x, int y, string label) { }
+
+        [Test, Ignore("BECAUSE"), Description("My test"), MaxTime(47)]
+        public void TestMethodWithArgumentsNotProvidedAndExtraAttributes(int x, int y, string label) { }
 
         [Test]
         public static void StaticTestMethodWithArgumentsNotProvided(int x, int y, string label) { }
