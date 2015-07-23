@@ -248,6 +248,10 @@ namespace NUnit.Framework.Internal.Execution
                     childResult.SetResult(resultState, message);
                     Result.AddResult(childResult);
 
+                    // Some runners may depend on getting the TestFinished event
+                    // even for tests that have been skipped at a higher level.
+                    Context.Listener.TestFinished(childResult);
+
                     if (child.IsSuite)
                         SkipChildren((TestSuite)child, resultState, message);
                 }
