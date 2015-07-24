@@ -60,11 +60,10 @@ namespace NUnit.Framework.Internal.Builders
             if (parentSuite != null)
                 prefix = parentSuite.FullName;
 
-            if (CheckTestMethodSignature(testMethod, parms))
-            {
-                if (parms == null || parms.Arguments == null)
-                    testMethod.ApplyAttributesToTest(method);
-            }
+            CheckTestMethodSignature(testMethod, parms);
+
+            if (parms == null || parms.Arguments == null)
+                testMethod.ApplyAttributesToTest(method);
 
             if (parms != null)
             {
@@ -109,6 +108,10 @@ namespace NUnit.Framework.Internal.Builders
         /// is found to be non-runnable, it will be modified.</param>
         /// <param name="parms">Parameters to be used for this test, or null</param>
         /// <returns>True if the method signature is valid, false if not</returns>
+        /// <remarks>
+        /// The return value is no longer used internally, but is retained
+        /// for testing purposes.
+        /// </remarks>
         private static bool CheckTestMethodSignature(TestMethod testMethod, TestCaseParameters parms)
         {
             if (testMethod.Method.IsAbstract)
