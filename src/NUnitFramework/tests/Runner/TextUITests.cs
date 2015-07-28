@@ -204,6 +204,8 @@ namespace NUnitLite.Runner.Tests
                 "",
                 "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
                 "ignoring this test method for now",
+                "",
+                "2) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitlyRunTest",
                 ""
             };
 
@@ -217,8 +219,8 @@ namespace NUnitLite.Runner.Tests
             var expected = new string[] {
                 "Test Run Summary",
                 "   Overall result: Failed",
-                "   Tests run: 9, Passed: 4, Errors: 1, Failures: 1, Inconclusive: 1",
-                "     Not run: 3, Invalid: 2, Ignored: 1, Skipped: 0",
+                "   Tests run: 7, Passed: 4, Errors: 1, Failures: 1, Inconclusive: 1",
+                "     Not run: 4, Invalid: 2, Ignored: 1, Explicit: 1, Skipped: 0",
                 "  Start time: 2014-12-02 12:34:56Z",
                 "    End time: 2014-12-02 12:34:56Z",
                 "    Duration: 0.123 seconds",

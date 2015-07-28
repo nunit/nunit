@@ -82,10 +82,13 @@ namespace NUnit.Framework.Internal.Execution
         /// Creates a test command for use in running this test.
         /// </summary>
         /// <returns></returns>
-        public static TestCommand MakeTestCommand(TestMethod test)
+        public static TestCommand MakeTestCommand(TestMethod test, ITestFilter filter)
         {
-            if (test.RunState != RunState.Runnable && test.RunState != RunState.Explicit)
-                return new SkipCommand(test);
+            if (test.RunState != RunState.Runnable)
+            {
+                if (test.RunState != RunState.Explicit || !filter.IsExplicitMatch(test))
+                    return new SkipCommand(test);
+            }
 
             // Command to execute test
             TestCommand command = new TestMethodCommand(test);

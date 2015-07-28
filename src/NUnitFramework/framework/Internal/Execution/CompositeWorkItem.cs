@@ -72,6 +72,9 @@ namespace NUnit.Framework.Internal.Execution
             InitializeSetUpAndTearDownCommands();
 
             if (!CheckForCancellation())
+                if (Test.RunState == RunState.Explicit && !_childFilter.IsExplicitMatch(Test))
+                    SkipFixture(ResultState.Explicit, GetSkipReason(), null);
+                else
                 switch (Test.RunState)
                 {
                     default:

@@ -179,6 +179,14 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\Filters\AndFilterTests.cs" />
+    <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
+    <Compile Include="Internal\Filters\EmptyFilterTests.cs" />
+    <Compile Include="Internal\Filters\IdFilterTests.cs" />
+    <Compile Include="Internal\Filters\NotFilterTests.cs" />
+    <Compile Include="Internal\Filters\OrFilterTests.cs" />
+    <Compile Include="Internal\Filters\SimpleNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
@@ -198,7 +206,6 @@
     <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
-    <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />

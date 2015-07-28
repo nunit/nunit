@@ -58,11 +58,20 @@ namespace NUnit.ConsoleRunner
         public int TestCount { get; private set; }
 
         /// <summary>
-        /// Returns the number of test cases actually run, which
-        /// is the same as TestCount, less any Skipped, Ignored
-        /// or NonRunnable tests.
+        /// Returns the number of test cases actually run.
         /// </summary>
-        public int RunCount { get; private set; }
+        public int RunCount 
+        {
+            get { return PassCount + FailureCount + ErrorCount + InconclusiveCount;  }
+        }
+
+        /// <summary>
+        /// Returns the number of test cases not run for any reason.
+        /// </summary>
+        public int NotRunCount
+        {
+            get { return IgnoreCount + ExplicitCount + InvalidCount + SkipCount;  }
+        }
 
         /// <summary>
         /// Gets the count of passed tests
@@ -92,7 +101,7 @@ namespace NUnit.ConsoleRunner
         public int InvalidCount { get; private set; }
 
         /// <summary>
-        /// Gets the count of skipped tests, excluding ignored tests
+        /// Gets the count of skipped tests, excluding ignored and explicit tests
         /// </summary>
         public int SkipCount { get; private set; }
 
@@ -101,6 +110,11 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public int IgnoreCount { get; private set; }
 
+        /// <summary>
+        /// Gets the count of tests not run because the are Explicit
+        /// </summary>
+        public int ExplicitCount { get; private set; }
+
         #endregion
 
         #region Helper Methods
@@ -108,13 +122,13 @@ namespace NUnit.ConsoleRunner
         private void InitializeCounters()
         {
             TestCount = 0;
-            RunCount = 0;
             PassCount = 0;
             FailureCount = 0;
             ErrorCount = 0;
             InconclusiveCount = 0;
             SkipCount = 0;
             IgnoreCount = 0;
+            ExplicitCount = 0;
             InvalidCount = 0;
         }
 
@@ -132,10 +146,8 @@ namespace NUnit.ConsoleRunner
                     {
                         case "Passed":
                             PassCount++;
-                            RunCount++;
                             break;
                         case "Failed":
-                            RunCount++;
                             if (label == null)
                                 FailureCount++;
                             else if (label == "Invalid")
@@ -145,11 +157,12 @@ namespace NUnit.ConsoleRunner
                             break;
                         case "Inconclusive":
                             InconclusiveCount++;
-                            RunCount++;
                             break;
                         case "Skipped":
                             if (label == "Ignored")
                                 IgnoreCount++;
+                            else if (label == "Explicit")
+                                ExplicitCount++;
                             else
                                 SkipCount++;
                             break;

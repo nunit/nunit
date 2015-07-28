@@ -48,13 +48,13 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void MakeSureSetUpAndTearDownAreCalledOnExplicitFixture()
+        public void MakeSureSetUpAndTearDownAreNotCalledOnExplicitFixture()
         {
             ExplicitSetUpAndTearDownFixture fixture = new ExplicitSetUpAndTearDownFixture();
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.AreEqual(1, fixture.setUpCount, "SetUp");
-            Assert.AreEqual(1, fixture.tearDownCount, "TearDown");
+            Assert.AreEqual(0, fixture.setUpCount, "SetUp");
+            Assert.AreEqual(0, fixture.tearDownCount, "TearDown");
         }
 
         [Test]

@@ -124,7 +124,7 @@ namespace NUnit.Framework.Api
         public void CountTestCases_AfterLoad_ReturnsCorrectCount()
         {
             _runner.Load(_mockAssemblyPath, _settings);
-            Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
+            Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(MockAssembly.Tests));
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Ignored));
+            Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
             Assert.That(result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 
@@ -174,12 +174,12 @@ namespace NUnit.Framework.Api
             _runner.Load(_mockAssemblyPath, _settings);
             var result = _runner.Run(this, TestFilter.Empty);
 
-            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - MockAssembly.Explicit));
-            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
+            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests));
+            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests));
 
             Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored));
+            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
             Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(_runner.Result.PassCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_runner.Result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Ignored));
+            Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
             Assert.That(_runner.Result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 
@@ -255,12 +255,12 @@ namespace NUnit.Framework.Api
             _runner.RunAsync(this, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
-            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - MockAssembly.Explicit));
-            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
+            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests));
+            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests));
 
             Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored));
+            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
             Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 

@@ -302,22 +302,34 @@ namespace NUnitLite.Runner
             WriteSectionHeader("Test Run Summary");
             WriteLabelLine("   Overall result: ", overallResult, overallStyle);
 
-            WriteLabel("   Tests run: ", summary.RunCount.ToString(CultureInfo.CurrentUICulture));
-            WriteLabel(", Passed: ", summary.PassCount.ToString(CultureInfo.CurrentUICulture));
-            WriteLabel(", Errors: ", summary.ErrorCount.ToString(CultureInfo.CurrentUICulture));
-            WriteLabel(", Failures: ", summary.FailureCount.ToString(CultureInfo.CurrentUICulture));
-            WriteLabelLine(", Inconclusive: ", summary.InconclusiveCount.ToString(CultureInfo.CurrentUICulture));
+            WriteSummaryCount("   Tests run: ", summary.RunCount);
+            WriteSummaryCount(", Passed: ", summary.PassCount);
+            WriteSummaryCount(", Errors: ", summary.ErrorCount, ColorStyle.Error);
+            WriteSummaryCount(", Failures: ", summary.FailureCount, ColorStyle.Failure);
+            WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
+            _outWriter.WriteLine();
 
-            var notRunTotal = summary.SkipCount + summary.IgnoreCount + summary.InvalidCount;
-            WriteLabel("     Not run: ", notRunTotal.ToString(CultureInfo.CurrentUICulture));
-            WriteLabel(", Invalid: ", summary.InvalidCount.ToString(CultureInfo.CurrentUICulture));
-            WriteLabel(", Ignored: ", summary.IgnoreCount.ToString(CultureInfo.CurrentUICulture));
-            WriteLabelLine(", Skipped: ", summary.SkipCount.ToString(CultureInfo.CurrentUICulture));
+            WriteSummaryCount("     Not run: ", summary.NotRunCount);
+            WriteSummaryCount(", Invalid: ", summary.InvalidCount, ColorStyle.Error);
+            WriteSummaryCount(", Ignored: ", summary.IgnoreCount, ColorStyle.Warning);
+            WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
+            WriteSummaryCount(", Skipped: ", summary.SkipCount);
+            _outWriter.WriteLine();
 
             WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
             WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
             WriteLabelLine("    Duration: ", summary.Duration.ToString("0.000") + " seconds");
             SkipLine();
+        }
+
+        private void WriteSummaryCount(string label, int count)
+        {
+            _outWriter.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture));
+        }
+
+        private void WriteSummaryCount(string label, int count, ColorStyle color)
+        {
+            _outWriter.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture), count > 0 ? color : ColorStyle.Value);
         }
 
         #endregion

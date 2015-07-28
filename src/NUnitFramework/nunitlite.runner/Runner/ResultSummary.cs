@@ -61,11 +61,20 @@ namespace NUnitLite.Runner
         public int TestCount { get; private set; }
 
         /// <summary>
-        /// Returns the number of test cases actually run, which
-        /// is the same as TestCount, less any Skipped, Ignored
-        /// or NonRunnable tests.
+        /// Returns the number of test cases actually run.
         /// </summary>
-        public int RunCount { get; private set; }
+        public int RunCount 
+        {
+            get { return PassCount + ErrorCount + FailureCount + InconclusiveCount;  }
+        }
+
+        /// <summary>
+        /// Gets the number of tests not run for any reason.
+        /// </summary>
+        public int NotRunCount
+        {
+            get { return InvalidCount + SkipCount + IgnoreCount + ExplicitCount;  }
+        }
 
         /// <summary>
         /// Gets the count of passed tests
@@ -105,6 +114,11 @@ namespace NUnitLite.Runner
         public int IgnoreCount { get; private set; }
 
         /// <summary>
+        /// Gets the explicit count
+        /// </summary>
+        public int ExplicitCount { get; private set; }
+
+        /// <summary>
         /// Gets the ResultState of the test result, which 
         /// indicates the success or failure of the test.
         /// </summary>
@@ -132,13 +146,13 @@ namespace NUnitLite.Runner
         private void InitializeCounters()
         {
             TestCount = 0;
-            RunCount = 0;
             PassCount = 0;
             FailureCount = 0;
             ErrorCount = 0;
             InconclusiveCount = 0;
             SkipCount = 0;
             IgnoreCount = 0;
+            ExplicitCount = 0;
             InvalidCount = 0;
         }
 
@@ -152,29 +166,29 @@ namespace NUnitLite.Runner
             else
             {
                 TestCount++;
+                var label = result.ResultState.Label;
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
                         PassCount++;
-                        RunCount++;
                         break;
                     case TestStatus.Skipped:
-                        if (result.ResultState == ResultState.Ignored)
+                        if (label == "Ignored")
                             IgnoreCount++;
-                        else if (result.ResultState == ResultState.Skipped)
+                        else if (label == "Explicit")
+                            ExplicitCount++;
+                        else
                             SkipCount++;
                         break;
                     case TestStatus.Failed:
-                        RunCount++;
-                        if (result.ResultState == ResultState.Failure)
-                            FailureCount++;
-                        else if (result.ResultState == ResultState.NotRunnable)
+                        if (label == "Invalid")
                             InvalidCount++;
-                        else
+                        else if (label == "Error")
                             ErrorCount++;
+                        else
+                            FailureCount++;
                         break;
                     case TestStatus.Inconclusive:
-                        RunCount++;
                         InconclusiveCount++;
                         break;
                 }

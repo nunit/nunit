@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal.Execution
@@ -40,9 +41,10 @@ namespace NUnit.Framework.Internal.Execution
         /// Construct a simple work item for a test.
         /// </summary>
         /// <param name="test">The test to be executed</param>
-        public SimpleWorkItem(TestMethod test) : base(test) 
+        /// <param name="filter">The filter used to select this test</param>
+        public SimpleWorkItem(TestMethod test, ITestFilter filter) : base(test) 
         {
-            _command = CommandBuilder.MakeTestCommand(test);
+            _command = CommandBuilder.MakeTestCommand(test, filter);
         }
 
         /// <summary>
