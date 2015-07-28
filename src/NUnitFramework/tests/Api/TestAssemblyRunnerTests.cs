@@ -164,7 +164,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
+            Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
             Assert.That(result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 
@@ -179,7 +179,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
+            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Skipped));
             Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(_runner.Result.PassCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_runner.Result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
+            Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
             Assert.That(_runner.Result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 
@@ -260,7 +260,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
-            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Ignored + MockAssembly.Explicit));
+            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Skipped));
             Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }
 

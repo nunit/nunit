@@ -112,13 +112,13 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
             Assert.That(RequiredAttribute(topNode, "name"), Is.EqualTo(AssemblyPath));
         }
 
-        [TestCase("total", MockAssembly.Tests-MockAssembly.Explicit)]
+        [TestCase("total", MockAssembly.Tests)]
         [TestCase("errors", MockAssembly.Errors)]
         [TestCase("failures", MockAssembly.Failures)]
         [TestCase("inconclusive", MockAssembly.Inconclusive)]
-        [TestCase("not-run", MockAssembly.NotRun-MockAssembly.Explicit)]
+        [TestCase("not-run", MockAssembly.NotRun)]
         [TestCase("ignored", MockAssembly.Ignored)]
-        [TestCase("skipped", 0)]
+        [TestCase("skipped", MockAssembly.Explicit)]
         [TestCase("invalid", MockAssembly.NotRunnable)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {

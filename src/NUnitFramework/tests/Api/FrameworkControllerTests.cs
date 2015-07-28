@@ -257,7 +257,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
             Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Success.ToString()));
             Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
-            Assert.That(result.Attributes["skipped"], Is.EqualTo((MockAssembly.Ignored + MockAssembly.Explicit).ToString()));
+            Assert.That(result.Attributes["skipped"], Is.EqualTo(MockAssembly.Skipped.ToString()));
             Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
         }

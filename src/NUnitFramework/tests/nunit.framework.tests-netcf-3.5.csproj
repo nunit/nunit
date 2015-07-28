@@ -197,6 +197,14 @@
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
+    <Compile Include="Internal\Filters\AndFilterTests.cs" />
+    <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
+    <Compile Include="Internal\Filters\EmptyFilterTests.cs" />
+    <Compile Include="Internal\Filters\IdFilterTests.cs" />
+    <Compile Include="Internal\Filters\NotFilterTests.cs" />
+    <Compile Include="Internal\Filters\OrFilterTests.cs" />
+    <Compile Include="Internal\Filters\SimpleNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs">
       <SubType>Code</SubType>
@@ -213,7 +221,6 @@
     <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
-    <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />
