@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NUnit</id>
+    <title>NUnit Version 3</title>
+    <version>$version$</version>
+    <authors>Charlie Poole</authors>
+    <owners>Charlie Poole</owners>
+    <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
+    <projectUrl>http://nunit.org</projectUrl>
+    <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>NUnit is a unit-testing framework for all .Net languages with a strong TDD focus.</summary>
+    <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible. A number of runners, both from the NUnit project and by third parties, are able to execute NUnit tests.&#10;&#13;This package includes the NUnit 3.0 framework assembly, which is referenced by your tests. You will need to install version 3.0 of the nunit-console program or a third-party runner that supports NUnit 3.0 in order to execute tests. Runners intended for use with NUnit 2.x will not run 3.0 tests correctly.&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</description>
+    <releaseNotes>This package includes the NUnit 3.0 framework assembly, which is referenced by your tests. You will need to install version 3.0 of the nunit-console program or a third-party runner that supports NUnit 3.0 in order to execute tests. Runners intended for use with NUnit 2.x will not run 3.0 tests correctly.&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</releaseNotes>
+    <language>en-US</language>
+    <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
+    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
+  </metadata>
+  <files>
+    <file src="LICENSE.txt" />
+    <file src="NOTICES.txt" />
+    <file src="CHANGES.txt" />
+    <file src="bin/$configuration$/net-2.0/nunit.framework.dll" target="lib\net20" />
+    <file src="bin/$configuration$/net-2.0/nunit.framework.xml" target="lib\net20" />
+    <file src="bin/$configuration$/net-4.0/nunit.framework.dll" target="lib\net40" />
+    <file src="bin/$configuration$/net-4.0/nunit.framework.xml" target="lib\net40" />
+    <file src="bin/$configuration$/net-4.5/nunit.framework.dll" target="lib\net45" />
+    <file src="bin/$configuration$/net-4.5/nunit.framework.xml" target="lib\net45" />
+  </files>
+</package>
