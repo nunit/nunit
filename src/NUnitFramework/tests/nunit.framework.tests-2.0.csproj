@@ -77,6 +77,7 @@
     <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
