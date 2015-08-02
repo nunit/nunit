@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,7 +40,7 @@ namespace NUnit.Framework
     /// to run it multiple times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class RepeatAttribute : PropertyAttribute, IWrapSetUpTearDown
+    public class RetryAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
         private int _count;
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework
         /// Construct a RepeatAttribute
         /// </summary>
         /// <param name="count">The number of times to run the test</param>
-        public RepeatAttribute(int count) : base(count)
+        public RetryAttribute(int count) : base(count)
         {
             _count = count;
         }
@@ -62,26 +62,26 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RepeatedTestCommand(command, _count);
+            return new RetryCommand(command, _count);
         }
 
         #endregion
 
-        #region Nested RepeatedTestCommand Class
+        #region Nested RetryCommand Class
 
-        public class RepeatedTestCommand : DelegatingTestCommand
+        public class RetryCommand : DelegatingTestCommand
         {
-            private int repeatCount;
+            private int _retryCount;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
+            /// Initializes a new instance of the <see cref="RetryCommand"/> class.
             /// </summary>
             /// <param name="innerCommand">The inner command.</param>
-            /// <param name="repeatCount">The number of repetitions</param>
-            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount)
+            /// <param name="retryCount">The number of repetitions</param>
+            public RetryCommand(TestCommand innerCommand, int retryCount)
                 : base(innerCommand)
             {
-                this.repeatCount = repeatCount;
+                _retryCount = retryCount;
             }
 
             /// <summary>
@@ -91,15 +91,16 @@ namespace NUnit.Framework
             /// <returns>A TestResult</returns>
             public override TestResult Execute(TestExecutionContext context)
             {
-                int count = repeatCount;
+                int count = _retryCount;
 
                 while (count-- > 0)
                 {
                     context.CurrentResult = innerCommand.Execute(context);
 
-                    // TODO: We may want to change this so that all iterations are run
-                    if (context.CurrentResult.ResultState != ResultState.Success)
+                    if (context.CurrentResult.ResultState != ResultState.Failure)
+                    {
                         break;
+                    }
                 }
 
                 return context.CurrentResult;

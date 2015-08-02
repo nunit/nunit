@@ -117,8 +117,9 @@
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
-    <Compile Include="Attributes\RepeatedTestTests.cs" />
+    <Compile Include="Attributes\RepeatAttributeTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
+    <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
     <Compile Include="Attributes\SetUpFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
