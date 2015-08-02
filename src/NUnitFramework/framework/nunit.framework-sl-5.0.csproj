@@ -193,6 +193,7 @@
     <Compile Include="Constraints\CollectionItemsEqualConstraint.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraint.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraint.cs" />
+    <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\CollectionTally.cs" />
     <Compile Include="Constraints\ComparisonAdapter.cs" />
     <Compile Include="Constraints\ComparisonConstraint.cs" />
