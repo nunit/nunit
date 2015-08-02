@@ -192,6 +192,9 @@
     <Compile Include="..\nunit.engine\TestEngineResult.cs">
       <Link>Internal\TestEngineResult.cs</Link>
     </Compile>
+    <Compile Include="..\nunit.engine\AsyncTestEngineResult.cs">
+      <Link>Internal\AsyncTestEngineResult.cs</Link>
+    </Compile>
     <Compile Include="..\nunit.engine\TestRun.cs">
       <Link>TestRun.cs</Link>
     </Compile>

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,39 +22,63 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+using System.Threading;
 
 namespace NUnit.Engine
 {
-    /// <summary>
-    /// The ITestRun class represents an ongoing test run.
-    /// </summary>
-    public interface ITestRun
+    public class AsyncTestEngineResult
     {
-        /// <summary>
-        /// Get the result of the test.
-        /// </summary>
-        /// <returns>An XmlNode representing the test run result</returns>
-        XmlNode Result { get; }
+        private ManualResetEvent _waitHandle;
+        private TestEngineResult _result;
 
-        /// <summary>
-        /// Stop the current test run, specifying whether to force cancellation. 
-        /// If no test is running, the method returns without error.
-        /// </summary>
-        /// <param name="force">If true, force the stop by cancelling all threads.</param>
-        /// <remarks>
-        /// Note that cancelling the threads is intrinsically unsafe and is only
-        /// provided on the assumption that tests do not impact production data.
-        /// </remarks>
-        void Stop(bool force);
+        public AsyncTestEngineResult()
+        {
+            _waitHandle = new ManualResetEvent(initialState: false);
+        }
+
+        public TestEngineResult Result 
+        {
+            get
+            {
+                if (!IsComplete)
+                {
+                    throw new InvalidOperationException("Cannot retrieve Result from an incomplete or cancelled AsyncTestEngineResult.");
+                }
+
+                return _result;
+            }
+        }
+
+        public void SetResult(TestEngineResult result)
+        {
+            if (result == null)
+            {
+                throw new ArgumentNullException("result");
+            }
+
+            if (_result != null)
+            {
+                throw new InvalidOperationException("Cannot set the Result of an AsyncTestEngineResult more than once");
+            }
+
+            _result = result;
+            _waitHandle.Set();
+        }
 
         /// <summary>
         /// Blocks the current thread until the current test run completes
         /// or the timeout is reached
         /// </summary>
         /// <param name="timeout">A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely. </param>
-        bool Wait(TimeSpan timeout);
+        /// <returns>True if the run completed</returns>
+        public bool Wait(TimeSpan timeout)
+        {
+            return _waitHandle.WaitOne(timeout);
+        }
+
+        /// <summary>
+        /// True if the test run has completed
+        /// </summary>
+        public bool IsComplete { get { return _result != null; } }
     }
 }

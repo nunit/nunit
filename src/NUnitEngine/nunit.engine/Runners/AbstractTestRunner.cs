@@ -137,13 +137,22 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected virtual void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter)
+        /// <returns>A AsyncTestEngineResult that will provide the result of the test execution</returns>
+        protected virtual AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
         {
+            var asyncResult = new AsyncTestEngineResult();
+
             using (var worker = new BackgroundWorker())
             {
-                worker.DoWork += (s, ea) => RunTests(listener, filter);
+                worker.DoWork += (s, ea) =>
+                {
+                    var result = RunTests(listener, filter);
+                    asyncResult.SetResult(result);
+                };
                 worker.RunWorkerAsync();
             }
+
+            return asyncResult;
         }
 
         /// <summary>
@@ -226,7 +235,21 @@ namespace NUnit.Engine.Runners
 
             return RunTests(listener, filter);
         }
+        
+        /// <summary>
+        /// Start a run of the tests in the loaded TestPackage. The tests are run
+        /// asynchronously and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>A AsyncTestEngineResult that will provide the result of the test execution</returns>
+        public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
+        {
+            EnsurePackageIsLoaded();
 
+            return RunTestsAsync(listener, filter);
+        }
+        
         /// <summary>
         /// Start a run of the tests in the TestPackage. The tests are run
         /// asynchronously and the listener interface is notified as it progresses.
@@ -236,9 +259,7 @@ namespace NUnit.Engine.Runners
         /// <param name="filter">A TestFilter used to select tests</param>
         public void StartRun(ITestEventListener listener, TestFilter filter)
         {
-            EnsurePackageIsLoaded();
-
-            RunTestsAsynchronously(listener, filter);
+            RunAsync(listener, filter);
         }
 
         #endregion

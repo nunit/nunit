@@ -196,7 +196,7 @@ namespace NUnit.Engine.Runners
         ITestRun ITestRunner.RunAsync(ITestEventListener listener, TestFilter filter)
         {
             var testRun = new TestRun(this);
-            testRun.Start(listener, filter);
+            testRun.RunAsync(listener, filter);
             return testRun;
         }
 

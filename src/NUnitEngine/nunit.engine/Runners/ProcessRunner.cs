@@ -131,6 +131,11 @@ namespace NUnit.Engine.Runners
             return _remoteRunner.Run(listener, filter);
         }
 
+        protected override AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
+        {
+            return _remoteRunner.RunAsync(listener, filter);
+        }
+
         /// <summary>
         /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>

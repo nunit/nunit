@@ -73,6 +73,7 @@
     <Compile Include="..\EngineVersion.cs">
       <Link>EngineVersion.cs</Link>
     </Compile>
+    <Compile Include="AsyncTestEngineResult.cs" />
     <Compile Include="Drivers\NotRunnableFrameworkDriver.cs" />
     <Compile Include="Drivers\NUnit3DriverFactory.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriver.cs" />

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml;
 
 namespace NUnit.Engine
@@ -34,9 +35,8 @@ namespace NUnit.Engine
     /// </summary>
     public class TestRun : ITestRun
     {
-        private BackgroundWorker _worker;
         private ITestEngineRunner _runner;
-        private TestEngineResult _result;
+        private AsyncTestEngineResult _result;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestRun"/> class.
@@ -45,10 +45,6 @@ namespace NUnit.Engine
         public TestRun(ITestEngineRunner runner)
         {
             _runner = runner;
-
-            _worker = new BackgroundWorker();
-            _worker.WorkerSupportsCancellation = true;
-            _worker.WorkerReportsProgress = true; // ?
         }
 
         /// <summary>
@@ -59,10 +55,10 @@ namespace NUnit.Engine
         {
             get
             {
-                if (_result == null)
+                if (_result == null || !_result.IsComplete)
                     throw new InvalidOperationException("Cannot retrieve Result from an incomplete or cancelled TestRun.");
 
-                return _result.Xml;
+                return _result.Result.Xml;
             }
         }
 
@@ -71,12 +67,11 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="listener">The ITestEventListener to use for this run</param>
         /// <param name="filter">The TestFilter to use for this run</param>
-        public void Start(ITestEventListener listener, TestFilter filter)
+        /// <returns>A <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
+        public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
         {
-            _worker.DoWork += (s, ea) => 
-                _result = _runner.Run(listener, filter);
-
-            _worker.RunWorkerAsync();
+            _result = _runner.RunAsync(listener, filter);
+            return _result;
         }
 
         /// <summary>
@@ -85,7 +80,17 @@ namespace NUnit.Engine
         /// <param name="force">If true, force the stop by cancelling all threads.</param>
         public void Stop(bool force)
         {
-            _worker.CancelAsync();
+            _runner.StopRun(force);
+        }
+
+        /// <summary>
+        /// Blocks the current thread until the current test run completes
+        /// or the timeout is reached
+        /// </summary>
+        /// <param name="timeout">A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely. </param>
+        public bool Wait(TimeSpan timeout)
+        {
+            return _result.Wait(timeout);
         }
     }
 }
