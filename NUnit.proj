@@ -115,6 +115,12 @@
     <NugetVersion>$(PackageVersion)$(PackageModifier)$(ConfigSuffix)</NugetVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+      <MSBuildCommunityTasksPath>$(ProjectToolsDir)\msbuild</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  
+  <Import Project="$(ProjectToolsDir)\msbuild\MSBuild.Community.Tasks.Targets" />
+
   <!-- *********************************************************************** -->
   <!--                        Dump Settings Target                             -->
   <!-- *********************************************************************** -->
@@ -279,12 +285,12 @@
       Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
     <Exec Condition="'$(Runtime)' == 'portable'" 
-				WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
+        WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
         Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunitlite.exe nunit.framework.tests "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
 
-		<Exec Condition="'$(Runtime)' != 'portable'"
-				WorkingDirectory="$(ConsoleBuildDir)"
+    <Exec Condition="'$(Runtime)' != 'portable'"
+        WorkingDirectory="$(ConsoleBuildDir)"
         Command='$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
     
@@ -400,6 +406,7 @@
     <Message Text="******************************************************************" />
 
     <Exec Command='git archive -o "$(ProjectPackageDir)\$(PackageName)-src.zip" HEAD' />
+
   </Target>
 
   <Target Name="PackageBinaries" Label="Packages the binaries as a zip" DependsOnTargets="_CreateImageIfNotPresent">
@@ -407,18 +414,9 @@
     <Message Text="* Creating the binary $(Configuration) package as $(PackageName)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
-    <CallTarget Targets="_RemoveGitDirFromImage" />
+    <Zip Files="@(BinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
+         ZipFileName="$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" />
 
-    <Exec Command='git init "$(CurrentImageDir)"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add -A' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git rm --cached bin\netcf-3.5\*' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.name "temp"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.email "temp@temp.com"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' /> 
-    <Exec WorkingDirectory='$(CurrentImageDir)' 
-      Command='git archive -o "$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" HEAD'></Exec>
-
-    <CallTarget Targets="_RemoveGitDirFromImage" />
   </Target>
 
   <Target Name="PackageNuGet" Label="Creates all NuGet packages"
@@ -501,18 +499,9 @@
     <Message Text="* Creating the binary $(Configuration) package as $(PackageNameCF)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
-    <CallTarget Targets="_RemoveGitDirFromImage" />
+    <Zip Files="@(CFBinZipFiles)" 
+         ZipFileName="$(ProjectPackageDir)\$PackageNameCF$ConfigSuffix).zip" />
 
-    <Exec Command='git init "$(CurrentImageDir)"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add *.txt nunit.ico' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add bin\netcf-3.5\*' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.name "temp"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.email "temp@temp.com"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)'
-      Command='git archive -o "$(ProjectPackageDir)\$(PackageNameCF)$(ConfigSuffix).zip" HEAD'></Exec>
-
-    <CallTarget Targets="_RemoveGitDirFromImage" />
   </Target>
 
   <Target Name="PackageNuGetNUnitCF" Label="Creates the NUnit Framework NuGet package for compact framework"
@@ -545,7 +534,7 @@
     <Copy DestinationFolder="$(CurrentImageDir)" SourceFiles="@(RootFiles)" />
 
     <!-- Copy binaries to bin directory -->
-    <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
+    <Copy DestinationFiles="@(BinFiles->'$(CurrentImageDir)\bin\%(RecursiveDir)%(Filename)%(Extension)')" 
         SourceFiles="@(BinFiles)" />
 
   </Target>
@@ -613,6 +602,15 @@
 
   <ItemGroup>
     <ZipFiles Include="*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BinZipFiles Include="$(CurrentImageDir)\**\*.*"
+                 Exclude="$(CurrentImageDir)\bin\netcf-3.5\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\**\*/*" />
   </ItemGroup>
 
   <ItemGroup Label="Supported Frameworks">
