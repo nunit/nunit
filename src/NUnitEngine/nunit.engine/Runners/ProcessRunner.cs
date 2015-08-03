@@ -131,6 +131,14 @@ namespace NUnit.Engine.Runners
             return _remoteRunner.Run(listener, filter);
         }
 
+        /// <summary>
+        /// Start a run of the tests in the loaded TestPackage, returning immediately.
+        /// The tests are run asynchronously and the listener interface is notified 
+        /// as it progresses.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>A AsyncTestEngineResult that will provide the result of the test execution</returns>
         protected override AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
         {
             return _remoteRunner.RunAsync(listener, filter);

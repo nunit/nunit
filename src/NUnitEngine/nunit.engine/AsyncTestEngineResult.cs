@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011-2014 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,10 +26,13 @@ using System.Threading;
 
 namespace NUnit.Engine
 {
+    /// <summary>
+    /// Encapsulates an ongoing <see cref="TestEngineResult"/> 
+    /// </summary>
     public class AsyncTestEngineResult
     {
-        private ManualResetEvent _waitHandle;
-        private TestEngineResult _result;
+        private readonly ManualResetEvent _waitHandle;
+        private volatile TestEngineResult _result;
 
         public AsyncTestEngineResult()
         {
@@ -67,7 +70,7 @@ namespace NUnit.Engine
 
         /// <summary>
         /// Blocks the current thread until the current test run completes
-        /// or the timeout is reached
+        /// or the timeout is reached.
         /// </summary>
         /// <param name="timeout">A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely. </param>
         /// <returns>True if the run completed</returns>

@@ -88,6 +88,7 @@ namespace NUnit.Engine
         /// or the timeout is reached
         /// </summary>
         /// <param name="timeout">A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely. </param>
+        /// <returns>True if the run completed</returns>
         public bool Wait(TimeSpan timeout)
         {
             return _result.Wait(timeout);
