@@ -134,6 +134,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-porta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-portable", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-portable.csproj", "{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{2821D6DA-4F95-4002-BC35-00E8B7F9961A}"
+	ProjectSection(SolutionItems) = preProject
+		targets\Build.Targets = targets\Build.Targets
+		targets\Common.Properties = targets\Common.Properties
+		targets\Packaging.Targets = targets\Packaging.Targets
+		targets\Testing.Targets = targets\Testing.Targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -354,6 +362,7 @@ Global
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{C4D16DF1-B6FA-42F5-834E-B01DA1BAA1FF} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{A972031D-2F61-4183-AF75-99EE1A9F6B32} = {49D441DF-39FD-4F4D-AECA-86CF8EFE23AF}
+		{2821D6DA-4F95-4002-BC35-00E8B7F9961A} = {49D441DF-39FD-4F4D-AECA-86CF8EFE23AF}
 		{775FAD50-3623-4922-97C4-DFB29A8BE4C7} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{372A3447-D657-40FF-A089-77C19FEC30C8} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{D694CB69-6CFB-4762-86C2-EB27B808B282} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
