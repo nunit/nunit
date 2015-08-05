@@ -101,6 +101,8 @@
     <Compile Include="PropertyAttributeTests.cs" />
     <Compile Include="RandomAttributeFixture.cs" />
     <Compile Include="RepeatedTestFixture.cs" />
+    <Compile Include="RepeatingTestsFixtureBase.cs" />
+    <Compile Include="RetryFixture.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="SetUpFixtureData.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />

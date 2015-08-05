@@ -73,6 +73,7 @@
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Attributes\CommandWrapperTests.cs" />
+    <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
@@ -127,7 +128,7 @@
     <Compile Include="Attributes\PairwiseTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
-    <Compile Include="Attributes\RepeatedTestTests.cs" />
+    <Compile Include="Attributes\RepeatAttributeTests.cs" />
     <Compile Include="Attributes\ApartmentAttributeTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />

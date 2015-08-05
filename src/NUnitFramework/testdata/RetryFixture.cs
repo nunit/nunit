@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,74 +21,67 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-// TODO: Rework this
-// RepeatAttribute should either
-//  1) Apply at load time to create the exact number of tests, or
-//  2) Apply at run time, generating tests or results dynamically
-//
-// #1 is feasible but doesn't provide much benefit
-// #2 requires infrastructure for dynamic test cases first
 using System;
 using NUnit.Framework;
 
 namespace NUnit.TestData.RepeatingTests
 {
-    public class RepeatSuccessFixture : RepeatingTestsFixtureBase
+    public class RetrySucceedsOnFirstTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
-        public void RepeatSuccess()
+        [Test, Retry(3)]
+        public void SucceedsEveryTime()
         {
             count++;
-            Assert.IsTrue (true);
+            Assert.IsTrue(true);
         }
     }
 
-    public class RepeatFailOnFirstTryFixture : RepeatingTestsFixtureBase
+    public class RetryFailsEveryTimeFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
-        public void RepeatFailOnFirst()
+        [Test, Retry(3)]
+        public void FailsEveryTime()
         {
             count++;
             Assert.IsFalse (true);
         }
     }
 
-    public class RepeatFailOnSecondTryFixture : RepeatingTestsFixtureBase
+    public class RetrySucceedsOnSecondTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
-        public void RepeatFailOnThird()
+        [Test, Retry(3)]
+        public void SucceedsOnSecondTry()
         {
             count++;
 
-            if (count == 2)
+            if (count < 2)
                 Assert.IsTrue(false);
         }
     }
 
-    public class RepeatFailOnThirdTryFixture : RepeatingTestsFixtureBase
+    public class RetrySucceedsOnThirdTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
-        public void RepeatFailOnThird()
+        [Test, Retry(3)]
+        public void SucceedsOnThirdTry()
         {
             count++;
 
-            if (count == 3)
+            if (count < 3)
                 Assert.IsTrue(false);
         }
     }
 
-    public class RepeatedTestWithIgnoreAttribute : RepeatingTestsFixtureBase
+    public class RetryWithIgnoreAttributeFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3), Ignore("Ignore this test")]
+        [Test, Retry(3), Ignore("Ignore this test")]
         public void RepeatShouldIgnore()
         {
             Assert.Fail("Ignored test executed");
         }
     }
 
-    public class RepeatIgnoredOnFirstTryFixture : RepeatingTestsFixtureBase
+    public class RetryIgnoredOnFirstTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
+        [Test, Retry(3)]
         public void Test()
         {
             count++;
@@ -96,33 +89,37 @@ namespace NUnit.TestData.RepeatingTests
         }
     }
 
-    public class RepeatIgnoredOnSecondTryFixture : RepeatingTestsFixtureBase
+    public class RetryIgnoredOnSecondTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
+        [Test, Retry(3)]
         public void Test()
         {
             count++;
 
-            if (count == 2)
-                Assert.Ignore("Ignoring");
+            if (count < 2)
+                Assert.Fail("Failed");
+
+            Assert.Ignore("Ignoring");
         }
     }
 
-    public class RepeatIgnoredOnThirdTryFixture : RepeatingTestsFixtureBase
+    public class RetryIgnoredOnThirdTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
+        [Test, Retry(3)]
         public void Test()
         {
             count++;
 
-            if (count == 3)
-                Assert.Ignore("Ignoring");
+            if (count < 3)
+                Assert.Fail("Failed");
+
+            Assert.Ignore("Ignoring");
         }
     }
 
-    public class RepeatErrorOnFirstTryFixture : RepeatingTestsFixtureBase
+    public class RetryErrorOnFirstTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
+        [Test, Retry(3)]
         public void Test()
         {
             count++;
@@ -130,33 +127,37 @@ namespace NUnit.TestData.RepeatingTests
         }
     }
 
-    public class RepeatErrorOnSecondTryFixture : RepeatingTestsFixtureBase
+    public class RetryErrorOnSecondTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
+        [Test, Retry(3)]
         public void Test()
         {
             count++;
 
-            if (count == 2)
-                throw new Exception("Deliberate Exception");
+            if (count < 2)
+                Assert.Fail("Failed");
+
+            throw new Exception("Deliberate Exception");
         }
     }
 
-    public class RepeatErrorOnThirdTryFixture : RepeatingTestsFixtureBase
+    public class RetryErrorOnThirdTryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3)]
+        [Test, Retry(3)]
         public void Test()
         {
             count++;
 
-            if (count == 3)
-                throw new Exception("Deliberate Exception");
+            if (count < 3)
+                Assert.Fail("Failed");
+
+            throw new Exception("Deliberate Exception");
         }
     }
 
-    public class RepeatedTestWithCategory : RepeatingTestsFixtureBase
+    public class RetryTestWithCategoryFixture : RepeatingTestsFixtureBase
     {
-        [Test, Repeat(3), Category("SAMPLE")]
+        [Test, Retry(3), Category("SAMPLE")]
         public void TestWithCategory()
         {
             count++;
