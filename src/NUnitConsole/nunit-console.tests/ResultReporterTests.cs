@@ -76,8 +76,8 @@ namespace NUnit.ConsoleRunner.Tests
             var expected = new string[] {
                 "Test Run Summary",
                 "    Overall result: Failed",
-                "   Tests run: 24, Passed: 18, Errors: 1, Failures: 1, Inconclusive: 1",
-                "     Not run: 7, Invalid: 3, Ignored: 4, Skipped: 0",
+                "   Tests run: 21, Passed: 18, Errors: 1, Failures: 1, Inconclusive: 1",
+                "     Not run: 7, Invalid: 3, Ignored: 4, Explicit: 0, Skipped: 0",
                 "  Start time: 2014-12-02 03:07:10Z",
                 "    End time: 2014-12-02 03:07:10Z",
                 "    Duration: 0.193 seconds",

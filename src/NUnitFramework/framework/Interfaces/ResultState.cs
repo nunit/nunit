@@ -95,6 +95,11 @@ namespace NUnit.Framework.Interfaces
         public readonly static ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
 
         /// <summary>
+        /// The test was skipped because it is explicit
+        /// </summary>
+        public readonly static ResultState Explicit = new ResultState(TestStatus.Skipped, "Explicit");
+
+        /// <summary>
         /// The test succeeded
         /// </summary>
         public readonly static ResultState Success = new ResultState(TestStatus.Passed);

@@ -86,17 +86,19 @@ namespace NUnit.ConsoleRunner
             _writer.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
             _writer.WriteLabelLine("    Overall result: ", _overallResult, overall);
 
-            _writer.WriteLabel("   Tests run: ", Summary.RunCount.ToString(CultureInfo.CurrentUICulture));
-            _writer.WriteLabel(", Passed: ", Summary.PassCount.ToString(CultureInfo.CurrentCulture));
-            _writer.WriteLabel(", Errors: ", Summary.ErrorCount.ToString(CultureInfo.CurrentUICulture));
-            _writer.WriteLabel(", Failures: ", Summary.FailureCount.ToString(CultureInfo.CurrentUICulture));
-            _writer.WriteLabelLine(", Inconclusive: ", Summary.InconclusiveCount.ToString(CultureInfo.CurrentUICulture));
+            WriteSummaryCount("   Tests run: ", Summary.RunCount);
+            WriteSummaryCount(", Passed: ", Summary.PassCount);
+            WriteSummaryCount(", Errors: ", Summary.ErrorCount, ColorStyle.Error);
+            WriteSummaryCount(", Failures: ", Summary.FailureCount, ColorStyle.Failure);
+            WriteSummaryCount(", Inconclusive: ", Summary.InconclusiveCount);
+            _writer.WriteLine();
 
-            var notRunTotal = Summary.SkipCount + Summary.IgnoreCount + Summary.InvalidCount;
-            _writer.WriteLabel("     Not run: ", notRunTotal.ToString(CultureInfo.CurrentUICulture));
-            _writer.WriteLabel(", Invalid: ", Summary.InvalidCount.ToString(CultureInfo.CurrentUICulture));
-            _writer.WriteLabel(", Ignored: ", Summary.IgnoreCount.ToString(CultureInfo.CurrentUICulture));
-            _writer.WriteLabelLine(", Skipped: ", Summary.SkipCount.ToString(CultureInfo.CurrentUICulture));
+            WriteSummaryCount("     Not run: ", Summary.NotRunCount);
+            WriteSummaryCount(", Invalid: ", Summary.InvalidCount, ColorStyle.Error);
+            WriteSummaryCount(", Ignored: ", Summary.IgnoreCount, ColorStyle.Warning);
+            WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
+            WriteSummaryCount(", Skipped: ", Summary.SkipCount);
+            _writer.WriteLine();
 
             var duration = _result.GetAttribute("duration", 0.0);
             var startTime = _result.GetAttribute("start-time", DateTime.MinValue);
@@ -209,6 +211,16 @@ namespace NUnit.ConsoleRunner
         #endregion
 
         #region Helper Methods
+
+        private void WriteSummaryCount(string label, int count)
+        {
+            _writer.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture));
+        }
+
+        private void WriteSummaryCount(string label, int count, ColorStyle color)
+        {
+            _writer.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture), count > 0 ? color : ColorStyle.Value);
+        }
 
         private static readonly char[] EOL_CHARS = new char[] { '\r', '\n' };
 

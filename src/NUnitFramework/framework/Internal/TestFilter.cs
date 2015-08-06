@@ -64,14 +64,26 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the test passes the filter, otherwise false</returns>
-        public virtual bool Pass( ITest test )
+        public virtual bool Pass(ITest test)
         {
             return Match(test) || MatchParent(test) || MatchDescendant(test);
         }
 
         /// <summary>
+        /// Determine if a test matches the filter expicitly. That is, it must
+        /// be a direct match of the test itself or one of it's children.
+        /// </summary>
+        /// <param name="test">The test to which the filter is applied</param>
+        /// <returns>True if the test matches the filter explicityly, otherwise false</returns>
+        public virtual bool IsExplicitMatch(ITest test)
+        {
+            return Match(test) || MatchDescendant(test);
+        }
+
+        /// <summary>
         /// Determine whether the test itself matches the filter criteria, without
-        /// examining either parents or descendants.
+        /// examining either parents or descendants. This is overridden by each
+        /// different type of filter to perform the necessary tests.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the filter matches the any parent of the test</returns>
@@ -82,10 +94,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the filter matches the an ancestor of the test</returns>
-        protected virtual bool MatchParent(ITest test)
+        private bool MatchParent(ITest test)
         {
-            return (test.RunState != RunState.Explicit && test.Parent != null &&
-                (Match(test.Parent) || MatchParent(test.Parent)));
+            return test.Parent != null && (Match(test.Parent) || MatchParent(test.Parent));
         }
 
         /// <summary>
@@ -181,19 +192,24 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Nested class provides an empty filter - one that always
-        /// returns true when called, unless the test is marked explicit.
+        /// returns true when called. It never matches explicitly.
         /// </summary>
         [Serializable]
         private class EmptyFilter : TestFilter
         {
             public override bool Match( ITest test )
             {
-                return test.RunState != RunState.Explicit;
+                return true;
             }
 
             public override bool Pass( ITest test )
             {
-                return test.RunState != RunState.Explicit;
+                return true;
+            }
+
+            public override bool IsExplicitMatch( ITest test )
+            {
+                return false;
             }
         }
     }

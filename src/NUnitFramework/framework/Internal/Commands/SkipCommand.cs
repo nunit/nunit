@@ -58,6 +58,9 @@ namespace NUnit.Framework.Internal.Commands
                 case RunState.Ignored:
                     testResult.SetResult(ResultState.Ignored, GetSkipReason());
                     break;
+                case RunState.Explicit:
+                    testResult.SetResult(ResultState.Explicit, GetSkipReason());
+                    break;
                 case RunState.NotRunnable:
                     testResult.SetResult(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
                     break;

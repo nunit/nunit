@@ -73,6 +73,7 @@ namespace NUnit.Tests
 
             public const int Ignored = MockTestFixture.Ignored + IgnoredFixture.Tests;
             public const int Explicit = MockTestFixture.Explicit + ExplicitFixture.Tests;
+            public const int Skipped = Ignored + Explicit;
             public const int NotRun = Ignored + Explicit + NotRunnable;
             public const int TestsRun = Tests - NotRun;
             public const int ResultCount = Tests - Explicit;

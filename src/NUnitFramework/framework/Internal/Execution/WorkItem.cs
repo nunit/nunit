@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal.Execution
             if (suite != null)
                 return new CompositeWorkItem(suite, filter);
             else
-                return new SimpleWorkItem((TestMethod)test);
+                return new SimpleWorkItem((TestMethod)test, filter);
         }
 
         #endregion

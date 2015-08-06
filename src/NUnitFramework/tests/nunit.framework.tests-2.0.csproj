@@ -82,6 +82,12 @@
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
+    <Compile Include="Internal\Filters\AndFilterTests.cs" />
+    <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
+    <Compile Include="Internal\Filters\EmptyFilterTests.cs" />
+    <Compile Include="Internal\Filters\IdFilterTests.cs" />
+    <Compile Include="Internal\Filters\NotFilterTests.cs" />
+    <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
@@ -213,7 +219,7 @@
     <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
-    <Compile Include="Internal\TestFilterTests.cs">
+    <Compile Include="Internal\Filters\TestFilterTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\TestFixtureTests.cs" />
@@ -236,6 +242,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Runner\TeamCityEventListenerTests.cs" />
+    <Compile Include="Internal\Filters\SimpleNameFilterTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />

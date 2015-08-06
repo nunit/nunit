@@ -111,7 +111,7 @@ namespace NUnit.Engine.Drivers.Tests
         public void CountTestsAction_AfterLoad_ReturnsCorrectCount()
         {
             _driver.Load(_mockAssemblyPath, _settings);
-            Assert.That(_driver.CountTestCases(TestFilter.Empty.Text), Is.EqualTo(MockAssembly.Tests - MockAssembly.Explicit));
+            Assert.That(_driver.CountTestCases(TestFilter.Empty.Text), Is.EqualTo(MockAssembly.Tests));
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace NUnit.Engine.Drivers.Tests
             Assert.That(result.GetAttribute("result"), Is.EqualTo("Failed"));
             Assert.That(result.GetAttribute("passed"), Is.EqualTo(MockAssembly.Success.ToString()));
             Assert.That(result.GetAttribute("failed"), Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
-            Assert.That(result.GetAttribute("skipped"), Is.EqualTo((MockAssembly.Ignored).ToString()));
+            Assert.That(result.GetAttribute("skipped"), Is.EqualTo(MockAssembly.Skipped.ToString()));
             Assert.That(result.GetAttribute("inconclusive"), Is.EqualTo(MockAssembly.Inconclusive.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
         }
