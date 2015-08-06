@@ -177,6 +177,7 @@
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\ConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />

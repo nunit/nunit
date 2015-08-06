@@ -394,6 +394,19 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region SupersetOf
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// is a superset of the collection supplied as an argument.
+        /// </summary>
+        public static CollectionSupersetConstraint SupersetOf(IEnumerable expected)
+        {
+            return new CollectionSupersetConstraint(expected);
+        }
+
+        #endregion
+
         #region Ordered
 
         /// <summary>

@@ -107,6 +107,7 @@
     <Compile Include="Compatibility\Path.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
+    <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />

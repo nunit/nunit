@@ -388,6 +388,58 @@ namespace NUnit.Framework
         }
         #endregion
 
+
+        #region IsNotSupersetOf
+
+        /// <summary>
+        /// Asserts that the subset does not contain the superset
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        public static void IsNotSupersetOf(IEnumerable superset, IEnumerable subset)
+        {
+            IsNotSupersetOf(superset, subset, string.Empty, null);
+        }
+
+        /// <summary>
+        /// Asserts that the subset does not contain the superset
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void IsNotSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object[] args)
+        {
+            Assert.That(superset, Is.Not.SupersetOf(subset), message, args);
+        }
+        #endregion
+
+        #region IsSupersetOf
+
+        /// <summary>
+        /// Asserts that the subset contains the superset.
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        public static void IsSupersetOf(IEnumerable superset, IEnumerable subset)
+        {
+            IsSupersetOf(superset, subset, string.Empty, null);
+        }
+
+        /// <summary>
+        /// Asserts that the subset contains the superset.
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void IsSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object[] args)
+        {
+            Assert.That(superset, Is.SupersetOf(subset), message, args);
+        }
+        #endregion
+
+
         #region IsEmpty
         /// <summary>
         /// Assert that an array, list or other collection is empty

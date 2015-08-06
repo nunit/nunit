@@ -152,6 +152,7 @@
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEqualsTests.cs" />
+    <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />
