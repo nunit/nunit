@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             // Handle skipped tests
             if (suite.RunState != RunState.Runnable && suite.RunState != RunState.Explicit)
-                return new SkipCommand(suite);
+                return MakeSkipCommand(suite);
 
             // Build the OneTimeSetUpCommand itself
             TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown, actions);
@@ -82,14 +82,8 @@ namespace NUnit.Framework.Internal.Execution
         /// Creates a test command for use in running this test.
         /// </summary>
         /// <returns></returns>
-        public static TestCommand MakeTestCommand(TestMethod test, ITestFilter filter)
+        public static TestCommand MakeTestCommand(TestMethod test)
         {
-            if (test.RunState != RunState.Runnable)
-            {
-                if (test.RunState != RunState.Explicit || !filter.IsExplicitMatch(test))
-                    return new SkipCommand(test);
-            }
-
             // Command to execute test
             TestCommand command = new TestMethodCommand(test);
 
@@ -113,6 +107,15 @@ namespace NUnit.Framework.Internal.Execution
                 command = new ApplyChangesToContextCommand(command, changes);
 
             return command;
+        }
+
+        /// <summary>
+        /// Creates a command for skipping a test. The result returned will
+        /// depend on the test RunState.
+        /// </summary>
+        public static SkipCommand MakeSkipCommand(Test test)
+        {
+            return new SkipCommand(test);
         }
 
         /// <summary>

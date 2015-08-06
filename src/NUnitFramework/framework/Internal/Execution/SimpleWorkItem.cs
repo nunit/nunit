@@ -44,7 +44,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter used to select this test</param>
         public SimpleWorkItem(TestMethod test, ITestFilter filter) : base(test) 
         {
-            _command = CommandBuilder.MakeTestCommand(test, filter);
+            _command = test.RunState == RunState.Runnable || test.RunState == RunState.Explicit && filter.IsExplicitMatch(test)
+                ? CommandBuilder.MakeTestCommand(test)
+                : CommandBuilder.MakeSkipCommand(test);
         }
 
         /// <summary>
