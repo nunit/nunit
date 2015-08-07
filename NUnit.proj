@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project DefaultTargets="Build" InitialTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  
-  <!-- *********************************************************************** -->
-  <!--                          Define Properties                              -->
-  <!-- *********************************************************************** -->
-  
+
+  <!-- Region Define Properties -->
+
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     <PackageVersion>3.0.0</PackageVersion>
@@ -120,10 +118,10 @@
   </PropertyGroup>
   
   <Import Project="$(ProjectToolsDir)\msbuild\MSBuild.Community.Tasks.Targets" />
+  
+  <!-- End Region -->
 
-  <!-- *********************************************************************** -->
-  <!--                        Dump Settings Target                             -->
-  <!-- *********************************************************************** -->
+  <!-- Region Dump Settings Target -->
   
   <Target Name="DumpSettings">
     <Message Text=" " />
@@ -170,10 +168,10 @@
     <Message Text="  Version:           $(NugetVersion)" />
     <Message Text=" " />
   </Target>
+  
+  <!-- End Region -->
 
-  <!-- *********************************************************************** -->
-  <!--                            Clean Targets                                -->
-  <!-- *********************************************************************** -->
+  <!-- Region Clean Targets -->
   
   <Target Name="Clean" DependsOnTargets="CleanFramework;CleanEngine;CleanConsole" />
 
@@ -205,9 +203,9 @@
     <MSBuild Targets="Clean" Projects="@(ConsoleProjects)" Properties="Configuration=$(Configuration); Platform=AnyCPU" />
   </Target>
 
-  <!-- *********************************************************************** -->
-  <!--                            Build Targets                                -->
-  <!-- *********************************************************************** -->
+  <!-- End Region -->
+  
+  <!-- Region Build Targets -->
 
   <Target Name="Build" Label="Build the framework, engine and console for the current config"
     DependsOnTargets="BuildFramework;BuildEngine;BuildConsole" />
@@ -244,10 +242,10 @@
     <MSBuild Targets="Build" Projects="@(ConsoleProjects)"
       Properties="Configuration=$(Configuration); Platform=AnyCPU" />
   </Target>
+  
+  <!-- End Region -->
 
-  <!-- *********************************************************************** -->
-  <!--                            Test Targets                                 -->
-  <!-- *********************************************************************** -->
+  <!-- Region Test Targets -->
 
   <Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
       DependsOnTargets="TestAllFrameworks;TestEngine;TestCoreEngine;TestAddins;TestV2Driver;TestConsole" />
@@ -371,10 +369,10 @@
     <MakeDir Directories="$(ResultDir)"  Condition="!Exists('$(ResultDir)')"/>
     
   </Target>
+  
+  <!-- End Region -->
 
-  <!-- *********************************************************************** -->
-  <!--                           Coverage Targets                              -->
-  <!-- *********************************************************************** -->
+  <!-- Region Coverage Targets -->
 
   <Target Name="TestCoverage">
     <CallTarget Targets="_NUnitCoverage" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
@@ -387,9 +385,11 @@
     </Exec>
   </Target>
   
+  <!-- End Region -->
+  
+  <!-- Region Packaging Targets -->
+  
   <!-- *********************************************************************** -->
-  <!--                          Packaging Targets                              -->
-  <!--                                                                         -->
   <!--                              WARNING                                    -->
   <!--                                                                         -->
   <!--   Packaging is decoupled from the Build by design. It's up to whoever   -->
@@ -555,11 +555,11 @@
   <Target Name="_RemoveGitDirFromImage">
     <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" Condition="Exists('$(CurrentImageDir)\.git')" />
   </Target>
+  
+  <!-- End Region -->
+  
+  <!-- Region Item Groups -->
                                        
-  <!-- *********************************************************************** -->
-  <!--                       Lists For Use by Targets                          -->
-  <!-- *********************************************************************** -->
-
   <ItemGroup Label ="Targets for Packaging">
     <AllPackages Include="PackageSource" />
       <AllPackages Include="PackageBinaries" />
@@ -664,4 +664,7 @@
     <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console\nunit-console.csproj" />
     <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console.tests\nunit-console.tests.csproj" />
   </ItemGroup>
+  
+  <!-- End Region -->
+  
 </Project>
