@@ -419,8 +419,7 @@
 
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all NuGet packages"
-    DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetCoreEngine" />
+  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetCoreEngine" />
   
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
@@ -605,8 +604,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <BinZipFiles Include="$(CurrentImageDir)\**\*.*"
-                 Exclude="$(CurrentImageDir)\bin\netcf-3.5\**\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\addins\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\addins\tests\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\addins\v2-tests\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\net-2.0\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.0\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.5\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\sl-5.0\*.*" Condition="$(IsWindows)" />
+    <BinZipFiles Include="$(CurrentImageDir)\portable\sl-5.0\*.*" Condition="$(IsWindows)" />
   </ItemGroup>
 
   <ItemGroup>
