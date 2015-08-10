@@ -47,7 +47,29 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void True(bool condition, string message, params object[] args)
+        {
+           Assert.That(condition, Is.True, message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
         public static void True(bool? condition)
+        {
+            Assert.That(condition, Is.True ,null, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        public static void True(bool condition)
         {
             Assert.That(condition, Is.True ,null, null);
         }
@@ -69,7 +91,29 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void IsTrue(bool condition, string message, params object[] args)
+        {
+            Assert.That(condition, Is.True ,message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool? condition)
+        {
+            Assert.That(condition, Is.True ,null, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        public static void IsTrue(bool condition)
         {
             Assert.That(condition, Is.True ,null, null);
         }
@@ -95,7 +139,29 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/>.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void False(bool condition, string message, params object[] args)
+        {
+            Assert.That(condition, Is.False ,message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
         public static void False(bool? condition)
+        {
+            Assert.That(condition, Is.False ,null, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
+        public static void False(bool condition)
         {
             Assert.That(condition, Is.False ,null, null);
         }
@@ -117,7 +183,29 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/>.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void IsFalse(bool condition, string message, params object[] args)
+        {
+            Assert.That(condition, Is.False ,message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool? condition)
+        {
+            Assert.That(condition, Is.False ,null, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
+        public static void IsFalse(bool condition)
         {
             Assert.That(condition, Is.False ,null, null);
         }
