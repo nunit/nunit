@@ -1,2 +1,3 @@
 #!/bin/bash
+./tools/nuget.exe restore nunit.sln
 xbuild "$@"

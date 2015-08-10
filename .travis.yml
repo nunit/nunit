@@ -2,11 +2,16 @@ before_install:
   - sudo add-apt-repository ppa:directhex/monoxide -y
   - sudo apt-get update -qq -y
   - sudo apt-get install mono-devel -qq -y
+  - yes | sudo certmgr -ssl -m https://go.microsoft.com
+  - yes | sudo certmgr -ssl -m https://nugetgallery.blob.core.windows.net
+  - yes | sudo certmgr -ssl -m https://nuget.org
+  - sudo mozroots --import --machine --sync
 
 before_script:
   - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings"
 
 script: 
+  - ./tools/nuget.exe restore nunit.sln
   - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework /t:$Targets
   
 env:

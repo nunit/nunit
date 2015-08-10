@@ -2,6 +2,9 @@ branches:
   except:
     - /travis-.*/
 
+before_build:
+  - nuget restore nunit.sln
+
 build_script: 
   - msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   
