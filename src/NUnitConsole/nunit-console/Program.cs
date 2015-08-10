@@ -130,12 +130,12 @@ namespace NUnit.ConsoleRunner
                     catch (FileNotFoundException ex)
                     {
                         OutWriter.WriteLine(ColorStyle.Error, ex.Message);
-                        return ConsoleRunner.FILE_NOT_FOUND;
+                        return ConsoleRunner.INVALID_ASSEMBLY;
                     }
                     catch (DirectoryNotFoundException ex)
                     {
                         OutWriter.WriteLine(ColorStyle.Error, ex.Message);
-                        return ConsoleRunner.FILE_NOT_FOUND;
+                        return ConsoleRunner.INVALID_ASSEMBLY;
                     }
                     catch (Exception ex)
                     {
