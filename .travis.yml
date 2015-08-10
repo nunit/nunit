@@ -11,7 +11,7 @@ before_script:
   - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings"
 
 script: 
-  - ./tools/NuGet.exe restore nunit.sln
+  - ./tools/nuget.exe restore nunit.sln
   - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework /t:$Targets
   
 env:
