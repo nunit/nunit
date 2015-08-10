@@ -21,15 +21,15 @@
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
-    <file src="bin\net-2.0\nunit.framework.dll" target="lib\net20" />
-    <file src="bin\net-2.0\nunit.framework.xml" target="lib\net20" />
-    <file src="bin\net-4.0\nunit.framework.dll" target="lib\net40" />
-    <file src="bin\net-4.0\nunit.framework.xml" target="lib\net40" />
-    <file src="bin\net-4.5\nunit.framework.dll" target="lib\net45" />
-    <file src="bin\net-4.5\nunit.framework.xml" target="lib\net45" />
-    <file src="bin\sl-5.0\nunit.framework.dll" target="lib\sl50" />
-    <file src="bin\sl-5.0\nunit.framework.xml" target="lib\sl50" />
-    <file src="bin\portable\nunit.framework.dll" target="lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1" />
-    <file src="bin\portable\nunit.framework.xml" target="lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1" />
+    <file src="bin/net-2.0/nunit.framework.dll" target="lib/net20" />
+    <file src="bin/net-2.0/nunit.framework.xml" target="lib/net20" />
+    <file src="bin/net-4.0/nunit.framework.dll" target="lib/net40" />
+    <file src="bin/net-4.0/nunit.framework.xml" target="lib/net40" />
+    <file src="bin/net-4.5/nunit.framework.dll" target="lib/net45" />
+    <file src="bin/net-4.5/nunit.framework.xml" target="lib/net45" />
+    <file src="bin/sl-5.0/nunit.framework.dll" target="lib\sl50" />
+    <file src="bin/sl-5.0/nunit.framework.xml" target="lib\sl50" />
+    <file src="bin/portable/nunit.framework.dll" target="lib/portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1" />
+    <file src="bin/portable/nunit.framework.xml" target="lib/portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1" />
   </files>
 </package>
