@@ -498,7 +498,7 @@
     <Message Text="* Creating the binary $(Configuration) package as $(PackageNameCF)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
-    <Zip Files="@(CFBinZipFiles)" 
+    <Zip Files="@(CFBinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
          ZipFileName="$(ProjectPackageDir)\$PackageNameCF$ConfigSuffix).zip" />
 
   </Target>
@@ -551,10 +551,6 @@
     <MakeDir Directories="$(CurrentImageDir)" />
   </Target>
 
-  <Target Name="_RemoveGitDirFromImage">
-    <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" Condition="Exists('$(CurrentImageDir)\.git')" />
-  </Target>
-  
   <!-- End Region -->
   
   <!-- Region Item Groups -->
