@@ -230,9 +230,18 @@ namespace NUnit.Framework.Internal.Execution
         {
             _children = new List<WorkItem>();
 
-            foreach (Test test in _suite.Tests)
+            if (_suite.Properties.ContainsKey(PropertyNames.Timeout))
+            {
+                int timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+                foreach (ITest test in _suite.Tests)
+                    test.Properties.Set(PropertyNames.Timeout, timeout);
+            }
+
+            foreach (ITest test in _suite.Tests)
+            {
                 if (_childFilter.Pass(test))
                     _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
+            }
         }
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)

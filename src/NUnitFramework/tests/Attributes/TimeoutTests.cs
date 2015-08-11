@@ -132,13 +132,15 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.Message, Does.Contain("100ms"));
         }
         [Test]
-        public void TestTimeOutTestCase()
+        public void TestTimeOutTestCaseWithOutElapsed()
         {
             TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
             ParameterizedMethodSuite testMethod = (ParameterizedMethodSuite)TestFinder.Find("TestTimeOutTestCase", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Cancelled));
+            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.Children[1].ResultState, Is.EqualTo(ResultState.Failure));
         }
     }
 }
