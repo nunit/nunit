@@ -23,6 +23,7 @@
 
 #if !PORTABLE
 using System;
+using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.TestData
@@ -87,6 +88,36 @@ namespace NUnit.TestData
         }
         [Test]
         public void Test3() { }
+    }
+
+    public class TimeoutTestCaseFixture
+    {
+        const int TIME_OUT_TIME = 100;
+        const int NOT_TIMEOUTED_TIME = 50;
+        const int TIMEOUTED_TIME = 150;
+
+        [Test]
+        [Timeout(TIME_OUT_TIME)]
+        public void TestTimeOutNotElapsed()
+        {
+            TestTimeOutTestCase(NOT_TIMEOUTED_TIME);
+        }
+
+        [Test]
+        [Timeout(TIME_OUT_TIME)]
+        public void TestTimeOutElapsed()
+        {
+            TestTimeOutTestCase(TIMEOUTED_TIME);
+        }
+
+        [Test]
+        [Timeout(TIME_OUT_TIME)]
+        [TestCase(NOT_TIMEOUTED_TIME)]
+        [TestCase(TIMEOUTED_TIME)]
+        public void TestTimeOutTestCase(int delay)
+        {
+            Thread.Sleep(delay);
+        }
     }
 }
 #endif

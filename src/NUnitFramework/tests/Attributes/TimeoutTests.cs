@@ -111,6 +111,36 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Does.Contain("50ms"));
         }
+
+        [Test]
+        public void TestTimeOutNotElapsed()
+        {
+            TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
+            TestMethod testMethod = (TestMethod)TestFinder.Find("TestTimeOutNotElapsed", suite, false);
+            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+        }
+        [Test]
+        public void TestTimeOutElapsed()
+        {
+            TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
+            TestMethod testMethod = (TestMethod)TestFinder.Find("TestTimeOutElapsed", suite, false);
+            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.Message, Does.Contain("100ms"));
+        }
+        [Test]
+        public void TestTimeOutTestCase()
+        {
+            TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
+            ParameterizedMethodSuite testMethod = (ParameterizedMethodSuite)TestFinder.Find("TestTimeOutTestCase", suite, false);
+            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            //Assert.That(result.Message, Does.Contain("100ms"));
+        }
     }
 }
 #endif
