@@ -115,6 +115,11 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public int ExplicitCount { get; private set; }
 
+        /// <summary>
+        /// Gets the count of invalid assemblies
+        /// </summary>
+        public int InvalidAssemblies { get; private set; }
+
         #endregion
 
         #region Helper Methods
@@ -130,17 +135,19 @@ namespace NUnit.ConsoleRunner
             IgnoreCount = 0;
             ExplicitCount = 0;
             InvalidCount = 0;
+            InvalidAssemblies = 0;
         }
 
         private void Summarize(XmlNode node)
         {
+            string type = node.GetAttribute("type");
+            string status = node.GetAttribute("result");
+            string label = node.GetAttribute("label");
+
             switch (node.Name)
             {
                 case "test-case":
                     TestCount++;
-
-                    string status = node.GetAttribute("result");
-                    string label = node.GetAttribute("label");
 
                     switch (status)
                     {
@@ -172,14 +179,23 @@ namespace NUnit.ConsoleRunner
                     }
                     break;
 
-                //case "test-suite":
-                //case "test-fixture":
-                //case "method-group":
-                default:
-                    foreach (XmlNode childResult in node.ChildNodes)
-                        Summarize(childResult);
+                case "test-suite":
+                    if (type == "Assembly" && status == "Failed" && label == "Invalid")
+                        InvalidAssemblies++;
+
+                    Summarize(node.ChildNodes);
+                    break;
+
+                case "test-run":
+                    Summarize(node.ChildNodes);
                     break;
             }
+        }
+
+        private void Summarize(XmlNodeList nodes)
+        {
+            foreach (XmlNode childResult in nodes)
+                Summarize(childResult);
         }
 
         #endregion

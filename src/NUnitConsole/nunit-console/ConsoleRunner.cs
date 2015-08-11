@@ -41,7 +41,7 @@ namespace NUnit.ConsoleRunner
 
         public static readonly int OK = 0;
         public static readonly int INVALID_ARG = -1;
-        public static readonly int FILE_NOT_FOUND = -2;
+        public static readonly int INVALID_ASSEMBLY = -2;
         public static readonly int FIXTURE_NOT_FOUND = -3;
         public static readonly int UNEXPECTED_ERROR = -100;
 
@@ -175,7 +175,10 @@ namespace NUnit.ConsoleRunner
                 _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
             }
 
-            return reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
+            return reporter.Summary.InvalidAssemblies > 0
+                    ? ConsoleRunner.INVALID_ASSEMBLY
+                    : reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
+
         }
 
         private void WriteRuntimeEnvironment(ExtendedTextWriter OutWriter)
