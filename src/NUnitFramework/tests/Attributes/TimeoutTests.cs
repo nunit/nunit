@@ -139,7 +139,6 @@ namespace NUnit.Framework.Attributes
             ParameterizedMethodSuite testMethod = (ParameterizedMethodSuite)TestFinder.Find("TestTimeOutTestCase", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            //Assert.That(result.Message, Does.Contain("100ms"));
         }
     }
 }
