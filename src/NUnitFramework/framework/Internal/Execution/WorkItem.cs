@@ -239,7 +239,7 @@ namespace NUnit.Framework.Internal.Execution
 #else
             ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
 
-            if (Test.RequiresThread || Test is TestMethod && timeout > 0 || currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
+            if (Test.RequiresThread || (Test is TestMethod || Test is ParameterizedMethodSuite) && timeout > 0 || currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
                 RunTestOnOwnThread(timeout, TargetApartment);
             else
                 RunTest();
