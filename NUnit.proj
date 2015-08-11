@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project DefaultTargets="Build" InitialTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  
-  <!-- *********************************************************************** -->
-  <!--                          Define Properties                              -->
-  <!-- *********************************************************************** -->
-  
+
+  <!-- Region Define Properties -->
+
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     <PackageVersion>3.0.0</PackageVersion>
@@ -115,9 +113,15 @@
     <NugetVersion>$(PackageVersion)$(PackageModifier)$(ConfigSuffix)</NugetVersion>
   </PropertyGroup>
 
-  <!-- *********************************************************************** -->
-  <!--                        Dump Settings Target                             -->
-  <!-- *********************************************************************** -->
+  <PropertyGroup>
+      <MSBuildCommunityTasksPath>$(ProjectToolsDir)\msbuild</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  
+  <Import Project="$(ProjectToolsDir)\msbuild\MSBuild.Community.Tasks.Targets" />
+  
+  <!-- End Region -->
+
+  <!-- Region Dump Settings Target -->
   
   <Target Name="DumpSettings">
     <Message Text=" " />
@@ -164,10 +168,10 @@
     <Message Text="  Version:           $(NugetVersion)" />
     <Message Text=" " />
   </Target>
+  
+  <!-- End Region -->
 
-  <!-- *********************************************************************** -->
-  <!--                            Clean Targets                                -->
-  <!-- *********************************************************************** -->
+  <!-- Region Clean Targets -->
   
   <Target Name="Clean" DependsOnTargets="CleanFramework;CleanEngine;CleanConsole" />
 
@@ -199,9 +203,9 @@
     <MSBuild Targets="Clean" Projects="@(ConsoleProjects)" Properties="Configuration=$(Configuration); Platform=AnyCPU" />
   </Target>
 
-  <!-- *********************************************************************** -->
-  <!--                            Build Targets                                -->
-  <!-- *********************************************************************** -->
+  <!-- End Region -->
+  
+  <!-- Region Build Targets -->
 
   <Target Name="Build" Label="Build the framework, engine and console for the current config"
     DependsOnTargets="BuildFramework;BuildEngine;BuildConsole" />
@@ -238,10 +242,10 @@
     <MSBuild Targets="Build" Projects="@(ConsoleProjects)"
       Properties="Configuration=$(Configuration); Platform=AnyCPU" />
   </Target>
+  
+  <!-- End Region -->
 
-  <!-- *********************************************************************** -->
-  <!--                            Test Targets                                 -->
-  <!-- *********************************************************************** -->
+  <!-- Region Test Targets -->
 
   <Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
       DependsOnTargets="TestAllFrameworks;TestEngine;TestCoreEngine;TestAddins;TestV2Driver;TestConsole" />
@@ -279,12 +283,12 @@
       Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
     <Exec Condition="'$(Runtime)' == 'portable'" 
-				WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
+        WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
         Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunitlite.exe nunit.framework.tests "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
 
-		<Exec Condition="'$(Runtime)' != 'portable'"
-				WorkingDirectory="$(ConsoleBuildDir)"
+    <Exec Condition="'$(Runtime)' != 'portable'"
+        WorkingDirectory="$(ConsoleBuildDir)"
         Command='$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
     
@@ -365,10 +369,10 @@
     <MakeDir Directories="$(ResultDir)"  Condition="!Exists('$(ResultDir)')"/>
     
   </Target>
+  
+  <!-- End Region -->
 
-  <!-- *********************************************************************** -->
-  <!--                           Coverage Targets                              -->
-  <!-- *********************************************************************** -->
+  <!-- Region Coverage Targets -->
 
   <Target Name="TestCoverage">
     <CallTarget Targets="_NUnitCoverage" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
@@ -381,9 +385,11 @@
     </Exec>
   </Target>
   
+  <!-- End Region -->
+  
+  <!-- Region Packaging Targets -->
+  
   <!-- *********************************************************************** -->
-  <!--                          Packaging Targets                              -->
-  <!--                                                                         -->
   <!--                              WARNING                                    -->
   <!--                                                                         -->
   <!--   Packaging is decoupled from the Build by design. It's up to whoever   -->
@@ -400,6 +406,7 @@
     <Message Text="******************************************************************" />
 
     <Exec Command='git archive -o "$(ProjectPackageDir)\$(PackageName)-src.zip" HEAD' />
+
   </Target>
 
   <Target Name="PackageBinaries" Label="Packages the binaries as a zip" DependsOnTargets="_CreateImageIfNotPresent">
@@ -407,22 +414,12 @@
     <Message Text="* Creating the binary $(Configuration) package as $(PackageName)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
-    <CallTarget Targets="_RemoveGitDirFromImage" />
+    <Zip Files="@(BinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
+         ZipFileName="$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" />
 
-    <Exec Command='git init "$(CurrentImageDir)"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add -A' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git rm --cached bin\netcf-3.5\*' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.name "temp"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.email "temp@temp.com"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' /> 
-    <Exec WorkingDirectory='$(CurrentImageDir)' 
-      Command='git archive -o "$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" HEAD'></Exec>
-
-    <CallTarget Targets="_RemoveGitDirFromImage" />
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all NuGet packages"
-    DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetCoreEngine" />
+  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetCoreEngine" />
   
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
@@ -501,18 +498,9 @@
     <Message Text="* Creating the binary $(Configuration) package as $(PackageNameCF)$(ConfigSuffix).zip" />
     <Message Text="******************************************************************" />
 
-    <CallTarget Targets="_RemoveGitDirFromImage" />
+    <Zip Files="@(CFBinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
+         ZipFileName="$(ProjectPackageDir)\$PackageNameCF$ConfigSuffix).zip" />
 
-    <Exec Command='git init "$(CurrentImageDir)"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add *.txt nunit.ico' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git add bin\netcf-3.5\*' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.name "temp"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git config user.email "temp@temp.com"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)' Command='git commit -m "Export"' />
-    <Exec WorkingDirectory='$(CurrentImageDir)'
-      Command='git archive -o "$(ProjectPackageDir)\$(PackageNameCF)$(ConfigSuffix).zip" HEAD'></Exec>
-
-    <CallTarget Targets="_RemoveGitDirFromImage" />
   </Target>
 
   <Target Name="PackageNuGetNUnitCF" Label="Creates the NUnit Framework NuGet package for compact framework"
@@ -545,7 +533,7 @@
     <Copy DestinationFolder="$(CurrentImageDir)" SourceFiles="@(RootFiles)" />
 
     <!-- Copy binaries to bin directory -->
-    <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
+    <Copy DestinationFiles="@(BinFiles->'$(CurrentImageDir)\bin\%(RecursiveDir)%(Filename)%(Extension)')" 
         SourceFiles="@(BinFiles)" />
 
   </Target>
@@ -563,14 +551,10 @@
     <MakeDir Directories="$(CurrentImageDir)" />
   </Target>
 
-  <Target Name="_RemoveGitDirFromImage">
-    <Exec Command="$(RemoveDir) $(CurrentImageDir)\.git" Condition="Exists('$(CurrentImageDir)\.git')" />
-  </Target>
+  <!-- End Region -->
+  
+  <!-- Region Item Groups -->
                                        
-  <!-- *********************************************************************** -->
-  <!--                       Lists For Use by Targets                          -->
-  <!-- *********************************************************************** -->
-
   <ItemGroup Label ="Targets for Packaging">
     <AllPackages Include="PackageSource" />
       <AllPackages Include="PackageBinaries" />
@@ -613,6 +597,23 @@
 
   <ItemGroup>
     <ZipFiles Include="*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BinZipFiles Include="$(CurrentImageDir)\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\addins\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\addins\tests\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\addins\v2-tests\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\net-2.0\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.0\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.5\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\sl-5.0\*.*" Condition="$(IsWindows)" />
+    <BinZipFiles Include="$(CurrentImageDir)\portable\sl-5.0\*.*" Condition="$(IsWindows)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\**\*/*" />
   </ItemGroup>
 
   <ItemGroup Label="Supported Frameworks">
@@ -666,4 +667,7 @@
     <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console\nunit-console.csproj" />
     <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console.tests\nunit-console.tests.csproj" />
   </ItemGroup>
+  
+  <!-- End Region -->
+  
 </Project>
