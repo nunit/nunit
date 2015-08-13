@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using Mono.Addins;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
@@ -76,9 +75,14 @@ namespace NUnit.Engine.Services
                 _factories.Add(new TestCaseResultWriterFactory());
                 _factories.Add(new XmlTransformResultWriterFactory());
 
-                foreach (var factory in AddinManager.GetExtensionObjects<IResultWriterFactory>())
-                    _factories.Add(factory);
+                var extensionService = ServiceContext.GetService<ExtensionService>();
 
+                if (extensionService != null && extensionService.Status == ServiceStatus.Started)
+                {
+                    foreach (var factory in extensionService.GetExtensions<IResultWriterFactory>())
+                        _factories.Add(factory);
+                }
+                    
                 Status = ServiceStatus.Started;
             }
             catch

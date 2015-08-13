@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using NUnit.Common;
-using Mono.Addins;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
@@ -88,10 +87,17 @@ namespace NUnit.Engine.Services
             {
                 try
                 {
-                    foreach (IProjectLoader loader in AddinManager.GetExtensionObjects<IProjectLoader>())
-                        _loaders.Add(loader);
+                    var extensionService = ServiceContext.GetService<ExtensionService>();
 
-                    Status = ServiceStatus.Started;
+                    if (extensionService != null && extensionService.Status == ServiceStatus.Started)
+                    {
+                        foreach (IProjectLoader loader in extensionService.GetExtensions<IProjectLoader>())
+                            _loaders.Add(loader);
+
+                        Status = ServiceStatus.Started;
+                    }
+                    else
+                        Status = ServiceStatus.Error;
                 }
                 catch
                 {

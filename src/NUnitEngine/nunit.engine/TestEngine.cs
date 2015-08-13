@@ -111,6 +111,9 @@ namespace NUnit.Engine
 
             Services.Add(settingsService);
             Services.Add(new DomainManager());
+#if NUNIT_ENGINE
+            Services.Add(new ExtensionService());
+#endif
             Services.Add(new DriverService());
 
 #if NUNIT_ENGINE

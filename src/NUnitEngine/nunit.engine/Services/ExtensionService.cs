@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,29 +23,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
+using Mono.Addins;
 
-namespace NUnit.Engine.Services.Tests
+namespace NUnit.Engine.Services
 {
-    public class ProjectServiceTests
+    public class ExtensionService : Service
     {
-        private ProjectService _projectService;
-
-        [SetUp]
-        public void CreateServiceContext()
+        public T[] GetExtensions<T>()
         {
-            var services = new ServiceContext();
-            services.Add(new ExtensionService());
-            _projectService = new ProjectService();
-            services.Add(_projectService);
-            services.ServiceManager.StartServices();
-        }
-
-        [Test]
-        public void ServiceIsStarted()
-        {
-            Assert.That(_projectService.Status, Is.EqualTo(ServiceStatus.Started));
+            return AddinManager.GetExtensionObjects<T>();
         }
     }
 }

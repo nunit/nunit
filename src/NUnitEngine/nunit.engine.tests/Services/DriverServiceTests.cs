@@ -33,19 +33,24 @@ namespace NUnit.Engine.Services.Tests
     [TestFixture]
     public class DriverServiceTests
     {
-        private DriverService _service;
+        private DriverService _driverService;
 
         [SetUp]
         public void CreateDriverFactory()
         {
-            _service = new DriverService();
-            _service.StartService();
+            var serviceContext = new ServiceContext();
+#if NUNIT_ENGINE
+            serviceContext.Add(new ExtensionService());
+#endif
+            _driverService = new DriverService();
+            serviceContext.Add(_driverService);
+            serviceContext.ServiceManager.StartServices();
         }
 
         [Test]
         public void ServiceIsStarted()
         {
-            Assert.That(_service.Status, Is.EqualTo(ServiceStatus.Started), "Failed to start service");
+            Assert.That(_driverService.Status, Is.EqualTo(ServiceStatus.Started), "Failed to start service");
         }
 
 
@@ -54,7 +59,7 @@ namespace NUnit.Engine.Services.Tests
         [TestCase("junk.dll", typeof(NotRunnableFrameworkDriver))]
         public void CorrectDriverIsUsed(string fileName, Type expectedType)
         {
-            var driver = _service.GetDriver(
+            var driver = _driverService.GetDriver(
                 AppDomain.CurrentDomain,
                 Path.Combine(TestContext.CurrentContext.TestDirectory, fileName));
 

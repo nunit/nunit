@@ -37,8 +37,11 @@ namespace NUnit.Engine.Services.Tests
         [SetUp]
         public void CreateService()
         {
+            var services = new ServiceContext();
+            services.Add(new ExtensionService());
             _resultService = new ResultService();
-            _resultService.StartService();
+            services.Add(_resultService);
+            services.ServiceManager.StartServices();
         }
 
         [Test]

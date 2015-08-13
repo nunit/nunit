@@ -29,10 +29,6 @@ using Mono.Cecil;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
 
-#if NUNIT_ENGINE
-using Mono.Addins;
-#endif
-
 namespace NUnit.Engine.Services
 {
     /// <summary>
@@ -83,18 +79,22 @@ namespace NUnit.Engine.Services
 
         public override void StartService()
         {
+            Guard.OperationValid(ServiceContext != null, "Can't start DriverService outside of a ServiceContext");
+
             try
             {
                 _factories.Add(new NUnit3DriverFactory());
 
 #if NUNIT_ENGINE
-                foreach (IDriverFactory factory in AddinManager.GetExtensionObjects<IDriverFactory>())
-                    _factories.Add(factory);
+                var extensionService = ServiceContext.GetService<ExtensionService>();
+                if (extensionService != null)
+                    foreach (IDriverFactory factory in extensionService.GetExtensions<IDriverFactory>())
+                        _factories.Add(factory);
 #endif
-
+ 
                 Status = ServiceStatus.Started;
             }
-            catch
+            catch(Exception ex)
             {
                 Status = ServiceStatus.Error;
                 throw;
