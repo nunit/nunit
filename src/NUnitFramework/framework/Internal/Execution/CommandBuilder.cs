@@ -57,9 +57,9 @@ namespace NUnit.Framework.Internal.Execution
                 if (changes.Length > 0)
                     command = new ApplyChangesToContextCommand(command, changes);
             }
-            if (suite is ParameterizedMethodSuite && suite.HasChildren)
+            if (suite.Method!=null)
             {
-                IApplyToContext[] changes = (IApplyToContext[])suite.Tests[0].Method.GetCustomAttributes(typeof(IApplyToContext), true);
+                IApplyToContext[] changes = (IApplyToContext[])suite.Method.GetCustomAttributes(typeof(IApplyToContext), true);
                 if (changes.Length > 0)
                     command = new ApplyChangesToContextCommand(command, changes);
             }
