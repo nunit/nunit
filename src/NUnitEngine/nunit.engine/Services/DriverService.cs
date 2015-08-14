@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Mono.Cecil;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
 
@@ -57,14 +58,14 @@ namespace NUnit.Engine.Services
 
             try
             {
-                var references = GetAssemblyReferences(assemblyPath);
+                var references = AssemblyDefinition.ReadAssembly(assemblyPath).MainModule.AssemblyReferences;
 
                 foreach (var factory in _factories)
                 {
                     foreach (var reference in references)
                     {
-                        if (factory.IsSupportedFramework(reference))
-                            return factory.GetDriver(domain, reference);
+                        if (factory.IsSupportedTestFramework(reference.Name, reference.Version))
+                            return factory.GetDriver(domain, reference.Name, reference.Version);
                     }
                 }
             }
@@ -76,34 +77,8 @@ namespace NUnit.Engine.Services
             return new NotRunnableFrameworkDriver(assemblyPath, "Unable to locate a driver for " + assemblyPath);
         }
 
-        private static AssemblyName[] GetAssemblyReferences(string assemblyPath)
-        {
-            var reflectionDomain = AppDomain.CreateDomain("ReflectionDomain");
-
-            try
-            {
-                var agentType = typeof(ReflectionAgent);
-                var agent = reflectionDomain.CreateInstanceAndUnwrap(agentType.Assembly.FullName, agentType.FullName) as ReflectionAgent;
-                return agent.GetReferencedAssemblies(assemblyPath);
-            }
-            finally
-            {
-                AppDomain.Unload(reflectionDomain);
-            }
-        }
-
-        private class ReflectionAgent : MarshalByRefObject
-        {
-            public AssemblyName[] GetReferencedAssemblies(string assemblyPath)
-            {
-                var testAssembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
-                var references = testAssembly.GetReferencedAssemblies();
-                return references;
-            }
-        }
-
         #endregion
- 
+
         #region Service Overrides
 
         public override void StartService()

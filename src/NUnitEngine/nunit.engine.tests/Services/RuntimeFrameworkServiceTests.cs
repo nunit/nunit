@@ -41,10 +41,44 @@ namespace NUnit.Engine.Services.Tests
             services.ServiceManager.StartServices();
         }
 
+        [TearDown]
+        public void StopService()
+        {
+            _runtimeService.StopService();
+        }
+
         [Test]
         public void ServiceIsStarted()
         {
             Assert.That(_runtimeService.Status, Is.EqualTo(ServiceStatus.Started));
+        }
+
+        [TestCase("mock-nunit-assembly.exe", "2.0.50727", false)]
+        [TestCase("net-2.0/mock-nunit-assembly.exe", "2.0.50727", false)]
+        [TestCase("net-4.0/mock-nunit-assembly.exe", "4.0.30319", false)]
+        // TODO: Change this case when the 4.0/4.5 bug is fixed
+        [TestCase("net-4.5/mock-nunit-assembly.exe", "4.0.30319", false)]
+        [TestCase("mock-cpp-clr-x64.dll", "4.0.30319", false)]
+        [TestCase("mock-cpp-clr-x86.dll", "4.0.30319", true)]
+        [TestCase("nunit-agent.exe", "2.0.50727", false)]
+        [TestCase("nunit-agent-x86.exe", "2.0.50727", true)]
+        // TODO: Make the following cases work correctly in case we want to use
+        // the engine to run them in the future.
+        [TestCase("netcf-3.5/mock-nunit-assembly.exe", "2.0.50727", false)]
+        [TestCase("sl-5.0/mock-nunit-assembly.dll", "4.0.30319", false)]
+        [TestCase("portable/mock-nunit-assembly.dll", "4.0.30319", false)]
+        public void SelectRuntimeFramework(string assemblyName, string expectedVersion, bool runAsX86)
+        {
+            // Some files don't actually exist on our CI servers
+            Assume.That(assemblyName, Does.Exist);
+            var package = new TestPackage(assemblyName);
+
+            var returnValue = _runtimeService.SelectRuntimeFramework(package);
+            var framework = RuntimeFramework.Parse(returnValue);
+
+            Assert.That(package.GetSetting("RuntimeFramework", ""), Is.EqualTo(returnValue));
+            Assert.That(package.GetSetting("RunAsX86", false), Is.EqualTo(runAsX86));
+            Assert.That(framework.ClrVersion.ToString(), Is.EqualTo(expectedVersion));
         }
     }
 }

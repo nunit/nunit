@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using Mono.Cecil;
 using NUnit.Common;
 using NUnit.Engine.Internal;
 
@@ -114,34 +115,25 @@ namespace NUnit.Engine.Services
                     // contribute any information to the decision, so we skip it.
                     if (PathUtils.IsAssemblyFileType(assembly) && File.Exists(assembly))
                     {
-                        using (var reader = new AssemblyReader(assembly))
+                        var module = AssemblyDefinition.ReadAssembly(assembly).MainModule;
+                        var NativeEntryPoint = (ModuleAttributes)16;
+                        var mask = ModuleAttributes.Required32Bit | NativeEntryPoint;
+                        if (module.Architecture != TargetArchitecture.AMD64 && 
+                            module.Architecture != TargetArchitecture.IA64 &&
+                           (module.Attributes & mask) != 0)
                         {
-                            if (!reader.IsValidPeFile)
-                                log.Debug("{0} is not a valid PE file", assembly);
-                            else if (!reader.IsDotNetFile)
-                                log.Debug("{0} is not a managed assembly", assembly);
-                            else
-                            {
-                                if (reader.ShouldRun32Bit)
-                                {
-                                    package.Settings[PackageSettings.RunAsX86] = true;
-                                    log.Debug("Assembly {0} will be run x86", assembly);
-                                }
-
-                                var imageRuntimeVersion = reader.ImageRuntimeVersion;
-                                if (imageRuntimeVersion != null)
-                                {
-                                    var v = new Version(imageRuntimeVersion.Substring(1));
-                                    log.Debug("Assembly {0} uses version {1}", assembly, v);
-
-                                    // TODO: We are doing two jobs here: (1) getting the
-                                    // target version and (2) applying a policy that says
-                                    // we run under the highest version of all assemblies.
-                                    // We should implement the policy at a higher level.
-                                    if (v > targetVersion) targetVersion = v;
-                                }
-                            }
+                            package.Settings[PackageSettings.RunAsX86] = true;
+                            log.Debug("Assembly {0} will be run x86", assembly);
                         }
+
+                        var v = new Version(module.RuntimeVersion.Substring(1));
+                        log.Debug("Assembly {0} uses version {1}", assembly, v);
+
+                        // TODO: We are doing two jobs here: (1) getting the
+                        // target version and (2) applying a policy that says
+                        // we run under the highest version of all assemblies.
+                        // We should implement the policy at a higher level.
+                        if (v > targetVersion) targetVersion = v;
                     }
                 }
                 

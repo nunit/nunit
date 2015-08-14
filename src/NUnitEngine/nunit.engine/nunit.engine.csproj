@@ -37,6 +37,9 @@
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.9.6.1\lib\net20\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -83,7 +86,6 @@
     <Compile Include="Agents\TestAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
-    <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
     <Compile Include="Internal\PathUtils.cs" />
@@ -150,7 +152,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
