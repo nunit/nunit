@@ -6,6 +6,6 @@ if not defined buildtool for /f %%i in ('dir /b /ad /on "%windir%\Microsoft.NET\
 if not defined buildtool (echo no MSBuild.exe or xbuild was found>&2 & exit /b 42)
 
 call "tools/nuget.exe" restore nunit.sln
-if %errorlevel% 1 (echo NuGet restore failed.>&2 & exit /b %errorlevel%)
+if errorlevel 1 (echo NuGet restore failed.>&2 & exit /b 1)
 
 if defined buildtool "%buildtool%" %*
