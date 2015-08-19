@@ -1,5 +1,9 @@
 #!/bin/bash
+
+#Restore nuget packages
+#Run mozroots --import --sync if certificates are not found
 mono ./tools/nuget.exe restore nunit.linux.sln
 if [ "$?" -ne 0 ]; then echo "NuGet restore failed."; exit 1; fi
 
+#run xbuild itself
 xbuild "$@"
