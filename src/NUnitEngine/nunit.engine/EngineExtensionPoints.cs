@@ -21,21 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Addins
-{
-    [Extension]
-    class NUnit2ResultWriterFactory : IResultWriterFactory
-    {
-        public string Format { get { return "nunit2";  } }
+// Extension points supported by the engine
 
-        public IResultWriter GetResultWriter(params object[] args)
-        {
-            return new NUnit2XmlResultWriter();
-        }
-    }
-}
+[assembly: ExtensionPoint("/NUnit/Engine/ProjectService", typeof(IProjectLoader),
+    Description = "Recognizes and loads assemblies from various types of project formats.")]
+
+[assembly: ExtensionPoint("/NUnit/Engine/ResultService", typeof(IResultWriterFactory),
+    Description = "Supplies a writer to write the result of a test to a file using a specific format.")]
+
+[assembly: ExtensionPoint("/NUnit/Engine/DriverService", typeof(IDriverFactory),
+    Description = "Supplies a driver to run tests that use a specific test framework.")]

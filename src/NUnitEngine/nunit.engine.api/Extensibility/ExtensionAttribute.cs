@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,20 +22,26 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Addins
+namespace NUnit.Engine.Extensibility
 {
-    [Extension]
-    class NUnit2ResultWriterFactory : IResultWriterFactory
+    /// <summary>
+    /// The ExtensionAttribute is used to identify a class that is intended
+    /// to serve as an extension.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=false)]
+    public class ExtensionAttribute : Attribute
     {
-        public string Format { get { return "nunit2";  } }
+        /// <summary>
+        /// The unique path of the ExtensionPoint for which this Extension is intended.
+        /// The Path is optional provided that there is only one extension point for
+        /// for which this object qualifies as an extension based on its Type.
+        /// </summary>
+        public string Path { get; set; }
 
-        public IResultWriter GetResultWriter(params object[] args)
-        {
-            return new NUnit2XmlResultWriter();
-        }
+        /// <summary>
+        /// An optional description of what the extension does.
+        /// </summary>
+        public string Description { get; set; }
     }
 }

@@ -70,6 +70,7 @@
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="ResultHelperTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
+    <Compile Include="Services\ExtensionServiceTests.cs" />
     <Compile Include="Services\Fakes\FakeRuntimeService.cs" />
     <Compile Include="Services\ServiceManagerTests.cs" />
     <Compile Include="Services\TestAgencyTests.cs" />
