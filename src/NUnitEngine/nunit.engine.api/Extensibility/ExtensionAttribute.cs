@@ -33,10 +33,22 @@ namespace NUnit.Engine.Extensibility
     public class ExtensionAttribute : Attribute
     {
         /// <summary>
-        /// The unique path of the ExtensionPoint for which this Extension is intended.
-        /// The Path is optional provided that there is only one extension point for
-        /// for which this object qualifies as an extension based on its Type.
+        /// Construct an ExtensionAttribute
         /// </summary>
+        /// <param name="path">The unique path of the ExtensionPoint for which this Extension is intended.</param>
+        public ExtensionAttribute(string path)
+        {
+            Path = path;
+        }
+
+        /// <summary>
+        /// The unique path of the ExtensionPoint for which this Extension is intended.
+        /// </summary>
+        /// <remarks>
+        /// The Path is currently required. We may make it optional in a future release
+        /// provided that there is only one extension point for for which the object
+        /// qualifies as an extension based on its Type.
+        /// </remarks>
         public string Path { get; set; }
 
         /// <summary>

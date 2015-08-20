@@ -26,13 +26,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using Mono.Addins;
 using Mono.Cecil;
 using NUnit.Engine.Extensibility;
 using NUnit.Engine.Internal;
-
-using ExtensionPoint = NUnit.Engine.Extensibility.ExtensionPoint;
-using ExtensionNode = NUnit.Engine.Extensibility.ExtensionNode;
 
 namespace NUnit.Engine.Services
 {
@@ -70,7 +66,13 @@ namespace NUnit.Engine.Services
 
         public T[] GetExtensions<T>()
         {
-            return AddinManager.GetExtensionObjects<T>();
+            var extensions = new List<T>();
+
+            var ep = GetExtensionPoint(typeof(T));
+            foreach (var node in ep.Extensions)
+                extensions.Add((T)node.ExtensionObject);
+
+            return extensions.ToArray();
         }
 
         #region Service Overrides
@@ -78,11 +80,9 @@ namespace NUnit.Engine.Services
         public override void StartService()
         {
             var thisAssembly = Assembly.GetExecutingAssembly();
-            //var startDir = new DirectoryInfo(Path.Combine(AssemblyHelper.GetDirectoryName(thisAssembly), "addins"));
             var startDir = new DirectoryInfo(AssemblyHelper.GetDirectoryName(thisAssembly));
 
             FindExtensionPoints(thisAssembly);
-
             FindExtensionsInDirectory(startDir);
 
             base.StartService();
@@ -90,7 +90,7 @@ namespace NUnit.Engine.Services
 
         private void FindExtensionPoints(Assembly assembly)
         {
-            foreach (Extensibility.ExtensionPointAttribute attr in assembly.GetCustomAttributes(typeof(Extensibility.ExtensionPointAttribute), false))
+            foreach (ExtensionPointAttribute attr in assembly.GetCustomAttributes(typeof(ExtensionPointAttribute), false))
             {
                 var ep = new ExtensionPoint(attr.Path, attr.Type)
                 {
@@ -98,6 +98,9 @@ namespace NUnit.Engine.Services
                 };
 
                 _extensionPoints.Add(ep);
+
+                // TODO: These Adds will throw if the path or type is a duplicate.
+                // We should give an error message instead.
                 _pathIndex.Add(ep.Path, ep);
                 _typeIndex.Add(ep.Type, ep);
             }
@@ -108,13 +111,13 @@ namespace NUnit.Engine.Services
             var addinsFiles = startDir.GetFiles("*.addins");
             if (addinsFiles.Length > 0)
                 foreach (var file in addinsFiles)
-                    ProcessAddinsFile(startDir, file.FullName);
+                    ProcessAddinsFile(startDir.FullName, file.FullName);
             else
                 foreach (var file in startDir.GetFiles("*.dll"))
                     FindExtensionsInAssembly(file.FullName);
         }
 
-        private void ProcessAddinsFile(DirectoryInfo baseDir, string fileName)
+        private void ProcessAddinsFile(string baseDir, string fileName)
         {
             var doc = new XmlDocument();
 
@@ -123,7 +126,7 @@ namespace NUnit.Engine.Services
                 doc.Load(rdr);
                 foreach (XmlNode dirNode in doc.SelectNodes("Addins/Directory"))
                 {
-                    var path = Path.Combine(baseDir.FullName, dirNode.InnerText);
+                    var path = Path.Combine(baseDir, dirNode.InnerText);
                     FindExtensionsInDirectory(new DirectoryInfo(path));
                 }
             }
@@ -135,7 +138,15 @@ namespace NUnit.Engine.Services
             foreach (var type in module.GetTypes())
                 foreach (var attr in type.CustomAttributes)
                     if (attr.AttributeType.FullName == "NUnit.Engine.Extensibility.ExtensionAttribute")
-                        _extensions.Add(new ExtensionNode(assemblyName, type.FullName));
+                    {
+                        var node = new ExtensionNode(assemblyName, type.FullName);
+                        node.Path = (string)attr.ConstructorArguments[0].Value;
+                        _extensions.Add(node);
+
+                        var ep = GetExtensionPoint(node.Path);
+                        if (ep != null) // TODO: Error message?
+                            ep.Extensions.Add(node);
+                    }
         }
 
         #endregion

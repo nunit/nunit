@@ -29,7 +29,6 @@ namespace NUnit.Engine.Drivers
 {
     public class NotRunnableFrameworkDriver : IFrameworkDriver
     {
-        // TODO: The id should not be hard-coded
         private const string LOAD_RESULT_FORMAT =
             "<test-suite type='Assembly' id='{0}' name='{1}' fullname='{2}' testcasecount='0' runstate='NotRunnable'>" +
                 "<properties>" +

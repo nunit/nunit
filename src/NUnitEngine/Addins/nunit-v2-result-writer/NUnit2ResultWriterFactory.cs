@@ -28,7 +28,7 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Addins
 {
-    [Extension]
+    [Extension("/NUnit/Engine/ResultService")]
     class NUnit2ResultWriterFactory : IResultWriterFactory
     {
         public string Format { get { return "nunit2";  } }

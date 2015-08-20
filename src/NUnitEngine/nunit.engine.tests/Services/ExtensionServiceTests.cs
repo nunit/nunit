@@ -99,5 +99,15 @@ namespace NUnit.Engine.Services.Tests
             Assert.Fail("Couldn't find known Extension {0}", typeName);
         }
 
+        [Test, Sequential]
+        public void ExtensionsAreAddedToExtensionPoint(
+            [ValueSource("KNOWN_EXTENSION_POINT_PATHS")] string path,
+            [Values(1, 2, 1)] int expectedExtensionCount)
+        {
+            var ep = _extensionService.GetExtensionPoint(path);
+            Assume.That(ep, Is.Not.Null);
+
+            Assert.That(ep.Extensions.Count, Is.EqualTo(expectedExtensionCount));
+        }
     }
 }

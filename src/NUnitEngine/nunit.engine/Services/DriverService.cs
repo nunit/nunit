@@ -65,7 +65,7 @@ namespace NUnit.Engine.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (BadImageFormatException ex)
             {
                 return new NotRunnableFrameworkDriver(assemblyPath, ex.Message);
             }

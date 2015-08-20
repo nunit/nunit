@@ -31,7 +31,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
     /// <summary>
     /// Summary description for VSProjectLoader.
     /// </summary>
-    [Extension]
+    [Extension("/NUnit/Engine/ProjectService")]
     public class VisualStudioProjectLoader : IProjectLoader
     {
         #region IProjectLoader Members
