@@ -558,7 +558,7 @@
   <ItemGroup Label ="Targets for Packaging">
     <AllPackages Include="PackageSource" />
       <AllPackages Include="PackageBinaries" />
-      <AllPackages Include="PackageNuGet" />
+      <AllPackages Include="PackageNuGet" Condition="$(IsWindows)" />
       <AllPackages Include="PackageAllMsis" Condition="$(IsWindows)" />
   </ItemGroup>
 
