@@ -21,6 +21,6 @@
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
-    <file src="bin\nunit.core.engine.dll" target="lib" />
+    <file src="bin/nunit.core.engine.dll" target="lib" />
   </files>
 </package>
