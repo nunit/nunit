@@ -637,8 +637,6 @@
   </ItemGroup>
   
   <ItemGroup Label="Projects for building the engine">
-    <!-- Our private version of Mono.Addins -->
-    <EngineProjects Include="$(EngineSrcDir)\mono-addins\Mono.Addins.csproj" />
     <!-- The engine and agent -->
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
