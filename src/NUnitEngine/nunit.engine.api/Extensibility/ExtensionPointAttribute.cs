@@ -35,7 +35,7 @@ namespace NUnit.Engine.Extensibility
         /// <summary>
         /// Construct an ExtensionPointAttribute
         /// </summary>
-        /// <param name="path">The unique path identifying the extension point.</param>
+        /// <param name="path">A unique string identifying the extension point.</param>
         /// <param name="type">The required Type of any extension that is installed at this extension point.</param>
         public ExtensionPointAttribute(string path, Type type)
         {
@@ -44,12 +44,15 @@ namespace NUnit.Engine.Extensibility
         }
 
         /// <summary>
-        /// The unique path identifying this ExtensionPoint
+        /// The unique string identifying this ExtensionPoint. This identifier
+        /// is typically formatted as a path using '/' and the set of extension 
+        /// points is sometimes viewed as forming a tree.
         /// </summary>
         public string Path { get; private set; }
 
         /// <summary>
-        /// The required Type of any extension that is installed at this ExtensionPoint
+        /// The required Type (usually an interface) of any extension that is 
+        /// installed at this ExtensionPoint.
         /// </summary>
         public Type Type { get; private set; }
 

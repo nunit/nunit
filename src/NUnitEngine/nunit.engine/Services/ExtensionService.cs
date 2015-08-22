@@ -36,7 +36,6 @@ namespace NUnit.Engine.Services
     {
         private List<ExtensionPoint> _extensionPoints = new List<ExtensionPoint>();
         private Dictionary<string, ExtensionPoint> _pathIndex = new Dictionary<string, ExtensionPoint>();
-        private Dictionary<Type, ExtensionPoint> _typeIndex = new Dictionary<Type, ExtensionPoint>();
 
         private List<ExtensionNode> _extensions = new List<ExtensionNode>();
 
@@ -61,7 +60,20 @@ namespace NUnit.Engine.Services
 
         public ExtensionPoint GetExtensionPoint(Type type)
         {
-            return _typeIndex[type];
+            foreach (var ep in _extensionPoints)
+                if (ep.Type == type)
+                    return ep;
+
+            return null;
+        }
+
+        public ExtensionPoint GetExtensionPoint(TypeReference type)
+        {
+            foreach (var ep in _extensionPoints)
+                if (ep.Type.FullName == type.FullName)
+                    return ep;
+
+            return null;
         }
 
         public T[] GetExtensions<T>()
@@ -88,21 +100,29 @@ namespace NUnit.Engine.Services
             base.StartService();
         }
 
+        #endregion
+
+        #region Helper Methods
+
         private void FindExtensionPoints(Assembly assembly)
         {
             foreach (ExtensionPointAttribute attr in assembly.GetCustomAttributes(typeof(ExtensionPointAttribute), false))
             {
+                if (_pathIndex.ContainsKey(attr.Path))
+                {
+                    string msg = string.Format(
+                        "The Path {0} is already in use for another extension point.",
+                        attr.Path);
+                    throw new NUnitEngineException(msg);
+                }
+                
                 var ep = new ExtensionPoint(attr.Path, attr.Type)
                 {
                     Description = attr.Description
                 };
 
                 _extensionPoints.Add(ep);
-
-                // TODO: These Adds will throw if the path or type is a duplicate.
-                // We should give an error message instead.
                 _pathIndex.Add(ep.Path, ep);
-                _typeIndex.Add(ep.Type, ep);
             }
         }
 
@@ -140,13 +160,69 @@ namespace NUnit.Engine.Services
                     if (attr.AttributeType.FullName == "NUnit.Engine.Extensibility.ExtensionAttribute")
                     {
                         var node = new ExtensionNode(assemblyName, type.FullName);
-                        node.Path = (string)attr.ConstructorArguments[0].Value;
+                        foreach (var x in attr.Properties)
+                        {
+                            switch (x.Name)
+                            {
+                                case "Path":
+                                    node.Path = x.Argument.Value as string;
+                                    break;
+                                case "Description":
+                                    node.Description = x.Argument.Value as string;
+                                    break;
+                            }
+                        }
+
                         _extensions.Add(node);
 
-                        var ep = GetExtensionPoint(node.Path);
-                        if (ep != null) // TODO: Error message?
-                            ep.Extensions.Add(node);
+                        ExtensionPoint ep;
+                        if (node.Path == null)
+                        {
+                            ep = DeduceExtensionPointFromType(type);
+                            if (ep == null)
+                            {
+                                string msg = string.Format(
+                                    "Unable to deduce ExtensionPoint for Type {0}. Specify Path on ExtensionAttribute to resolve.",
+                                    type.FullName);
+                                throw new NUnitEngineException(msg);
+                            }
+
+                            node.Path = ep.Path;
+                        }
+                        else
+                        {
+                            ep = GetExtensionPoint(node.Path);
+                            if (ep == null)
+                            {
+                                string msg = string.Format(
+                                    "Unable to locate ExtensionPoint for Type {0}. The Path {1} cannot be found.",
+                                    type.FullName,
+                                    node.Path);
+                                throw new NUnitEngineException(msg);
+                            }
+                        }
+
+                        ep.Extensions.Add(node);
                     }
+        }
+
+        private ExtensionPoint DeduceExtensionPointFromType(TypeReference type)
+        {
+            var ep = GetExtensionPoint(type);
+            if (ep != null)
+                return ep;
+
+            foreach (var iface in type.Resolve().Interfaces)
+            {
+                ep = DeduceExtensionPointFromType(iface);
+                if (ep != null)
+                    return ep;
+            }
+
+            var baseType = type.Resolve().BaseType;
+            return baseType != null && baseType.FullName != "System.Object"
+                ? DeduceExtensionPointFromType(baseType)
+                : null;
         }
 
         #endregion

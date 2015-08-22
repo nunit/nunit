@@ -77,14 +77,15 @@ namespace NUnit.Engine.Extensibility
         }
 
         /// <summary>
-        /// Gets and sets the unique path identifying the ExtensionPoint for which
-        /// this Extension node is intended.
+        /// Gets and sets the unique string identifying the ExtensionPoint for which 
+        /// this Extension is intended. This identifier may be supplied by the attribute
+        /// marking the extension or deduced by NUnit from the Type of the extension class.
         /// </summary>
-        /// <remarks>
-        /// Currently, the Path must be supplied before the extensin can actually be used 
-        /// at an extension point. In a future release, we may be able to deduce the 
-        /// desired ExtensionPoint using the Type of the extension object.
-        /// </remarks>
         public string Path { get; set; }
+
+        /// <summary>
+        /// An optional description of what the extension does.
+        /// </summary>
+        public string Description { get; set; }
     }
 }
