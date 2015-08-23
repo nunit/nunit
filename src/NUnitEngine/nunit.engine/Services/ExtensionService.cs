@@ -131,14 +131,42 @@ namespace NUnit.Engine.Services
             var addinsFiles = startDir.GetFiles("*.addins");
             if (addinsFiles.Length > 0)
                 foreach (var file in addinsFiles)
-                    ProcessAddinsFile(startDir.FullName, file.FullName);
+                    ProcessAddinsFile(startDir, file.FullName);
             else
                 foreach (var file in startDir.GetFiles("*.dll"))
                     FindExtensionsInAssembly(file.FullName);
         }
 
-        private void ProcessAddinsFile(string baseDir, string fileName)
+        private void ProcessAddinsFile(DirectoryInfo baseDir, string fileName)
         {
+#if true
+            using (var rdr = new StreamReader(fileName))
+            {
+                while (!rdr.EndOfStream)
+                {
+                    var line = rdr.ReadLine();
+                    if (line == null)
+                        break;
+
+                    line = line.Split(new char[] { '#' })[0].Trim();
+
+                    if (line == string.Empty)
+                        continue;
+
+                    if (line.Contains("*"))
+                        foreach (var file in baseDir.GetFiles(line))
+                            FindExtensionsInAssembly(file.FullName);
+                    else
+                    {
+                        var path = Path.Combine(baseDir.FullName, line);
+                        if (Directory.Exists(path))
+                            FindExtensionsInDirectory(new DirectoryInfo(path));
+                        else if (File.Exists(path))
+                            FindExtensionsInAssembly(path);
+                    }
+                }
+            }
+#else
             var doc = new XmlDocument();
 
             using (var rdr = new StreamReader(fileName))
@@ -146,10 +174,17 @@ namespace NUnit.Engine.Services
                 doc.Load(rdr);
                 foreach (XmlNode dirNode in doc.SelectNodes("Addins/Directory"))
                 {
-                    var path = Path.Combine(baseDir, dirNode.InnerText);
+                    var path = Path.Combine(baseDir.FullName, dirNode.InnerText);
                     FindExtensionsInDirectory(new DirectoryInfo(path));
                 }
+
+                foreach (XmlNode addinNode in doc.SelectNodes("Addins/Addin"))
+                {
+                    foreach (var addin in baseDir.GetFiles(addinNode.InnerText))
+                        FindExtensionsInAssembly(addin.FullName);
+                }
             }
+#endif
         }
 
         private void FindExtensionsInAssembly(string assemblyName)

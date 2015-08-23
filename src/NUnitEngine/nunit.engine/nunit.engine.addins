@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Addins>
-	<Directory>addins</Directory>
-</Addins>
+﻿addins/nunit.v2.driver.dll
+addins/nunit-v2-result-writer.dll
+addins/nunit-project-loader.dll
+addins/vs-project-loader.dll
