@@ -82,6 +82,7 @@ namespace NUnit.Engine.Services
             // then defer to the AggregatingTestRunner, which will make
             // the decision on a file by file basis so that each project
             // runs with its own settings.
+            // TODO: What about when ProcessModel is Parallel?
             if (projectCount > 1 || projectCount > 0 && assemblyCount > 0)
                 return new AggregatingTestRunner(ServiceContext, package);
 
@@ -117,6 +118,8 @@ namespace NUnit.Engine.Services
 
                 case ProcessModel.Single:
                     return base.MakeTestRunner(package);
+                case ProcessModel.Parallel:
+                    return new ParallelTestProcessRunner(this.ServiceContext, package);
             }
         }
 
@@ -127,6 +130,8 @@ namespace NUnit.Engine.Services
 
             switch (processModel)
             {
+                case ProcessModel.Parallel:
+                    return runner is ParallelTestProcessRunner;
                 case ProcessModel.Default:
                 case ProcessModel.Multiple:
                     return runner is MultipleTestProcessRunner;

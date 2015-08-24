@@ -1,7 +1,7 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
-// Permission is hereby granted, free of charge, to any person obtaining
+// Permission is hereby granted, free of charge, to any person obtainingn
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
 // without limitation the rights to use, copy, modify, merge, publish,
@@ -23,33 +23,8 @@
 
 namespace NUnit.Engine.Internal
 {
-    /// <summary>
-    /// Represents the manner in which test assemblies are
-    /// distributed across processes.
-    /// </summary>
-    public enum ProcessModel
+    public interface ITask
     {
-        /// <summary>
-        /// Use the default setting, depending on the runner
-        /// and the nature of the tests to be loaded.
-        /// </summary>
-        Default,
-        /// <summary>
-        /// Run tests directly in the NUnit process
-        /// </summary>
-        Single,
-        /// <summary>
-        /// Run tests in a single separate process
-        /// </summary>
-        Separate,
-        /// <summary>
-        /// Run tests in a separate process per assembly
-        /// </summary>
-        Multiple,
-        /// <summary>
-        /// Run tests in a separate process for each test assembly 
-        /// and run them all in parallel
-        /// </summary>
-        Parallel,
+        void Execute();
     }
 }

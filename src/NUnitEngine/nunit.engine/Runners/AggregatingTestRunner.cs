@@ -121,11 +121,24 @@ namespace NUnit.Engine.Runners
 
             bool disposeRunners = TestPackage.GetSetting(PackageSettings.DisposeRunners, false);
 
+            var workerPool = new ParallelTaskWorkerPool(GetLevelOfParallelism());
+            var tasks = new List<TestEngineRunnerTask>();
+
             foreach (ITestEngineRunner runner in _runners)
             {
-                results.Add(runner.Run(listener, filter));
-                if (disposeRunners) runner.Dispose();
+                var task = new TestEngineRunnerTask(runner, listener, filter, disposeRunners);
+                tasks.Add(task);
+                workerPool.Enqueue(task);
             }
+
+            workerPool.Start();
+            workerPool.WaitAll();
+
+            foreach (var task in tasks)
+            {
+                results.Add(task.Result());
+            }
+
             if (disposeRunners) _runners.Clear();
 
             TestEngineResult result = ResultHelper.Merge(results);
@@ -166,6 +179,11 @@ namespace NUnit.Engine.Runners
         protected virtual ITestEngineRunner CreateRunner(TestPackage package)
         {
             return TestRunnerFactory.MakeTestRunner(package);
+        }
+
+        protected virtual int GetLevelOfParallelism()
+        {
+            return 1;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
-// Permission is hereby granted, free of charge, to any person obtaining
+// Permission is hereby granted, free of charge, to any person obtainingn
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
 // without limitation the rights to use, copy, modify, merge, publish,
@@ -21,35 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Engine.Internal
+using System;
+
+namespace NUnit.Engine.Runners
 {
     /// <summary>
-    /// Represents the manner in which test assemblies are
-    /// distributed across processes.
+    /// ParallelTestProcessRunner runs tests using separate
+    /// processes for each assembly and runs them in parallel
     /// </summary>
-    public enum ProcessModel
+    public class ParallelTestProcessRunner : AggregatingTestRunner
     {
         /// <summary>
-        /// Use the default setting, depending on the runner
-        /// and the nature of the tests to be loaded.
+        /// Initializes a new instance of the <see cref="ParallelTestProcessRunner"/> class.
         /// </summary>
-        Default,
-        /// <summary>
-        /// Run tests directly in the NUnit process
-        /// </summary>
-        Single,
-        /// <summary>
-        /// Run tests in a single separate process
-        /// </summary>
-        Separate,
-        /// <summary>
-        /// Run tests in a separate process per assembly
-        /// </summary>
-        Multiple,
-        /// <summary>
-        /// Run tests in a separate process for each test assembly 
-        /// and run them all in parallel
-        /// </summary>
-        Parallel,
+        /// <param name="services">The services.</param>
+        /// <param name="package">The package.</param>
+        public ParallelTestProcessRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+
+        #region AggregatingTestRunner Overrides
+
+        protected override ITestEngineRunner CreateRunner(TestPackage package)
+        {
+            return new ProcessRunner(Services, package);
+        }
+
+        protected override int GetLevelOfParallelism()
+        {
+            return Math.Max(Environment.ProcessorCount, 2);
+        }
+
+        #endregion
     }
 }

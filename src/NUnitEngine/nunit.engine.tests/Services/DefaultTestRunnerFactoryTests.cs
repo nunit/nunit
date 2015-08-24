@@ -59,6 +59,8 @@ namespace NUnit.Engine.Services.Tests
         [TestCase("x.dll",             "Separate",  typeof(ProcessRunner))]
         [TestCase("EngineTests.nunit", "Multiple",  typeof(MultipleTestProcessRunner))]
         [TestCase("x.dll",             "Multiple",  typeof(MultipleTestProcessRunner))]
+        [TestCase("EngineTests.nunit", "Parallel",  typeof(ParallelTestProcessRunner))]
+        [TestCase("x.dll",             "Parallel",  typeof(ParallelTestProcessRunner))]
         // Two files
         [TestCase("x.nunit y.nunit",   null,        typeof(AggregatingTestRunner))]
         [TestCase("x.nunit y.dll",     null,        typeof(AggregatingTestRunner))]
@@ -72,6 +74,8 @@ namespace NUnit.Engine.Services.Tests
         [TestCase("x.nunit y.nunit",   "Multiple",  typeof(AggregatingTestRunner))]
         [TestCase("x.nunit y.dll",     "Multiple",  typeof(AggregatingTestRunner))]
         [TestCase("x.dll y.dll",       "Multiple",  typeof(MultipleTestProcessRunner))]
+        [TestCase("x.nunit y.dll",     "Parallel",  typeof(AggregatingTestRunner))]
+        [TestCase("x.dll y.dll",       "Parallel",  typeof(ParallelTestProcessRunner))]
         // Three files
         [TestCase("x.nunit y.dll z.nunit", null,       typeof(AggregatingTestRunner))]
         [TestCase("x.dll y.nunit z.dll",   null,       typeof(AggregatingTestRunner))]
@@ -84,6 +88,8 @@ namespace NUnit.Engine.Services.Tests
         [TestCase("x.nunit y.dll z.nunit", "Multiple", typeof(AggregatingTestRunner))]
         [TestCase("x.dll y.nunit z.dll",   "Multiple", typeof(AggregatingTestRunner))]
         [TestCase("x.dll y.dll z.dll",     "Multiple", typeof(MultipleTestProcessRunner))]
+        [TestCase("x.dll y.nunit z.dll",   "Parallel", typeof(AggregatingTestRunner))]
+        [TestCase("x.dll y.dll z.dll",     "Parallel", typeof(ParallelTestProcessRunner))]
         public void CorrectRunnerIsUsed(string files, string processModel, Type expectedType)
         {
             var package = new TestPackage(files.Split(new char[] { ' ' }));

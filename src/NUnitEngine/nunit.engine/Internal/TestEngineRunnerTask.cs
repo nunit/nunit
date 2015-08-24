@@ -1,7 +1,7 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
-// Permission is hereby granted, free of charge, to any person obtaining
+// Permission is hereby granted, free of charge, to any person obtainingn
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
 // without limitation the rights to use, copy, modify, merge, publish,
@@ -23,33 +23,34 @@
 
 namespace NUnit.Engine.Internal
 {
-    /// <summary>
-    /// Represents the manner in which test assemblies are
-    /// distributed across processes.
-    /// </summary>
-    public enum ProcessModel
+    public class TestEngineRunnerTask : ITask
     {
-        /// <summary>
-        /// Use the default setting, depending on the runner
-        /// and the nature of the tests to be loaded.
-        /// </summary>
-        Default,
-        /// <summary>
-        /// Run tests directly in the NUnit process
-        /// </summary>
-        Single,
-        /// <summary>
-        /// Run tests in a single separate process
-        /// </summary>
-        Separate,
-        /// <summary>
-        /// Run tests in a separate process per assembly
-        /// </summary>
-        Multiple,
-        /// <summary>
-        /// Run tests in a separate process for each test assembly 
-        /// and run them all in parallel
-        /// </summary>
-        Parallel,
+        private readonly ITestEngineRunner _runner;
+        private readonly ITestEventListener _listener;
+        private readonly TestFilter _filter;
+        private volatile TestEngineResult _testResult;
+        private readonly bool _disposeRunner;
+
+        public TestEngineRunnerTask(ITestEngineRunner runner, ITestEventListener listener, TestFilter filter, bool disposeRunner)
+        {
+            _disposeRunner = disposeRunner;
+            _filter = filter;
+            _listener = listener;
+            _runner = runner;
+        }
+
+        public void Execute()
+        {
+            _testResult = _runner.Run(_listener, _filter);
+            if (_disposeRunner)
+            {
+                _runner.Dispose();
+            }
+        }
+
+        public TestEngineResult Result()
+        {
+            return _testResult;
+        }
     }
 }

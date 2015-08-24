@@ -80,6 +80,7 @@
     <Compile Include="Drivers\NUnit3DriverFactory.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriver.cs" />
     <Compile Include="IDriverService.cs" />
+    <Compile Include="Internal\ITask.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="Agents\RemoteTestAgent.cs" />
@@ -106,10 +107,13 @@
     <Compile Include="Runners\LocalTestRunner.cs" />
     <Compile Include="Runners\MasterTestRunner.cs" />
     <Compile Include="Runners\MultipleTestDomainRunner.cs" />
+    <Compile Include="Internal\ParallelTaskWorkerPool.cs" />
+    <Compile Include="Runners\ParallelTestProcessRunner.cs" />
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
     <Compile Include="IProjectService.cs" />
+    <Compile Include="Internal\TestEngineRunnerTask.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
     <Compile Include="Services\ResultWriters\XmlTransformResultWriter.cs" />
