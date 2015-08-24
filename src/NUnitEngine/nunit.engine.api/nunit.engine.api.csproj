@@ -55,6 +55,8 @@
     <Compile Include="..\EngineApiVersion.cs">
       <Link>EngineApiVersion.cs</Link>
     </Compile>
+    <Compile Include="Extensibility\ExtensionAttribute.cs" />
+    <Compile Include="Extensibility\ExtensionPointAttribute.cs" />
     <Compile Include="Extensibility\IDriverFactory.cs" />
     <Compile Include="Extensibility\IProject.cs" />
     <Compile Include="Extensibility\IProjectLoader.cs" />

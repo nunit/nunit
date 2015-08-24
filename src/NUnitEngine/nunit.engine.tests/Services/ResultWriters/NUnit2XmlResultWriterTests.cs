@@ -32,37 +32,41 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
 {
     public class NUnit2XmlResultWriterTests : XmlOutputTest
     {
-        private XmlDocument doc;
-        private XmlNode topNode;
-        private XmlNode envNode;
-        private XmlNode cultureNode;
-        private XmlNode fixtureNode;
+        private XmlDocument _doc;
+        private XmlNode _topNode;
+        private XmlNode _envNode;
+        private XmlNode _cultureNode;
+        private XmlNode _fixtureNode;
 
         [OneTimeSetUp]
         public void ConvertEngineResultToXml()
         {
+            ServiceContext services = new ServiceContext();
+            services.Add(new ExtensionService());
+            ResultService resultService = new ResultService();
+            services.Add(resultService);
+            services.ServiceManager.StartServices();
+
             StringBuilder sb = new StringBuilder();
-            ResultService service = new ResultService();
-            service.StartService();
             using (StringWriter writer = new StringWriter(sb))
             {
-                service.GetResultWriter("nunit2", null).WriteResultFile(EngineResult.Xml, writer);
+                resultService.GetResultWriter("nunit2", null).WriteResultFile(EngineResult.Xml, writer);
             }
 
-            doc = new XmlDocument();
-            doc.LoadXml(sb.ToString());
+            _doc = new XmlDocument();
+            _doc.LoadXml(sb.ToString());
 
-            topNode = doc.SelectSingleNode("/test-results");
-            Assert.NotNull(topNode, "Test-results element not found");
+            _topNode = _doc.SelectSingleNode("/test-results");
+            Assert.NotNull(_topNode, "Test-results element not found");
 
-            envNode = topNode.SelectSingleNode("environment");
-            Assert.NotNull(envNode, "Environment element not found");
+            _envNode = _topNode.SelectSingleNode("environment");
+            Assert.NotNull(_envNode, "Environment element not found");
 
-            cultureNode = topNode.SelectSingleNode("culture-info");
-            Assert.NotNull(topNode, "CultureInfo element not found");
+            _cultureNode = _topNode.SelectSingleNode("culture-info");
+            Assert.NotNull(_topNode, "CultureInfo element not found");
 
-            fixtureNode = topNode.SelectSingleNode("descendant::test-suite[@name='MockTestFixture']");
-            Assert.NotNull(fixtureNode, "MockTestFixture element not found");
+            _fixtureNode = _topNode.SelectSingleNode("descendant::test-suite[@name='MockTestFixture']");
+            Assert.NotNull(_fixtureNode, "MockTestFixture element not found");
         }
 
         #region Document Level Tests
@@ -70,36 +74,36 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [Test]
         public void Document_HasThreeChildren()
         {
-            Assert.That(doc.ChildNodes.Count, Is.EqualTo(3));
+            Assert.That(_doc.ChildNodes.Count, Is.EqualTo(3));
         }
 
         [Test]
         public void Document_FirstChildIsXmlDeclaration()
         {
-            Assume.That(doc.FirstChild != null);
-            Assert.That(doc.FirstChild.NodeType, Is.EqualTo(XmlNodeType.XmlDeclaration));
-            Assert.That(doc.FirstChild.Name, Is.EqualTo("xml"));
+            Assume.That(_doc.FirstChild != null);
+            Assert.That(_doc.FirstChild.NodeType, Is.EqualTo(XmlNodeType.XmlDeclaration));
+            Assert.That(_doc.FirstChild.Name, Is.EqualTo("xml"));
         }
 
         [Test]
         public void Document_SecondChildIsComment()
         {
-            Assume.That(doc.ChildNodes.Count >= 2);
-            Assert.That(doc.ChildNodes[1].Name, Is.EqualTo("#comment"));
+            Assume.That(_doc.ChildNodes.Count >= 2);
+            Assert.That(_doc.ChildNodes[1].Name, Is.EqualTo("#comment"));
         }
 
         [Test]
         public void Document_ThirdChildIsTestResults()
         {
-            Assume.That(doc.ChildNodes.Count >= 3);
-            Assert.That(doc.ChildNodes[2].Name, Is.EqualTo("test-results"));
+            Assume.That(_doc.ChildNodes.Count >= 3);
+            Assert.That(_doc.ChildNodes[2].Name, Is.EqualTo("test-results"));
         }
 
         [Test]
         public void Document_HasTestResults()
         {
-            Assert.That(topNode, Is.Not.Null);
-            Assert.That(topNode.Name, Is.EqualTo("test-results"));
+            Assert.That(_topNode, Is.Not.Null);
+            Assert.That(_topNode.Name, Is.EqualTo("test-results"));
         }
 
         #endregion
@@ -109,7 +113,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [Test]
         public void TestResults_AssemblyPathIsCorrect()
         {
-            Assert.That(RequiredAttribute(topNode, "name"), Is.EqualTo(AssemblyPath));
+            Assert.That(RequiredAttribute(_topNode, "name"), Is.EqualTo(AssemblyPath));
         }
 
         [TestCase("total", MockAssembly.Tests)]
@@ -122,13 +126,13 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [TestCase("invalid", MockAssembly.NotRunnable)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {
-            Assert.That(RequiredAttribute(topNode, name), Is.EqualTo(count.ToString()));
+            Assert.That(RequiredAttribute(_topNode, name), Is.EqualTo(count.ToString()));
         }
 
         [Test]
         public void TestResults_HasValidDateAttribute()
         {
-            string dateString = RequiredAttribute(topNode, "date");
+            string dateString = RequiredAttribute(_topNode, "date");
 #if !NETCF
             DateTime date;
             Assert.That(DateTime.TryParse(dateString, out date), "Invalid date attribute: {0}", dateString);
@@ -138,7 +142,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [Test]
         public void TestResults_HasValidTimeAttribute()
         {
-            string timeString = RequiredAttribute(topNode, "time");
+            string timeString = RequiredAttribute(_topNode, "time");
 #if !NETCF
             DateTime time;
             Assert.That(DateTime.TryParse(timeString, out time), "Invalid time attribute: {0}", timeString);
@@ -152,7 +156,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [Test]
         public void Environment_HasEnvironmentElement()
         {
-            Assert.That(envNode, Is.Not.Null, "Missing environment element");
+            Assert.That(_envNode, Is.Not.Null, "Missing environment element");
         }
 
         [TestCase("nunit-version")]
@@ -167,7 +171,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
 #endif
         public void Environment_HasRequiredAttribute(string name)
         {
-            RequiredAttribute(envNode, name);
+            RequiredAttribute(_envNode, name);
         }
 
         #endregion
@@ -177,14 +181,14 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [Test]
         public void CultureInfo_HasCultureInfoElement()
         {
-            Assert.That(cultureNode, Is.Not.Null, "Missing culture-info element");
+            Assert.That(_cultureNode, Is.Not.Null, "Missing culture-info element");
         }
 
         [TestCase("current-culture")]
         [TestCase("current-uiculture")]
         public void CultureInfo_HasRequiredAttribute(string name)
         {
-            string cultureName = RequiredAttribute(cultureNode, name);
+            string cultureName = RequiredAttribute(_cultureNode, name);
             System.Globalization.CultureInfo culture = null;
 
             try
@@ -212,7 +216,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [TestCase("asserts", "0")]
         public void TestFixture_ExpectedAttribute(string name, string value)
         {
-            Assert.That(RequiredAttribute(fixtureNode, name), Is.EqualTo(value));
+            Assert.That(RequiredAttribute(_fixtureNode, name), Is.EqualTo(value));
         }
 
         [Test]
@@ -223,7 +227,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
 #else
             double time;
             // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
-            Assert.That(double.TryParse(RequiredAttribute(fixtureNode, "time"),System.Globalization.NumberStyles.Float,null, out time), "Invalid value for time");
+            Assert.That(double.TryParse(RequiredAttribute(_fixtureNode, "time"),System.Globalization.NumberStyles.Float,null, out time), "Invalid value for time");
 #endif
         }
 

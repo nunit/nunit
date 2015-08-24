@@ -28,6 +28,7 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {
+    [Extension]
     public class NUnit2DriverFactory : IDriverFactory
     {
         private const string NUNIT_FRAMEWORK = "nunit.framework";

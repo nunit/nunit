@@ -79,6 +79,11 @@
     <Compile Include="Drivers\NotRunnableFrameworkDriver.cs" />
     <Compile Include="Drivers\NUnit3DriverFactory.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriver.cs" />
+    <Compile Include="EngineExtensionPoints.cs" />
+    <Compile Include="Extensibility\ExtensionNode.cs" />
+    <Compile Include="Extensibility\ExtensionPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IDriverService.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
@@ -110,6 +115,7 @@
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
     <Compile Include="IProjectService.cs" />
+    <Compile Include="Services\ExtensionService.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
     <Compile Include="Services\ResultWriters\XmlTransformResultWriter.cs" />
@@ -133,10 +139,6 @@
     <Compile Include="TestEngineResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\mono-addins\Mono.Addins.csproj">
-      <Project>{91DD5A2D-9FE3-4C3C-9253-876141874DAD}</Project>
-      <Name>Mono.Addins</Name>
-    </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>

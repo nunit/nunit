@@ -104,6 +104,7 @@ namespace NUnit.Agent
             // Custom Service Initialization
             //log.Info("Adding Services");
             engine.Services.Add(settingsService);
+            engine.Services.Add(new ExtensionService());
             engine.Services.Add(new ProjectService());
             engine.Services.Add(new DomainManager());
             engine.Services.Add(new InProcessTestRunnerFactory());

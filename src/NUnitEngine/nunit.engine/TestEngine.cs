@@ -28,10 +28,6 @@ using System.Reflection;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
-#if NUNIT_ENGINE
-using Mono.Addins;
-#endif
-
 namespace NUnit.Engine
 {
     /// <summary>
@@ -88,16 +84,6 @@ namespace NUnit.Engine
         /// </summary>
         public void Initialize()
         {
-#if NUNIT_ENGINE
-            if (!AddinManager.IsInitialized)
-            {
-                // Pass in the current nunit.engine assembly because mono.addins uses the executing assembly by
-                // default and that might be in a an entirely different directory than the runner that is using it.
-                AddinManager.Initialize(Assembly.GetExecutingAssembly(), NUnitConfiguration.ApplicationDirectory);
-                AddinManager.Registry.Update(null);
-            }
-#endif
-
             SettingsService settingsService = new SettingsService(true);
 
             if(InternalTraceLevel == InternalTraceLevel.Default)
@@ -111,6 +97,9 @@ namespace NUnit.Engine
 
             Services.Add(settingsService);
             Services.Add(new DomainManager());
+#if NUNIT_ENGINE
+            Services.Add(new ExtensionService());
+#endif
             Services.Add(new DriverService());
 
 #if NUNIT_ENGINE

@@ -38,6 +38,7 @@ namespace NUnit.Engine.Services.Tests
         public void CreateServiceContext()
         {
             _services = new ServiceContext();
+            _services.Add(new ExtensionService());
             _services.Add(new ProjectService());
             _factory = new DefaultTestRunnerFactory();
             _services.Add(_factory);

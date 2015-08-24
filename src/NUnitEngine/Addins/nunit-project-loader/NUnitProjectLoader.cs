@@ -28,6 +28,7 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.ProjectLoaders
 {
+    [Extension]
     public class NUnitProjectLoader : IProjectLoader
     {
         #region IProjectLoader Members

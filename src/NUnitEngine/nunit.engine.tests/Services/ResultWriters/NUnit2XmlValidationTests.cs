@@ -65,8 +65,11 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         {
             StringBuilder output = new StringBuilder();
 
+            ServiceContext services = new ServiceContext();
+            services.Add(new ExtensionService());
             ResultService service = new ResultService();
-            service.StartService();
+            services.Add(service);
+            services.ServiceManager.StartServices();
             service.GetResultWriter("nunit2", null).WriteResultFile(this.EngineResult.Xml, new StringWriter(output));
 
             if (!validator.Validate(new StringReader(output.ToString())))
