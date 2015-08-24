@@ -32,6 +32,11 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
+    /// <summary>
+    /// The ExtensionService discovers ExtensionPoints and Extensions and
+    /// maintains them in a database. It can return extension nodes or 
+    /// actual extension objects on request.
+    /// </summary>
     public class ExtensionService : Service
     {
         private List<ExtensionPoint> _extensionPoints = new List<ExtensionPoint>();
@@ -53,11 +58,19 @@ namespace NUnit.Engine.Services
 
         #endregion
 
+        #region Public Methods - Extension Points
+
+        /// <summary>
+        /// Get an ExtensionPoint based on it's unique identifying path.
+        /// </summary>
         public ExtensionPoint GetExtensionPoint(string path)
         {
             return _pathIndex[path];
         }
 
+        /// <summary>
+        /// Get an ExtensionPoint based on the required Type for extensions.
+        /// </summary>
         public ExtensionPoint GetExtensionPoint(Type type)
         {
             foreach (var ep in _extensionPoints)
@@ -67,6 +80,9 @@ namespace NUnit.Engine.Services
             return null;
         }
 
+        /// <summary>
+        /// Get an ExtensionPoint based on a Cecil TypeReference.
+        /// </summary>
         public ExtensionPoint GetExtensionPoint(TypeReference type)
         {
             foreach (var ep in _extensionPoints)
@@ -76,34 +92,62 @@ namespace NUnit.Engine.Services
             return null;
         }
 
-        public T[] GetExtensions<T>()
+        #endregion
+
+        #region Public Methods - Extensions
+
+        public IEnumerable<ExtensionNode> GetExtensionNodes(string path)
         {
-            var extensions = new List<T>();
-
-            var ep = GetExtensionPoint(typeof(T));
-            foreach (var node in ep.Extensions)
-                extensions.Add((T)node.ExtensionObject);
-
-            return extensions.ToArray();
+            var ep = GetExtensionPoint(path);
+            if (ep != null)
+                foreach (var node in ep.Extensions)
+                    yield return node;
         }
+
+        public IEnumerable<ExtensionNode> GetExtensionNodes<T>()
+        {
+            var ep = GetExtensionPoint(typeof(T));
+            if (ep != null)
+                foreach (var node in ep.Extensions)
+                    yield return node;
+        }
+
+        public IEnumerable<T> GetExtensions<T>()
+        {
+            foreach (var node in GetExtensionNodes<T>())
+                yield return (T)node.ExtensionObject;
+        }
+
+        #endregion
 
         #region Service Overrides
 
         public override void StartService()
         {
-            var thisAssembly = Assembly.GetExecutingAssembly();
-            var startDir = new DirectoryInfo(AssemblyHelper.GetDirectoryName(thisAssembly));
+            try
+            {
+                var thisAssembly = Assembly.GetExecutingAssembly();
+                var startDir = new DirectoryInfo(AssemblyHelper.GetDirectoryName(thisAssembly));
 
-            FindExtensionPoints(thisAssembly);
-            FindExtensionsInDirectory(startDir);
+                FindExtensionPoints(thisAssembly);
+                FindExtensionsInDirectory(startDir);
 
-            base.StartService();
+                Status = ServiceStatus.Started;
+            }
+            catch
+            {
+                Status = ServiceStatus.Error;
+                throw;
+            }
         }
 
         #endregion
 
-        #region Helper Methods
+        #region Helper Methods - Extension Points
 
+        /// <summary>
+        /// Find the extension points in a loded assembly
+        /// </summary>
         private void FindExtensionPoints(Assembly assembly)
         {
             foreach (ExtensionPointAttribute attr in assembly.GetCustomAttributes(typeof(ExtensionPointAttribute), false))
@@ -126,6 +170,39 @@ namespace NUnit.Engine.Services
             }
         }
 
+        /// <summary>
+        /// Deduce the extension point based on the Type of an extension. 
+        /// Returns null if no extension point can be found that would
+        /// be satisfied by the provided Type.
+        /// </summary>
+        private ExtensionPoint DeduceExtensionPointFromType(TypeReference type)
+        {
+            var ep = GetExtensionPoint(type);
+            if (ep != null)
+                return ep;
+
+            foreach (var iface in type.Resolve().Interfaces)
+            {
+                ep = DeduceExtensionPointFromType(iface);
+                if (ep != null)
+                    return ep;
+            }
+
+            var baseType = type.Resolve().BaseType;
+            return baseType != null && baseType.FullName != "System.Object"
+                ? DeduceExtensionPointFromType(baseType)
+                : null;
+        }
+
+        #endregion
+
+        #region Helper Methods - Extensions
+
+        /// <summary>
+        /// Scans a directory for addins. Note that assemblies in the directory
+        /// are only scanned if no file of type .addins is found. If such a file
+        /// is found, then those assemblies it references are scanned.
+        /// </summary>
         private void FindExtensionsInDirectory(DirectoryInfo startDir)
         {
             var addinsFiles = startDir.GetFiles("*.addins");
@@ -137,9 +214,14 @@ namespace NUnit.Engine.Services
                     FindExtensionsInAssembly(file.FullName);
         }
 
+        /// <summary>
+        /// Process a .addins type file. The file contains one entry per
+        /// line. Each entry may be a directory to scan, an assembly
+        /// path or a wildcard pattern used to find assemblies. Blank
+        /// lines and comments started by # are ignored.
+        /// </summary>
         private void ProcessAddinsFile(DirectoryInfo baseDir, string fileName)
         {
-#if true
             using (var rdr = new StreamReader(fileName))
             {
                 while (!rdr.EndOfStream)
@@ -166,27 +248,13 @@ namespace NUnit.Engine.Services
                     }
                 }
             }
-#else
-            var doc = new XmlDocument();
-
-            using (var rdr = new StreamReader(fileName))
-            {
-                doc.Load(rdr);
-                foreach (XmlNode dirNode in doc.SelectNodes("Addins/Directory"))
-                {
-                    var path = Path.Combine(baseDir.FullName, dirNode.InnerText);
-                    FindExtensionsInDirectory(new DirectoryInfo(path));
-                }
-
-                foreach (XmlNode addinNode in doc.SelectNodes("Addins/Addin"))
-                {
-                    foreach (var addin in baseDir.GetFiles(addinNode.InnerText))
-                        FindExtensionsInAssembly(addin.FullName);
-                }
-            }
-#endif
         }
 
+        /// <summary>
+        /// Scan a single assembly for extensions marked by ExtensionAttribute.
+        /// For each extension, create an ExtensionNode and link it to the
+        /// correct ExtensionPoint.
+        /// </summary>
         private void FindExtensionsInAssembly(string assemblyName)
         {
             var module = AssemblyDefinition.ReadAssembly(assemblyName).MainModule;
@@ -237,27 +305,8 @@ namespace NUnit.Engine.Services
                             }
                         }
 
-                        ep.Extensions.Add(node);
+                        ep.Install(node);
                     }
-        }
-
-        private ExtensionPoint DeduceExtensionPointFromType(TypeReference type)
-        {
-            var ep = GetExtensionPoint(type);
-            if (ep != null)
-                return ep;
-
-            foreach (var iface in type.Resolve().Interfaces)
-            {
-                ep = DeduceExtensionPointFromType(iface);
-                if (ep != null)
-                    return ep;
-            }
-
-            var baseType = type.Resolve().BaseType;
-            return baseType != null && baseType.FullName != "System.Object"
-                ? DeduceExtensionPointFromType(baseType)
-                : null;
         }
 
         #endregion

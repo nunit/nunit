@@ -64,26 +64,35 @@ namespace NUnit.Engine.Extensibility
         /// </summary>
         public List<ExtensionNode> Extensions { get; private set; }
 
-        ///// <summary>
-        ///// Install an extension at this extension point. If the
-        ///// extension object does not meet the requirements for
-        ///// this extension point, an exception is thrown.
-        ///// </summary>
-        ///// <param name="extension">The extension to install</param>
-        //public void Install(object extension)
-        //{
-        //    Extensions.Add(extension);
-        //}
+        /// <summary>
+        /// Install an extension at this extension point. If the
+        /// extension node does not meet the requirements for
+        /// this extension point, an exception is thrown.
+        /// </summary>
+        public void Install(ExtensionNode node)
+        {
+            if (node.Path != Path)
+            {
+                string msg = string.Format("Non-matching extension path. Expected {0} but got {1}.", Path, node.Path);
+                throw new NUnitEngineException(msg);
+            }
 
-        ///// <summary>
-        ///// Removes an extension from this extension point. If the
-        ///// extension object is not present, the method returns
-        ///// without error.
-        ///// </summary>
-        ///// <param name="extension"></param>
-        //public void Remove(object extension)
-        //{
-        //    Extensions.Remove( extension );
-        //}
+            // TODO: Verify that the type is correct using Cecil or Reflection 
+            // depending on whether the assembly is pre-loaded. For now, it's not 
+            // simple to verify the type without loading the extension, so we
+            // let it throw at the time the object is accessed.
+
+            Extensions.Add(node);
+        }
+
+        /// <summary>
+        /// Removes an extension from this extension point. If the
+        /// extension object is not present, the method returns
+        /// without error.
+        /// </summary>
+        public void Remove(ExtensionNode extension)
+        {
+            Extensions.Remove(extension);
+        }
     }
 }

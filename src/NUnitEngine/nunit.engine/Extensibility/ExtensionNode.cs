@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Engine.Extensibility
 {
@@ -63,7 +64,8 @@ namespace NUnit.Engine.Extensibility
         }
 
         /// <summary>
-        /// Gets an object of the specified extension type.
+        /// Gets an object of the specified extension type, loading the Assembly
+        /// and creating the object as needed.
         /// </summary>
         public object ExtensionObject
         {
