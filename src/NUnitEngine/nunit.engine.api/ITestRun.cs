@@ -49,5 +49,13 @@ namespace NUnit.Engine
         /// provided on the assumption that tests do not impact production data.
         /// </remarks>
         void Stop(bool force);
+
+        /// <summary>
+        /// Blocks the current thread until the current test run completes
+        /// or the timeout is reached
+        /// </summary>
+        /// <param name="timeout">A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely. </param>
+        /// <returns>True if the run completed</returns>
+        bool Wait(TimeSpan timeout);
     }
 }

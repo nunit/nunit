@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml;
 
 namespace NUnit.Engine
@@ -34,21 +35,17 @@ namespace NUnit.Engine
     /// </summary>
     public class TestRun : ITestRun
     {
-        private BackgroundWorker _worker;
-        private ITestEngineRunner _runner;
-        private TestEngineResult _result;
+        private volatile TestEngineResult _result;
+        private readonly ManualResetEvent _waitHandle;
+        private readonly ITestEngineRunner _runner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestRun"/> class.
         /// </summary>
-        /// <param name="runner">The <see cref="ITestEngineRunner"/> to use for this run.</param>
         public TestRun(ITestEngineRunner runner)
         {
             _runner = runner;
-
-            _worker = new BackgroundWorker();
-            _worker.WorkerSupportsCancellation = true;
-            _worker.WorkerReportsProgress = true; // ?
+            _waitHandle = new ManualResetEvent(initialState: false);
         }
 
         /// <summary>
@@ -65,27 +62,44 @@ namespace NUnit.Engine
                 return _result.Xml;
             }
         }
-
-        /// <summary>
-        /// Start asynchronous execution of a test.
-        /// </summary>
-        /// <param name="listener">The ITestEventListener to use for this run</param>
-        /// <param name="filter">The TestFilter to use for this run</param>
-        public void Start(ITestEventListener listener, TestFilter filter)
+        
+        public void SetResult(TestEngineResult result)
         {
-            _worker.DoWork += (s, ea) => 
-                _result = _runner.Run(listener, filter);
-
-            _worker.RunWorkerAsync();
+            Guard.ArgumentNotNull(result, "result");
+            Guard.OperationValid(_result == null, "Cannot set the Result of an TestRun more than once");
+            
+            _result = result;
+            _waitHandle.Set();
         }
 
         /// <summary>
-        /// Stop the current test run. 
+        /// Stop the current test run, specifying whether to force cancellation. 
+        /// If no test is running, the method returns without error.
         /// </summary>
         /// <param name="force">If true, force the stop by cancelling all threads.</param>
+        /// <remarks>
+        /// Note that cancelling the threads is intrinsically unsafe and is only
+        /// provided on the assumption that tests do not impact production data.
+        /// </remarks>
         public void Stop(bool force)
         {
-            _worker.CancelAsync();
+            _runner.StopRun(force);
         }
+
+        /// <summary>
+        /// Blocks the current thread until the current test run completes
+        /// or the timeout is reached
+        /// </summary>
+        /// <param name="timeout">A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely. </param>
+        /// <returns>True if the run completed</returns>
+        public bool Wait(TimeSpan timeout)
+        {
+            return _waitHandle.WaitOne(timeout);
+        }
+
+        /// <summary>
+        /// True if the test run has completed
+        /// </summary>
+        public bool IsComplete { get { return _result != null; } }
     }
 }
