@@ -131,6 +131,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Does.Contain("100ms"));
         }
+#if !NETCF
         [Test]
         public void TestTimeOutTestCaseWithOutElapsed()
         {
@@ -142,6 +143,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.Children[1].ResultState, Is.EqualTo(ResultState.Failure));
         }
+#endif
     }
 }
 #endif

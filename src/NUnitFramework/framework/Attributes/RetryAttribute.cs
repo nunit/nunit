@@ -69,6 +69,9 @@ namespace NUnit.Framework
 
         #region Nested RetryCommand Class
 
+        /// <summary>
+        /// The test command for the RetryAttribute
+        /// </summary>
         public class RetryCommand : DelegatingTestCommand
         {
             private int _retryCount;

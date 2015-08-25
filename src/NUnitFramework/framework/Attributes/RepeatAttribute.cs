@@ -69,6 +69,9 @@ namespace NUnit.Framework
 
         #region Nested RepeatedTestCommand Class
 
+        /// <summary>
+        /// The test command for the RepeatAttribute
+        /// </summary>
         public class RepeatedTestCommand : DelegatingTestCommand
         {
             private int repeatCount;

@@ -7,8 +7,8 @@
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     <PackageVersion>3.0.0</PackageVersion>
-    <PackageModifier>-beta-3</PackageModifier>
-    <DisplayVersion>3.0 Beta 3</DisplayVersion>
+    <PackageModifier>-beta-4</PackageModifier>
+    <DisplayVersion>3.0 Beta 4</DisplayVersion>
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
   </PropertyGroup>
@@ -499,7 +499,7 @@
     <Message Text="******************************************************************" />
 
     <Zip Files="@(CFBinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
-         ZipFileName="$(ProjectPackageDir)\$PackageNameCF$ConfigSuffix).zip" />
+         ZipFileName="$(ProjectPackageDir)\$(PackageNameCF)$(ConfigSuffix).zip" />
 
   </Target>
 
@@ -613,7 +613,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\**\*/*" />
+    <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\*.*" />
   </ItemGroup>
 
   <ItemGroup Label="Supported Frameworks">
