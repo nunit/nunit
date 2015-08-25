@@ -1,4 +1,42 @@
-﻿NUnit 3.0.0 Beta 3 - July 15, 2015
+﻿NUnit 3.0.0 Beta 4 - August 25, 2015
+
+Framework
+
+ * A new RetryAttribute allows retrying of failing tests.
+ * New SupersetConstraint and Is.SupersetOf syntax complement SubsetConstraint.
+ * Tests skipped due to ExplicitAttribute are now reported as skipped.
+
+Engine
+
+ * We now use Cecil to examine assemblies prior to loading them.
+ * Extensions are no longer based on Mono.Addins but use our own extension framework.
+
+Issues Resolved
+
+ * 125 3rd-party dependencies should be downloaded on demand
+ * 283 What should we do when a user extension does something bad?
+ * 585 RetryAttribute
+ * 642 Restructure MSBuild script
+ * 649 Change how we zip packages
+ * 654 ReflectionOnlyLoad and ReflectionOnlyLoadFrom
+ * 664 Invalid "id" attribute in the report for case "test started"
+ * 685 In the some cases when tests cannot be started NUnit returns exit code "0"
+ * 728 Missing Assert.That overload
+ * 741 Explicit Tests get run when using --exclude
+ * 746 Framework should send events for all tests
+ * 747 NUnit should apply attributes even if test is non-runnable
+ * 749 Review Use of Mono.Addins for Engine Extensibility
+ * 750 Include Explicit Tests in Test Results
+ * 753 Feature request: Is.SupersetOf() assertion constraint
+ * 755 TimeOut attribute doesn't work with TestCaseSource Attribute
+ * 757 Implement some way to wait for execution to complete in ITestEngineRunner
+ * 760 Packaging targets do not run on Linux
+ * 766 Added overloads for True()/False() accepting booleans
+ * 778 Build and build.cmd scripts invoke nuget.exe improperly
+ * 780 Teamcity fix
+ * 782 No sources for 2.6.4
+
+NUnit 3.0.0 Beta 3 - July 15, 2015
 
 Framework
 
