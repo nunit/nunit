@@ -94,7 +94,7 @@ namespace NUnit.Engine.Services
  
                 Status = ServiceStatus.Started;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 Status = ServiceStatus.Error;
                 throw;

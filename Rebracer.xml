@@ -11,9 +11,14 @@
       <ToolsOptionsSubCategory name="CSharp-Specific">
         <PropertyValue name="AutoComment">1</PropertyValue>
         <PropertyValue name="BringUpOnIdentifier">1</PropertyValue>
+        <PropertyValue name="ClosedFileDiagnostics">1</PropertyValue>
         <PropertyValue name="CodeDefinitionWindow_DocumentationComment_IndentBase">1</PropertyValue>
         <PropertyValue name="CodeDefinitionWindow_DocumentationComment_IndentOffset">2</PropertyValue>
         <PropertyValue name="CodeDefinitionWindow_DocumentationComment_WrapLength">80</PropertyValue>
+        <PropertyValue name="DisplayLineSeparators">0</PropertyValue>
+        <PropertyValue name="EnableHighlightRelatedKeywords">1</PropertyValue>
+        <PropertyValue name="ExtractMethod_AllowMovingDeclaration">0</PropertyValue>
+        <PropertyValue name="ExtractMethod_DoNotPutOutOrRefOnStruct">1</PropertyValue>
         <PropertyValue name="Formatting_TriggerOnBlockCompletion">1</PropertyValue>
         <PropertyValue name="Formatting_TriggerOnPaste">1</PropertyValue>
         <PropertyValue name="Formatting_TriggerOnStatementCompletion">1</PropertyValue>
@@ -40,6 +45,7 @@
         <PropertyValue name="NewLines_ObjectInitializer_EachMember">1</PropertyValue>
         <PropertyValue name="NewLines_QueryExpression_EachClause">1</PropertyValue>
         <PropertyValue name="RemoveUnusedUsings">1</PropertyValue>
+        <PropertyValue name="RenameTrackingPreview">1</PropertyValue>
         <PropertyValue name="SortUsings">1</PropertyValue>
         <PropertyValue name="SortUsings_PlaceSystemFirst">1</PropertyValue>
         <PropertyValue name="Space_AfterBasesColon">1</PropertyValue>
@@ -68,6 +74,10 @@
         <PropertyValue name="Space_WithinMethodDeclarationParentheses">0</PropertyValue>
         <PropertyValue name="Space_WithinOtherParentheses">0</PropertyValue>
         <PropertyValue name="Space_WithinSquares">0</PropertyValue>
+        <PropertyValue name="Style_PreferIntrinsicPredefinedTypeKeywordInDeclaration">1</PropertyValue>
+        <PropertyValue name="Style_PreferIntrinsicPredefinedTypeKeywordInMemberAccess">1</PropertyValue>
+        <PropertyValue name="Style_QualifyMemberAccessWithThisOrMe">0</PropertyValue>
+        <PropertyValue name="Style_UseVarWhenDeclaringLocals">1</PropertyValue>
         <PropertyValue name="WarnOnBuildErrors">1</PropertyValue>
         <PropertyValue name="WarnWhenMembersCauseCompilerGeneratedReferences">1</PropertyValue>
         <PropertyValue name="Wrapping_IgnoreSpacesAroundBinaryOperators">0</PropertyValue>
