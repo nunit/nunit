@@ -36,9 +36,9 @@
                 <File Id="nunit_agent_x86.exe.config"
                       Source="$(var.Binaries)\nunit-agent-x86.exe.config" />
             </Component>
-            <Component Id="MONO.ADDINS" Location="local" Guid="C3E15752-7785-4C94-9E96-F642175CEFFA">
-                <File Id="Mono.Addins.dll"
-                      Source="$(var.Binaries)\Mono.Addins.dll" />
+            <Component Id="MONO.CECIL" Location="local" Guid="D4A15752-6685-3494-9346-F623175CEFFA">
+                <File Id="Mono.Cecil.dll"
+                      Source="$(var.Binaries)\Mono.Cecil.dll" />
             </Component>
             <Component Id="NUNIT.ENGINE.REGISTRY">
                 <RegistryKey Root="HKMU" Key="Software\NUnit.org\Engine" >
