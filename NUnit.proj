@@ -499,7 +499,7 @@
     <Message Text="******************************************************************" />
 
     <Zip Files="@(CFBinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
-         ZipFileName="$(ProjectPackageDir)\$PackageNameCF$ConfigSuffix).zip" />
+         ZipFileName="$(ProjectPackageDir)\$(PackageNameCF)$(ConfigSuffix).zip" />
 
   </Target>
 
@@ -613,7 +613,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\**\*/*" />
+    <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\*.*" />
   </ItemGroup>
 
   <ItemGroup Label="Supported Frameworks">
