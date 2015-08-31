@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Attributes
 {
@@ -81,7 +82,7 @@ namespace NUnit.Framework.Attributes
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             ParameterInfo param = method.GetParameters()[0];
             ValuesAttribute attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
-            Assert.That(attr.GetData(param), Is.EqualTo(expected));
+            Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
         }
 
         #endregion

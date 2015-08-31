@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal.Builders
         /// Adds the specified fixtures to the tree.
         /// </summary>
         /// <param name="fixtures">The fixtures to be added.</param>
-        public void Add( IList fixtures )
+        public void Add( IList<Test> fixtures )
         {
             foreach (TestSuite fixture in fixtures)
                 //if (fixture is SetUpFixture)
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Internal.Builders
         private static string GetNamespaceForFixture(TestSuite fixture)
         {
             string ns = fixture.FullName;
-            int index = ns.IndexOf("[");
+            int index = ns.IndexOfAny(new char[] { '[', '(' });
             if (index >= 0) ns = ns.Substring(0, index);
             index = ns.LastIndexOf('.');
             ns = index > 0 ? ns.Substring(0, index) : string.Empty;

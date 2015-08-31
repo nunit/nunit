@@ -254,7 +254,7 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private TestCaseParameters GetParametersForTestCase(MethodInfo method)
+        private TestCaseParameters GetParametersForTestCase(IMethodInfo method)
         {
             TestCaseParameters parms;
 
@@ -267,7 +267,7 @@ namespace NUnit.Framework
                 method = tmethod;
 #endif
 
-                ParameterInfo[] parameters = method.GetParameters();
+                IParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
 
@@ -276,11 +276,11 @@ namespace NUnit.Framework
                 // Special handling for params arguments
                 if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
                 {
-                    ParameterInfo lastParameter = parameters[argsNeeded - 1];
+                    IParameterInfo lastParameter = parameters[argsNeeded - 1];
                     Type lastParameterType = lastParameter.ParameterType;
                     Type elementType = lastParameterType.GetElementType();
 
-                    if (lastParameterType.IsArray && lastParameter.IsDefined(typeof(ParamArrayAttribute), false))
+                    if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
                     {
                         if (argsProvided == argsNeeded)
                         {
@@ -341,7 +341,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arglist">The arguments to be converted</param>
         /// <param name="parameters">The ParameterInfo array for the method</param>
-        private static void PerformSpecialConversions(object[] arglist, ParameterInfo[] parameters)
+        private static void PerformSpecialConversions(object[] arglist, IParameterInfo[] parameters)
         {
             for (int i = 0; i < arglist.Length; i++)
             {
@@ -392,7 +392,7 @@ namespace NUnit.Framework
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
             

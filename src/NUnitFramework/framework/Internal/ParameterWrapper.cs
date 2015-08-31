@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,52 +21,57 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
-    /// <summary>
-    /// ParameterizedMethodSuite holds a collection of individual
-    /// TestMethods with their arguments applied.
-    /// </summary>
-    public class ParameterizedMethodSuite : TestSuite
+    public class ParameterWrapper : IParameterInfo
     {
-        private bool _isTheory;
-
-        /// <summary>
-        /// Construct from a MethodInfo
-        /// </summary>
-        /// <param name="method"></param>
-        public ParameterizedMethodSuite(IMethodInfo method)
-            : base(method.TypeInfo.FullName, method.Name)
+        public ParameterWrapper(IMethodInfo method, ParameterInfo parameterInfo)
         {
             Method = method;
-#if PORTABLE
-            _isTheory = false;
-#else
-            _isTheory = method.IsDefined<TheoryAttribute>(true);
-#endif
-            this.MaintainTestOrder = true;
+            ParameterInfo = parameterInfo;
+        }
+
+        #region Properties
+
+        public bool IsOptional
+        {
+            get { return ParameterInfo.IsOptional;  }
+        }
+
+        public IMethodInfo Method { get; private set; }
+
+        public ParameterInfo ParameterInfo { get; private set; }
+
+        public Type ParameterType
+        {
+            get { return ParameterInfo.ParameterType;  }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Returns an array of custom attributes of the specified type applied to this method
+        /// </summary>
+        public T[] GetCustomAttributes<T>(bool inherit) where T : class
+        {
+            return (T[])ParameterInfo.GetCustomAttributes(typeof(T), inherit);
         }
 
         /// <summary>
-        /// Gets a string representing the type of test
+        /// Gets a value indicating whether one or more attributes of the specified type are defined on the parameter.
         /// </summary>
-        /// <value></value>
-        public override string TestType
+        public bool IsDefined<T>(bool inherit)
         {
-            get
-            {
-                if (_isTheory)
-                    return "Theory";
-
-                if (this.Method.ContainsGenericParameters)
-                    return "GenericMethod";
-                
-                return "ParameterizedMethod";
-            }
+            return ParameterInfo.IsDefined(typeof(T), inherit);
         }
+
+        #endregion
     }
 }

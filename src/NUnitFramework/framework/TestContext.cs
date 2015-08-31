@@ -95,7 +95,7 @@ namespace NUnit.Framework
         /// </summary>
         public string TestDirectory
         {
-            get { return AssemblyHelper.GetDirectoryName(_testExecutionContext.CurrentTest.FixtureType.Assembly); }
+            get { return AssemblyHelper.GetDirectoryName(_testExecutionContext.CurrentTest.TypeInfo.Assembly); }
         }
 #endif
 

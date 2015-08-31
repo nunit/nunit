@@ -107,9 +107,9 @@ namespace NUnit.Framework.Internal.Execution
             if (Test is TestAssembly)
                 _actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((TestAssembly)Test).Assembly));
             else if (Test is ParameterizedMethodSuite)
-                _actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((ParameterizedMethodSuite)Test).Method));
-            else if (Test.FixtureType != null)
-                _actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.FixtureType));
+                _actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(Test.Method.MethodInfo));
+            else if (Test.TypeInfo != null)
+                _actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.TypeInfo.Type));
         }
 
         #endregion

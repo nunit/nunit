@@ -66,18 +66,17 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Build a TestSuite from type provided.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public Test BuildFrom(Type type)
+        public TestSuite BuildFrom(Type type)
         {
             var fixtures = new List<TestSuite>();
+            var typeInfo = new TypeInfo(type);
 
             try
             {
-                IFixtureBuilder[] builders = GetFixtureBuilderAttributes(type);
+                IFixtureBuilder[] builders = GetFixtureBuilderAttributes(typeInfo);
 
                 foreach (var builder in builders)
-                    foreach (var fixture in builder.BuildFrom(type))
+                    foreach (var fixture in builder.BuildFrom(typeInfo))
                         fixtures.Add(fixture);
 
                 if (type.IsGenericType)
@@ -86,7 +85,7 @@ namespace NUnit.Framework.Internal.Builders
                 switch (fixtures.Count)
                 {
                     case 0:
-                        return _defaultBuilder.BuildFrom(type);
+                        return _defaultBuilder.BuildFrom(typeInfo);
                     case 1:
                         return fixtures[0];
                     default:
@@ -95,7 +94,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             catch (Exception ex)
             {
-                var fixture = new TestFixture(type);
+                var fixture = new TestFixture(typeInfo);
                 fixture.RunState = RunState.NotRunnable;
 
                 if (ex is System.Reflection.TargetInvocationException)
@@ -110,7 +109,7 @@ namespace NUnit.Framework.Internal.Builders
 
         #region Helper Methods
 
-        private Test BuildMultipleFixtures(Type type, IEnumerable<TestSuite> fixtures)
+        private TestSuite BuildMultipleFixtures(Type type, IEnumerable<TestSuite> fixtures)
         {
             TestSuite suite = new ParameterizedFixtureSuite(type);
 
@@ -126,15 +125,15 @@ namespace NUnit.Framework.Internal.Builders
         /// unless there are no fixture builder attributes at all on the derived
         /// class. This is by design.
         /// </summary>
-        /// <param name="type">The type being examined for attributes</param>
+        /// <param name="typeInfo">The type being examined for attributes</param>
         /// <returns>A list of the attributes found.</returns>
-        private IFixtureBuilder[] GetFixtureBuilderAttributes(Type type)
+        private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo typeInfo)
         {
             IFixtureBuilder[] attrs = new IFixtureBuilder[0];
 
-            while (type != null)
+            while (typeInfo != null && !typeInfo.IsType(typeof(object)))
             {
-                attrs = (IFixtureBuilder[])type.GetCustomAttributes(typeof(IFixtureBuilder), false);
+                attrs = typeInfo.GetCustomAttributes<IFixtureBuilder>(false);
 
                 if (attrs.Length > 0)
                 {
@@ -167,7 +166,7 @@ namespace NUnit.Framework.Internal.Builders
                     return result;
                 }
 
-                type = type.BaseType;
+                typeInfo = typeInfo.BaseType;
             }
 
             return attrs;

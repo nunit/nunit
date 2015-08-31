@@ -44,13 +44,13 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>
         /// True if any data is available, otherwise false.
         /// </returns>
-        public bool HasDataFor(System.Reflection.ParameterInfo parameter)
+        public bool HasDataFor(IParameterInfo parameter)
         {
             Type parameterType = parameter.ParameterType;
-            MemberInfo method = parameter.Member;
-            Type fixtureType = method.ReflectedType;
+            var method = parameter.Method;
+            Type fixtureType = method.TypeInfo.Type;
 
-            if (!method.IsDefined(typeof(TheoryAttribute), true))
+            if (!method.IsDefined<TheoryAttribute>(true))
                 return false;
 
             if (parameterType == typeof(bool) || parameterType.IsEnum)
@@ -78,12 +78,12 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>
         /// An IEnumerable providing the required data
         /// </returns>
-        public System.Collections.IEnumerable GetDataFor(System.Reflection.ParameterInfo parameter)
+        public System.Collections.IEnumerable GetDataFor(IParameterInfo parameter)
         {
             var datapoints = new List<object>();
 
             Type parameterType = parameter.ParameterType;
-            Type fixtureType = parameter.Member.ReflectedType;
+            Type fixtureType = parameter.Method.TypeInfo.Type;
 
             foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
             {

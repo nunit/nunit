@@ -27,6 +27,7 @@ using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
+    using Execution;
     using Interfaces;
 
     /// <summary>
@@ -45,9 +46,9 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
-            Guard.OperationValid(Test.FixtureType != null, "TestMethod must have a non-null FixtureType");
+            Guard.OperationValid(Test.TypeInfo != null, "TestMethod must have a non-null TypeInfo");
 
-            _setUpTearDownItems = Execution.CommandBuilder.BuildSetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
+            _setUpTearDownItems = CommandBuilder.BuildSetUpTearDownList(Test.TypeInfo.Type, typeof(SetUpAttribute), typeof(TearDownAttribute));
         }
 
         /// <summary>

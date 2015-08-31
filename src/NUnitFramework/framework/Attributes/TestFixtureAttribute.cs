@@ -220,11 +220,11 @@ namespace NUnit.Framework
         /// Build a fixture from type provided. Normally called for a Type
         /// on which the attribute has been placed.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used.</param>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <returns>A an IEnumerable holding one TestFixture object.</returns>
-        public IEnumerable<TestSuite> BuildFrom(Type type)
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            yield return _builder.BuildFrom(type, this);
+            yield return _builder.BuildFrom(typeInfo, this);
         }
 
         #endregion

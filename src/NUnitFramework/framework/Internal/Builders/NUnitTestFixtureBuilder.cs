@@ -61,18 +61,17 @@ namespace NUnit.Framework.Internal.Builders
         /// If something prevents the fixture from being used, it should
         /// be returned nonetheless, labelled as non-runnable.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used.</param>
+        /// <param name="typeInfo">An ITypeInfo for the fixture to be used.</param>
         /// <returns>A TestSuite object or one derived from TestSuite.</returns>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
-        public TestSuite BuildFrom(Type type)
+        public TestSuite BuildFrom(ITypeInfo typeInfo)
         {
-            var fixture = new TestFixture(type);
+            var fixture = new TestFixture(typeInfo);
 
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 
-            fixture.ApplyAttributesToTest(type);
-
+            fixture.ApplyAttributesToTest(typeInfo.Type);
 
             AddTestCasesToFixture(fixture);
 
@@ -84,16 +83,16 @@ namespace NUnit.Framework.Internal.Builders
         /// Builds a fixture using the provided type and information 
         /// in the ITestFixtureData object.
         /// </summary>
-        /// <param name="type">The Type for which to construct a fixture.</param>
+        /// <param name="typeInfo">The TypeInfo for which to construct a fixture.</param>
         /// <param name="testFixtureData">An object implementing ITestFixtureData or null.</param>
         /// <returns></returns>
-        public TestSuite BuildFrom(Type type, ITestFixtureData testFixtureData)
+        public TestSuite BuildFrom(ITypeInfo typeInfo, ITestFixtureData testFixtureData)
         {
             Guard.ArgumentNotNull(testFixtureData, "testFixtureData");
 
             object[] arguments = testFixtureData.Arguments;
 
-            if (type.ContainsGenericParameters)
+            if (typeInfo.Type.ContainsGenericParameters)
             {
                 Type[] typeArgs = testFixtureData.TypeArgs;
                 if (typeArgs.Length == 0)
@@ -118,18 +117,18 @@ namespace NUnit.Framework.Internal.Builders
                 }
 
                 if (typeArgs.Length > 0 ||
-                    TypeHelper.CanDeduceTypeArgsFromArgs(type, arguments, ref typeArgs))
+                    TypeHelper.CanDeduceTypeArgsFromArgs(typeInfo.Type, arguments, ref typeArgs))
                 {
-                    type = TypeHelper.MakeGenericType(type, typeArgs);
+                    typeInfo = new TypeInfo(TypeHelper.MakeGenericType(typeInfo.Type, typeArgs));
                 }
             }
 
-            var fixture = new TestFixture(type);
+            var fixture = new TestFixture(typeInfo);
             
             if (arguments != null && arguments.Length > 0)
             {
-                string name = fixture.Name = TypeHelper.GetDisplayName(type, arguments);
-                string nspace = type.Namespace;
+                string name = fixture.Name = TypeHelper.GetDisplayName(typeInfo.Type, arguments);
+                string nspace = typeInfo.Namespace;
                 fixture.FullName = nspace != null && nspace != ""
                     ? nspace + "." + name
                     : name;
@@ -146,7 +145,7 @@ namespace NUnit.Framework.Internal.Builders
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 
-            fixture.ApplyAttributesToTest(type);
+            fixture.ApplyAttributesToTest(typeInfo.Type);
 
             AddTestCasesToFixture(fixture);
 
@@ -163,20 +162,20 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="fixture">The fixture to which cases should be added</param>
         private void AddTestCasesToFixture(TestFixture fixture)
         {
-            Type fixtureType = fixture.FixtureType;
+            ITypeInfo typeInfo = fixture.TypeInfo;
 
             // TODO: Check this logic added from Neil's build.
-            if (fixtureType.ContainsGenericParameters)
+            if (typeInfo.ContainsGenericParameters)
             {
                 fixture.RunState = RunState.NotRunnable;
                 fixture.Properties.Set(PropertyNames.SkipReason, NO_TYPE_ARGS_MSG);
                 return;
             }
 
-            IList methods = fixtureType.GetMethods(
+            var methods = typeInfo.GetMethods(
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 
-            foreach (MethodInfo method in methods)
+            foreach (IMethodInfo method in methods)
             {
                 Test test = BuildTestCase(method, fixture);
 
@@ -198,19 +197,19 @@ namespace NUnit.Framework.Internal.Builders
         /// Derived classes should add builders to the collection
         /// in their constructor.
         /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be created</param>
+        /// <param name="method">The method for which a test is to be created</param>
         /// <param name="suite">The test suite being built.</param>
         /// <returns>A newly constructed Test</returns>
-        private Test BuildTestCase(MethodInfo method, TestSuite suite)
+        private Test BuildTestCase(IMethodInfo method, TestSuite suite)
         {
-            return _testBuilder.CanBuildFrom(method, suite)
+            return _testBuilder.CanBuildFrom(method.MethodInfo, suite)
                 ? _testBuilder.BuildFrom(method, suite)
                 : null;
         }
 
         private static void CheckTestFixtureIsValid(TestFixture fixture)
         {
-            Type fixtureType = fixture.FixtureType;
+            Type fixtureType = fixture.TypeInfo.Type;
 
             if (fixtureType.ContainsGenericParameters)
             {

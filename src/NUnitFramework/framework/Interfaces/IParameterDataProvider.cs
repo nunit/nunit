@@ -38,15 +38,15 @@ namespace NUnit.Framework.Interfaces
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>True if any data is available, otherwise false.</returns>
-        bool HasDataFor(ParameterInfo parameter);
+        bool HasDataFor(IParameterInfo parameter);
 
         /// <summary>
         /// Return an IEnumerable providing data for use with the
         /// supplied parameter.
         /// </summary>
-        /// <param name="parameter">A ParameterInfo representing one
+        /// <param name="parameter">An IParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>An IEnumerable providing the required data</returns>
-        IEnumerable GetDataFor(ParameterInfo parameter);
+        IEnumerable GetDataFor(IParameterInfo parameter);
     }
 }

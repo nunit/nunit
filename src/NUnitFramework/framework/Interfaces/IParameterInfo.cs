@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,49 +23,36 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
+using System.Reflection;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Interfaces
 {
-    public class SetUpFixtureAttributeTests
+    public interface IParameterInfo
     {
-        [TestCase(typeof(Class1))]
-        [TestCase(typeof(Class2))]
-        [TestCase(typeof(Class3))]
-        [TestCase(typeof(Class4))]
-        public void CertainAttributesAreNotAllowed(Type type)
-        {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeInfo(type));
-            foreach (var fixture in fixtures)
-                Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
-        }
+        #region Properties
 
-#pragma warning disable 618 // Obsolete Attributes
-        private class Class1
-        {
-            [TestFixtureSetUp]
-            public void SomeMethod() { }
-        }
+        bool IsOptional { get; }
 
-        private class Class2
-        {
-            [TestFixtureTearDown]
-            public void SomeMethod() { }
-        }
-#pragma warning restore
+        IMethodInfo Method { get; }
 
-        private class Class3
-        {
-            [SetUp]
-            public void SomeMethod() { }
-        }
+        ParameterInfo ParameterInfo { get; }
 
-        private class Class4
-        {
-            [TearDown]
-            public void SomeMethod() { }
-        }
+        Type ParameterType { get; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Returns an array of custom attributes of the specified type applied to this method
+        /// </summary>
+        T[] GetCustomAttributes<T>(bool inherit) where T : class;
+
+        /// <summary>
+        /// Gets a value indicating whether one or more attributes of the specified type are defined on the parameter.
+        /// </summary>
+        bool IsDefined<T>(bool inherit);
+
+        #endregion
     }
 }

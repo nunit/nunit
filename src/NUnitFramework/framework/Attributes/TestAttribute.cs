@@ -119,12 +119,12 @@ namespace NUnit.Framework
         #region ISimpleTestBuilder Members
 
         /// <summary>
-        /// Construct a TestMethod from a given MethodInfo.
+        /// Construct a TestMethod from a given method.
         /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be constructed.</param>
+        /// <param name="method">The method for which a test is to be constructed.</param>
         /// <param name="suite">The suite to which the test will be added.</param>
         /// <returns>A TestMethod</returns>
-        public TestMethod BuildFrom(MethodInfo method, Test suite)
+        public TestMethod BuildFrom(IMethodInfo method, Test suite)
         {
             TestCaseParameters parms = null;
 

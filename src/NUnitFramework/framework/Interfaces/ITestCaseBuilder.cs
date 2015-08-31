@@ -58,6 +58,6 @@ namespace NUnit.Framework.Interfaces
         /// <param name="method">The method to be used as a test case</param>
         /// <param name="suite">The test suite being populated, or null</param>
         /// <returns>A TestCase or null</returns>
-        Test BuildFrom(MethodInfo method, Test suite);
+        Test BuildFrom(IMethodInfo method, Test suite);
     }
 }

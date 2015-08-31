@@ -143,7 +143,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of _values to be used as arguments.
         /// </summary>
-        public IEnumerable GetData(ParameterInfo parameter)
+        public IEnumerable GetData(IParameterInfo parameter)
         {
             // Since a separate Randomizer is used for each parameter,
             // we can't fill in the data in the constructor of the
@@ -220,7 +220,7 @@ namespace NUnit.Framework
         {
             public Type DataType { get; protected set; }
 
-            public abstract IEnumerable GetData(ParameterInfo parameter);
+            public abstract IEnumerable GetData(IParameterInfo parameter);
         }
 
         abstract class RandomDataSource<T> : RandomDataSource
@@ -250,11 +250,11 @@ namespace NUnit.Framework
                 DataType = typeof(T);
             }
 
-            public override IEnumerable GetData(ParameterInfo parameter)
+            public override IEnumerable GetData(IParameterInfo parameter)
             {
                 //Guard.ArgumentValid(parameter.ParameterType == typeof(T), "Parameter type must be " + typeof(T).Name, "parameter");
 
-                _randomizer = Randomizer.GetRandomizer(parameter);
+                _randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
 
                 for (int i = 0; i < _count; i++)
                     yield return _inRange
@@ -279,7 +279,7 @@ namespace NUnit.Framework
                 _source = source;
             }
 
-            public override IEnumerable GetData(ParameterInfo parameter)
+            public override IEnumerable GetData(IParameterInfo parameter)
             {
                 Type parmType = parameter.ParameterType;
 
@@ -533,11 +533,11 @@ namespace NUnit.Framework
                 DataType = typeof(Enum);
             }
 
-            public override IEnumerable GetData(ParameterInfo parameter)
+            public override IEnumerable GetData(IParameterInfo parameter)
             {
                 Guard.ArgumentValid(parameter.ParameterType.IsEnum, "EnumDataSource requires an enum parameter", "parameter");
 
-                Randomizer randomizer = Randomizer.GetRandomizer(parameter);
+                Randomizer randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
                 DataType = parameter.ParameterType;
 
                 for (int i = 0; i < _count; i++ )

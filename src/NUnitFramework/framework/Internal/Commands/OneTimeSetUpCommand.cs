@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Internal.Commands
     public class OneTimeSetUpCommand : TestCommand
     {
         private readonly TestSuite _suite;
-        private readonly Type _fixtureType;
+        private readonly ITypeInfo _fixtureType;
         private readonly object[] _arguments;
         private readonly List<SetUpTearDownItem> _setUpTearDown;
         private readonly List<TestActionItem> _actions;
@@ -49,7 +50,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(suite) 
         {
             _suite = suite;
-            _fixtureType = suite.FixtureType;
+            _fixtureType = suite.TypeInfo;
             _arguments = suite.Arguments;
             _setUpTearDown = setUpTearDown;
             _actions = actions;
@@ -65,9 +66,9 @@ namespace NUnit.Framework.Internal.Commands
             if (_fixtureType != null)
             {
                 // Use pre-constructed fixture if available, otherwise construct it
-                if (!IsStaticClass(_fixtureType))
+                if (!IsStaticClass(_fixtureType.Type))
                 {
-                    context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType, _arguments);
+                    context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType.Type, _arguments);
                     if (_suite.Fixture == null)
                     {
                         _suite.Fixture = context.TestObject;

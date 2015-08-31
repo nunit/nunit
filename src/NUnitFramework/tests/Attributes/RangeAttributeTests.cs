@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Attributes
 {
@@ -405,18 +406,19 @@ namespace NUnit.Framework.Attributes
         
         private void CheckValues(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-            ParameterInfo param = method.GetParameters()[0];
-            ValuesAttribute attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
-            Assert.That(attr.GetData(param), Is.EqualTo(expected));
+            var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var param = method.GetParameters()[0];
+            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+            Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
         }
 
         private void CheckValuesWithinTolerance(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-            ParameterInfo param = method.GetParameters()[0];
-            ValuesAttribute attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
-            Assert.That(attr.GetData(param), Is.EqualTo(expected).Within(0.000001));
+            var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var param = method.GetParameters()[0];
+            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+            Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), 
+                Is.EqualTo(expected).Within(0.000001));
         }
         
         #endregion

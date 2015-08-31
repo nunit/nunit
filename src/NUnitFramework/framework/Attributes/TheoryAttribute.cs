@@ -67,9 +67,9 @@ namespace NUnit.Framework
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Internal.Test suite)
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Internal.Test suite)
         {
-            ParameterInfo[] parameters = method.GetParameters();
+            IParameterInfo[] parameters = method.GetParameters();
 
             List<TestMethod> tests = new List<TestMethod>();
 

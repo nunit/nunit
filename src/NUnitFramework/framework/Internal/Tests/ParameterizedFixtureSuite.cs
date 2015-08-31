@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedFixtureSuite : TestSuite
     {
-        private Type type;
+        private bool _genericFixture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterizedFixtureSuite"/> class.
@@ -39,16 +39,7 @@ namespace NUnit.Framework.Internal
         /// <param name="type">The type.</param>
         public ParameterizedFixtureSuite(Type type) : base(type.Namespace, TypeHelper.GetDisplayName(type)) 
         {
-            this.type = type;
-        }
-
-        /// <summary>
-        /// Gets the Type represented by this suite.
-        /// </summary>
-        /// <value>A System.Type.</value>
-        public Type ParameterizedType
-        {
-            get { return type; }
+            _genericFixture = type.ContainsGenericParameters;
         }
 
         /// <summary>
@@ -59,10 +50,9 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (this.ParameterizedType.ContainsGenericParameters)
-                    return "GenericFixture";
-                
-                return "ParameterizedFixture";
+                return _genericFixture
+                    ? "GenericFixture"
+                    : "ParameterizedFixture";
             }
         }
     }

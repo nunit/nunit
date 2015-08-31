@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -60,12 +60,9 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the test</param>
         protected Test( string name )
         {
-            this.FullName = name;
-            this.Name = name;
-            this.Id = GetNextId();
+            Guard.ArgumentNotNullOrEmpty(name, "name");
 
-            this.Properties = new PropertyBag();
-            this.RunState = RunState.Runnable;
+            Initialize(name);
         }
 
         /// <summary>
@@ -75,35 +72,47 @@ namespace NUnit.Framework.Internal
         /// <param name="pathName">The parent tests full name</param>
         /// <param name="name">The name of the test</param>
         protected Test( string pathName, string name ) 
-        { 
-            this.FullName = pathName == null || pathName == string.Empty 
-                ? name : pathName + "." + name;
-            this.Name = name;
-            this.Id = GetNextId();
+        {
+            Guard.ArgumentNotNullOrEmpty(pathName, "pathName");
 
-            this.Properties = new PropertyBag();
-            this.RunState = RunState.Runnable;
+            Initialize(name);
+
+            FullName = pathName + "." + name;
         }
 
         /// <summary>
         ///  TODO: Documentation needed for constructor
         /// </summary>
-        /// <param name="fixtureType"></param>
-        protected Test(Type fixtureType) : this(fixtureType.FullName)
+        /// <param name="typeInfo"></param>
+        protected Test(ITypeInfo typeInfo)
         {
-            this.FixtureType = fixtureType;
+            Initialize(TypeHelper.GetDisplayName(typeInfo.Type));
+
+            string nspace = typeInfo.Namespace;
+            if (nspace != null && nspace != "")
+                FullName = nspace + "." + Name;
+            TypeInfo = typeInfo;
         }
 
         /// <summary>
         /// Construct a test from a MethodInfo
         /// </summary>
         /// <param name="method"></param>
-        protected Test(MethodInfo method)
-            : this(method.ReflectedType)
+        protected Test(IMethodInfo method)
         {
-            this.Name = method.Name;
-            this.FullName += "." + this.Name;
-            this.Method = method;
+            Initialize(method.Name);
+
+            Method = method;
+            TypeInfo = method.TypeInfo;
+            FullName = method.TypeInfo.FullName + "." + Name;
+        }
+
+        private void Initialize(string name)
+        {
+            FullName = Name = name;
+            Id = GetNextId();
+            Properties = new PropertyBag();
+            RunState = RunState.Runnable;
         }
 
         private static string GetNextId()
@@ -140,15 +149,12 @@ namespace NUnit.Framework.Internal
         { 
             get
             {
-                Type type = FixtureType;
-
-                if (type == null)
+                if (TypeInfo == null)
                     return null;
 
-                if (type.IsGenericType)
-                    type = type.GetGenericTypeDefinition();
-
-                return type.FullName;
+                return TypeInfo.IsGenericType
+                    ? TypeInfo.GetGenericTypeDefinition().FullName
+                    : TypeInfo.FullName;
             }
         }
 
@@ -162,16 +168,16 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the Type of the fixture used in running this test
+        /// Gets the TypeInfo of the fixture used in running this test
         /// or null if no fixture type is associated with it.
         /// </summary>
-        public Type FixtureType { get; private set; }
+        public ITypeInfo TypeInfo { get; private set; }
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public MethodInfo Method { get; set; } // public setter needed by NUnitTestCaseBuilder
+        public IMethodInfo Method { get; set; } // public setter needed by NUnitTestCaseBuilder
 
         /// <summary>
         /// Whether or not the test should be run

@@ -42,16 +42,16 @@ namespace NUnit.Framework
         /// Build a SetUpFixture from type provided. Normally called for a Type
         /// on which the attribute has been placed.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used.</param>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <returns>A SetUpFixture object as a TestSuite.</returns>
-        public IEnumerable<TestSuite> BuildFrom(Type type)
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            SetUpFixture fixture = new SetUpFixture(type);
+            SetUpFixture fixture = new SetUpFixture(typeInfo);
 
             if (fixture.RunState != RunState.NotRunnable)
             {
                 string reason = null;
-                if (!IsValidFixtureType(type, ref reason))
+                if (!IsValidFixtureType(typeInfo.Type, ref reason))
                 {
                     fixture.RunState = RunState.NotRunnable;
                     fixture.Properties.Set(PropertyNames.SkipReason, reason);

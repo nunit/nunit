@@ -53,8 +53,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite( string name ) 
-            : base( name ) 
+        public TestSuite( string name ) : base( name ) 
         {
             Arguments = new object[0];
         }
@@ -74,13 +73,19 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestSuite(Type fixtureType) : base(fixtureType)
+        public TestSuite(ITypeInfo fixtureType)
+            : base(fixtureType)
         {
-            Name = TypeHelper.GetDisplayName(fixtureType);
-            string nspace = fixtureType.Namespace;
-            FullName = nspace != null && nspace != ""
-                ? nspace + "." + Name
-                : Name;
+            Arguments = new object[0];
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
+        public TestSuite(Type fixtureType)
+            : base(new TypeInfo(fixtureType))
+        {
             Arguments = new object[0];
         }
 
@@ -244,7 +249,7 @@ namespace NUnit.Framework.Internal
         /// <param name="attrType">The attribute type to check for</param>
         protected void CheckSetUpTearDownMethods(Type attrType)
         {
-            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(FixtureType, attrType, true))
+            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(TypeInfo.Type, attrType, true))
                 if (method.IsAbstract ||
                      !method.IsPublic && !method.IsFamily ||
                      method.GetParameters().Length > 0 ||

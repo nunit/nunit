@@ -72,9 +72,9 @@ namespace NUnit.Framework.Internal.Builders
         /// of test case data, this method may return a single test
         /// or a group of tests contained in a ParameterizedMethodSuite.
         /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be built</param>
+        /// <param name="method">The method for which a test is to be built</param>
         /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(MethodInfo method)
+        public Test BuildFrom(IMethodInfo method)
         {
             return BuildFrom(method, null);
         }
@@ -109,15 +109,15 @@ namespace NUnit.Framework.Internal.Builders
         /// of test case data, this method may return a single test
         /// or a group of tests contained in a ParameterizedMethodSuite.
         /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be built</param>
+        /// <param name="method">The method for which a test is to be built</param>
         /// <param name="parentSuite">The test fixture being populated, or null</param>
         /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(MethodInfo method, Test parentSuite)
+        public Test BuildFrom(IMethodInfo method, Test parentSuite)
         {
             var tests = new List<TestMethod>();
 
             List<ITestBuilder> builders = new List<ITestBuilder>(
-                (ITestBuilder[])method.GetCustomAttributes(typeof(ITestBuilder), false));
+                method.GetCustomAttributes<ITestBuilder>(false));
 
             // See if we need a CombinatorialAttribute added
             bool needCombinatorial = true;
@@ -154,13 +154,13 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Builds a ParameterizedMethodSuite containing individual test cases.
         /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be built.</param>
+        /// <param name="method">The method for which a test is to be built.</param>
         /// <param name="tests">The list of test cases to include.</param>
         /// <returns>A ParameterizedMethodSuite populated with test cases</returns>
-        private Test BuildParameterizedMethodSuite(MethodInfo method, IEnumerable<TestMethod> tests)
+        private Test BuildParameterizedMethodSuite(IMethodInfo method, IEnumerable<TestMethod> tests)
         {
             ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
-            methodSuite.ApplyAttributesToTest(method);
+            methodSuite.ApplyAttributesToTest(method.MethodInfo);
 
             foreach (TestMethod test in tests)
                 methodSuite.Add(test);
@@ -174,9 +174,9 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">The MethodInfo for which a test is to be built</param>
         /// <param name="suite">The test suite for which the method is being built</param>
         /// <returns>A TestMethod.</returns>
-        private Test BuildSingleTestMethod(MethodInfo method, Test suite)
+        private Test BuildSingleTestMethod(IMethodInfo method, Test suite)
         {
-            var builders = (ISimpleTestBuilder[])method.GetCustomAttributes(typeof(ISimpleTestBuilder), false);
+            var builders = method.GetCustomAttributes<ISimpleTestBuilder>(false);
             return builders.Length > 0
                 ? builders[0].BuildFrom(method, suite)
                 : _nunitTestCaseBuilder.BuildTestMethod(method, suite, null);

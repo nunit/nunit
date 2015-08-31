@@ -50,6 +50,6 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="type">The type of the fixture to be used</param>
         /// <returns>A TestSuite</returns>
-        Test BuildFrom( Type type );
+        TestSuite BuildFrom( Type type );
     }
 }

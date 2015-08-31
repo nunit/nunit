@@ -14,12 +14,12 @@ namespace NUnit.Framework.Internal
         [SetUp]
         public void SetUp()
         {
-            testMethod = new TestMethod(typeof(DummyFixture).GetMethod("DummyMethod"));
+            testMethod = new TestMethod(new MethodWrapper(typeof(DummyFixture), "DummyMethod"));
             testMethod.Properties.Set(PropertyNames.Description, "Test description");
             testMethod.Properties.Add(PropertyNames.Category, "Dubious");
             testMethod.Properties.Set("Priority", "low");
 
-            testFixture = new TestFixture(typeof(DummyFixture));
+            testFixture = new TestFixture(new TypeInfo(typeof(DummyFixture)));
             testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
             testFixture.Properties.Add(PropertyNames.Category, "Fast");
             testFixture.Properties.Add("Value", 3);
@@ -41,9 +41,9 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("TestSuite"));
             Assert.That(new TestAssembly("junk").TestType, 
                 Is.EqualTo("Assembly"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "ParameterizedMethod")).TestType,
                 Is.EqualTo("ParameterizedMethod"));
             Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
                 Is.EqualTo("ParameterizedFixture"));
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
-            if (test.FixtureType != null)
+            if (test.TypeInfo != null)
             {
                 Assert.NotNull(test.ClassName);
                 Assert.That(topNode.Attributes["classname"], Is.EqualTo(test.ClassName));

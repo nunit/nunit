@@ -130,7 +130,7 @@ namespace NUnit.Framework.Api
             try
             {
                 IList fixtureNames = options[PackageSettings.LOAD] as IList;
-                IList fixtures = GetFixtures(assembly, fixtureNames);
+                var fixtures = GetFixtures(assembly, fixtureNames);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyPath, fixtures);
             }
@@ -148,12 +148,12 @@ namespace NUnit.Framework.Api
 
         #region Helper Methods
 
-        private IList GetFixtures(Assembly assembly, IList names)
+        private IList<Test> GetFixtures(Assembly assembly, IList names)
         {
             var fixtures = new List<Test>();
             log.Debug("Examining assembly for test fixtures");
 
-            IList testTypes = GetCandidateFixtureTypes(assembly, names);
+            var testTypes = GetCandidateFixtureTypes(assembly, names);
 
             log.Debug("Found {0} classes to examine", testTypes.Count);
 #if LOAD_TIMING
@@ -187,9 +187,9 @@ namespace NUnit.Framework.Api
             return fixtures;
         }
 
-        private IList GetCandidateFixtureTypes(Assembly assembly, IList names)
+        private IList<Type> GetCandidateFixtureTypes(Assembly assembly, IList names)
         {
-            IList types = assembly.GetTypes();
+            var types = assembly.GetTypes();
 
             if (names == null || names.Count == 0)
                 return types;
@@ -214,7 +214,7 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-        private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList fixtures)
+        private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList<Test> fixtures)
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyName);
 

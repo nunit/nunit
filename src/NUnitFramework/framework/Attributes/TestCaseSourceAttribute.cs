@@ -99,10 +99,10 @@ namespace NUnit.Framework
         /// Construct one or more TestMethods from a given MethodInfo,
         /// using available parameter data.
         /// </summary>
-        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
+        /// <param name="method">The IMethod for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
                 yield return _builder.BuildTestMethod(method, suite, parms);
@@ -118,7 +118,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The method for which data is needed.</param>
         /// <returns></returns>
-        private IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+        private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
 
@@ -129,9 +129,9 @@ namespace NUnit.Framework
                 if (source != null)
                 {
 #if NETCF
-                    ParameterInfo[] parameters = method.IsGenericMethodDefinition ? new ParameterInfo[0] : method.GetParameters();
+                    IParameterInfo[] parameters = method.IsGenericMethodDefinition ? new ParameterInfo[0] : method.GetParameters();
 #else
-                    ParameterInfo[] parameters = method.GetParameters();
+                    IParameterInfo[] parameters = method.GetParameters();
 #endif
 
                     foreach (object item in source)
@@ -210,11 +210,11 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestCaseSource(MethodInfo method)
+        private IEnumerable GetTestCaseSource(IMethodInfo method)
         {
             Type sourceType = this.SourceType;
             if (sourceType == null)
-                sourceType = method.ReflectedType;
+                sourceType = method.TypeInfo.Type;
 
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)

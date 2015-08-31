@@ -149,8 +149,8 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeSetUpAndTearDownCommands()
         {
-            List<SetUpTearDownItem> setUpTearDownItems = _suite.FixtureType != null
-                ? CommandBuilder.BuildSetUpTearDownList(_suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute))
+            List<SetUpTearDownItem> setUpTearDownItems = _suite.TypeInfo != null
+                ? CommandBuilder.BuildSetUpTearDownList(_suite.TypeInfo.Type, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute))
                 : new List<SetUpTearDownItem>();
 
             var actionItems = new List<TestActionItem>();

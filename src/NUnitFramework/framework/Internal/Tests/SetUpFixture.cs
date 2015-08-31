@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -37,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="SetUpFixture"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-        public SetUpFixture( Type type ) : base( type )
+        public SetUpFixture( ITypeInfo type ) : base( type )
         {
             this.Name = type.Namespace;
             if (this.Name == null)
