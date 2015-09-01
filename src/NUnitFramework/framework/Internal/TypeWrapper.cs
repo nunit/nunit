@@ -29,15 +29,15 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// The TypeInfo class wraps a Type so it may be used in
+    /// The TypeWrapper class wraps a Type so it may be used in
     /// a platform-independent manner.
     /// </summary>
-    public class TypeInfo : ITypeInfo
+    public class TypeWrapper : ITypeInfo
     {
         /// <summary>
         /// Construct a TypeWrapper for a specified Type.
         /// </summary>
-        public TypeInfo(Type type)
+        public TypeWrapper(Type type)
         {
             Guard.ArgumentNotNull(type, "Type");
 
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
                 var baseType = Type.BaseType;
 
                 return baseType != null
-                    ? new TypeInfo(baseType)
+                    ? new TypeWrapper(baseType)
                     : null; 
             }
         }
@@ -97,6 +97,14 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets a value indicating whether the type is abstract.
+        /// </summary>
+        public bool IsAbstract
+        {
+            get { return Type.IsAbstract; }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the Type is a generic Type
         /// </summary>
         public bool IsGenericType
@@ -129,6 +137,22 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets a value indicating whether the type is sealed.
+        /// </summary>
+        public bool IsSealed
+        {
+            get { return Type.IsSealed; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this type represents a static class.
+        /// </summary>
+        public bool IsStaticClass
+        {
+            get { return Type.IsSealed && Type.IsAbstract; }
+        }
+
+        /// <summary>
         /// Returns a Type representing a generic type definition from which this Type can be constructed.
         /// </summary>
         public Type GetGenericTypeDefinition()
@@ -142,6 +166,16 @@ namespace NUnit.Framework.Internal
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
             return (T[])Type.GetCustomAttributes(typeof(T), inherit);
+        }
+
+        public bool IsDefined<T>(bool inherit)
+        {
+            return Type.IsDefined(typeof(T), inherit);
+        }
+
+        public bool HasMethodWithAttribute(Type attributeType)
+        {
+            return Reflect.HasMethodWithAttribute(Type, attributeType);
         }
 
         /// <summary>
@@ -158,5 +192,22 @@ namespace NUnit.Framework.Internal
 
             return result;
         }
+
+        /// <summary>
+        /// Returns a value indicating whether this Type has a public constructor taking the specified argument Types.
+        /// </summary>
+        public bool HasConstructor(Type[] argTypes)
+        {
+            return Type.GetConstructor(argTypes) != null;
+        }
+
+        /// <summary>
+        /// Construct an object of this Type, using the specified arguments.
+        /// </summary>
+        public object Construct(object[] args)
+        {
+            return Reflect.Construct(Type, args);
+        }
+
     }
 }

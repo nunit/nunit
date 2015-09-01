@@ -29,7 +29,7 @@ namespace NUnit.Framework.Interfaces
     /// The IMethodInfo class is used to encapsulate information
     /// about a method in a platform-independent manner.
     /// </summary>
-    public interface IMethodInfo
+    public interface IMethodInfo : IReflectionInfo
     {
         #region Properties
 
@@ -94,16 +94,6 @@ namespace NUnit.Framework.Interfaces
         /// <param name="typeArguments">The type arguments to be used</param>
         /// <returns>A new IMethodInfo with the type arguments replaced</returns>
         IMethodInfo MakeGenericMethod(params Type[] typeArguments);
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this method
-        /// </summary>
-        T[] GetCustomAttributes<T>(bool inherit) where T : class;
-
-        /// <summary>
-        /// Gets a value indicating whether one or more attributes of the specified type are defined on the method.
-        /// </summary>
-        bool IsDefined<T>(bool inherit);
 
         /// <summary>
         /// Invokes the method, converting any TargetInvocationException to an NUnitException.

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -36,10 +37,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterizedFixtureSuite"/> class.
         /// </summary>
-        /// <param name="type">The type.</param>
-        public ParameterizedFixtureSuite(Type type) : base(type.Namespace, TypeHelper.GetDisplayName(type)) 
+        /// <param name="typeInfo">The ITypeInfo for the type that represents the suite.</param>
+        public ParameterizedFixtureSuite(ITypeInfo typeInfo) : base(typeInfo.Namespace, TypeHelper.GetDisplayName(typeInfo.Type)) 
         {
-            _genericFixture = type.ContainsGenericParameters;
+            _genericFixture = typeInfo.ContainsGenericParameters;
         }
 
         /// <summary>

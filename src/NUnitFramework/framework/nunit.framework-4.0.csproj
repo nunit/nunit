@@ -289,6 +289,7 @@
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
+    <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
     <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITest.cs" />
@@ -395,7 +396,7 @@
     <Compile Include="Internal\Tests\TestSuite.cs" />
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
-    <Compile Include="Internal\TypeInfo.cs" />
+    <Compile Include="Internal\TypeWrapper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ITestAction.cs" />
     <Compile Include="Iz.cs" />

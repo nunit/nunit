@@ -212,9 +212,7 @@ namespace NUnit.Framework
 
         private IEnumerable GetTestCaseSource(IMethodInfo method)
         {
-            Type sourceType = this.SourceType;
-            if (sourceType == null)
-                sourceType = method.TypeInfo.Type;
+            Type sourceType = SourceType ?? method.TypeInfo.Type;
 
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)

@@ -46,17 +46,16 @@ namespace NUnit.Framework.Internal.Builders
         /// </returns>
         public bool HasDataFor(IParameterInfo parameter)
         {
-            Type parameterType = parameter.ParameterType;
             var method = parameter.Method;
-            Type fixtureType = method.TypeInfo.Type;
-
             if (!method.IsDefined<TheoryAttribute>(true))
                 return false;
 
+            Type parameterType = parameter.ParameterType;
             if (parameterType == typeof(bool) || parameterType.IsEnum)
                 return true;
 
-            foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
+            Type containingType = method.TypeInfo.Type;
+            foreach (MemberInfo member in containingType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
                     GetTypeFromMemberInfo(member) == parameterType)

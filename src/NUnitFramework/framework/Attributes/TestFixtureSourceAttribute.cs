@@ -108,7 +108,9 @@ namespace NUnit.Framework
         /// <returns>One or more TestFixtures as TestSuite</returns>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            foreach (TestFixtureParameters parms in GetParametersFor(typeInfo.Type))
+            Type sourceType = SourceType ?? typeInfo.Type;
+
+            foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
                 yield return _builder.BuildFrom(typeInfo, parms);
         }
 
@@ -120,15 +122,15 @@ namespace NUnit.Framework
         /// Returns a set of ITestFixtureData items for use as arguments
         /// to a parameterized test fixture.
         /// </summary>
-        /// <param name="type">The type for which data is needed.</param>
+        /// <param name="sourceType">The type for which data is needed.</param>
         /// <returns></returns>
-        public IEnumerable<ITestFixtureData> GetParametersFor(Type type)
+        public IEnumerable<ITestFixtureData> GetParametersFor(Type sourceType)
         {
             List<ITestFixtureData> data = new List<ITestFixtureData>();
 
             try
             {
-                IEnumerable source = GetTestFixtureSource(type);
+                IEnumerable source = GetTestFixtureSource(sourceType);
 
                 if (source != null)
                 {
@@ -164,12 +166,8 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestFixtureSource(Type type)
+        private IEnumerable GetTestFixtureSource(Type sourceType)
         {
-            Type sourceType = this.SourceType;
-            if (sourceType == null)
-                sourceType = type;
-
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)
                 return Reflect.Construct(sourceType) as IEnumerable;

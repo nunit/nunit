@@ -163,11 +163,13 @@ namespace NUnit.Framework.Api
             int testcases = 0;
             foreach (Type testType in testTypes)
             {
+                var typeInfo = new TypeWrapper(testType);
+
                 try
                 {
-                    if (_defaultSuiteBuilder.CanBuildFrom(testType))
+                    if (_defaultSuiteBuilder.CanBuildFrom(typeInfo))
                     {
-                        Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
+                        Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo);
                         fixtures.Add(fixture);
                         testcases += fixture.TestCaseCount;
                     }

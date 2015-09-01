@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,35 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework.Internal;
-
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ISuiteBuilder interface is exposed by a class that knows how to
-    /// build a suite from one or more Types. 
+    /// The IReflectionInfo interface is implemented by NUnit wrapper objects that perform reflection.
     /// </summary>
-    public interface ISuiteBuilder
+    public interface IReflectionInfo
     {
         /// <summary>
-        /// Examine the type and determine if it is suitable for
-        /// this builder to use in building a TestSuite.
-        /// 
-        /// Note that returning false will cause the type to be ignored 
-        /// in loading the tests. If it is desired to load the suite
-        /// but label it as non-runnable, ignored, etc., then this
-        /// method must return true.
+        /// Returns an array of custom attributes of the specified type applied to this object
         /// </summary>
-        /// <param name="typeInfo">The type of the fixture to be used</param>
-        /// <returns>True if the type can be used to build a TestSuite</returns>
-        bool CanBuildFrom( ITypeInfo typeInfo );
+        T[] GetCustomAttributes<T>(bool inherit) where T : class;
 
         /// <summary>
-        /// Build a TestSuite from type provided.
+        /// Returns a value indicating whether an attribute of the specified type is defined on this object.
         /// </summary>
-        /// <param name="typeInfo">The type of the fixture to be used</param>
-        /// <returns>A TestSuite</returns>
-        TestSuite BuildFrom( ITypeInfo typeInfo );
+        bool IsDefined<T>(bool inherit);
     }
 }

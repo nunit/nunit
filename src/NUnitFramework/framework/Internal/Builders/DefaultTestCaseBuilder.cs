@@ -58,12 +58,12 @@ namespace NUnit.Framework.Internal.Builders
         /// methods to be reported, the check for validity is made
         /// in BuildFrom rather than here.
         /// </summary>
-        /// <param name="method">A MethodInfo for the method being used as a test method</param>
+        /// <param name="method">An IMethodInfo for the method being used as a test method</param>
         /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(MethodInfo method)
+        public bool CanBuildFrom(IMethodInfo method)
         {
-            return method.IsDefined(typeof(ITestBuilder), false)
-                || method.IsDefined(typeof(ISimpleTestBuilder), false);
+            return method.IsDefined<ITestBuilder>(false)
+                || method.IsDefined<ISimpleTestBuilder>(false);
         }
 
         /// <summary>
@@ -95,10 +95,10 @@ namespace NUnit.Framework.Internal.Builders
         /// methods to be reported, the check for validity is made
         /// in BuildFrom rather than here.
         /// </summary>
-        /// <param name="method">A MethodInfo for the method being used as a test method</param>
+        /// <param name="method">An IMethodInfo for the method being used as a test method</param>
         /// <param name="parentSuite">The test suite being built, to which the new test would be added</param>
         /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(MethodInfo method, Test parentSuite)
+        public bool CanBuildFrom(IMethodInfo method, Test parentSuite)
         {
             return CanBuildFrom(method);
         }

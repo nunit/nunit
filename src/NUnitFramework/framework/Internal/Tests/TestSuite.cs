@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         public TestSuite(Type fixtureType)
-            : base(new TypeInfo(fixtureType))
+            : base(new TypeWrapper(fixtureType))
         {
             Arguments = new object[0];
         }

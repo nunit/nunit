@@ -138,12 +138,13 @@
     </Compile>
     <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />
+    <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
     <Compile Include="Internal\MethodWrapper.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\ParameterWrapper.cs" />
-    <Compile Include="Internal\TypeInfo.cs" />
+    <Compile Include="Internal\TypeWrapper.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />

@@ -29,8 +29,10 @@ namespace NUnit.Framework.Interfaces
     /// <summary>
     /// The ITypeInfo interface is an abstraction of a .NET Type
     /// </summary>
-    public interface ITypeInfo
+    public interface ITypeInfo : IReflectionInfo
     {
+        #region Properties
+
         /// <summary>
         /// Gets the underlying Type on which this ITypeInfo is based
         /// </summary>
@@ -67,6 +69,11 @@ namespace NUnit.Framework.Interfaces
         string Namespace { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the type is abstract.
+        /// </summary>
+        bool IsAbstract { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the Type is a generic Type
         /// </summary>
         bool IsGenericType { get; }
@@ -82,19 +89,45 @@ namespace NUnit.Framework.Interfaces
         bool IsGenericTypeDefinition { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the type is sealed.
+        /// </summary>
+        bool IsSealed { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this type is a static class.
+        /// </summary>
+        bool IsStaticClass { get; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
         /// Returns a Type representing a generic type definition from which this Type can be constructed.
         /// </summary>
         Type GetGenericTypeDefinition();
 
         /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this type
+        /// Returns a value indicating whether this type has a method with a specified public attribute
         /// </summary>
-        T[] GetCustomAttributes<T>(bool inherit) where T : class;
+        bool HasMethodWithAttribute(Type attrType);
 
         /// <summary>
         /// Returns an array of IMethodInfos for methods of this Type
         /// that match the specified flags.
         /// </summary>
         IMethodInfo[] GetMethods(BindingFlags flags);
+
+        /// <summary>
+        /// Returns a value indicating whether this Type has a public constructor taking the specified argument Types.
+        /// </summary>
+        bool HasConstructor(Type[] argTypes);
+
+        /// <summary>
+        /// Construct an object of this Type, using the specified arguments.
+        /// </summary>
+        object Construct(object[] args);
+
+        #endregion
     }
 }

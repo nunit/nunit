@@ -35,7 +35,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Determine whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">A ParameterInfo representing one
+        /// <param name="parameter">An IParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>True if any data is available, otherwise false.</returns>
         bool HasDataFor(IParameterInfo parameter);

@@ -37,7 +37,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(Class4))]
         public void CertainAttributesAreNotAllowed(Type type)
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeInfo(type));
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(type));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }

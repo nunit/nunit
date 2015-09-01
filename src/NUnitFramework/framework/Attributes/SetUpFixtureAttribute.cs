@@ -51,7 +51,7 @@ namespace NUnit.Framework
             if (fixture.RunState != RunState.NotRunnable)
             {
                 string reason = null;
-                if (!IsValidFixtureType(typeInfo.Type, ref reason))
+                if (!IsValidFixtureType(typeInfo, ref reason))
                 {
                     fixture.RunState = RunState.NotRunnable;
                     fixture.Properties.Set(PropertyNames.SkipReason, reason);
@@ -65,17 +65,17 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private bool IsValidFixtureType(Type fixtureType, ref string reason)
+        private bool IsValidFixtureType(ITypeInfo typeInfo, ref string reason)
         {
-            if (fixtureType.IsAbstract)
+            if (typeInfo.IsAbstract)
             {
-                reason = string.Format("{0} is an abstract class", fixtureType.FullName);
+                reason = string.Format("{0} is an abstract class", typeInfo.FullName);
                 return false;
             }
 
-            if (fixtureType.GetConstructor(new Type[0]) == null)
+            if (!typeInfo.HasConstructor(new Type[0]))
             {
-                reason = string.Format("{0} does not have a valid constructor", fixtureType.FullName);
+                reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
                 return false;
             }
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework
 #pragma warning restore
 
             foreach (Type invalidType in invalidAttributes)
-                if (Reflect.HasMethodWithAttribute(fixtureType, invalidType))
+                if (typeInfo.HasMethodWithAttribute(invalidType))
                 {
                     reason = invalidType.Name + " attribute not allowed in a SetUpFixture";
                     return false;

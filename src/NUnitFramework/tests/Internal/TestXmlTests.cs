@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
             testMethod.Properties.Add(PropertyNames.Category, "Dubious");
             testMethod.Properties.Set("Priority", "low");
 
-            testFixture = new TestFixture(new TypeInfo(typeof(DummyFixture)));
+            testFixture = new TestFixture(new TypeWrapper(typeof(DummyFixture)));
             testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
             testFixture.Properties.Add(PropertyNames.Category, "Fast");
             testFixture.Properties.Add("Value", 3);
@@ -45,10 +45,10 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("GenericMethod"));
             Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "ParameterizedMethod")).TestType,
                 Is.EqualTo("ParameterizedMethod"));
-            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
+            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(typeof(DummyFixture))).TestType,
                 Is.EqualTo("ParameterizedFixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
-            Assert.That(new ParameterizedFixtureSuite(genericType).TestType,
+            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(genericType)).TestType,
                 Is.EqualTo("GenericFixture"));
         }
 

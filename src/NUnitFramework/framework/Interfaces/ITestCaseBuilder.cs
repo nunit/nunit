@@ -49,7 +49,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="method">The test method to examine</param>
         /// <param name="suite">The suite being populated</param>
         /// <returns>True is the builder can use this method</returns>
-        bool CanBuildFrom(MethodInfo method, Test suite);
+        bool CanBuildFrom(IMethodInfo method, Test suite);
 
         /// <summary>
         /// Build a TestCase from the provided MethodInfo for

@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public MethodWrapper(Type type, MethodInfo method)
         {
-            TypeInfo = new TypeInfo(type);
+            TypeInfo = new TypeWrapper(type);
             MethodInfo = method;
         }
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public MethodWrapper(Type type, string methodName)
         {
-            TypeInfo = new TypeInfo(type);
+            TypeInfo = new TypeWrapper(type);
             MethodInfo = type.GetMethod(methodName);
         }
 
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ITypeInfo ReturnType
         {
-            get { return new TypeInfo(MethodInfo.ReturnType); }
+            get { return new TypeWrapper(MethodInfo.ReturnType); }
         }
 
         /// <summary>

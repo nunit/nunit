@@ -42,7 +42,7 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeFixture(Type type)
         {
-            return (TestSuite)new DefaultSuiteBuilder().BuildFrom(type);
+            return (TestSuite)new DefaultSuiteBuilder().BuildFrom(new TypeWrapper(type));
         }
 
         public static TestSuite MakeFixture(object fixture)

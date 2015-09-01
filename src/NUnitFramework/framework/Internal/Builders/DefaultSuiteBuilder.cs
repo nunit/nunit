@@ -43,33 +43,32 @@ namespace NUnit.Framework.Internal.Builders
         /// IFixtureBuilder interface or one or more methods
         /// marked as tests.
         /// </summary>
-        /// <param name="type">The fixture type to check</param>
+        /// <param name="typeInfo">The fixture type to check</param>
         /// <returns>True if the fixture can be built, false if not</returns>
-        public bool CanBuildFrom(Type type)
+        public bool CanBuildFrom(ITypeInfo typeInfo)
         {
-            if (type.IsAbstract && !type.IsSealed)
+            if (typeInfo.IsAbstract && !typeInfo.IsSealed)
                 return false;
 
-            if (type.IsDefined(typeof(IFixtureBuilder), true))
+            if (typeInfo.IsDefined<IFixtureBuilder>(true))
                 return true;
 
             // Generics must have an attribute in order to provide
             // them with arguments to determine the specific type.
             // TODO: What about automatic fixtures? Should there
             // be some kind of error shown?
-            if (type.IsGenericTypeDefinition)
+            if (typeInfo.IsGenericTypeDefinition)
                 return false;
 
-            return Reflect.HasMethodWithAttribute(type, typeof(IImplyFixture));
+            return typeInfo.HasMethodWithAttribute(typeof(IImplyFixture));
         }
 
         /// <summary>
         /// Build a TestSuite from type provided.
         /// </summary>
-        public TestSuite BuildFrom(Type type)
+        public TestSuite BuildFrom(ITypeInfo typeInfo)
         {
             var fixtures = new List<TestSuite>();
-            var typeInfo = new TypeInfo(type);
 
             try
             {
@@ -79,8 +78,8 @@ namespace NUnit.Framework.Internal.Builders
                     foreach (var fixture in builder.BuildFrom(typeInfo))
                         fixtures.Add(fixture);
 
-                if (type.IsGenericType)
-                    return BuildMultipleFixtures(type, fixtures);
+                if (typeInfo.IsGenericType)
+                    return BuildMultipleFixtures(typeInfo, fixtures);
 
                 switch (fixtures.Count)
                 {
@@ -89,7 +88,7 @@ namespace NUnit.Framework.Internal.Builders
                     case 1:
                         return fixtures[0];
                     default:
-                        return BuildMultipleFixtures(type, fixtures);
+                        return BuildMultipleFixtures(typeInfo, fixtures);
                 }
             }
             catch (Exception ex)
@@ -109,9 +108,9 @@ namespace NUnit.Framework.Internal.Builders
 
         #region Helper Methods
 
-        private TestSuite BuildMultipleFixtures(Type type, IEnumerable<TestSuite> fixtures)
+        private TestSuite BuildMultipleFixtures(ITypeInfo typeInfo, IEnumerable<TestSuite> fixtures)
         {
-            TestSuite suite = new ParameterizedFixtureSuite(type);
+            TestSuite suite = new ParameterizedFixtureSuite(typeInfo);
 
             foreach (var fixture in fixtures)
                 suite.Add(fixture);

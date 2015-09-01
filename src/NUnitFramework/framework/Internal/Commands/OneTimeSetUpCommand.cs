@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Commands
     public class OneTimeSetUpCommand : TestCommand
     {
         private readonly TestSuite _suite;
-        private readonly ITypeInfo _fixtureType;
+        private readonly ITypeInfo _typeInfo;
         private readonly object[] _arguments;
         private readonly List<SetUpTearDownItem> _setUpTearDown;
         private readonly List<TestActionItem> _actions;
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(suite) 
         {
             _suite = suite;
-            _fixtureType = suite.TypeInfo;
+            _typeInfo = suite.TypeInfo;
             _arguments = suite.Arguments;
             _setUpTearDown = setUpTearDown;
             _actions = actions;
@@ -63,12 +63,12 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            if (_fixtureType != null)
+            if (_typeInfo != null)
             {
                 // Use pre-constructed fixture if available, otherwise construct it
-                if (!IsStaticClass(_fixtureType.Type))
+                if (!_typeInfo.IsStaticClass)
                 {
-                    context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType.Type, _arguments);
+                    context.TestObject = _suite.Fixture ?? _typeInfo.Construct(_arguments);
                     if (_suite.Fixture == null)
                     {
                         _suite.Fixture = context.TestObject;
@@ -85,11 +85,6 @@ namespace NUnit.Framework.Internal.Commands
                 _actions[i].BeforeTest(Test);
 
             return context.CurrentResult;
-        }
-
-        private static bool IsStaticClass(Type type)
-        {
-            return type.IsAbstract && type.IsSealed;
         }
     }
 }

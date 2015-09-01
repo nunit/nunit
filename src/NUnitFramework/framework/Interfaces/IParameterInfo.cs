@@ -27,31 +27,32 @@ using System.Reflection;
 
 namespace NUnit.Framework.Interfaces
 {
-    public interface IParameterInfo
+    /// <summary>
+    /// The IParameterInfo interface is an abstraction of a .NET parameter.
+    /// </summary>
+    public interface IParameterInfo : IReflectionInfo
     {
         #region Properties
 
+        /// <summary>
+        /// Gets a value indicating whether the parameter is optional
+        /// </summary>
         bool IsOptional { get; }
 
+        /// <summary>
+        /// Gets an IMethodInfo representing the method for which this is a parameter
+        /// </summary>
         IMethodInfo Method { get; }
 
+        /// <summary>
+        /// Gets the underlying .NET ParameterInfo
+        /// </summary>
         ParameterInfo ParameterInfo { get; }
 
+        /// <summary>
+        /// Gets the Type of the parameter
+        /// </summary>
         Type ParameterType { get; }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this method
-        /// </summary>
-        T[] GetCustomAttributes<T>(bool inherit) where T : class;
-
-        /// <summary>
-        /// Gets a value indicating whether one or more attributes of the specified type are defined on the parameter.
-        /// </summary>
-        bool IsDefined<T>(bool inherit);
 
         #endregion
     }

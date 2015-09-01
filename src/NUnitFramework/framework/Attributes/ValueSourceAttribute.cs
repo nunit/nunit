@@ -98,9 +98,7 @@ namespace NUnit.Framework
 
         private IEnumerable GetDataSource(IParameterInfo parameter)
         {
-            Type sourceType = SourceType;
-            if (sourceType == null)
-                sourceType = parameter.Method.TypeInfo.Type;
+            Type sourceType = SourceType ?? parameter.Method.TypeInfo.Type;
 
             // TODO: Test this
             if (SourceName == null)
