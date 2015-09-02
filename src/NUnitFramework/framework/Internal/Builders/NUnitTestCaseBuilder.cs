@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal.Builders
                 }
                 else if (parms.OriginalArguments != null)
                 {
-                    string name = MethodHelper.GetDisplayName(method.MethodInfo, parms.OriginalArguments);
+                    string name = method.GetDisplayName(parms.OriginalArguments);
                     testMethod.Name = name;
                     testMethod.FullName = prefix + "." + name;
                 }

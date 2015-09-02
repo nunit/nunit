@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal
         /// <param name="typeInfo"></param>
         protected Test(ITypeInfo typeInfo)
         {
-            Initialize(TypeHelper.GetDisplayName(typeInfo.Type));
+            Initialize(typeInfo.GetDisplayName());
 
             string nspace = typeInfo.Namespace;
             if (nspace != null && nspace != "")

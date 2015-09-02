@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="ParameterizedFixtureSuite"/> class.
         /// </summary>
         /// <param name="typeInfo">The ITypeInfo for the type that represents the suite.</param>
-        public ParameterizedFixtureSuite(ITypeInfo typeInfo) : base(typeInfo.Namespace, TypeHelper.GetDisplayName(typeInfo.Type)) 
+        public ParameterizedFixtureSuite(ITypeInfo typeInfo) : base(typeInfo.Namespace, typeInfo.GetDisplayName()) 
         {
             _genericFixture = typeInfo.ContainsGenericParameters;
         }

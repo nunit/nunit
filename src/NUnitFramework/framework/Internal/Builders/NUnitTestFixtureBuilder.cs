@@ -127,7 +127,7 @@ namespace NUnit.Framework.Internal.Builders
             
             if (arguments != null && arguments.Length > 0)
             {
-                string name = fixture.Name = TypeHelper.GetDisplayName(typeInfo.Type, arguments);
+                string name = fixture.Name = typeInfo.GetDisplayName(arguments);
                 string nspace = typeInfo.Namespace;
                 fixture.FullName = nspace != null && nspace != ""
                     ? nspace + "." + name

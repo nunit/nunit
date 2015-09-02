@@ -153,6 +153,22 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Get the display name for this type
+        /// </summary>
+        public string GetDisplayName()
+        {
+            return TypeHelper.GetDisplayName(Type);
+        }
+
+        /// <summary>
+        /// Get the display name for an object of this type, constructed with the specified args.
+        /// </summary>
+        public string GetDisplayName(object[] args)
+        {
+            return TypeHelper.GetDisplayName(Type, args);
+        }
+
+        /// <summary>
         /// Returns a Type representing a generic type definition from which this Type can be constructed.
         /// </summary>
         public Type GetGenericTypeDefinition()
@@ -168,11 +184,22 @@ namespace NUnit.Framework.Internal
             return (T[])Type.GetCustomAttributes(typeof(T), inherit);
         }
 
+        /// <summary>
+        /// Returns a value indicating whether the type has an attribute of the specified type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inherit"></param>
+        /// <returns></returns>
         public bool IsDefined<T>(bool inherit)
         {
             return Type.IsDefined(typeof(T), inherit);
         }
 
+        /// <summary>
+        /// Returns a flag indicating whether this type has a method with an attribute of the specified type.
+        /// </summary>
+        /// <param name="attributeType"></param>
+        /// <returns></returns>
         public bool HasMethodWithAttribute(Type attributeType)
         {
             return Reflect.HasMethodWithAttribute(Type, attributeType);

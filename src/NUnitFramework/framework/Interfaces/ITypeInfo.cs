@@ -103,6 +103,16 @@ namespace NUnit.Framework.Interfaces
         #region Methods
 
         /// <summary>
+        /// Get the display name for this typeInfo.
+        /// </summary>
+        string GetDisplayName();
+
+        /// <summary>
+        /// Get the display name for an oject of this type, constructed with specific arguments
+        /// </summary>
+        string GetDisplayName(object[] args);
+
+        /// <summary>
         /// Returns a Type representing a generic type definition from which this Type can be constructed.
         /// </summary>
         Type GetGenericTypeDefinition();
