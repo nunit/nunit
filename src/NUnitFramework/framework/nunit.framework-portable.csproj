@@ -161,7 +161,6 @@
     <Compile Include="Compatibility\Activator.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\MarshalByRefObject.cs" />
-    <Compile Include="Compatibility\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\Path.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />

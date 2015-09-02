@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web.UI;
 using System.Xml;
 using NUnit.Engine.Internal;
 using NUnit.Framework;

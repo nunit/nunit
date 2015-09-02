@@ -22,11 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Web.UI;
 
 namespace NUnit.Engine
 {
-    public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
+    public class CallbackHandler : MarshalByRefObject
     {
         public string Result { get; private set; }
 
@@ -44,11 +43,6 @@ namespace NUnit.Engine
         #endregion
 
         #region ICallbackEventHandler Members
-
-        public string GetCallbackResult()
-        {
-            throw new NotImplementedException();
-        }
 
         public void RaiseCallbackEvent(string eventArgument)
         {

@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Web.UI;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -36,15 +35,15 @@ namespace NUnit.Framework.Internal
     {
         static Logger log = InternalTrace.GetLogger("TestProgressReporter");
 
-        private ICallbackEventHandler handler;
+        private Action<string> _callback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProgressReporter"/> class.
         /// </summary>
-        /// <param name="handler">The callback handler to be used for reporting progress.</param>
-        public TestProgressReporter(ICallbackEventHandler handler)
+        /// <param name="callback">The callback to be used for reporting progress.</param>
+        public TestProgressReporter(Action<string> callback)
         {
-            this.handler = handler;
+            _callback = callback;
         }
 
         #region ITestListener Members
@@ -63,7 +62,7 @@ namespace NUnit.Framework.Internal
         //            XmlHelper.FormatAttributeValue(test.Name),
         //            XmlHelper.FormatAttributeValue(test.FullName));
 
-        //        handler.RaiseCallbackEvent(report);
+        //        _callback(report);
         //    }
         //    catch (Exception ex)
         //    {
@@ -80,7 +79,7 @@ namespace NUnit.Framework.Internal
         //{
         //    try
         //    {
-        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
+        //        _callback(result.ToXml(false).OuterXml);
         //    }
         //    catch (Exception ex)
         //    {
@@ -102,7 +101,7 @@ namespace NUnit.Framework.Internal
         //            XmlHelper.FormatAttributeValue(test.Name),
         //            XmlHelper.FormatAttributeValue(test.FullName));
 
-        //        handler.RaiseCallbackEvent(report);
+        //        _callback(report);
         //    }
         //    catch (Exception ex)
         //    {
@@ -119,7 +118,7 @@ namespace NUnit.Framework.Internal
         //{
         //    try
         //    {
-        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
+        //        _callback(result.ToXml(false).OuterXml);
         //    }
         //    catch (Exception ex)
         //    {
@@ -146,7 +145,7 @@ namespace NUnit.Framework.Internal
                     FormatAttributeValue(test.Name),
                     FormatAttributeValue(test.FullName));
 
-                handler.RaiseCallbackEvent(report);
+                _callback(report);
             }
             catch (Exception ex)
             {
@@ -163,7 +162,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
+                _callback(result.ToXml(false).OuterXml);
             }
             catch (Exception ex)
             {

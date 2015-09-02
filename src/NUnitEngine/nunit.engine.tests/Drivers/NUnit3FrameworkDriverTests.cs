@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web.UI;
 using System.Xml;
 using NUnit.Tests.Assemblies;
 using NUnit.Engine.Internal;
@@ -164,7 +163,7 @@ namespace NUnit.Engine.Drivers.Tests
         #endregion
 
         #region Nested Callback Class
-        private class CallbackEventHandler : System.Web.UI.ICallbackEventHandler
+        private class CallbackEventHandler
         {
             private string _result;
 

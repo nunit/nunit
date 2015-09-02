@@ -78,7 +78,7 @@ namespace NUnit.Engine.Drivers
             CallbackHandler handler = new CallbackHandler();
 
             log.Info("Loading {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
-            CreateObject(LOAD_ACTION, _frameworkController, handler);
+            CreateObject(LOAD_ACTION, _frameworkController, (Action<string>)handler.RaiseCallbackEvent);
 
             return handler.Result;
         }
@@ -89,7 +89,7 @@ namespace NUnit.Engine.Drivers
 
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject(COUNT_ACTION, _frameworkController, filter, handler);
+            CreateObject(COUNT_ACTION, _frameworkController, filter, (Action<string>)handler.RaiseCallbackEvent);
 
             return int.Parse(handler.Result);
         }
@@ -107,7 +107,7 @@ namespace NUnit.Engine.Drivers
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
             log.Info("Running {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
-            CreateObject(RUN_ACTION, _frameworkController, filter, handler);
+            CreateObject(RUN_ACTION, _frameworkController, filter, (Action<string>)handler.RaiseCallbackEvent);
 
             return handler.Result;
         }
@@ -133,7 +133,7 @@ namespace NUnit.Engine.Drivers
             CallbackHandler handler = new CallbackHandler();
 
             log.Info("Exploring {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
-            CreateObject(EXPLORE_ACTION, _frameworkController, filter, handler);
+            CreateObject(EXPLORE_ACTION, _frameworkController, filter, (Action<string>)handler.RaiseCallbackEvent);
 
             return handler.Result;
         }

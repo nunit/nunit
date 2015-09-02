@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Web.UI;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Tests.Assemblies;
@@ -50,7 +49,7 @@ namespace NUnit.Framework.Api
 
         private IDictionary _settings = new Dictionary<string, object>();
         private FrameworkController _controller;
-        private ICallbackEventHandler _handler;
+        private CallbackEventHandler _handler;
 
         [SetUp]
         public void CreateController()
@@ -82,7 +81,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_GoodFile_ReturnsRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.LoadTestsAction(_controller, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -98,7 +97,7 @@ namespace NUnit.Framework.Api
         public void LoadTestsAction_Assembly_ReturnsRunnableSuite()
         {
             _controller = new FrameworkController(typeof(MockAssembly).Assembly, "ID", _settings);
-            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.LoadTestsAction(_controller, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -117,7 +116,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(new FrameworkController(MISSING_FILE, "ID", _settings), _handler);
+            new FrameworkController.LoadTestsAction(new FrameworkController(MISSING_FILE, "ID", _settings), _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -132,7 +131,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(new FrameworkController(BAD_FILE, "ID", _settings), _handler);
+            new FrameworkController.LoadTestsAction(new FrameworkController(BAD_FILE, "ID", _settings), _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -148,8 +147,8 @@ namespace NUnit.Framework.Api
         [Test]
         public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(_controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -165,7 +164,7 @@ namespace NUnit.Framework.Api
         public void ExploreTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
             var ex = Assert.Throws<InvalidOperationException>(
-                () => new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler));
+                () => new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent));
             Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
         }
 
@@ -173,8 +172,8 @@ namespace NUnit.Framework.Api
         public void ExploreTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
             var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -190,8 +189,8 @@ namespace NUnit.Framework.Api
         public void ExploreTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
             var controller = new FrameworkController(BAD_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -208,8 +207,8 @@ namespace NUnit.Framework.Api
         [Test]
         public void CountTestsAction_AfterLoad_ReturnsCorrectCount()
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(_controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo(MockAssembly.Tests.ToString()));
         }
 
@@ -217,7 +216,7 @@ namespace NUnit.Framework.Api
         public void CountTestsAction_WithoutLoad_ThrowsInvalidOperation()
         {
             var ex = Assert.Throws<InvalidOperationException>(
-                () => new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler));
+                () => new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent));
             Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
 
@@ -225,8 +224,8 @@ namespace NUnit.Framework.Api
         public void CountTestsAction_FileNotFound_ReturnsZero()
         {
             var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
         }
 
@@ -234,8 +233,8 @@ namespace NUnit.Framework.Api
         public void CountTestsAction_BadFile_ReturnsZero()
         {
             var controller = new FrameworkController(BAD_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
         }
         #endregion
@@ -244,8 +243,8 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(_controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -266,7 +265,7 @@ namespace NUnit.Framework.Api
         public void RunTestsAction_WithoutLoad_ReturnsError()
         {
             var ex = Assert.Throws<InvalidOperationException>(
-                () => new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler));
+                () => new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent));
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
@@ -274,8 +273,8 @@ namespace NUnit.Framework.Api
         public void RunTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
             var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -291,8 +290,8 @@ namespace NUnit.Framework.Api
         public void RunTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
             var controller = new FrameworkController(BAD_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -309,8 +308,8 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(_controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             //var result = TNode.FromXml(_handler.GetCallbackResult());
 
             //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -331,7 +330,7 @@ namespace NUnit.Framework.Api
         public void RunAsyncAction_WithoutLoad_ReturnsError()
         {
             var ex = Assert.Throws<InvalidOperationException>(
-                () => new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler));
+                () => new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler.RaiseCallbackEvent));
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
@@ -339,8 +338,8 @@ namespace NUnit.Framework.Api
         public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
         {
             var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             //var result = TNode.FromXml(_handler.GetCallbackResult());
 
             //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -356,8 +355,8 @@ namespace NUnit.Framework.Api
         public void RunAsyncAction_BadFile_ReturnsNonRunnableSuite()
         {
             var controller = new FrameworkController(BAD_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
+            new FrameworkController.LoadTestsAction(controller, _handler.RaiseCallbackEvent);
+            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler.RaiseCallbackEvent);
             //var result = TNode.FromXml(_handler.GetCallbackResult());
 
             //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -382,7 +381,7 @@ namespace NUnit.Framework.Api
 
         #region Nested Callback Class
 
-        private class CallbackEventHandler : System.Web.UI.ICallbackEventHandler
+        private class CallbackEventHandler
         {
             private string _result;
 

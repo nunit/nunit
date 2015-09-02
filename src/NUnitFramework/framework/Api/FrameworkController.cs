@@ -26,7 +26,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Web.UI;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -199,17 +198,17 @@ namespace NUnit.Framework.Api
 
         #region Private Action Methods Used by Nested Classes
 
-        private void LoadTests(ICallbackEventHandler handler)
+        private void LoadTests(Action<string> callback)
         {
             if (_testAssembly != null)
                 Runner.Load(_testAssembly, Settings);
             else
                 Runner.Load(AssemblyNameOrPath, Settings);
 
-            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
+            callback(Runner.LoadedTest.ToXml(false).OuterXml);
         }
 
-        private void ExploreTests(ICallbackEventHandler handler, string filter)
+        private void ExploreTests(Action<string> callback, string filter)
         {
             Guard.ArgumentNotNull(filter, "filter");
 
@@ -217,40 +216,40 @@ namespace NUnit.Framework.Api
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
             // TODO: Make use of the filter
-            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
+            callback(Runner.LoadedTest.ToXml(true).OuterXml);
         }
 
-        private void RunTests(ICallbackEventHandler handler, string filter)
+        private void RunTests(Action<string> callback, string filter)
         {
             Guard.ArgumentNotNull(filter, "filter");
 
-            ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+            ITestResult result = Runner.Run(new TestProgressReporter(callback), TestFilter.FromXml(filter));
 
             // Ensure that the CallContext of the thread is not polluted
             // by our TestExecutionContext, which is not serializable.
             TestExecutionContext.ClearCurrentContext();
 
-            handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
+            callback(result.ToXml(true).OuterXml);
         }
 
-        private void RunAsync(ICallbackEventHandler handler, string filter)
+        private void RunAsync(Action<string> callback, string filter)
         {
             Guard.ArgumentNotNull(filter, "filter");
 
-            Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+            Runner.RunAsync(new TestProgressReporter(callback), TestFilter.FromXml(filter));
         }
 
-        private void StopRun(ICallbackEventHandler handler, bool force)
+        private void StopRun(Action<string> callback, bool force)
         {
             Runner.StopRun(force);
         }
 
-        private void CountTests(ICallbackEventHandler handler, string filter)
+        private void CountTests(Action<string> callback, string filter)
         {
             Guard.ArgumentNotNull(filter, "filter");
 
             var count = Runner.CountTestCases(TestFilter.FromXml(filter));
-            handler.RaiseCallbackEvent(count.ToString());
+            callback(count.ToString());
         }
 
         #endregion
@@ -293,10 +292,10 @@ namespace NUnit.Framework.Api
             /// LoadTestsAction loads the tests in an assembly.
             /// </summary>
             /// <param name="controller">The controller.</param>
-            /// <param name="handler">The callback handler.</param>
-            public LoadTestsAction(FrameworkController controller, object handler)
+            /// <param name="callback">The callback.</param>
+            public LoadTestsAction(FrameworkController controller, Action<string> callback)
             {
-                controller.LoadTests((ICallbackEventHandler)handler);
+                controller.LoadTests(callback);
             }
         }
 
@@ -314,10 +313,10 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">The controller for which this action is being performed.</param>
             /// <param name="filter">Filter used to control which tests are included (NYI)</param>
-            /// <param name="handler">The callback handler.</param>
-            public ExploreTestsAction(FrameworkController controller, string filter, object handler)
+            /// <param name="callback">The callback.</param>
+            public ExploreTestsAction(FrameworkController controller, string filter, Action<string> callback)
             {
-                controller.ExploreTests((ICallbackEventHandler)handler, filter);
+                controller.ExploreTests(callback, filter);
             }
         }
 
@@ -336,10 +335,10 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">A FrameworkController holding the TestSuite whose cases are to be counted</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
-            /// <param name="handler">A callback handler used to report results</param>
-            public CountTestsAction(FrameworkController controller, string filter, object handler) 
+            /// <param name="callback">A callback used to report results</param>
+            public CountTestsAction(FrameworkController controller, string filter, Action<string> callback) 
             {
-                controller.CountTests((ICallbackEventHandler)handler, filter);
+                controller.CountTests(callback, filter);
             }
         }
 
@@ -357,10 +356,10 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
-            /// <param name="handler">A callback handler used to report results</param>
-            public RunTestsAction(FrameworkController controller, string filter, object handler) 
+            /// <param name="callback">A callback used to report results</param>
+            public RunTestsAction(FrameworkController controller, string filter, Action<string> callback) 
             {
-                controller.RunTests((ICallbackEventHandler)handler, filter);
+                controller.RunTests(callback, filter);
             }
         }
 
@@ -378,10 +377,10 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
-            /// <param name="handler">A callback handler used to report results</param>
-            public RunAsyncAction(FrameworkController controller, string filter, object handler) 
+            /// <param name="callback">A callback used to report results</param>
+            public RunAsyncAction(FrameworkController controller, string filter, Action<string> callback) 
             {
-                controller.RunAsync((ICallbackEventHandler)handler, filter);
+                controller.RunAsync(callback, filter);
             }
         }
 
@@ -400,11 +399,11 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">The FrameworkController for which a run is to be stopped.</param>
             /// <param name="force">True the stop should be forced, false for a cooperative stop.</param>
-            /// <param name="handler">>A callback handler used to report results</param>
+            /// <param name="callback">>A callback used to report results</param>
             /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
-            public StopRunAction(FrameworkController controller, bool force, object handler)
+            public StopRunAction(FrameworkController controller, bool force, Action<string> callback)
             {
-                controller.StopRun((ICallbackEventHandler)handler, force);
+                controller.StopRun(callback, force);
             }
         }
 
