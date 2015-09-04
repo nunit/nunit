@@ -47,6 +47,7 @@ namespace NUnit.Framework.Internal
 
         #region Properties
 
+#if !NETCF
         /// <summary>
         /// Gets a value indicating whether the parameter is optional
         /// </summary>
@@ -54,6 +55,7 @@ namespace NUnit.Framework.Internal
         {
             get { return ParameterInfo.IsOptional;  }
         }
+#endif
 
         /// <summary>
         /// Gets an IMethodInfo representing the method for which this is a parameter.

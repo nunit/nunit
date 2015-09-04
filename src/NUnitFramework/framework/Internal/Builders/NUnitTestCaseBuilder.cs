@@ -132,14 +132,14 @@ namespace NUnit.Framework.Internal.Builders
                     parameters = testMethod.Method.GetParameters();
                 }
                 else
-                    parameters = new ParameterInfo[0];
+                    parameters = new IParameterInfo[0];
             }
             else
-#endif
+                parameters = testMethod.Method.GetParameters();
 
+            int minArgsNeeded = parameters.Length;
+#else
             parameters = testMethod.Method.GetParameters();
-
-#if !NETCF
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
             {
@@ -147,8 +147,6 @@ namespace NUnit.Framework.Internal.Builders
                 if (!parameter.IsOptional)
                     minArgsNeeded++;
             }
-#else
-            int minArgsNeeded = parameters.Length;
 #endif
             int maxArgsNeeded = parameters.Length;
 
@@ -170,7 +168,7 @@ namespace NUnit.Framework.Internal.Builders
             }
 
 #if NETCF
-            ITypeInfo returnType = testMethod.Method.IsGenericMethodDefinition && (parms == null || parms.Arguments == null) ? typeof(void) : (Type)testMethod.Method.ReturnType;
+            ITypeInfo returnType = testMethod.Method.IsGenericMethodDefinition && (parms == null || parms.Arguments == null) ? new TypeWrapper(typeof(void)) : testMethod.Method.ReturnType;
 #else
             ITypeInfo returnType = testMethod.Method.ReturnType;
 #endif

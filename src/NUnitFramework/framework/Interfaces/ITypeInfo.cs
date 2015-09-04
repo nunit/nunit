@@ -118,6 +118,11 @@ namespace NUnit.Framework.Interfaces
         Type GetGenericTypeDefinition();
 
         /// <summary>
+        /// Returns a new ITypeInfo representing an instance of this generic Type using the supplied Type arguments
+        /// </summary>
+        ITypeInfo MakeGenericType(Type[] typeArgs);
+
+        /// <summary>
         /// Returns a value indicating whether this type has a method with a specified public attribute
         /// </summary>
         bool HasMethodWithAttribute(Type attrType);

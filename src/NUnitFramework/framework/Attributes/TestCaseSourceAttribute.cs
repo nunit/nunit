@@ -129,9 +129,11 @@ namespace NUnit.Framework
                 if (source != null)
                 {
 #if NETCF
-                    IParameterInfo[] parameters = method.IsGenericMethodDefinition ? new ParameterInfo[0] : method.GetParameters();
+                    //IParameterInfo[] parameters = method.IsGenericMethodDefinition ? new IParameterInfo[0] : method.GetParameters();
+                    int numParameters = method.IsGenericMethodDefinition ? 0 : method.GetParameters().Length;
 #else
-                    IParameterInfo[] parameters = method.GetParameters();
+                    //IParameterInfo[] parameters = method.GetParameters();
+                    int numParameters = method.GetParameters().Length;
 #endif
 
                     foreach (object item in source)
@@ -147,10 +149,11 @@ namespace NUnit.Framework
                                 if (method.IsGenericMethodDefinition)
                                 {
                                     var mi = method.MakeGenericMethodEx(args);
-                                    parameters = mi == null ? new ParameterInfo[0] : mi.GetParameters();
+                                    //parameters = mi == null ? new ParameterInfo[0] : mi.GetParameters();
+                                    numParameters = mi == null ? 0 : mi.GetParameters().Length;
                                 }
 #endif
-                                if (args.Length != parameters.Length)
+                                if (args.Length != numParameters)//parameters.Length)
                                     args = new object[] { item };
                             }
                             // else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
@@ -162,9 +165,9 @@ namespace NUnit.Framework
                                 Array array = item as Array;
 
 #if NETCF
-                                if (array.Rank == 1 && (method.IsGenericMethodDefinition || array.Length == parameters.Length))
+                                if (array.Rank == 1 && (method.IsGenericMethodDefinition || array.Length == numParameters))//parameters.Length))
 #else
-                                if (array.Rank == 1 && array.Length == parameters.Length)
+                                if (array.Rank == 1 && array.Length == numParameters)//parameters.Length)
 #endif
                                 {
                                     args = new object[array.Length];

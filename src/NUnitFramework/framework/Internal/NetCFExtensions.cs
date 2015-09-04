@@ -4,11 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
     static class NetCFExtensions
     {
+        public static IMethodInfo MakeGenericMethodEx(this IMethodInfo method, object[] arguments)
+        {
+            var newMi = method.MethodInfo.MakeGenericMethodEx(arguments);
+            if (newMi == null) return null;
+
+            return new MethodWrapper(method.TypeInfo.Type, newMi);
+        }
+
         public static MethodInfo MakeGenericMethodEx(this MethodInfo mi, object[] arguments)
         {
             return mi.MakeGenericMethodEx(arguments.Select(a => a == null ? typeof(object) : (a is Type ? typeof(Type) : a.GetType())).ToArray());

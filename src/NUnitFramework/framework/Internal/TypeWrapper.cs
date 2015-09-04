@@ -169,6 +169,14 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Returns a new ITypeInfo representing an instance of this generic Type using the supplied Type arguments
+        /// </summary>
+        public ITypeInfo MakeGenericType(Type[] typeArgs)
+        {
+            return new TypeWrapper(Type.MakeGenericType(typeArgs));
+        }
+
+        /// <summary>
         /// Returns a Type representing a generic type definition from which this Type can be constructed.
         /// </summary>
         public Type GetGenericTypeDefinition()

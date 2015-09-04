@@ -94,6 +94,11 @@ namespace NUnit.Framework.Interfaces
         IParameterInfo[] GetParameters();
 
         /// <summary>
+        /// Returns the Type arguments of a generic method or the Type parameters of a generic method definition.
+        /// </summary>
+        Type[] GetGenericArguments();
+
+        /// <summary>
         /// Replaces the type parameters of the method with the array of types provided and returns a new IMethodInfo.
         /// </summary>
         /// <param name="typeArguments">The type arguments to be used</param>

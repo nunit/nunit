@@ -122,8 +122,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns the display name for the method, called with specific arguments.
         /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
         public string GetDisplayName(object[] args)
         {
             return MethodHelper.GetDisplayName(MethodInfo, args);
@@ -142,6 +140,14 @@ namespace NUnit.Framework.Internal
                 result[i] = new ParameterWrapper(this, parameters[i]);
 
             return result;
+        }
+
+        /// <summary>
+        /// Returns the Type arguments of a generic method or the Type parameters of a generic method definition.
+        /// </summary>
+        public Type[] GetGenericArguments()
+        {
+            return MethodInfo.GetGenericArguments();
         }
 
         /// <summary>

@@ -260,18 +260,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Creates an instance of a generic Type using the supplied Type arguments
-        /// </summary>
-        /// <param name="type">The generic type to be specialized.</param>
-        /// <param name="typeArgs">The type args.</param>
-        /// <returns>An instance of the generic type.</returns>
-        public static Type MakeGenericType(Type type, Type[] typeArgs)
-        {
-            // TODO: Add error handling
-            return type.MakeGenericType(typeArgs);
-        }
-
-        /// <summary>
         /// Determines whether this instance can deduce type args for a generic type from the supplied arguments.
         /// </summary>
         /// <param name="type">The type to be examined.</param>

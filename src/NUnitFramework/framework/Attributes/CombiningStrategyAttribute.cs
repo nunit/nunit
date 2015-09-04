@@ -90,7 +90,7 @@ namespace NUnit.Framework
 
                 var o = new object();
                 var tryArgs = Enumerable.Repeat(o, numGenericParams).ToArray();
-                MethodInfo mi;
+                IMethodInfo mi;
 
                 try
                 {
@@ -106,6 +106,7 @@ namespace NUnit.Framework
                 }
 
                 var par = mi.GetParameters();
+
                 if (par.Length == 0)
                     return tests;
 
