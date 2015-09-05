@@ -129,10 +129,8 @@ namespace NUnit.Framework
                 if (source != null)
                 {
 #if NETCF
-                    //IParameterInfo[] parameters = method.IsGenericMethodDefinition ? new IParameterInfo[0] : method.GetParameters();
                     int numParameters = method.IsGenericMethodDefinition ? 0 : method.GetParameters().Length;
 #else
-                    //IParameterInfo[] parameters = method.GetParameters();
                     int numParameters = method.GetParameters().Length;
 #endif
 
@@ -149,17 +147,12 @@ namespace NUnit.Framework
                                 if (method.IsGenericMethodDefinition)
                                 {
                                     var mi = method.MakeGenericMethodEx(args);
-                                    //parameters = mi == null ? new ParameterInfo[0] : mi.GetParameters();
                                     numParameters = mi == null ? 0 : mi.GetParameters().Length;
                                 }
 #endif
                                 if (args.Length != numParameters)//parameters.Length)
                                     args = new object[] { item };
                             }
-                            // else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
-                            // {
-                            //    args = new object[] { item };
-                            // }
                             else if (item is Array)
                             {
                                 Array array = item as Array;

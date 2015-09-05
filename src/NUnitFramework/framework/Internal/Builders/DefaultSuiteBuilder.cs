@@ -64,8 +64,10 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// Build a TestSuite from type provided.
+        /// Build a TestSuite from TypeInfo provided.
         /// </summary>
+        /// <param name="typeInfo">The fixture type to build</param>
+        /// <returns>A TestSuite built from that type</returns>
         public TestSuite BuildFrom(ITypeInfo typeInfo)
         {
             var fixtures = new List<TestSuite>();
