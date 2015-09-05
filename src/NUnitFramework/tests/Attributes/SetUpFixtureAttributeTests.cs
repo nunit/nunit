@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Attributes
 {
@@ -36,7 +37,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(Class4))]
         public void CertainAttributesAreNotAllowed(Type type)
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(type);
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(type));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }

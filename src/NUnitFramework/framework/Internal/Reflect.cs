@@ -210,18 +210,20 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
+#if !PORTABLE
+                catch (System.Threading.ThreadAbortException)
+                {
+                    // No need to wrap or rethrow ThreadAbortException
+                    return null;
+                }
+#endif
+                catch (TargetInvocationException e)
+                {
+                    throw new NUnitException("Rethrown", e.InnerException);
+                }
                 catch (Exception e)
                 {
-#if !PORTABLE
-                    // No need to wrap or rethrow ThreadAbortException
-                    if (!(e is System.Threading.ThreadAbortException))
-#endif
-                    {
-                        if (e is TargetInvocationException)
-                            throw new NUnitException("Rethrown", e.InnerException);
-                        else
-                            throw new NUnitException("Rethrown", e);
-                    }
+                    throw new NUnitException("Rethrown", e);
                 }
             }
 

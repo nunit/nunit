@@ -87,7 +87,7 @@ namespace NUnit.Framework
         /// <returns>
         /// An enumeration containing individual data items
         /// </returns>
-        public IEnumerable GetData(ParameterInfo parameter)
+        public IEnumerable GetData(IParameterInfo parameter)
         {
             return GetDataSource(parameter);
         }
@@ -96,11 +96,9 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private IEnumerable GetDataSource(ParameterInfo parameter)
+        private IEnumerable GetDataSource(IParameterInfo parameter)
         {
-            Type sourceType = SourceType;
-            if (sourceType == null)
-                sourceType = parameter.Member.ReflectedType;
+            Type sourceType = SourceType ?? parameter.Method.TypeInfo.Type;
 
             // TODO: Test this
             if (SourceName == null)

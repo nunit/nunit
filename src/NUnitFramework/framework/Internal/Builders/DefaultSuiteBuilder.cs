@@ -43,59 +43,59 @@ namespace NUnit.Framework.Internal.Builders
         /// IFixtureBuilder interface or one or more methods
         /// marked as tests.
         /// </summary>
-        /// <param name="type">The fixture type to check</param>
+        /// <param name="typeInfo">The fixture type to check</param>
         /// <returns>True if the fixture can be built, false if not</returns>
-        public bool CanBuildFrom(Type type)
+        public bool CanBuildFrom(ITypeInfo typeInfo)
         {
-            if (type.IsAbstract && !type.IsSealed)
+            if (typeInfo.IsAbstract && !typeInfo.IsSealed)
                 return false;
 
-            if (type.IsDefined(typeof(IFixtureBuilder), true))
+            if (typeInfo.IsDefined<IFixtureBuilder>(true))
                 return true;
 
             // Generics must have an attribute in order to provide
             // them with arguments to determine the specific type.
             // TODO: What about automatic fixtures? Should there
             // be some kind of error shown?
-            if (type.IsGenericTypeDefinition)
+            if (typeInfo.IsGenericTypeDefinition)
                 return false;
 
-            return Reflect.HasMethodWithAttribute(type, typeof(IImplyFixture));
+            return typeInfo.HasMethodWithAttribute(typeof(IImplyFixture));
         }
 
         /// <summary>
-        /// Build a TestSuite from type provided.
+        /// Build a TestSuite from TypeInfo provided.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public Test BuildFrom(Type type)
+        /// <param name="typeInfo">The fixture type to build</param>
+        /// <returns>A TestSuite built from that type</returns>
+        public TestSuite BuildFrom(ITypeInfo typeInfo)
         {
             var fixtures = new List<TestSuite>();
 
             try
             {
-                IFixtureBuilder[] builders = GetFixtureBuilderAttributes(type);
+                IFixtureBuilder[] builders = GetFixtureBuilderAttributes(typeInfo);
 
                 foreach (var builder in builders)
-                    foreach (var fixture in builder.BuildFrom(type))
+                    foreach (var fixture in builder.BuildFrom(typeInfo))
                         fixtures.Add(fixture);
 
-                if (type.IsGenericType)
-                    return BuildMultipleFixtures(type, fixtures);
+                if (typeInfo.IsGenericType)
+                    return BuildMultipleFixtures(typeInfo, fixtures);
 
                 switch (fixtures.Count)
                 {
                     case 0:
-                        return _defaultBuilder.BuildFrom(type);
+                        return _defaultBuilder.BuildFrom(typeInfo);
                     case 1:
                         return fixtures[0];
                     default:
-                        return BuildMultipleFixtures(type, fixtures);
+                        return BuildMultipleFixtures(typeInfo, fixtures);
                 }
             }
             catch (Exception ex)
             {
-                var fixture = new TestFixture(type);
+                var fixture = new TestFixture(typeInfo);
                 fixture.RunState = RunState.NotRunnable;
 
                 if (ex is System.Reflection.TargetInvocationException)
@@ -110,9 +110,9 @@ namespace NUnit.Framework.Internal.Builders
 
         #region Helper Methods
 
-        private Test BuildMultipleFixtures(Type type, IEnumerable<TestSuite> fixtures)
+        private TestSuite BuildMultipleFixtures(ITypeInfo typeInfo, IEnumerable<TestSuite> fixtures)
         {
-            TestSuite suite = new ParameterizedFixtureSuite(type);
+            TestSuite suite = new ParameterizedFixtureSuite(typeInfo);
 
             foreach (var fixture in fixtures)
                 suite.Add(fixture);
@@ -126,15 +126,15 @@ namespace NUnit.Framework.Internal.Builders
         /// unless there are no fixture builder attributes at all on the derived
         /// class. This is by design.
         /// </summary>
-        /// <param name="type">The type being examined for attributes</param>
+        /// <param name="typeInfo">The type being examined for attributes</param>
         /// <returns>A list of the attributes found.</returns>
-        private IFixtureBuilder[] GetFixtureBuilderAttributes(Type type)
+        private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo typeInfo)
         {
             IFixtureBuilder[] attrs = new IFixtureBuilder[0];
 
-            while (type != null)
+            while (typeInfo != null && !typeInfo.IsType(typeof(object)))
             {
-                attrs = (IFixtureBuilder[])type.GetCustomAttributes(typeof(IFixtureBuilder), false);
+                attrs = typeInfo.GetCustomAttributes<IFixtureBuilder>(false);
 
                 if (attrs.Length > 0)
                 {
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal.Builders
                     return result;
                 }
 
-                type = type.BaseType;
+                typeInfo = typeInfo.BaseType;
             }
 
             return attrs;

@@ -42,7 +42,7 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeFixture(Type type)
         {
-            return (TestSuite)new DefaultSuiteBuilder().BuildFrom(type);
+            return (TestSuite)new DefaultSuiteBuilder().BuildFrom(new TypeWrapper(type));
         }
 
         public static TestSuite MakeFixture(object fixture)
@@ -79,10 +79,10 @@ namespace NUnit.TestUtilities
         // depending on whether the method takes arguments or not
         internal static Test MakeTestFromMethod(Type type, string methodName)
         {
-            MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (method == null)
                 Assert.Fail("Method not found: " + methodName);
-            return new DefaultTestCaseBuilder().BuildFrom(method);
+            return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
         }
 
         #endregion

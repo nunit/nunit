@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal.Execution
             // 2. For now, if this represents a test case. This avoids issues of
             // tests that access the fixture state and allows handling ApartmentState
             // preferences set on the fixture.
-            else if (work is SimpleWorkItem || work.Test.FixtureType == null)
+            else if (work is SimpleWorkItem || work.Test.TypeInfo == null)
                 Execute(work);
             else
                 Enqueue(work);

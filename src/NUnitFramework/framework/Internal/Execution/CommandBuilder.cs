@@ -51,15 +51,15 @@ namespace NUnit.Framework.Internal.Execution
             TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown, actions);
 
             // Prefix with any IApplyToContext items from attributes
-            if (suite.FixtureType != null)
+            if (suite.TypeInfo != null)
             {
-                IApplyToContext[] changes = (IApplyToContext[])suite.FixtureType.GetCustomAttributes(typeof(IApplyToContext), true);
+                IApplyToContext[] changes = suite.TypeInfo.GetCustomAttributes<IApplyToContext>(true);
                 if (changes.Length > 0)
                     command = new ApplyChangesToContextCommand(command, changes);
             }
             if (suite.Method!=null)
             {
-                IApplyToContext[] changes = (IApplyToContext[])suite.Method.GetCustomAttributes(typeof(IApplyToContext), true);
+                IApplyToContext[] changes = suite.Method.GetCustomAttributes<IApplyToContext>(true);
                 if (changes.Length > 0)
                     command = new ApplyChangesToContextCommand(command, changes);
             }
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal.Execution
             TestCommand command = new TestMethodCommand(test);
 
             // Add any wrappers to the TestMethodCommand
-            foreach (IWrapTestMethod wrapper in test.Method.GetCustomAttributes(typeof(IWrapTestMethod), true))
+            foreach (IWrapTestMethod wrapper in test.Method.GetCustomAttributes<IWrapTestMethod>(true))
                 command = wrapper.Wrap(command);
 
             // Wrap in TestActionCommand
@@ -104,11 +104,11 @@ namespace NUnit.Framework.Internal.Execution
             command = new SetUpTearDownCommand(command);
 
             // Add wrappers that apply before setup and after teardown
-            foreach (ICommandWrapper decorator in test.Method.GetCustomAttributes(typeof(IWrapSetUpTearDown), true))
+            foreach (ICommandWrapper decorator in test.Method.GetCustomAttributes<IWrapSetUpTearDown>(true))
                 command = decorator.Wrap(command);
 
             // Add command to set up context using attributes that implement IApplyToContext
-            IApplyToContext[] changes = (IApplyToContext[])test.Method.GetCustomAttributes(typeof(IApplyToContext), true);
+            IApplyToContext[] changes = test.Method.GetCustomAttributes<IApplyToContext>(true);
             if (changes.Length > 0)
                 command = new ApplyChangesToContextCommand(command, changes);
 
@@ -127,9 +127,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Builds the set up tear down list.
         /// </summary>
-        /// <param name="fixtureType">Type of the fixture.</param>
-        /// <param name="setUpType">Type of the set up.</param>
-        /// <param name="tearDownType">Type of the tear down.</param>
+        /// <param name="fixtureType">TypeInfo of the fixture.</param>
+        /// <param name="setUpType">Type of the set up attribute.</param>
+        /// <param name="tearDownType">Type of the tear down attribute.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
         public static List<SetUpTearDownItem> BuildSetUpTearDownList(Type fixtureType, Type setUpType, Type tearDownType)
         {
@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal.Execution
 
             var list = new List<SetUpTearDownItem>();
 
-            while (fixtureType != null && fixtureType != typeof(object))
+            while (fixtureType != null && !fixtureType.Equals(typeof(object)))
             {
                 var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
                 if (node.HasMethods)

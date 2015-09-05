@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,52 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
-
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// ParameterizedMethodSuite holds a collection of individual
-    /// TestMethods with their arguments applied.
+    /// The IReflectionInfo interface is implemented by NUnit wrapper objects that perform reflection.
     /// </summary>
-    public class ParameterizedMethodSuite : TestSuite
+    public interface IReflectionInfo
     {
-        private bool _isTheory;
+        /// <summary>
+        /// Returns an array of custom attributes of the specified type applied to this object
+        /// </summary>
+        T[] GetCustomAttributes<T>(bool inherit) where T : class;
 
         /// <summary>
-        /// Construct from a MethodInfo
+        /// Returns a value indicating whether an attribute of the specified type is defined on this object.
         /// </summary>
-        /// <param name="method"></param>
-        public ParameterizedMethodSuite(IMethodInfo method)
-            : base(method.TypeInfo.FullName, method.Name)
-        {
-            Method = method;
-#if PORTABLE
-            _isTheory = false;
-#else
-            _isTheory = method.IsDefined<TheoryAttribute>(true);
-#endif
-            this.MaintainTestOrder = true;
-        }
-
-        /// <summary>
-        /// Gets a string representing the type of test
-        /// </summary>
-        /// <value></value>
-        public override string TestType
-        {
-            get
-            {
-                if (_isTheory)
-                    return "Theory";
-
-                if (this.Method.ContainsGenericParameters)
-                    return "GenericMethod";
-                
-                return "ParameterizedMethod";
-            }
-        }
+        bool IsDefined<T>(bool inherit);
     }
 }

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -37,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestFixture"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestFixture(Type fixtureType) : base(fixtureType)
+        public TestFixture(ITypeInfo fixtureType) : base(fixtureType)
         {
             CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
             CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));

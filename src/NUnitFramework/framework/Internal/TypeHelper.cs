@@ -27,6 +27,7 @@ using System.Linq;
 #endif
 using System.Reflection;
 using System.Text;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -222,7 +223,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="arglist">An array of args to be converted</param>
         /// <param name="parameters">A ParameterInfo[] whose types will be used as targets</param>
-        public static void ConvertArgumentList(object[] arglist, ParameterInfo[] parameters)
+        public static void ConvertArgumentList(object[] arglist, IParameterInfo[] parameters)
         {
             System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);
 
@@ -256,18 +257,6 @@ namespace NUnit.Framework.Internal
                             System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
-        }
-
-        /// <summary>
-        /// Creates an instance of a generic Type using the supplied Type arguments
-        /// </summary>
-        /// <param name="type">The generic type to be specialized.</param>
-        /// <param name="typeArgs">The type args.</param>
-        /// <returns>An instance of the generic type.</returns>
-        public static Type MakeGenericType(Type type, Type[] typeArgs)
-        {
-            // TODO: Add error handling
-            return type.MakeGenericType(typeArgs);
         }
 
         /// <summary>

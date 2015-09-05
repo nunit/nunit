@@ -43,9 +43,9 @@ namespace NUnit.Framework.Interfaces
         /// a fixture. If something prevents the fixture from being used, it
         /// will be returned nonetheless, labelled as non-runnable.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used.</param>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <returns>A TestSuite object or one derived from TestSuite.</returns>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
-        IEnumerable<TestSuite> BuildFrom(Type type);
+        IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo);
     }
 }

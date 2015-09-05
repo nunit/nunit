@@ -45,25 +45,25 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>
         /// True if any data is available, otherwise false.
         /// </returns>
-        public bool HasDataFor(ParameterInfo parameter)
+        public bool HasDataFor(IParameterInfo parameter)
         {
-            return parameter.IsDefined(typeof(IParameterDataSource), false);
+            return parameter.IsDefined<IParameterDataSource>(false);
         }
 
         /// <summary>
         /// Return an IEnumerable providing data for use with the
         /// supplied parameter.
         /// </summary>
-        /// <param name="parameter">A ParameterInfo representing one
+        /// <param name="parameter">An IParameterInfo representing one
         /// argument to a parameterized test</param>
         /// <returns>
         /// An IEnumerable providing the required data
         /// </returns>
-        public IEnumerable GetDataFor(ParameterInfo parameter)
+        public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             var data = new List<object>();
 
-            foreach (IParameterDataSource source in parameter.GetCustomAttributes(typeof(IParameterDataSource), false))
+            foreach (IParameterDataSource source in parameter.GetCustomAttributes<IParameterDataSource>(false))
             {
                 foreach (object item in source.GetData(parameter))
                     data.Add(item);

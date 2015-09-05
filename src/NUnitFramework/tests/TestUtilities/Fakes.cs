@@ -94,7 +94,7 @@ namespace NUnit.TestUtilities
             : this(obj.GetType(), name) { }
 
         public FakeTestMethod(Type type, string name)
-            : base(type.GetMethod(name, BF.Public | BF.NonPublic | BF.Static | BF.Instance)) { }
+            : base(new MethodWrapper(type, type.GetMethod(name, BF.Public | BF.NonPublic | BF.Static | BF.Instance))) { }
     }
 
     #endregion

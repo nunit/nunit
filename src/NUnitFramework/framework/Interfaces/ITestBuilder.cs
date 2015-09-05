@@ -41,6 +41,6 @@ namespace NUnit.Framework.Interfaces
         /// <param name="method">The method to be used as a test</param>
         /// <param name="suite">The TestSuite to which the method will be added</param>
         /// <returns>A TestMethod object</returns>
-        IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite);
+        IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite);
     }
 }

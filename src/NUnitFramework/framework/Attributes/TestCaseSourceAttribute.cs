@@ -99,10 +99,10 @@ namespace NUnit.Framework
         /// Construct one or more TestMethods from a given MethodInfo,
         /// using available parameter data.
         /// </summary>
-        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
+        /// <param name="method">The IMethod for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
                 yield return _builder.BuildTestMethod(method, suite, parms);
@@ -118,7 +118,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The method for which data is needed.</param>
         /// <returns></returns>
-        private IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+        private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
 
@@ -129,9 +129,9 @@ namespace NUnit.Framework
                 if (source != null)
                 {
 #if NETCF
-                    ParameterInfo[] parameters = method.IsGenericMethodDefinition ? new ParameterInfo[0] : method.GetParameters();
+                    int numParameters = method.IsGenericMethodDefinition ? 0 : method.GetParameters().Length;
 #else
-                    ParameterInfo[] parameters = method.GetParameters();
+                    int numParameters = method.GetParameters().Length;
 #endif
 
                     foreach (object item in source)
@@ -147,24 +147,20 @@ namespace NUnit.Framework
                                 if (method.IsGenericMethodDefinition)
                                 {
                                     var mi = method.MakeGenericMethodEx(args);
-                                    parameters = mi == null ? new ParameterInfo[0] : mi.GetParameters();
+                                    numParameters = mi == null ? 0 : mi.GetParameters().Length;
                                 }
 #endif
-                                if (args.Length != parameters.Length)
+                                if (args.Length != numParameters)//parameters.Length)
                                     args = new object[] { item };
                             }
-                            // else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
-                            // {
-                            //    args = new object[] { item };
-                            // }
                             else if (item is Array)
                             {
                                 Array array = item as Array;
 
 #if NETCF
-                                if (array.Rank == 1 && (method.IsGenericMethodDefinition || array.Length == parameters.Length))
+                                if (array.Rank == 1 && (method.IsGenericMethodDefinition || array.Length == numParameters))//parameters.Length))
 #else
-                                if (array.Rank == 1 && array.Length == parameters.Length)
+                                if (array.Rank == 1 && array.Length == numParameters)//parameters.Length)
 #endif
                                 {
                                     args = new object[array.Length];
@@ -210,11 +206,9 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestCaseSource(MethodInfo method)
+        private IEnumerable GetTestCaseSource(IMethodInfo method)
         {
-            Type sourceType = this.SourceType;
-            if (sourceType == null)
-                sourceType = method.ReflectedType;
+            Type sourceType = SourceType ?? method.TypeInfo.Type;
 
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)

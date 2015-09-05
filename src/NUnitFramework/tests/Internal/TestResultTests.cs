@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
             expectedStart = new DateTime(1968, 4, 8, 15, 05, 30, 250, DateTimeKind.Utc);
             expectedEnd = expectedStart.AddSeconds(expectedDuration);
 
-            test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
+            test = new TestMethod(new MethodWrapper(typeof(DummySuite), "DummyMethod"));
             test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
             test.Properties.Set("Priority", "low");

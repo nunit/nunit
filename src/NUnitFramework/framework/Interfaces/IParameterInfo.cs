@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,52 +21,41 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// ParameterizedMethodSuite holds a collection of individual
-    /// TestMethods with their arguments applied.
+    /// The IParameterInfo interface is an abstraction of a .NET parameter.
     /// </summary>
-    public class ParameterizedMethodSuite : TestSuite
+    public interface IParameterInfo : IReflectionInfo
     {
-        private bool _isTheory;
+        #region Properties
 
+#if !NETCF
         /// <summary>
-        /// Construct from a MethodInfo
+        /// Gets a value indicating whether the parameter is optional
         /// </summary>
-        /// <param name="method"></param>
-        public ParameterizedMethodSuite(IMethodInfo method)
-            : base(method.TypeInfo.FullName, method.Name)
-        {
-            Method = method;
-#if PORTABLE
-            _isTheory = false;
-#else
-            _isTheory = method.IsDefined<TheoryAttribute>(true);
+        bool IsOptional { get; }
 #endif
-            this.MaintainTestOrder = true;
-        }
 
         /// <summary>
-        /// Gets a string representing the type of test
+        /// Gets an IMethodInfo representing the method for which this is a parameter
         /// </summary>
-        /// <value></value>
-        public override string TestType
-        {
-            get
-            {
-                if (_isTheory)
-                    return "Theory";
+        IMethodInfo Method { get; }
 
-                if (this.Method.ContainsGenericParameters)
-                    return "GenericMethod";
-                
-                return "ParameterizedMethod";
-            }
-        }
+        /// <summary>
+        /// Gets the underlying .NET ParameterInfo
+        /// </summary>
+        ParameterInfo ParameterInfo { get; }
+
+        /// <summary>
+        /// Gets the Type of the parameter
+        /// </summary>
+        Type ParameterType { get; }
+
+        #endregion
     }
 }

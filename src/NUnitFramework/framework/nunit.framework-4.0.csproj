@@ -281,12 +281,15 @@
     <Compile Include="Interfaces\ICommandWrapper.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
+    <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
+    <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
+    <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
     <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITest.cs" />
@@ -298,6 +301,7 @@
     <Compile Include="Interfaces\ITestFixtureData.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
+    <Compile Include="Interfaces\ITypeInfo.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
@@ -360,9 +364,11 @@
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
+    <Compile Include="Internal\MethodWrapper.cs" />
     <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
+    <Compile Include="Internal\ParameterWrapper.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
@@ -390,6 +396,7 @@
     <Compile Include="Internal\Tests\TestSuite.cs" />
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
+    <Compile Include="Internal\TypeWrapper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ITestAction.cs" />
     <Compile Include="Iz.cs" />
