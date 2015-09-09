@@ -38,7 +38,7 @@
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
   </ItemGroup>

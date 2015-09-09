@@ -13,8 +13,6 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,9 +40,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -120,7 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
   </ItemGroup>
