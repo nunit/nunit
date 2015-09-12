@@ -34,6 +34,7 @@ using NUnit.Framework.Internal.Execution;
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
+using NUnit.Framework.Compatibility;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -49,7 +50,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestExecutionContext
 #if !SILVERLIGHT && !NETCF && !PORTABLE
-        : MarshalByRefObject, ILogicalThreadAffinative
+        : LongLivedMarshalByRefObject, ILogicalThreadAffinative
 #endif
     {
         // NOTE: Be very careful when modifying this class. It uses

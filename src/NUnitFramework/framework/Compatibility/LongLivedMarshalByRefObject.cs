@@ -21,22 +21,27 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PORTABLE || SILVERLIGHT
-namespace System
+using System;
+
+namespace NUnit.Framework.Compatibility
 {
     /// <summary>
-    /// A shim of the .NET class for platforms that do not support it.
+    /// A MarshalByRefObject that lives forever
     /// </summary>
-    public class MarshalByRefObject
+#if PORTABLE || SILVERLIGHT || NETCF
+    public class LongLivedMarshalByRefObject
+    {
+    }
+#else
+    public class LongLivedMarshalByRefObject : MarshalByRefObject
     {
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
-        /// <returns>null</returns>
-        public virtual object InitializeLifetimeService()
+        public override object InitializeLifetimeService()
         {
             return null;
         }
     }
-}
 #endif
+}
