@@ -35,10 +35,6 @@ using NUnit.Framework.Internal;
 using Path = NUnit.Framework.Compatibility.Path;
 #endif
 
-#if NETCF
-using Activator = NUnit.Framework.Compatibility.Activator;
-#endif
-
 namespace NUnit.Framework.Api
 {
     /// <summary>
@@ -105,8 +101,8 @@ namespace NUnit.Framework.Api
         /// <param name="builderType">The Type of the test builder</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
-            Builder = (ITestAssemblyBuilder)Activator.CreateInstance(Type.GetType(builderType));
-            Runner = (ITestAssemblyRunner)Activator.CreateInstance(Type.GetType(runnerType), new object[] { Builder });
+            Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
+            Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
 
             Test.IdPrefix = idPrefix ?? "";
             Initialize(assemblyNameOrPath, settings);

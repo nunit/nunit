@@ -53,7 +53,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(RetryErrorOnThirdTryFixture), "Failed(Child)", 3)]
         public void RetryWorksAsExpected(Type fixtureType, string outcome, int nTries)
         {
-            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Activator.CreateInstance(fixtureType);
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
             Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));

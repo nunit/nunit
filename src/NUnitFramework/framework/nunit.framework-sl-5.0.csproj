@@ -173,7 +173,6 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
-    <Compile Include="Compatibility\Activator.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\MarshalByRefObject.cs" />

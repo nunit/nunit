@@ -54,7 +54,7 @@ namespace NUnit.TestUtilities
         {
             Test test = TestBuilder.MakeTestFromMethod(type, name);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
-            object testObject = Activator.CreateInstance(type);
+            object testObject = Reflect.Construct(type);
             ITestResult result = TestBuilder.RunTest(test, testObject);
             if (result.HasChildren) // In case it's a parameterized method
                 result = result.Children[0];
