@@ -115,8 +115,9 @@ namespace NUnitLite.Runner
 
         private void TC_TestFinished(string name, double duration)
         {
-            _outWriter.WriteLine("##teamcity[testFinished name='{0}' duration='{1}']", Escape(name),
-                             duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
+            // TeamCity expects the duration to be in milliseconds
+            int milliseconds = (int)(duration * 1000d);
+            _outWriter.WriteLine("##teamcity[testFinished name='{0}' duration='{1}']", Escape(name), milliseconds);
         }
 
         private void TC_TestIgnored(string name, string reason)
