@@ -26,7 +26,8 @@ using System.Reflection;
 namespace NUnit.Framework.Compatibility
 {
     /// <summary>
-    /// Provides extension methods on portable platforms to simplify working with Attributes
+    /// Provides a platform-independent methods for getting attributes
+    /// for use by AttributeConstraint and AttributeExistsConstraint.
     /// </summary>
     public static class AttributeHelper
     {
@@ -43,8 +44,10 @@ namespace NUnit.Framework.Compatibility
         {
 #if !PORTABLE
             var attrProvider = actual as ICustomAttributeProvider;
-            if (attrProvider != null)
-                return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
+            if (attrProvider == null)
+                throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider.", actual), "actual");
+            
+            return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
 #else
             var member = actual as MemberInfo;
             if (member != null)
@@ -63,8 +66,9 @@ namespace NUnit.Framework.Compatibility
             {
                 return (Attribute[])assembly.GetCustomAttributes(attributeType, inherit);
             }
+
+            throw new ArgumentException(string.Format("Actual value {0} must be a MemberInfo, ParameterInfo or Assembly.", actual), "actual");
 #endif
-            throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider", actual), "actual");
         }
 
     }
