@@ -338,11 +338,19 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void DisposeCalledWhenFixtureImplementsIDisposable()
+        public void DisposeCalledOnceWhenFixtureImplementsIDisposable()
         {
-            DisposableFixture fixture = new DisposableFixture();
+            var fixture = new DisposableFixture();
             TestBuilder.RunTestFixture(fixture);
-            Assert.IsTrue(fixture.disposeCalled);
+            Assert.That(fixture.disposeCalled, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void DisposeCalledOnceWhenFixtureImplementsIDisposableAndHasTestCases()
+        {
+            var fixture = new DisposableFixtureWithTestCases();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.disposeCalled, Is.EqualTo(1));
         }
     }
 
