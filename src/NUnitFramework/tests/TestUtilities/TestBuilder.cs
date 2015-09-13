@@ -105,7 +105,7 @@ namespace NUnit.TestUtilities
 
             object testObject = null;
             if (!IsStaticClass(type))
-                testObject = Activator.CreateInstance(type);
+                testObject = Reflect.Construct(type);
 
             return RunTestSuite(suite, testObject);
         }
@@ -138,7 +138,7 @@ namespace NUnit.TestUtilities
 
             object testObject = null;
             if (!IsStaticClass(type))
-                testObject = Activator.CreateInstance(type);
+                testObject = Reflect.Construct(type);
 
             return RunTest(testMethod, testObject);
         }

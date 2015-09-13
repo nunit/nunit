@@ -28,16 +28,9 @@ using System.IO;
 using System.Reflection;
 using System.Web.UI;
 using NUnit.Common;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-
-#if PORTABLE
-using Path = NUnit.Framework.Compatibility.Path;
-#endif
-
-#if NETCF
-using Activator = NUnit.Framework.Compatibility.Activator;
-#endif
 
 namespace NUnit.Framework.Api
 {
@@ -55,7 +48,7 @@ namespace NUnit.Framework.Api
     /// reload on run, by combining these calls.
     /// </summary>
     [Serializable]
-    public class FrameworkController : MarshalByRefObject
+    public class FrameworkController : LongLivedMarshalByRefObject
     {
 #if !PORTABLE && !SILVERLIGHT
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
@@ -105,8 +98,8 @@ namespace NUnit.Framework.Api
         /// <param name="builderType">The Type of the test builder</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
-            Builder = (ITestAssemblyBuilder)Activator.CreateInstance(Type.GetType(builderType));
-            Runner = (ITestAssemblyRunner)Activator.CreateInstance(Type.GetType(runnerType), new object[] { Builder });
+            Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
+            Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
 
             Test.IdPrefix = idPrefix ?? "";
             Initialize(assemblyNameOrPath, settings);
@@ -183,20 +176,6 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-        #region InitializeLifetimeService
-
-#if !NETCF
-        /// <summary>
-        /// InitializeLifetimeService returns null, allowing the instance to live indefinitely.
-        /// </summary>
-        public override object InitializeLifetimeService()
-        {
-            return null;
-        }
-#endif
-
-        #endregion
-
         #region Private Action Methods Used by Nested Classes
 
         private void LoadTests(ICallbackEventHandler handler)
@@ -263,21 +242,8 @@ namespace NUnit.Framework.Api
         /// FrameworkControllerAction is the base class for all actions
         /// performed against a FrameworkController.
         /// </summary>
-        public abstract class FrameworkControllerAction : MarshalByRefObject
+        public abstract class FrameworkControllerAction : LongLivedMarshalByRefObject
         {
-            #region InitializeLifetimeService
-
-#if !NETCF
-            /// <summary>
-            /// Initialize lifetime service to null so that the instance lives indefinitely.
-            /// </summary>
-            public override object InitializeLifetimeService()
-            {
-                return null;
-            }
-#endif
-
-            #endregion
         }
 
         #endregion
