@@ -119,6 +119,7 @@
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />
+    <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelismAttribute.cs" />
     <Compile Include="Attributes\MaxTimeAttribute.cs" />
     <Compile Include="Attributes\NUnitAttribute.cs" />

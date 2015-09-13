@@ -86,6 +86,7 @@
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
     <Compile Include="Attributes\RetryAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
