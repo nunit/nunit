@@ -211,6 +211,12 @@ namespace NUnit.Common
         public const string ImageRequiresX86 = "ImageRequiresX86";
 
         /// <summary>
+        /// True if any assembly in the package requires a special assembly resolution hook
+        /// in the default AppDomain in order to find dependent assemblies.
+        /// </summary>
+        public const string ImageRequiresDefaultAppDomainAssemblyResolver = "ImageRequiresDefaultAppDomainAssemblyResolver";
+
+        /// <summary>
         /// The FrameworkName specified on a TargetFrameworkAttribute for the assembly
         /// </summary>
         public const string ImageTargetFrameworkName = "ImageTargetFrameworkName";
