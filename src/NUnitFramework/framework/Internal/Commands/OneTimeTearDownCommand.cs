@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal.Commands
                         item.RunTearDown(context);
 
                 IDisposable disposable = context.TestObject as IDisposable;
-                if (disposable != null)
+                if (disposable != null && Test is TestFixture)
                     disposable.Dispose();
             }
             catch (Exception ex)
