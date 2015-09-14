@@ -7,7 +7,7 @@
     <ProjectGuid>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit</RootNamespace>
+    <RootNamespace>NUnit.Framework</RootNamespace>
     <AssemblyName>nunit.framework</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
@@ -278,6 +278,7 @@
     <Compile Include="Interfaces\IApplyToTest.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ICommandWrapper.cs" />
+    <Compile Include="Interfaces\IDisposableFixture.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IMethodInfo.cs" />

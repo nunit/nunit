@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal.Commands
                         item.RunTearDown(context);
 
                 IDisposable disposable = context.TestObject as IDisposable;
-                if (disposable != null)
+                if (disposable != null && Test is IDisposableFixture)
                     disposable.Dispose();
             }
             catch (Exception ex)

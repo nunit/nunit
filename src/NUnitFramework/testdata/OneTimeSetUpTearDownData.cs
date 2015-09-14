@@ -360,14 +360,31 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     [TestFixture]
     public class DisposableFixture : IDisposable
     {
-        public bool disposeCalled = false;
+        public int disposeCalled = 0;
 
         [Test]
         public void OneTest() { }
 
         public void Dispose()
         {
-            disposeCalled = true;
+            disposeCalled++;
+        }
+    }
+
+    [TestFixture]
+    public class DisposableFixtureWithTestCases : IDisposable
+    {
+        public int disposeCalled = 0;
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void TestCaseTest(int data) { }
+        
+        public void Dispose()
+        {
+            disposeCalled++;
         }
     }
 }

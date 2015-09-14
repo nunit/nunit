@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -30,7 +29,7 @@ namespace NUnit.Framework.Internal
     /// TestFixture is a surrogate for a user test fixture class,
     /// containing one or more tests.
     /// </summary>
-    public class TestFixture : TestSuite
+    public class TestFixture : TestSuite, IDisposableFixture
     {
         #region Constructor
 

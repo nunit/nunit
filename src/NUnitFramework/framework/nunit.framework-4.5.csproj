@@ -282,6 +282,7 @@
     <Compile Include="Interfaces\IApplyToContext.cs" />
     <Compile Include="Interfaces\IApplyToTest.cs" />
     <Compile Include="Interfaces\ICommandWrapper.cs" />
+    <Compile Include="Interfaces\IDisposableFixture.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IMethodInfo.cs" />
