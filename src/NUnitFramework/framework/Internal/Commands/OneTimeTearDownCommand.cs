@@ -23,8 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Interfaces;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {

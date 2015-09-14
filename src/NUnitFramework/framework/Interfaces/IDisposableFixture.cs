@@ -22,7 +22,7 @@
 // 
 // **********************************************************************************
 
-namespace NUnit.Interfaces
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// Any ITest that implements this interface is at a level that the implementing

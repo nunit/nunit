@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
-using NUnit.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
