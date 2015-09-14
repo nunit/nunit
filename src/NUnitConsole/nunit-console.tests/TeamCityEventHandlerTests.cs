@@ -46,7 +46,7 @@ namespace NUnit.ConsoleRunner.Tests
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testFinished name='FULLNAME' duration='1.234' flowId='ID']" + NL));
+                "##teamcity[testFinished name='FULLNAME' duration='1234' flowId='ID']" + NL));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace NUnit.ConsoleRunner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testFailed name='FULLNAME' message='Error message' details='Stack trace' flowId='ID']" + NL +
-                "##teamcity[testFinished name='FULLNAME' duration='1.234' flowId='ID']" + NL));
+                "##teamcity[testFinished name='FULLNAME' duration='1234' flowId='ID']" + NL));
         }
 
         private XmlNode CreateXmlNode(string elementName)

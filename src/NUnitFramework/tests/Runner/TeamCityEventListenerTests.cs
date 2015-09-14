@@ -62,7 +62,7 @@ namespace NUnitLite.Runner.Tests
             _teamCity.TestFinished(result);
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testFinished name='FakeTestMethod' duration='1.234']" + NL));
+                "##teamcity[testFinished name='FakeTestMethod' duration='1234']" + NL));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testFailed name='FakeTestMethod' message='Error message' details='Stack trace']" + NL +
-                "##teamcity[testFinished name='FakeTestMethod' duration='1.234']" + NL));
+                "##teamcity[testFinished name='FakeTestMethod' duration='1234']" + NL));
         }
 
         private void FakeTestMethod() { }
