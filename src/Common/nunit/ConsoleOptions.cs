@@ -330,6 +330,9 @@ namespace NUnit.Common
 
             this.Add("shadowcopy", "Shadow copy test files",
                 v => ShadowCopyFiles = v != null);
+
+            this.Add("debug", "Launch debugger when tests start.",
+                v => Debug = v != null);
 #endif
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
@@ -346,9 +349,6 @@ namespace NUnit.Common
 
             this.Add("wait", "Wait for input before closing console window.",
                 v => WaitBeforeExit = v != null);
-
-            this.Add("debug", "Launch debugger when tests start.",
-                v => Debug = v != null);
 
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
