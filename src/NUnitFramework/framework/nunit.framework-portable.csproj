@@ -7,7 +7,7 @@
     <ProjectGuid>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit</RootNamespace>
+    <RootNamespace>NUnit.Framework</RootNamespace>
     <AssemblyName>nunit.framework</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
