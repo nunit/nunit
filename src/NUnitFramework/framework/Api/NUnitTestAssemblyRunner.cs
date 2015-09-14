@@ -244,6 +244,10 @@ namespace NUnit.Framework.Api
             Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
 
+            if (Settings.Contains("Debug") && (bool)Settings["Debug"])
+                if (!System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Launch();
+
             Context.Dispatcher.Dispatch(TopLevelWorkItem);
         }
 

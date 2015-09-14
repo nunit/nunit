@@ -112,7 +112,7 @@ namespace NUnit.Common
 
         public bool WaitBeforeExit { get; private set; }
 
-        public bool PauseBeforeRun { get; private set; }
+        public bool Debug { get; private set; }
 
         // Output Control
 
@@ -347,8 +347,8 @@ namespace NUnit.Common
             this.Add("wait", "Wait for input before closing console window.",
                 v => WaitBeforeExit = v != null);
 
-            this.Add("pause", "Pause before run to allow debugging.",
-                v => PauseBeforeRun = v != null);
+            this.Add("debug", "Launch debugger when tests start.",
+                v => Debug = v != null);
 
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",

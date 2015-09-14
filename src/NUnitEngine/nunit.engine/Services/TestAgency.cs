@@ -168,10 +168,9 @@ namespace NUnit.Engine.Services
                 targetRuntime = new RuntimeFramework(RuntimeFramework.CurrentFramework.Runtime, targetRuntime.ClrVersion);
 
             bool useX86Agent = package.GetSetting(PackageSettings.RunAsX86, false);
-            bool enableDebug = package.GetSetting("AgentDebug", false);
+            bool enableDebug = package.GetSetting("Debug", false);
             bool verbose = package.GetSetting("Verbose", false);
             string agentArgs = string.Empty;
-            if (enableDebug) agentArgs += " --pause";
             if (verbose) agentArgs += " --verbose";
 
             log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", targetRuntime);

@@ -58,26 +58,14 @@ namespace NUnit.Agent
             AgentId = new Guid(args[0]);
             AgencyUrl = args[1];
             
-#if DEBUG
-            bool pause = false;
-#endif
             bool verbose = false;
             for (int i = 2; i < args.Length; i++)
                 switch (args[i])
                 {
-#if DEBUG
-                    case "--pause":
-                        pause = true;
-                        break;
-#endif
                     case "--verbose":
                         verbose = true;
                         break;
                 }
-#if DEBUG
-            if (pause)
-                System.Windows.Forms.MessageBox.Show("Attach debugger if desired, then press OK", "NUnit-Agent");
-#endif
 
             // Create SettingsService early so we know the trace level right at the start
             SettingsService settingsService = new SettingsService(false);

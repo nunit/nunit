@@ -67,6 +67,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--seed=1234", "RandomSeed", 1234)]
         [TestCase("--workers=3", "NumberOfTestWorkers", 3)]
         [TestCase("--workers=0", "NumberOfTestWorkers", 0)]
+        [TestCase("--debug", "Debug", true)]
         public void WhenOptionIsSpecified_PackageIncludesSetting(string option, string key, object val)
         {
             var options = new ConsoleOptions("test.dll", option);
@@ -74,6 +75,26 @@ namespace NUnit.ConsoleRunner.Tests
 
             Assert.That(package.Settings.ContainsKey(key), "Setting not included for {0}", option);
             Assert.AreEqual(val, package.Settings[key], "NumberOfTestWorkers not set correctly for {0}", option);
+        }
+
+        [Test]
+        public void WhenDebugging_NumberOfTestWorkersDefaultsToZero()
+        {
+            var options = new ConsoleOptions("test.dll", "--debug");
+            var package = ConsoleRunner.MakeTestPackage(options);
+
+            Assert.That(package.Settings["Debug"], Is.EqualTo(true));
+            Assert.That(package.Settings["NumberOfTestWorkers"], Is.EqualTo(0));
+        }
+
+        [Test]
+        public void WhenDebugging_NumberOfTestWorkersMayBeOverridden()
+        {
+            var options = new ConsoleOptions("test.dll", "--debug", "--workers=3");
+            var package = ConsoleRunner.MakeTestPackage(options);
+
+            Assert.That(package.Settings["Debug"], Is.EqualTo(true));
+            Assert.That(package.Settings["NumberOfTestWorkers"], Is.EqualTo(3));
         }
 
         //[Test]

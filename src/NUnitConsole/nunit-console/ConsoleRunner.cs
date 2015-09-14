@@ -302,6 +302,14 @@ namespace NUnit.ConsoleRunner
             if (options.Verbose)
                 package.AddSetting("Verbose", true);
 
+            if (options.Debug)
+            {
+                package.AddSetting("Debug", true);
+
+                if (options.NumWorkers < 0)
+                    package.AddSetting(PackageSettings.NumberOfTestWorkers, 0);
+            }
+
 #if DEBUG
             //foreach (KeyValuePair<string, object> entry in package.Settings)
             //    if (!(entry.Value is string || entry.Value is int || entry.Value is bool))
