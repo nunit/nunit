@@ -77,12 +77,6 @@ namespace NUnit.ConsoleRunner
             //log.Info("NUnit-console.exe starting");
             try
             {
-                if (Options.PauseBeforeRun)
-                {
-                    OutWriter.WriteLine(ColorStyle.Warning, "Press any key to continue . . .");
-                    Console.ReadKey(true);
-                }
-
                 if (!Options.NoHeader)
                     WriteHeader();
 

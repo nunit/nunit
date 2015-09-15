@@ -54,6 +54,11 @@ namespace NUnit.Common
         public const string ConfigurationFile = "ConfigurationFile";
 
         /// <summary>
+        /// Indicates whether a debugger should be launched at agent startup.
+        /// </summary>
+        public const string DebugAgent = "DebugAgent";
+
+        /// <summary>
         /// Indicates how to load tests across AppDomains
         /// </summary>
         public const string DomainUsage = "DomainUsage";
@@ -91,6 +96,11 @@ namespace NUnit.Common
         #endregion
 
         #region Settings taken from DriverSettings in the framework
+
+        /// <summary>
+        /// Indicates whether tests are being debugged.
+        /// </summary>
+        public const string DebugTests = "DebugTests";
 
         /// <summary>
         /// Integer value in milliseconds for the default timeout value

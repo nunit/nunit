@@ -55,7 +55,6 @@ namespace NUnit.Common.Tests
         [TestCase("ShowHelp", "help|h")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
-        [TestCase("PauseBeforeRun", "pause")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
 #if !NUNITLITE
