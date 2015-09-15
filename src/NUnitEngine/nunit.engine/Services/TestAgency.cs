@@ -168,9 +168,12 @@ namespace NUnit.Engine.Services
                 targetRuntime = new RuntimeFramework(RuntimeFramework.CurrentFramework.Runtime, targetRuntime.ClrVersion);
 
             bool useX86Agent = package.GetSetting(PackageSettings.RunAsX86, false);
-            bool enableDebug = package.GetSetting("Debug", false);
+            bool debugTests = package.GetSetting(PackageSettings.DebugTests, false);
+            bool debugAgent = package.GetSetting(PackageSettings.DebugAgent, false);
             bool verbose = package.GetSetting("Verbose", false);
+
             string agentArgs = string.Empty;
+            if (debugAgent) agentArgs += " --debug-agent";
             if (verbose) agentArgs += " --verbose";
 
             log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", targetRuntime);
@@ -199,7 +202,7 @@ namespace NUnit.Engine.Services
                 case RuntimeType.Mono:
                     p.StartInfo.FileName = NUnitConfiguration.MonoExePath;
                     string monoOptions = "--runtime=v" + targetRuntime.ClrVersion.ToString(3);
-                    if (enableDebug) monoOptions += " --debug";
+                    if (debugTests || debugAgent) monoOptions += " --debug";
                     p.StartInfo.Arguments = string.Format("{0} \"{1}\" {2}", monoOptions, agentExePath, arglist);
                     break;
                 case RuntimeType.Net:

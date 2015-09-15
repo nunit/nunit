@@ -61,7 +61,10 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("DisposeRunners", "dispose-runners")]
         [TestCase("ShadowCopyFiles", "shadowcopy")]
         [TestCase("TeamCity", "teamcity")]
-        [TestCase("Debug", "debug")]
+        [TestCase("DebugTests", "debug")]
+#if DEBUG
+        [TestCase("DebugAgent", "debug-agent")]
+#endif
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');

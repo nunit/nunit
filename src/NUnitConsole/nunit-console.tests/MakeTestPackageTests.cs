@@ -67,7 +67,10 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--seed=1234", "RandomSeed", 1234)]
         [TestCase("--workers=3", "NumberOfTestWorkers", 3)]
         [TestCase("--workers=0", "NumberOfTestWorkers", 0)]
-        [TestCase("--debug", "Debug", true)]
+        [TestCase("--debug", "DebugTests", true)]
+#if DEBUG
+        [TestCase("--debug-agent", "DebugAgent", true)]
+#endif
         public void WhenOptionIsSpecified_PackageIncludesSetting(string option, string key, object val)
         {
             var options = new ConsoleOptions("test.dll", option);
@@ -83,7 +86,7 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--debug");
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.That(package.Settings["Debug"], Is.EqualTo(true));
+            Assert.That(package.Settings["DebugTests"], Is.EqualTo(true));
             Assert.That(package.Settings["NumberOfTestWorkers"], Is.EqualTo(0));
         }
 
@@ -93,7 +96,7 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--debug", "--workers=3");
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.That(package.Settings["Debug"], Is.EqualTo(true));
+            Assert.That(package.Settings["DebugTests"], Is.EqualTo(true));
             Assert.That(package.Settings["NumberOfTestWorkers"], Is.EqualTo(3));
         }
 

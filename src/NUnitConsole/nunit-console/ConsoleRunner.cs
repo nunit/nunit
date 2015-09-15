@@ -302,15 +302,18 @@ namespace NUnit.ConsoleRunner
             if (options.Verbose)
                 package.AddSetting("Verbose", true);
 
-            if (options.Debug)
+            if (options.DebugTests)
             {
-                package.AddSetting("Debug", true);
+                package.AddSetting(PackageSettings.DebugTests, true);
 
                 if (options.NumWorkers < 0)
                     package.AddSetting(PackageSettings.NumberOfTestWorkers, 0);
             }
 
 #if DEBUG
+            if (options.DebugAgent)
+                package.AddSetting(PackageSettings.DebugAgent, true);
+
             //foreach (KeyValuePair<string, object> entry in package.Settings)
             //    if (!(entry.Value is string || entry.Value is int || entry.Value is bool))
             //        throw new Exception(string.Format("Package setting {0} is not a valid type", entry.Key));

@@ -62,6 +62,10 @@ namespace NUnit.Agent
             for (int i = 2; i < args.Length; i++)
                 switch (args[i])
                 {
+                    case "--debug-agent":
+                        if (!System.Diagnostics.Debugger.IsAttached)
+                            System.Diagnostics.Debugger.Launch();
+                        break;
                     case "--verbose":
                         verbose = true;
                         break;

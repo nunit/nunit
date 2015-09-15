@@ -112,7 +112,9 @@ namespace NUnit.Common
 
         public bool WaitBeforeExit { get; private set; }
 
-        public bool Debug { get; private set; }
+        public bool DebugTests { get; private set; }
+
+        public bool DebugAgent { get; private set; }
 
         // Output Control
 
@@ -331,8 +333,13 @@ namespace NUnit.Common
             this.Add("shadowcopy", "Shadow copy test files",
                 v => ShadowCopyFiles = v != null);
 
-            this.Add("debug", "Launch debugger when tests start.",
-                v => Debug = v != null);
+            this.Add("debug", "Launch debugger to debug tests.",
+                v => DebugTests = v != null);
+
+#if DEBUG
+            this.Add("debug-agent", "Launch debugger in nunit-agent when it starts.",
+                v => DebugAgent = v != null);
+#endif
 #endif
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
