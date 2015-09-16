@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.TestUtilities;
 
@@ -163,6 +164,60 @@ namespace NUnit.Framework.Constraints
 
             Assert.IsFalse(comparer.AreEqual(x, y, ref tolerance));
         }
+
+        [Test]
+        public void ImplementingIEquatableDirectlyOnTheClass()
+        {
+            var listA = new List<EquatableObject>
+                {
+                    new EquatableObject {SomeProperty = 1},
+                    new EquatableObject {SomeProperty = 2},
+                    new EquatableObject {SomeProperty = 3},
+                    new EquatableObject {SomeProperty = 4},
+                    new EquatableObject {SomeProperty = 5},
+                };
+
+            var listB = new List<EquatableObject>
+                {
+                    new EquatableObject {SomeProperty = 1},
+                    new EquatableObject {SomeProperty = 2},
+                    new EquatableObject {SomeProperty = 3},
+                    new EquatableObject {SomeProperty = 4},
+                    new EquatableObject {SomeProperty = 5},
+                };
+
+            var n = new NUnitEqualityComparer();
+            var tolerance = Tolerance.Exact;
+            var actualResult = n.AreEqual(listA, listB, ref tolerance);
+            Assert.IsTrue(actualResult);
+        }
+
+        [Test]
+        public void ImplementingIEquatableOnABaseClassOrInterface()
+        {
+            var listA = new List<InheritedEquatableObject>
+                {
+                    new InheritedEquatableObject {SomeProperty = 1},
+                    new InheritedEquatableObject {SomeProperty = 2},
+                    new InheritedEquatableObject {SomeProperty = 3},
+                    new InheritedEquatableObject {SomeProperty = 4},
+                    new InheritedEquatableObject {SomeProperty = 5},
+                };
+
+            var listB = new List<InheritedEquatableObject>
+                {
+                    new InheritedEquatableObject {SomeProperty = 1},
+                    new InheritedEquatableObject {SomeProperty = 2},
+                    new InheritedEquatableObject {SomeProperty = 3},
+                    new InheritedEquatableObject {SomeProperty = 4},
+                    new InheritedEquatableObject {SomeProperty = 5},
+                };
+
+            var n = new NUnitEqualityComparer();
+            var tolerance = Tolerance.Exact;
+            var actualResult = n.AreEqual(listA, listB, ref tolerance);
+            Assert.IsTrue(actualResult);
+        }
     }
 
     public class NeverEqualIEquatableWithOverriddenAlwaysTrueEquals : IEquatable<NeverEqualIEquatableWithOverriddenAlwaysTrueEquals>
@@ -220,4 +275,37 @@ namespace NUnit.Framework.Constraints
             return value.Equals(other.value);
         }
     }
+    
+    public class EquatableObject : IEquatable<EquatableObject>
+    {
+        public int SomeProperty { get; set; }
+        public bool Equals(EquatableObject other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return SomeProperty == other.SomeProperty;
+        }
+    }
+
+    public interface IEquatableObject : IEquatable<IEquatableObject>
+    {
+        int SomeProperty { get; set; }
+    }
+
+    public class InheritedEquatableObject : IEquatableObject
+    {
+        public int SomeProperty { get; set; }
+
+        public bool Equals(IEquatableObject other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return SomeProperty == other.SomeProperty;
+        }
+    }
+
 }
