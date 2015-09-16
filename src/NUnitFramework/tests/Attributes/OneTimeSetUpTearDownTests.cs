@@ -42,7 +42,27 @@ namespace NUnit.Framework.Attributes
         {
             SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
             TestBuilder.RunTestFixture(fixture);
+            
+            Assert.AreEqual(1, fixture.setUpCount, "SetUp");
+            Assert.AreEqual(1, fixture.tearDownCount, "TearDown");
+        }
 
+        [Test]
+        public void MakeSureSetUpAndTearDownAreCalledOnFixtureWithTestCases()
+        {
+            var fixture = new SetUpAndTearDownFixtureWithTestCases();
+            TestBuilder.RunTestFixture(fixture);
+            
+            Assert.AreEqual(1, fixture.setUpCount, "SetUp");
+            Assert.AreEqual(1, fixture.tearDownCount, "TearDown");
+        }
+
+        [Test]
+        public void MakeSureSetUpAndTearDownAreCalledOnFixtureWithTheories()
+        {
+            var fixture = new SetUpAndTearDownFixtureWithTheories();
+            TestBuilder.RunTestFixture(fixture);
+            
             Assert.AreEqual(1, fixture.setUpCount, "SetUp");
             Assert.AreEqual(1, fixture.tearDownCount, "TearDown");
         }
