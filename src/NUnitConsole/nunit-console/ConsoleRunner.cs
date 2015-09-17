@@ -293,6 +293,9 @@ namespace NUnit.ConsoleRunner
             if (options.StopOnError)
                 package.AddSetting(PackageSettings.StopOnError, true);
 
+            if (options.MaxAgents >= 0)
+                package.AddSetting(PackageSettings.MaxAgents, options.MaxAgents);
+
             if (options.NumWorkers >= 0)
                 package.AddSetting(PackageSettings.NumberOfTestWorkers, options.NumWorkers);
 

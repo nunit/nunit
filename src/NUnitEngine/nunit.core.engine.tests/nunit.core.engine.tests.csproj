@@ -68,6 +68,9 @@
     <Compile Include="..\nunit.engine.tests\Api\TestPackageTests.cs">
       <Link>Api\TestPackageTests.cs</Link>
     </Compile>
+    <Compile Include="..\nunit.engine.tests\AsyncTestEngineResultTests.cs">
+      <Link>AsyncTestEngineResultTests.cs</Link>
+    </Compile>
     <Compile Include="..\nunit.engine.tests\Drivers\NotRunnableFrameworkDriverTests.cs">
       <Link>Drivers\NotRunnableFrameworkDriverTests.cs</Link>
     </Compile>
@@ -106,9 +109,6 @@
     </Compile>
     <Compile Include="..\nunit.engine.tests\TestEngineResultTests.cs">
       <Link>TestEngineResultTests.cs</Link>
-    </Compile>
-    <Compile Include="..\nunit.engine.tests\TestRunTests.cs">
-      <Link>TestRunTests.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CoreTestRunnerFactoryTests.cs" />

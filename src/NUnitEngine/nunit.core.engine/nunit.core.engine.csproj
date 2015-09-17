@@ -115,6 +115,9 @@
     <Compile Include="..\nunit.engine.api\TestPackage.cs">
       <Link>TestPackage.cs</Link>
     </Compile>
+    <Compile Include="..\nunit.engine\AsyncTestEngineResult.cs">
+      <Link>AsyncTestEngineResult.cs</Link>
+    </Compile>
     <Compile Include="..\nunit.engine\CallbackHandler.cs">
       <Link>CallbackHandler.cs</Link>
     </Compile>
@@ -195,9 +198,6 @@
     </Compile>
     <Compile Include="..\nunit.engine\TestEngineResult.cs">
       <Link>Internal\TestEngineResult.cs</Link>
-    </Compile>
-    <Compile Include="..\nunit.engine\TestRun.cs">
-      <Link>TestRun.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CoreTestRunnerFactory.cs" />

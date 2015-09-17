@@ -138,8 +138,8 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>A ITestRun that will provide the result of the test execution</returns>
-        protected override ITestRun RunTestsAsync(ITestEventListener listener, TestFilter filter)
+        /// <returns>An AsyncTestRun that will provide the result of the test execution</returns>
+        protected override AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
         {
             return _remoteRunner.RunAsync(listener, filter);
         }

@@ -22,9 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using System.Threading;
 using System.Xml;
 
@@ -33,34 +30,29 @@ namespace NUnit.Engine
     /// <summary>
     /// The TestRun class encapsulates an ongoing test run.
     /// </summary>
-    public class TestRun : ITestRun
+    [Serializable]
+    public class AsyncTestEngineResult : ITestRun
     {
         private volatile TestEngineResult _result;
-        private readonly ManualResetEvent _waitHandle;
-        private readonly ITestEngineRunner _runner;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestRun"/> class.
-        /// </summary>
-        public TestRun(ITestEngineRunner runner)
-        {
-            _runner = runner;
-            _waitHandle = new ManualResetEvent(initialState: false);
-        }
+        private readonly ManualResetEvent _waitHandle = new ManualResetEvent(false);
 
         /// <summary>
         /// Get the result of this run.
         /// </summary>
         /// <exception cref="InvalidOperationException">Cannot retrieve Result from an incomplete or cancelled TestRun.</exception>
-        public XmlNode Result
+        public TestEngineResult EngineResult
         {
             get
             {
-                if (_result == null)
-                    throw new InvalidOperationException("Cannot retrieve Result from an incomplete or cancelled TestRun.");
+                Guard.OperationValid(_result != null, "Cannot retrieve Result from an incomplete or cancelled TestRun.");
 
-                return _result.Xml;
+                return _result;
             }
+        }
+
+        public EventWaitHandle WaitHandle
+        {
+            get { return _waitHandle; }
         }
         
         public void SetResult(TestEngineResult result)
@@ -73,26 +65,12 @@ namespace NUnit.Engine
         }
 
         /// <summary>
-        /// Stop the current test run, specifying whether to force cancellation. 
-        /// If no test is running, the method returns without error.
-        /// </summary>
-        /// <param name="force">If true, force the stop by cancelling all threads.</param>
-        /// <remarks>
-        /// Note that cancelling the threads is intrinsically unsafe and is only
-        /// provided on the assumption that tests do not impact production data.
-        /// </remarks>
-        public void Stop(bool force)
-        {
-            _runner.StopRun(force);
-        }
-
-        /// <summary>
         /// Blocks the current thread until the current test run completes
         /// or the timeout is reached
         /// </summary>
-        /// <param name="timeout">A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely. </param>
+        /// <param name="timeout">A <see cref="T:System.Int32"/> that represents the number of milliseconds to wait, or -1 milliseconds to wait indefinitely. </param>
         /// <returns>True if the run completed</returns>
-        public bool Wait(TimeSpan timeout)
+        public bool Wait(int timeout)
         {
             return _waitHandle.WaitOne(timeout);
         }
@@ -101,5 +79,19 @@ namespace NUnit.Engine
         /// True if the test run has completed
         /// </summary>
         public bool IsComplete { get { return _result != null; } }
+
+        #region ITestRun Members
+
+        XmlNode ITestRun.Result
+        {
+            get { return EngineResult.Xml; }
+        }
+
+        bool ITestRun.Wait(int timeout)
+        {
+            return Wait(timeout);
+        }
+
+        #endregion
     }
 }

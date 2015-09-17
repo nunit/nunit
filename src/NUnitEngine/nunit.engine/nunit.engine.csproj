@@ -106,6 +106,7 @@
     <Compile Include="Runners\AbstractTestRunner.cs" />
     <Compile Include="Runners\AggregatingTestRunner.cs" />
     <Compile Include="Runners\DirectTestRunner.cs" />
+    <Compile Include="Runners\ITestExecutionTask.cs" />
     <Compile Include="Runners\LocalTestRunner.cs" />
     <Compile Include="Runners\MasterTestRunner.cs" />
     <Compile Include="Runners\MultipleTestDomainRunner.cs" />
@@ -113,13 +114,15 @@
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
     <Compile Include="IProjectService.cs" />
+    <Compile Include="Runners\ParallelTaskWorkerPool.cs" />
+    <Compile Include="Runners\TestExecutionTask.cs" />
     <Compile Include="Services\ExtensionService.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
     <Compile Include="Services\ResultWriters\XmlTransformResultWriter.cs" />
     <Compile Include="Services\ResultService.cs" />
     <Compile Include="Services\Service.cs" />
-    <Compile Include="TestRun.cs" />
+    <Compile Include="AsyncTestEngineResult.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
     <Compile Include="RuntimeFramework.cs" />
     <Compile Include="ServiceContext.cs" />

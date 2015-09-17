@@ -108,6 +108,9 @@ namespace NUnit.Common
         private int numWorkers = -1;
         public int NumWorkers { get { return numWorkers; } }
 
+        private int maxAgents = -1;
+        public int MaxAgents { get { return maxAgents; } }
+
         public bool StopOnError { get; private set; }
 
         public bool WaitBeforeExit { get; private set; }
@@ -347,6 +350,9 @@ namespace NUnit.Common
 
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
+
+            this.Add("agents=", "Specify the maximum {NUMBER} of test assembly agents to run at one time. If not specified, there is no limit.",
+                v => maxAgents = RequiredInt(v, "--agents"));
 
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => numWorkers = RequiredInt(v, "--workers"));
