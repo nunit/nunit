@@ -46,6 +46,8 @@ namespace NUnit.Engine.Extensibility
         {
             _assemblyPath = assemblyPath;
             _typeName = typeName;
+
+            Properties = new Dictionary<string, string>();
         }
         /// <summary>
         /// Gets the path to the assembly where the extension is defined.
@@ -89,5 +91,10 @@ namespace NUnit.Engine.Extensibility
         /// An optional description of what the extension does.
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Properties of the extension node
+        /// </summary>
+        public IDictionary<string, string> Properties { get; private set; }
     }
 }

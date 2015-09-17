@@ -21,15 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Engine.Extensibility;
+using System;
 
-// Extension points supported by the engine
+namespace NUnit.Engine.Extensibility
+{
+    /// <summary>
+    /// The ExtensionPropertyAttribute is used to specify named properties for an extension.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=false)]
+    public class ExtensionPropertyAttribute : Attribute
+    {
+        /// <summary>
+        /// Construct an ExtensionPropertyAttribute
+        /// </summary>
+        /// <param name="name">The name of the property</param>
+        /// <param name="value">The property value</param>
+        public ExtensionPropertyAttribute(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
 
-[assembly: ExtensionPoint("/NUnit/Engine/ProjectService", typeof(IProjectLoader),
-    Description = "Recognizes and loads assemblies from various types of project formats.")]
+        /// <summary>
+        /// The name of the property.
+        /// </summary>
+        public string Name { get; private set; }
 
-[assembly: ExtensionPoint("/NUnit/Engine/ResultService", typeof(IResultWriter),
-    Description = "Supplies a writer to write the result of a test to a file using a specific format.")]
-
-[assembly: ExtensionPoint("/NUnit/Engine/DriverService", typeof(IDriverFactory),
-    Description = "Supplies a driver to run tests that use a specific test framework.")]
+        /// <summary>
+        /// The property value
+        /// </summary>
+        public string Value { get; private set; }
+    }
+}

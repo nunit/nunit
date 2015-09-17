@@ -40,7 +40,7 @@ namespace NUnit.Engine.Services.Tests
         private static readonly Type[] KNOWN_EXTENSION_POINT_TYPES = new Type[] {
             typeof(IDriverFactory),
             typeof(IProjectLoader),
-            typeof(IResultWriterFactory)
+            typeof(IResultWriter)
         };
 
         [SetUp]
@@ -86,7 +86,7 @@ namespace NUnit.Engine.Services.Tests
             "NUnit.Engine.Drivers.NUnit2DriverFactory",
             "NUnit.Engine.Services.ProjectLoaders.NUnitProjectLoader",
             "NUnit.Engine.Services.ProjectLoaders.VisualStudioProjectLoader",
-            "NUnit.Engine.Addins.NUnit2ResultWriterFactory"
+            "NUnit.Engine.Addins.NUnit2XmlResultWriter"
         };
 
         [TestCaseSource("KNOWN_EXTENSIONS")]

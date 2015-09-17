@@ -23,27 +23,32 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Xml;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
 {
     public class ResultService : Service, IResultService
     {
-        IList<IResultWriterFactory> _factories = new List<IResultWriterFactory>();
+        private readonly string[] BUILT_IN_FORMATS = new string[] { "nunit3", "cases", "user" };
 
+        private IEnumerable<ExtensionNode> _extensionNodes;
+
+        private string[] _formats;
         public string[] Formats
         {
             get
             {
-                List<string> formats = new List<string>();
+                if (_formats == null)
+                {
+                    var formatList = new List<string>(BUILT_IN_FORMATS);
 
-                foreach (var factory in _factories)
-                    formats.Add(factory.Format);
+                    foreach (var node in _extensionNodes)
+                        formatList.Add(node.Properties["Format"]);
 
-                return formats.ToArray();
+                    _formats = formatList.ToArray();
+                }
+
+                return _formats;
             }
         }
 
@@ -55,14 +60,21 @@ namespace NUnit.Engine.Services
         /// <returns>An IResultWriter</returns>
         public IResultWriter GetResultWriter(string format, object[] args)
         {
-            // TODO: Handle invalid arguments.
-            foreach (var factory in _factories)
+            switch (format)
             {
-                if (factory.Format == format)
-                    return factory.GetResultWriter(args);
-            }
+                case "nunit3":
+                    return new NUnit3XmlResultWriter();
+                case "cases":
+                    return new TestCaseResultWriter();
+                case "user":
+                    return new XmlTransformResultWriter(args);
+                default:
+                    foreach (var node in _extensionNodes)
+                        if (node.Properties["Format"] == format)
+                            return node.ExtensionObject as IResultWriter;
 
-            throw new ArgumentException(string.Format("Invalid XML output format '{0}'", format), "format");
+                    throw new ArgumentException(string.Format("Invalid XML output format '{0}'", format), "format");
+            }
         }
 
         #region IService Members
@@ -71,70 +83,18 @@ namespace NUnit.Engine.Services
         {
             try
             {
-                _factories.Add(new NUnit3ResultWriterFactory());
-                _factories.Add(new TestCaseResultWriterFactory());
-                _factories.Add(new XmlTransformResultWriterFactory());
-
                 var extensionService = ServiceContext.GetService<ExtensionService>();
 
                 if (extensionService != null && extensionService.Status == ServiceStatus.Started)
-                {
-                    foreach (var factory in extensionService.GetExtensions<IResultWriterFactory>())
-                        _factories.Add(factory);
-                }
-                    
+                    _extensionNodes = extensionService.GetExtensionNodes<IResultWriter>();
+                
+                // If there is no extension service, we start anyway using builtin writers
                 Status = ServiceStatus.Started;
             }
             catch
             {
                 Status = ServiceStatus.Error;
                 throw;
-            }
-        }
-
-        #endregion
-
-        #region Nested Factory Classes
-
-        abstract class ResultWriterFactory : IResultWriterFactory
-        {
-            public ResultWriterFactory(string format)
-            {
-                Format = format;
-            }
-
-            public string Format { get; private set; }
-
-            public abstract IResultWriter GetResultWriter(params object[] args);
-        }
-
-        class NUnit3ResultWriterFactory : ResultWriterFactory
-        {
-            public NUnit3ResultWriterFactory() : base("nunit3") { }
-
-            public override IResultWriter GetResultWriter(params object[] args)
-            {
-                return new NUnit3XmlResultWriter();
-            }
-        }
-
-        class TestCaseResultWriterFactory : ResultWriterFactory
-        {
-            public TestCaseResultWriterFactory() : base("cases") { }
-
-            public override IResultWriter GetResultWriter(params object[] args)
-            {
-                return new TestCaseResultWriter();
-            }
-        }
-
-        class XmlTransformResultWriterFactory : ResultWriterFactory
-        {
-            public XmlTransformResultWriterFactory() : base("user") { }
-
-            public override IResultWriter GetResultWriter(params object[] args)
-            {
-                return new XmlTransformResultWriter(args);
             }
         }
 

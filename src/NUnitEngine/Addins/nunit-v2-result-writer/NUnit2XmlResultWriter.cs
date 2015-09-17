@@ -32,6 +32,8 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Addins
 {
+    [Extension]
+    [ExtensionProperty("Format", "nunit2")]
     public class NUnit2XmlResultWriter : IResultWriter
     {
         private XmlWriter xmlWriter;

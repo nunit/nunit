@@ -83,6 +83,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDriverService.cs" />
+    <Compile Include="Internal\CecilExtensions.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="Agents\RemoteTestAgent.cs" />

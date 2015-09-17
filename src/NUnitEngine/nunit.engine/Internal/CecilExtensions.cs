@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,18 +24,50 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Engine.Extensibility;
+using Mono.Cecil;
 
-namespace NUnit.Engine.Addins
+namespace NUnit.Engine.Internal
 {
-    [Extension]
-    class NUnit2ResultWriterFactory : IResultWriterFactory
+    /// <summary>
+    /// Extension methods that make it easier to work with Mono.Cecil.
+    /// </summary>
+    public static class CecilExtensions
     {
-        public string Format { get { return "nunit2";  } }
+        #region TypeDefinition Extensions
 
-        public IResultWriter GetResultWriter(params object[] args)
+        public static List<CustomAttribute> GetAttributes(this TypeDefinition type, string fullName)
         {
-            return new NUnit2XmlResultWriter();
+            var attributes = new List<CustomAttribute>();
+
+            foreach (CustomAttribute attr in type.CustomAttributes)
+                if (attr.AttributeType.FullName == fullName)
+                    attributes.Add(attr);
+
+            return attributes;
         }
+
+        public static CustomAttribute GetAttribute(this TypeDefinition type, string fullName)
+        {
+            foreach (CustomAttribute attr in type.CustomAttributes)
+                if (attr.AttributeType.FullName == fullName)
+                    return attr;
+
+            return null;
+        }
+
+        #endregion
+
+        #region CustomAttribute Extensions
+
+        public static object GetNamedArgument(this CustomAttribute attr, string name)
+        {
+            foreach (var property in attr.Properties)
+                if (property.Name == name)
+                    return property.Argument.Value;
+
+            return null;
+        }
+
+        #endregion
     }
 }
