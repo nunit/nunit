@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -65,6 +65,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--trace=Error", "InternalTraceLevel", "Error")]
         [TestCase("--trace=error", "InternalTraceLevel", "Error")]
         [TestCase("--seed=1234", "RandomSeed", 1234)]
+        [TestCase("--agents=5", "MaxAgents", 5)]
         [TestCase("--workers=3", "NumberOfTestWorkers", 3)]
         [TestCase("--workers=0", "NumberOfTestWorkers", 0)]
         [TestCase("--debug", "DebugTests", true)]

@@ -125,6 +125,11 @@ namespace NUnit.Common
         public const string LOAD = "LOAD";
 
         /// <summary>
+        /// The maximum number of test agents to run simultneously
+        /// </summary>
+        public const string MaxAgents = "MaxAgents";
+
+        /// <summary>
         /// The number of test threads to run for the assembly.
         /// </summary>
         public const string NumberOfTestWorkers = "NumberOfTestWorkers";

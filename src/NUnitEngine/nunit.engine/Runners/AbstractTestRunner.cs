@@ -137,10 +137,10 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>An <see cref="ITestRun"/> that will provide the result of the test execution</returns>
-        protected virtual ITestRun RunTestsAsync(ITestEventListener listener, TestFilter filter)
+        /// <returns>An <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
+        protected virtual AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
         {
-            var testRun = new TestRun(this);
+            var testRun = new AsyncTestEngineResult();
 
             using (var worker = new BackgroundWorker())
             {
@@ -242,8 +242,8 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>An <see cref="ITestRun"/> that will provide the result of the test execution</returns>
-        public ITestRun RunAsync(ITestEventListener listener, TestFilter filter)
+        /// <returns>An <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
+        public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
         {
             EnsurePackageIsLoaded();
 

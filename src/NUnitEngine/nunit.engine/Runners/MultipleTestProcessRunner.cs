@@ -21,11 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using NUnit.Common;
+
 namespace NUnit.Engine.Runners
 {
     /// <summary>
-    /// MultipleTestDomainRunner runs tests using separate
-    /// AppDomains for each assembly.
+    /// MultipleTestProcessRunner runs tests using separate
+    /// Processes for each assembly.
     /// </summary>
     public class MultipleTestProcessRunner : AggregatingTestRunner
     {
@@ -41,6 +44,11 @@ namespace NUnit.Engine.Runners
         protected override ITestEngineRunner CreateRunner(TestPackage package)
         {
             return new ProcessRunner(Services, package);
+        }
+
+        protected override int GetLevelOfParallelism()
+        {
+            return TestPackage.GetSetting(PackageSettings.MaxAgents, int.MaxValue);
         }
 
         #endregion

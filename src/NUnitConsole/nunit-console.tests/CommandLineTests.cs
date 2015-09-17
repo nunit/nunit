@@ -150,6 +150,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("DefaultTimeout", "timeout")]
         [TestCase("RandomSeed", "seed")]
         [TestCase("NumWorkers", "workers")]
+        [TestCase("MaxAgents", "agents")]
         public void CanRecognizeIntOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');
@@ -160,7 +161,7 @@ namespace NUnit.ConsoleRunner.Tests
             foreach (string option in prototypes)
             {
                 ConsoleOptions options = new ConsoleOptions("--" + option + ":42");
-                Assert.AreEqual(42, (int)property.GetValue(options, null), "Didn't recognize --" + option + ":text");
+                Assert.AreEqual(42, (int)property.GetValue(options, null), "Didn't recognize --" + option + ":42");
             }
         }
 

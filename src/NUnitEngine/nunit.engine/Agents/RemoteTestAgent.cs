@@ -184,8 +184,8 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>A <see cref="ITestRun"/> that will provide the result of the test execution</returns>
-        public ITestRun RunAsync(ITestEventListener listener, TestFilter filter)
+        /// <returns>A <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
+        public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
         {
             if (_runner == null)
                 throw new InvalidOperationException("RemoteTestAgent: RunAsync called before Load");

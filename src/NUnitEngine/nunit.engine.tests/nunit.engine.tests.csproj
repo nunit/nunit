@@ -63,7 +63,7 @@
     <Compile Include="Api\ServiceLocatorTests.cs" />
     <Compile Include="Api\TestFilterTests.cs" />
     <Compile Include="Api\TestPackageTests.cs" />
-    <Compile Include="TestRunTests.cs" />
+    <Compile Include="AsyncTestEngineResultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drivers\NotRunnableFrameworkDriverTests.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriverTests.cs" />
@@ -71,6 +71,7 @@
     <Compile Include="Internal\ServerUtilityTests.cs" />
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="ResultHelperTests.cs" />
+    <Compile Include="Runners\ParallelTaskWorkerPoolTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\ExtensionServiceTests.cs" />
     <Compile Include="Services\Fakes\FakeRuntimeService.cs" />
@@ -116,9 +117,7 @@
       <Name>nunit.engine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Runners\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="EngineTests.nunit">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
