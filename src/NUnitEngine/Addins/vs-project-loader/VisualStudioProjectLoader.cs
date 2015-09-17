@@ -32,6 +32,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
     /// Summary description for VSProjectLoader.
     /// </summary>
     [Extension]
+    [ExtensionProperty("FileExtensions", ".sln,.csproj,.vbproj,.vjsproj,.vcproj,.fsproj")]
     public class VisualStudioProjectLoader : IProjectLoader
     {
         #region IProjectLoader Members

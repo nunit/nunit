@@ -29,6 +29,7 @@ using NUnit.Engine.Extensibility;
 namespace NUnit.Engine.Services.ProjectLoaders
 {
     [Extension]
+    [ExtensionProperty("FileExtensions", ".nunit")]
     public class NUnitProjectLoader : IProjectLoader
     {
         #region IProjectLoader Members
