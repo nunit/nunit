@@ -92,9 +92,9 @@ namespace NUnit.TestData
 
     public class TimeoutTestCaseFixture
     {
-        const int TIME_OUT_TIME = 100;
+        const int TIME_OUT_TIME = 200;
         const int NOT_TIMEOUTED_TIME = 50;
-        const int TIMEOUTED_TIME = 150;
+        const int TIMEOUTED_TIME = 400;
 
         [Test]
         [Timeout(TIME_OUT_TIME)]
