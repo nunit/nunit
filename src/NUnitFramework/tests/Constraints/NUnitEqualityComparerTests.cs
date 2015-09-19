@@ -168,55 +168,37 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ImplementingIEquatableDirectlyOnTheClass()
         {
-            var listA = new List<EquatableObject>
-                {
-                    new EquatableObject {SomeProperty = 1},
-                    new EquatableObject {SomeProperty = 2},
-                    new EquatableObject {SomeProperty = 3},
-                    new EquatableObject {SomeProperty = 4},
-                    new EquatableObject {SomeProperty = 5},
-                };
-
-            var listB = new List<EquatableObject>
-                {
-                    new EquatableObject {SomeProperty = 1},
-                    new EquatableObject {SomeProperty = 2},
-                    new EquatableObject {SomeProperty = 3},
-                    new EquatableObject {SomeProperty = 4},
-                    new EquatableObject {SomeProperty = 5},
-                };
+            var obj1 = new EquatableObject { SomeProperty = 1 };
+            var obj2 = new EquatableObject { SomeProperty = 1 };
 
             var n = new NUnitEqualityComparer();
             var tolerance = Tolerance.Exact;
-            var actualResult = n.AreEqual(listA, listB, ref tolerance);
-            Assert.IsTrue(actualResult);
+            Assert.That(n.AreEqual(obj1, obj2, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj2, obj1, ref tolerance), Is.True);
         }
 
         [Test]
         public void ImplementingIEquatableOnABaseClassOrInterface()
         {
-            var listA = new List<InheritedEquatableObject>
-                {
-                    new InheritedEquatableObject {SomeProperty = 1},
-                    new InheritedEquatableObject {SomeProperty = 2},
-                    new InheritedEquatableObject {SomeProperty = 3},
-                    new InheritedEquatableObject {SomeProperty = 4},
-                    new InheritedEquatableObject {SomeProperty = 5},
-                };
-
-            var listB = new List<InheritedEquatableObject>
-                {
-                    new InheritedEquatableObject {SomeProperty = 1},
-                    new InheritedEquatableObject {SomeProperty = 2},
-                    new InheritedEquatableObject {SomeProperty = 3},
-                    new InheritedEquatableObject {SomeProperty = 4},
-                    new InheritedEquatableObject {SomeProperty = 5},
-                };
+            var obj1 = new InheritedEquatableObject { SomeProperty = 1 };
+            var obj2 = new InheritedEquatableObject { SomeProperty = 1 };
 
             var n = new NUnitEqualityComparer();
             var tolerance = Tolerance.Exact;
-            var actualResult = n.AreEqual(listA, listB, ref tolerance);
-            Assert.IsTrue(actualResult);
+            Assert.That(n.AreEqual(obj1, obj2, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj2, obj1, ref tolerance), Is.True);
+        }
+
+        [Test]
+        public void ImplementingIEquatableOnABaseClassOrInterfaceThroughInterface()
+        {
+            IEquatableObject obj1 = new InheritedEquatableObject { SomeProperty = 1 };
+            IEquatableObject obj2 = new InheritedEquatableObject { SomeProperty = 1 };
+
+            var n = new NUnitEqualityComparer();
+            var tolerance = Tolerance.Exact;
+            Assert.That(n.AreEqual(obj1, obj2, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj2, obj1, ref tolerance), Is.True);
         }
     }
 
@@ -282,9 +264,8 @@ namespace NUnit.Framework.Constraints
         public bool Equals(EquatableObject other)
         {
             if (other == null)
-            {
                 return false;
-            }
+
             return SomeProperty == other.SomeProperty;
         }
     }
@@ -301,9 +282,8 @@ namespace NUnit.Framework.Constraints
         public bool Equals(IEquatableObject other)
         {
             if (other == null)
-            {
                 return false;
-            }
+
             return SomeProperty == other.SomeProperty;
         }
     }

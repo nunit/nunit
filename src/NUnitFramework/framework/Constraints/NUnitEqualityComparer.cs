@@ -247,7 +247,7 @@ namespace NUnit.Framework.Constraints
         private static bool FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
             foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
-                if (xEquatableArgument.Equals(second))
+                if (xEquatableArgument.IsAssignableFrom(second))
                     return true;
 
             return false;
@@ -272,9 +272,29 @@ namespace NUnit.Framework.Constraints
 
         private static bool InvokeFirstIEquatableEqualsSecond(object first, object second)
         {
-            MethodInfo equals = typeof(IEquatable<>).MakeGenericType(second.GetType()).GetMethod("Equals");
+            //MethodInfo equals = typeof(IEquatable<>).MakeGenericType(second.GetType()).GetMethod("Equals");
+            MethodInfo equals = GetCorrectGenericEqualsMethod(first.GetType(), second.GetType());
 
-            return (bool)equals.Invoke(first, new object[] { second });
+            return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
+        }
+
+        private static MethodInfo GetCorrectGenericEqualsMethod(Type first, Type second)
+        {
+            MethodInfo[] methods = first.GetMethods();
+            foreach(var method in methods)
+            {
+                if(method.Name == "Equals")
+                {
+                    ParameterInfo[] prms = method.GetParameters();
+                    if (prms.Length == 1 &&
+                        prms[0].ParameterType != typeof(Object) &&
+                        prms[0].ParameterType.IsAssignableFrom(second))
+                    {
+                        return method;
+                    }
+                }
+            }
+            return null;
         }
         
         #endregion
