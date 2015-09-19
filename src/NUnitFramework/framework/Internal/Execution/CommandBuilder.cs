@@ -127,7 +127,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Builds the set up tear down list.
         /// </summary>
-        /// <param name="fixtureType">TypeInfo of the fixture.</param>
+        /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="setUpType">Type of the set up attribute.</param>
         /// <param name="tearDownType">Type of the tear down attribute.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
