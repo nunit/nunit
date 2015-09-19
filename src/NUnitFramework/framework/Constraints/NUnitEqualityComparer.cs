@@ -272,7 +272,6 @@ namespace NUnit.Framework.Constraints
 
         private static bool InvokeFirstIEquatableEqualsSecond(object first, object second)
         {
-            //MethodInfo equals = typeof(IEquatable<>).MakeGenericType(second.GetType()).GetMethod("Equals");
             MethodInfo equals = GetCorrectGenericEqualsMethod(first.GetType(), second.GetType());
 
             return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
