@@ -200,6 +200,23 @@ namespace NUnit.Framework.Constraints
             Assert.That(n.AreEqual(obj1, obj2, ref tolerance), Is.True);
             Assert.That(n.AreEqual(obj2, obj1, ref tolerance), Is.True);
         }
+
+        [Test]
+        public void CanHandleMultipleImplementationsOfIEquatable()
+        {
+            IEquatableObject obj1 = new InheritedEquatableObject { SomeProperty = 1 };
+            IEquatableObject obj2 = new MultipleIEquatables { SomeProperty = 1 };
+            var obj3 = new EquatableObject { SomeProperty = 1 };
+
+            var n = new NUnitEqualityComparer();
+            var tolerance = Tolerance.Exact;
+            Assert.That(n.AreEqual(obj1, obj2, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj2, obj1, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj1, obj3, ref tolerance), Is.False);
+            Assert.That(n.AreEqual(obj3, obj1, ref tolerance), Is.False);
+            Assert.That(n.AreEqual(obj2, obj3, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj3, obj2, ref tolerance), Is.True);
+        }
     }
 
     public class NeverEqualIEquatableWithOverriddenAlwaysTrueEquals : IEquatable<NeverEqualIEquatableWithOverriddenAlwaysTrueEquals>
@@ -288,4 +305,14 @@ namespace NUnit.Framework.Constraints
         }
     }
 
+    public class MultipleIEquatables : InheritedEquatableObject, IEquatable<EquatableObject>
+    {
+        public bool Equals(EquatableObject other)
+        {
+            if (other == null)
+                return false;
+
+            return SomeProperty == other.SomeProperty;
+        }
+    }
 }
