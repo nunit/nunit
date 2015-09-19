@@ -129,7 +129,7 @@ namespace NUnit.Framework.Attributes
             TestMethod testMethod = (TestMethod)TestFinder.Find("TestTimeOutElapsed", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Does.Contain("100ms"));
+            Assert.That(result.Message, Does.Contain("200ms"));
         }
 
         [Test]
