@@ -268,7 +268,7 @@
 
     <CallTarget Targets="TestFramework"
           ContinueOnError="$(ContinueOnFailure)"
-          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
+          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 
   </Target>
 
@@ -608,8 +608,8 @@
     <BinZipFiles Include="$(CurrentImageDir)\bin\net-2.0\*.*" />
     <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.0\*.*" />
     <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.5\*.*" />
+    <BinZipFiles Include="$(CurrentImageDir)\bin\portable\*.*" />
     <BinZipFiles Include="$(CurrentImageDir)\bin\sl-5.0\*.*" Condition="$(IsWindows)" />
-    <BinZipFiles Include="$(CurrentImageDir)\portable\sl-5.0\*.*" Condition="$(IsWindows)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -622,7 +622,7 @@
     <SupportedFrameworks Include="net-2.0" />
     <!--<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-3.5" />-->
     <SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0" />
-    <SupportedFrameworks Condition="$(IsWindows)" Include="portable" />
+    <SupportedFrameworks Include="portable" />
   </ItemGroup>
   
   <ItemGroup Label="Projects for building the framework">
