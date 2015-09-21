@@ -32,6 +32,7 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {
+    [Extension]
     public class NUnit2FrameworkDriver : IFrameworkDriver
     {
         // TODO: The id should not be hard-coded

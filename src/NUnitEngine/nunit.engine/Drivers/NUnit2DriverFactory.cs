@@ -28,11 +28,16 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {
-    [Extension]
     public class NUnit2DriverFactory : IDriverFactory
     {
         private const string NUNIT_FRAMEWORK = "nunit.framework";
         private const string NUNITLITE_FRAMEWORK = "nunitlite";
+        private ExtensionNode _driverNode;
+
+        public NUnit2DriverFactory(ExtensionNode driverNode)
+        {
+            _driverNode = driverNode;
+        }
 
         /// <summary>
         /// Gets a flag indicating whether a given assembly name and version
@@ -57,7 +62,7 @@ namespace NUnit.Engine.Drivers
             if (!IsSupportedTestFramework(assemblyName, version))
                 throw new ArgumentException("Invalid framework name", "frameworkAssemblyName");
 
-            return new NUnit2FrameworkDriver(domain);
+            return _driverNode.CreateExtensionObject(domain) as IFrameworkDriver;
         }
     }
 }

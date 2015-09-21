@@ -70,14 +70,16 @@ namespace NUnit.Engine.Extensibility
 
         /// <summary>
         /// Gets an object of the specified extension type, loading the Assembly
-        /// and creating the object as needed.
+        /// and creating the object as needed. Note that this property always
+        /// returns the same object. Use CreateExtensionObject if a new one is
+        /// needed each time or to specify arguments.
         /// </summary>
         public object ExtensionObject
         {
             get
             {
                 if (_extensionObject == null)
-                    _extensionObject = AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(_assemblyPath, _typeName);
+                    _extensionObject = CreateExtensionObject();
 
                 return _extensionObject;
             }
@@ -98,6 +100,14 @@ namespace NUnit.Engine.Extensibility
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Gets a newly created extension object, created in the domain specified
+        /// </summary>
+        public object CreateExtensionObject(params object[] args)
+        {
+            return AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(_assemblyPath, _typeName, false, 0, null, args, null, null, null);
+        }
 
         public void AddProperty(string name, string val)
         {
