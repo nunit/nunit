@@ -350,32 +350,46 @@ namespace NUnit.Framework.Constraints
 
         private bool CollectionsEqual(ICollection x, ICollection y, ref Tolerance tolerance)
         {
-            IEnumerator expectedEnum = x.GetEnumerator();
-            IEnumerator actualEnum = y.GetEnumerator();
+            IEnumerator expectedEnum = null;
+            IEnumerator actualEnum = null;
 
-            int count;
-            for (count = 0; ; count++)
+            try
             {
-                bool expectedHasData = expectedEnum.MoveNext();
-                bool actualHasData = actualEnum.MoveNext();
-
-                if (!expectedHasData && !actualHasData)
-                    return true;
-
-                if (expectedHasData != actualHasData ||
-                    !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                expectedEnum = x.GetEnumerator();
+                actualEnum = y.GetEnumerator();
+                int count;
+                for (count = 0; ; count++)
                 {
-                    FailurePoint fp = new FailurePoint();
-                    fp.Position = count;
-                    fp.ExpectedHasData = expectedHasData;
-                    if (expectedHasData)
-                        fp.ExpectedValue = expectedEnum.Current;
-                    fp.ActualHasData = actualHasData;
-                    if (actualHasData)
-                        fp.ActualValue = actualEnum.Current;
-                    failurePoints.Insert(0, fp);
-                    return false;
+                    bool expectedHasData = expectedEnum.MoveNext();
+                    bool actualHasData = actualEnum.MoveNext();
+
+                    if (!expectedHasData && !actualHasData)
+                        return true;
+
+                    if (expectedHasData != actualHasData ||
+                        !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                    {
+                        FailurePoint fp = new FailurePoint();
+                        fp.Position = count;
+                        fp.ExpectedHasData = expectedHasData;
+                        if (expectedHasData)
+                            fp.ExpectedValue = expectedEnum.Current;
+                        fp.ActualHasData = actualHasData;
+                        if (actualHasData)
+                            fp.ActualValue = actualEnum.Current;
+                        failurePoints.Insert(0, fp);
+                        return false;
+                    }
                 }
+            }
+            finally
+            {
+                var expectedDisposable = expectedEnum as IDisposable;
+                if (expectedDisposable != null) expectedDisposable.Dispose();
+
+                var actualDisposable = actualEnum as IDisposable;
+                if (actualDisposable != null) actualDisposable.Dispose();
+
             }
         }
 
@@ -397,32 +411,47 @@ namespace NUnit.Framework.Constraints
 
         private bool EnumerablesEqual(IEnumerable x, IEnumerable y, ref Tolerance tolerance)
         {
-            IEnumerator expectedEnum = x.GetEnumerator();
-            IEnumerator actualEnum = y.GetEnumerator();
+            IEnumerator expectedEnum = null;
+            IEnumerator actualEnum = null;
 
-            int count;
-            for (count = 0; ; count++)
+            try
             {
-                bool expectedHasData = expectedEnum.MoveNext();
-                bool actualHasData = actualEnum.MoveNext();
+                expectedEnum = x.GetEnumerator();
+                actualEnum = y.GetEnumerator();
 
-                if (!expectedHasData && !actualHasData)
-                    return true;
-
-                if (expectedHasData != actualHasData ||
-                    !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                int count;
+                for (count = 0; ; count++)
                 {
-                    FailurePoint fp = new FailurePoint();
-                    fp.Position = count;
-                    fp.ExpectedHasData = expectedHasData;
-                    if (expectedHasData)
-                        fp.ExpectedValue = expectedEnum.Current;
-                    fp.ActualHasData = actualHasData;
-                    if (actualHasData)
-                        fp.ActualValue = actualEnum.Current;
-                    failurePoints.Insert(0, fp);
-                    return false;
+                    bool expectedHasData = expectedEnum.MoveNext();
+                    bool actualHasData = actualEnum.MoveNext();
+
+                    if (!expectedHasData && !actualHasData)
+                        return true;
+
+                    if (expectedHasData != actualHasData ||
+                        !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                    {
+                        FailurePoint fp = new FailurePoint();
+                        fp.Position = count;
+                        fp.ExpectedHasData = expectedHasData;
+                        if (expectedHasData)
+                            fp.ExpectedValue = expectedEnum.Current;
+                        fp.ActualHasData = actualHasData;
+                        if (actualHasData)
+                            fp.ActualValue = actualEnum.Current;
+                        failurePoints.Insert(0, fp);
+                        return false;
+                    }
                 }
+            }
+            finally
+            {
+                var expectedDisposable = expectedEnum as IDisposable;
+                if (expectedDisposable != null) expectedDisposable.Dispose();
+
+                var actualDisposable = actualEnum as IDisposable;
+                if (actualDisposable != null) actualDisposable.Dispose();
+
             }
         }
 

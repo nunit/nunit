@@ -22,9 +22,11 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.TestUtilities;
+using System.Linq;
 
 namespace NUnit.Framework.Constraints
 {
@@ -217,6 +219,90 @@ namespace NUnit.Framework.Constraints
             Assert.That(n.AreEqual(obj2, obj3, ref tolerance), Is.True);
             Assert.That(n.AreEqual(obj3, obj2, ref tolerance), Is.True);
         }
+
+        [Test]
+        public void IEnumeratorIsDisposed()
+        {
+            var enumeration = new EnumerableWithDisposeChecks<int>(new[] { 0, 1, 2, 3 });
+            Assert.True(comparer.AreEqual(enumeration, enumeration, ref tolerance));
+            Assert.That(enumeration.EnumeratorDisposeChecks, Is.All.True);
+        }
+    }
+
+    internal class EnumerableWithDisposeChecks<T> : IEnumerable<T>
+    {
+        private readonly IEnumerable<T> data;
+        private readonly List<DisposableEnumerator<T>> enumerators = new List<DisposableEnumerator<T>>();
+
+        public EnumerableWithDisposeChecks(T[] data)
+        {
+            this.data = data;
+        }
+
+        public IEnumerable<bool> EnumeratorDisposeChecks
+        {
+            get
+            {
+                return enumerators.Select(e => e.Disposed);
+            }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            var enumerator = new DisposableEnumerator<T>(data.GetEnumerator());
+            enumerators.Add(enumerator);
+            return enumerator;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<T>)this).GetEnumerator();
+        }
+    }
+
+    internal class DisposableEnumerator<T> : IEnumerator<T>
+    {
+        private bool disposedValue = false;
+        private readonly IEnumerator<T> enumerator;
+
+        public DisposableEnumerator(IEnumerator<T> enumerator)
+        {
+            this.enumerator = enumerator;
+        }
+
+        public bool Disposed { get { return disposedValue; } }
+
+        public T Current
+        {
+            get
+            {
+                return enumerator.Current;
+            }
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return enumerator.Current;
+            }
+        }
+
+        public bool MoveNext()
+        {
+            return enumerator.MoveNext();
+        }
+
+        public void Reset()
+        {
+            enumerator.Reset();
+        }
+
+        public void Dispose()
+        {
+            disposedValue = true;
+        }
+
     }
 
     public class NeverEqualIEquatableWithOverriddenAlwaysTrueEquals : IEquatable<NeverEqualIEquatableWithOverriddenAlwaysTrueEquals>
