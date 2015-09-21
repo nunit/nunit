@@ -14,23 +14,29 @@ namespace NUnit.TestUtilities
     public class UniqueValues
     {
         /// <summary>
-        /// Call a delegate a specified number of times and check that
-        /// the returned values are more or less unique.
+        /// Call a delegate until a certain number of unique values are returned,
+        /// up to a maximum number of tries. Assert that the target was reached.
         /// </summary>
-        public static void Check<T>(ActualValueDelegate<T> del, int count, double successRatio)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="del"></param>
+        /// <param name="unique"></param>
+        /// <param name="maxTries"></param>
+        public static void Check<T>(ActualValueDelegate<T> del, int targetCount, int maxTries)
         {
-            int minExpected = (int)(count * successRatio);
+            var lookup = new Dictionary<T, int>();
 
-            int unique = CountUniqueValues(del, count);
-            Assert.That(unique, Is.Not.EqualTo(1), "All values were the same!");
+            while (--maxTries >= 0)
+            {
+                T val = del();
+                if (!lookup.ContainsKey(val))
+                {
+                    lookup.Add(val, 1);
+                    if (lookup.Count >= targetCount)
+                        return;
+                }
+            }
 
-            // TODO: Change to an actual warning once we implement them
-            Assert.That(unique, Is.GreaterThanOrEqualTo(minExpected), "WARNING: The number of unique values less than expected.");
-        }
-
-        public static void Check<T>(ActualValueDelegate<T> del, int count)
-        {
-            Check(del, count, 0.8);
+            Assert.Fail("After {0} attempts, only {1} value(s) found", maxTries, lookup.Count);
         }
 
         #region Helper Methods

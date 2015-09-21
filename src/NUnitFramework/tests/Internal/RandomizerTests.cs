@@ -43,13 +43,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomIntsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.Next(), 10);
+            UniqueValues.Check(() => _randomizer.Next(), 10, 100);
         }
 
         [Test]
         public void RandomIntsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.Next(-300, 300), 10);
+            UniqueValues.Check(() => _randomizer.Next(-300, 300), 10, 100);
         }
 
         #endregion
@@ -92,13 +92,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomUIntsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextUInt(), 10);
+            UniqueValues.Check(() => _randomizer.NextUInt(), 10, 100);
         }
 
         [Test]
         public void RandomUIntsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextUInt(27u, 777u), 10);
+            UniqueValues.Check(() => _randomizer.NextUInt(27u, 777u), 10, 100);
         }
 
         #endregion
@@ -148,13 +148,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomShortsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextShort(), 10);
+            UniqueValues.Check(() => _randomizer.NextShort(), 10, 100);
         }
 
         [Test]
         public void RandomShortsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextShort(-300, 300), 10);
+            UniqueValues.Check(() => _randomizer.NextShort(-300, 300), 10, 100);
         }
 
         #endregion
@@ -204,13 +204,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomUShortsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextUShort(), 10);
+            UniqueValues.Check(() => _randomizer.NextUShort(), 10, 100);
         }
 
         [Test]
         public void RandomUShortsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextUShort((ushort)27, (ushort)200), 10);
+            UniqueValues.Check(() => _randomizer.NextUShort((ushort)27, (ushort)200), 10, 100);
         }
 
         #endregion
@@ -255,13 +255,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomLongsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextLong(), 10);
+            UniqueValues.Check(() => _randomizer.NextLong(), 10, 100);
         }
 
         [Test]
         public void RandomLongsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextLong(1066L, 2010L), 10);
+            UniqueValues.Check(() => _randomizer.NextLong(1066L, 2010L), 10, 100);
         }
 
         #endregion
@@ -305,13 +305,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomULongsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextULong(), 10);
+            UniqueValues.Check(() => _randomizer.NextULong(), 10, 100);
         }
 
         [Test]
         public void RandomULongsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextULong(1066UL, 2010UL), 10);
+            UniqueValues.Check(() => _randomizer.NextULong(1066UL, 2010UL), 10, 100);
         }
 
         #endregion
@@ -360,13 +360,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomBytesAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextByte(), 10);
+            UniqueValues.Check(() => _randomizer.NextByte(), 10, 1000);
         }
 
         [Test]
         public void RandomBytesInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextByte(byte.MinValue, byte.MaxValue), 10);
+            UniqueValues.Check(() => _randomizer.NextByte(byte.MinValue, byte.MaxValue), 10, 1000);
         }
 
         #endregion
@@ -415,13 +415,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomSBytesAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextSByte(), 10);
+            UniqueValues.Check(() => _randomizer.NextSByte(), 10, 1000);
         }
 
         [Test]
         public void RandomSBytesInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextSByte(sbyte.MinValue, sbyte.MaxValue), 10);
+            UniqueValues.Check(() => _randomizer.NextSByte(sbyte.MinValue, sbyte.MaxValue), 10, 1000);
         }
 
         #endregion
@@ -431,39 +431,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomBool()
         {
-            bool haveTrue = false;
-            bool haveFalse = false;
-            int attempts = 0;
-            while (!haveTrue && !haveFalse)
-            {
-                if (attempts++ > 10000)
-                {
-                    Assert.Fail("No randomness in 10000 attempts");
-                }
-                if (_randomizer.NextBool())
-                    haveTrue = true;
-                else
-                    haveFalse = true;
-            }
+            UniqueValues.Check(() => _randomizer.NextBool(), 2, 100);
         }
 
         [Test]
         public void RandomBoolWithProbability()
         {
-            bool haveTrue = false;
-            bool haveFalse = false;
-            int attempts = 0;
-            while (!haveTrue && !haveFalse)
-            {
-                if (attempts++ > 10000)
-                {
-                    Assert.Fail("No randomness in 10000 attempts");
-                }
-                if (_randomizer.NextBool(.25))
-                    haveTrue = true;
-                else
-                    haveFalse = true;
-            }
+            UniqueValues.Check(() => _randomizer.NextBool(.25), 2, 200);
         }
 
         [Test]
@@ -526,13 +500,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomDoublesAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextDouble(), 10);
+            UniqueValues.Check(() => _randomizer.NextDouble(), 10, 100);
         }
 
         [Test]
         public void RandomDoublesInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextDouble(0.1, 0.7), 10);
+            UniqueValues.Check(() => _randomizer.NextDouble(0.1, 0.7), 10, 100);
         }
 
         #endregion
@@ -576,13 +550,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomFloatsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextFloat(), 10);
+            UniqueValues.Check(() => _randomizer.NextFloat(), 10, 100);
         }
 
         [Test]
         public void RandomFloatsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextFloat(0.5f, 1.5f), 10);
+            UniqueValues.Check(() => _randomizer.NextFloat(0.5f, 1.5f), 10, 100);
         }
 
         /// <summary>
@@ -666,13 +640,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomDecimalsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextDecimal(), 10);
+            UniqueValues.Check(() => _randomizer.NextDecimal(), 10, 100);
         }
 
         [Test]
         public void RandomDecimalsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextDecimal(1066M, 2010M), 10);
+            UniqueValues.Check(() => _randomizer.NextDecimal(1066M, 2010M), 10, 100);
         }
 
         #endregion
@@ -683,7 +657,7 @@ namespace NUnit.Framework.Internal
         [Description("Test that all generated strings are unique")]
         public void RandomStringsAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.GetString(), 10, 1.0);
+            UniqueValues.Check(() => _randomizer.GetString(), 10, 10);
         }
         
         [TestCase(30, "Tｈｅɋúｉｃｋƃｒòｗｎｆ߀хｊｕｍｐëԁoѵerｔհëｌａȥｙｄｏɢ")]
@@ -692,7 +666,7 @@ namespace NUnit.Framework.Internal
         [Description("Test that all generated strings are unique for varying output length")]
         public void RandomStringsAreUnique(int outputLength, string allowedChars)
         {
-            UniqueValues.Check(() => _randomizer.GetString(outputLength, allowedChars), 10, 1.0);
+            UniqueValues.Check(() => _randomizer.GetString(outputLength, allowedChars), 10, 10);
         }
         
         #endregion
@@ -702,14 +676,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomEnum()
         {
-            object e = _randomizer.NextEnum(typeof(AttributeTargets));
-            Assert.That(e, Is.TypeOf<AttributeTargets>());
+            UniqueValues.Check(() => _randomizer.NextEnum(typeof(AttributeTargets)), 5, 50);
         }
 
         [Test]
         public void RandomEnum_Generic()
         {
-            AttributeTargets at = _randomizer.NextEnum<AttributeTargets>();
+            UniqueValues.Check(() => _randomizer.NextEnum<AttributeTargets>(), 5, 50);
         }
 
         #endregion
