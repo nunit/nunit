@@ -39,7 +39,6 @@
       <Link>XmlHelper.cs</Link>
     </Compile>
     <Compile Include="NUnit2ResultSummary.cs" />
-    <Compile Include="NUnit2ResultWriterFactory.cs" />
     <Compile Include="NUnit2XmlResultWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

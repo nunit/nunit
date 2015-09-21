@@ -53,6 +53,8 @@
     <Compile Include="..\EngineApiVersion.cs">
       <Link>EngineApiVersion.cs</Link>
     </Compile>
+    <Compile Include="Extensibility\TypeExtensionPointAttribute.cs" />
+    <Compile Include="Extensibility\ExtensionPropertyAttribute.cs" />
     <Compile Include="Extensibility\ExtensionAttribute.cs" />
     <Compile Include="Extensibility\ExtensionPointAttribute.cs" />
     <Compile Include="Extensibility\IDriverFactory.cs" />
@@ -60,7 +62,6 @@
     <Compile Include="Extensibility\IProjectLoader.cs" />
     <Compile Include="Extensibility\IResultWriter.cs" />
     <Compile Include="IResultService.cs" />
-    <Compile Include="Extensibility\IResultWriterFactory.cs" />
     <Compile Include="IRuntimeFrameworkService.cs" />
     <Compile Include="NUnitEngineNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

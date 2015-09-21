@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using NUnit.Common;
 using NUnit.Engine.Extensibility;
 
@@ -32,18 +34,19 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class ProjectService : Service, IProjectService
     {
-        /// <summary>
-        /// List of all installed ProjectLoaders
-        /// </summary>
-        IList<IProjectLoader> _loaders = new List<IProjectLoader>();
+        Dictionary<string, ExtensionNode> _extensionIndex = new Dictionary<string, ExtensionNode>();
 
         #region IProjectService Members
 
         public bool CanLoadFrom(string path)
         {
-            foreach (IProjectLoader loader in _loaders)
+            ExtensionNode node = GetNodeForPath(path);
+            if (node != null)
+            {
+                var loader = node.ExtensionObject as IProjectLoader;
                 if (loader.CanLoadFrom(path))
                     return true;
+            }
 
             return false;
         }
@@ -91,8 +94,14 @@ namespace NUnit.Engine.Services
 
                     if (extensionService != null && extensionService.Status == ServiceStatus.Started)
                     {
-                        foreach (IProjectLoader loader in extensionService.GetExtensions<IProjectLoader>())
-                            _loaders.Add(loader);
+                        foreach (var node in extensionService.GetExtensionNodes<IProjectLoader>())
+                        {
+                            foreach (string ext in node.GetProperties("FileExtension"))
+                            {
+                                if (ext != null)
+                                    _extensionIndex.Add(ext, node);
+                            }
+                        }
 
                         Status = ServiceStatus.Started;
                     }
@@ -114,11 +123,25 @@ namespace NUnit.Engine.Services
 
         private IProject LoadFrom(string path)
         {
-            foreach (IProjectLoader loader in _loaders)
+            ExtensionNode node = GetNodeForPath(path);
+            if (node != null)
+            {
+                var loader = node.ExtensionObject as IProjectLoader;
                 if (loader.CanLoadFrom(path))
                     return loader.LoadFrom(path);
+            }
 
             return null;
+        }
+
+        private ExtensionNode GetNodeForPath(string path)
+        {
+            var ext = Path.GetExtension(path);
+
+            if (string.IsNullOrEmpty(ext) || !_extensionIndex.ContainsKey(ext))
+                return null;
+
+            return _extensionIndex[ext];
         }
 
         #endregion

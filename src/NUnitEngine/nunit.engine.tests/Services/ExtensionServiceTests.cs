@@ -32,15 +32,17 @@ namespace NUnit.Engine.Services.Tests
         private ExtensionService _extensionService;
 
         private static readonly string[] KNOWN_EXTENSION_POINT_PATHS = new string[] {
-            "/NUnit/Engine/DriverService",
-            "/NUnit/Engine/ProjectService", 
-            "/NUnit/Engine/ResultService"
+            "/NUnit/Engine/TypeExtensions/IDriverFactory",
+            "/NUnit/Engine/TypeExtensions/IProjectLoader", 
+            "/NUnit/Engine/TypeExtensions/IResultWriter",
+            "/NUnit/Engine/NUnitV2Driver"
         };
 
         private static readonly Type[] KNOWN_EXTENSION_POINT_TYPES = new Type[] {
             typeof(IDriverFactory),
             typeof(IProjectLoader),
-            typeof(IResultWriterFactory)
+            typeof(IResultWriter),
+            typeof(IFrameworkDriver)
         };
 
         [SetUp]
@@ -83,10 +85,10 @@ namespace NUnit.Engine.Services.Tests
         }
 
         private static readonly string[] KNOWN_EXTENSIONS = new string[] {
-            "NUnit.Engine.Drivers.NUnit2DriverFactory",
             "NUnit.Engine.Services.ProjectLoaders.NUnitProjectLoader",
             "NUnit.Engine.Services.ProjectLoaders.VisualStudioProjectLoader",
-            "NUnit.Engine.Addins.NUnit2ResultWriterFactory"
+            "NUnit.Engine.Addins.NUnit2XmlResultWriter",
+            "NUnit.Engine.Drivers.NUnit2FrameworkDriver"
         };
 
         [TestCaseSource("KNOWN_EXTENSIONS")]
@@ -102,7 +104,7 @@ namespace NUnit.Engine.Services.Tests
         [Test, Sequential]
         public void ExtensionsAreAddedToExtensionPoint(
             [ValueSource("KNOWN_EXTENSION_POINT_PATHS")] string path,
-            [Values(1, 2, 1)] int expectedExtensionCount)
+            [Values(0, 2, 1, 1)] int expectedExtensionCount)
         {
             var ep = _extensionService.GetExtensionPoint(path);
             Assume.That(ep, Is.Not.Null);

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,20 +22,34 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Addins
+namespace NUnit.Engine.Extensibility
 {
-    [Extension]
-    class NUnit2ResultWriterFactory : IResultWriterFactory
+    /// <summary>
+    /// The ExtensionPropertyAttribute is used to specify named properties for an extension.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=false)]
+    public class ExtensionPropertyAttribute : Attribute
     {
-        public string Format { get { return "nunit2";  } }
-
-        public IResultWriter GetResultWriter(params object[] args)
+        /// <summary>
+        /// Construct an ExtensionPropertyAttribute
+        /// </summary>
+        /// <param name="name">The name of the property</param>
+        /// <param name="value">The property value</param>
+        public ExtensionPropertyAttribute(string name, string value)
         {
-            return new NUnit2XmlResultWriter();
+            Name = name;
+            Value = value;
         }
+
+        /// <summary>
+        /// The name of the property.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// The property value
+        /// </summary>
+        public string Value { get; private set; }
     }
 }

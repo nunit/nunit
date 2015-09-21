@@ -33,9 +33,11 @@ namespace NUnit.Engine.Extensibility
     /// </summary>
     public class ExtensionNode
     {
-        object _extensionObject;
-        string _assemblyPath;
-        string _typeName;
+        private object _extensionObject;
+        private string _assemblyPath;
+        private string _typeName;
+        private Dictionary<string, List<string>> _properties = new Dictionary<string, List<string>>();
+
 
         /// <summary>
         /// Construct an ExtensionNode
@@ -47,6 +49,9 @@ namespace NUnit.Engine.Extensibility
             _assemblyPath = assemblyPath;
             _typeName = typeName;
         }
+
+        #region Properties
+
         /// <summary>
         /// Gets the path to the assembly where the extension is defined.
         /// </summary>
@@ -65,14 +70,16 @@ namespace NUnit.Engine.Extensibility
 
         /// <summary>
         /// Gets an object of the specified extension type, loading the Assembly
-        /// and creating the object as needed.
+        /// and creating the object as needed. Note that this property always
+        /// returns the same object. Use CreateExtensionObject if a new one is
+        /// needed each time or to specify arguments.
         /// </summary>
         public object ExtensionObject
         {
             get
             {
                 if (_extensionObject == null)
-                    _extensionObject = AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(_assemblyPath, _typeName);
+                    _extensionObject = CreateExtensionObject();
 
                 return _extensionObject;
             }
@@ -89,5 +96,41 @@ namespace NUnit.Engine.Extensibility
         /// An optional description of what the extension does.
         /// </summary>
         public string Description { get; set; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Gets a newly created extension object, created in the domain specified
+        /// </summary>
+        public object CreateExtensionObject(params object[] args)
+        {
+            return AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(_assemblyPath, _typeName, false, 0, null, args, null, null, null);
+        }
+
+        public void AddProperty(string name, string val)
+        {
+            if (_properties.ContainsKey(name))
+                _properties[name].Add(val);
+            else
+            {
+                var list = new List<string>();
+                list.Add(val);
+                _properties.Add(name, list);
+            }
+        }
+
+        public IEnumerable<string> GetProperties(string name)
+        {
+            return _properties.ContainsKey(name) ? _properties[name] : new List<string>();
+        }
+
+        public string GetProperty(string name)
+        {
+            return _properties.ContainsKey(name) ? _properties[name][0] : null;
+        }
+
+        #endregion
     }
 }

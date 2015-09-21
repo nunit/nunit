@@ -88,8 +88,14 @@ namespace NUnit.Engine.Services
 #if NUNIT_ENGINE
                 var extensionService = ServiceContext.GetService<ExtensionService>();
                 if (extensionService != null)
+                {
                     foreach (IDriverFactory factory in extensionService.GetExtensions<IDriverFactory>())
                         _factories.Add(factory);
+                }
+
+                var node = extensionService.GetExtensionNode("/NUnit/Engine/NUnitV2Driver");
+                if (node != null)
+                    _factories.Add(new NUnit2DriverFactory(node));
 #endif
  
                 Status = ServiceStatus.Started;

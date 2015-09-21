@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009-2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,33 +22,45 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 
 namespace NUnit.Engine.Extensibility
 {
     /// <summary>
-    /// Interface implemented by a Type that knows how to create a driver for a test assembly.
+    /// TypeExtensionPointAttribute is used to bind an extension point
+    /// to a class or interface.
     /// </summary>
-#if NUNIT_ENGINE
-    [TypeExtensionPoint(
-        Description = "Supplies a driver to run tests that use a specific test framework.")]
-#endif
-    public interface IDriverFactory
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple=true, Inherited=false)]
+    public class TypeExtensionPointAttribute : Attribute
     {
         /// <summary>
-        /// Gets a flag indicating whether a given assembly name and version
-        /// represent a test framework supported by this factory.
+        /// Construct a TypeExtensionPointAttribute, specifying the path.
         /// </summary>
-        bool IsSupportedTestFramework(string assemblyName, Version version);
+        /// <param name="path">A unique string identifying the extension point.</param>
+        public TypeExtensionPointAttribute(string path)
+        {
+            Path = path;
+        }
 
         /// <summary>
-        /// Gets a driver for a given test assembly and a framework
-        /// which the assembly is already known to reference.
+        /// Construct an TypeExtensionPointAttribute, without specifying the path.
+        /// The extension point will use a path constructed based on the interface
+        /// or class to which the attribute is applied.
         /// </summary>
-        /// <param name="domain">The domain in which the assembly will be loaded</param>
-        /// <param name="assemblyName">The Name of the test framework reference</param>
-        /// <param name="version">The version of the test framework reference</param>
-        /// <returns></returns>
-        IFrameworkDriver GetDriver(AppDomain domain, string assemblyName, Version version);
+        public TypeExtensionPointAttribute()
+        {
+
+        }
+
+        /// <summary>
+        /// The unique string identifying this ExtensionPoint. This identifier
+        /// is typically formatted as a path using '/' and the set of extension 
+        /// points is sometimes viewed as forming a tree.
+        /// </summary>
+        public string Path { get; private set; }
+
+        /// <summary>
+        /// An optional description of the purpose of the ExtensionPoint
+        /// </summary>
+        public string Description { get; set; }
     }
 }

@@ -70,7 +70,9 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
             ResultService service = new ResultService();
             services.Add(service);
             services.ServiceManager.StartServices();
-            service.GetResultWriter("nunit2", null).WriteResultFile(this.EngineResult.Xml, new StringWriter(output));
+            var nunit2Writer = service.GetResultWriter("nunit2", null);
+            Assert.NotNull(nunit2Writer, "Unable to get nunit2 result writer");
+            nunit2Writer.WriteResultFile(this.EngineResult.Xml, new StringWriter(output));
 
             if (!validator.Validate(new StringReader(output.ToString())))
             {

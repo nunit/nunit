@@ -41,7 +41,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NUnit2DriverFactory.cs" />
     <Compile Include="TestEventAdapter.cs" />
     <Compile Include="XmlExtensions.cs" />
     <Compile Include="NUnit2FrameworkDriver.cs" />
