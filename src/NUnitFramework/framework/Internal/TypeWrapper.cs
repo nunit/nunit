@@ -249,7 +249,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override string ToString()
         {
-            return Type.ToString() + "()";
+            return Type.ToString();
         }
     }
 }
