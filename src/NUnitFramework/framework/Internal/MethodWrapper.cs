@@ -187,6 +187,14 @@ namespace NUnit.Framework.Internal
             return Reflect.InvokeMethod(MethodInfo, fixture, args);
         }
 
+        /// <summary>
+        /// Override ToString() so that error messages in NUnit's own tests make sense
+        /// </summary>
+        public override string ToString()
+        {
+            return MethodInfo.Name;
+        }
+
         #endregion
     }
 }
