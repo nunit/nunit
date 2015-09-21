@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Common;
@@ -94,8 +95,13 @@ namespace NUnit.Engine.Services
                     if (extensionService != null && extensionService.Status == ServiceStatus.Started)
                     {
                         foreach (var node in extensionService.GetExtensionNodes<IProjectLoader>())
-                            foreach (string ext in node.Properties["FileExtensions"].Split(new char[] { ',' }))
-                                _extensionIndex.Add(ext, node);
+                        {
+                            foreach (string ext in node.GetProperties("FileExtension"))
+                            {
+                                if (ext != null)
+                                    _extensionIndex.Add(ext, node);
+                            }
+                        }
 
                         Status = ServiceStatus.Started;
                     }

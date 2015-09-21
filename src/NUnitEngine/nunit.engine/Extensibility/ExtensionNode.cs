@@ -33,9 +33,11 @@ namespace NUnit.Engine.Extensibility
     /// </summary>
     public class ExtensionNode
     {
-        object _extensionObject;
-        string _assemblyPath;
-        string _typeName;
+        private object _extensionObject;
+        private string _assemblyPath;
+        private string _typeName;
+        private Dictionary<string, List<string>> _properties = new Dictionary<string, List<string>>();
+
 
         /// <summary>
         /// Construct an ExtensionNode
@@ -46,9 +48,10 @@ namespace NUnit.Engine.Extensibility
         {
             _assemblyPath = assemblyPath;
             _typeName = typeName;
-
-            Properties = new Dictionary<string, string>();
         }
+
+        #region Properties
+
         /// <summary>
         /// Gets the path to the assembly where the extension is defined.
         /// </summary>
@@ -92,9 +95,32 @@ namespace NUnit.Engine.Extensibility
         /// </summary>
         public string Description { get; set; }
 
-        /// <summary>
-        /// Properties of the extension node
-        /// </summary>
-        public IDictionary<string, string> Properties { get; private set; }
+        #endregion
+
+        #region Methods
+
+        public void AddProperty(string name, string val)
+        {
+            if (_properties.ContainsKey(name))
+                _properties[name].Add(val);
+            else
+            {
+                var list = new List<string>();
+                list.Add(val);
+                _properties.Add(name, list);
+            }
+        }
+
+        public IEnumerable<string> GetProperties(string name)
+        {
+            return _properties.ContainsKey(name) ? _properties[name] : new List<string>();
+        }
+
+        public string GetProperty(string name)
+        {
+            return _properties.ContainsKey(name) ? _properties[name][0] : null;
+        }
+
+        #endregion
     }
 }

@@ -25,11 +25,5 @@ using NUnit.Engine.Extensibility;
 
 // Extension points supported by the engine
 
-[assembly: ExtensionPoint("/NUnit/Engine/ProjectService", typeof(IProjectLoader),
-    Description = "Recognizes and loads assemblies from various types of project formats.")]
-
-[assembly: ExtensionPoint("/NUnit/Engine/ResultService", typeof(IResultWriter),
-    Description = "Supplies a writer to write the result of a test to a file using a specific format.")]
-
-[assembly: ExtensionPoint("/NUnit/Engine/DriverService", typeof(IDriverFactory),
-    Description = "Supplies a driver to run tests that use a specific test framework.")]
+[assembly: ExtensionPoint("/NUnit/Engine/NUnitV2Driver", typeof(IFrameworkDriver),
+    Description="Driver for NUnit tests using the V2 framework.")]

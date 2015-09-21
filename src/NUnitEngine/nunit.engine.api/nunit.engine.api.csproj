@@ -53,6 +53,7 @@
     <Compile Include="..\EngineApiVersion.cs">
       <Link>EngineApiVersion.cs</Link>
     </Compile>
+    <Compile Include="Extensibility\TypeExtensionPointAttribute.cs" />
     <Compile Include="Extensibility\ExtensionPropertyAttribute.cs" />
     <Compile Include="Extensibility\ExtensionAttribute.cs" />
     <Compile Include="Extensibility\ExtensionPointAttribute.cs" />

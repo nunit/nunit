@@ -50,7 +50,9 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
             StringBuilder sb = new StringBuilder();
             using (StringWriter writer = new StringWriter(sb))
             {
-                resultService.GetResultWriter("nunit2", null).WriteResultFile(EngineResult.Xml, writer);
+                var nunit2Writer = resultService.GetResultWriter("nunit2", null);
+                Assert.NotNull(nunit2Writer, "Unable to get nunit2 result writer");
+                nunit2Writer.WriteResultFile(EngineResult.Xml, writer);
             }
 
             _doc = new XmlDocument();

@@ -32,9 +32,9 @@ namespace NUnit.Engine.Services.Tests
         private ExtensionService _extensionService;
 
         private static readonly string[] KNOWN_EXTENSION_POINT_PATHS = new string[] {
-            "/NUnit/Engine/DriverService",
-            "/NUnit/Engine/ProjectService", 
-            "/NUnit/Engine/ResultService"
+            "/NUnit/Engine/TypeExtensions/IDriverFactory",
+            "/NUnit/Engine/TypeExtensions/IProjectLoader", 
+            "/NUnit/Engine/TypeExtensions/IResultWriter"
         };
 
         private static readonly Type[] KNOWN_EXTENSION_POINT_TYPES = new Type[] {

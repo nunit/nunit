@@ -65,7 +65,7 @@ namespace NUnit.Engine.Services
         /// </summary>
         public ExtensionPoint GetExtensionPoint(string path)
         {
-            return _pathIndex[path];
+            return _pathIndex.ContainsKey(path) ? _pathIndex[path] : null;
         }
 
         /// <summary>
@@ -104,6 +104,13 @@ namespace NUnit.Engine.Services
                     yield return node;
         }
 
+        public ExtensionNode GetExtensionNode(string path)
+        {
+            var ep = GetExtensionPoint(path);
+
+            return ep != null && ep.Extensions.Count > 0 ? ep.Extensions[0] : null;
+        }
+
         public IEnumerable<ExtensionNode> GetExtensionNodes<T>()
         {
             var ep = GetExtensionPoint(typeof(T));
@@ -127,9 +134,11 @@ namespace NUnit.Engine.Services
             try
             {
                 var thisAssembly = Assembly.GetExecutingAssembly();
+                var apiAssembly = typeof(ITestEngine).Assembly;
                 var startDir = new DirectoryInfo(AssemblyHelper.GetDirectoryName(thisAssembly));
 
                 FindExtensionPoints(thisAssembly);
+                FindExtensionPoints(apiAssembly);
                 FindExtensionsInDirectory(startDir);
 
                 Status = ServiceStatus.Started;
@@ -159,14 +168,38 @@ namespace NUnit.Engine.Services
                         attr.Path);
                     throw new NUnitEngineException(msg);
                 }
-                
+
                 var ep = new ExtensionPoint(attr.Path, attr.Type)
                 {
-                    Description = attr.Description
+                    Description = attr.Description,
                 };
 
                 _extensionPoints.Add(ep);
                 _pathIndex.Add(ep.Path, ep);
+            }
+
+            foreach (Type type in assembly.GetExportedTypes())
+            {
+                foreach (TypeExtensionPointAttribute attr in type.GetCustomAttributes(typeof(TypeExtensionPointAttribute), false))
+                {
+                    string path = attr.Path ?? "/NUnit/Engine/TypeExtensions/" + type.Name;
+
+                    if (_pathIndex.ContainsKey(path))
+                    {
+                        string msg = string.Format(
+                            "The Path {0} is already in use for another extension point.",
+                            attr.Path);
+                        throw new NUnitEngineException(msg);
+                    }
+
+                    var ep = new ExtensionPoint(path, type)
+                    {
+                        Description = attr.Description,
+                    };
+
+                    _extensionPoints.Add(ep);
+                    _pathIndex.Add(path, ep);
+                }
             }
         }
 
@@ -276,7 +309,7 @@ namespace NUnit.Engine.Services
                         string value = attr.ConstructorArguments[1].Value as string;
 
                         if (name != null && value != null)
-                            node.Properties.Add(name, value);
+                            node.AddProperty(name, value);
                     }
 
                     _extensions.Add(node);
