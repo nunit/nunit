@@ -105,6 +105,9 @@ namespace NUnit.Engine.Runners
 
             TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
+            // These are inserted in reverse order, since each is added as the first child.
+            result.Xml.InsertSettingsElement(TestPackage);
+            result.Xml.InsertCommandLineElement();
             result.Xml.InsertEnvironmentElement();
 
             double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;

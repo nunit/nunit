@@ -131,6 +131,34 @@ namespace NUnit.Engine.Internal
             return IntPtr.Size == 8 ? "x64" : "x86";
         }
 
+        public static void InsertCommandLineElement(this XmlNode resultNode)
+        {
+            var doc = resultNode.OwnerDocument;
+
+            XmlNode cmd = doc.CreateElement("command-line");
+            resultNode.InsertAfter(cmd, null);
+
+            var cdata = doc.CreateCDataSection(Environment.CommandLine);
+            cmd.AppendChild(cdata);
+        }
+
+        public static void InsertSettingsElement(this XmlNode resultNode, TestPackage package)
+        {
+            var doc = resultNode.OwnerDocument;
+
+            XmlNode settings = doc.CreateElement("settings");
+            resultNode.InsertAfter(settings, null);
+
+            foreach (string name in package.Settings.Keys)
+            {
+                string value = package.Settings[name].ToString();
+                XmlNode setting = doc.CreateElement("setting");
+                setting.AddAttribute("name", name);
+                setting.AddAttribute("value", value);
+                settings.AppendChild(setting);
+            }
+        }
+
         #endregion
 
         #region Methods that operate on a list of XmlNodes
