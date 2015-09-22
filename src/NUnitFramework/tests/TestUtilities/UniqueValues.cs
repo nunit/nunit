@@ -17,10 +17,6 @@ namespace NUnit.TestUtilities
         /// Call a delegate until a certain number of unique values are returned,
         /// up to a maximum number of tries. Assert that the target was reached.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="del"></param>
-        /// <param name="unique"></param>
-        /// <param name="maxTries"></param>
         public static void Check<T>(ActualValueDelegate<T> del, int targetCount, int maxTries)
         {
             var lookup = new Dictionary<T, int>();
