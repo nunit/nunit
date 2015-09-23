@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 #if NETCF
 using System.Linq;
 #endif

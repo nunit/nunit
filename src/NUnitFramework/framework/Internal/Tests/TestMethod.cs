@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;

@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
 
 namespace NUnit.Framework.Interfaces

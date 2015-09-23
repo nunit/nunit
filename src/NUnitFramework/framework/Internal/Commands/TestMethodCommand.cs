@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
