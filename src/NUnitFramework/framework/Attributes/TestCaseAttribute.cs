@@ -367,17 +367,34 @@ namespace NUnit.Framework
 #endif
                 bool convert = false;
 
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
+                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) ||
+                    targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
+                {
                     convert = arg is int;
-                else
-                if (targetType == typeof(decimal))
+                }
+                else if (targetType == typeof(decimal) || targetType == typeof(decimal?))
+                {
                     convert = arg is double || arg is string || arg is int;
-                else
-                    if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
-                        convert = arg is string;
+                }
+                else if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
+                {
+                    convert = arg is string;
+                }
 
                 if (convert)
-                    arglist[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
+                {
+                    Type convertTo = targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ? 
+                        targetType.GetGenericArguments()[0] : targetType;
+                    arglist[i] = Convert.ChangeType(arg, convertTo, System.Globalization.CultureInfo.InvariantCulture);
+                }
+
+                // Convert.ChangeType doesn't work for TimeSpan from string
+                if ((targetType == typeof(TimeSpan) || targetType == typeof(TimeSpan?)) && arg is string)
+                {
+                    TimeSpan value;
+                    if(TimeSpan.TryParse((string)arg, out value))
+                        arglist[i] = value;
+                }
             }
         }
         #endregion
