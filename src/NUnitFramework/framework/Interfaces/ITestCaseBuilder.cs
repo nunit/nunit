@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Interfaces

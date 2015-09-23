@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;

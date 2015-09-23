@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Collections;
-using System.Reflection;
 
 namespace NUnit.Framework.Interfaces
 {
