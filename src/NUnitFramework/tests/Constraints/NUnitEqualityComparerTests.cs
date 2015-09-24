@@ -26,7 +26,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.TestUtilities;
-using System.Linq;
 
 namespace NUnit.Framework.Constraints
 {
@@ -225,7 +224,7 @@ namespace NUnit.Framework.Constraints
         {
             var enumeration = new EnumerableWithDisposeChecks<int>(new[] { 0, 1, 2, 3 });
             Assert.True(comparer.AreEqual(enumeration, enumeration, ref tolerance));
-            Assert.That(enumeration.EnumeratorDisposeChecks, Is.All.True);
+            Assert.That(enumeration.EnumeratorsDisposed);
         }
     }
 
@@ -239,11 +238,18 @@ namespace NUnit.Framework.Constraints
             this.data = data;
         }
 
-        public IEnumerable<bool> EnumeratorDisposeChecks
+        public bool EnumeratorsDisposed
         {
             get
             {
-                return enumerators.Select(e => e.Disposed);
+                foreach (var disposableEnumerator in enumerators)
+                {
+                    if (!disposableEnumerator.Disposed)
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
 
