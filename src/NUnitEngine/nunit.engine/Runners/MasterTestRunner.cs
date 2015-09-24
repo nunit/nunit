@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
@@ -37,6 +38,31 @@ namespace NUnit.Engine.Runners
         public MasterTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         public bool IsTestRunning { get; private set; }
+
+        /// <summary>
+        /// Gets a dictionary of the package settings with defaults resolved by the engine.
+        /// </summary>
+        public IDictionary<string, object> EffectiveSettings
+        {
+            get 
+            {
+                if (_effectiveSettings == null)
+                {
+                    _effectiveSettings = new Dictionary<string, object>();
+                    foreach (string key in TestPackage.Settings.Keys)
+                        _effectiveSettings.Add(key, TestPackage.Settings[key]);
+
+                    if (!_effectiveSettings.ContainsKey(PackageSettings.ProcessModel))
+                        _effectiveSettings.Add(PackageSettings.ProcessModel, TestPackage.SubPackages.Count > 1 ? "Multiple" : "Separate");
+
+                    if (!_effectiveSettings.ContainsKey(PackageSettings.NumberOfTestWorkers))
+                        _effectiveSettings.Add(PackageSettings.NumberOfTestWorkers, Math.Max(Environment.ProcessorCount, 2));
+                }
+
+                return _effectiveSettings; 
+            }
+        }
+        private Dictionary<string, object> _effectiveSettings;
 
         #region AbstractTestRunner Overrides
 
@@ -106,7 +132,7 @@ namespace NUnit.Engine.Runners
             TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             // These are inserted in reverse order, since each is added as the first child.
-            result.Xml.InsertSettingsElement(TestPackage);
+            result.Xml.InsertSettingsElement(EffectiveSettings);
             result.Xml.InsertCommandLineElement();
             result.Xml.InsertEnvironmentElement();
 

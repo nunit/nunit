@@ -50,7 +50,7 @@ namespace NUnit.Engine
             if (filePath != null)
             {
                 FullName = Path.GetFullPath(filePath);
-                Settings = new Dictionary<string, object>();
+                Settings = new Dictionary<string,object>();
                 SubPackages = new List<TestPackage>();
             }
         }
@@ -63,7 +63,7 @@ namespace NUnit.Engine
         {
             ID = GetNextID();
             SubPackages = new List<TestPackage>();
-            Settings = new Dictionary<string, object>();
+            Settings = new Dictionary<string,object>();
 
             foreach (string testFile in testFiles)
                 SubPackages.Add(new TestPackage(testFile));

@@ -142,20 +142,20 @@ namespace NUnit.Engine.Internal
             cmd.AppendChild(cdata);
         }
 
-        public static void InsertSettingsElement(this XmlNode resultNode, TestPackage package)
+        public static void InsertSettingsElement(this XmlNode resultNode, IDictionary<string,object> settings)
         {
             var doc = resultNode.OwnerDocument;
 
-            XmlNode settings = doc.CreateElement("settings");
-            resultNode.InsertAfter(settings, null);
+            XmlNode settingsNode = doc.CreateElement("settings");
+            resultNode.InsertAfter(settingsNode, null);
 
-            foreach (string name in package.Settings.Keys)
+            foreach (string name in settings.Keys)
             {
-                string value = package.Settings[name].ToString();
-                XmlNode setting = doc.CreateElement("setting");
-                setting.AddAttribute("name", name);
-                setting.AddAttribute("value", value);
-                settings.AppendChild(setting);
+                string value = settings[name].ToString();
+                XmlNode settingNode = doc.CreateElement("setting");
+                settingNode.AddAttribute("name", name);
+                settingNode.AddAttribute("value", value);
+                settingsNode.AppendChild(settingNode);
             }
         }
 

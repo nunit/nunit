@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace NUnit.Engine
@@ -35,6 +36,11 @@ namespace NUnit.Engine
         /// Get a flag indicating whether a test is running
         /// </summary>
         bool IsTestRunning { get; }
+
+        /// <summary>
+        /// Gets a dictionary of the package settings with defaults resolved by the engine.
+        /// </summary>
+        IDictionary<string,object> EffectiveSettings { get; }
 
         /// <summary>
         /// Load a TestPackage for possible execution
