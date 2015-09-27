@@ -25,61 +25,106 @@ namespace NUnit.Common
 {
     /// <summary>
     /// PackageSettings is a static class containing constant values that
-    /// are used as keys in setting up a TestPackage. These values duplicate
-    /// settings in the engine and framework.
+    /// are used as keys in setting up a TestPackage. These values are used in
+    /// the engine and framework. Setting values may be a string, int or bool.
     /// </summary>
     public static class PackageSettings
     {
-        #region Settings taken from RunnerSettings in the engine
+        #region Common Settings - Used by both the Engine and the 3.0 Framework
 
         /// <summary>
-        /// The config to use in loading a project
+        /// Flag (bool) indicating whether tests are being debugged.
+        /// </summary>
+        public const string DebugTests = "DebugTests";
+
+        /// <summary>
+        /// The InternalTraceLevel for this run. Values are: "Default",
+        /// "Off", "Error", "Warning", "Info", "Debug", "Verbose".
+        /// Default is "Off". "Debug" and "Verbose" are synonyms.
+        /// </summary>
+        public const string InternalTraceLevel = "InternalTraceLevel";
+
+        /// <summary>
+        /// Full path of the directory to be used for work and result files.
+        /// This path is provided to tests by the frameowrk TestContext.
+        /// </summary>
+        public const string WorkDirectory = "WorkDirectory";
+
+        #endregion
+
+        #region Engine Settings - Used by the Engine itself
+
+        /// <summary>
+        /// The name of the config to use in loading a project.
+        /// If not specified, the first config found is used.
         /// </summary>
         public const string ActiveConfig = "ActiveConfig";
 
         /// <summary>
-        /// If true, the engine should determine the private bin
-        /// path by examining the paths to all the tests.
+        /// Bool indicating whether the engine should determine the private
+        /// bin path by examining the paths to all the tests. Defaults to
+        /// true unless PrivateBinPath is specified.
         /// </summary>
         public const string AutoBinPath = "AutoBinPath";
 
         /// <summary>
-        /// The ApplicationBase to use in loading the tests.
+        /// The ApplicationBase to use in loading the tests. If not 
+        /// specified, and each assembly has its own process, then the
+        /// location of the assembly is used. For multiple  assemblies
+        /// in a single process, the closest common root directory is used.
         /// </summary>
         public const string BasePath = "BasePath";
 
         /// <summary>
-        /// The config file to use in running the tests 
+        /// Path to the config file to use in running the tests. 
         /// </summary>
         public const string ConfigurationFile = "ConfigurationFile";
 
         /// <summary>
-        /// Indicates whether a debugger should be launched at agent startup.
+        /// Bool flag indicating whether a debugger should be launched at agent 
+        /// startup. Used only for debugging NUnit itself.
         /// </summary>
         public const string DebugAgent = "DebugAgent";
 
         /// <summary>
-        /// Indicates how to load tests across AppDomains
+        /// Indicates how to load tests across AppDomains. Values are:
+        /// "Default", "None", "Single", "Multiple". Default is "Multiple"
+        /// if more than one assembly is loaded in a process. Otherwise,
+        /// it is "Single".
         /// </summary>
         public const string DomainUsage = "DomainUsage";
 
         /// <summary>
-        /// The private binpath used to locate assemblies
+        /// The private binpath used to locate assemblies. Directory paths
+        /// is separated by a semicolon. It's an error to specify this and
+        /// also set AutoBinPath to true.
         /// </summary>
         public const string PrivateBinPath = "PrivateBinPath";
 
         /// <summary>
-        /// Indicates how to allocate assemblies to processes
+        /// The maximum number of test agents permitted to run simultneously. 
+        /// Ignored if the ProcessModel is not set or defaulted to Multiple.
+        /// </summary>
+        public const string MaxAgents = "MaxAgents";
+
+        /// <summary>
+        /// Indicates how to allocate assemblies to processes. Values are:
+        /// "Default", "Single", "Separate", "Multiple". Default is "Multiple"
+        /// for more than one assembly, "Separate" for a single assembly.
         /// </summary>
         public const string ProcessModel = "ProcessModel";
 
         /// <summary>
-        /// Indicates the desired runtime to use for the tests.
+        /// Indicates the desired runtime to use for the tests. Values 
+        /// are strings like "net-4.5", "mono-4.0", etc. Default is to
+        /// use the target framework for which an assembly was built.
         /// </summary>
         public const string RuntimeFramework = "RuntimeFramework";
 
         /// <summary>
-        /// Indicates the test should be run in a 32-bit process on a 64-bit system
+        /// Bool flag indicating that the test should be run in a 32-bit process 
+        /// on a 64-bit system. By default, NUNit runs in a 64-bit process on
+        /// a 64-bit system. Ignored if set on a 32-bit system.
         /// </summary>
         public const string RunAsX86 = "RunAsX86";
 
@@ -89,29 +134,21 @@ namespace NUnit.Common
         public const string DisposeRunners = "DisposeRunners";
 
         /// <summary>
-        /// Indicates that the test assemblies should be shadow copied. Defaults to false.
+        /// Bool flag indicating that the test assemblies should be shadow copied. 
+        /// Defaults to false.
         /// </summary>
         public const string ShadowCopyFiles = "ShadowCopyFiles";
 
         #endregion
 
-        #region Settings taken from DriverSettings in the framework
-
-        /// <summary>
-        /// Indicates whether tests are being debugged.
-        /// </summary>
-        public const string DebugTests = "DebugTests";
+        #region Framework Settings - Passed through and used by the 3.0 Framework
 
         /// <summary>
         /// Integer value in milliseconds for the default timeout value
-        /// for test cases. If not specified, there is no timeout.
+        /// for test cases. If not specified, there is no timeout except
+        /// as specified by attributes on the tests themselves.
         /// </summary>
         public const string DefaultTimeout = "DefaultTimeout";
-
-        /// <summary>
-        /// An InternalTraceLevel enumeration value for this run. 
-        /// </summary>
-        public const string InternalTraceLevel = "InternalTraceLevel";
 
         /// <summary>
         /// A TextWriter to which the internal trace will be sent.
@@ -125,17 +162,18 @@ namespace NUnit.Common
         public const string LOAD = "LOAD";
 
         /// <summary>
-        /// The maximum number of test agents to run simultneously
-        /// </summary>
-        public const string MaxAgents = "MaxAgents";
-
-        /// <summary>
-        /// The number of test threads to run for the assembly.
+        /// The number of test threads to run for the assembly. If set to
+        /// 1, a single queue is used. If set to 0, tests are executed
+        /// directly, without queuing.
         /// </summary>
         public const string NumberOfTestWorkers = "NumberOfTestWorkers";
 
         /// <summary>
-        /// The random seed to be used for this assembly.
+        /// The random seed to be used for this assembly. If specified
+        /// as the value reported from a prior run, the framework should
+        /// generate identical random values for tests as were used for
+        /// that run, provided that no change has been made to the test
+        /// assembly. Default is a random value itself.
         /// </summary>
         public const string RandomSeed = "RandomSeed";
 
@@ -143,11 +181,6 @@ namespace NUnit.Common
         /// If true, execution stops after the first error or failure.
         /// </summary>
         public const string StopOnError = "StopOnError";
-
-        /// <summary>
-        /// Full path of the directory to be used for work and result files.
-        /// </summary>
-        public const string WorkDirectory = "WorkDirectory";
 
         #endregion
     }
