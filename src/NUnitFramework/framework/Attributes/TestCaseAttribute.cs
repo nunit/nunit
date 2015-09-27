@@ -387,13 +387,11 @@ namespace NUnit.Framework
                         targetType.GetGenericArguments()[0] : targetType;
                     arglist[i] = Convert.ChangeType(arg, convertTo, System.Globalization.CultureInfo.InvariantCulture);
                 }
-
+                else
                 // Convert.ChangeType doesn't work for TimeSpan from string
                 if ((targetType == typeof(TimeSpan) || targetType == typeof(TimeSpan?)) && arg is string)
                 {
-                    TimeSpan value;
-                    if(TimeSpan.TryParse((string)arg, out value))
-                        arglist[i] = value;
+                    arglist[i] = TimeSpan.Parse((string)arg);
                 }
             }
         }
