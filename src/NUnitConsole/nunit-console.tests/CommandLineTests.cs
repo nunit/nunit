@@ -94,7 +94,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("Include",            "include",    new string[] { "Short,Fast" },                     new string[0])]
         [TestCase("Exclude",            "exclude",    new string[] { "Long" },                           new string[0])]
         [TestCase("ActiveConfig",       "config",     new string[] { "Debug" },                          new string[0])]
-        [TestCase("ProcessModel",       "process",    new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
+        [TestCase("ProcessModel",       "process",    new string[] { "InProcess", "Separate", "Multiple" }, new string[] { "JUNK" })]
         [TestCase("DomainUsage",        "domain",     new string[] { "None", "Single", "Multiple" },     new string[] { "JUNK" })]
         [TestCase("Framework",          "framework",  new string[] { "net-4.0" },                        new string[0])]
         [TestCase("OutFile",            "output|out", new string[] { "output.txt" },                     new string[0])]
@@ -128,7 +128,7 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
-        [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" })]
+        [TestCase("ProcessModel", "process", new string[] { "InProcess", "Separate", "Multiple" })]
         [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" })]
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
