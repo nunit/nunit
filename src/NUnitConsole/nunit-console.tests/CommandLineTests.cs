@@ -128,6 +128,14 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
+        [Test]
+        public void CanRegognizeInProcessOption()
+        {
+            ConsoleOptions options = new ConsoleOptions("--inprocess");
+            Assert.True(options.Validate(), "Should be valid: --inprocess");
+            Assert.AreEqual("InProcess", options.ProcessModel, "Didn't recognize --inprocess");
+        }
+
         [TestCase("ProcessModel", "process", new string[] { "InProcess", "Separate", "Multiple" })]
         [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" })]
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
