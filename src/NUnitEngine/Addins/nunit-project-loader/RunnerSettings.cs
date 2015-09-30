@@ -25,15 +25,16 @@ namespace NUnit.Engine
 {
     /// <summary>
     /// RunnerSettings is a static class containing constant values that
-    /// are used as keys in a TestPackage and are acted on by the engine.
+    /// are used as keys in the TestPackage created by the project loader.
     /// </summary>
+    /// <remarks>
+    /// This class is used only in the NUnitProjectLoader extension and
+    /// represents knowledge the extension has of the internals of the
+    /// engine - that is, the meaning of various settings. Only setting
+    /// keys actually used by the loader are included.
+    /// </remarks>
     public static class RunnerSettings
     {
-        /// <summary>
-        /// The config to use in loading a project
-        /// </summary>
-        public const string ActiveConfig = "ActiveConfig";
-
         /// <summary>
         /// If true, the engine should determine the private bin
         /// path by examining the paths to all the tests.
@@ -69,20 +70,5 @@ namespace NUnit.Engine
         /// Indicates the desired runtime to use for the tests.
         /// </summary>
         public const string RuntimeFramework = "RuntimeFramework";
-
-        /// <summary>
-        /// Indicates that the tests should be run in a 32-bit process on a 64-bit system
-        /// </summary>
-        public const string RunAsX86 = "RunAsX86";
-
-        /// <summary>
-        /// Indicates that test runners should be disposed after the tests are executed
-        /// </summary>
-        public const string DisposeRunners = "DisposeRunners";
-
-        /// <summary>
-        /// Indicates that the test assemblies should be shadow copied. Defaults to false.
-        /// </summary>
-        public const string ShadowCopyFiles = "ShadowCopyFiles";
     }
 }

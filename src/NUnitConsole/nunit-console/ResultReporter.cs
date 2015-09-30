@@ -62,6 +62,8 @@ namespace NUnit.ConsoleRunner
         {
             _writer.WriteLine();
 
+            WriteRunSettingsReport();
+
             WriteSummaryReport();
 
             if (_overallResult == "Failed")
@@ -70,6 +72,30 @@ namespace NUnit.ConsoleRunner
             if (Summary.SkipCount + Summary.IgnoreCount > 0)
                 WriteNotRunReport();
         }
+
+        #region
+
+        private void WriteRunSettingsReport()
+        {
+            var settings = _result.SelectNodes("settings/setting");
+
+            if (settings.Count > 0)
+            {
+                _writer.WriteLine(ColorStyle.SectionHeader, "Run Settings");
+
+                foreach (XmlNode node in settings)
+                {
+                    string name = node.GetAttribute("name");
+                    string val = node.GetAttribute("value");
+                    string label = string.Format("    {0}: ", name);
+                    _writer.WriteLabelLine(label, val);
+                }
+
+                _writer.WriteLine();
+            }
+        }
+
+        #endregion
 
         #region Summary Report
 

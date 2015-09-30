@@ -155,7 +155,7 @@ namespace NUnit.Common.Tests
         [TestCase("DefaultTimeout", "timeout")]
         [TestCase("RandomSeed", "seed")]
 #if PARALLEL
-        [TestCase("NumWorkers", "workers")]
+        [TestCase("NumberOfTestWorkers", "workers")]
 #endif
         public void CanRecognizeIntOptions(string propertyName, string pattern)
         {

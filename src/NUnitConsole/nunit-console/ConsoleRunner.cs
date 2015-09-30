@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Common;
@@ -134,8 +135,7 @@ namespace NUnit.ConsoleRunner
 
         private int RunTests(TestPackage package, TestFilter filter)
         {
-            // TODO: We really need options as resolved by engine for most of  these
-            DisplayRequestedOptions();
+            DisplaySelectedTests();
 
             foreach (var spec in _options.ResultOutputSpecifications)
                 GetResultWriter(spec).CheckWritability(spec.OutputPath);
@@ -148,6 +148,7 @@ namespace NUnit.ConsoleRunner
                 : "ON";
 
             XmlNode result;
+
             try
             {
                 using (new SaveConsoleOutput())
@@ -155,7 +156,7 @@ namespace NUnit.ConsoleRunner
                 using (ITestRunner runner = _engine.GetRunner(package))
                 using (var output = CreateOutputWriter())
                 {
-                    var eventHandler = new TestEventHandler(output, labels, _options.TeamCity);
+                    var eventHandler = new TestEventHandler(output, labels, _options.TeamCity); 
 
                     result = runner.Run(eventHandler, filter);
                 }
@@ -189,22 +190,8 @@ namespace NUnit.ConsoleRunner
             OutWriter.WriteLine();
         }
 
-        private void DisplayRequestedOptions()
+        private void DisplaySelectedTests()
         {
-            _outWriter.WriteLine(ColorStyle.SectionHeader, "Options");
-            _outWriter.WriteLabel("    ProcessModel: ", _options.ProcessModel ?? "Default");
-            _outWriter.WriteLabelLine("    DomainUsage: ", _options.DomainUsage ?? "Default");
-            _outWriter.WriteLabelLine("    Execution Runtime: ", _options.Framework ?? "Not Specified");
-            if (_options.DefaultTimeout >= 0)
-                _outWriter.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout.ToString());
-            if (_options.NumWorkers > 0)
-                _outWriter.WriteLabelLine("    Worker Threads: ", _options.NumWorkers.ToString());
-            _outWriter.WriteLabelLine("    Work Directory: ", _workDirectory);
-            _outWriter.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
-            if (_options.TeamCity)
-                _outWriter.WriteLine(ColorStyle.Label, "    Display TeamCity Service Messages");
-            _outWriter.WriteLine();
-
             if (_options.TestList.Count > 0)
             {
                 _outWriter.WriteLine(ColorStyle.Label, "Selected test(s):");
@@ -212,17 +199,11 @@ namespace NUnit.ConsoleRunner
                     foreach (string testName in _options.TestList)
                         _outWriter.WriteLine("    " + testName);
             }
-
-            if (!string.IsNullOrEmpty(_options.Include))
-                _outWriter.WriteLabelLine("Included categories: ", _options.Include);
-
-            if (!string.IsNullOrEmpty(_options.Exclude))
-                _outWriter.WriteLabelLine("Excluded categories: ", _options.Exclude);
         }
 
         private void RedirectErrorOutputAsRequested()
         {
-            if (_options.ErrFile != null)
+            if (_options.ErrFileSpecified)
             {
                 var errorStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile));
                 errorStreamWriter.AutoFlush = true;
@@ -232,7 +213,7 @@ namespace NUnit.ConsoleRunner
 
         private ExtendedTextWriter CreateOutputWriter()
         {
-            if (_options.OutFile != null)
+            if (_options.OutFileSpecified)
             {
                 var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
                 outStreamWriter.AutoFlush = true;
@@ -246,7 +227,7 @@ namespace NUnit.ConsoleRunner
         private void RestoreErrorOutput()
         {
             _errorWriter.Flush();
-            if (_options.ErrFile != null)
+            if (_options.ErrFileSpecified)
                 _errorWriter.Close();
         }
 
@@ -260,13 +241,13 @@ namespace NUnit.ConsoleRunner
         {
             TestPackage package = new TestPackage(options.InputFiles);
 
-            if (options.ProcessModel != null) //ProcessModel.Default)
+            if (options.ProcessModelSpecified)
                 package.AddSetting(PackageSettings.ProcessModel, options.ProcessModel);
 
-            if (options.DomainUsage != null)
+            if (options.DomainUsageSpecified)
                 package.AddSetting(PackageSettings.DomainUsage, options.DomainUsage);
 
-            if (options.Framework != null)
+            if (options.FrameworkSpecified)
                 package.AddSetting(PackageSettings.RuntimeFramework, options.Framework);
 
             if (options.RunAsX86)
@@ -281,25 +262,25 @@ namespace NUnit.ConsoleRunner
             if (options.DefaultTimeout >= 0)
                 package.AddSetting(PackageSettings.DefaultTimeout, options.DefaultTimeout);
 
-            if (options.InternalTraceLevel != null)
+            if (options.InternalTraceLevelSpecified)
                 package.AddSetting(PackageSettings.InternalTraceLevel, options.InternalTraceLevel);
 
-            if (options.ActiveConfig != null)
+            if (options.ActiveConfigSpecified)
                 package.AddSetting(PackageSettings.ActiveConfig, options.ActiveConfig);
 
-            if (options.WorkDirectory != null)
-                package.AddSetting(PackageSettings.WorkDirectory, options.WorkDirectory);
+            // Always add work directory, in case current directory is chnaged
+            package.AddSetting(PackageSettings.WorkDirectory, options.WorkDirectory);
 
             if (options.StopOnError)
                 package.AddSetting(PackageSettings.StopOnError, true);
 
-            if (options.MaxAgents >= 0)
+            if (options.MaxAgentsSpecified)
                 package.AddSetting(PackageSettings.MaxAgents, options.MaxAgents);
 
-            if (options.NumWorkers >= 0)
-                package.AddSetting(PackageSettings.NumberOfTestWorkers, options.NumWorkers);
+            if (options.NumberOfTestWorkersSpecified)
+                package.AddSetting(PackageSettings.NumberOfTestWorkers, options.NumberOfTestWorkers);
 
-            if (options.RandomSeed > 0)
+            if (options.RandomSeedSpecified)
                 package.AddSetting(PackageSettings.RandomSeed, options.RandomSeed);
 
             if (options.Verbose)
@@ -309,7 +290,7 @@ namespace NUnit.ConsoleRunner
             {
                 package.AddSetting(PackageSettings.DebugTests, true);
 
-                if (options.NumWorkers < 0)
+                if (!options.NumberOfTestWorkersSpecified)
                     package.AddSetting(PackageSettings.NumberOfTestWorkers, 0);
             }
 
@@ -334,10 +315,10 @@ namespace NUnit.ConsoleRunner
 
             // TODO: Support multiple include / exclude options
 
-            if (options.Include != null)
+            if (options.IncludeSpecified)
                 builder.Include.Add(options.Include);
 
-            if (options.Exclude != null)
+            if (options.ExcludeSpecified)
                 builder.Exclude.Add(options.Exclude);
 
             return builder.GetFilter();

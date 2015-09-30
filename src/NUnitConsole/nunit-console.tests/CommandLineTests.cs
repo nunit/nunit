@@ -149,7 +149,7 @@ namespace NUnit.ConsoleRunner.Tests
 
         [TestCase("DefaultTimeout", "timeout")]
         [TestCase("RandomSeed", "seed")]
-        [TestCase("NumWorkers", "workers")]
+        [TestCase("NumberOfTestWorkers", "workers")]
         [TestCase("MaxAgents", "agents")]
         public void CanRecognizeIntOptions(string propertyName, string pattern)
         {

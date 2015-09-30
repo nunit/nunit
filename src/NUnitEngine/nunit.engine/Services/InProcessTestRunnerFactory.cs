@@ -61,7 +61,6 @@ namespace NUnit.Engine.Services
                         return new TestDomainRunner(this.ServiceContext, package);
 
                 case DomainUsage.Multiple:
-                    package.Settings.Remove("DomainUsage");
                     return new MultipleTestDomainRunner(ServiceContext, package);
 
                 case DomainUsage.None:

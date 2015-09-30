@@ -98,7 +98,6 @@ namespace NUnit.Engine.Services
             // TODO: What about bad extensions?
 
             ProcessModel processModel = GetTargetProcessModel(package);
-            package.Settings.Remove(PackageSettings.ProcessModel);
 
             switch (processModel)
             {

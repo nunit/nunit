@@ -38,14 +38,14 @@ namespace NUnit.Engine.Services
     public class NUnit3XmlResultWriter : IResultWriter
     {
         /// <summary>
-        /// Checks if the output is writable. If the output is not
+        /// Checks if the output is writable by creating a stub result file. If the output is not
         /// writable, this method should throw an exception.
         /// </summary>
         /// <param name="outputPath"></param>
         public void CheckWritability(string outputPath)
         {
-            XmlNode commandLine = GetCommandLine();
-            WriteResultFile(commandLine, outputPath);
+            XmlNode stub = GetStubResult();
+            WriteResultFile(stub, outputPath);
         }
 
         public void WriteResultFile(XmlNode resultNode, string outputPath)
@@ -68,7 +68,7 @@ namespace NUnit.Engine.Services
             }
         }
 
-        private XmlNode GetCommandLine()
+        private XmlNode GetStubResult()
         {
             var doc = new XmlDocument();
             var test = doc.CreateElement("test-run");

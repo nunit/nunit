@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
@@ -37,6 +38,45 @@ namespace NUnit.Engine.Runners
         public MasterTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         public bool IsTestRunning { get; private set; }
+
+        /// <summary>
+        /// Gets a dictionary of the package settings with defaults resolved by the engine.
+        /// </summary>
+        public IDictionary<string, object> EffectiveSettings
+        {
+            get 
+            {
+                if (_effectiveSettings == null)
+                {
+                    _effectiveSettings = new Dictionary<string, object>();
+                    foreach (string key in TestPackage.Settings.Keys)
+                        _effectiveSettings.Add(key, TestPackage.Settings[key]);
+
+                    bool processModelSpecified = _effectiveSettings.ContainsKey(PackageSettings.ProcessModel);
+                    string processModel = processModelSpecified
+                        ? (string)_effectiveSettings[PackageSettings.ProcessModel]
+                        : TestPackage.SubPackages.Count > 1
+                            ? "Multiple"
+                            : "Separate";
+
+                    if (!processModelSpecified)
+                        _effectiveSettings.Add(PackageSettings.ProcessModel, processModel);
+
+                    if (!_effectiveSettings.ContainsKey(PackageSettings.DomainUsage))
+                    {
+                        string domainUsage = processModel == "Multiple" || TestPackage.SubPackages.Count <= 1 ? "Single" : "Multiple";
+                        _effectiveSettings.Add(PackageSettings.DomainUsage, domainUsage);
+                    }
+
+                    // This incorporates knowledge of the NUNit 3.0 frameowrk.
+                    if (!_effectiveSettings.ContainsKey(PackageSettings.NumberOfTestWorkers))
+                        _effectiveSettings.Add(PackageSettings.NumberOfTestWorkers, Math.Max(Environment.ProcessorCount, 2));
+                }
+
+                return _effectiveSettings; 
+            }
+        }
+        private Dictionary<string, object> _effectiveSettings;
 
         #region AbstractTestRunner Overrides
 
@@ -57,7 +97,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
-            // Last chance to catch invalid settings in package, 
+            // Last chance to catch invalid settings in package,
             // in case the client runner missed them.
             ValidatePackageSettings();
 
@@ -105,6 +145,9 @@ namespace NUnit.Engine.Runners
 
             TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
+            // These are inserted in reverse order, since each is added as the first child.
+            result.Xml.InsertSettingsElement(EffectiveSettings);
+            result.Xml.InsertCommandLineElement();
             result.Xml.InsertEnvironmentElement();
 
             double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
@@ -217,7 +260,7 @@ namespace NUnit.Engine.Runners
         // runner is putting invalid values into the package.
         private void ValidatePackageSettings()
         {
-#if NUNIT_ENGINE
+#if NUNIT_ENGINE // Core engine does not support this setting
             var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
             if (frameworkSetting.Length > 0)
             {
