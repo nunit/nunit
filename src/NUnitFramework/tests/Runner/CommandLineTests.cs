@@ -26,9 +26,10 @@ using System;
 using System.Reflection;
 using System.Text;
 using System.Globalization;
+using NUnit.Common;
 using NUnit.Framework;
 
-namespace NUnit.Common.Tests
+namespace NUnitLite.Runner.Tests
 {
     using System.Collections.Generic;
 
@@ -57,11 +58,6 @@ namespace NUnit.Common.Tests
         [TestCase("WaitBeforeExit", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
-#if !NUNITLITE
-        [TestCase("RunAsX86", "x86")]
-        [TestCase("DisposeRunners", "dispose-runners")]
-        [TestCase("ShadowCopyFiles", "shadowcopy")]
-#endif
 #if !SILVERLIGHT && !NETCF
         [TestCase("TeamCity", "teamcity")]
 #endif
@@ -94,12 +90,6 @@ namespace NUnit.Common.Tests
 
         [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
         [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
-#if !NUNITLITE
-        [TestCase("ActiveConfig", "config", new string[] { "Debug" }, new string[0])]
-        [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
-        [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" }, new string[] { "JUNK" })]
-        [TestCase("Framework", "framework", new string[] { "net-4.0" }, new string[0])]
-#endif
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
@@ -131,10 +121,6 @@ namespace NUnit.Common.Tests
             }
         }
 
-#if !NUNITLITE
-        [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" })]
-        [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" })]
-#endif
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
@@ -195,14 +181,7 @@ namespace NUnit.Common.Tests
 
         [TestCase("--include")]
         [TestCase("--exclude")]
-#if !NUNITLITE
-        [TestCase("--config")]
-        [TestCase("--process")]
-        [TestCase("--domain")]
-        [TestCase("--framework")]
-#endif
         [TestCase("--timeout")]
-        // [TestCase("--xml")]
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]

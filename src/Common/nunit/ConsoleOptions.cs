@@ -331,8 +331,17 @@ namespace NUnit.Common
                 v => ActiveConfig = RequiredValue(v, "--config"));
 
             // Where to Run Tests
-            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple. If not specified, defaults to Separate for a single assembly or Multiple for more than one.",
-                v => ProcessModel = RequiredValue(v, "--process", "Single", "Separate", "Multiple"));
+            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: InProcess, Separate, Multiple. If not specified, defaults to Separate for a single assembly or Multiple for more than one.",
+                v => 
+                {
+                    ProcessModel = RequiredValue(v, "--process", "Single", "InProcess", "Separate", "Multiple");
+                    // Change so it displays correctly even though it isn't absolutely needed
+                    if (ProcessModel.ToLower() == "single")
+                        ProcessModel = "InProcess"; 
+                } );
+
+            this.Add("inprocess", "Synonym for --process:InProcess",
+                v => ProcessModel = "InProcess");
 
             this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple. If not specified, defaults to Single for a single assembly or Multiple for more than one.",
                 v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));

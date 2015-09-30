@@ -114,7 +114,7 @@ namespace NUnit.Engine.Services
                 case ProcessModel.Separate:
                     return new ProcessRunner(this.ServiceContext, package);
 
-                case ProcessModel.Single:
+                case ProcessModel.InProcess:
                     return base.MakeTestRunner(package);
             }
         }

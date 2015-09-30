@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Engine.Internal
 {
     /// <summary>
@@ -37,7 +39,12 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Run tests directly in the NUnit process
         /// </summary>
-        Single,
+        InProcess,
+        /// <summary>
+        /// Run tests directly in the NUnit process
+        /// </summary>
+        [Obsolete("Use InProcess instead")]
+        Single = InProcess,
         /// <summary>
         /// Run tests in a single separate process
         /// </summary>
