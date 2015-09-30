@@ -78,20 +78,26 @@ namespace NUnit.Common
         public IList<string> TestList { get { return testList; } }
 
         public string Include { get; private set; }
+        public bool IncludeSpecified { get { return Include != null; } }
 
         public string Exclude { get; private set; }
+        public bool ExcludeSpecified { get { return Exclude != null; } }
 
         public string ActiveConfig { get; private set; }
+        public bool ActiveConfigSpecified { get { return ActiveConfig != null; } }
 
         // Where to Run Tests
 
         public string ProcessModel { get; private set; }
+        public bool ProcessModelSpecified { get { return ProcessModel != null;  } }
 
         public string DomainUsage { get; private set; }
+        public bool DomainUsageSpecified { get { return DomainUsage != null; } }
 
         // How to Run Tests
 
         public string Framework { get; private set; }
+        public bool FrameworkSpecified { get { return Framework != null;  } }
 
         public bool RunAsX86 { get; private set; }
 
@@ -101,15 +107,19 @@ namespace NUnit.Common
 
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }
+        public bool DefaultTimeoutSpecified { get { return defaultTimeout >= 0; } }
 
         private int randomSeed = -1;
         public int RandomSeed { get { return randomSeed; } }
+        public bool RandomSeedSpecified { get { return randomSeed >= 0; } }
 
         private int numWorkers = -1;
-        public int NumWorkers { get { return numWorkers; } }
+        public int NumberOfTestWorkers { get { return numWorkers; } }
+        public bool NumberOfTestWorkersSpecified { get { return numWorkers >= 0; } }
 
         private int maxAgents = -1;
         public int MaxAgents { get { return maxAgents; } }
+        public bool MaxAgentsSpecified { get { return maxAgents >= 0; } }
 
         public bool StopOnError { get; private set; }
 
@@ -130,18 +140,22 @@ namespace NUnit.Common
         public bool TeamCity { get; private set; }
 
         public string OutFile { get; private set; }
+        public bool OutFileSpecified { get { return OutFile != null; } }
 
         public string ErrFile { get; private set; }
+        public bool ErrFileSpecified { get { return ErrFile != null; } }
 
         public string DisplayTestLabels { get; private set; }
 
-        private string workDirectory = NUnit.Env.DefaultWorkDirectory;
+        private string workDirectory = null;
         public string WorkDirectory 
         {
-            get { return workDirectory; }
+            get { return workDirectory ?? NUnit.Env.DefaultWorkDirectory; }
         }
+        public bool WorkDirectorySpecified { get { return workDirectory != null; } }
 
         public string InternalTraceLevel { get; private set; }
+        public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
 
         /// <summary>Indicates whether a full report should be displayed.</summary>
         public bool Full { get; private set; }

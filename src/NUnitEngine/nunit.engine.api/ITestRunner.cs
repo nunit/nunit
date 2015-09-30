@@ -38,11 +38,6 @@ namespace NUnit.Engine
         bool IsTestRunning { get; }
 
         /// <summary>
-        /// Gets a dictionary of the package settings with defaults resolved by the engine.
-        /// </summary>
-        IDictionary<string,object> EffectiveSettings { get; }
-
-        /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
         /// <returns>An XmlNode representing the loaded package.</returns>

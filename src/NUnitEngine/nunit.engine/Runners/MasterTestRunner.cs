@@ -52,9 +52,23 @@ namespace NUnit.Engine.Runners
                     foreach (string key in TestPackage.Settings.Keys)
                         _effectiveSettings.Add(key, TestPackage.Settings[key]);
 
-                    if (!_effectiveSettings.ContainsKey(PackageSettings.ProcessModel))
-                        _effectiveSettings.Add(PackageSettings.ProcessModel, TestPackage.SubPackages.Count > 1 ? "Multiple" : "Separate");
+                    bool processModelSpecified = _effectiveSettings.ContainsKey(PackageSettings.ProcessModel);
+                    string processModel = processModelSpecified
+                        ? (string)_effectiveSettings[PackageSettings.ProcessModel]
+                        : TestPackage.SubPackages.Count > 1
+                            ? "Multiple"
+                            : "Separate";
 
+                    if (!processModelSpecified)
+                        _effectiveSettings.Add(PackageSettings.ProcessModel, processModel);
+
+                    if (!_effectiveSettings.ContainsKey(PackageSettings.DomainUsage))
+                    {
+                        string domainUsage = processModel == "Multiple" || TestPackage.SubPackages.Count <= 1 ? "Single" : "Multiple";
+                        _effectiveSettings.Add(PackageSettings.DomainUsage, domainUsage);
+                    }
+
+                    // This incorporates knowledge of the NUNit 3.0 frameowrk.
                     if (!_effectiveSettings.ContainsKey(PackageSettings.NumberOfTestWorkers))
                         _effectiveSettings.Add(PackageSettings.NumberOfTestWorkers, Math.Max(Environment.ProcessorCount, 2));
                 }
@@ -83,7 +97,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
-            // Last chance to catch invalid settings in package, 
+            // Last chance to catch invalid settings in package,
             // in case the client runner missed them.
             ValidatePackageSettings();
 
@@ -246,7 +260,7 @@ namespace NUnit.Engine.Runners
         // runner is putting invalid values into the package.
         private void ValidatePackageSettings()
         {
-#if NUNIT_ENGINE
+#if NUNIT_ENGINE // Core engine does not support this setting
             var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
             if (frameworkSetting.Length > 0)
             {
