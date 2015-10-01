@@ -292,7 +292,10 @@ namespace NUnit.Engine.Services
         /// </summary>
         private void FindExtensionsInAssembly(string assemblyName)
         {
-            var module = AssemblyDefinition.ReadAssembly(assemblyName).MainModule;
+            var resolver = new DefaultAssemblyResolver();
+            resolver.AddSearchDirectory(Path.GetDirectoryName(assemblyName));
+            var parameters = new ReaderParameters() { AssemblyResolver = resolver };
+            var module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
             foreach (var type in module.GetTypes())
             {
                 CustomAttribute extensionAttr = type.GetAttribute("NUnit.Engine.Extensibility.ExtensionAttribute");
