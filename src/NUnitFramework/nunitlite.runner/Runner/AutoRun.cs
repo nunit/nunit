@@ -51,7 +51,7 @@ namespace NUnitLite.Runner
         /// <param name="args">Execution options</param>
         public int Execute(string[] args)
         {
-            var options = new ConsoleOptions(args);
+            var options = new NUnitLiteOptions(args);
             var callingAssembly = Assembly.GetCallingAssembly();
 
             var level = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), options.InternalTraceLevel ?? "Off", true);

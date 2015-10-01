@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011-2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,19 +29,22 @@ using Mono.Options;
 namespace NUnit.Common
 {
     /// <summary>
-    /// ConsoleOptions encapsulates the option settings for
-    /// the nunit-console program. It inherits from the Mono
+    /// CommandLineOptions is the base class the specific option classes
+    /// used for nunit-console and nunitlite. It encapsulates all common
+    /// settings and features of both. This is done to ensure that common
+    /// features remain common and for the convenience of having the code
+    /// in a common location. The class inherits from the Mono
     /// Options OptionSet class and provides a central location
     /// for defining and parsing options.
     /// </summary>
-    public class ConsoleOptions : OptionSet
+    public class CommandLineOptions : OptionSet
     {
         private bool validated;
         private bool noresult;
 
         #region Constructor
 
-        internal ConsoleOptions(IDefaultOptionsProvider defaultOptionsProvider, params string[] args)
+        internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, params string[] args)
         {
             // Apply default oprions
             if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
@@ -52,7 +55,7 @@ namespace NUnit.Common
                 Parse(args);
         }
 
-        public ConsoleOptions(params string[] args)
+        public CommandLineOptions(params string[] args)
         {
             ConfigureOptions();
             if (args != null)
@@ -83,28 +86,6 @@ namespace NUnit.Common
         public string Exclude { get; private set; }
         public bool ExcludeSpecified { get { return Exclude != null; } }
 
-        public string ActiveConfig { get; private set; }
-        public bool ActiveConfigSpecified { get { return ActiveConfig != null; } }
-
-        // Where to Run Tests
-
-        public string ProcessModel { get; private set; }
-        public bool ProcessModelSpecified { get { return ProcessModel != null;  } }
-
-        public string DomainUsage { get; private set; }
-        public bool DomainUsageSpecified { get { return DomainUsage != null; } }
-
-        // How to Run Tests
-
-        public string Framework { get; private set; }
-        public bool FrameworkSpecified { get { return Framework != null;  } }
-
-        public bool RunAsX86 { get; private set; }
-
-        public bool DisposeRunners { get; private set; }
-
-        public bool ShadowCopyFiles { get; private set; }
-
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }
         public bool DefaultTimeoutSpecified { get { return defaultTimeout >= 0; } }
@@ -117,17 +98,9 @@ namespace NUnit.Common
         public int NumberOfTestWorkers { get { return numWorkers; } }
         public bool NumberOfTestWorkersSpecified { get { return numWorkers >= 0; } }
 
-        private int maxAgents = -1;
-        public int MaxAgents { get { return maxAgents; } }
-        public bool MaxAgentsSpecified { get { return maxAgents >= 0; } }
-
         public bool StopOnError { get; private set; }
 
         public bool WaitBeforeExit { get; private set; }
-
-        public bool DebugTests { get; private set; }
-
-        public bool DebugAgent { get; private set; }
 
         // Output Control
 
@@ -207,7 +180,7 @@ namespace NUnit.Common
         /// Case is ignored when val is compared to validValues. When a match is found, the
         /// returned value will be in the canonical case from validValues.
         /// </summary>
-        private string RequiredValue(string val, string option, params string[] validValues)
+        protected string RequiredValue(string val, string option, params string[] validValues)
         {
             if (string.IsNullOrEmpty(val))
                 ErrorMessages.Add("Missing required value for option '" + option + "'.");
@@ -230,7 +203,7 @@ namespace NUnit.Common
             return val;
         }
 
-        private int RequiredInt(string val, string option)
+        protected int RequiredInt(string val, string option)
         {
             // We have to return something even though the value will
             // be ignored if an error is reported. The -1 value seems
@@ -241,7 +214,7 @@ namespace NUnit.Common
                 ErrorMessages.Add("Missing required value for option '" + option + "'.");
             else
             {
-#if NETCF   // NETCF: Create compatibility method for TryParse
+                // NOTE: Don't replace this with TryParse or you'll break the CF build!
                 try
                 {
                     result = int.Parse(val);
@@ -250,13 +223,6 @@ namespace NUnit.Common
                 {
                     ErrorMessages.Add("An int value was expected for option '{0}' but a value of '{1}' was used");
                 }
-#else
-                int r;
-                if (int.TryParse(val, out r))
-                    result = r;
-                else
-                    ErrorMessages.Add("An int value was expected for option '{0}' but a value of '{1}' was used");
-#endif
             }
 
             return result;
@@ -273,18 +239,11 @@ namespace NUnit.Common
 #endif
         }
 
-        private void ConfigureOptions()
+        protected virtual void ConfigureOptions()
         {
             // NOTE: The order in which patterns are added
             // determines the display order for the help.
 
-            // Old Options no longer supported:
-            //   fixture
-            //   xmlConsole
-            //   noshadow
-            //   nothread
-            //   nodots
-           
             // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
@@ -326,56 +285,11 @@ namespace NUnit.Common
             this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
                 v => Exclude = RequiredValue(v, "--exclude"));
 
-#if !NUNITLITE
-            this.Add("config=", "{NAME} of a project configuration to load (e.g.: Debug).",
-                v => ActiveConfig = RequiredValue(v, "--config"));
-
-            // Where to Run Tests
-            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: InProcess, Separate, Multiple. If not specified, defaults to Separate for a single assembly or Multiple for more than one.",
-                v => 
-                {
-                    ProcessModel = RequiredValue(v, "--process", "Single", "InProcess", "Separate", "Multiple");
-                    // Change so it displays correctly even though it isn't absolutely needed
-                    if (ProcessModel.ToLower() == "single")
-                        ProcessModel = "InProcess"; 
-                } );
-
-            this.Add("inprocess", "Synonym for --process:InProcess",
-                v => ProcessModel = "InProcess");
-
-            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple. If not specified, defaults to Single for a single assembly or Multiple for more than one.",
-                v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
-
-            // How to Run Tests
-            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0. If not specified, tests will run under the framework they are compiled with.",
-                v => Framework = RequiredValue(v, "--framework"));
-
-            this.Add("x86", "Run tests in an x86 process on 64 bit systems",
-                v => RunAsX86 = v != null);
-
-            this.Add("dispose-runners", "Dispose each test runner after it has finished running its tests.",
-                v => DisposeRunners = v != null);
-
-            this.Add("shadowcopy", "Shadow copy test files",
-                v => ShadowCopyFiles = v != null);
-
-            this.Add("debug", "Launch debugger to debug tests.",
-                v => DebugTests = v != null);
-
-#if DEBUG
-            this.Add("debug-agent", "Launch debugger in nunit-agent when it starts.",
-                v => DebugAgent = v != null);
-#endif
-#endif
-
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
 
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
-
-            this.Add("agents=", "Specify the maximum {NUMBER} of test assembly agents to run at one time. If not specified, there is no limit.",
-                v => maxAgents = RequiredInt(v, "--agents"));
 
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => numWorkers = RequiredInt(v, "--workers"));

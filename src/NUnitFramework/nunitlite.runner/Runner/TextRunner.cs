@@ -70,7 +70,7 @@ namespace NUnitLite.Runner
         private ITestAssemblyRunner _runner;
 
 #if !SILVERLIGHT
-        private ConsoleOptions _options;
+        private NUnitLiteOptions _options;
 #if !NETCF
         private TeamCityEventListener _teamCity;
 #endif
@@ -102,7 +102,7 @@ namespace NUnitLite.Runner
         }
 #else
         /// <param name="options">The options to use when running the test</param>
-        public TextRunner(TextUI textUI, ConsoleOptions options)
+        public TextRunner(TextUI textUI, NUnitLiteOptions options)
         {
             _textUI = textUI;
             _options = options;
@@ -251,7 +251,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Make the settings for this run - this is public for testing
         /// </summary>
-        public static Dictionary<string, object> MakeRunSettings(ConsoleOptions options)
+        public static Dictionary<string, object> MakeRunSettings(NUnitLiteOptions options)
         {
             // Transfer command line options to run settings
             var runSettings = new Dictionary<string, object>();
@@ -276,7 +276,7 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static TestFilter CreateTestFilter(ConsoleOptions options)
+        public static TestFilter CreateTestFilter(NUnitLiteOptions options)
         {
             TestFilter namefilter = options.TestList.Count > 0
                 ? new SimpleNameFilter(options.TestList)

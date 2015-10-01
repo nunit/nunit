@@ -68,7 +68,7 @@ namespace NUnitLite.Runner.Tests
             _reportBuilder = new StringBuilder();
             var writer = new ExtendedTextWrapper(new StringWriter(_reportBuilder));
 #if !SILVERLIGHT
-            var options = new ConsoleOptions();
+            var options = new NUnitLiteOptions();
             _textUI = new TextUI(writer, options);
 #else
             _textUI = new TextUI(writer);
@@ -183,7 +183,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void ReportSequenceTest()
         {
-            var textRunner = new TextRunner(_textUI, new ConsoleOptions());
+            var textRunner = new TextRunner(_textUI, new NUnitLiteOptions());
             textRunner.ReportResults(_result);
 
             int last = -1;

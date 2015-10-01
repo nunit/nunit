@@ -36,7 +36,7 @@ namespace NUnitLite.Runner
     {
         private ExtendedTextWriter _outWriter;
 #if !SILVERLIGHT
-        private ConsoleOptions _options;
+        private NUnitLiteOptions _options;
 #endif
 
         #region Constructors
@@ -47,9 +47,9 @@ namespace NUnitLite.Runner
             _outWriter = writer;
         }
 #else
-        public TextUI(ConsoleOptions options) : this(null, options) { }
+        public TextUI(NUnitLiteOptions options) : this(null, options) { }
 
-        public TextUI(ExtendedTextWriter writer, ConsoleOptions options)
+        public TextUI(ExtendedTextWriter writer, NUnitLiteOptions options)
         {
             _options = options;
             _outWriter = writer ?? new ColorConsoleWriter(!options.NoColor);
