@@ -161,7 +161,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestListFileMissing()
         {
-            var options = new ConsoleOptions("--testlist:\\badtestlistfile");
+            var options = new NUnitLiteOptions("--testlist:\\badtestlistfile");
             Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
             Assert.That(options.ErrorMessages, Does.Contain("Unable to locate file: \\badtestlistfile"));
             var filter = TextRunner.CreateTestFilter(options);
@@ -170,7 +170,7 @@ namespace NUnitLite.Runner.Tests
 
         private TestFilter GetFilter(params string[] args)
         {
-            return TextRunner.CreateTestFilter(new ConsoleOptions(args));
+            return TextRunner.CreateTestFilter(new NUnitLiteOptions(args));
         }
     }
 }

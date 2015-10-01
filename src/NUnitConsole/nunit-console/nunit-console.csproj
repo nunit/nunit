@@ -57,8 +57,8 @@
     <Compile Include="..\..\Common\nunit\ColorStyle.cs">
       <Link>ColorStyle.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
-      <Link>ConsoleOptions.cs</Link>
+    <Compile Include="..\..\Common\nunit\CommandLineOptions.cs">
+      <Link>CommandLineOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
       <Link>DefaultOptionsProvider.cs</Link>
@@ -99,6 +99,7 @@
     <Compile Include="..\ConsoleVersion.cs">
       <Link>ConsoleVersion.cs</Link>
     </Compile>
+    <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
