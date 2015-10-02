@@ -27,6 +27,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Compatibility;
 
+#if NETCORE
+using System.Linq;
+#endif
+
 namespace NUnit.Framework.Internal
 {
     using Interfaces;
@@ -57,28 +61,21 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if PORTABLE || NETCORE
+#if PORTABLE
         public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
         {
             if (attributeProvider == null)
                 return new ITestAction[0];
 
-#if NETCORE
-            var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction)));
-#else
             var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
-#endif
             actions.Sort(SortByTargetDescending);
 
             return actions.ToArray();
         }
 
         public static ITestAction[] GetActionsFromAttributeProvider(MemberInfo attributeProvider)
-#else
-        public static ITestAction[] GetActionsFromAttributeProvider(ICustomAttributeProvider attributeProvider)
-#endif
-            {
-                if (attributeProvider == null)
+        {
+            if (attributeProvider == null)
                 return new ITestAction[0];
 
             var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
@@ -86,6 +83,40 @@ namespace NUnit.Framework.Internal
 
             return actions.ToArray();
         }
+#elif NETCORE
+        public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
+        {
+            if (attributeProvider == null)
+                return new ITestAction[0];
+
+            var actions = attributeProvider.GetAttributes<ITestAction>().ToList();
+            actions.Sort(SortByTargetDescending);
+
+            return actions.ToArray();
+        }
+
+        public static ITestAction[] GetActionsFromAttributeProvider(MemberInfo attributeProvider)
+        {
+            if (attributeProvider == null)
+                return new ITestAction[0];
+
+            var actions = attributeProvider.GetAttributes<ITestAction>(false).ToList();
+            actions.Sort(SortByTargetDescending);
+
+            return actions.ToArray();
+        }
+#else
+        public static ITestAction[] GetActionsFromAttributeProvider(ICustomAttributeProvider attributeProvider)
+        {
+            if (attributeProvider == null)
+                return new ITestAction[0];
+
+            var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
+            actions.Sort(SortByTargetDescending);
+
+            return actions.ToArray();
+        }
+#endif
 
         public static ITestAction[] GetActionsFromTypesAttributes(Type type)
         {
