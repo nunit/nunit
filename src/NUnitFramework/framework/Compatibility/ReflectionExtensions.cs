@@ -22,8 +22,12 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 
-#if NET_2_0
+#if NETCORE
+using System.Linq;
+#elif NET_2_0
 namespace System.Runtime.CompilerServices
 {
     /// <summary>

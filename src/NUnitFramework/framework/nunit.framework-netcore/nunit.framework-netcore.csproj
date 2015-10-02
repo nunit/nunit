@@ -16,6 +16,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -403,7 +404,7 @@
     <Compile Include="..\Constraints\ExactCountConstraint.cs" />
     <Compile Include="..\Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="..\Constraints\ExceptionTypeConstraint.cs" />
-    <Compile Include="ReflectionExtensions.cs" />
+    <Compile Include="..\Compatibility\ReflectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
