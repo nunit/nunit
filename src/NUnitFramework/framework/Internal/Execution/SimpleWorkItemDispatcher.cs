@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItemDispatcher : IWorkItemDispatcher
     {
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
         // The first WorkItem to be dispatched, assumed to be top-level item
         private WorkItem _topLevelWorkItem;
 
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-#if PORTABLE
+#if PORTABLE || NETCORE
             if (work != null)
                 work.Execute();
 #else
@@ -70,28 +70,28 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
     private void RunnerThreadProc()
     {
         _topLevelWorkItem.Execute();
     }
 #endif
 
-		/// <summary>
-		/// Cancel the ongoing run completely.
-		/// If no run is in process, the call has no effect.
-		/// </summary>
-		public void CancelRun()
+        /// <summary>
+        /// Cancel the ongoing run completely.
+        /// If no run is in process, the call has no effect.
+        /// </summary>
+        public void CancelRun()
 		{
-	#if !PORTABLE
-	#if NETCF
+#if !PORTABLE && !NETCORE
+#if NETCF
 			if (_runnerThread != null && !_runnerThread.Join(0))
-	#else
+#else
 			if (_runnerThread != null && _runnerThread.IsAlive)
-	#endif
+#endif
 				ThreadUtility.Kill(_runnerThread);
-	#endif
-		}
-		#endregion
-	}
+#endif
+        }
+        #endregion
+    }
 }

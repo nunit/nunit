@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections;
+using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -100,7 +102,7 @@ namespace NUnit.Framework
         {
             Type targetType = parameter.ParameterType;
 
-            if (targetType.IsEnum && data.Length == 0)
+            if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
             {
                 return TypeHelper.GetEnumValues(targetType);
             }
@@ -127,10 +129,10 @@ namespace NUnit.Framework
                     continue;
                 }
 
-                if (targetType.IsAssignableFrom(arg.GetType()))
+                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
                     continue;
 
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
                 if (arg is DBNull)
                 {
                     data[i] = null;

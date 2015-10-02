@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -56,13 +57,17 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if PORTABLE
+#if PORTABLE || NETCORE
         public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
         {
             if (attributeProvider == null)
                 return new ITestAction[0];
 
+#if NETCORE
+            var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction)));
+#else
             var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
+#endif
             actions.Sort(SortByTargetDescending);
 
             return actions.ToArray();
@@ -72,8 +77,8 @@ namespace NUnit.Framework.Internal
 #else
         public static ITestAction[] GetActionsFromAttributeProvider(ICustomAttributeProvider attributeProvider)
 #endif
-        {
-            if (attributeProvider == null)
+            {
+                if (attributeProvider == null)
                 return new ITestAction[0];
 
             var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
@@ -92,14 +97,14 @@ namespace NUnit.Framework.Internal
 
             var actions = new List<ITestAction>();
 
-            actions.AddRange(GetActionsFromTypesAttributes(type.BaseType));
+            actions.AddRange(GetActionsFromTypesAttributes(type.GetTypeInfo().BaseType));
 
             Type[] declaredInterfaces = GetDeclaredInterfaces(type);
 
             foreach(Type interfaceType in declaredInterfaces)
-                actions.AddRange(GetActionsFromAttributeProvider(interfaceType));
+                actions.AddRange(GetActionsFromAttributeProvider(interfaceType.GetTypeInfo()));
 
-            actions.AddRange(GetActionsFromAttributeProvider(type));
+            actions.AddRange(GetActionsFromAttributeProvider(type.GetTypeInfo()));
 
             return actions.ToArray();
         }
@@ -108,10 +113,10 @@ namespace NUnit.Framework.Internal
         {
             List<Type> interfaces = new List<Type>(type.GetInterfaces());
 
-            if (type.BaseType == typeof(object))
+            if (type.GetTypeInfo().BaseType == typeof(object))
                 return interfaces.ToArray();
 
-            List<Type> baseInterfaces = new List<Type>(type.BaseType.GetInterfaces());
+            List<Type> baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
             List<Type> declaredInterfaces = new List<Type>();
 
             foreach (Type interfaceType in interfaces)

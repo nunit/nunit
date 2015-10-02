@@ -106,7 +106,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (var region = AsyncInvocationRegion.Create(del))
                     return ApplyTo(region.WaitForPendingOperationsToComplete(del()));
@@ -268,7 +268,7 @@ namespace NUnit.Framework.Constraints
 
         #region After Modifier
 
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
         /// <summary>
         /// Returns a DelayedConstraint with the specified delay time.
         /// </summary>

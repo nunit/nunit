@@ -27,6 +27,7 @@ using System.Linq;
 #endif
 using System.Reflection;
 using System.Text;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -60,7 +61,7 @@ namespace NUnit.Framework.Internal
             if (type.IsGenericParameter)
                 return type.Name;
 
-            if (type.IsGenericType)
+            if (type.GetTypeInfo().IsGenericType)
             {
                 string name = type.FullName;
                 int index = name.IndexOf('[');

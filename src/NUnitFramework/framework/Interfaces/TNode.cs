@@ -25,7 +25,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-#if PORTABLE || SILVERLIGHT
+#if PORTABLE || SILVERLIGHT || NETCORE
 using System.Xml.Linq;
 #endif
 
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A TNode</returns>
         public static TNode FromXml(string xmlText)
         {
-#if PORTABLE || SILVERLIGHT
+#if PORTABLE || SILVERLIGHT || NETCORE
             return FromXml(XElement.Parse(xmlText));
 #else
             var doc = new XmlDocument();
@@ -258,7 +258,7 @@ namespace NUnit.Framework.Interfaces
 
         #region Helper Methods
 
-#if PORTABLE || SILVERLIGHT
+#if PORTABLE || SILVERLIGHT || NETCORE
         private static TNode FromXml(XElement xElement)
         {
             TNode tNode = new TNode(xElement.Name.ToString(), xElement.Value);

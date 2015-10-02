@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
 using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -50,14 +50,14 @@ namespace NUnit.Framework
             _timeout = timeout;
         }
 
-        #region IApplyToContext Members
+#region IApplyToContext Members
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
             context.TestCaseTimeout = _timeout;
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

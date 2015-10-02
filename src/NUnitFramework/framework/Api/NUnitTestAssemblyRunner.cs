@@ -43,7 +43,7 @@ namespace NUnit.Framework.Api
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
         // Saved Console.Out and Console.Error
         private TextWriter _savedOut;
         private TextWriter _savedErr;
@@ -213,7 +213,7 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
             return _runComplete.WaitOne(timeout, false);
 #else
             return _runComplete.WaitOne(timeout);
@@ -225,7 +225,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public void StartRun(ITestListener listener)
         {
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
             // Save Console.Out and Error for later restoration
             _savedOut = Console.Out;
             _savedErr = Console.Error;
@@ -323,7 +323,7 @@ namespace NUnit.Framework.Api
             _pump.Dispose();
 #endif
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
 #endif
