@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
         TestExecutionContext fixtureContext;
         TestExecutionContext setupContext;
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
         string originalDirectory;
         IPrincipal originalPrincipal;
 #endif
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
             originalUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
             originalDirectory = Environment.CurrentDirectory;
             originalPrincipal = Thread.CurrentPrincipal;
 #endif
@@ -91,12 +91,12 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !NETCF
+#if !NETCF && !NETCORE
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
             Environment.CurrentDirectory = originalDirectory;
             Thread.CurrentPrincipal = originalPrincipal;
 #endif
@@ -282,7 +282,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentPrincipal
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
         [Test]
         public void FixtureSetUpContextReflectsCurrentPrincipal()
         {
@@ -366,7 +366,7 @@ namespace NUnit.Framework.Internal
 
         #region Cross-domain Tests
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
         [Test]
         public void CanCreateObjectInAppDomain()
         {
@@ -391,7 +391,7 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 
-#if !PORTABLE && !SILVERLIGHT && !NETCF
+#if !PORTABLE && !SILVERLIGHT && !NETCF && !NETCORE
     [TestFixture]
     public class TextExecutionContextInAppDomain
     {

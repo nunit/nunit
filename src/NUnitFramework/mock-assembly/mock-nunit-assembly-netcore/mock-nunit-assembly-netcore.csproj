@@ -55,6 +55,9 @@
     <Compile Include="..\..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="..\MockAssembly.cs">
+      <Link>MockAssembly.cs</Link>
+    </Compile>
     <Compile Include="..\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>

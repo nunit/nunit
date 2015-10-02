@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using NUnit.Framework.Compatibility;
 
 namespace NUnit.TestUtilities
 {
@@ -50,7 +51,7 @@ namespace NUnit.TestUtilities
             _resourceName = "NUnit.Framework.Tests." + resourceName;
             _fileLength = 0L;
 
-            Assembly a = Assembly.GetExecutingAssembly();
+            Assembly a = typeof(TestFile).GetTypeInfo().Assembly;
             using (Stream s = a.GetManifestResourceStream(_resourceName))
             {
                 if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
@@ -76,7 +77,7 @@ namespace NUnit.TestUtilities
 
         public long OffsetOf(char target)
         {
-            Assembly a = Assembly.GetExecutingAssembly();
+            Assembly a = typeof(TestFile).GetTypeInfo().Assembly;
             using (Stream s = a.GetManifestResourceStream(_resourceName))
             {
                 if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");

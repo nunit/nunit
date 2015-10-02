@@ -358,7 +358,7 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
             [Test]
             public void CanMatchHashtables_SameOrder()
             {

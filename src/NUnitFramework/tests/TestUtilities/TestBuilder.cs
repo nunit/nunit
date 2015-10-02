@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
@@ -122,10 +123,12 @@ namespace NUnit.TestUtilities
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
             {
-#if !PORTABLE
-                Thread.Sleep(1);
-#else
+#if PORTABLE
                 System.Threading.Tasks.TaskEx.Delay(1);
+#elif NETCORE
+                System.Threading.Tasks.Task.Delay(1);
+#else
+                Thread.Sleep(1);
 #endif
             }
 
@@ -188,10 +191,12 @@ namespace NUnit.TestUtilities
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
             {
-#if !PORTABLE
-                Thread.Sleep(1);
-#else
+#if PORTABLE
                 System.Threading.Tasks.TaskEx.Delay(1);
+#elif NETCORE
+                System.Threading.Tasks.Task.Delay(1);
+#else
+                Thread.Sleep(1);
 #endif
             }
 
@@ -202,7 +207,7 @@ namespace NUnit.TestUtilities
 
         private static bool IsStaticClass(Type type)
         {
-            return type.IsAbstract && type.IsSealed;
+            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
         }
 
         private TestBuilder() { }

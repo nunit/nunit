@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // TODO: Get to work in Portable and Silverlight - will require building mock-assembly
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
 
 using System;
 using System.Collections;
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Api
             _inconclusiveCount = 0;
         }
 
-        #region Load
+#region Load
         [Test]
         public void Load_GoodFile_ReturnsRunnableSuite()
         {
@@ -117,9 +117,9 @@ namespace NUnit.Framework.Api
             Assert.That(result.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Could not load").And.Contains(BAD_FILE));
 #endif
         }
-        #endregion
+#endregion
 
-        #region CountTestCases
+#region CountTestCases
         [Test]
         public void CountTestCases_AfterLoad_ReturnsCorrectCount()
         {
@@ -148,9 +148,9 @@ namespace NUnit.Framework.Api
             _runner.Load(BAD_FILE, _settings);
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
-        #endregion
+#endregion
 
-        #region Run
+#region Run
         [Test]
         public void Run_AfterLoad_ReturnsRunnableSuite()
         {
@@ -226,9 +226,9 @@ namespace NUnit.Framework.Api
             Assert.That(result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
 #endif
         }
-        #endregion
+#endregion
 
-        #region RunAsync
+#region RunAsync
         [Test]
         public void RunAsync_AfterLoad_ReturnsRunnableSuite()
         {
@@ -311,9 +311,9 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
 #endif
         }
-        #endregion
+#endregion
 
-        #region StopRun
+#region StopRun
         [Test]
         public void StopRun_WhenNoTestIsRunning_Succeeds()
         {
@@ -338,9 +338,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region Cancel Run
+#region Cancel Run
 
         [Test]
         public void CancelRun_WhenNoTestIsRunning_Succeeds()
@@ -369,9 +369,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region ITestListener Implementation
+#region ITestListener Implementation
 
         void ITestListener.TestStarted(ITest test)
         {
@@ -403,7 +403,7 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
     }
 }
 #endif
