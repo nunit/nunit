@@ -248,10 +248,10 @@
   <!-- Region Test Targets -->
 
   <Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-      DependsOnTargets="TestAllFrameworks;TestEngine;TestCoreEngine;TestAddins;TestV2Driver;TestConsole" />
+      DependsOnTargets="TestAllFrameworks;TestEngine;TestAddins;TestV2Driver;TestConsole" />
     
   <Target Name="Test" Label="Run tests for the current framework, engine and console"
-      DependsOnTargets="TestFramework;TestEngine;TestCoreEngine;TestAddins;TestV2Driver;TestConsole" />
+      DependsOnTargets="TestFramework;TestEngine;TestAddins;TestV2Driver;TestConsole" />
 
   <Target Name="TestAllFrameworks"
       Label="Test the framework for the current config and all runtimes">
@@ -304,20 +304,6 @@
 
     <Exec WorkingDirectory="$(EngineBuildDir)"
         Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll "-result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat)" $(TestOptions)'
-        ContinueOnError="$(ContinueOnFailure)"/>
-
-  </Target>
-
-  <Target Name="TestCoreEngine"
-      Label ="Run the core engine tests"
-      DependsOnTargets="_CreateResultDir">
-
-    <Message Text="******************************************************************" />
-    <Message Text="* Testing the NUnit Core Engine - $(Configuration)" />
-    <Message Text="******************************************************************" />
-
-    <Exec WorkingDirectory="$(EngineBuildDir)"
-        Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.core.engine.tests.dll "-result:$(ResultDir)/CoreEngineResult.xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)"/>
 
   </Target>
@@ -419,7 +405,7 @@
 
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetCoreEngine" />
+  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
   
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
@@ -453,17 +439,6 @@
 
     <Exec WorkingDirectory="$(ProjectBaseDir)"
         Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.console.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
-
-  </Target>
-
-  <Target Name="PackageNuGetCoreEngine" Label="Creates the NUnit.Core.Engine NuGet package"
-      DependsOnTargets="_CreateImageIfNotPresent">
-    <Message Text="******************************************************************" />
-    <Message Text="* Creating the NUnit.Core.Engine Nuget $(Configuration) package" />
-    <Message Text="******************************************************************" />
-
-    <Exec WorkingDirectory="$(ProjectBaseDir)"
-        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.core.engine.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
 
@@ -640,14 +615,11 @@
     <!-- The engine and agent -->
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
-    <EngineProjects Include="$(EngineSrcDir)\nunit.core.engine\nunit.core.engine.csproj" />
-    <EngineProjects Include="$(EngineSrcDir)\core-runner\core-runner.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
     <EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
 
     <!-- Test Assemblies -->
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />  
-    <EngineProjects Include="$(EngineSrcDir)\nunit.core.engine.tests\nunit.core.engine.tests.csproj" />  
     
     <!-- Addins -->
     <EngineProjects Include="$(AddinSrcDir)\nunit-project-loader\nunit-project-loader.csproj" />
