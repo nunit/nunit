@@ -57,15 +57,15 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if the test passes the filter, otherwise false</returns>
         public override bool Pass(ITest test)
         {
-            return !BaseFilter.Pass(test);
-        }
+			return !BaseFilter.Match (test) && !BaseFilter.MatchParent (test);
+		}
 
-        /// <summary>
-        /// Check whether the filter matches a test
-        /// </summary>
-        /// <param name="test">The test to be matched</param>
-        /// <returns>True if it matches, otherwise false</returns>
-        public override bool Match( ITest test )
+		/// <summary>
+		/// Check whether the filter matches a test
+		/// </summary>
+		/// <param name="test">The test to be matched</param>
+		/// <returns>True if it matches, otherwise false</returns>
+		public override bool Match( ITest test )
         {
             return !BaseFilter.Match( test );
         }
@@ -76,10 +76,9 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the test matches the filter explicityly, otherwise false</returns>
-        // TODO: Not yet clear how explicit match should work for NotFilter
         public override bool IsExplicitMatch(ITest test)
         {
-            return !BaseFilter.IsExplicitMatch(test);
+            return !BaseFilter.Match(test);
         }
 
         ///// <summary>

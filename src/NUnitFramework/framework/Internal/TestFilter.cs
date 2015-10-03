@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the filter matches the an ancestor of the test</returns>
-        private bool MatchParent(ITest test)
+        public bool MatchParent(ITest test)
         {
             return test.Parent != null && (Match(test.Parent) || MatchParent(test.Parent));
         }

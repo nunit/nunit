@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new NotFilter(new CategoryFilter("Dummy"));
 
-            Assert.False(filter.Pass(_topLevelSuite));
+            Assert.True(filter.Pass(_topLevelSuite));
             Assert.False(filter.Pass(_dummyFixture));
             Assert.False(filter.Pass(_dummyFixture.Tests[0]));
 
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new NotFilter(new CategoryFilter("Dummy"));
 
-            Assert.False(filter.IsExplicitMatch(_topLevelSuite));
+            Assert.True(filter.IsExplicitMatch(_topLevelSuite));
             Assert.False(filter.IsExplicitMatch(_dummyFixture));
             Assert.True(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
 
