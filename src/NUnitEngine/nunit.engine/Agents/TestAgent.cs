@@ -37,7 +37,7 @@ namespace NUnit.Engine.Agents
 
         private ITestAgency agency;
         private Guid agentId;
-        private ServiceContext services;
+        private IServiceLocator services;
 
         #endregion
 
@@ -48,8 +48,8 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="agentId">The identifier of the agent.</param>
         /// <param name="agency">The agency that this agent is associated with.</param>
-        /// <param name="services">The context under which to run the agent.</param>
-        public TestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
+        /// <param name="services">The services available to the agent.</param>
+        public TestAgent( Guid agentId, ITestAgency agency, IServiceLocator services )
         {
             this.agency = agency;
             this.agentId = agentId;
@@ -61,9 +61,9 @@ namespace NUnit.Engine.Agents
         #region Protected Properties
 
         /// <summary>
-        /// The ServiceContext under which the agent is running
+        /// The services available to the agent
         /// </summary>
-        protected ServiceContext Services
+        protected IServiceLocator Services
         {
             get { return services; }
         }

@@ -37,7 +37,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="package">The package.</param>
-        public MultipleTestProcessRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+        public MultipleTestProcessRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
 
         #region AggregatingTestRunner Overrides
 

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine
 {
@@ -39,14 +40,18 @@ namespace NUnit.Engine
     }
 
     /// <summary>
-    /// The IService interface is implemented by all Services.
+    /// The IService interface is implemented by all Services. Although it
+    /// is extensible, it does not reside in the Extensibility namespace
+    /// because it is so widely used by the engine.
     /// </summary>
+    [TypeExtensionPoint(
+        Description="Provides a service within the engine and possibly externally as well.")]
     public interface IService
     {
         /// <summary>
         /// The ServiceContext
         /// </summary>
-        ServiceContext ServiceContext { get; set; }
+        IServiceLocator ServiceContext { get; set; }
 
         /// <summary>
         /// Gets the ServiceStatus of this service

@@ -38,7 +38,7 @@ namespace NUnit.Engine.Runners
     {
         protected const string TEST_RUN_ELEMENT = "test-run";
 
-        public AbstractTestRunner(ServiceContext services, TestPackage package)
+        public AbstractTestRunner(IServiceLocator services, TestPackage package)
         {
             this.Services = services;
             this.TestPackage = package;
@@ -53,7 +53,7 @@ namespace NUnit.Engine.Runners
         /// <summary>
         /// Our Service Context
         /// </summary>
-        protected ServiceContext Services { get; private set; }
+        protected IServiceLocator Services { get; private set; }
 
 #if NUNIT_ENGINE
         protected IProjectService ProjectService { get; private set; }

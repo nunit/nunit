@@ -25,7 +25,7 @@ namespace NUnit.Engine.Services.Tests.Fakes
 {
     public class FakeService : IService
     {
-        ServiceContext IService.ServiceContext { get; set; }
+        IServiceLocator IService.ServiceContext { get; set; }
 
         private ServiceStatus _status;
         ServiceStatus IService.Status

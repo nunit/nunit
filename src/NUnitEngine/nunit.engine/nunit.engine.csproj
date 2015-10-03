@@ -104,7 +104,6 @@
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\SettingsStore.cs" />
-    <Compile Include="IService.cs" />
     <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />
