@@ -244,7 +244,7 @@ namespace NUnit.Framework.Interfaces
 
             if (Value != null)
                 if (ValueIsCDATA)
-                    writer.WriteCData(Value);
+                    WriteCDataTo(writer);
                 else
                     writer.WriteString(Value);
 
@@ -330,6 +330,28 @@ namespace NUnit.Framework.Interfaces
         private static string CharToUnicodeSequence(char symbol)
         {
             return string.Format("\\u{0}", ((int)symbol).ToString("x4"));
+        }
+
+        private void WriteCDataTo(XmlWriter writer)
+        {
+            int start = 0;
+            string text = Value;
+
+            while (true)
+            {
+                int illegal = text.IndexOf("]]>", start);
+                if (illegal < 0)
+                    break;
+                writer.WriteCData(text.Substring(start, illegal - start + 2));
+                start = illegal + 2;
+                if (start >= text.Length)
+                    return;
+            }
+
+            if (start > 0)
+                writer.WriteCData(text.Substring(start));
+            else
+                writer.WriteCData(text);
         }
 
         #endregion
