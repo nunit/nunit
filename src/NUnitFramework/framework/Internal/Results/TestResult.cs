@@ -132,18 +132,6 @@ namespace NUnit.Framework.Internal
         public string Message { get; private set; }
 
         /// <summary>
-        /// Gets the escaped message associated with a test
-        /// failure or with not running the test
-        /// </summary>
-        public string EscapedMessage
-        {
-            get
-            {
-                return EscapeInvalidXmlCharacters(Message);
-            }
-        }
-
-        /// <summary>
         /// Gets any stacktrace associated with an
         /// error or failure.
         /// </summary>
@@ -501,7 +489,7 @@ namespace NUnit.Framework.Internal
         private TNode AddReasonElement(TNode targetNode)
         {
             TNode reasonNode = targetNode.AddElement("reason");
-            return reasonNode.AddElement("message", EscapedMessage);
+            return reasonNode.AddElementWithCDATA("message", Message);
         }
 
         /// <summary>
@@ -514,31 +502,17 @@ namespace NUnit.Framework.Internal
             TNode failureNode = targetNode.AddElement("failure");
 
             if (Message != null)
-                failureNode.AddElement("message", EscapedMessage);
+                failureNode.AddElementWithCDATA("message", Message);
 
             if (StackTrace != null)
-                failureNode.AddElement("stack-trace", StackTrace);
+                failureNode.AddElementWithCDATA("stack-trace", StackTrace);
 
             return failureNode;
         }
 
         private TNode AddOutputElement(TNode targetNode)
         {
-            return targetNode.AddElement("output", Output);
-        }
-
-        static string EscapeInvalidXmlCharacters(string str)
-        {
-            // Based on the XML spec http://www.w3.org/TR/xml/#charsets
-            // For detailed explanation of the regex see http://mnaoumov.wordpress.com/2014/06/15/escaping-invalid-xml-unicode-characters/
-
-            var invalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])");
-            return invalidXmlCharactersRegex.Replace(str, match => CharToUnicodeSequence(match.Value[0]));
-        }
-
-        static string CharToUnicodeSequence(char symbol)
-        {
-            return string.Format("\\u{0}", ((int) symbol).ToString("x4"));
+            return targetNode.AddElementWithCDATA("output", Output);
         }
 
         #endregion

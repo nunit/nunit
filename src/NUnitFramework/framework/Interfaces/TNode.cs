@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 #if PORTABLE || SILVERLIGHT
@@ -56,10 +57,19 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="name">The name of the node</param>
         /// <param name="value">The text content of the node</param>
-        public TNode(string name, string value)
+        public TNode(string name, string value) : this(name, value, false) { }
+
+        /// <summary>
+        /// Constructs a new instance of TNode with a value
+        /// </summary>
+        /// <param name="name">The name of the node</param>
+        /// <param name="value">The text content of the node</param>
+        /// <param name="valueIsCDATA">Flag indicating whether to use CDATA when writing the text</param>
+        public TNode(string name, string value, bool valueIsCDATA)
             : this(name)
         {
             Value = value;
+            ValueIsCDATA = valueIsCDATA;
         }
 
         #endregion
@@ -75,6 +85,11 @@ namespace NUnit.Framework.Interfaces
         /// Gets the value of the node
         /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Gets a flag indicating whether the value should be output using CDATA.
+        /// </summary>
+        public bool ValueIsCDATA { get; private set; }
 
         /// <summary>
         /// Gets the dictionary of attributes
@@ -158,7 +173,21 @@ namespace NUnit.Framework.Interfaces
         /// <returns>The newly created child element</returns>
         public TNode AddElement(string name, string value)
         {
-            TNode childResult = new TNode(name, value);
+            TNode childResult = new TNode(name, EscapeInvalidXmlCharacters(value));
+            ChildNodes.Add(childResult);
+            return childResult;
+        }
+
+        /// <summary>
+        /// Adds a new element with a value as a child of the current node and returns it.
+        /// The value will be output using a CDATA section.
+        /// </summary>
+        /// <param name="name">The element name</param>
+        /// <param name="value">The text content of the new element</param>
+        /// <returns>The newly created child element</returns>
+        public TNode AddElementWithCDATA(string name, string value)
+        {
+            TNode childResult = new TNode(name, EscapeInvalidXmlCharacters(value), true);
             ChildNodes.Add(childResult);
             return childResult;
         }
@@ -170,7 +199,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="value">The value of the attribute.</param>
         public void AddAttribute(string name, string value)
         {
-            Attributes.Add(name, value);
+            Attributes.Add(name, EscapeInvalidXmlCharacters(value));
         }
 
         /// <summary>
@@ -214,8 +243,10 @@ namespace NUnit.Framework.Interfaces
                 writer.WriteAttributeString(name, Attributes[name]);
 
             if (Value != null)
-                //writer.WriteChars(TextContent.ToCharArray(), 0, TextContent.Length);
-                writer.WriteString(Value);
+                if (ValueIsCDATA)
+                    writer.WriteCData(Value);
+                else
+                    writer.WriteString(Value);
 
             foreach (TNode node in ChildNodes)
                 node.WriteTo(writer);
@@ -285,6 +316,20 @@ namespace NUnit.Framework.Interfaces
             return tail != null
                 ? ApplySelection(resultNodes, tail)
                 : resultNodes;
+        }
+
+        private static string EscapeInvalidXmlCharacters(string str)
+        {
+            // Based on the XML spec http://www.w3.org/TR/xml/#charsets
+            // For detailed explanation of the regex see http://mnaoumov.wordpress.com/2014/06/15/escaping-invalid-xml-unicode-characters/
+
+            var invalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])");
+            return invalidXmlCharactersRegex.Replace(str, match => CharToUnicodeSequence(match.Value[0]));
+        }
+
+        private static string CharToUnicodeSequence(char symbol)
+        {
+            return string.Format("\\u{0}", ((int)symbol).ToString("x4"));
         }
 
         #endregion
