@@ -111,5 +111,5 @@ namespace NUnit.Framework.Internal.Filters
             public void Test2 () {}
         }
         #endregion
-        }
     }
+}
