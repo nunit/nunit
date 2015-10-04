@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal.Filters
         public override bool Pass(ITest test)
         {
 		    return !BaseFilter.Match (test) && !BaseFilter.MatchParent (test);
-		}
+	    }
 
 		/// <summary>
 		/// Check whether the filter matches a test
