@@ -62,6 +62,8 @@ namespace NUnit.Framework.Internal.Filters
         protected static readonly TestSuite _dummyFixture = TestBuilder.MakeFixture(typeof(DummyFixture));
         protected static readonly TestSuite _anotherFixture = TestBuilder.MakeFixture(typeof(AnotherFixture));
         protected static readonly TestSuite _yetAnotherFixture = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
+        protected static readonly TestSuite _fixtureWithExplicitTest = TestBuilder.MakeFixture (typeof (FixtureWithExplicitTest));
+        protected static readonly TestSuite _fixtureWithMultipleTests = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
         protected static readonly TestSuite _topLevelSuite = new TestSuite("MySuite");
 
         static TestFilterTests()
@@ -100,6 +102,14 @@ namespace NUnit.Framework.Internal.Filters
         {
         }
 
+        private class FixtureWithMultipleTests
+        {
+            [Test]
+            public void Test1 () {}
+
+            [Test, Category ("Dummy")]
+            public void Test2 () {}
+        }
         #endregion
+        }
     }
-}

@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if the test matches the filter explicityly, otherwise false</returns>
         public override bool IsExplicitMatch(ITest test)
         {
-            return !BaseFilter.Match(test);
+            return false;
         }
 
         ///// <summary>
