@@ -349,7 +349,7 @@ namespace NUnit.Engine.Services
 
         #region IService Members
 
-        public ServiceContext ServiceContext { get; set; }
+        public IServiceLocator ServiceContext { get; set; }
 
         public ServiceStatus Status { get; private set; }
 

@@ -35,7 +35,7 @@ namespace NUnit.Engine.Runners
     {
         private ITestEngineRunner _realRunner;
 
-        public MasterTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+        public MasterTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
 
         public bool IsTestRunning { get; private set; }
 

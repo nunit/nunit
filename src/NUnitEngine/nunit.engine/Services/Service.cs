@@ -39,7 +39,7 @@ namespace NUnit.Engine.Services
         /// <summary>
         /// The ServiceContext
         /// </summary>
-        public ServiceContext ServiceContext { get; set; }
+        public IServiceLocator ServiceContext { get; set; }
 
         /// <summary>
         /// Gets the ServiceStatus of this service

@@ -39,7 +39,7 @@ namespace NUnit.Engine.Services
 
         #region IService Implementation
 
-        public ServiceContext ServiceContext { get; set; }
+        public IServiceLocator ServiceContext { get; set; }
 
         public ServiceStatus Status { get; private set; }
 

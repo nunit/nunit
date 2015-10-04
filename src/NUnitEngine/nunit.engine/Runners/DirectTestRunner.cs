@@ -36,7 +36,7 @@ namespace NUnit.Engine.Runners
     {
         private readonly List<IFrameworkDriver> _drivers = new List<IFrameworkDriver>();
 
-        public DirectTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+        public DirectTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
 
         #region Properties
 

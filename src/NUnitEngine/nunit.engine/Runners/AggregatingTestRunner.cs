@@ -38,7 +38,7 @@ namespace NUnit.Engine.Runners
         // of writing this comment) be either TestDomainRunners or ProcessRunners.
         protected readonly List<ITestEngineRunner> _runners = new List<ITestEngineRunner>();
 
-        public AggregatingTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+        public AggregatingTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
 
         #region AbstractTestRunner Overrides
 

@@ -33,7 +33,7 @@ namespace NUnit.Engine.Runners
     {
         private DomainManager _domainManager;
 
-        public TestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) 
+        public TestDomainRunner(IServiceLocator services, TestPackage package) : base(services, package) 
         {
             _domainManager = Services.GetService<DomainManager>();
         }

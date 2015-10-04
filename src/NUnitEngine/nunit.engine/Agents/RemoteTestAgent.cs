@@ -52,7 +52,7 @@ namespace NUnit.Engine.Agents
         /// <summary>
         /// Construct a RemoteTestAgent
         /// </summary>
-        public RemoteTestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
+        public RemoteTestAgent( Guid agentId, ITestAgency agency, IServiceLocator services )
             : base(agentId, agency, services) 
         {
         }
