@@ -355,7 +355,6 @@ namespace NUnit.Framework.Attributes
 
 #if !PORTABLE
         [Test]
-        [Platform(Exclude = "MaxOSX", Reason = "See issue #869")]
         public void PlatformAttributeRunsTest()
         {
             string myPlatform = GetMyPlatform();           
