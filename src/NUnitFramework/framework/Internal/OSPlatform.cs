@@ -308,6 +308,7 @@ namespace NUnit.Framework.Internal
 			get { return platform == PlatformID.MacOSX; }
 		}
 
+#if !SILVERLIGHT
 		[DllImport("libc")]
 		static extern int uname(IntPtr buf);
 
@@ -329,6 +330,7 @@ namespace NUnit.Framework.Internal
 			Marshal.FreeHGlobal(buf);
 			return isMacOSX;
 		}
+#endif
 #endif
 
         /// <summary>
