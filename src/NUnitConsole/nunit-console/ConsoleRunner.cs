@@ -29,6 +29,7 @@ using NUnit.Common;
 using NUnit.ConsoleRunner.Utilities;
 using NUnit.Engine;
 using NUnit.Engine.Extensibility;
+using System.Runtime.InteropServices;
 
 namespace NUnit.ConsoleRunner
 {
@@ -185,10 +186,33 @@ namespace NUnit.ConsoleRunner
         private void WriteRuntimeEnvironment(ExtendedTextWriter OutWriter)
         {
             OutWriter.WriteLine(ColorStyle.SectionHeader, "Runtime Environment");
-            OutWriter.WriteLabelLine("   OS Version: ", Environment.OSVersion.ToString());
+            OutWriter.WriteLabelLine("   OS Version: ", GetOSVersion());
             OutWriter.WriteLabelLine("  CLR Version: ", Environment.Version.ToString());
             OutWriter.WriteLine();
         }
+
+        private static string GetOSVersion()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            string osString = os.ToString();
+            if (os.Platform == PlatformID.Unix && os.Platform != PlatformID.MacOSX)
+            {
+                IntPtr buf = Marshal.AllocHGlobal(8192);
+                if (uname(buf) == 0)
+                {
+                    var unixVariant = Marshal.PtrToStringAnsi(buf);
+                    if (unixVariant.Equals("Darwin"))
+                        unixVariant = "MacOSX";
+                    
+                    osString = string.Format("{0} {1} {2}", unixVariant, os.Version, os.ServicePack); 
+                }
+                Marshal.FreeHGlobal(buf);
+            }
+            return osString;
+        }
+
+        [DllImport("libc")]
+        static extern int uname(IntPtr buf);
 
         private void DisplaySelectedTests()
         {
