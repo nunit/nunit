@@ -355,10 +355,10 @@ namespace NUnit.Framework.Attributes
 
 #if !PORTABLE
         [Test]
+        [Platform(Exclude = "MaxOSX", Reason = "See issue #869")]
         public void PlatformAttributeRunsTest()
         {
-            string myPlatform = System.IO.Path.DirectorySeparatorChar == '/'
-                ? "Linux" : "Win";
+            string myPlatform = GetMyPlatform();           
             new PlatformAttribute(myPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
@@ -376,10 +376,18 @@ namespace NUnit.Framework.Attributes
         public void PlatformAttributeDoesNotAffectNonRunnableTest()
         {
             test.RunState = RunState.NotRunnable;
-            string myPlatform = System.IO.Path.DirectorySeparatorChar == '/'
-                ? "Linux" : "Win";
+            string myPlatform = GetMyPlatform();
             new PlatformAttribute(myPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        string GetMyPlatform()
+        {
+            if (System.IO.Path.DirectorySeparatorChar == '/')
+            {
+                return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux"; 
+            }
+            return "Win";
         }
 #endif
 

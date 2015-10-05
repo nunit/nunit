@@ -265,44 +265,64 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanIncludePlatform()
         {
-            bool isLinux = System.IO.Path.DirectorySeparatorChar == '/';
+            bool isLinux = OSPlatform.CurrentPlatform.IsUnix;
+            bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
             
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodWithIncludePlatform");
 
             Test testCase1 = TestFinder.Find("MethodWithIncludePlatform(1)", suite, false);
             Test testCase2 = TestFinder.Find("MethodWithIncludePlatform(2)", suite, false);
+            Test testCase3 = TestFinder.Find("MethodWithIncludePlatform(3)", suite, false);
             if (isLinux)
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
                 Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+            }
+            else if (isMacOSX)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
             }
             else
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
                 Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
             }
         }
 
         [Test]
         public void CanExcludePlatform()
         {
-            bool isLinux = System.IO.Path.DirectorySeparatorChar == '/';
+            bool isLinux = OSPlatform.CurrentPlatform.IsUnix;
+            bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
 
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodWitExcludePlatform");
 
             Test testCase1 = TestFinder.Find("MethodWitExcludePlatform(1)", suite, false);
             Test testCase2 = TestFinder.Find("MethodWitExcludePlatform(2)", suite, false);
+            Test testCase3 = TestFinder.Find("MethodWitExcludePlatform(3)", suite, false);
             if (isLinux)
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
                 Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+            }
+            else if (isMacOSX)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
             }
             else
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
                 Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
             }
         }
 #endif
