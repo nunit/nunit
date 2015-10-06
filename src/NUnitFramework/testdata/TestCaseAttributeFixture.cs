@@ -82,12 +82,14 @@ namespace NUnit.TestData.TestCaseAttributeFixture
 #if !PORTABLE
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
+        [TestCase(3, IncludePlatform = "MacOSX")]
         public void MethodWithIncludePlatform(int num)
         {
         }
 
         [TestCase(1, ExcludePlatform = "Win")]
         [TestCase(2, ExcludePlatform = "Linux")]
+        [TestCase(3, ExcludePlatform = "MacOSX")]
         public void MethodWitExcludePlatform(int num)
         {
         }

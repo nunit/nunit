@@ -75,6 +75,12 @@ namespace NUnit.Framework.Internal
                             os = new OperatingSystem(os.Platform, GetWindows81PlusVersion(os.Version));
                         currentPlatform = new OSPlatform(os.Platform, os.Version, (ProductType)osvi.ProductType);
                     }
+					else if (CheckIfIsMacOSX(os.Platform))
+					{
+						// Mono returns PlatformID.Unix for OSX (see http://www.mono-project.com/docs/faq/technical/#how-to-detect-the-execution-platform)
+						// The above check uses uname to confirm it is MacOSX and we change the PlatformId here.
+						currentPlatform = new OSPlatform(PlatformID.MacOSX, os.Version);
+					}
                     else
                         currentPlatform = new OSPlatform(os.Platform, os.Version);
 #endif
@@ -297,10 +303,34 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if the platform is MacOSX
         /// </summary>
-        public bool IsMacOSX
-        {
-            get { return platform == PlatformID.MacOSX; }
-        }
+		public bool IsMacOSX 
+		{
+			get { return platform == PlatformID.MacOSX; }
+		}
+
+#if !SILVERLIGHT
+		[DllImport("libc")]
+		static extern int uname(IntPtr buf);
+
+		static bool CheckIfIsMacOSX(PlatformID platform)
+		{
+			if (platform == PlatformID.MacOSX)
+				return true;
+			
+			if (platform != PlatformID.Unix)					
+				return false;
+
+			IntPtr buf = Marshal.AllocHGlobal(8192);
+			bool isMacOSX = false;
+			if (uname(buf) == 0)
+			{
+				string os = Marshal.PtrToStringAnsi(buf);
+				isMacOSX = os.Equals("Darwin");
+			}
+			Marshal.FreeHGlobal(buf);
+			return isMacOSX;
+		}
+#endif
 #endif
 
         /// <summary>
