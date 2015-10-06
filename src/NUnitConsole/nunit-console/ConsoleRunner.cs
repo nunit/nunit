@@ -195,7 +195,7 @@ namespace NUnit.ConsoleRunner
         {
             OperatingSystem os = Environment.OSVersion;
             string osString = os.ToString();
-            if (os.Platform == PlatformID.Unix && os.Platform != PlatformID.MacOSX)
+            if (os.Platform == PlatformID.Unix)
             {
                 IntPtr buf = Marshal.AllocHGlobal(8192);
                 if (uname(buf) == 0)
