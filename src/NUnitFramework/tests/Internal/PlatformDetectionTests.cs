@@ -287,7 +287,7 @@ namespace NUnit.Framework.Internal
         [Platform(Include = "MacOSX")]
         public void CurrentPlatformIsMacOSX()
         {
-            Assert.That(OSPlatform.CurrentPlatform.IsMacOSX, Is.True);
+            Assert.That(OSPlatform.CurrentPlatform.IsMacOSX);
         }
 #endif
 #endif
