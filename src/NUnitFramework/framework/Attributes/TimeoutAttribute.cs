@@ -50,14 +50,14 @@ namespace NUnit.Framework
             _timeout = timeout;
         }
 
-#region IApplyToContext Members
+        #region IApplyToContext Members
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
             context.TestCaseTimeout = _timeout;
         }
 
-#endregion
+        #endregion
     }
 }
 #endif
