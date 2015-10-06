@@ -71,7 +71,7 @@ namespace NUnitLite.Runner
 
 #if !SILVERLIGHT
         private NUnitLiteOptions _options;
-#if !NETCF
+#if !NETCF && !NETCORE
         private TeamCityEventListener _teamCity;
 #endif
 #endif
@@ -110,7 +110,7 @@ namespace NUnitLite.Runner
             if (!Directory.Exists(_options.WorkDirectory))
                 Directory.CreateDirectory(_options.WorkDirectory);
 
-#if !NETCF
+#if !NETCF && !NETCORE
             if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
 #endif
@@ -164,7 +164,7 @@ namespace NUnitLite.Runner
 #endif
 
                 var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
-                Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
+                _textUI.DisplayError(string.Format("No tests found in assembly {0}", assemblyName.Name));
                 return OK;
             }
             catch (FileNotFoundException ex)
@@ -197,7 +197,7 @@ namespace NUnitLite.Runner
 #endif
             ReportResults(result);
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCORE
             if (_options.ResultOutputSpecifications.Count > 0)
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
@@ -231,6 +231,7 @@ namespace NUnitLite.Runner
 #if !SILVERLIGHT
         private int ExploreTests()
         {
+#if !NETCORE
             ITest testNode = _runner.LoadedTest;
 
             var specs = _options.ExploreOutputSpecifications;
@@ -244,6 +245,7 @@ namespace NUnitLite.Runner
                 foreach (var spec in _options.ExploreOutputSpecifications)
                     outputManager.WriteTestFile(testNode, spec);
             }
+#endif
 
             return OK;
         }
@@ -304,7 +306,7 @@ namespace NUnitLite.Runner
         }
 #endif
 
-        #endregion
+#endregion
 
         #region ITestListener Members
 
@@ -314,7 +316,7 @@ namespace NUnitLite.Runner
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT && !NETCF && !NETCORE
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
 #endif
@@ -327,7 +329,7 @@ namespace NUnitLite.Runner
         public void TestFinished(ITestResult result)
         {
 #if !SILVERLIGHT
-#if !NETCF
+#if !NETCF && !NETCORE
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 #endif

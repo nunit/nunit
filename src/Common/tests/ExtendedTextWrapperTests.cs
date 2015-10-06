@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
 using System;
 using System.Collections.Generic;
 using System.IO;
