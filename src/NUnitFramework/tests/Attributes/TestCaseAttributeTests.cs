@@ -265,8 +265,13 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanIncludePlatform()
         {
+#if NETCF
+            bool isLinux = false;
+            bool isMacOSX = false;
+#else
             bool isLinux = OSPlatform.CurrentPlatform.IsUnix;
             bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
+#endif
             
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodWithIncludePlatform");
@@ -297,8 +302,13 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanExcludePlatform()
         {
+#if NETCF
+            bool isLinux = false;
+            bool isMacOSX = false;
+#else
             bool isLinux = OSPlatform.CurrentPlatform.IsUnix;
             bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
+#endif
 
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodWitExcludePlatform");
