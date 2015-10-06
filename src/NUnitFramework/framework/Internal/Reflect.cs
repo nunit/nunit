@@ -123,7 +123,8 @@ namespace NUnit.Framework.Internal
 #if NETCF
             if (fixtureType.ContainsGenericParameters)
                 return false;
-#elif NETCORE
+#endif
+#if NETCORE
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
                 .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
 #else
