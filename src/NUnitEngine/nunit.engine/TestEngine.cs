@@ -109,6 +109,7 @@ namespace NUnit.Engine
             Services.Add(new DefaultTestRunnerFactory());
             Services.Add(new TestAgency());
             Services.Add(new ResultService());
+            Services.Add(new TestFilterService());
 #else
             Services.Add(new CoreTestRunnerFactory());
 #endif

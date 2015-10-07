@@ -352,10 +352,13 @@
     <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
+    <Compile Include="Internal\Filters\ClassNameFilter.cs" />
+    <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
+    <Compile Include="Internal\Filters\MethodNameFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
-    <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
+    <Compile Include="Internal\Filters\TestNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />

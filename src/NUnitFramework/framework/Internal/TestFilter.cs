@@ -172,14 +172,24 @@ namespace NUnit.Framework.Internal
                             idFilter.Add(id);
                     return idFilter;
 
-                case "tests":
-                    var testFilter = new SimpleNameFilter();
-                    foreach (var childNode in node.SelectNodes("test"))
-                        testFilter.Add(childNode.Value);
-                    return testFilter;
+                case "test":
+                    return new FullNameFilter(node.Value);
+
+                case "name":
+                    return new TestNameFilter(node.Value);
+
+                case "method":
+                    return new MethodNameFilter(node.Value);
+
+                case "class":
+                    return new ClassNameFilter(node.Value);
 
                 case "cat":
                     var catFilter = new CategoryFilter();
+                    var op = node.Attributes["op"];
+                    if (op == "")
+                        op = "=";
+
                     if (node.Value != null)
                         foreach (string cat in node.Value.Split(COMMA))
                             catFilter.AddCategory(cat);

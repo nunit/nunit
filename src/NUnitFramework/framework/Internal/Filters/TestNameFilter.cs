@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,34 +28,34 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
-    /// SimpleName filter selects tests based on their name
+    /// TestName filter selects tests based on their Name
     /// </summary>
     [Serializable]
-    public class SimpleNameFilter : ValueMatchFilter<string>
+    public class TestNameFilter : ValueMatchFilter<string>
     {
         /// <summary>
         /// Construct an empty SimpleNameFilter
         /// </summary>
-        public SimpleNameFilter() { }
+        public TestNameFilter() { }
 
         /// <summary>
-        /// Construct a SimpleNameFilter for a single name
+        /// Construct a FullNameFilter for a single name
         /// </summary>
         /// <param name="nameToAdd">The name the filter will recognize.</param>
-        public SimpleNameFilter(string nameToAdd) : base (nameToAdd) { }
+        public TestNameFilter(string nameToAdd) : base(nameToAdd) { }
 
         /// <summary>
-        /// Construct a SimpleNameFilter for an array of ids
+        /// Construct a FullNameFilter for an array of ids
         /// </summary>
-        /// <param name="namesToAdd">The ids the filter will recognize.</param>
-        public SimpleNameFilter(IEnumerable<string> namesToAdd) : base(namesToAdd) { }
+        /// <param name="namesToAdd">The names the filter will recognize.</param>
+        public TestNameFilter(IEnumerable<string> namesToAdd) : base(namesToAdd) { }
 
         /// <summary>
         /// Match a test against a single value.
         /// </summary>
         protected override bool Match(ITest test, string value)
         {
-            return test.FullName == value;
+            return test.Name == value;
         }
     }
 }

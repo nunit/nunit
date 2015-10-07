@@ -124,8 +124,8 @@ namespace NUnit.Common
             this.Add("debug-agent", "Launch debugger in nunit-agent when it starts.",
                 v => DebugAgent = v != null);
 #endif
+        }
 
         #endregion
-        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,37 +21,41 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Xml;
-
 namespace NUnit.Engine
 {
     /// <summary>
-    /// Abstract base for all test filters. A filter is represented
-    /// by an XmlNode with &lt;filter&gt; as it's topmost element.
-    /// In the console runner, filters serve only to carry this
-    /// XML representation, as all filtering is done by the engine.
+    /// Interface to a TestFilterBuilder, which is used to create TestFilters
     /// </summary>
-    [Serializable]
-    public class TestFilter
+    public interface ITestFilterBuilder
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestFilter"/> class.
+        /// Add a test to be selected
         /// </summary>
-        /// <param name="xmlText">The XML text that specifies the filter.</param>
-        public TestFilter(string xmlText)
-        {
-            Text = xmlText;
-        }
+        /// <param name="fullName">The full name of the test, as created by NUnit</param>
+        void AddTest(string fullName);
 
         /// <summary>
-        /// The empty filter - one that always passes.
+        /// Add a category to be included
         /// </summary>
-        public static readonly TestFilter Empty = new TestFilter("<filter/>");
+        /// <param name="category">The category name</param>
+        void IncludeCategory(string category);
 
         /// <summary>
-        /// Gets the XML representation of this filter as a string.
+        /// Add a category to be excluded
         /// </summary>
-        public string Text { get; private set; }
+        /// <param name="category">The category name</param>
+        void ExcludeCategory(string category);
+
+        /// <summary>
+        /// Specify what is to be included by the filter using a where clause.
+        /// </summary>
+        /// <param name="whereClause">A where clause that will be parsed by NUnit to create the filter.</param>
+        void SelectWhere(string whereClause);
+
+        /// <summary>
+        /// Get a TestFilter constructed according to the criteria specified by the other calls.
+        /// </summary>
+        /// <returns>A TestFilter.</returns>
+        TestFilter GetFilter();
     }
 }

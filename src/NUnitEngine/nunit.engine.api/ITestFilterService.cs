@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,37 +21,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Xml;
-
 namespace NUnit.Engine
 {
     /// <summary>
-    /// Abstract base for all test filters. A filter is represented
-    /// by an XmlNode with &lt;filter&gt; as it's topmost element.
-    /// In the console runner, filters serve only to carry this
-    /// XML representation, as all filtering is done by the engine.
+    /// The TestFilterService provides builders that can create TestFilters
     /// </summary>
-    [Serializable]
-    public class TestFilter
+    public interface ITestFilterService
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestFilter"/> class.
+        /// Get an uninitialized TestFilterBuilder
         /// </summary>
-        /// <param name="xmlText">The XML text that specifies the filter.</param>
-        public TestFilter(string xmlText)
-        {
-            Text = xmlText;
-        }
-
-        /// <summary>
-        /// The empty filter - one that always passes.
-        /// </summary>
-        public static readonly TestFilter Empty = new TestFilter("<filter/>");
-
-        /// <summary>
-        /// Gets the XML representation of this filter as a string.
-        /// </summary>
-        public string Text { get; private set; }
+        ITestFilterBuilder GetTestFilterBuilder();
     }
 }

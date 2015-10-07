@@ -64,6 +64,8 @@
     <Compile Include="IResultService.cs" />
     <Compile Include="IRuntimeFrameworkService.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="ITestFilterBuilder.cs" />
+    <Compile Include="ITestFilterService.cs" />
     <Compile Include="NUnitEngineNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensibility\IFrameworkDriver.cs" />

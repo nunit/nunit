@@ -279,7 +279,7 @@ namespace NUnitLite.Runner
         public static TestFilter CreateTestFilter(NUnitLiteOptions options)
         {
             TestFilter namefilter = options.TestList.Count > 0
-                ? new SimpleNameFilter(options.TestList)
+                ? new FullNameFilter(options.TestList)
                 : TestFilter.Empty;
 
             TestFilter includeFilter = string.IsNullOrEmpty(options.Include)

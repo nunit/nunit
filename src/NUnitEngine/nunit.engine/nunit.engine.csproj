@@ -139,6 +139,10 @@
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />
+    <Compile Include="Services\TestFilterBuilder.cs" />
+    <Compile Include="Services\TestFilterService.cs" />
+    <Compile Include="Services\TestSelectionParser.cs" />
+    <Compile Include="Services\Tokenizer.cs" />
     <Compile Include="TestEngine.cs" />
     <Compile Include="TestEngineResult.cs" />
   </ItemGroup>

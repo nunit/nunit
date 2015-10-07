@@ -96,6 +96,9 @@
     <Compile Include="Services\ResultWriters\XmlTransformResultWriterTests.cs" />
     <Compile Include="Services\DefaultTestRunnerFactoryTests.cs" />
     <Compile Include="Services\ServiceDependencyTests.cs" />
+    <Compile Include="Services\TestFilterBuilderTests.cs" />
+    <Compile Include="Services\TestSelectionParserTests.cs" />
+    <Compile Include="Services\TokenizerTests.cs" />
     <Compile Include="TempResourceFile.cs" />
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>

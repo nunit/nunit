@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,36 +22,40 @@
 // ***********************************************************************
 
 using System;
-using System.Xml;
+using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Engine
+namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
-    /// Abstract base for all test filters. A filter is represented
-    /// by an XmlNode with &lt;filter&gt; as it's topmost element.
-    /// In the console runner, filters serve only to carry this
-    /// XML representation, as all filtering is done by the engine.
+    /// ClassName filter selects tests based on the class FullName
     /// </summary>
     [Serializable]
-    public class TestFilter
+    public class ClassNameFilter : ValueMatchFilter<string>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestFilter"/> class.
+        /// Construct an empty SimpleNameFilter
         /// </summary>
-        /// <param name="xmlText">The XML text that specifies the filter.</param>
-        public TestFilter(string xmlText)
+        public ClassNameFilter() { }
+
+        /// <summary>
+        /// Construct a FullNameFilter for a single name
+        /// </summary>
+        /// <param name="nameToAdd">The name the filter will recognize.</param>
+        public ClassNameFilter(string nameToAdd) : base(nameToAdd) { }
+
+        /// <summary>
+        /// Construct a FullNameFilter for an array of ids
+        /// </summary>
+        /// <param name="namesToAdd">The ids the filter will recognize.</param>
+        public ClassNameFilter(IEnumerable<string> namesToAdd) : base(namesToAdd) { }
+
+        /// <summary>
+        /// Match a test against a single value.
+        /// </summary>
+        protected override bool Match(ITest test, string value)
         {
-            Text = xmlText;
+            return test.ClassName == value;
         }
-
-        /// <summary>
-        /// The empty filter - one that always passes.
-        /// </summary>
-        public static readonly TestFilter Empty = new TestFilter("<filter/>");
-
-        /// <summary>
-        /// Gets the XML representation of this filter as a string.
-        /// </summary>
-        public string Text { get; private set; }
     }
 }

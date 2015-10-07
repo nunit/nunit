@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void IsNotEmpty()
         {
-            var filter = new SimpleNameFilter(_dummyFixture.FullName);
+            var filter = new FullNameFilter(_dummyFixture.FullName);
 
             Assert.False(filter.IsEmpty);
         }
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void Match_SingleName()
         {
-            var filter = new SimpleNameFilter(_dummyFixture.FullName);
+            var filter = new FullNameFilter(_dummyFixture.FullName);
 
             Assert.That(filter.Match(_dummyFixture));
             Assert.False(filter.Match(_anotherFixture));
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void Pass_SingleName()
         {
-            var filter = new SimpleNameFilter(_dummyFixture.FullName);
+            var filter = new FullNameFilter(_dummyFixture.FullName);
 
             Assert.That(filter.Pass(_topLevelSuite));
             Assert.That(filter.Pass(_dummyFixture));
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Filters
 
         public void ExplicitMatch_SingleName()
         {
-            var filter = new SimpleNameFilter(_dummyFixture.FullName);
+            var filter = new FullNameFilter(_dummyFixture.FullName);
 
             Assert.That(filter.IsExplicitMatch(_topLevelSuite));
             Assert.That(filter.IsExplicitMatch(_dummyFixture));
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void Match_MultipleNames()
         {
-            var filter = new SimpleNameFilter(new string[] { _dummyFixture.FullName, _anotherFixture.FullName });
+            var filter = new FullNameFilter(new string[] { _dummyFixture.FullName, _anotherFixture.FullName });
 
             Assert.That(filter.Match(_dummyFixture));
             Assert.That(filter.Match(_anotherFixture));
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void Pass_MultipleNames()
         {
-            var filter = new SimpleNameFilter(new string[] { _dummyFixture.FullName, _anotherFixture.FullName });
+            var filter = new FullNameFilter(new string[] { _dummyFixture.FullName, _anotherFixture.FullName });
 
             Assert.That(filter.Pass(_topLevelSuite));
             Assert.That(filter.Pass(_dummyFixture));
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void ExplicitMatch_MultipleNames()
         {
-            var filter = new SimpleNameFilter(new string[] { _dummyFixture.FullName, _anotherFixture.FullName });
+            var filter = new FullNameFilter(new string[] { _dummyFixture.FullName, _anotherFixture.FullName });
 
             Assert.That(filter.IsExplicitMatch(_topLevelSuite));
             Assert.That(filter.IsExplicitMatch(_dummyFixture));
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void AddNames()
         {
-            var filter = new SimpleNameFilter();
+            var filter = new FullNameFilter();
             filter.Add(_dummyFixture.FullName);
             filter.Add(_anotherFixture.FullName);
 
@@ -123,9 +123,9 @@ namespace NUnit.Framework.Internal.Filters
         public void BuildFromXml_SingleName()
         {
             TestFilter filter = TestFilter.FromXml(
-                "<filter><tests><test>" + _dummyFixture.FullName + "</test></tests></filter>");
+                "<filter><test>" + _dummyFixture.FullName + "</test></filter>");
 
-            Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
+            Assert.That(filter, Is.TypeOf<FullNameFilter>());
             Assert.That(filter.Match(_dummyFixture));
             Assert.False(filter.Match(_anotherFixture));
         }
@@ -134,9 +134,9 @@ namespace NUnit.Framework.Internal.Filters
         public void BuildFromXml_MultipleNames()
         {
             TestFilter filter = TestFilter.FromXml(
-                "<filter><tests><test>" + _dummyFixture.FullName + "</test><test>" + _anotherFixture.FullName + "</test></tests></filter>");
+                "<filter><or><test>" + _dummyFixture.FullName + "</test><test>" + _anotherFixture.FullName + "</test></or></filter>");
 
-            Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
+            Assert.That(filter, Is.TypeOf<OrFilter>());
             Assert.That(filter.Match(_dummyFixture));
             Assert.That(filter.Match(_anotherFixture));
             Assert.False(filter.Match(_yetAnotherFixture));

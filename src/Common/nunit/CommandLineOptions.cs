@@ -86,6 +86,9 @@ namespace NUnit.Common
         public string Exclude { get; private set; }
         public bool ExcludeSpecified { get { return Exclude != null; } }
 
+        public string WhereClause { get; private set; }
+        public bool WhereClauseSpecified { get { return WhereClause != null; } }
+
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }
         public bool DefaultTimeoutSpecified { get { return defaultTimeout >= 0; } }
@@ -284,6 +287,9 @@ namespace NUnit.Common
 
             this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
                 v => Exclude = RequiredValue(v, "--exclude"));
+
+            this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
+                v => WhereClause = RequiredValue(v, "--where"));
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
