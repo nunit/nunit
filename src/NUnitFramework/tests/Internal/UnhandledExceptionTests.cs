@@ -34,7 +34,7 @@ namespace NUnit.Framework.Tests
     [TestFixture, Explicit("These tests fail by design")]
     public class UnhandledExceptionTests
     {
-#region Normal
+        #region Normal
         [NUnit.Framework.Test]
         public void Normal()
         {
@@ -53,42 +53,42 @@ namespace NUnit.Framework.Tests
                 Assert.AreEqual("System.ApplicationException : Test exception", result.Message);
             }
         }
-#endregion Normal
+        #endregion Normal
 
-#region Threaded
+        #region Threaded
         //[NUnit.Framework.Test]
         //public void Threaded()
         //{
         //    // TODO: Make this fail
         //    testDummy("Threaded", true);
         //}
-#endregion Threaded
+        #endregion Threaded
 
-#region ThreadedAndWait
+        #region ThreadedAndWait
         [NUnit.Framework.Test]
         public void ThreadedAndWait()
         {
             // TODO: Make this fail
             testDummy("ThreadedAndWait", true);
         }
-#endregion ThreadedAndWait
+        #endregion ThreadedAndWait
 
-#region ThreadedAndForget
+        #region ThreadedAndForget
         [NUnit.Framework.Test]
         public void ThreadedAndForget()
         {
             // TODO: Make this fail
             testDummy("ThreadedAndForget", true);
         }
-#endregion ThreadedAndForget
+        #endregion ThreadedAndForget
 
-#region ThreadedAssert
+        #region ThreadedAssert
         [NUnit.Framework.Test]
         public void ThreadedAssert()
         {
             testDummy("ThreadedAssert", true);
         }
-#endregion
+        #endregion
     }
 }
 #endif

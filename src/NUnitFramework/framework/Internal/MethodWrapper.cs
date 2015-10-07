@@ -177,9 +177,9 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-            /// <summary>
-            /// Gets a value indicating whether one or more attributes of the spcified type are defined on the method.
-            /// </summary>
+        /// <summary>
+        /// Gets a value indicating whether one or more attributes of the spcified type are defined on the method.
+        /// </summary>
         public bool IsDefined<T>(bool inherit)
         {
 #if NETCORE
