@@ -67,15 +67,5 @@ namespace NUnit.ConsoleRunner.Tests
             }
             Assert.That( Console.ForegroundColor, Is.Not.EqualTo(expected) );
         }
-
-        [Test, Ignore("Find another way to test this")]
-        public void TestNoColorOption()
-        {
-            using(new ColorConsole(_testStyle))
-            {
-                Assert.That(Console.ForegroundColor, Is.EqualTo(ConsoleColor.Magenta));
-            }
-            Assert.That(Console.ForegroundColor, Is.EqualTo(ConsoleColor.Magenta));
-        }
     }
 }
