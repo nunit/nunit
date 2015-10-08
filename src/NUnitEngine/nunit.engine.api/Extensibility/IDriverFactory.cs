@@ -29,10 +29,8 @@ namespace NUnit.Engine.Extensibility
     /// <summary>
     /// Interface implemented by a Type that knows how to create a driver for a test assembly.
     /// </summary>
-#if NUNIT_ENGINE
     [TypeExtensionPoint(
         Description = "Supplies a driver to run tests that use a specific test framework.")]
-#endif
     public interface IDriverFactory
     {
         /// <summary>

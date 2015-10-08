@@ -260,7 +260,6 @@ namespace NUnit.Engine.Runners
         // runner is putting invalid values into the package.
         private void ValidatePackageSettings()
         {
-#if NUNIT_ENGINE // Core engine does not support this setting
             var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
             if (frameworkSetting.Length > 0)
             {
@@ -278,7 +277,6 @@ namespace NUnit.Engine.Runners
                             "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
                 }
             }
-#endif
         }
 
         #endregion

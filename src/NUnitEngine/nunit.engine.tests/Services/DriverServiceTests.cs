@@ -39,9 +39,7 @@ namespace NUnit.Engine.Services.Tests
         public void CreateDriverFactory()
         {
             var serviceContext = new ServiceContext();
-#if NUNIT_ENGINE
             serviceContext.Add(new ExtensionService());
-#endif
             _driverService = new DriverService();
             serviceContext.Add(_driverService);
             serviceContext.ServiceManager.StartServices();
