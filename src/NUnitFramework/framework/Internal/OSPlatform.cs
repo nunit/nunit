@@ -291,7 +291,17 @@ namespace NUnit.Framework.Internal
             get { return platform == PlatformID.WinCE; }
         }
 
-#if !NETCF
+#if NETCF
+        /// <summary>
+        /// Return true if the platform is Xbox
+        /// </summary>
+        public bool IsXbox { get { return false; } }
+
+        /// <summary>
+        /// Return true if the platform is MacOSX
+        /// </summary>
+        public bool IsMacOSX { get { return false; } }
+#else
         /// <summary>
         /// Return true if the platform is Xbox
         /// </summary>
