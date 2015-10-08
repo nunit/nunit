@@ -137,12 +137,14 @@ namespace NUnit.Framework.Internal
                 ? "start-suite"
                 : "start-test";
 
+            var parent = GetParent(test);
             try
             {
                 string report = string.Format(
-                    "<{0} id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
+                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\"/>",
                     startElement,
                     test.Id,
+                    parent != null ? parent.Id : string.Empty,
                     FormatAttributeValue(test.Name),
                     FormatAttributeValue(test.FullName));
 
@@ -163,7 +165,10 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
+                var node = result.ToXml(false);
+                var parent = GetParent(result.Test);
+                node.Attributes.Add("parentId", parent != null ? parent.Id : string.Empty);
+                handler.RaiseCallbackEvent(node.OuterXml);                
             }
             catch (Exception ex)
             {
@@ -174,6 +179,21 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Returns the parent test item for the targer test item if it exists
+        /// </summary>
+        /// <param name="test"></param>
+        /// <returns>parent test item</returns>
+        private static ITest GetParent(ITest test)
+        {
+            if (test == null || test.Parent == null)
+            {
+                return null;
+            }
+
+            return test.Parent.IsSuite ? test.Parent : GetParent(test.Parent);
+        }
 
         /// <summary>
         /// Makes a string safe for use as an attribute, replacing
