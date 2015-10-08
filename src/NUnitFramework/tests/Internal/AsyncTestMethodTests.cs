@@ -35,9 +35,9 @@ namespace NUnit.Framework.Internal
     public class AsyncTestMethodTests
     {
 #if PORTABLE
-        private static readonly bool ON_LINUX = true;   // We don't know what platform we are running under in portable
+        private static readonly bool PLATFORM_IGNORE = true;
 #else
-        private static readonly bool ON_LINUX = OSPlatform.CurrentPlatform.IsUnix;
+        private static readonly bool PLATFORM_IGNORE = OSPlatform.CurrentPlatform.IsUnix;
 #endif
 
         private DefaultTestCaseBuilder _builder;
@@ -96,11 +96,11 @@ namespace NUnit.Framework.Internal
         /// Private method to return a test case, optionally ignored on the Linux platform.
         /// We use this since the Platform attribute is not supported on TestCaseData.
         /// </summary>
-        private static TestCaseData GetTestCase(IMethodInfo method, ResultState resultState, int assertionCount, bool ignoreOnLinux)
+        private static TestCaseData GetTestCase(IMethodInfo method, ResultState resultState, int assertionCount, bool ignoreThis)
         {
             var data = new TestCaseData(method, resultState, assertionCount);
-            if (ON_LINUX && ignoreOnLinux)
-                data = data.Ignore("Intermittent failure on Linux");
+            if (PLATFORM_IGNORE && ignoreThis)
+                data = data.Ignore("Intermittent failure on Linux and under Portable build");
             return data;
         }
 

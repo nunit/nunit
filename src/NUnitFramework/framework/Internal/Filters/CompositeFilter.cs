@@ -27,35 +27,42 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
-    /// <summary>
-    /// TestName filter selects tests based on their Name
-    /// </summary>
-    [Serializable]
-    public class TestNameFilter : ValueMatchFilter<string>
+    public abstract class CompositeFilter : TestFilter
     {
         /// <summary>
-        /// Construct an empty SimpleNameFilter
+        /// List of component filters
         /// </summary>
-        public TestNameFilter() { }
+        protected List<ITestFilter> _filters = new List<ITestFilter>();
 
         /// <summary>
-        /// Construct a TestNameFilter for a single name
+        /// Constructs an empty CompoundFilter
         /// </summary>
-        /// <param name="nameToAdd">The name the filter will recognize.</param>
-        public TestNameFilter(string nameToAdd) : base(nameToAdd) { }
+        public CompositeFilter() { }
 
         /// <summary>
-        /// Construct a FullNameFilter for an array of ids
+        /// Constructs a CompoundFilter from an array of filters
         /// </summary>
-        /// <param name="namesToAdd">The names the filter will recognize.</param>
-        public TestNameFilter(IEnumerable<string> namesToAdd) : base(namesToAdd) { }
-
-        /// <summary>
-        /// Match a test against a single value.
-        /// </summary>
-        protected override bool Match(ITest test, string value)
+        /// <param name="filters"></param>
+        public CompositeFilter( params ITestFilter[] filters )
         {
-            return test.Name == value;
+            _filters.AddRange( filters );
+        }
+
+        /// <summary>
+        /// Adds a filter to the list of filters
+        /// </summary>
+        /// <param name="filter">The filter to be added</param>
+        public void Add(ITestFilter filter)
+        {
+            _filters.Add(filter);
+        }
+
+        /// <summary>
+        /// Return an array of the composing filters
+        /// </summary>
+        public ITestFilter[] Filters
+        {
+            get { return _filters.ToArray(); }
         }
     }
 }

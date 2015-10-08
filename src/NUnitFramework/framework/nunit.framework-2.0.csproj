@@ -138,6 +138,7 @@
     <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
+    <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\TestNameFilter.cs" />
     <Compile Include="Internal\Filters\ClassNameFilter.cs" />
     <Compile Include="Internal\Filters\MethodNameFilter.cs" />

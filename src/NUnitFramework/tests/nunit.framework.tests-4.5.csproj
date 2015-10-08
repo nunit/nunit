@@ -190,11 +190,14 @@
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
     <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
+    <Compile Include="Internal\Filters\ClassNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
     <Compile Include="Internal\Filters\EmptyFilterTests.cs" />
     <Compile Include="Internal\Filters\IdFilterTests.cs" />
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
-    <Compile Include="Internal\Filters\SimpleNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\FullNameFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />

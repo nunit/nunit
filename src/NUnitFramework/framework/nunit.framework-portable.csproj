@@ -353,6 +353,7 @@
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
     <Compile Include="Internal\Filters\ClassNameFilter.cs" />
+    <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\MethodNameFilter.cs" />

@@ -71,6 +71,7 @@ namespace NUnit.Framework.Internal.Filters
             _topLevelSuite.Add(_dummyFixture);
             _topLevelSuite.Add(_anotherFixture);
             _topLevelSuite.Add(_yetAnotherFixture);
+            _topLevelSuite.Add(_fixtureWithMultipleTests);
         }
 
         #region Fixtures Used by Tests
