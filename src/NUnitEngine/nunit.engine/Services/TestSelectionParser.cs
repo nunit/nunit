@@ -32,21 +32,36 @@ namespace NUnit.Engine
     {
         private Tokenizer _tokenizer;
 
-        private readonly Token LPAREN = new Token(TokenKind.Symbol, "(");
-        private readonly Token RPAREN = new Token(TokenKind.Symbol, ")");
-        private readonly Token COMMA = new Token(TokenKind.Symbol, ",");
-        private readonly Token AND_OP1 = new Token(TokenKind.Symbol, "&");
-        private readonly Token AND_OP2 = new Token(TokenKind.Symbol, "&&");
-        private readonly Token OR_OP1 = new Token(TokenKind.Symbol, "|");
-        private readonly Token OR_OP2 = new Token(TokenKind.Symbol, "||");
-        private readonly Token NOT_OP = new Token(TokenKind.Symbol, "!");
+        private static readonly Token LPAREN = new Token(TokenKind.Symbol, "(");
+        private static readonly Token RPAREN = new Token(TokenKind.Symbol, ")");
+        private static readonly Token COMMA = new Token(TokenKind.Symbol, ",");
+        private static readonly Token AND_OP1 = new Token(TokenKind.Symbol, "&");
+        private static readonly Token AND_OP2 = new Token(TokenKind.Symbol, "&&");
+        private static readonly Token AND_OP3 = new Token(TokenKind.Word, "and");
+        private static readonly Token OR_OP1 = new Token(TokenKind.Symbol, "|");
+        private static readonly Token OR_OP2 = new Token(TokenKind.Symbol, "||");
+        private static readonly Token OR_OP3 = new Token(TokenKind.Word, "or");
+        private static readonly Token NOT_OP = new Token(TokenKind.Symbol, "!");
+
+        private static readonly Token EQ_OP1 = new Token(TokenKind.Symbol, "=");
+        private static readonly Token EQ_OP2 = new Token(TokenKind.Symbol, "==");
+        private static readonly Token NE_OP = new Token(TokenKind.Symbol, "!=");
+        private static readonly Token MATCH_OP = new Token(TokenKind.Symbol, "=~");
+        private static readonly Token NOMATCH_OP = new Token(TokenKind.Symbol, "!~");
+
+        private static readonly Token[] AND_OPS = new Token[] { AND_OP1, AND_OP2, AND_OP3 };
+        private static readonly Token[] OR_OPS = new Token[] { OR_OP1, OR_OP2, OR_OP3 };
+        private static readonly Token[] EQ_OPS = new Token[] { EQ_OP1, EQ_OP2 };
+        private static readonly Token[] REL_OPS = new Token[] { EQ_OP1, EQ_OP2, NE_OP, MATCH_OP, NOMATCH_OP };
+
+        private static readonly Token EOF = new Token(TokenKind.Eof);
 
         public string Parse(string input)
         {
-            if (input == null || input == "")
-                return "";
-
             _tokenizer = new Tokenizer(input);
+
+            if (_tokenizer.LookAhead == EOF)
+                throw new NUnitEngineException("No input provided for where clause.");
 
             return ParseFilterExpression();
         }
@@ -60,12 +75,8 @@ namespace NUnit.Engine
             var terms = new List<string>();
             terms.Add(ParseFilterTerm());
 
-            while (true)
+            while (LookingAt(OR_OPS))
             {
-                Token op = Peek();
-                if (op != OR_OP1 && op != OR_OP2)
-                    break;
-
                 NextToken();
                 terms.Add(ParseFilterTerm());
             }
@@ -91,12 +102,8 @@ namespace NUnit.Engine
             var elements = new List<string>();
             elements.Add(ParseFilterElement());
 
-            while (true)
+            while (LookingAt(AND_OPS))
             {
-                Token op = Peek();
-                if (op != AND_OP1 && op != AND_OP2)
-                    break;
-
                 NextToken();
                 elements.Add(ParseFilterElement());
             }
@@ -120,151 +127,97 @@ namespace NUnit.Engine
         /// </summary>
         public string ParseFilterElement()
         {
-            Token nextOp = Peek();
-            if (nextOp == LPAREN || nextOp == NOT_OP)
+            if (LookingAt(LPAREN, NOT_OP))
                 return ParseExpressionInParentheses();
 
-            string lhs = GetWord();
+            Token lhs = Expect(TokenKind.Word);
 
-            switch (lhs)
+            switch (lhs.Text)
             {
                 case "id":
-                    string op = GetOperator("=", "==");
-                    string values = GetIdList();
-                    return string.Format("<id>{0}</id>", values);
-
                 case "cat":
-                case "category":
                 case "method":
                 case "class":
-                    op = GetOperator("=", "==", "!=", "=~", "!~");
-                    values = GetWordList();
-                    string tag = lhs == "category" ? "cat" : lhs;
-                    switch (op)
-                    {
-                        case "=":
-                        case "==":
-                            return string.Format("<{0}>{1}</{0}>", tag, values);
-                        case "!=":
-                            return string.Format("<not><{0}>{1}</{0}></not>", tag, values);
-                        default:
-                            return string.Format("<{0} op='{1}'>{2}</{0}>", tag, op, values);
-                    }
-
                 case "name":
                 case "test":
-                case "fullname":
-                    op = GetOperator("=", "==", "!=", "=~", "!~");
-                    values = Peek().Kind == TokenKind.String
-                        ? GetString()
-                        : GetWord();
-                    tag = lhs == "fullname" ? "test" : lhs;
-                    switch (op)
-                    {
-                        case "=":
-                        case "==":
-                            return string.Format("<{0}>{1}</{0}>", tag, values);
-                        case "!=":
-                            return string.Format("<not><{0}>{1}</{0}></not>", tag, values);
-                        default:
-                            return string.Format("<{0} op={1}>{2}</{0}>", tag, op, values);
-                    }
+                    Token op = lhs.Text == "id"
+                        ? Expect(EQ_OPS)
+                        : Expect(REL_OPS);
+                    Token rhs = Expect(TokenKind.String, TokenKind.Word);
+                    return EmitFilterElement(lhs, op, rhs);
 
                 default:
-                    throw new NUnitEngineException("Unknown name '" + lhs + "' in where clause.");
+                    throw InvalidTokenError(lhs);
             }
+        }
+
+        private static string EmitFilterElement(Token lhs, Token op, Token rhs)
+        {
+            if (op == EQ_OP1 || op == EQ_OP2)
+                return string.Format("<{0}>{1}</{0}>", lhs.Text, rhs.Text);
+            else if (op == NE_OP)
+                return string.Format("<not><{0}>{1}</{0}></not>", lhs.Text, rhs.Text);
+            else
+                return string.Format("<{0} op='{1}'>{2}</{0}>", lhs.Text, op.Text, rhs.Text);
         }
 
         private string ParseExpressionInParentheses()
         {
-            Token op = NextToken();
-            bool negate = op == NOT_OP;
-            Guard.OperationValid(negate || op == LPAREN, "Called with invalid token");
+            Token op = Expect(LPAREN, NOT_OP);
 
-            if (negate && NextToken() != LPAREN)
-                throw new NUnitEngineException("Expected '(' after '!' in where clause.");
+            if (op == NOT_OP) Expect(LPAREN);
 
             string result = ParseFilterExpression();
 
-            if (NextToken() != RPAREN)
-                throw new NUnitEngineException("Expected ')' in where clause.");
+            Expect(RPAREN);
 
-            if (negate)
+            if (op == NOT_OP)
                 result = "<not>" + result + "</not>";
 
             return result;
         }
 
-        private string GetWord()
-        {
-            return Expect(TokenKind.Word).Text;
-        }
-
-        private string GetWord(params string[] valid)
-        {
-            string name = GetWord();
-
-            foreach (string item in valid)
-                if (name == item)
-                    return name;
-
-            throw new NUnitEngineException("Unexpected name '" + name + "' in where clause.");
-        }
-
-        private string GetWordList()
-        {
-            string wordList = GetWord();
-
-            while (Peek() == COMMA)
-            {
-                NextToken();
-                wordList += ",";
-                wordList += GetWord();
-            }
-
-            return wordList;
-        }
-
-        private string GetString()
-        {
-            return Expect(TokenKind.String).Text;
-        }
-
-        private string GetOperator()
-        {
-            return Expect(TokenKind.Symbol).Text;
-        }
-
-        private string GetOperator(params string[] valid)
-        {
-            string op = GetOperator();
-
-            foreach (string item in valid)
-                if (op == item)
-                    return op;
-
-            throw new NUnitEngineException("Unexpected operator '" + op + "' in where clause.");
-        }
-
-        private string GetIdList()
-        {
-            return null;
-        }
-
-        private Token Expect(TokenKind kind)
+        // Require a token of one or more kinds
+        private Token Expect(params TokenKind[] kinds)
         {
             Token token = NextToken();
 
-            if (token.Kind != kind)
-                throw new NUnitEngineException("Unexpected token '" + token.Text + "' in where clause.");
-             
+            foreach (TokenKind kind in kinds)
+                if (token.Kind == kind)
+                    return token;
 
-            return token;
+            throw InvalidTokenError(token);
         }
 
-        private Token Peek()
+        // Require a token from a list of tokens
+        private Token Expect(params Token[] valid)
         {
-            return _tokenizer.Peek();
+            Token token = NextToken();
+
+            foreach (Token item in valid)
+                if (token == item)
+                    return token;
+
+            throw InvalidTokenError(token);
+        }
+
+        private Exception InvalidTokenError(Token token)
+        {
+            return new NUnitEngineException(string.Format("Unexpected token '{0}' at position {1} in where clause.", token.Text, token.Pos));
+        }
+
+        private Token LookAhead
+        {
+            get { return _tokenizer.LookAhead; }
+        }
+
+        private bool LookingAt(params Token[] tokens)
+        {
+            foreach (Token token in tokens)
+                if (LookAhead == token)
+                    return true;
+
+            return false;
         }
 
         private Token NextToken()

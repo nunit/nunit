@@ -50,6 +50,8 @@ namespace NUnit.Engine
 
         public string Text { get; private set; }
 
+        public int Pos { get; set; }
+
         #region Equality Overrides
 
         public override bool Equals(object obj)
@@ -102,26 +104,29 @@ namespace NUnit.Engine
         private string _input;
         private int _index;
 
-        private const char EOF = '\0';
-        private const string WORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.";
+        private const char EOF_CHAR = '\0';
+        private const string WORD_BREAK_CHARS = "=!()&|";
         private readonly string[] DOUBLE_CHAR_SYMBOLS = new string[] { "==", "=~", "!=", "!~", "&&", "||" };
 
         private Token _lookahead;
 
         public Tokenizer(string input)
         {
-            Guard.ArgumentNotNullOrEmpty(input, "input");
+            Guard.ArgumentNotNull(input, "input");
 
             _input = input;
             _index = 0;
         }
 
-        public Token Peek()
+        public Token LookAhead
         {
-            if (_lookahead == null)
-                _lookahead = GetNextToken();
+            get
+            {
+                if (_lookahead == null)
+                    _lookahead = GetNextToken();
 
-            return _lookahead;
+                return _lookahead;
+            }
         }
 
         public Token NextToken()
@@ -136,18 +141,18 @@ namespace NUnit.Engine
             SkipBlanks();
 
             var ch = NextChar;
+            int pos = _index;
 
             switch (ch)
             {
-                case EOF:
-                    return new Token(TokenKind.Eof);
+                case EOF_CHAR:
+                    return new Token(TokenKind.Eof) { Pos = pos };
 
                 // Single char symbols
                 case '(':
                 case ')':
-                case ',':
                     GetChar();
-                    return new Token(TokenKind.Symbol, ch);
+                    return new Token(TokenKind.Symbol, ch) { Pos = pos };
 
                 // Possible double char symbols
                 case '&':
@@ -159,7 +164,7 @@ namespace NUnit.Engine
                         if (ch == dbl[0] && NextChar == dbl[1])
                         {
                             GetChar();
-                            return new Token(TokenKind.Symbol, dbl);
+                            return new Token(TokenKind.Symbol, dbl) { Pos = pos };
                         }
 
                     return new Token(TokenKind.Symbol, ch);
@@ -170,36 +175,37 @@ namespace NUnit.Engine
                     return GetString();
 
                 default:
-                    if (IsWordChar(ch))
-                        return GetWord();
-
-                    throw new NUnitEngineException(
-                        string.Format("Invalid character {0} at position {1} in where clause.", ch, _index));
+                    return GetWord();
             }
         }
 
         private bool IsWordChar(char c)
         {
-            return WORD_CHARS.IndexOf(c) >= 0;
+            if (char.IsWhiteSpace(c) || c == EOF_CHAR)
+                return false;
+
+            return WORD_BREAK_CHARS.IndexOf(c) < 0;
         }
 
         private Token GetWord()
         {
             var sb = new StringBuilder();
+            int pos = _index;
 
             while (IsWordChar(NextChar))
                 sb.Append(GetChar());
 
-            return new Token(TokenKind.Word, sb.ToString());
+            return new Token(TokenKind.Word, sb.ToString()) { Pos = pos };
         }
 
         private Token GetString()
         {
             var sb = new StringBuilder();
+            int pos = _index;
 
             char quote = GetChar(); // Save the initial quote char
 
-            while (NextChar != EOF)
+            while (NextChar != EOF_CHAR)
             {
                 var ch = GetChar();
                 if (ch == '\\')
@@ -209,7 +215,7 @@ namespace NUnit.Engine
                 sb.Append(ch);
             }
 
-            return new Token(TokenKind.String, sb.ToString());
+            return new Token(TokenKind.String, sb.ToString()) { Pos = pos };
         }
 
         /// <summary>
@@ -218,7 +224,7 @@ namespace NUnit.Engine
         /// <returns>The next char</returns>
         private char GetChar()
         {
-            return _index < _input.Length ? _input[_index++] : EOF;
+            return _index < _input.Length ? _input[_index++] : EOF_CHAR;
         }
 
         /// <summary>
@@ -228,7 +234,7 @@ namespace NUnit.Engine
         {
             get
             {
-                return _index < _input.Length ? _input[_index] : EOF;
+                return _index < _input.Length ? _input[_index] : EOF_CHAR;
             }
         }
 

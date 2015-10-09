@@ -37,12 +37,6 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [Test]
-        public void EmptyInputThrowsException()
-        {
-            Assert.That(() => new Tokenizer(string.Empty), Throws.ArgumentException);
-        }
-
-        [Test]
         public void BlankStringReturnsEof()
         {
             var tokenizer = new Tokenizer("    ");
@@ -59,6 +53,16 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "x")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "abc123")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "a1x")));
+            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Eof)));
+        }
+
+        [Test]
+        public void WordsInUnicode()
+        {
+            var tokenizer = new Tokenizer("method == Здравствуйте");
+            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "method")));
+            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, "==")));
+            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "Здравствуйте")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Eof)));
         }
 
@@ -141,7 +145,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void MixedTokens_Complex()
         {
-            var tokenizer = new Tokenizer("name =~ '*DataBase*' && (category = Urgent,High || Priority = Urgent,High)");
+            var tokenizer = new Tokenizer("name =~ '*DataBase*' && (category = Urgent || Priority = High)");
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "name")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, "=~")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.String, "*DataBase*")));
@@ -150,13 +154,9 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "category")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, "=")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "Urgent")));
-            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, ",")));
-            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "High")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, "||")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "Priority")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, "=")));
-            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "Urgent")));
-            Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, ",")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Word, "High")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Symbol, ")")));
             Assert.That(tokenizer.NextToken(), Is.EqualTo(new Token(TokenKind.Eof)));

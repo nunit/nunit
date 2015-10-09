@@ -38,20 +38,20 @@ namespace NUnit.Engine.Services.Tests
             _parser = new TestSelectionParser();
         }
 
-        [TestCase("", "")]
         [TestCase("cat=Urgent", "<cat>Urgent</cat>")]
         [TestCase("cat==Urgent", "<cat>Urgent</cat>")]
-        [TestCase("category==Urgent", "<cat>Urgent</cat>")]
         [TestCase("cat!=Urgent", "<not><cat>Urgent</cat></not>")]
         [TestCase("cat =~ Urgent", "<cat op='=~'>Urgent</cat>")]
         [TestCase("cat !~ Urgent", "<cat op='!~'>Urgent</cat>")]
-        [TestCase("cat = Urgent,High", "<cat>Urgent,High</cat>")]
+        [TestCase("cat = Urgent || cat = High", "<or><cat>Urgent</cat><cat>High</cat></or>")]
         [TestCase("name='SomeTest'", "<name>SomeTest</name>")]
         [TestCase("method=TestMethod", "<method>TestMethod</method>")]
-        [TestCase("method=Test1,Test2,Test3", "<method>Test1,Test2,Test3</method>")]
+        [TestCase("method=Test1||method=Test2||method=Test3", "<or><method>Test1</method><method>Test2</method><method>Test3</method></or>")]
         [TestCase("test='My.Test.Fixture.Method(42)'", "<test>My.Test.Fixture.Method(42)</test>")]
         [TestCase("cat==Urgent && test=='My.Tests'", "<and><cat>Urgent</cat><test>My.Tests</test></and>")]
+        [TestCase("cat==Urgent and test=='My.Tests'", "<and><cat>Urgent</cat><test>My.Tests</test></and>")]
         [TestCase("cat==Urgent || test=='My.Tests'", "<or><cat>Urgent</cat><test>My.Tests</test></or>")]
+        [TestCase("cat==Urgent or test=='My.Tests'", "<or><cat>Urgent</cat><test>My.Tests</test></or>")]
         [TestCase("cat==Urgent || test=='My.Tests' && cat == high", "<or><cat>Urgent</cat><and><test>My.Tests</test><cat>high</cat></and></or>")]
         [TestCase("cat==Urgent && test=='My.Tests' || cat == high", "<or><and><cat>Urgent</cat><test>My.Tests</test></and><cat>high</cat></or>")]
         [TestCase("cat==Urgent && (test=='My.Tests' || cat == high)", "<and><cat>Urgent</cat><or><test>My.Tests</test><cat>high</cat></or></and>")]
@@ -59,6 +59,15 @@ namespace NUnit.Engine.Services.Tests
         public void TestParser(string input, string output)
         {
             Assert.That(_parser.Parse(input), Is.EqualTo(output));
+        }
+
+        [TestCase(null, typeof(ArgumentNullException))]
+        [TestCase("", typeof(NUnitEngineException))]
+        [TestCase("   ", typeof(NUnitEngineException))]
+        [TestCase("  \t\t ", typeof(NUnitEngineException))]
+        public void TestParser_InvalidInput(string input, Type type)
+        {
+            Assert.That(() => _parser.Parse(input), Throws.TypeOf(type));
         }
     }
 }
