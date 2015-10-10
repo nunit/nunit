@@ -46,13 +46,6 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual(0, options.InputFiles.Count);
         }
 
-        //[Test]
-        //public void AllowForwardSlashDefaultsCorrectly()
-        //{
-        //    ConsoleOptions options = new ConsoleOptions();
-        //    Assert.AreEqual( Path.DirectorySeparatorChar != '/', options.AllowForwardSlash );
-        //}
-
         [TestCase("ShowHelp", "help|h")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
@@ -91,8 +84,6 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
-        [TestCase("Include",            "include",    new string[] { "Short,Fast" },                     new string[0])]
-        [TestCase("Exclude",            "exclude",    new string[] { "Long" },                           new string[0])]
         [TestCase("WhereClause",        "where",      new string[] { "cat==Short,Fast" },                new string[0])]
         [TestCase("ActiveConfig",       "config",     new string[] { "Debug" },                          new string[0])]
         [TestCase("ProcessModel",       "process",    new string[] { "InProcess", "Separate", "Multiple" }, new string[] { "JUNK" })]
@@ -196,8 +187,6 @@ namespace NUnit.ConsoleRunner.Tests
         //    }
         //}
 
-        [TestCase("--include")]
-        [TestCase("--exclude")]
         [TestCase("--where")]
         [TestCase("--config")]
         [TestCase("--process")]
