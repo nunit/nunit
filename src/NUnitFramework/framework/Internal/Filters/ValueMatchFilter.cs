@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -31,16 +32,18 @@ namespace NUnit.Framework.Internal.Filters
     /// ValueMatchFilter selects tests based on some value, which
     /// is expected to be contained in the test.
     /// </summary>
-    /// <typeparam name="T">The Type of the value</typeparam>
     [Serializable]
-    public abstract class ValueMatchFilter<T> : TestFilter
+    public abstract class ValueMatchFilter : TestFilter
     {
-        private List<T> _values = new List<T>();
+        /// <summary>
+        /// Returns the value matched by the filter - used for testing
+        /// </summary>
+        public string ExpectedValue { get; private set; }
 
         /// <summary>
-        /// Return a list of the values matched by the filter - used for testing
+        /// Indicates whether the value is a regular expression
         /// </summary>
-        public IList<T> Values { get { return _values; } }
+        public bool IsRegex { get; set; }
 
         /// <summary>
         /// Construct an empty ValueMatchFilter
@@ -51,48 +54,22 @@ namespace NUnit.Framework.Internal.Filters
         /// Construct a ValueMatchFilter for a single value.
         /// </summary>
         /// <param name="value">The value to be included.</param>
-        public ValueMatchFilter(T value)
+        public ValueMatchFilter(string value)
         {
-            this.Add(value);
+            ExpectedValue = value;
         }
 
         /// <summary>
-        /// Construct a ValueMatchFilter for multiple values
+        /// Match the input provided by the derived class
         /// </summary>
-        /// <param name="values">The set of values the filter will recognize.</param>
-        public ValueMatchFilter(IEnumerable<T> values)
+        /// <param name="input">The value to be matchedT</param>
+        /// <returns>True for a match, false otherwise.</returns>
+        protected bool Match(string input)
         {
-            foreach (T value in values)
-                this.Add(value);
+            if (IsRegex)
+                return input != null && new Regex(ExpectedValue).IsMatch(input);
+            else
+                return ExpectedValue == input;
         }
-
-        /// <summary>
-        /// Add a single value to the filter
-        /// </summary>
-        /// <param name="value">The value to be added.</param>
-        public void Add(T value)
-        {
-            _values.Add(value);
-        }
-
-        /// <summary>
-        /// Check whether the filter matches a test
-        /// </summary>
-        /// <param name="test">The test to be matched</param>
-        /// <returns>True if it matches, otherwise false</returns>
-        public override bool Match(ITest test)
-        {
-            foreach (T value in _values)
-                if (Match(test, value))
-                    return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Match a test against a single value.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool Match(ITest test, T value);
     }
 }

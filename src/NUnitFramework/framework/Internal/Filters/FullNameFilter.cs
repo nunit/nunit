@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     /// FullName filter selects tests based on their FullName
     /// </summary>
     [Serializable]
-    public class FullNameFilter : ValueMatchFilter<string>
+    public class FullNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct an empty SimpleNameFilter
@@ -45,17 +45,11 @@ namespace NUnit.Framework.Internal.Filters
         public FullNameFilter(string nameToAdd) : base(nameToAdd) { }
 
         /// <summary>
-        /// Construct a FullNameFilter for an array of ids
-        /// </summary>
-        /// <param name="namesToAdd">The ids the filter will recognize.</param>
-        public FullNameFilter(IEnumerable<string> namesToAdd) : base(namesToAdd) { }
-
-        /// <summary>
         /// Match a test against a single value.
         /// </summary>
-        protected override bool Match(ITest test, string value)
+        public override bool Match(ITest test)
         {
-            return test.FullName == value;
+            return Match(test.FullName);
         }
     }
 }

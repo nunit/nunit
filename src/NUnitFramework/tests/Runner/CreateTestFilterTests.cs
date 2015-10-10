@@ -44,17 +44,26 @@ namespace NUnitLite.Runner.Tests
         {
             var filter = GetFilter("--test:My.Test.Name");
             Assert.That(filter, Is.TypeOf<FullNameFilter>());
-            Assert.That(((FullNameFilter)filter).Values,
-                Is.EqualTo(new string[] { "My.Test.Name" }));
+            Assert.That(((FullNameFilter)filter).ExpectedValue,
+                Is.EqualTo("My.Test.Name"));
         }
 
         [Test]
         public void ThreeTestsSelected()
         {
             var filter = GetFilter("--test:My.First.Test", "--test:My.Second.Test", "--test:My.Third.Test");
-            Assert.That(filter, Is.TypeOf<FullNameFilter>());
-            Assert.That(((FullNameFilter)filter).Values,
-                Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test" }));
+            Assert.That(filter, Is.TypeOf<AndFilter>());
+            var filters = ((AndFilter)filter).Filters;
+            Assert.That(filters.Length, Is.EqualTo(3));
+
+            Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
+            Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
+
+            Assert.That(filters[1], Is.TypeOf<FullNameFilter>());
+            Assert.That(((FullNameFilter)filters[1]).ExpectedValue, Is.EqualTo("My.Second.Test"));
+
+            Assert.That(filters[2], Is.TypeOf<FullNameFilter>());
+            Assert.That(((FullNameFilter)filters[2]).ExpectedValue, Is.EqualTo("My.Third.Test"));
         }
 
         [Test]
@@ -106,8 +115,8 @@ namespace NUnitLite.Runner.Tests
             Assert.That(filters.Length, Is.EqualTo(2));
 
             Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
-            Assert.That(((FullNameFilter)filters[0]).Values,
-                Is.EqualTo(new string[] { "My.Test.Name" }));
+            Assert.That(((FullNameFilter)filters[0]).ExpectedValue,
+                Is.EqualTo("My.Test.Name"));
 
             Assert.That(filters[1], Is.TypeOf<CategoryFilter>());
             Assert.That(((CategoryFilter)filters[1]).Categories,
@@ -139,9 +148,18 @@ namespace NUnitLite.Runner.Tests
             using (var tf = new TestFile("TestListFile.txt", "TestListFile.txt"))
             {
                 var filter = GetFilter("--testlist:" + tf.File.FullName);
-                Assert.That(filter, Is.TypeOf<FullNameFilter>());
-                Assert.That(((FullNameFilter)filter).Values,
-                    Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test" }));
+                Assert.That(filter, Is.TypeOf<AndFilter>());
+                var filters = ((AndFilter)filter).Filters;
+                Assert.That(filters.Length, Is.EqualTo(3));
+
+                Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
+
+                Assert.That(filters[1], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[1]).ExpectedValue, Is.EqualTo("My.Second.Test"));
+
+                Assert.That(filters[2], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[2]).ExpectedValue, Is.EqualTo("My.Third.Test"));
             }
         }
 
@@ -152,9 +170,27 @@ namespace NUnitLite.Runner.Tests
             using (var tf2 = new TestFile("TestListFile2.txt", "TestListFile2.txt"))
             {
                 var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName );
-                Assert.That(filter, Is.TypeOf<FullNameFilter>());
-                Assert.That(((FullNameFilter)filter).Values,
-                    Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test", "My.Fourth.Test", "My.Fifth.Test", "My.Sixth.Test"}));
+                Assert.That(filter, Is.TypeOf<AndFilter>());
+                var filters = ((AndFilter)filter).Filters;
+                Assert.That(filters.Length, Is.EqualTo(6));
+
+                Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
+
+                Assert.That(filters[1], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[1]).ExpectedValue, Is.EqualTo("My.Second.Test"));
+
+                Assert.That(filters[2], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[2]).ExpectedValue, Is.EqualTo("My.Third.Test"));
+
+                Assert.That(filters[3], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[3]).ExpectedValue, Is.EqualTo("My.Fourth.Test"));
+
+                Assert.That(filters[4], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[4]).ExpectedValue, Is.EqualTo("My.Fifth.Test"));
+
+                Assert.That(filters[5], Is.TypeOf<FullNameFilter>());
+                Assert.That(((FullNameFilter)filters[5]).ExpectedValue, Is.EqualTo("My.Sixth.Test"));
             }
         }
 

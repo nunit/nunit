@@ -147,6 +147,9 @@ namespace NUnit.Engine
                     return EmitFilterElement(lhs, op, rhs);
 
                 default:
+                    //op = Expect(REL_OPS);
+                    //rhs = Expect(TokenKind.String, TokenKind.Word);
+                    //return string.Format("<prop name='{0}'>{1}</prop>", lhs.Text, rhs.Text);
                     throw InvalidTokenError(lhs);
             }
         }
@@ -157,8 +160,13 @@ namespace NUnit.Engine
                 return string.Format("<{0}>{1}</{0}>", lhs.Text, rhs.Text);
             else if (op == NE_OP)
                 return string.Format("<not><{0}>{1}</{0}></not>", lhs.Text, rhs.Text);
+            else if (op == MATCH_OP)
+                return string.Format("<{0} re='1'>{1}</{0}>", lhs.Text, rhs.Text);
+            else if (op == NOMATCH_OP)
+                return string.Format("<not><{0} re='1'>{1}</{0}></not>", lhs.Text, rhs.Text);
             else
                 return string.Format("<{0} op='{1}'>{2}</{0}>", lhs.Text, op.Text, rhs.Text);
+
         }
 
         private string ParseExpressionInParentheses()

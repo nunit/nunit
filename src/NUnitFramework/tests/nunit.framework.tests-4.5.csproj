@@ -192,6 +192,7 @@
     <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
     <Compile Include="Internal\Filters\ClassNameFilterTests.cs" />
     <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
     <Compile Include="Internal\Filters\EmptyFilterTests.cs" />
     <Compile Include="Internal\Filters\IdFilterTests.cs" />

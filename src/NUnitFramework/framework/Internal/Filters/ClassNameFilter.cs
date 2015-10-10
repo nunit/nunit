@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -31,10 +32,10 @@ namespace NUnit.Framework.Internal.Filters
     /// ClassName filter selects tests based on the class FullName
     /// </summary>
     [Serializable]
-    public class ClassNameFilter : ValueMatchFilter<string>
+    public class ClassNameFilter : ValueMatchFilter
     {
         /// <summary>
-        /// Construct an empty SimpleNameFilter
+        /// Construct an empty ClassNameFilter
         /// </summary>
         public ClassNameFilter() { }
 
@@ -45,17 +46,16 @@ namespace NUnit.Framework.Internal.Filters
         public ClassNameFilter(string nameToAdd) : base(nameToAdd) { }
 
         /// <summary>
-        /// Construct a FullNameFilter for an array of ids
-        /// </summary>
-        /// <param name="namesToAdd">The ids the filter will recognize.</param>
-        public ClassNameFilter(IEnumerable<string> namesToAdd) : base(namesToAdd) { }
-
-        /// <summary>
         /// Match a test against a single value.
         /// </summary>
-        protected override bool Match(ITest test, string value)
+        public override bool Match(ITest test)
         {
-            return test.ClassName == value;
+            // tests below the fixture level may have non-null className
+            // but we don't want to match them explicitly.
+            if (!test.IsSuite || test is ParameterizedMethodSuite || test.ClassName == null)
+                return false;
+
+            return Match(test.ClassName);
         }
     }
 }

@@ -59,10 +59,11 @@ namespace NUnit.Framework.Internal.Filters
 
     public abstract class TestFilterTests
     {
+        public const string DUMMY_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+DummyFixture";
+
         protected static readonly TestSuite _dummyFixture = TestBuilder.MakeFixture(typeof(DummyFixture));
         protected static readonly TestSuite _anotherFixture = TestBuilder.MakeFixture(typeof(AnotherFixture));
         protected static readonly TestSuite _yetAnotherFixture = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
-        protected static readonly TestSuite _fixtureWithExplicitTest = TestBuilder.MakeFixture (typeof (FixtureWithExplicitTest));
         protected static readonly TestSuite _fixtureWithMultipleTests = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
         protected static readonly TestSuite _topLevelSuite = new TestSuite("MySuite");
 
@@ -81,14 +82,6 @@ namespace NUnit.Framework.Internal.Filters
         {
             [Test]
             public void Test() { }
-
-        }
-
-        [Category("Dummy")]
-        private class FixtureWithExplicitTest
-        {
-            [Test, Explicit]
-            public void ExplicitTest() { }
 
         }
 

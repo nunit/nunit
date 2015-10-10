@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     /// TestName filter selects tests based on their Name
     /// </summary>
     [Serializable]
-    public class TestNameFilter : ValueMatchFilter<string>
+    public class TestNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct an empty SimpleNameFilter
@@ -45,17 +45,11 @@ namespace NUnit.Framework.Internal.Filters
         public TestNameFilter(string nameToAdd) : base(nameToAdd) { }
 
         /// <summary>
-        /// Construct a FullNameFilter for an array of ids
-        /// </summary>
-        /// <param name="namesToAdd">The names the filter will recognize.</param>
-        public TestNameFilter(IEnumerable<string> namesToAdd) : base(namesToAdd) { }
-
-        /// <summary>
         /// Match a test against a single value.
         /// </summary>
-        protected override bool Match(ITest test, string value)
+        public override bool Match(ITest test)
         {
-            return test.Name == value;
+            return Match(test.Name);
         }
     }
 }

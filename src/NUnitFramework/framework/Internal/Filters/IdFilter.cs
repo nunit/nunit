@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     /// IdFilter selects tests based on their id
     /// </summary>
     [Serializable]
-    public class IdFilter : ValueMatchFilter<string>
+    public class IdFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct an empty IdFilter
@@ -45,17 +45,11 @@ namespace NUnit.Framework.Internal.Filters
         public IdFilter(string id) : base (id) { }
 
         /// <summary>
-        /// Construct a IdFilter for multiple ids
-        /// </summary>
-        /// <param name="ids">The ids the filter will recognize.</param>
-        public IdFilter(IEnumerable<string> ids) : base(ids) { }
-
-        /// <summary>
         /// Match a test against a single value.
         /// </summary>
-        protected override bool Match(ITest test, string id)
+        public override bool Match(ITest test)
         {
-            return test.Id == id;
+            return test.Id == ExpectedValue;
         }
     }
 }

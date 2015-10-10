@@ -147,6 +147,8 @@ namespace NUnit.Framework.Internal
 
         private static TestFilter FromXml(TNode node)
         {
+            bool isRegex = node.Attributes["re"] == "1";
+
             switch (node.Name)
             {
                 case "filter":
@@ -166,23 +168,19 @@ namespace NUnit.Framework.Internal
                     return new NotFilter(FromXml(node.FirstChild));
 
                 case "id":
-                    var idFilter = new IdFilter();
-                    if (node.Value != null)
-                        foreach (string id in node.Value.Split(COMMA))
-                            idFilter.Add(id);
-                    return idFilter;
+                    return new IdFilter(node.Value); 
 
                 case "test":
-                    return new FullNameFilter(node.Value);
+                    return new FullNameFilter(node.Value) { IsRegex = isRegex };
 
                 case "name":
-                    return new TestNameFilter(node.Value);
+                    return new TestNameFilter(node.Value) { IsRegex = isRegex };
 
                 case "method":
-                    return new MethodNameFilter(node.Value);
+                    return new MethodNameFilter(node.Value) { IsRegex = isRegex };
 
                 case "class":
-                    return new ClassNameFilter(node.Value);
+                    return new ClassNameFilter(node.Value) { IsRegex = isRegex };
 
                 case "cat":
                     var catFilter = new CategoryFilter();

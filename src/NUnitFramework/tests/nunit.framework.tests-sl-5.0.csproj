@@ -234,6 +234,7 @@
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />

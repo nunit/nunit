@@ -280,14 +280,24 @@ namespace NUnitLite.Runner
         {
             var filters = new List<TestFilter>();
 
-            if (options.TestList.Count > 0)
-                filters.Add(new FullNameFilter(options.TestList));
+            foreach (var test in options.TestList)
+                filters.Add(new FullNameFilter(test));
 
-            if (!string.IsNullOrEmpty(options.Include))
-                filters.Add(new SimpleCategoryExpression(options.Include).Filter);
+            if (options.IncludeSpecified)
+            {
+                var includeFilter = new CategoryFilter();
+                foreach (string cat in options.Include.Split(','))
+                    includeFilter.AddCategory(cat);
+                filters.Add(includeFilter);
+            }
 
-            if (!string.IsNullOrEmpty(options.Exclude))
-                filters.Add(new NotFilter(new SimpleCategoryExpression(options.Exclude).Filter));
+            if (options.ExcludeSpecified)
+            {
+                var excludeFilter = new CategoryFilter();
+                foreach (string cat in options.Exclude.Split(','))
+                    excludeFilter.AddCategory(cat);
+                filters.Add(new NotFilter(excludeFilter));
+            }
 
             switch (filters.Count)
             {

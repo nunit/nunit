@@ -27,95 +27,48 @@ using System.Text;
 
 namespace NUnit.Framework.Internal.Filters
 {
+    [TestFixture(TestFilterTests.DUMMY_CLASS, false)]
+    [TestFixture("Dummy", true)]
     public class ClassNameFilterTests : TestFilterTests
     {
-        private const string DUMMY_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+DummyFixture";
-        private const string ANOTHER_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+AnotherFixture";
+        private TestFilter _filter;
 
-        private readonly TestFilter filter = new ClassNameFilter(DUMMY_CLASS);
-        private readonly TestFilter filter2 = new ClassNameFilter(new string[] { DUMMY_CLASS, ANOTHER_CLASS });
+        public ClassNameFilterTests(string value, bool isRegex)
+        {
+            _filter = new ClassNameFilter(value) { IsRegex = isRegex };
+        }
 
         [Test]
         public void IsNotEmpty()
         {
-            Assert.False(filter.IsEmpty);
+            Assert.False(_filter.IsEmpty);
         }
 
         [Test]
-        public void Match_SingleName()
+        public void MatchTest()
         {
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(_filter.Match(_dummyFixture));
+            Assert.False(_filter.Match(_anotherFixture));
         }
 
         [Test]
-        public void Pass_SingleName()
+        public void PassTest()
         {
-            Assert.That(filter.Pass(_topLevelSuite));
-            Assert.That(filter.Pass(_dummyFixture));
-            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
+            Assert.That(_filter.Pass(_topLevelSuite));
+            Assert.That(_filter.Pass(_dummyFixture));
+            Assert.That(_filter.Pass(_dummyFixture.Tests[0]));
 
-            Assert.False(filter.Pass(_anotherFixture));
-        }
-
-        public void ExplicitMatch_SingleName()
-        {
-            Assert.That(filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
-
-            Assert.False(filter.IsExplicitMatch(_anotherFixture));
+            Assert.False(_filter.Pass(_anotherFixture));
         }
 
         [Test]
-        public void Match_MultipleNames()
+        public void ExplicitMatchTest()
         {
-            Assert.That(filter2.Match(_dummyFixture));
-            Assert.That(filter2.Match(_anotherFixture));
-            Assert.False(filter2.Match(_yetAnotherFixture));
-        }
+            Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
+            Assert.That(_filter.IsExplicitMatch(_dummyFixture));
+            Assert.False(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
 
-        [Test]
-        public void Pass_MultipleNames()
-        {
-            Assert.That(filter2.Pass(_topLevelSuite));
-            Assert.That(filter2.Pass(_dummyFixture));
-            Assert.That(filter2.Pass(_dummyFixture.Tests[0]));
-            Assert.That(filter2.Pass(_anotherFixture));
-            Assert.That(filter2.Pass(_anotherFixture.Tests[0]));
-
-            Assert.False(filter2.Pass(_yetAnotherFixture));
-        }
-
-        [Test]
-        public void ExplicitMatch_MultipleNames()
-        {
-            Assert.That(filter2.IsExplicitMatch(_dummyFixture));
-            Assert.That(filter2.IsExplicitMatch(_anotherFixture));
-            Assert.That(filter2.IsExplicitMatch(_dummyFixture.Tests[0]));
-        }
-
-        [Test]
-        public void AddNames()
-        {
-            var filter = new ClassNameFilter();
-            filter.Add(DUMMY_CLASS);
-            filter.Add(ANOTHER_CLASS);
-
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
-            Assert.False(filter.Match(_yetAnotherFixture));
-        }
-
-        [Test]
-        public void BuildFromXml()
-        {
-            TestFilter filter = TestFilter.FromXml(
-                "<filter><class>" + DUMMY_CLASS + "</class></filter>");
-
-            Assert.That(filter, Is.TypeOf<ClassNameFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.False(_filter.IsExplicitMatch(_anotherFixture));
         }
     }
 }

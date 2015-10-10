@@ -27,107 +27,47 @@ using System.Text;
 
 namespace NUnit.Framework.Internal.Filters
 {
+    [TestFixture("TestFilterTests+DummyFixture", false)]
+    [TestFixture("Dummy", true)]
     public class TestNameFilterTests : TestFilterTests
     {
+        private TestFilter _filter;
+
+        public TestNameFilterTests(string value, bool isRegex)
+        {
+            _filter = new TestNameFilter(value) { IsRegex = isRegex };
+        }
+
         [Test]
         public void IsNotEmpty()
         {
-            var filter = new TestNameFilter(_dummyFixture.Name);
-
-            Assert.False(filter.IsEmpty);
+            Assert.False(_filter.IsEmpty);
         }
 
         [Test]
-        public void Match_SingleName()
+        public void MatchTest()
         {
-            var filter = new TestNameFilter(_dummyFixture.Name);
-
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(_filter.Match(_dummyFixture));
+            Assert.False(_filter.Match(_anotherFixture));
         }
 
         [Test]
-        public void Pass_SingleName()
+        public void PassTest()
         {
-            var filter = new TestNameFilter(_dummyFixture.Name);
+            Assert.That(_filter.Pass(_topLevelSuite));
+            Assert.That(_filter.Pass(_dummyFixture));
+            Assert.That(_filter.Pass(_dummyFixture.Tests[0]));
 
-            Assert.That(filter.Pass(_topLevelSuite));
-            Assert.That(filter.Pass(_dummyFixture));
-            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
-
-            Assert.False(filter.Pass(_anotherFixture));
+            Assert.False(_filter.Pass(_anotherFixture));
         }
 
-        public void ExplicitMatch_SingleName()
+        public void ExplicitMatchTest()
         {
-            var filter = new TestNameFilter(_dummyFixture.Name);
+            Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
+            Assert.That(_filter.IsExplicitMatch(_dummyFixture));
+            Assert.False(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
 
-            Assert.That(filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
-
-            Assert.False(filter.IsExplicitMatch(_anotherFixture));
-        }
-
-        [Test]
-        public void Match_MultipleNames()
-        {
-            var filter = new TestNameFilter(new string[] { _dummyFixture.Name, _anotherFixture.Name });
-
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
-            Assert.False(filter.Match(_yetAnotherFixture));
-        }
-
-        [Test]
-        public void Pass_MultipleNames()
-        {
-            var filter = new TestNameFilter(new string[] { _dummyFixture.Name, _anotherFixture.Name });
-
-            Assert.That(filter.Pass(_topLevelSuite));
-            Assert.That(filter.Pass(_dummyFixture));
-            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
-            Assert.That(filter.Pass(_anotherFixture));
-            Assert.That(filter.Pass(_anotherFixture.Tests[0]));
-
-            Assert.False(filter.Pass(_yetAnotherFixture));
-        }
-
-        [Test]
-        public void ExplicitMatch_MultipleNames()
-        {
-            var filter = new TestNameFilter(new string[] { _dummyFixture.Name, _anotherFixture.Name });
-
-            Assert.That(filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
-            Assert.That(filter.IsExplicitMatch(_anotherFixture));
-            Assert.False(filter.IsExplicitMatch(_anotherFixture.Tests[0]));
-
-            Assert.False(filter.IsExplicitMatch(_yetAnotherFixture));
-        }
-
-        [Test]
-        public void AddNames()
-        {
-            var filter = new TestNameFilter();
-            filter.Add(_dummyFixture.Name);
-            filter.Add(_anotherFixture.Name);
-
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
-            Assert.False(filter.Match(_yetAnotherFixture));
-        }
-
-        [Test]
-        public void BuildFromXml()
-        {
-            TestFilter filter = TestFilter.FromXml(
-                "<filter><name>" + _dummyFixture.Name + "</name></filter>");
-
-            Assert.That(filter, Is.TypeOf<TestNameFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.False(_filter.IsExplicitMatch(_anotherFixture));
         }
     }
 }
