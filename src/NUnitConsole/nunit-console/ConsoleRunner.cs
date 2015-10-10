@@ -225,19 +225,13 @@ namespace NUnit.ConsoleRunner
 
         private void DisplayTestFilters()
         {
-            if (_options.TestList.Count > 0 || _options.IncludeSpecified || _options.ExcludeSpecified || _options.WhereClauseSpecified)
+            if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
             {
                 _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Filters");
 
                 if (_options.TestList.Count > 0)
                     foreach (string testName in _options.TestList)
                         _outWriter.WriteLabelLine("    Test: ", testName);
-
-                if (_options.IncludeSpecified)
-                    _outWriter.WriteLabelLine("    Include: ", _options.Include.Trim());
-
-                if (_options.ExcludeSpecified)
-                    _outWriter.WriteLabelLine("    Exclude: ", _options.Exclude.Trim());
 
                 if (_options.WhereClauseSpecified)
                     _outWriter.WriteLabelLine("    Where: ", _options.WhereClause.Trim());
@@ -357,12 +351,6 @@ namespace NUnit.ConsoleRunner
 
             foreach (string testName in options.TestList)
                 builder.AddTest(testName);
-
-            if (options.IncludeSpecified)
-                builder.IncludeCategory(options.Include);
-
-            if (options.ExcludeSpecified)
-                builder.ExcludeCategory(options.Exclude);
 
             if (options.WhereClauseSpecified)
                 builder.SelectWhere(options.WhereClause);

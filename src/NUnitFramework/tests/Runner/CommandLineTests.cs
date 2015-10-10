@@ -46,13 +46,6 @@ namespace NUnitLite.Runner.Tests
             Assert.AreEqual(0, options.InputFiles.Count);
         }
 
-        // [Test]
-        // public void AllowForwardSlashDefaultsCorrectly()
-        // {
-        //    ConsoleOptions options = new ConsoleOptions();
-        //    Assert.AreEqual( Path.DirectorySeparatorChar != '/', options.AllowForwardSlash );
-        // }
-
         [TestCase("ShowHelp", "help|h")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
@@ -88,8 +81,6 @@ namespace NUnitLite.Runner.Tests
             }
         }
 
-        [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
-        [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
@@ -179,8 +170,6 @@ namespace NUnitLite.Runner.Tests
         //    }
         // }
 
-        [TestCase("--include")]
-        [TestCase("--exclude")]
         [TestCase("--timeout")]
         [TestCase("--output")]
         [TestCase("--err")]

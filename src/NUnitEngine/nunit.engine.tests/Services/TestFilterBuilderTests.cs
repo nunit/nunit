@@ -68,71 +68,6 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [Test]
-        public void OneCategoryIncluded()
-        {
-            builder.IncludeCategory("Dummy");
-            TestFilter filter = builder.GetFilter();
-
-            Assert.That(filter.Text, Is.EqualTo("<filter><cat>Dummy</cat></filter>"));
-        }
-
-        [Test]
-        public void ThreeCategoriesIncluded()
-        {
-            builder.IncludeCategory("Dummy");
-            builder.IncludeCategory("Another");
-            builder.IncludeCategory("StillAnother");
-            TestFilter filter = builder.GetFilter();
-
-            Assert.That(filter.Text, Is.EqualTo(
-                "<filter><cat>Dummy,Another,StillAnother</cat></filter>"));
-        }
-
-        [Test]
-        public void OneCategoryExcluded()
-        {
-            builder.ExcludeCategory("Dummy");
-            TestFilter filter = builder.GetFilter();
-
-            Assert.That(filter.Text, Is.EqualTo("<filter><not><cat>Dummy</cat></not></filter>"));
-        }
-
-        [Test]
-        public void ThreeCategoriesExcluded()
-        {
-            builder.ExcludeCategory("Dummy");
-            builder.ExcludeCategory("Another");
-            builder.ExcludeCategory("StillAnother");
-            TestFilter filter = builder.GetFilter();
-
-            Assert.That(filter.Text, Is.EqualTo(
-                "<filter><not><cat>Dummy,Another,StillAnother</cat></not></filter>"));
-        }
-
-        [Test]
-        public void OneTestAndOneCategory()
-        {
-            builder.AddTest("My.Test.Name");
-            builder.IncludeCategory("Dummy");
-            TestFilter filter = builder.GetFilter();
-
-            Assert.That(filter.Text, Is.EqualTo(
-                "<filter><test>My.Test.Name</test><cat>Dummy</cat></filter>"));
-        }
-
-        [Test]
-        public void TwoCategoriesIncludedAndOneExcluded()
-        {
-            builder.IncludeCategory("Dummy");
-            builder.IncludeCategory("Another");
-            builder.ExcludeCategory("Slow");
-            TestFilter filter = builder.GetFilter();
-
-            Assert.That(filter.Text, Is.EqualTo(
-                "<filter><cat>Dummy,Another</cat><not><cat>Slow</cat></not></filter>"));
-        }
-
-        [Test]
         public void WhereClause()
         {
             builder.SelectWhere("cat==Dummy");
@@ -142,15 +77,14 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [Test]
-        public void OneTestOneCategoryAndWhereClause()
+        public void OneTestAndWhereClause()
         {
             builder.AddTest("My.Test.Name");
-            builder.IncludeCategory("Dummy");
             builder.SelectWhere("cat != Slow");
             TestFilter filter = builder.GetFilter();
 
             Assert.That(filter.Text, Is.EqualTo(
-                "<filter><test>My.Test.Name</test><cat>Dummy</cat><not><cat>Slow</cat></not></filter>"));
+                "<filter><test>My.Test.Name</test><not><cat>Slow</cat></not></filter>"));
         }
     }
 }

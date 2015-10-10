@@ -80,12 +80,6 @@ namespace NUnit.Common
         private List<string> testList = new List<string>();
         public IList<string> TestList { get { return testList; } }
 
-        public string Include { get; private set; }
-        public bool IncludeSpecified { get { return Include != null; } }
-
-        public string Exclude { get; private set; }
-        public bool ExcludeSpecified { get { return Exclude != null; } }
-
         public string WhereClause { get; private set; }
         public bool WhereClauseSpecified { get { return WhereClause != null; } }
 
@@ -281,12 +275,6 @@ namespace NUnit.Common
                         }
                     }
                 });
-
-            this.Add("include=", "Test {CATEGORIES} to be included. May be a single category, a comma-separated list of categories or a category expression.",
-                v => Include = RequiredValue(v, "--include"));
-
-            this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
-                v => Exclude = RequiredValue(v, "--exclude"));
 
             this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));

@@ -30,8 +30,6 @@ namespace NUnit.Engine
     public class TestFilterBuilder : ITestFilterBuilder
     {
         private List<string> _testList = new List<string>();
-        private List<string> _includedCategories = new List<string>();
-        private List<string> _excludedCategories = new List<string>();
         private string _whereClause;
 
         /// <summary>
@@ -41,24 +39,6 @@ namespace NUnit.Engine
         public void AddTest(string fullName)
         {
             _testList.Add(fullName);
-        }
-
-        /// <summary>
-        /// Add a category to be included
-        /// </summary>
-        /// <param name="category">The category name</param>
-        public void IncludeCategory(string category)
-        {
-            _includedCategories.Add(category);
-        }
-
-        /// <summary>
-        /// Add a category to be excluded
-        /// </summary>
-        /// <param name="category">The category name</param>
-        public void ExcludeCategory(string category)
-        {
-            _excludedCategories.Add(category);
         }
 
         /// <summary>
@@ -88,32 +68,6 @@ namespace NUnit.Engine
                     filter.Append("</or>");
             }
 
-
-            if (_includedCategories.Count > 0)
-            {
-                filter.Append("<cat>");
-                bool needComma = false;
-                foreach (string category in _includedCategories)
-                {
-                    if (needComma) filter.Append(',');
-                    filter.Append(category);
-                    needComma = true;
-                }
-                filter.Append("</cat>");
-            }
-
-            if (_excludedCategories.Count > 0)
-            {
-                filter.Append("<not><cat>");
-                bool needComma = false;
-                foreach (string category in _excludedCategories)
-                {
-                    if (needComma) filter.Append(',');
-                    filter.Append(category);
-                    needComma = true;
-                }
-                filter.Append("</cat></not>");
-            }
 
             if (_whereClause != null)
                 filter.Append(new TestSelectionParser().Parse(_whereClause));

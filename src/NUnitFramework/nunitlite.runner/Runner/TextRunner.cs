@@ -283,21 +283,7 @@ namespace NUnitLite.Runner
             foreach (var test in options.TestList)
                 filters.Add(new FullNameFilter(test));
 
-            if (options.IncludeSpecified)
-            {
-                var includeFilter = new CategoryFilter();
-                foreach (string cat in options.Include.Split(','))
-                    includeFilter.AddCategory(cat);
-                filters.Add(includeFilter);
-            }
-
-            if (options.ExcludeSpecified)
-            {
-                var excludeFilter = new CategoryFilter();
-                foreach (string cat in options.Exclude.Split(','))
-                    excludeFilter.AddCategory(cat);
-                filters.Add(new NotFilter(excludeFilter));
-            }
+            // TODO: Add where clause here
 
             switch (filters.Count)
             {

@@ -35,18 +35,6 @@ namespace NUnit.Engine
         void AddTest(string fullName);
 
         /// <summary>
-        /// Add a category to be included
-        /// </summary>
-        /// <param name="category">The category name</param>
-        void IncludeCategory(string category);
-
-        /// <summary>
-        /// Add a category to be excluded
-        /// </summary>
-        /// <param name="category">The category name</param>
-        void ExcludeCategory(string category);
-
-        /// <summary>
         /// Specify what is to be included by the filter using a where clause.
         /// </summary>
         /// <param name="whereClause">A where clause that will be parsed by NUnit to create the filter.</param>
