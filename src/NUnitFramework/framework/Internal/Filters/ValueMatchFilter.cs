@@ -46,17 +46,12 @@ namespace NUnit.Framework.Internal.Filters
         public bool IsRegex { get; set; }
 
         /// <summary>
-        /// Construct an empty ValueMatchFilter
-        /// </summary>
-        public ValueMatchFilter() { }
-
-        /// <summary>
         /// Construct a ValueMatchFilter for a single value.
         /// </summary>
-        /// <param name="value">The value to be included.</param>
-        public ValueMatchFilter(string value)
+        /// <param name="expectedValue">The value to be included.</param>
+        public ValueMatchFilter(string expectedValue)
         {
-            ExpectedValue = value;
+            ExpectedValue = expectedValue;
         }
 
         /// <summary>

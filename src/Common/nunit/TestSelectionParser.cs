@@ -37,7 +37,6 @@ namespace NUnit.Common
 
         private static readonly Token LPAREN = new Token(TokenKind.Symbol, "(");
         private static readonly Token RPAREN = new Token(TokenKind.Symbol, ")");
-        private static readonly Token COMMA = new Token(TokenKind.Symbol, ",");
         private static readonly Token AND_OP1 = new Token(TokenKind.Symbol, "&");
         private static readonly Token AND_OP2 = new Token(TokenKind.Symbol, "&&");
         private static readonly Token AND_OP3 = new Token(TokenKind.Word, "and");

@@ -134,7 +134,7 @@ namespace NUnitLite.Runner.Tests
             var filter = GetFilter("--where:cat==Urgent");
 
             Assert.That(filter, Is.TypeOf<CategoryFilter>());
-            Assert.That(((CategoryFilter)filter).Categories[0], Is.EqualTo("Urgent"));
+            Assert.That(((CategoryFilter)filter).ExpectedValue, Is.EqualTo("Urgent"));
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace NUnitLite.Runner.Tests
             Assert.That(((FullNameFilter)filters[1]).ExpectedValue, Is.EqualTo("My.Second.Test"));
 
             Assert.That(filters[2], Is.TypeOf<CategoryFilter>());
-            Assert.That(((CategoryFilter)filters[2]).Categories[0], Is.EqualTo("Urgent"));
+            Assert.That(((CategoryFilter)filters[2]).ExpectedValue, Is.EqualTo("Urgent"));
         }
 
         private TestFilter GetFilter(params string[] args)

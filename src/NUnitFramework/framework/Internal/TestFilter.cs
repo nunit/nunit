@@ -184,15 +184,7 @@ namespace NUnit.Framework.Internal
                     return new ClassNameFilter(node.Value) { IsRegex = isRegex };
 
                 case "cat":
-                    var catFilter = new CategoryFilter();
-                    var op = node.Attributes["op"];
-                    if (op == "")
-                        op = "=";
-
-                    if (node.Value != null)
-                        foreach (string cat in node.Value.Split(COMMA))
-                            catFilter.AddCategory(cat);
-                    return catFilter;
+                    return new CategoryFilter(node.Value) { IsRegex = isRegex };
 
                 default:
                     throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");

@@ -34,11 +34,6 @@ namespace NUnit.Framework.Internal.Filters
     public class IdFilter : ValueMatchFilter
     {
         /// <summary>
-        /// Construct an empty IdFilter
-        /// </summary>
-        public IdFilter() { }
-
-        /// <summary>
         /// Construct an IdFilter for a single value
         /// </summary>
         /// <param name="id">The id the filter will recognize.</param>
@@ -49,6 +44,8 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public override bool Match(ITest test)
         {
+            // We make a direct test here rather than calling ValueMatchFilter.Match
+            // because regular expressions are not supported for ID.
             return test.Id == ExpectedValue;
         }
     }

@@ -117,5 +117,38 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(filter.Match(_dummyFixture));
             Assert.False(filter.Match(_anotherFixture));
         }
+
+        [Test]
+        public void BuildCategoryFilter()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                "<filter><cat>Dummy</cat></filter>");
+
+            Assert.That(filter, Is.TypeOf<CategoryFilter>());
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.False(filter.Match(_anotherFixture));
+        }
+
+        [Test]
+        public void BuildCategoryFilter_Regex()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                "<filter><cat re='1'>D.mmy</cat></filter>");
+
+            Assert.That(filter, Is.TypeOf<CategoryFilter>());
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.False(filter.Match(_anotherFixture));
+        }
+
+        [Test]
+        public void BuildIdFilter()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                string.Format("<filter><id>{0}</id></filter>", _dummyFixture.Id));
+
+            Assert.That(filter, Is.TypeOf<IdFilter>());
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.False(filter.Match(_anotherFixture));
+        }
     }
 }

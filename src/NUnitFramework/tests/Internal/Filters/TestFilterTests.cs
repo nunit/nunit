@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Filters
     //    <id>1,2,3</id>
     // 
     // TestName filter
-    //    <tests><test>xxxxxxx.xxx</test><test>yyyyyyy.yyy</test></tests>
+    //    <test>xxxxxxx.xxx</test>
     //
     // Name filter
     //    <name>xxxxx</name>
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal.Filters
     //    <cat>cat1,cat2,cat3</cat>
     //
     // Property filter
-    //    <prop>name=value</prop>
+    //    <prop name="xxxx">value</prop>
     //
     // And Filter
     //    <and><filter>...</filter><filter>...</filter></and>

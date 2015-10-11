@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -34,15 +33,10 @@ namespace NUnit.Framework.Internal.Filters
     public class TestNameFilter : ValueMatchFilter
     {
         /// <summary>
-        /// Construct an empty SimpleNameFilter
-        /// </summary>
-        public TestNameFilter() { }
-
-        /// <summary>
         /// Construct a TestNameFilter for a single name
         /// </summary>
-        /// <param name="nameToAdd">The name the filter will recognize.</param>
-        public TestNameFilter(string nameToAdd) : base(nameToAdd) { }
+        /// <param name="expectedValue">The name the filter will recognize.</param>
+        public TestNameFilter(string expectedValue) : base(expectedValue) { }
 
         /// <summary>
         /// Match a test against a single value.

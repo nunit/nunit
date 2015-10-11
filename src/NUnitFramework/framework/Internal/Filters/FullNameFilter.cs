@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -34,15 +33,10 @@ namespace NUnit.Framework.Internal.Filters
     public class FullNameFilter : ValueMatchFilter
     {
         /// <summary>
-        /// Construct an empty SimpleNameFilter
-        /// </summary>
-        public FullNameFilter() { }
-
-        /// <summary>
         /// Construct a FullNameFilter for a single name
         /// </summary>
-        /// <param name="nameToAdd">The name the filter will recognize.</param>
-        public FullNameFilter(string nameToAdd) : base(nameToAdd) { }
+        /// <param name="expectedValue">The name the filter will recognize.</param>
+        public FullNameFilter(string expectedValue) : base(expectedValue) { }
 
         /// <summary>
         /// Match a test against a single value.

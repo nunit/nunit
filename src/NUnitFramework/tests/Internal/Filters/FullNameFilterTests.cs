@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Filters
 
         public FullNameFilterTests(string value, bool isRegex)
         {
-            _filter = new ClassNameFilter(value) { IsRegex = isRegex };
+            _filter = new FullNameFilter(value) { IsRegex = isRegex };
         }
 
         [Test]
@@ -45,14 +45,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void Match_SingleName()
+        public void MatchTest()
         {
             Assert.That(_filter.Match(_dummyFixture));
             Assert.False(_filter.Match(_anotherFixture));
         }
 
         [Test]
-        public void Pass_SingleName()
+        public void PassTest()
         {
             Assert.That(_filter.Pass(_topLevelSuite));
             Assert.That(_filter.Pass(_dummyFixture));
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.False(_filter.Pass(_anotherFixture));
         }
 
-        public void ExplicitMatch_SingleName()
+        public void ExplicitMatchTest()
         {
             Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
             Assert.That(_filter.IsExplicitMatch(_dummyFixture));
