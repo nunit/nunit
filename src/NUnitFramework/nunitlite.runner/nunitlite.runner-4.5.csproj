@@ -87,6 +87,15 @@
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Runner\TestNameParser.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
+      <Link>Runner\TestSelectionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
+      <Link>Runner\TestSelectionParserException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Tokenizer.cs">
+      <Link>Runner\Tokenizer.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>

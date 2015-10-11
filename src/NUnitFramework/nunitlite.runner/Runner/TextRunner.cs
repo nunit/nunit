@@ -283,7 +283,11 @@ namespace NUnitLite.Runner
             foreach (var test in options.TestList)
                 filters.Add(new FullNameFilter(test));
 
-            // TODO: Add where clause here
+            if (options.WhereClauseSpecified)
+            {
+                string xmlText = new TestSelectionParser().Parse(options.WhereClause);
+                filters.Add(TestFilter.FromXml(TNode.FromXml(xmlText)));
+            }
 
             switch (filters.Count)
             {

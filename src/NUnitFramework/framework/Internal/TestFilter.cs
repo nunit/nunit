@@ -123,8 +123,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Create a TestFilter instance from an xml representation.
         /// </summary>
-        /// <param name="xmlText"></param>
-        /// <returns></returns>
         public static TestFilter FromXml(string xmlText)
         {
             TNode topNode = TNode.FromXml(xmlText);
@@ -145,7 +143,10 @@ namespace NUnit.Framework.Internal
             return filter;
         }
 
-        private static TestFilter FromXml(TNode node)
+        /// <summary>
+        /// Create a TestFilter from it's TNode representation
+        /// </summary>
+        public static TestFilter FromXml(TNode node)
         {
             bool isRegex = node.Attributes["re"] == "1";
 

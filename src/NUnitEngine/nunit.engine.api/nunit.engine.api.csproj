@@ -50,6 +50,9 @@
     <Compile Include="..\..\Common\nunit\Logging\InternalTraceLevel.cs">
       <Link>InternalTraceLevel.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
+      <Link>TestSelectionParserException.cs</Link>
+    </Compile>
     <Compile Include="..\EngineApiVersion.cs">
       <Link>EngineApiVersion.cs</Link>
     </Compile>

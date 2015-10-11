@@ -21,10 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Text;
-using NUnit.Common;
 
+#if NUNIT_ENGINE
 namespace NUnit.Engine
+#else
+namespace NUnit.Common
+#endif
 {
     public enum TokenKind
     {
@@ -112,7 +116,8 @@ namespace NUnit.Engine
 
         public Tokenizer(string input)
         {
-            Guard.ArgumentNotNull(input, "input");
+            if (input == null)
+                throw new ArgumentNullException("input");
 
             _input = input;
             _index = 0;

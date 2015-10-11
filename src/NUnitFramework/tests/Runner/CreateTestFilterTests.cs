@@ -128,6 +128,34 @@ namespace NUnitLite.Runner.Tests
             Assert.That(filter, Is.EqualTo(TestFilter.Empty));
         }
 
+        [Test]
+        public void WhereClauseSpecified()
+        {
+            var filter = GetFilter("--where:cat==Urgent");
+
+            Assert.That(filter, Is.TypeOf<CategoryFilter>());
+            Assert.That(((CategoryFilter)filter).Categories[0], Is.EqualTo("Urgent"));
+        }
+
+        [Test]
+        public void TwoTestsAndWhereClauseSpecified()
+        {
+            var filter = GetFilter("--test:My.First.Test", "--test:My.Second.Test", "--where:cat==Urgent");
+
+            Assert.That(filter, Is.TypeOf<AndFilter>());
+            var filters = ((AndFilter)filter).Filters;
+            Assert.That(filters.Length, Is.EqualTo(3));
+
+            Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
+            Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
+
+            Assert.That(filters[1], Is.TypeOf<FullNameFilter>());
+            Assert.That(((FullNameFilter)filters[1]).ExpectedValue, Is.EqualTo("My.Second.Test"));
+
+            Assert.That(filters[2], Is.TypeOf<CategoryFilter>());
+            Assert.That(((CategoryFilter)filters[2]).Categories[0], Is.EqualTo("Urgent"));
+        }
+
         private TestFilter GetFilter(params string[] args)
         {
             return TextRunner.CreateTestFilter(new NUnitLiteOptions(args));

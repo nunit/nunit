@@ -24,9 +24,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Common;
 
+#if NUNIT_ENGINE
 namespace NUnit.Engine
+#else
+namespace NUnit.Common
+#endif
 {
     public class TestSelectionParser
     {
@@ -61,7 +64,7 @@ namespace NUnit.Engine
             _tokenizer = new Tokenizer(input);
 
             if (_tokenizer.LookAhead == EOF)
-                throw new NUnitEngineException("No input provided for where clause.");
+                throw new TestSelectionParserException("No input provided for test selection.");
 
             return ParseFilterExpression();
         }
@@ -211,7 +214,8 @@ namespace NUnit.Engine
 
         private Exception InvalidTokenError(Token token)
         {
-            return new NUnitEngineException(string.Format("Unexpected token '{0}' at position {1} in where clause.", token.Text, token.Pos));
+            return new TestSelectionParserException(string.Format(
+                "Unexpected token '{0}' at position {1} in selection expression.", token.Text, token.Pos));
         }
 
         private Token LookAhead

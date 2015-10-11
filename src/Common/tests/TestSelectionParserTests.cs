@@ -26,7 +26,11 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.Tests
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Tests
+#else
+namespace NUnit.Common.Tests
+#endif
 {
     public class TestSelectionParserTests
     {
@@ -62,9 +66,9 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [TestCase(null, typeof(ArgumentNullException))]
-        [TestCase("", typeof(NUnitEngineException))]
-        [TestCase("   ", typeof(NUnitEngineException))]
-        [TestCase("  \t\t ", typeof(NUnitEngineException))]
+        [TestCase("", typeof(TestSelectionParserException))]
+        [TestCase("   ", typeof(TestSelectionParserException))]
+        [TestCase("  \t\t ", typeof(TestSelectionParserException))]
         public void TestParser_InvalidInput(string input, Type type)
         {
             Assert.That(() => _parser.Parse(input), Throws.TypeOf(type));

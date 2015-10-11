@@ -84,7 +84,7 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
-        [TestCase("WhereClause",        "where",      new string[] { "cat==Short,Fast" },                new string[0])]
+        [TestCase("WhereClause",        "where",      new string[] { "cat==Fast" },                      new string[0])]
         [TestCase("ActiveConfig",       "config",     new string[] { "Debug" },                          new string[0])]
         [TestCase("ProcessModel",       "process",    new string[] { "InProcess", "Separate", "Multiple" }, new string[] { "JUNK" })]
         [TestCase("DomainUsage",        "domain",     new string[] { "None", "Single", "Multiple" },     new string[] { "JUNK" })]

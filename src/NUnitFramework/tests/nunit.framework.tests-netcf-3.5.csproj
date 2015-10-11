@@ -65,6 +65,12 @@
     <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
       <Link>Runner\ExtendedTextWrapperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
+      <Link>Runner\TestSelectionParserTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
+      <Link>Runner\TokenizerTests.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>

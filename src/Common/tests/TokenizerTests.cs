@@ -26,7 +26,11 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Services.Tests
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Tests
+#else
+namespace NUnit.Common.Tests
+#endif
 {
     public class TokenizerTests
     {
