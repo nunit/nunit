@@ -186,9 +186,14 @@ namespace NUnit.Framework.Internal
                 case "cat":
                     return new CategoryFilter(node.Value) { IsRegex = isRegex };
 
-                default:
-                    throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
+                case "prop":
+                    string name = node.Attributes["name"];
+                    if (name != null)
+                        return new PropertyFilter(name, node.Value) { IsRegex = isRegex };
+                    break;
             }
+
+            throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
         }
 
         /// <summary>

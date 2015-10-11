@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -30,18 +30,24 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
-    /// CategoryFilter is able to select or exclude tests
-    /// based on their categories.
+    /// PropertyFilter is able to select or exclude tests
+    /// based on their properties.
     /// </summary>
     /// 
     [Serializable]
-    public class CategoryFilter : ValueMatchFilter
+    public class PropertyFilter : ValueMatchFilter
     {
+        private string _propertyName;
+
         /// <summary>
-        /// Construct a CategoryFilter using a single category name
+        /// Construct a PropertyFilter using a property name and expected value
         /// </summary>
-        /// <param name="name">A category name</param>
-        public CategoryFilter( string name ) : base(name) { }
+        /// <param name="propertyName">A property name</param>
+        /// <param name="expectedValue">The expected value of the property</param>
+        public PropertyFilter(string propertyName, string expectedValue) : base(expectedValue) 
+        {
+            _propertyName = propertyName;
+        }
 
         /// <summary>
         /// Check whether the filter matches a test
@@ -50,11 +56,11 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns></returns>
         public override bool Match(ITest test)
         {
-            IList testCategories = test.Properties[PropertyNames.Category];
+            IList values = test.Properties[_propertyName];
 
-            if ( testCategories != null)
-                foreach (string cat in testCategories)
-                    if ( Match(cat))
+            if (values != null)
+                foreach (string val in values)
+                    if (Match(val))
                         return true;
 
             return false;

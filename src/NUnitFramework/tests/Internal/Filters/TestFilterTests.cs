@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal.Filters
 
         #region Fixtures Used by Tests
 
-        [Category("Dummy")]
+        [Category("Dummy"), Property("Priority", "High"), Author("Charlie Poole")]
         private class DummyFixture
         {
             [Test]
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Filters
 
         }
 
-        [Category("Another")]
+        [Category("Another"), Property("Priority", "Low"), Author("Fred Smith")]
         private class AnotherFixture
         {
             [Test]

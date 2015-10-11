@@ -141,6 +141,30 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
+        public void BuildPropertyFilter()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                "<filter><prop name='Priority'>High</prop></filter>");
+
+            Assert.That(filter, Is.TypeOf<PropertyFilter>());
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.False(filter.Match(_anotherFixture));
+            Assert.False(filter.Match(_yetAnotherFixture));
+        }
+
+        [Test]
+        public void BuildPropertyFilter_Regex()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                "<filter><prop name='Author' re='1'>Charlie P</prop></filter>");
+
+            Assert.That(filter, Is.TypeOf<PropertyFilter>());
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.False(filter.Match(_anotherFixture));
+            Assert.False(filter.Match(_yetAnotherFixture));
+        }
+
+        [Test]
         public void BuildIdFilter()
         {
             TestFilter filter = TestFilter.FromXml(

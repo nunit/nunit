@@ -149,10 +149,11 @@ namespace NUnit.Common
                     return EmitFilterElement(lhs, op, rhs);
 
                 default:
-                    //op = Expect(REL_OPS);
-                    //rhs = Expect(TokenKind.String, TokenKind.Word);
-                    //return string.Format("<prop name='{0}'>{1}</prop>", lhs.Text, rhs.Text);
-                    throw InvalidTokenError(lhs);
+                    // Assume it's a property name
+                    op = Expect(REL_OPS);
+                    rhs = Expect(TokenKind.String, TokenKind.Word);
+                    return EmitPropertyElement(lhs, op, rhs);
+                    //throw InvalidTokenError(lhs);
             }
         }
 
@@ -168,7 +169,20 @@ namespace NUnit.Common
                 return string.Format("<not><{0} re='1'>{1}</{0}></not>", lhs.Text, rhs.Text);
             else
                 return string.Format("<{0} op='{1}'>{2}</{0}>", lhs.Text, op.Text, rhs.Text);
+        }
 
+        private static string EmitPropertyElement(Token lhs, Token op, Token rhs)
+        {
+            if (op == EQ_OP1 || op == EQ_OP2)
+                return string.Format("<prop name='{0}'>{1}</prop>", lhs.Text, rhs.Text);
+            else if (op == NE_OP)
+                return string.Format("<not><prop name='{0}'>{1}</prop></not>", lhs.Text, rhs.Text);
+            else if (op == MATCH_OP)
+                return string.Format("<prop name='{0}' re='1'>{1}</prop>", lhs.Text, rhs.Text);
+            else if (op == NOMATCH_OP)
+                return string.Format("<not><prop name='{0}' re='1'>{1}</prop></not>", lhs.Text, rhs.Text);
+            else
+                return string.Format("<prop name='{0}' op='{1}'>{2}</prop>", lhs.Text, op.Text, rhs.Text);
         }
 
         private string ParseExpressionInParentheses()
