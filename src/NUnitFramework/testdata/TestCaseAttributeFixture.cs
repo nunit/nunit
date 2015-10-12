@@ -83,6 +83,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
         [TestCase(3, IncludePlatform = "MacOSX")]
+        [TestCase(4, IncludePlatform = "XBox")]
         public void MethodWithIncludePlatform(int num)
         {
         }
@@ -90,6 +91,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         [TestCase(1, ExcludePlatform = "Win")]
         [TestCase(2, ExcludePlatform = "Linux")]
         [TestCase(3, ExcludePlatform = "MacOSX")]
+        [TestCase(4, ExcludePlatform = "XBox")]
         public void MethodWitExcludePlatform(int num)
         {
         }
