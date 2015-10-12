@@ -146,6 +146,7 @@ namespace NUnit.Engine.Runners
             TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             // These are inserted in reverse order, since each is added as the first child.
+            result.Xml.InsertFilterElement(filter);
             result.Xml.InsertSettingsElement(EffectiveSettings);
             result.Xml.InsertCommandLineElement();
             result.Xml.InsertEnvironmentElement();

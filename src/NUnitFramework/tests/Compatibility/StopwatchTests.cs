@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests.Compatibility
     {
 #if SILVERLIGHT || PORTABLE
         private const int DELAY = 100;
-        private const int TOLERANCE = 20;
+        private const int TOLERANCE = 50;
 
         [Test]
         public void TestStartNewIsRunning()

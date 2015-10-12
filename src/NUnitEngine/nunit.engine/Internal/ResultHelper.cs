@@ -159,6 +159,20 @@ namespace NUnit.Engine.Internal
             }
         }
 
+        public static void InsertFilterElement(this XmlNode resultNode, TestFilter filter)
+        {
+            // Convert the filter to an XmlNode
+            var tempNode = XmlHelper.CreateXmlNode(filter.Text);
+
+            // Don't include it if it's an empty filter
+            if (tempNode.ChildNodes.Count > 0)
+            {
+                var doc = resultNode.OwnerDocument;
+                var filterElement = doc.ImportNode(tempNode, true);
+                resultNode.InsertAfter(filterElement, null);
+            }
+        }
+
         #endregion
 
         #region Methods that operate on a list of XmlNodes
