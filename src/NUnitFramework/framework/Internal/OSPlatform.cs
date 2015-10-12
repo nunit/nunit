@@ -52,6 +52,16 @@ namespace NUnit.Framework.Internal
         public static readonly PlatformID UnixPlatformID_Mono = (PlatformID)128;
 
         /// <summary>
+        /// Platform ID for XBox as defined by .NET and Mono, but not CF
+        /// </summary>
+        public static readonly PlatformID XBoxPlatformID = (PlatformID)5;
+
+        /// <summary>
+        /// Platform ID for MacOSX as defined by .NET and Mono, but not CF
+        /// </summary>
+        public static readonly PlatformID MacOSXPlatformID = (PlatformID)6;
+
+        /// <summary>
         /// Get the OSPlatform under which we are currently running
         /// </summary>
         public static OSPlatform CurrentPlatform
@@ -290,24 +300,13 @@ namespace NUnit.Framework.Internal
         {
             get { return platform == PlatformID.WinCE; }
         }
-
-#if NETCF
-        /// <summary>
-        /// Return true if the platform is Xbox
-        /// </summary>
-        public bool IsXbox { get { return false; } }
-
-        /// <summary>
-        /// Return true if the platform is MacOSX
-        /// </summary>
-        public bool IsMacOSX { get { return false; } }
-#else
+        
         /// <summary>
         /// Return true if the platform is Xbox
         /// </summary>
         public bool IsXbox
         {
-            get { return platform == PlatformID.Xbox; }
+            get { return platform == XBoxPlatformID; }
         }
 
         /// <summary>
@@ -315,10 +314,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
 		public bool IsMacOSX 
 		{
-			get { return platform == PlatformID.MacOSX; }
+			get { return platform == MacOSXPlatformID; }
 		}
 
-#if !SILVERLIGHT
+#if !NETCF && !SILVERLIGHT
 		[DllImport("libc")]
 		static extern int uname(IntPtr buf);
 
@@ -340,7 +339,6 @@ namespace NUnit.Framework.Internal
 			Marshal.FreeHGlobal(buf);
 			return isMacOSX;
 		}
-#endif
 #endif
 
         /// <summary>
