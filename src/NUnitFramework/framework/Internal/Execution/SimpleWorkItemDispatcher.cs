@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
                 _topLevelWorkItem = work;
                 _runnerThread = new Thread(RunnerThreadProc);
                 _runnerThread.Start();
-			}	
+            }	
 #endif
         }
 
@@ -77,21 +77,21 @@ namespace NUnit.Framework.Internal.Execution
     }
 #endif
 
-		/// <summary>
-		/// Cancel the ongoing run completely.
-		/// If no run is in process, the call has no effect.
-		/// </summary>
-		public void CancelRun()
-		{
-	#if !PORTABLE
-	#if NETCF
-			if (_runnerThread != null && !_runnerThread.Join(0))
-	#else
-			if (_runnerThread != null && _runnerThread.IsAlive)
-	#endif
-				ThreadUtility.Kill(_runnerThread);
-	#endif
-		}
-		#endregion
-	}
+        /// <summary>
+        /// Cancel the ongoing run completely.
+        /// If no run is in process, the call has no effect.
+        /// </summary>
+        public void CancelRun()
+        {
+    #if !PORTABLE
+    #if NETCF
+            if (_runnerThread != null && !_runnerThread.Join(0))
+    #else
+            if (_runnerThread != null && _runnerThread.IsAlive)
+    #endif
+                ThreadUtility.Kill(_runnerThread);
+    #endif
+        }
+        #endregion
+    }
 }

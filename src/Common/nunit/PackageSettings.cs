@@ -182,6 +182,11 @@ namespace NUnit.Common
         /// </summary>
         public const string StopOnError = "StopOnError";
 
+        /// <summary>
+        /// If true, use of the event queue is suppressed and test events are synchronous.
+        /// </summary>
+        public const string SynchronousEvents = "SynchronousEvents";
+
         #endregion
     }
 }
