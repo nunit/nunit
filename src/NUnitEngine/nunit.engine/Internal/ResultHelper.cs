@@ -161,11 +161,15 @@ namespace NUnit.Engine.Internal
 
         public static void InsertFilterElement(this XmlNode resultNode, TestFilter filter)
         {
-            if (!filter.IsEmpty)
+            // Convert the filter to an XmlNode
+            var tempNode = XmlHelper.CreateXmlNode(filter.Text);
+
+            // Don't include it if it's an empty filter
+            if (tempNode.ChildNodes.Count > 0)
             {
                 var doc = resultNode.OwnerDocument;
-                var filterNode = doc.ImportNode(filter.Xml, true);
-                resultNode.InsertAfter(filterNode, null);
+                var filterElement = doc.ImportNode(tempNode, true);
+                resultNode.InsertAfter(filterElement, null);
             }
         }
 
@@ -206,7 +210,9 @@ namespace NUnit.Engine.Internal
             if (fullName != null && fullName != string.Empty)
                 combinedNode.AddAttribute("fullname", fullName);
 
-            string status = "Inconclusive";
+            string aggregateResult = "Inconclusive";
+            string aggregateLabel = null;
+
             //double totalDuration = 0.0d;
             int testcasecount = 0;
             int total = 0;
@@ -227,18 +233,24 @@ namespace NUnit.Engine.Internal
                 {
                     isTestRunResult = true;
 
+                    string label = node.GetAttribute("label");
+
                     switch (resultAttribute.Value)
                     {
                         case "Skipped":
-                            if (status == "Inconclusive")
-                                status = "Skipped";
+                            if (aggregateResult == "Inconclusive" || aggregateResult == "Passed" && label == "Ignored")
+                            {
+                                aggregateResult = "Skipped";
+                                aggregateLabel = label;
+                            }
                             break;
                         case "Passed":
-                            if (status != "Failed")
-                                status = "Passed";
+                            if (aggregateResult != "Failed" && aggregateLabel != "Ignored")
+                                aggregateResult = "Passed";
                             break;
                         case "Failed":
-                            status = "Failed";
+                            aggregateResult = "Failed";
+                            aggregateLabel = label;
                             break;
                     }
 
@@ -258,7 +270,10 @@ namespace NUnit.Engine.Internal
 
             if (isTestRunResult)
             {
-                combinedNode.AddAttribute("result", status);
+                combinedNode.AddAttribute("result", aggregateResult);
+                if (aggregateLabel != null)
+                    combinedNode.AddAttribute("label", aggregateLabel);
+
                 //combinedNode.AddAttribute("duration", totalDuration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
                 combinedNode.AddAttribute("total", total.ToString());
                 combinedNode.AddAttribute("passed", passed.ToString());

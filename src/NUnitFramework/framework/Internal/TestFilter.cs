@@ -123,8 +123,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Create a TestFilter instance from an xml representation.
         /// </summary>
-        /// <param name="xmlText"></param>
-        /// <returns></returns>
         public static TestFilter FromXml(string xmlText)
         {
             TNode topNode = TNode.FromXml(xmlText);
@@ -145,8 +143,13 @@ namespace NUnit.Framework.Internal
             return filter;
         }
 
-        private static TestFilter FromXml(TNode node)
+        /// <summary>
+        /// Create a TestFilter from it's TNode representation
+        /// </summary>
+        public static TestFilter FromXml(TNode node)
         {
+            bool isRegex = node.Attributes["re"] == "1";
+
             switch (node.Name)
             {
                 case "filter":
@@ -166,28 +169,31 @@ namespace NUnit.Framework.Internal
                     return new NotFilter(FromXml(node.FirstChild));
 
                 case "id":
-                    var idFilter = new IdFilter();
-                    if (node.Value != null)
-                        foreach (string id in node.Value.Split(COMMA))
-                            idFilter.Add(id);
-                    return idFilter;
+                    return new IdFilter(node.Value); 
 
-                case "tests":
-                    var testFilter = new SimpleNameFilter();
-                    foreach (var childNode in node.SelectNodes("test"))
-                        testFilter.Add(childNode.Value);
-                    return testFilter;
+                case "test":
+                    return new FullNameFilter(node.Value) { IsRegex = isRegex };
+
+                case "name":
+                    return new TestNameFilter(node.Value) { IsRegex = isRegex };
+
+                case "method":
+                    return new MethodNameFilter(node.Value) { IsRegex = isRegex };
+
+                case "class":
+                    return new ClassNameFilter(node.Value) { IsRegex = isRegex };
 
                 case "cat":
-                    var catFilter = new CategoryFilter();
-                    if (node.Value != null)
-                        foreach (string cat in node.Value.Split(COMMA))
-                            catFilter.AddCategory(cat);
-                    return catFilter;
+                    return new CategoryFilter(node.Value) { IsRegex = isRegex };
 
-                default:
-                    throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
+                case "prop":
+                    string name = node.Attributes["name"];
+                    if (name != null)
+                        return new PropertyFilter(name, node.Value) { IsRegex = isRegex };
+                    break;
             }
+
+            throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
         }
 
         /// <summary>

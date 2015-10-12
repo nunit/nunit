@@ -36,7 +36,7 @@ namespace System.Runtime.CompilerServices
 
 #if NUNIT_CONSOLE
 namespace NUnit.ConsoleRunner.Utilities
-#elif NUNIT_ENGINE || CORE_ENGINE
+#elif NUNIT_ENGINE
 namespace NUnit.Engine.Internal
 #else
 namespace NUnit.Common

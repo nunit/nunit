@@ -43,9 +43,7 @@ namespace NUnit.Engine.Runners
             this.Services = services;
             this.TestPackage = package;
             TestRunnerFactory = Services.GetService<ITestRunnerFactory>();
-#if NUNIT_ENGINE
             ProjectService = Services.GetService<IProjectService>();
-#endif
         }
 
         #region Properties
@@ -55,9 +53,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         protected IServiceLocator Services { get; private set; }
 
-#if NUNIT_ENGINE
         protected IProjectService ProjectService { get; private set; }
-#endif
 
         protected ITestRunnerFactory TestRunnerFactory { get; private set; }
 
@@ -289,7 +285,6 @@ namespace NUnit.Engine.Runners
 
         #region Helper Methods
 
-#if NUNIT_ENGINE
         protected bool IsProjectPackage(TestPackage package)
         {
             return package != null
@@ -297,7 +292,6 @@ namespace NUnit.Engine.Runners
                 && package.FullName != string.Empty
                 && ProjectService.CanLoadFrom(package.FullName);
         }
-#endif
 
         private void EnsurePackageIsLoaded()
         {

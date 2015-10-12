@@ -97,21 +97,15 @@ namespace NUnit.Engine
 
             Services.Add(settingsService);
             Services.Add(new DomainManager());
-#if NUNIT_ENGINE
             Services.Add(new ExtensionService());
-#endif
             Services.Add(new DriverService());
-
-#if NUNIT_ENGINE
             Services.Add(new RecentFilesService());
             Services.Add(new ProjectService());
             Services.Add(new RuntimeFrameworkService());
             Services.Add(new DefaultTestRunnerFactory());
             Services.Add(new TestAgency());
             Services.Add(new ResultService());
-#else
-            Services.Add(new CoreTestRunnerFactory());
-#endif
+            Services.Add(new TestFilterService());
 
             Services.ServiceManager.StartServices();
         }

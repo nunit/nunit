@@ -68,6 +68,12 @@
     <Compile Include="..\..\Common\nunit\PackageSettings.cs">
       <Link>PackageSettings.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
+      <Link>Services\TestSelectionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Tokenizer.cs">
+      <Link>Services\Tokenizer.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\XmlHelper.cs">
       <Link>Internal\XmlHelper.cs</Link>
     </Compile>
@@ -139,6 +145,8 @@
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />
+    <Compile Include="Services\TestFilterBuilder.cs" />
+    <Compile Include="Services\TestFilterService.cs" />
     <Compile Include="TestEngine.cs" />
     <Compile Include="TestEngineResult.cs" />
   </ItemGroup>

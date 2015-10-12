@@ -35,9 +35,6 @@ namespace NUnit.Engine
     [Serializable]
     public class TestFilter
     {
-        [NonSerialized]
-        private XmlNode xmlNode;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TestFilter"/> class.
         /// </summary>
@@ -45,16 +42,6 @@ namespace NUnit.Engine
         public TestFilter(string xmlText)
         {
             Text = xmlText;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestFilter"/> class.
-        /// </summary>
-        /// <param name="node">The XML node that specifies the filter.</param>
-        public TestFilter(XmlNode node)
-        {
-            xmlNode = node;
-            Text = xmlNode.OuterXml;
         }
 
         /// <summary>
@@ -66,32 +53,5 @@ namespace NUnit.Engine
         /// Gets the XML representation of this filter as a string.
         /// </summary>
         public string Text { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is empty.
-        /// </summary>
-        /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
-        public bool IsEmpty
-        {
-            get { return Xml.ChildNodes.Count == 0; }
-        }
-
-        /// <summary>
-        /// Gets the XML representation of this filter as an XmlNode
-        /// </summary>
-        public XmlNode Xml
-        {
-            get
-            {
-                if(xmlNode == null)
-                {
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(Text);
-                    xmlNode = doc.FirstChild;
-                }
-
-                return xmlNode;
-            }
-        }
     }
 }

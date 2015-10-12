@@ -278,29 +278,26 @@ namespace NUnitLite.Runner
         /// <returns></returns>
         public static TestFilter CreateTestFilter(NUnitLiteOptions options)
         {
-            TestFilter namefilter = options.TestList.Count > 0
-                ? new SimpleNameFilter(options.TestList)
-                : TestFilter.Empty;
+            var filters = new List<TestFilter>();
 
-            TestFilter includeFilter = string.IsNullOrEmpty(options.Include)
-                ? TestFilter.Empty
-                : new SimpleCategoryExpression(options.Include).Filter;
+            foreach (var test in options.TestList)
+                filters.Add(new FullNameFilter(test));
 
-            TestFilter excludeFilter = string.IsNullOrEmpty(options.Exclude)
-                ? TestFilter.Empty
-                : new NotFilter(new SimpleCategoryExpression(options.Exclude).Filter);
+            if (options.WhereClauseSpecified)
+            {
+                string xmlText = new TestSelectionParser().Parse(options.WhereClause);
+                filters.Add(TestFilter.FromXml(TNode.FromXml(xmlText)));
+            }
 
-            TestFilter catFilter = includeFilter.IsEmpty
-                ? excludeFilter
-                : excludeFilter.IsEmpty
-                    ? includeFilter
-                    : new AndFilter(includeFilter, excludeFilter);
-
-            return namefilter.IsEmpty
-                ? catFilter
-                : catFilter.IsEmpty
-                    ? namefilter
-                    : new AndFilter(namefilter, catFilter);
+            switch (filters.Count)
+            {
+                case 0:
+                    return TestFilter.Empty;
+                case 1:
+                    return filters[0];
+                default:
+                    return new AndFilter(filters.ToArray());
+            }
         }
 #endif
 

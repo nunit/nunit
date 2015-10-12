@@ -197,17 +197,7 @@ namespace NUnitLite.Runner
                 SkipLine();
             }
 
-            if (!string.IsNullOrEmpty(_options.Include))
-            {
-                WriteLabelLine("Included categories: ", _options.Include);
-                SkipLine();
-            }
-
-            if (!string.IsNullOrEmpty(_options.Exclude))
-            {
-                WriteLabelLine("Excluded categories: ", _options.Exclude);
-                SkipLine();
-            }
+            // TODO: Add where clause here
         }
 #endif
 

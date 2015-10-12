@@ -21,46 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Engine
 {
     /// <summary>
-    /// SimpleCategoryFilter parses a basic string representing a
-    /// single category or a list of categories separated by commas
+    /// Interface to a TestFilterBuilder, which is used to create TestFilters
     /// </summary>
-    public class SimpleCategoryExpression
+    public interface ITestFilterBuilder
     {
-        private string text;
-
-        private TestFilter filter;
+        /// <summary>
+        /// Add a test to be selected
+        /// </summary>
+        /// <param name="fullName">The full name of the test, as created by NUnit</param>
+        void AddTest(string fullName);
 
         /// <summary>
-        /// Construct category filter from a text string
+        /// Specify what is to be included by the filter using a where clause.
         /// </summary>
-        /// <param name="text">A list of categories to parse</param>
-        public SimpleCategoryExpression(string text)
-        {
-            this.text = text;
-        }
+        /// <param name="whereClause">A where clause that will be parsed by NUnit to create the filter.</param>
+        void SelectWhere(string whereClause);
 
         /// <summary>
-        /// Gets the TestFilter represented by the expression
+        /// Get a TestFilter constructed according to the criteria specified by the other calls.
         /// </summary>
-        public TestFilter Filter
-        {
-            get
-            {
-                if (filter == null)
-                {
-                    filter = GetCategories(); 
-                }
-                return filter;
-            }
-        }
-
-        private TestFilter GetCategories()
-        {
-            string[] categories = text.Split(',');
-            return new CategoryFilter(categories);
-        }
+        /// <returns>A TestFilter.</returns>
+        TestFilter GetFilter();
     }
 }

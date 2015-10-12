@@ -243,7 +243,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void AssemblySetupFixtureWrapsExecutionOfTest()
         {
-            ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeFixture"));
+            ITestResult result = runTests(null, new Filters.FullNameFilter("SomeFixture"));
             Assert.AreEqual(1, result.PassCount);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
