@@ -54,6 +54,12 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
+      <Link>Services\TestSelectionParserTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
+      <Link>Services\TokenizerTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\XmlHelperTests.cs">
       <Link>Internal\XmlHelperTests.cs</Link>
     </Compile>
@@ -96,6 +102,7 @@
     <Compile Include="Services\ResultWriters\XmlTransformResultWriterTests.cs" />
     <Compile Include="Services\DefaultTestRunnerFactoryTests.cs" />
     <Compile Include="Services\ServiceDependencyTests.cs" />
+    <Compile Include="Services\TestFilterBuilderTests.cs" />
     <Compile Include="TempResourceFile.cs" />
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>

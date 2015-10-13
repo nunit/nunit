@@ -50,6 +50,9 @@
     <Compile Include="..\..\Common\nunit\Logging\InternalTraceLevel.cs">
       <Link>InternalTraceLevel.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
+      <Link>TestSelectionParserException.cs</Link>
+    </Compile>
     <Compile Include="..\EngineApiVersion.cs">
       <Link>EngineApiVersion.cs</Link>
     </Compile>
@@ -64,6 +67,8 @@
     <Compile Include="IResultService.cs" />
     <Compile Include="IRuntimeFrameworkService.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="ITestFilterBuilder.cs" />
+    <Compile Include="ITestFilterService.cs" />
     <Compile Include="NUnitEngineNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensibility\IFrameworkDriver.cs" />

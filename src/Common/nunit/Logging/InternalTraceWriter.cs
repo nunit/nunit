@@ -22,7 +22,7 @@
 // ***********************************************************************
 using System.IO;
 
-#if NUNIT_ENGINE || CORE_ENGINE
+#if NUNIT_ENGINE
 namespace NUnit.Engine.Internal
 #elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Internal

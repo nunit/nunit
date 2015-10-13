@@ -84,6 +84,15 @@
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Runner\TestNameParser.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
+      <Link>Runner\TestSelectionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
+      <Link>Runner\TestSelectionParserException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Tokenizer.cs">
+      <Link>Runner\Tokenizer.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -99,7 +108,6 @@
     <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
-    <Compile Include="Runner\SimpleCategoryExpression.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TeamCityEventListener.cs" />
     <Compile Include="Runner\TextRunner.cs" />

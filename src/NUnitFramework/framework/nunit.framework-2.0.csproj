@@ -139,6 +139,11 @@
     <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
+    <Compile Include="Internal\Filters\CompositeFilter.cs" />
+    <Compile Include="Internal\Filters\PropertyFilter.cs" />
+    <Compile Include="Internal\Filters\TestNameFilter.cs" />
+    <Compile Include="Internal\Filters\ClassNameFilter.cs" />
+    <Compile Include="Internal\Filters\MethodNameFilter.cs" />
     <Compile Include="Internal\MethodWrapper.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -377,7 +382,7 @@
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
-    <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
+    <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />

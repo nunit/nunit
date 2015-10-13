@@ -35,9 +35,7 @@ namespace NUnit.Engine.Services.Tests
         private IService _settingsService;
         private ServiceManager _serviceManager;
 
-#if NUNIT_ENGINE
         private IService _projectService;
-#endif
 
         [SetUp]
         public void SetUp()
@@ -47,10 +45,8 @@ namespace NUnit.Engine.Services.Tests
             _settingsService = new FakeSettingsService();
             _serviceManager.AddService(_settingsService);
 
-#if NUNIT_ENGINE
             _projectService = new FakeProjectService();
             _serviceManager.AddService(_projectService);
-#endif
         }
 
         [Test]
@@ -60,10 +56,8 @@ namespace NUnit.Engine.Services.Tests
 
             IService service = _serviceManager.GetService(typeof(ISettings));
             Assert.That(service.Status, Is.EqualTo(ServiceStatus.Started));
-#if NUNIT_ENGINE
             service = _serviceManager.GetService(typeof(IProjectService));
             Assert.That(service.Status, Is.EqualTo(ServiceStatus.Started));
-#endif
         }
 
         [Test]

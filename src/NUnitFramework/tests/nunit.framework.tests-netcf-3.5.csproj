@@ -65,6 +65,12 @@
     <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
       <Link>Runner\ExtendedTextWrapperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
+      <Link>Runner\TestSelectionParserTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
+      <Link>Runner\TokenizerTests.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -201,12 +207,17 @@
     <Compile Include="Internal\EventQueueTests.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
     <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
+    <Compile Include="Internal\Filters\ClassNameFilterTests.cs" />
     <Compile Include="Internal\Filters\EmptyFilterTests.cs" />
+    <Compile Include="Internal\Filters\FullNameFilterTests.cs" />
     <Compile Include="Internal\Filters\IdFilterTests.cs" />
+    <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
-    <Compile Include="Internal\Filters\SimpleNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\PropertyFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
+    <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs">
       <SubType>Code</SubType>

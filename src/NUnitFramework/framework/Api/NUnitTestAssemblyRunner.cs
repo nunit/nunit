@@ -235,13 +235,15 @@ namespace NUnit.Framework.Api
 #endif
 
 #if PARALLEL
-            QueuingEventListener queue = new QueuingEventListener();
-            Context.Listener = queue;
+            // Queue and pump events, unless settings have SynchronousEvents == false
+            if (!Settings.Contains(PackageSettings.SynchronousEvents) || !(bool)Settings[PackageSettings.SynchronousEvents])
+            {
+                QueuingEventListener queue = new QueuingEventListener();
+                Context.Listener = queue;
 
-            _pump = new EventPump(listener, queue.Events);
-            _pump.Start();
-#else
-            Context.Dispatcher = new SimpleWorkItemDispatcher();
+                _pump = new EventPump(listener, queue.Events);
+                _pump.Start();
+            }
 #endif
 
             if (!System.Diagnostics.Debugger.IsAttached &&
@@ -311,6 +313,8 @@ namespace NUnit.Framework.Api
             }
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
+#else
+                Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
         }
 
@@ -320,7 +324,8 @@ namespace NUnit.Framework.Api
         private void OnRunCompleted(object sender, EventArgs e)
         {
 #if PARALLEL
-            _pump.Dispose();
+            if (_pump != null)
+                _pump.Dispose();
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
