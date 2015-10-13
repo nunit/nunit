@@ -1,8 +1,11 @@
 ﻿{
+  "version": "3.0.0-*",
+  "description": "Portable version of the NUnitlite runner that supports DNX",
+  "authors": [ "Rob Prouse" ],
   "supports": {
-    "net46.app": {},
-    "uwp.10.0.app": {},
-    "dnxcore50.app": {}
+    "net46.app": { },
+    "uwp.10.0.app": { },
+    "dnxcore50.app": { }
   },
   "dependencies": {
     "Microsoft.NETCore": "5.0.0",

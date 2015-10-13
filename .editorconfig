@@ -11,19 +11,7 @@ root = true
 indent_style = space
 indent_size = 4
 
-[*.proj]
-indent_style = space
-indent_size = 2
-
-[*.csproj]
-indent_style = space
-indent_size = 2
-
-[*.vcxproj]
-indent_style = space
-indent_size = 2
-
-[*.config]
+[*.proj,*.csproj,*.vcxproj,*.xproj,*.json,*.config]
 indent_style = space
 indent_size = 2
 

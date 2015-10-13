@@ -1,4 +1,7 @@
 ﻿{
+  "version": "3.0.0-*",
+  "description": "Portable version of the NUnit.Framework that supports DNX",
+  "authors": [ "Rob Prouse" ],
   "supports": {
     "net46.app": {},
     "uwp.10.0.app": {},

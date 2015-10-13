@@ -1,4 +1,7 @@
 ﻿{
+  "version": "3.0.0-*",
+  "description": "A mock test assembly that supports DNX",
+  "authors": [ "Rob Prouse" ],
   "supports": {
     "net46.app": {},
     "uwp.10.0.app": {},
