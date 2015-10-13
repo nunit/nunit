@@ -53,6 +53,12 @@
     <Compile Include="..\..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Common\tests\TestSelectionParserTests.cs">
+      <Link>Runner\TestSelectionParserTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\tests\TokenizerTests.cs">
+      <Link>Runner\TokenizerTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
@@ -452,11 +458,20 @@
     <Compile Include="..\Internal\Filters\CategoryFilterTests.cs">
       <Link>Internal\Filters\CategoryFilterTests.cs</Link>
     </Compile>
+    <Compile Include="..\Internal\Filters\ClassNameFilterTests.cs">
+      <Link>Internal\Filters\ClassNameFilterTests.cs</Link>
+    </Compile>
     <Compile Include="..\Internal\Filters\EmptyFilterTests.cs">
       <Link>Internal\Filters\EmptyFilterTests.cs</Link>
     </Compile>
+    <Compile Include="..\Internal\Filters\FullNameFilterTests.cs">
+      <Link>Internal\Filters\FullNameFilterTests.cs</Link>
+    </Compile>
     <Compile Include="..\Internal\Filters\IdFilterTests.cs">
       <Link>Internal\Filters\IdFilterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Internal\Filters\MethodNameFilterTests.cs">
+      <Link>Internal\Filters\MethodNameFilterTests.cs</Link>
     </Compile>
     <Compile Include="..\Internal\Filters\NotFilterTests.cs">
       <Link>Internal\Filters\NotFilterTests.cs</Link>
@@ -464,11 +479,17 @@
     <Compile Include="..\Internal\Filters\OrFilterTests.cs">
       <Link>Internal\Filters\OrFilterTests.cs</Link>
     </Compile>
-    <Compile Include="..\Internal\Filters\SimpleNameFilterTests.cs">
-      <Link>Internal\Filters\SimpleNameFilterTests.cs</Link>
+    <Compile Include="..\Internal\Filters\PropertyFilterTests.cs">
+      <Link>Internal\Filters\PropertyFilterTests.cs</Link>
     </Compile>
     <Compile Include="..\Internal\Filters\TestFilterTests.cs">
       <Link>Internal\Filters\TestFilterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Internal\Filters\TestFilterXmlTests.cs">
+      <Link>Internal\Filters\TestFilterXmlTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Internal\Filters\TestNameFilterTests.cs">
+      <Link>Internal\Filters\TestNameFilterTests.cs</Link>
     </Compile>
     <Compile Include="..\Internal\GenericMethodHelperTests.cs">
       <Link>Internal\GenericMethodHelperTests.cs</Link>
@@ -712,6 +733,10 @@
     <ProjectReference Include="..\..\mock-assembly\mock-nunit-assembly-netcore\mock-nunit-assembly-netcore.csproj">
       <Project>{75bd51cb-ab1d-4c2b-81f3-bb42ac9ab847}</Project>
       <Name>mock-nunit-assembly-netcore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\nunitlite.runner\nunitlite.runner-netcore\nunitlite.runner-netcore.csproj">
+      <Project>{2a6a6c3f-486c-4547-a050-aca60bb28a16}</Project>
+      <Name>nunitlite.runner-netcore</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\testdata\nunit.testdata-netcore\nunit.testdata-netcore.csproj">
       <Project>{2eccdace-913e-4cff-b19d-085e3715c758}</Project>

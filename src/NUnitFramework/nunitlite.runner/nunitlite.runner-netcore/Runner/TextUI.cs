@@ -147,17 +147,7 @@ namespace NUnitLite.Runner
                 _writer.WriteLine();
             }
 
-            if (!string.IsNullOrEmpty(_options.Include))
-            {
-                WriteLabelLine("Included categories: ", _options.Include);
-                _writer.WriteLine();
-            }
-
-            if (!string.IsNullOrEmpty(_options.Exclude))
-            {
-                WriteLabelLine("Excluded categories: ", _options.Exclude);
-                _writer.WriteLine();
-            }
+            // TODO: Add where clause here
         }
 
         private bool _testCreatedOutput = false;

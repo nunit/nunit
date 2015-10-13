@@ -869,14 +869,23 @@
     <Compile Include="..\Internal\Filters\AndFilter.cs">
       <Link>Internal\Filters\AndFilter.cs</Link>
     </Compile>
-    <Compile Include="..\Internal\Filters\CategoryExpression.cs">
-      <Link>Internal\Filters\CategoryExpression.cs</Link>
-    </Compile>
     <Compile Include="..\Internal\Filters\CategoryFilter.cs">
       <Link>Internal\Filters\CategoryFilter.cs</Link>
     </Compile>
+    <Compile Include="..\Internal\Filters\ClassNameFilter.cs">
+      <Link>Internal\Filters\ClassNameFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Internal\Filters\CompositeFilter.cs">
+      <Link>Internal\Filters\CompositeFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Internal\Filters\FullNameFilter.cs">
+      <Link>Internal\Filters\FullNameFilter.cs</Link>
+    </Compile>
     <Compile Include="..\Internal\Filters\IdFilter.cs">
       <Link>Internal\Filters\IdFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Internal\Filters\MethodNameFilter.cs">
+      <Link>Internal\Filters\MethodNameFilter.cs</Link>
     </Compile>
     <Compile Include="..\Internal\Filters\NotFilter.cs">
       <Link>Internal\Filters\NotFilter.cs</Link>
@@ -884,8 +893,11 @@
     <Compile Include="..\Internal\Filters\OrFilter.cs">
       <Link>Internal\Filters\OrFilter.cs</Link>
     </Compile>
-    <Compile Include="..\Internal\Filters\SimpleNameFilter.cs">
-      <Link>Internal\Filters\SimpleNameFilter.cs</Link>
+    <Compile Include="..\Internal\Filters\PropertyFilter.cs">
+      <Link>Internal\Filters\PropertyFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Internal\Filters\TestNameFilter.cs">
+      <Link>Internal\Filters\TestNameFilter.cs</Link>
     </Compile>
     <Compile Include="..\Internal\Filters\ValueMatchFilter.cs">
       <Link>Internal\Filters\ValueMatchFilter.cs</Link>

@@ -120,22 +120,22 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-#if NETCF
-            if (fixtureType.ContainsGenericParameters)
-                return false;
-#endif
 #if NETCORE
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
                 .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
 #else
+
+#if NETCF
+            if (fixtureType.ContainsGenericParameters)
+                return false;
+#endif
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
                 if (method.IsDefined(attributeType, false))
                     return true;
             }
-#endif
-
             return false;
+#endif
         }
 
         #endregion

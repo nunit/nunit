@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\netcore\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Debug\netcore\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NETCORE;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\netcore\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Release\netcore\</OutputPath>
     <DefineConstants>TRACE;NETCORE;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -63,6 +63,15 @@
     <Compile Include="..\..\..\Common\nunit\TestNameParser.cs">
       <Link>Runner\TestNameParser.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Common\nunit\TestSelectionParser.cs">
+      <Link>Runner\TestSelectionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\TestSelectionParserException.cs">
+      <Link>Runner\TestSelectionParserException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Tokenizer.cs">
+      <Link>Runner\Tokenizer.cs</Link>
+    </Compile>
     <Compile Include="..\..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
@@ -74,9 +83,6 @@
     </Compile>
     <Compile Include="..\Runner\ResultSummary.cs">
       <Link>Runner\ResultSummary.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\SimpleCategoryExpression.cs">
-      <Link>Runner\SimpleCategoryExpression.cs</Link>
     </Compile>
     <Compile Include="..\Runner\TextRunner.cs">
       <Link>Runner\TextRunner.cs</Link>
