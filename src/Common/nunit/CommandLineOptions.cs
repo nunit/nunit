@@ -66,9 +66,9 @@ namespace NUnit.Common
                 Parse(args);
         }
         
-#endregion
-
-#region Properties
+        #endregion
+        
+        #region Properties
 
         // Action to Perform
 
@@ -158,9 +158,9 @@ namespace NUnit.Common
         public List<string> errorMessages = new List<string>();
         public IList<string> ErrorMessages { get { return errorMessages; } }
 
-#endregion
-
-#region Public Methods
+        #endregion
+        
+        #region Public Methods
 
         public bool Validate()
         {
@@ -174,9 +174,9 @@ namespace NUnit.Common
             return ErrorMessages.Count == 0;
         }
 
-#endregion
-
-#region Helper Methods
+        #endregion
+        
+        #region Helper Methods
 
         /// <summary>
         /// Case is ignored when val is compared to validValues. When a match is found, the
@@ -359,6 +359,6 @@ namespace NUnit.Common
             });
         }
 
-#endregion
+        #endregion
     }
 }
