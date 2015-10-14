@@ -1,0 +1,12 @@
+{
+  "version": "3.0.0-*",
+  "frameworks": {
+    "dnxcore50": {
+      "wrappedProject": "../../src/NUnitFramework/tests/nunit.framework.tests-netcore/nunit.framework.tests-netcore.csproj",
+      "bin": {
+        "assembly": "../../bin/Debug/netcore/nunit.framework.tests.dll",
+        "pdb": "../../bin/Debug/netcore/nunit.framework.tests.pdb"
+      }
+    }
+  }
+}

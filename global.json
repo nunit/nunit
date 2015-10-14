@@ -1,10 +1,5 @@
 {
   "projects": [
-    "src/NUnitFramework/framework/nunit.framework-netcore",
-    "src/NUnitFramework/mock-assembly/mock-nunit-assembly-netcore",
-    "src/NUnitFramework/testdata/nunit.testdata-netcore",
-    "src/NUnitFramework/tests/nunit.framework.tests-netcore",
-    "src/NUnitFramework/nunitlite.runner/nunitlite.runner-netcore",
     "src/NUnitFramework/nunit.dnx.tests",
     "wrap"
   ],

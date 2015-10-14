@@ -7,11 +7,6 @@
   "licenseUrl": "",
 
   "dependencies": {
-    "mock-nunit-assembly-netcore": "",
-    "nunit.framework-netcore": "",
-    "nunit.framework.tests-netcore": "",
-    "nunit.testdata-netcore": "",
-    "nunitlite.runner-netcore": ""
   },
 
   "commands": {
@@ -20,14 +15,20 @@
 
   "frameworks": {
     "dnxcore50": {
-        "dependencies": {
-            "Microsoft.CSharp": "4.0.1-beta-23225",
-            "System.Collections": "4.0.11-beta-23225",
-            "System.Console": "4.0.0-beta-23225",
-            "System.Linq": "4.0.1-beta-23225",
-            "System.Reflection.Extensions": "4.0.1-beta-23225",
-            "System.Threading": "4.0.11-beta-23225"
-        }
+      "dependencies": {
+        "System.Runtime": "4.0.21-beta-23225",
+        "Microsoft.CSharp": "4.0.0-beta-23019",
+        "System.Collections": "4.0.11-beta-23225",
+        "System.Console": "4.0.0-beta-23225",
+        "System.Linq": "4.0.1-beta-23225",
+        "System.Reflection.Extensions": "4.0.1-beta-23225",
+        "System.Threading": "4.0.11-beta-23225",
+        "mock-nunit-assembly-netcore": "3.0.0-*",
+        "nunit.framework-netcore": "3.0.0-*",
+        "nunit.framework.tests-netcore": "3.0.0-*",
+        "nunit.testdata-netcore": "3.0.0-*",
+        "nunitlite.runner-netcore": "3.0.0-*"
+      }
     }
   }
 }
