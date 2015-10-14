@@ -41,7 +41,7 @@ namespace NUnit.Framework.Api
         private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private ITestAssemblyBuilder _builder;
-        private ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private AutoResetEvent _runComplete = new AutoResetEvent(false);
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
         // Saved Console.Out and Console.Error
