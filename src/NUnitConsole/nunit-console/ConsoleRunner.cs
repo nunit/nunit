@@ -148,7 +148,10 @@ namespace NUnit.ConsoleRunner
         private int RunTests(TestPackage package, TestFilter filter)
         {
             foreach (var spec in _options.ResultOutputSpecifications)
-                GetResultWriter(spec).CheckWritability(spec.OutputPath);
+            {
+                var outputPath = Path.Combine(_workDirectory, spec.OutputPath);
+                GetResultWriter(spec).CheckWritability(outputPath);
+            }
 
             // TODO: Incorporate this in EventCollector?
             RedirectErrorOutputAsRequested();
@@ -182,7 +185,8 @@ namespace NUnit.ConsoleRunner
 
             foreach (var spec in _options.ResultOutputSpecifications)
             {
-                GetResultWriter(spec).WriteResultFile(result, spec.OutputPath);
+                var outputPath = Path.Combine(_workDirectory, spec.OutputPath);
+                GetResultWriter(spec).WriteResultFile(result, outputPath);
                 _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
             }
 
@@ -307,8 +311,9 @@ namespace NUnit.ConsoleRunner
             if (options.ActiveConfigSpecified)
                 package.AddSetting(PackageSettings.ActiveConfig, options.ActiveConfig);
 
-            // Always add work directory, in case current directory is chnaged
-            package.AddSetting(PackageSettings.WorkDirectory, options.WorkDirectory);
+            // Always add work directory, in case current directory is changed
+            var workDirectory = options.WorkDirectory ?? Environment.CurrentDirectory;
+            package.AddSetting(PackageSettings.WorkDirectory, workDirectory);
 
             if (options.StopOnError)
                 package.AddSetting(PackageSettings.StopOnError, true);
