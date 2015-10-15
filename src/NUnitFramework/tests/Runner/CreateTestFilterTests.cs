@@ -52,8 +52,8 @@ namespace NUnitLite.Runner.Tests
         public void ThreeTestsSelected()
         {
             var filter = GetFilter("--test:My.First.Test", "--test:My.Second.Test", "--test:My.Third.Test");
-            Assert.That(filter, Is.TypeOf<AndFilter>());
-            var filters = ((AndFilter)filter).Filters;
+            Assert.That(filter, Is.TypeOf<OrFilter>());
+            var filters = ((OrFilter)filter).Filters;
             Assert.That(filters.Length, Is.EqualTo(3));
 
             Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
@@ -72,8 +72,8 @@ namespace NUnitLite.Runner.Tests
             using (var tf = new TestFile("TestListFile.txt", "TestListFile.txt"))
             {
                 var filter = GetFilter("--testlist:" + tf.File.FullName);
-                Assert.That(filter, Is.TypeOf<AndFilter>());
-                var filters = ((AndFilter)filter).Filters;
+                Assert.That(filter, Is.TypeOf<OrFilter>());
+                var filters = ((OrFilter)filter).Filters;
                 Assert.That(filters.Length, Is.EqualTo(3));
 
                 Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
@@ -94,8 +94,8 @@ namespace NUnitLite.Runner.Tests
             using (var tf2 = new TestFile("TestListFile2.txt", "TestListFile2.txt"))
             {
                 var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName );
-                Assert.That(filter, Is.TypeOf<AndFilter>());
-                var filters = ((AndFilter)filter).Filters;
+                Assert.That(filter, Is.TypeOf<OrFilter>());
+                var filters = ((OrFilter)filter).Filters;
                 Assert.That(filters.Length, Is.EqualTo(6));
 
                 Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
@@ -144,16 +144,20 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
             var filters = ((AndFilter)filter).Filters;
-            Assert.That(filters.Length, Is.EqualTo(3));
+            Assert.That(filters.Length, Is.EqualTo(2));
+
+            Assert.That(filters[1], Is.TypeOf<CategoryFilter>());
+            Assert.That(((CategoryFilter)filters[1]).ExpectedValue, Is.EqualTo("Urgent"));
+
+            Assert.That(filters[0], Is.TypeOf<OrFilter>());
+            filters = ((OrFilter)filters[0]).Filters;
+            Assert.That(filters.Length, Is.EqualTo(2));
 
             Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
             Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
 
             Assert.That(filters[1], Is.TypeOf<FullNameFilter>());
             Assert.That(((FullNameFilter)filters[1]).ExpectedValue, Is.EqualTo("My.Second.Test"));
-
-            Assert.That(filters[2], Is.TypeOf<CategoryFilter>());
-            Assert.That(((CategoryFilter)filters[2]).ExpectedValue, Is.EqualTo("Urgent"));
         }
 
         private TestFilter GetFilter(params string[] args)
