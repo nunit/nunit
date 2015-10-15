@@ -83,9 +83,9 @@ namespace NUnit.Framework.Compatibility
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this assembly
         /// </summary>
-        public static IEnumerable<T> GetAttributes<T>(this Assembly info) where T : class
+        public static IEnumerable<T> GetAttributes<T>(this Assembly asm) where T : class
         {
-            return GetAttributesImpl<T>(info.GetCustomAttributes());
+            return GetAttributesImpl<T>(asm.GetCustomAttributes());
         }
 
         private static IEnumerable<T> GetAttributesImpl<T>(IEnumerable<Attribute> attributes) where T : class
@@ -96,6 +96,20 @@ namespace NUnit.Framework.Compatibility
                 .All(a => { attrs.Add(a as T); return true; });
 
             return attrs;
+        }
+
+        /// <summary>
+        /// DNX does not have a version of GetCustomAttributes on Assembly that takes an inherit
+        /// parameter since it doesn't make sense on Assemblies. This version just ignores the 
+        /// inherit parameter.
+        /// </summary>
+        /// <param name="asm">The assembly</param>
+        /// <param name="attributeType">The type of attribute you are looking for</param>
+        /// <param name="inherit">Ignored</param>
+        /// <returns></returns>
+        public static object[] GetCustomAttributes(this Assembly asm, Type attributeType, bool inherit)
+        {
+            return asm.GetCustomAttributes(attributeType).ToArray();
         }
 #endif
     }

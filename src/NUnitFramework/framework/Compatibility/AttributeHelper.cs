@@ -64,11 +64,7 @@ namespace NUnit.Framework.Compatibility
             var assembly = actual as Assembly;
             if (assembly != null)
             {
-#if NETCORE
-                return (Attribute[])assembly.GetCustomAttributes(attributeType);
-#else
                 return (Attribute[])assembly.GetCustomAttributes(attributeType, inherit);
-#endif
             }
 
             throw new ArgumentException(string.Format("Actual value {0} must be a MemberInfo, ParameterInfo or Assembly.", actual), "actual");
