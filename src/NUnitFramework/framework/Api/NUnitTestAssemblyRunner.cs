@@ -246,12 +246,14 @@ namespace NUnit.Framework.Api
             }
 #endif
 
+#if !NETCF
             if (!System.Diagnostics.Debugger.IsAttached &&
                 Settings.Contains(PackageSettings.DebugTests) &&
                 (bool)Settings[PackageSettings.DebugTests])
             {
                 System.Diagnostics.Debugger.Launch();
             }
+#endif
 
             Context.Dispatcher.Dispatch(TopLevelWorkItem);
         }
