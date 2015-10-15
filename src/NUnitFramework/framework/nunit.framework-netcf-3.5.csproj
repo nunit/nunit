@@ -51,7 +51,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -434,11 +434,13 @@
     <Compile Include="Throws.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit.snk" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
     <Content Include="Interfaces\InterfaceChanges.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

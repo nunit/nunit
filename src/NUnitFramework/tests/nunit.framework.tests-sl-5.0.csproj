@@ -66,7 +66,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -297,7 +297,6 @@
     <Compile Include="Syntax\TestCompiler.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
-    <Compile Include="TestContextTests.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
     <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectCollection.cs" />
@@ -324,7 +323,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\framework\nunit.snk">
+    <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
     <None Include="Properties\AppManifest.xml" />
