@@ -171,11 +171,15 @@ namespace NUnit.Common
             writer.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
+#if NETCORE
+                System.Environment.CurrentManagedThreadId,
+#else
                 System.Threading.Thread.CurrentThread.ManagedThreadId,
+#endif
                 name,
                 message);
         }
 
-        #endregion
+#endregion
     }
 }

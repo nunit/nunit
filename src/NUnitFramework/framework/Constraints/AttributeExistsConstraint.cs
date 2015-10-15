@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 using System;
+using System.Reflection;
 using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Constraints
@@ -42,7 +43,7 @@ namespace NUnit.Framework.Constraints
         {
             this.expectedType = type;
 
-            if (!typeof(Attribute).IsAssignableFrom(expectedType))
+            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
                 throw new ArgumentException(string.Format(
                     "Type {0} is not an attribute", expectedType), "type");
         }

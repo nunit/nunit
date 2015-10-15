@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
             new ArrayList(),
 #endif
             new System.Collections.Generic.List<int>()

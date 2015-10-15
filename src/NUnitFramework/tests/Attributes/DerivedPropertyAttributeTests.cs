@@ -36,12 +36,12 @@ namespace NUnit.Framework.Attributes
 #if !NETCF
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
 #endif
 #endif
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
         [TestCase(typeof(TimeoutAttribute), PropertyNames.Timeout, 50)]
 #endif
         public void ConstructWithOneArg<T>(Type attrType, string propName, T propValue)
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
         [TestCase(typeof(RequiresThreadAttribute), PropertyNames.RequiresThread, true)]
 #endif
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)

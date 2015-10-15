@@ -1,0 +1,67 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitFramework", "NUnitFramework", "{03E89C2B-ACAE-4168-A551-7F7FAC1FABAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework-netcore", "src\NUnitFramework\framework\nunit.framework-netcore\nunit.framework-netcore.csproj", "{0030AC1C-25B9-44D4-B676-F30606C1912C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-nunit-assembly-netcore", "src\NUnitFramework\mock-assembly\mock-nunit-assembly-netcore\mock-nunit-assembly-netcore.csproj", "{75BD51CB-AB1D-4C2B-81F3-BB42AC9AB847}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-netcore", "src\NUnitFramework\testdata\nunit.testdata-netcore\nunit.testdata-netcore.csproj", "{2ECCDACE-913E-4CFF-B19D-085E3715C758}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-netcore", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-netcore\nunitlite.runner-netcore.csproj", "{2A6A6C3F-486C-4547-A050-ACA60BB28A16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-netcore", "src\NUnitFramework\tests\nunit.framework.tests-netcore\nunit.framework.tests-netcore.csproj", "{45E2D1F1-5554-4B9A-B76B-9C93937867A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA3076D9-A09C-4B47-B205-07EDF3ABF1BD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
+		global.json = global.json
+		NUnit.proj = NUnit.proj
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0030AC1C-25B9-44D4-B676-F30606C1912C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0030AC1C-25B9-44D4-B676-F30606C1912C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0030AC1C-25B9-44D4-B676-F30606C1912C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0030AC1C-25B9-44D4-B676-F30606C1912C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75BD51CB-AB1D-4C2B-81F3-BB42AC9AB847}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75BD51CB-AB1D-4C2B-81F3-BB42AC9AB847}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75BD51CB-AB1D-4C2B-81F3-BB42AC9AB847}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75BD51CB-AB1D-4C2B-81F3-BB42AC9AB847}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ECCDACE-913E-4CFF-B19D-085E3715C758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ECCDACE-913E-4CFF-B19D-085E3715C758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ECCDACE-913E-4CFF-B19D-085E3715C758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ECCDACE-913E-4CFF-B19D-085E3715C758}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A6A6C3F-486C-4547-A050-ACA60BB28A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A6A6C3F-486C-4547-A050-ACA60BB28A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A6A6C3F-486C-4547-A050-ACA60BB28A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A6A6C3F-486C-4547-A050-ACA60BB28A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45E2D1F1-5554-4B9A-B76B-9C93937867A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45E2D1F1-5554-4B9A-B76B-9C93937867A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45E2D1F1-5554-4B9A-B76B-9C93937867A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45E2D1F1-5554-4B9A-B76B-9C93937867A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0030AC1C-25B9-44D4-B676-F30606C1912C} = {03E89C2B-ACAE-4168-A551-7F7FAC1FABAB}
+		{75BD51CB-AB1D-4C2B-81F3-BB42AC9AB847} = {03E89C2B-ACAE-4168-A551-7F7FAC1FABAB}
+		{2ECCDACE-913E-4CFF-B19D-085E3715C758} = {03E89C2B-ACAE-4168-A551-7F7FAC1FABAB}
+		{2A6A6C3F-486C-4547-A050-ACA60BB28A16} = {03E89C2B-ACAE-4168-A551-7F7FAC1FABAB}
+		{45E2D1F1-5554-4B9A-B76B-9C93937867A7} = {03E89C2B-ACAE-4168-A551-7F7FAC1FABAB}
+	EndGlobalSection
+EndGlobal

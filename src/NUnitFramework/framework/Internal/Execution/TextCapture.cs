@@ -21,10 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
 using System;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
+//using System.Runtime.Remoting.Messaging;
 
 namespace NUnit.Framework.Internal.Execution
 {

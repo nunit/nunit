@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
 using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;

@@ -34,7 +34,7 @@ namespace NUnit.Common
     /// TestSelectionParserException is thrown when an error 
     /// is found while parsing the selection expression.
     /// </summary>
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
     [Serializable]
 #endif
     public class TestSelectionParserException : Exception
@@ -51,7 +51,7 @@ namespace NUnit.Common
         /// <param name="innerException"></param>
         public TestSelectionParserException(string message, Exception innerException) : base(message, innerException) { }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
         /// <summary>
         /// Serialization constructor
         /// </summary>

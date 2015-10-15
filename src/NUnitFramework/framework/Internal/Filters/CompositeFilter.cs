@@ -27,6 +27,9 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
+    /// <summary>
+    /// A base class for multi-part filters
+    /// </summary>
     public abstract class CompositeFilter : TestFilter
     {
         /// <summary>
@@ -35,12 +38,12 @@ namespace NUnit.Framework.Internal.Filters
         protected List<ITestFilter> _filters = new List<ITestFilter>();
 
         /// <summary>
-        /// Constructs an empty CompoundFilter
+        /// Constructs an empty CompositeFilter
         /// </summary>
         public CompositeFilter() { }
 
         /// <summary>
-        /// Constructs a CompoundFilter from an array of filters
+        /// Constructs a CompositeFilter from an array of filters
         /// </summary>
         /// <param name="filters"></param>
         public CompositeFilter( params ITestFilter[] filters )

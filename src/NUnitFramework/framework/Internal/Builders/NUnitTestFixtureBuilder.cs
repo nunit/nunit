@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -71,7 +72,7 @@ namespace NUnit.Framework.Internal.Builders
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 
-            fixture.ApplyAttributesToTest(typeInfo.Type);
+            fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
 
             AddTestCasesToFixture(fixture);
 
@@ -145,7 +146,7 @@ namespace NUnit.Framework.Internal.Builders
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 
-            fixture.ApplyAttributesToTest(typeInfo.Type);
+            fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
 
             AddTestCasesToFixture(fixture);
 
@@ -237,7 +238,7 @@ namespace NUnit.Framework.Internal.Builders
 
         private static bool IsStaticClass(Type type)
         {
-            return type.IsAbstract && type.IsSealed;
+            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
         }
 
         #endregion

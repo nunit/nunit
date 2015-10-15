@@ -34,7 +34,7 @@ namespace NUnit.Framework.Tests
     {
         private string _name;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
         private string _testDirectory;
 #endif
         private string _workDirectory;
@@ -43,13 +43,13 @@ namespace NUnit.Framework.Tests
         {
             _name = TestContext.CurrentContext.Test.Name;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
             _testDirectory = TestContext.CurrentContext.TestDirectory;
 #endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
         }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
         [Test]
         public void ConstructorCanAccessTestDirectory()
         {
@@ -236,7 +236,7 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE && !SILVERLIGHT && !NETCORE
             Assert.That(context.TestDirectory, Is.Not.Null);
             Assert.That(context.WorkDirectory, Is.Not.Null);
 #endif

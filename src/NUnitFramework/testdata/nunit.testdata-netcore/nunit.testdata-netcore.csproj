@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2ECCDACE-913E-4CFF-B19D-085E3715C758}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.TestData</RootNamespace>
+    <AssemblyName>nunit.testdata</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <IntermediateOutputPath>obj\$(Configuration)\netcore\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\bin\Debug\netcore\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETCORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\bin\Release\netcore\</OutputPath>
+    <DefineConstants>TRACE;NETCORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\framework\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
+    <None Include="project.json" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework-netcore.csproj">
+      <Project>{0030ac1c-25b9-44d4-b676-f30606c1912c}</Project>
+      <Name>nunit.framework-netcore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\FrameworkVersion.cs">
+      <Link>FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\ActionAttributeFixture.cs">
+      <Link>ActionAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\AssertCountFixture.cs">
+      <Link>AssertCountFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\AssertFailFixture.cs">
+      <Link>AssertFailFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\AssertIgnoreData.cs">
+      <Link>AssertIgnoreData.cs</Link>
+    </Compile>
+    <Compile Include="..\AsyncDummyFixture.cs">
+      <Link>AsyncDummyFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\AsyncRealFixture.cs">
+      <Link>AsyncRealFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\AsyncSetupTearDownFixture.cs">
+      <Link>AsyncSetupTearDownFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\AttributeInheritanceData.cs">
+      <Link>AttributeInheritanceData.cs</Link>
+    </Compile>
+    <Compile Include="..\AuthorFixture.cs">
+      <Link>AuthorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\CategoryAttributeData.cs">
+      <Link>CategoryAttributeData.cs</Link>
+    </Compile>
+    <Compile Include="..\CultureAttributeData.cs">
+      <Link>CultureAttributeData.cs</Link>
+    </Compile>
+    <Compile Include="..\DatapointFixture.cs">
+      <Link>DatapointFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\DescriptionFixture.cs">
+      <Link>DescriptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\GenericTestMethodData.cs">
+      <Link>GenericTestMethodData.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxTimeFixture.cs">
+      <Link>MaxTimeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\OneTimeSetUpTearDownData.cs">
+      <Link>OneTimeSetUpTearDownData.cs</Link>
+    </Compile>
+    <Compile Include="..\OptionalTestParametersFixture.cs">
+      <Link>OptionalTestParametersFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\ParameterizedTestFixture.cs">
+      <Link>ParameterizedTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyAttributeTests.cs">
+      <Link>PropertyAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\RandomAttributeFixture.cs">
+      <Link>RandomAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\RepeatedTestFixture.cs">
+      <Link>RepeatedTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\RepeatingTestsFixtureBase.cs">
+      <Link>RepeatingTestsFixtureBase.cs</Link>
+    </Compile>
+    <Compile Include="..\RetryFixture.cs">
+      <Link>RetryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\SetUpData.cs">
+      <Link>SetUpData.cs</Link>
+    </Compile>
+    <Compile Include="..\SetUpFixtureData.cs">
+      <Link>SetUpFixtureData.cs</Link>
+    </Compile>
+    <Compile Include="..\TestCaseAttributeFixture.cs">
+      <Link>TestCaseAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\TestCaseSourceAttributeFixture.cs">
+      <Link>TestCaseSourceAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\TestContextData.cs">
+      <Link>TestContextData.cs</Link>
+    </Compile>
+    <Compile Include="..\TestFixtureData.cs">
+      <Link>TestFixtureData.cs</Link>
+    </Compile>
+    <Compile Include="..\TestFixtureSourceData.cs">
+      <Link>TestFixtureSourceData.cs</Link>
+    </Compile>
+    <Compile Include="..\TestMethodSignatureFixture.cs">
+      <Link>TestMethodSignatureFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\TestOfFixture.cs">
+      <Link>TestOfFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\TheoryFixture.cs">
+      <Link>TheoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\TimeoutFixture.cs">
+      <Link>TimeoutFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\UnexpectedExceptionFixture.cs">
+      <Link>UnexpectedExceptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\UnhandledExceptions.cs">
+      <Link>UnhandledExceptions.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

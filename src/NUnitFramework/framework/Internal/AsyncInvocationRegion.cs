@@ -21,14 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-#if NET_4_5
+#if NET_4_5 || NETCORE
 using System.Runtime.ExceptionServices;
 #endif
 
@@ -63,7 +63,11 @@ namespace NUnit.Framework.Internal
 
         public static AsyncInvocationRegion Create(Delegate @delegate)
         {
+#if NETCORE
+            return Create(@delegate.GetMethodInfo());
+#else
             return Create(@delegate.Method);
+#endif
         }
 
         public static AsyncInvocationRegion Create(MethodInfo method)
@@ -86,7 +90,11 @@ at wrapping a non-async method invocation in an async region was done");
 
         public static bool IsAsyncOperation(Delegate @delegate)
         {
+#if NETCORE
+            return IsAsyncOperation(@delegate.GetMethodInfo());
+#else
             return IsAsyncOperation(@delegate.Method);
+#endif
         }
 
         /// <summary>
@@ -118,7 +126,7 @@ at wrapping a non-async method invocation in an async region was done");
                 {
                     IList<Exception> innerExceptions = GetAllExceptions(e.InnerException);
 
-#if NET_4_5
+#if NET_4_5 || NETCORE
                     ExceptionDispatchInfo.Capture(innerExceptions[0]).Throw();
 #elif NET_4_0 || PORTABLE
                     PreserveStackTrace(innerExceptions[0]);

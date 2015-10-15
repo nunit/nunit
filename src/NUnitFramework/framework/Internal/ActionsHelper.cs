@@ -25,6 +25,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
+
+#if NETCORE
+using System.Linq;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -69,9 +74,6 @@ namespace NUnit.Framework.Internal
         }
 
         public static ITestAction[] GetActionsFromAttributeProvider(MemberInfo attributeProvider)
-#else
-        public static ITestAction[] GetActionsFromAttributeProvider(ICustomAttributeProvider attributeProvider)
-#endif
         {
             if (attributeProvider == null)
                 return new ITestAction[0];
@@ -81,6 +83,40 @@ namespace NUnit.Framework.Internal
 
             return actions.ToArray();
         }
+#elif NETCORE
+        public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
+        {
+            if (attributeProvider == null)
+                return new ITestAction[0];
+
+            var actions = attributeProvider.GetAttributes<ITestAction>().ToList();
+            actions.Sort(SortByTargetDescending);
+
+            return actions.ToArray();
+        }
+
+        public static ITestAction[] GetActionsFromAttributeProvider(MemberInfo attributeProvider)
+        {
+            if (attributeProvider == null)
+                return new ITestAction[0];
+
+            var actions = attributeProvider.GetAttributes<ITestAction>(false).ToList();
+            actions.Sort(SortByTargetDescending);
+
+            return actions.ToArray();
+        }
+#else
+        public static ITestAction[] GetActionsFromAttributeProvider(ICustomAttributeProvider attributeProvider)
+        {
+            if (attributeProvider == null)
+                return new ITestAction[0];
+
+            var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
+            actions.Sort(SortByTargetDescending);
+
+            return actions.ToArray();
+        }
+#endif
 
         public static ITestAction[] GetActionsFromTypesAttributes(Type type)
         {
@@ -92,14 +128,14 @@ namespace NUnit.Framework.Internal
 
             var actions = new List<ITestAction>();
 
-            actions.AddRange(GetActionsFromTypesAttributes(type.BaseType));
+            actions.AddRange(GetActionsFromTypesAttributes(type.GetTypeInfo().BaseType));
 
             Type[] declaredInterfaces = GetDeclaredInterfaces(type);
 
             foreach(Type interfaceType in declaredInterfaces)
-                actions.AddRange(GetActionsFromAttributeProvider(interfaceType));
+                actions.AddRange(GetActionsFromAttributeProvider(interfaceType.GetTypeInfo()));
 
-            actions.AddRange(GetActionsFromAttributeProvider(type));
+            actions.AddRange(GetActionsFromAttributeProvider(type.GetTypeInfo()));
 
             return actions.ToArray();
         }
@@ -108,10 +144,10 @@ namespace NUnit.Framework.Internal
         {
             List<Type> interfaces = new List<Type>(type.GetInterfaces());
 
-            if (type.BaseType == typeof(object))
+            if (type.GetTypeInfo().BaseType == typeof(object))
                 return interfaces.ToArray();
 
-            List<Type> baseInterfaces = new List<Type>(type.BaseType.GetInterfaces());
+            List<Type> baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
             List<Type> declaredInterfaces = new List<Type>();
 
             foreach (Type interfaceType in interfaces)

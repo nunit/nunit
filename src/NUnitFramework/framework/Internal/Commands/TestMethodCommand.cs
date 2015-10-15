@@ -56,7 +56,6 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="context">The execution context</param>
         public override TestResult Execute(TestExecutionContext context)
         {
-            var thisThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
             // TODO: Decide if we should handle exceptions here
             object result = RunTestMethod(context);
 
@@ -71,7 +70,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunTestMethod(TestExecutionContext context)
         {
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
                 return RunAsyncTestMethod(context);
             else
@@ -79,7 +78,7 @@ namespace NUnit.Framework.Internal.Commands
                 return RunNonAsyncTestMethod(context);
         }
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
         private object RunAsyncTestMethod(TestExecutionContext context)
         {
             using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method.MethodInfo))

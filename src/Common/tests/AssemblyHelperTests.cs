@@ -57,7 +57,7 @@ namespace NUnit.Common.Tests
             Assert.That(assemblyName.FullName, Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCORE
         [Test]
         public void GetPathForAssembly()
         {

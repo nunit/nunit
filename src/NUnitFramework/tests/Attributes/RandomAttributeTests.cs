@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
+using System.Reflection;
 using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.RandomAttributeTests;

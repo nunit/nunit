@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -121,16 +123,16 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public override bool CanCompare(object x, object y)
             {
-                return typeof(T).IsAssignableFrom(x.GetType())
-                    && typeof(T).IsAssignableFrom(y.GetType());
+                return typeof(T).GetTypeInfo().IsAssignableFrom(x.GetType().GetTypeInfo())
+                    && typeof(T).GetTypeInfo().IsAssignableFrom(y.GetType().GetTypeInfo());
             }
 
             protected void ThrowIfNotCompatible(object x, object y)
             {
-                if (!typeof(T).IsAssignableFrom(x.GetType()))
+                if (!typeof(T).GetTypeInfo().IsAssignableFrom(x.GetType().GetTypeInfo()))
                     throw new ArgumentException("Cannot compare " + x.ToString());
 
-                if (!typeof(T).IsAssignableFrom(y.GetType()))
+                if (!typeof(T).GetTypeInfo().IsAssignableFrom(y.GetType().GetTypeInfo()))
                     throw new ArgumentException("Cannot compare " + y.ToString());
             }
         }

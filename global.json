@@ -1,0 +1,14 @@
+﻿{
+  "projects": [
+    "src/NUnitFramework/framework/nunit.framework-netcore",
+    "src/NUnitFramework/mock-assembly/mock-nunit-assembly-netcore",
+    "src/NUnitFramework/testdata/nunit.testdata-netcore",
+    "src/NUnitFramework/tests/nunit.framework.tests-netcore",
+    "src/NUnitFramework/nunitlite.runner/nunitlite.runner-netcore"
+  ],
+  "sdk": {
+    "version": "1.0.0-beta5",
+    "runtime": "clr",
+    "architecture": "x86"
+  }
+}

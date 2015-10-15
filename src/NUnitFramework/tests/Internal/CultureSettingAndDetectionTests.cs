@@ -149,7 +149,7 @@ namespace NUnit.Framework.Internal
                 Assert.AreEqual( RunState.Skipped, test.RunState, test.Name );
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
         [Test]
         [Platform(Exclude = "Windows10,WindowsServer10", Reason = "An unknown culture string creates a user defined culture in Windows 10")]
         public void SettingInvalidCultureOnFixtureGivesError()

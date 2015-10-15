@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // TODO: Get to work in Portable and Silverlight - will require building mock-assembly
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
 
 using System;
 using System.Collections;

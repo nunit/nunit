@@ -5,7 +5,7 @@
 // ****************************************************************
 
 // TODO: Figure out how to make test work in SILVERLIGHT, since they support SetUpFixture
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
 using System.Collections;
 using NUnit.Common;
 using NUnit.Framework.Api;

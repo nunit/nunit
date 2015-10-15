@@ -25,6 +25,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
+
+#if NETCORE
+using System.Linq;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -115,18 +120,22 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
+#if NETCORE
+            return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
+                .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
+#else
+
 #if NETCF
             if (fixtureType.ContainsGenericParameters)
                 return false;
 #endif
-
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
                 if (method.IsDefined(attributeType, false))
                     return true;
             }
-
             return false;
+#endif
         }
 
         #endregion
@@ -210,7 +219,7 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if !PORTABLE
+#if !PORTABLE && !NETCORE
                 catch (System.Threading.ThreadAbortException)
                 {
                     // No need to wrap or rethrow ThreadAbortException

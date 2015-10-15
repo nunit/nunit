@@ -23,7 +23,12 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
+
+#if NETCORE
+using System.Linq;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -165,7 +170,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
+#if NETCORE
+            return MethodInfo.GetAttributes<T>(inherit).ToArray();
+#else
             return (T[])MethodInfo.GetCustomAttributes(typeof(T), inherit);
+#endif
         }
 
         /// <summary>
@@ -173,7 +182,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsDefined<T>(bool inherit)
         {
+#if NETCORE
+            return MethodInfo.GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
+#else
             return MethodInfo.IsDefined(typeof(T), inherit);
+#endif
         }
 
         /// <summary>

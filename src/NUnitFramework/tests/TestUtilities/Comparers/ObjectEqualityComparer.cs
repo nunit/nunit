@@ -37,7 +37,7 @@ namespace NUnit.TestUtilities.Comparers
         bool IEqualityComparer.Equals(object x, object y)
         {
             Called = true;
-#if SILVERLIGHT || PORTABLE
+#if SILVERLIGHT || PORTABLE || NETCORE
             return Comparer<object>.Default.Compare(x, y) == 0;
 #else
             return Comparer.Default.Compare(x, y) == 0;

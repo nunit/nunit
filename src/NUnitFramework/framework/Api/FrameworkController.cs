@@ -50,7 +50,7 @@ namespace NUnit.Framework.Api
     [Serializable]
     public class FrameworkController : LongLivedMarshalByRefObject
     {
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE && !SILVERLIGHT && !NETCORE
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 #endif
 
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Api
 
                 if (settings.Contains(PackageSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)settings[PackageSettings.InternalTraceWriter], traceLevel);
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE && !SILVERLIGHT && !NETCORE
                 else
                 {
                     var workDirectory = settings.Contains(PackageSettings.WorkDirectory) ? (string)settings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
