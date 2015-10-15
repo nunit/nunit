@@ -52,7 +52,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenParallelizedTestsFromNUnit3()
+        public void ShouldSendMessagesWithValidFlowIdWhenParallelizedTestsFromNUnit3()
         {
             // Given
             var publisher = CreateInstance();
@@ -119,7 +119,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenHas1SuiteFromNUnit3()
+        public void ShouldSendMessagesWithValidFlowIdWhenHas1SuiteFromNUnit3()
         {
             // Given
             var publisher = CreateInstance();
@@ -153,7 +153,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenHasNoSuiteFromNUnit3()
+        public void ShouldSendMessagesWithValidFlowIdWhenHasNoSuiteFromNUnit3()
         {
             // Given
             var publisher = CreateInstance();
@@ -176,7 +176,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenOutputIsEmpty()
+        public void ShouldSendMessagesWithValidFlowIdWhenOutputIsEmpty()
         {
             // Given
             var publisher = CreateInstance();
@@ -198,7 +198,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenHasNoOutput()
+        public void ShouldSendMessagesWithValidFlowIdWhenHasNoOutput()
         {
             // Given
             var publisher = CreateInstance();
@@ -220,7 +220,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenTestsFromNUnit2()
+        public void ShouldSendMessagesWithValidFlowIdWhenTestsFromNUnit2()
         {
             // Given
             var publisher = CreateInstance();
@@ -282,7 +282,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenHas1SuiteFromNUnit2()
+        public void ShouldSendMessagesWithValidFlowIdWhenHas1SuiteFromNUnit2()
         {
             // Given
             var publisher = CreateInstance();
@@ -314,7 +314,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void SholdSendMessagesWithValidFlowIdWhenHasNoSuiteFromNUnit2()
+        public void ShouldSendMessagesWithValidFlowIdWhenHasNoSuiteFromNUnit2()
         {
             // Given
             var publisher = CreateInstance();

@@ -110,6 +110,7 @@
     <Compile Include="Utilities\SaveConsoleOutput.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\TeamCityEventHandler.cs" />
     <Compile Include="Utilities\TeamCityServiceMessagePublisher.cs" />
   </ItemGroup>
   <ItemGroup>
