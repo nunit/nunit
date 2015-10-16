@@ -23,11 +23,11 @@
         "System.Linq": "4.0.1-beta-23225",
         "System.Reflection.Extensions": "4.0.1-beta-23225",
         "System.Threading": "4.0.11-beta-23225",
-        "mock-nunit-assembly-netcore": "3.0.0-*",
-        "nunit.framework-netcore": "3.0.0-*",
-        "nunit.framework.tests-netcore": "3.0.0-*",
-        "nunit.testdata-netcore": "3.0.0-*",
-        "nunitlite.runner-netcore": "3.0.0-*"
+        "mock-nunit-assembly": "3.0.0-*",
+        "nunit.framework": "3.0.0-*",
+        "nunit.framework.tests": "3.0.0-*",
+        "nunit.testdata": "3.0.0-*",
+        "nunitlite.runner": "3.0.0-*"
       }
     }
   }

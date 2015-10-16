@@ -2,7 +2,7 @@
   "version": "3.0.0-*",
   "frameworks": {
     "dnxcore50": {
-      "wrappedProject": "../../src/NUnitFramework/testdata/nunit.testdata-netcore/nunit.testdata-netcore.csproj",
+      "wrappedProject": "../../src/NUnitFramework/testdata/nunit.testdata-netcore/nunit.testdata.csproj",
       "bin": {
         "assembly": "../../bin/Debug/netcore/nunit.testdata.dll",
         "pdb": "../../bin/Debug/netcore/nunit.testdata.pdb"

@@ -49,9 +49,9 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework-netcore.csproj">
+    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework.csproj">
       <Project>{0030ac1c-25b9-44d4-b676-f30606c1912c}</Project>
-      <Name>nunit.framework-netcore</Name>
+      <Name>nunit.framework</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

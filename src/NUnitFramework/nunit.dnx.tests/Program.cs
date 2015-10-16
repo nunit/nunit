@@ -9,8 +9,8 @@ namespace NUnitLite.Runner
     public class Program
     {
         public void Main(string[] args)
-        {                        
-            new AutoRun().Execute(typeof(Program).GetTypeInfo().Assembly, Console.Out, Console.In, args);
+        {   
+            new AutoRun().Execute(typeof(NUnit.Framework.Tests.ThrowsTests).GetTypeInfo().Assembly, Console.Out, Console.In, args);
         }
     }
 }

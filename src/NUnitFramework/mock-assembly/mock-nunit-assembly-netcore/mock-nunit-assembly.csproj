@@ -5,14 +5,15 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2A6A6C3F-486C-4547-A050-ACA60BB28A16}</ProjectGuid>
+    <ProjectGuid>{75BD51CB-AB1D-4C2B-81F3-BB42AC9AB847}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnitLite</RootNamespace>
-    <AssemblyName>nunitlite.runner-netcore</AssemblyName>
+    <RootNamespace>NUnit.Tests</RootNamespace>
+    <AssemblyName>mock-nunit-assembly</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <IntermediateOutputPath>obj\$(Configuration)\netcore\</IntermediateOutputPath>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
@@ -22,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\..\bin\Debug\netcore\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETCORE;NUNITLITE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETCORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -30,7 +31,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\..\bin\Release\netcore\</OutputPath>
-    <DefineConstants>TRACE;NETCORE;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NETCORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -38,10 +39,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\framework\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\..\nunit.snk">
+    <None Include="..\..\framework\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
     <None Include="project.json" />
@@ -49,51 +50,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\CommandLineOptions.cs">
-      <Link>Runner\CommandLineOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\IDefaultOptionsProvider.cs">
-      <Link>Runner\IDefaultOptionsProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\Options.cs">
-      <Link>Runner\Options.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\TestNameParser.cs">
-      <Link>Runner\TestNameParser.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\TestSelectionParser.cs">
-      <Link>Runner\TestSelectionParser.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\TestSelectionParserException.cs">
-      <Link>Runner\TestSelectionParserException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\Tokenizer.cs">
-      <Link>Runner\Tokenizer.cs</Link>
+      <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\FrameworkVersion.cs">
-      <Link>Properties\FrameworkVersion.cs</Link>
+      <Link>FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\MockAssembly.cs">
+      <Link>MockAssembly.cs</Link>
     </Compile>
     <Compile Include="..\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Runner\NUnitLiteOptions.cs">
-      <Link>Runner\NUnitLiteOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\ResultSummary.cs">
-      <Link>Runner\ResultSummary.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\TextRunner.cs">
-      <Link>Runner\TextRunner.cs</Link>
-    </Compile>
-    <Compile Include="Runner\AutoRun.cs" />
-    <Compile Include="Runner\TextUI.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework-netcore.csproj">
+    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework.csproj">
       <Project>{0030ac1c-25b9-44d4-b676-f30606c1912c}</Project>
-      <Name>nunit.framework-netcore</Name>
+      <Name>nunit.framework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
