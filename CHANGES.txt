@@ -1,4 +1,68 @@
-﻿NUnit 3.0.0 Beta 4 - August 25, 2015
+﻿NUnit 3.0.0 Beta 5 - October 15, 2015
+
+Framework
+
+ * Parameterized test cases now support nullable arguments.
+ * The NUnit framework may now be built for the .NET Core framework. Note that this is only available through building the source code. A binary will be available in the next release.
+
+Engine
+
+ * The engine now runs multiple test assemblies in parallel by default
+ * The output XML now includes more information about the test run, including the text of the command used, any engine settings and the filter used to select tests.
+ * Extensions may now specify data in an identifying attribute, for use by the engine in deciding whether to load that extension.
+
+
+Console Runner
+
+ * The console runner accepts a new option --maxagents. If multiple assemblies are run in separate processes, this value may be used to limit the number that are executed simultaneously in parallel.
+ * The console runner no longer accepts the --include and --exclude options. Instead, the new --where option provides a more general way to express which tests will be executed, such as --where "cat==Fast && Priority==High". See the docs for details of the syntax.
+ * The new --debug option causes NUnit to break in the debugger immediately before tests are run. This simplifies debugging, especially when the test is run in a separate process.
+
+Issues Resolved
+
+ * 41	Check for zeroes in Assert messages
+ * 254	Finalize XML format for test results
+ * 275	NUnitEqualityComparer fails to compare IEquatable<T> where second object is derived from T
+ * 304	Run test Assemblies in parallel
+ * 374	New syntax for selecting tests to be run
+ * 515	OSPlatform.IsMacOSX doesn't work
+ * 573	nunit-console hangs on Mac OS X after all tests have run
+ * 669	TeamCity service message should have assembly name as a part of test name.
+ * 689	The TeamCity service message "testFinished" should have an integer value in the "duration" attribute
+ * 713	Include command information in XML
+ * 719	We have no way to configure tests for several assemblies using NUnit project file and the common installation from msi file
+ * 735	Workers number in xml report file cannot be found
+ * 784	Build Portable Framework on Linux
+ * 790	Allow Extensions to provide data through an attribute
+ * 794	Make it easier to debug tests as well as NUnit itself
+ * 801	NUnit calls Dispose multiple times
+ * 814	Support nullable types with TestCase
+ * 818	Possible error in Merge Pull Request #797
+ * 821	Wrapped method results in loss of result information
+ * 822	Test for Debugger in NUnitTestAssemblyRunner probably should not be in CF build
+ * 824	Remove unused System.Reflection using statements
+ * 826	Randomizer uniqueness tests fail randomly!
+ * 828	Merge pull request #827 (issue 826)
+ * 830	Add ability to report test results synchronously to test runners
+ * 837	Enumerators not disposed when comparing IEnumerables
+ * 840	Add missing copyright notices
+ * 844	Pull Request #835 (Issue #814) does not build in CF
+ * 847	Add new --process:inprocess and --inprocess options
+ * 850	Test runner fails if test name contains invalid xml characters
+ * 851	'Exclude' console option is not working in NUnit Lite
+ * 853	Cannot run NUnit Console from another directory
+ * 860	Use CDATA section for message, stack-trace and output elements of XML
+ * 863	Eliminate core engine
+ * 865	Intermittent failures of StopWatchTests
+ * 869	Tests that use directory separator char to determine platform misreport Linux on MaxOSX
+ * 870	NUnit Console Runtime Environment misreports on MacOSX
+ * 874	Add .NET Core Framework
+ * 878	Cannot exclude MacOSX or XBox platforms when running on CF
+ * 892	Fixed test runner returning early when executing more than one test run.
+ * 894	Give nunit.engine and nunit.engine.api assemblies strong names
+ * 896	NUnit 3.0 console runner not placing test result xml in --work directory
+
+NUnit 3.0.0 Beta 4 - August 25, 2015
 
 Framework
 
