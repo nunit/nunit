@@ -23,65 +23,52 @@
 
 using System;
 using System.IO;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
 using System.Xml;
 using NUnit.Common;
 using NUnit.Engine;
+using NUnit.ConsoleRunner.Utilities;
 
 namespace NUnit.ConsoleRunner
-{
-    using Utilities;
-
+{    
     /// <summary>
     /// TestEventHandler processes events from the running
     /// test for the console runner.
     /// </summary>
     public class TestEventHandler : MarshalByRefObject, ITestEventListener
     {
-        private string _displayLabels;
-        private TextWriter _outWriter;
-        private TeamCityEventHandler _teamCity;
-
+        private readonly string _displayLabels;
+        private readonly TextWriter _outWriter;
+        private readonly TeamCityServiceMessagePublisher _teamCity;
 
         public TestEventHandler(TextWriter outWriter, string displayLabels, bool teamCity)
         {
             _displayLabels = displayLabels;
             _outWriter = outWriter;
             if (teamCity)
-                _teamCity = new TeamCityEventHandler(outWriter);
+            {
+                _teamCity = new TeamCityServiceMessagePublisher(outWriter);
+            }
         }
 
         #region ITestEventHandler Members
 
         public void OnTestEvent(string report)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(report);
-            XmlNode testEvent = doc.FirstChild;
 
+            var testEvent = doc.FirstChild;
             switch (testEvent.Name)
             {
-                case "start-test":
-                    if (_teamCity != null)
-                        _teamCity.TestStarted(testEvent);
-                    break;
-
                 case "test-case":
                     TestFinished(testEvent);
                     break;
-
-                case "start-suite":
-                    break;
-
-                case "test-suite":
-                    break;
-
-                case "start-run":
-                    break;
             }
 
+            if (_teamCity != null)
+            {
+                _teamCity.RegisterMessage(testEvent);
+            }            
         }
 
         #endregion
@@ -102,10 +89,7 @@ namespace NUnit.ConsoleRunner
                     WriteTestLabel(testName);
 
                 WriteTestOutput(outputNode);
-            }
-
-            if (_teamCity != null)
-                _teamCity.TestFinished(testResult);
+            }            
         }
 
         private void WriteTestLabel(string name)

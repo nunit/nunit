@@ -117,8 +117,8 @@ namespace NUnit.Framework.Internal
         }
 
         private static string GetNextId()
-        {
-            return IdPrefix + unchecked(_nextID++).ToString();
+        {            
+            return IdPrefix + unchecked(_nextID++);
         }
 
         #endregion

@@ -108,9 +108,10 @@
     <Compile Include="ResultSummary.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\SaveConsoleOutput.cs" />
-    <Compile Include="Utilities\TeamCityEventHandler.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\TeamCityEventHandler.cs" />
+    <Compile Include="Utilities\TeamCityServiceMessagePublisher.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
