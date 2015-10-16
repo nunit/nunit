@@ -53,7 +53,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -432,9 +432,10 @@
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="Throws.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <None Include="nunit.snk" />
+    <None Include="..\..\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
