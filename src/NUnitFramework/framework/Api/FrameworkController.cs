@@ -65,11 +65,7 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyNameOrPath">The AssemblyName or path to the test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
-#if NETCORE
-        private FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
-#else
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
-#endif
         {
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
