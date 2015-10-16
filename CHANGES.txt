@@ -1,4 +1,4 @@
-﻿NUnit 3.0.0 Beta 5 - October 15, 2015
+﻿NUnit 3.0.0 Beta 5 - October 16, 2015
 
 Framework
 
@@ -21,7 +21,7 @@ Console Runner
 
 Issues Resolved
 
- * 41	Check for zeroes in Assert messages
+ *  41	Check for zeroes in Assert messages
  * 254	Finalize XML format for test results
  * 275	NUnitEqualityComparer fails to compare IEquatable<T> where second object is derived from T
  * 304	Run test Assemblies in parallel
