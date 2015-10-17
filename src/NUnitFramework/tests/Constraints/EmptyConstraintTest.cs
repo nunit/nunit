@@ -105,7 +105,9 @@ namespace NUnit.Framework.Constraints
         {
             var testPath = new DirectoryInfo(NUnit.Env.DefaultWorkDirectory);
             Assume.That(testPath, Does.Exist);
-            Assert.That(testPath, Is.Not.Empty);
+#if !NETCORE
+            Assert.That(testPath, Is.Not.Empty, "{0} should not be empty", testPath.FullName);
+#endif
         }
     }
 #endif

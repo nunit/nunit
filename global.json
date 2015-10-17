@@ -1,13 +1,10 @@
-﻿{
+{
   "projects": [
-    "src/NUnitFramework/framework/nunit.framework-netcore",
-    "src/NUnitFramework/mock-assembly/mock-nunit-assembly-netcore",
-    "src/NUnitFramework/testdata/nunit.testdata-netcore",
-    "src/NUnitFramework/tests/nunit.framework.tests-netcore",
-    "src/NUnitFramework/nunitlite.runner/nunitlite.runner-netcore"
+    "src/NUnitFramework/nunit.dnx.tests",
+    "wrap"
   ],
   "sdk": {
-    "version": "1.0.0-beta5",
+    "version": "1.0.0-beta8",
     "runtime": "clr",
     "architecture": "x86"
   }

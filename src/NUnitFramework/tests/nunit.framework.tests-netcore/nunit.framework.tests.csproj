@@ -726,21 +726,21 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework-netcore.csproj">
+    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework.csproj">
       <Project>{0030ac1c-25b9-44d4-b676-f30606c1912c}</Project>
-      <Name>nunit.framework-netcore</Name>
+      <Name>nunit.framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\mock-assembly\mock-nunit-assembly-netcore\mock-nunit-assembly-netcore.csproj">
+    <ProjectReference Include="..\..\mock-assembly\mock-nunit-assembly-netcore\mock-nunit-assembly.csproj">
       <Project>{75bd51cb-ab1d-4c2b-81f3-bb42ac9ab847}</Project>
-      <Name>mock-nunit-assembly-netcore</Name>
+      <Name>mock-nunit-assembly</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\nunitlite.runner\nunitlite.runner-netcore\nunitlite.runner-netcore.csproj">
+    <ProjectReference Include="..\..\nunitlite.runner\nunitlite.runner-netcore\nunitlite.runner.csproj">
       <Project>{2a6a6c3f-486c-4547-a050-aca60bb28a16}</Project>
-      <Name>nunitlite.runner-netcore</Name>
+      <Name>nunitlite.runner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\testdata\nunit.testdata-netcore\nunit.testdata-netcore.csproj">
+    <ProjectReference Include="..\..\testdata\nunit.testdata-netcore\nunit.testdata.csproj">
       <Project>{2eccdace-913e-4cff-b19d-085e3715c758}</Project>
-      <Name>nunit.testdata-netcore</Name>
+      <Name>nunit.testdata</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

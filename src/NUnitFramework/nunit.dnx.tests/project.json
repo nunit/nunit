@@ -1,0 +1,34 @@
+﻿{
+  "version": "3.0.0-*",
+  "description": "Console Application to run nunit.framework.tests",
+  "authors": [ "Rob Prouse" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+  },
+
+  "commands": {
+    "nunit.dnx.tests": "nunit.dnx.tests"
+  },
+
+  "frameworks": {
+    "dnxcore50": {
+      "dependencies": {
+        "System.Runtime": "4.0.21-beta-23225",
+        "Microsoft.CSharp": "4.0.0-beta-23019",
+        "System.Collections": "4.0.11-beta-23225",
+        "System.Console": "4.0.0-beta-23225",
+        "System.Linq": "4.0.1-beta-23225",
+        "System.Reflection.Extensions": "4.0.1-beta-23225",
+        "System.Threading": "4.0.11-beta-23225",
+        "mock-nunit-assembly": "3.0.0-*",
+        "nunit.framework": "3.0.0-*",
+        "nunit.framework.tests": "3.0.0-*",
+        "nunit.testdata": "3.0.0-*",
+        "nunitlite.runner": "3.0.0-*"
+      }
+    }
+  }
+}

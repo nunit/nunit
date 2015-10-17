@@ -91,7 +91,11 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !NETCF && !NETCORE
+#if NETCORE
+            CultureInfo.CurrentCulture = originalCulture;
+            CultureInfo.CurrentUICulture = originalUICulture;
+
+#elif !NETCF
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
