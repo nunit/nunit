@@ -7,8 +7,8 @@
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     <PackageVersion>3.0.0</PackageVersion>
-    <PackageModifier>-beta-4</PackageModifier>
-    <DisplayVersion>3.0 Beta 4</DisplayVersion>
+    <PackageModifier>-beta-5</PackageModifier>
+    <DisplayVersion>3.0 Beta 5</DisplayVersion>
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
   </PropertyGroup>
