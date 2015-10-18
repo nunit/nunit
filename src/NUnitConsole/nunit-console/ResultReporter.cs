@@ -62,15 +62,15 @@ namespace NUnit.ConsoleRunner
         {
             _writer.WriteLine();
 
-            WriteRunSettingsReport();
-
-            WriteSummaryReport();
+            if (Summary.SkipCount + Summary.IgnoreCount > 0)
+                WriteNotRunReport();
 
             if (_overallResult == "Failed")
                 WriteErrorsAndFailuresReport();
 
-            if (Summary.SkipCount + Summary.IgnoreCount > 0)
-                WriteNotRunReport();
+            WriteRunSettingsReport();
+
+            WriteSummaryReport();
         }
 
         #region
