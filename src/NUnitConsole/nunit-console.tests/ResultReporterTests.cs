@@ -38,9 +38,10 @@ namespace NUnit.ConsoleRunner.Tests
     {
         private const string MOCK_TEST_RESULT = "NUnit.ConsoleRunner.Tests.MockTestResult.xml";
         private static readonly string[] REPORT_SEQUENCE = new string[] {
-            "Test Run Summary",
+            "Tests Not Run",
             "Errors and Failures",
-            "Tests Not Run"
+            "Run Settings",
+            "Test Run Summary"
         };
 
         private XmlNode _result;
@@ -90,6 +91,7 @@ namespace NUnit.ConsoleRunner.Tests
                 var index = report.IndexOf(title);
                 Assert.That(index > 0, "Report not found: " + title);
                 Assert.That(index > last, "Report out of sequence: " + title);
+                last = index;
             }
         }
 
@@ -99,11 +101,11 @@ namespace NUnit.ConsoleRunner.Tests
             var expected = new string[] {
                 "Test Run Summary",
                 "    Overall result: Failed",
-                "   Tests run: 21, Passed: 18, Errors: 1, Failures: 1, Inconclusive: 1",
-                "     Not run: 7, Invalid: 3, Ignored: 4, Explicit: 0, Skipped: 0",
-                "  Start time: 2014-12-02 03:07:10Z",
-                "    End time: 2014-12-02 03:07:10Z",
-                "    Duration: 0.193 seconds",
+                "   Tests run: 35, Passed: 30, Errors: 1, Failures: 3, Inconclusive: 1",
+                "     Not run: 10, Invalid: 3, Ignored: 4, Explicit: 3, Skipped: 0",
+                "  Start time: 2015-10-19 02:12:28Z",
+                "    End time: 2015-10-19 02:12:29Z",
+                "    Duration: 0.349 seconds",
                 ""
             };
 
@@ -119,7 +121,7 @@ namespace NUnit.ConsoleRunner.Tests
                 "",
                 "1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest",
                 "Intentional failure",
-                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 134",
+                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 148",
                 "",
                 "2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5",
                 "Method is not public",
@@ -129,11 +131,19 @@ namespace NUnit.ConsoleRunner.Tests
                 "",
                 "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException",
                 "System.Exception : Intentional Exception",
-                "   at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 171",
-                "   at NUnit.Tests.Assemblies.MockTestFixture.TestWithException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 166",
+                "   at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 185",
+                "   at NUnit.Tests.Assemblies.MockTestFixture.TestWithException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 180",
                 "",
                 "5) Invalid : NUnit.Tests.BadFixture",
                 "No suitable constructor was found",
+                "",
+                "6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage",
+                "The CDATA was: <![CDATA[ My <xml> ]]>",
+                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 344",
+                "",
+                "7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage",
+                "Deliberate failure to illustrate ]]> in message ",
+                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 338",
                 ""
             };
 
@@ -147,16 +157,25 @@ namespace NUnit.ConsoleRunner.Tests
             var expected = new string[] {
                 "Tests Not Run",
                 "",
-                "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
+                "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitlyRunTest",
+                "",
+                "",
+                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
                 "ignoring this test method for now",
                 "",
-                "2) Ignored : NUnit.Tests.IgnoredFixture.Test1",
+                "3) Explicit : NUnit.Tests.ExplicitFixture.Test1",
+                "OneTimeSetUp: ",
+                "",
+                "4) Explicit : NUnit.Tests.ExplicitFixture.Test2",
+                "OneTimeSetUp: ",
+                "",
+                "5) Ignored : NUnit.Tests.IgnoredFixture.Test1",
                 "OneTimeSetUp: BECAUSE",
                 "",
-                "3) Ignored : NUnit.Tests.IgnoredFixture.Test2",
+                "6) Ignored : NUnit.Tests.IgnoredFixture.Test2",
                 "OneTimeSetUp: BECAUSE",
                 "",
-                "4) Ignored : NUnit.Tests.IgnoredFixture.Test3",
+                "7) Ignored : NUnit.Tests.IgnoredFixture.Test3",
                 "OneTimeSetUp: BECAUSE",
                 ""
             };
