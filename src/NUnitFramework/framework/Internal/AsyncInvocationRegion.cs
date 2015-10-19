@@ -48,12 +48,14 @@ namespace NUnit.Framework.Internal
 
             if (method != null)
             {
-                PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof (Action<Exception>), method);
+                try
+                {
+                    PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), method);
+                    return;
+                }
+                catch (InvalidOperationException) { }
             }
-            else 
-            {
-                PreserveStackTrace = _ => { };
-            }
+            PreserveStackTrace = _ => { };
         }
 #endif
 
