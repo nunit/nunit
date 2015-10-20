@@ -33,14 +33,12 @@ namespace NUnit.Framework.Internal.Filters
     public abstract class CompositeFilter : TestFilter
     {
         /// <summary>
-        /// List of component filters
-        /// </summary>
-        protected List<ITestFilter> _filters = new List<ITestFilter>();
-
-        /// <summary>
         /// Constructs an empty CompositeFilter
         /// </summary>
-        public CompositeFilter() { }
+        public CompositeFilter()
+        {
+            Filters = new List<ITestFilter>();
+        }
 
         /// <summary>
         /// Constructs a CompositeFilter from an array of filters
@@ -48,7 +46,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="filters"></param>
         public CompositeFilter( params ITestFilter[] filters )
         {
-            _filters.AddRange( filters );
+            Filters = new List<ITestFilter>(filters);
         }
 
         /// <summary>
@@ -57,15 +55,12 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="filter">The filter to be added</param>
         public void Add(ITestFilter filter)
         {
-            _filters.Add(filter);
+            Filters.Add(filter);
         }
 
         /// <summary>
-        /// Return an array of the composing filters
+        /// Return a list of the composing filters.
         /// </summary>
-        public ITestFilter[] Filters
-        {
-            get { return _filters.ToArray(); }
-        }
+        public IList<ITestFilter> Filters { get; private set; }
     }
 }
