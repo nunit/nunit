@@ -80,18 +80,10 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
-      <Link>Internal\AssemblyHelperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>Runner\ExtendedTextWrapperTests.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
-    <Compile Include="Api\FrameworkControllerTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="App.xaml.cs">
@@ -233,6 +225,7 @@
     <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
+    <Compile Include="Internal\Filters\PropertyFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
@@ -240,23 +233,13 @@
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
-    <Compile Include="Internal\PlatformDetectionTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Internal\PropertyBagTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Internal\RandomizerTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Internal\PlatformDetectionTests.cs" />
+    <Compile Include="Internal\PropertyBagTests.cs" />
+    <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
-    <Compile Include="Internal\RuntimeFrameworkTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpFixtureTests.cs" />
-    <Compile Include="Internal\SetUpTearDownTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
@@ -274,12 +257,6 @@
     <Compile Include="Internal\WorkItemQueueTests.cs" />
     <Compile Include="Internal\WorkShiftTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\CommandLineTests.cs" />
-    <Compile Include="Runner\CreateTestFilterTests.cs" />
-    <Compile Include="Runner\MakeRunSettingsTests.cs" />
-    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="Runner\TeamCityEventListenerTests.cs" />
-    <Compile Include="Runner\TextUITests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />

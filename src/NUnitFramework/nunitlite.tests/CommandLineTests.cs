@@ -29,7 +29,7 @@ using System.Globalization;
 using NUnit.Common;
 using NUnit.Framework;
 
-namespace NUnitLite.Runner.Tests
+namespace NUnitLite.Tests
 {
     using System.Collections.Generic;
 

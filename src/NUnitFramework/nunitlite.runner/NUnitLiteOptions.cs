@@ -23,7 +23,7 @@
 
 using NUnit.Common;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// NUnitLiteOptions encapsulates the option settings for NUnitLite.

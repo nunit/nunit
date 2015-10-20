@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// Helper class used to summarize the result of a test run

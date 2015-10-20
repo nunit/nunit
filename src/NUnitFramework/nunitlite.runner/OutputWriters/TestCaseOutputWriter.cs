@@ -25,7 +25,7 @@ using System.IO;
 using System.Text;
 using NUnit.Framework.Interfaces;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// TestCaseOutputWriter lists test cases

@@ -51,71 +51,71 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ColorConsole.cs">
-      <Link>Runner\ColorConsole.cs</Link>
+      <Link>ColorConsole.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
-      <Link>Runner\ColorConsoleWriter.cs</Link>
+      <Link>ColorConsoleWriter.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ColorStyle.cs">
-      <Link>Runner\ColorStyle.cs</Link>
+      <Link>ColorStyle.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\CommandLineOptions.cs">
-      <Link>Runner\CommandLineOptions.cs</Link>
+      <Link>CommandLineOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
-      <Link>Runner\DefaultOptionsProvider.cs</Link>
+      <Link>DefaultOptionsProvider.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
-      <Link>Runner\ExtendedTextWrapper.cs</Link>
+      <Link>ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
-      <Link>Runner\ExtendedTextWriter.cs</Link>
+      <Link>ExtendedTextWriter.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
-      <Link>Runner\IDefaultOptionsProvider.cs</Link>
+      <Link>IDefaultOptionsProvider.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Options.cs">
-      <Link>Runner\Options.cs</Link>
+      <Link>Options.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
-      <Link>Runner\OutputSpecification.cs</Link>
+      <Link>OutputSpecification.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\StringExtensions.cs">
-      <Link>Runner\StringExtensions.cs</Link>
+      <Link>StringExtensions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\StringSplitOptions.cs">
-      <Link>Runner\StringSplitOptions.cs</Link>
+      <Link>StringSplitOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
-      <Link>Runner\TestNameParser.cs</Link>
+      <Link>TestNameParser.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
-      <Link>Runner\TestSelectionParser.cs</Link>
+      <Link>TestSelectionParser.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
-      <Link>Runner\TestSelectionParserException.cs</Link>
+      <Link>TestSelectionParserException.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Tokenizer.cs">
-      <Link>Runner\Tokenizer.cs</Link>
+      <Link>Tokenizer.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="AutoRun.cs" />
+    <Compile Include="DebugWriter.cs" />
+    <Compile Include="NUnitLiteOptions.cs" />
+    <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\OutputWriter.cs" />
+    <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\AutoRun.cs" />
-    <Compile Include="Runner\DebugWriter.cs" />
-    <Compile Include="Runner\NUnitLiteOptions.cs" />
-    <Compile Include="Runner\OutputManager.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
-    <Compile Include="Runner\Program.cs" />
-    <Compile Include="Runner\ResultSummary.cs" />
-    <Compile Include="Runner\TcpWriter.cs" />
-    <Compile Include="Runner\TeamCityEventListener.cs" />
-    <Compile Include="Runner\TextRunner.cs" />
-    <Compile Include="Runner\TextUI.cs" />
+    <Compile Include="ResultSummary.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="TcpWriter.cs" />
+    <Compile Include="TeamCityEventListener.cs" />
+    <Compile Include="TextRunner.cs" />
+    <Compile Include="TextUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
@@ -128,6 +128,7 @@
       <Link>nunit.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

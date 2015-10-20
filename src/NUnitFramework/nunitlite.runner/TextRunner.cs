@@ -31,7 +31,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// TextRunner is a general purpose class that runs tests and

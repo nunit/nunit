@@ -30,7 +30,7 @@ using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// NUnit3XmlOutputWriter is responsible for writing the results

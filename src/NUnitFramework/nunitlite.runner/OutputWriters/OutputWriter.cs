@@ -25,7 +25,7 @@ using System.IO;
 using System.Text;
 using NUnit.Framework.Interfaces;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// OutputWriter is an abstract class used to write test

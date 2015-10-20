@@ -29,7 +29,7 @@ using System.Reflection;
 using NUnit.Common;
 using NUnit.Framework.Internal;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// The AutoRun class is used by executable test

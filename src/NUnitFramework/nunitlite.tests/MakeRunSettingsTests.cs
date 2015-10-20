@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,54 +21,43 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if false
-using System;
+#if !SILVERLIGHT && !PORTABLE && !NETCORE
 using System.IO;
-using System.Net.Sockets;
-using System.Text;
+using NUnit.Common;
+using NUnit.Framework;
 
-namespace NUnitLite.Runner
+namespace NUnitLite.Tests
 {
-    /// <summary>
-    /// Redirects output to a Tcp connection
-    /// </summary>
-    class TcpWriter : TextWriter
+    public class MakeRunSettingsTests
     {
-        private string hostName;
-        private int port;
-
-        private TcpClient client;
-        private NetworkStream stream;
-        private StreamWriter writer;
-
-        public TcpWriter(string hostName, int port)
+        [Test]
+        public void WhenTimeoutIsSpecified_RunSettingsIncludeIt()
         {
-            this.hostName = hostName;
-            this.port = port;
-            this.client = new TcpClient(hostName, port);
-            this.stream = client.GetStream();
-            this.writer = new StreamWriter(stream);
+            var options = new NUnitLiteOptions("test.dll", "--timeout=50");
+            var settings = TextRunner.MakeRunSettings(options);
+
+            Assert.That(settings.ContainsKey("DefaultTimeout"));
+            Assert.AreEqual(50, settings["DefaultTimeout"]);
         }
 
-        public override void Write(char value)
+        [Test]
+        public void WhenWorkDirectoryIsSpecified_RunSettingsIncludeIt()
         {
-            writer.Write(value);
+            var options = new NUnitLiteOptions("test.dll", "--work=results");
+            var settings = TextRunner.MakeRunSettings(options);
+
+            Assert.That(settings.ContainsKey("WorkDirectory"));
+            Assert.AreEqual(Path.GetFullPath("results"), settings["WorkDirectory"]);
         }
 
-        public override void Write(string value)
+        [Test]
+        public void WhenSeedIsSpecified_RunSettingsIncludeIt()
         {
-            writer.Write(value);
-        }
+            var options = new NUnitLiteOptions("test.dll", "--seed=1234");
+            var settings = TextRunner.MakeRunSettings(options);
 
-        public override void WriteLine(string value)
-        {
-            writer.WriteLine(value);
-            writer.Flush();
-        }
-
-        public override System.Text.Encoding Encoding
-        {
-            get { return System.Text.Encoding.Default; }
+            Assert.That(settings.ContainsKey("RandomSeed"));
+            Assert.AreEqual(1234, settings["RandomSeed"]);
         }
     }
 }

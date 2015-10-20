@@ -28,7 +28,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 using NUnit.TestUtilities;
 
-namespace NUnitLite.Runner.Tests
+namespace NUnitLite.Tests
 {
     public class CreateTestFilterTests
     {

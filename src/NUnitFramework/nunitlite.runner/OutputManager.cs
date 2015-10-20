@@ -28,7 +28,7 @@ using System.Xml;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// OutputManager is responsible for creating output files

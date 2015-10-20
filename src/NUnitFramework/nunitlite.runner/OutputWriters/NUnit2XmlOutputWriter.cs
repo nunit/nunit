@@ -31,7 +31,7 @@ using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// NUnit2XmlOutputWriter is able to create an xml file representing

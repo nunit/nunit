@@ -27,7 +27,7 @@ using System.Globalization;
 using System.IO;
 using NUnit.Framework.Interfaces;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// TeamCityEventListener class handles ITestListener events

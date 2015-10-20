@@ -26,7 +26,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// DebugWriter is a TextWriter that sends it's 

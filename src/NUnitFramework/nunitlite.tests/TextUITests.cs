@@ -34,7 +34,7 @@ using NUnit.TestUtilities;
 using NUnit.Tests.Assemblies;
 #endif
 
-namespace NUnitLite.Runner.Tests
+namespace NUnitLite.Tests
 {
     public class TextUITests
     {

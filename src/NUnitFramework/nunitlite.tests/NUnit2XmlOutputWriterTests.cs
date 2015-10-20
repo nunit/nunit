@@ -30,7 +30,7 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Tests.Assemblies;
 
-namespace NUnitLite.Runner.Tests
+namespace NUnitLite.Tests
 {
     public class NUnit2XmlOutputWriterTests
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Common;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     static class Program
     {
