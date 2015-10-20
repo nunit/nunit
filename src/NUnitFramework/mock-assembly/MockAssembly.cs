@@ -26,7 +26,7 @@ using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 #if !SILVERLIGHT && !PORTABLE && !NETCORE
-using NUnitLite.Runner;
+using NUnitLite;
 #endif
 
 namespace NUnit.Tests

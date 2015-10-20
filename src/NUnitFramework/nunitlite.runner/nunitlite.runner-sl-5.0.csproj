@@ -68,51 +68,51 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ColorStyle.cs">
-      <Link>Runner\ColorStyle.cs</Link>
+      <Link>ColorStyle.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
-      <Link>Runner\ExtendedTextWrapper.cs</Link>
+      <Link>ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
-      <Link>Runner\ExtendedTextWriter.cs</Link>
+      <Link>ExtendedTextWriter.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Options.cs">
-      <Link>Runner\Options.cs</Link>
+      <Link>Options.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
-      <Link>Runner\OutputSpecification.cs</Link>
+      <Link>OutputSpecification.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\StringExtensions.cs">
-      <Link>Runner\StringExtensions.cs</Link>
+      <Link>StringExtensions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\StringSplitOptions.cs">
-      <Link>Runner\StringSplitOptions.cs</Link>
+      <Link>StringSplitOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
-      <Link>Runner\TestNameParser.cs</Link>
+      <Link>TestNameParser.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="DebugWriter.cs" />
+    <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\OutputWriter.cs" />
+    <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\DebugWriter.cs" />
-    <Compile Include="Runner\OutputManager.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
-    <Compile Include="Runner\ResultSummary.cs" />
-    <Compile Include="Runner\Silverlight\TestPage.xaml.cs">
+    <Compile Include="ResultSummary.cs" />
+    <Compile Include="Silverlight\TestPage.xaml.cs">
       <DependentUpon>TestPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Runner\Silverlight\TextBlockWriter.cs" />
-    <Compile Include="Runner\TcpWriter.cs" />
-    <Compile Include="Runner\TeamCityEventListener.cs" />
-    <Compile Include="Runner\TextRunner.cs" />
-    <Compile Include="Runner\TextUI.cs" />
+    <Compile Include="Silverlight\TextBlockWriter.cs" />
+    <Compile Include="TcpWriter.cs" />
+    <Compile Include="TeamCityEventListener.cs" />
+    <Compile Include="TextRunner.cs" />
+    <Compile Include="TextUI.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Runner\Silverlight\TestPage.xaml">
+    <Page Include="Silverlight\TestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -128,6 +128,7 @@
       <Link>nunit.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

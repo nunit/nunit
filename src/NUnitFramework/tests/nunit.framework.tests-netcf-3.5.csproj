@@ -62,15 +62,6 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>Runner\ExtendedTextWrapperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
-      <Link>Runner\TestSelectionParserTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
-      <Link>Runner\TokenizerTests.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -250,12 +241,6 @@
     <Compile Include="Internal\WorkShiftTests.cs" />
     <Compile Include="NUnitLite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\CommandLineTests.cs" />
-    <Compile Include="Runner\CreateTestFilterTests.cs" />
-    <Compile Include="Runner\MakeRunSettingsTests.cs" />
-    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="Runner\TeamCityEventListenerTests.cs" />
-    <Compile Include="Runner\TextUITests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
