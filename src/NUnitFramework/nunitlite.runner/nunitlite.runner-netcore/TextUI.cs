@@ -31,7 +31,7 @@ using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     public class TextUI
     {

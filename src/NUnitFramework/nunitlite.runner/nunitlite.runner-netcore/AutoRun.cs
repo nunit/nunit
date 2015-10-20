@@ -24,7 +24,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace NUnitLite.Runner
+namespace NUnitLite
 {
     /// <summary>
     /// The AutoRun class is used by executable test

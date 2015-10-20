@@ -40,10 +40,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\framework\nunit.snk">
+    <None Include="..\..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
     <None Include="project.json" />
@@ -52,12 +52,6 @@
   <ItemGroup>
     <Compile Include="..\..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\tests\TestSelectionParserTests.cs">
-      <Link>Runner\TestSelectionParserTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\tests\TokenizerTests.cs">
-      <Link>Runner\TokenizerTests.cs</Link>
     </Compile>
     <Compile Include="..\..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
@@ -574,24 +568,6 @@
     </Compile>
     <Compile Include="..\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\CommandLineTests.cs">
-      <Link>Runner\CommandLineTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\CreateTestFilterTests.cs">
-      <Link>Runner\CreateTestFilterTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\MakeRunSettingsTests.cs">
-      <Link>Runner\MakeRunSettingsTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\NUnit2XmlOutputWriterTests.cs">
-      <Link>Runner\NUnit2XmlOutputWriterTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\TeamCityEventListenerTests.cs">
-      <Link>Runner\TeamCityEventListenerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Runner\TextUITests.cs">
-      <Link>Runner\TextUITests.cs</Link>
     </Compile>
     <Compile Include="..\Syntax\AfterTests.cs">
       <Link>Syntax\AfterTests.cs</Link>

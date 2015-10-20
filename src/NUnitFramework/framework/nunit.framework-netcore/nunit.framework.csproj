@@ -41,7 +41,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -1057,7 +1057,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\nunit.snk">
+    <None Include="..\..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
     <None Include="project.json" />
