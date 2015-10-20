@@ -88,6 +88,7 @@
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
+    <Compile Include="Internal\TestNameGeneratorTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />
     <Compile Include="Internal\TypeHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

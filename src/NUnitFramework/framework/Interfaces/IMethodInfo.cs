@@ -83,11 +83,6 @@ namespace NUnit.Framework.Interfaces
         #region Methods
 
         /// <summary>
-        /// Get the display name for a method with arguments
-        /// </summary>
-        string GetDisplayName(object[] args);
-
-        /// <summary>
         /// Gets the parameters of the method.
         /// </summary>
         /// <returns></returns>

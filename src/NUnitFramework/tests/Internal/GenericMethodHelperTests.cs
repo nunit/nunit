@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal
         public void GetTypeArgumentsForMethodTests(string methodName, object[] args, Type[] typeArgs)
         {
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.That(new GenericMethodHelper(method).GetTypeArguments(args), Is.EqualTo(typeArgs), MethodHelper.GetDisplayName(method, args));
+            Assert.That(new GenericMethodHelper(method).GetTypeArguments(args), Is.EqualTo(typeArgs));
         }
 
         private static object[] ArgList(params object[] args) { return args; }
