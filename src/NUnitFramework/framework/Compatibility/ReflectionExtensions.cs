@@ -204,6 +204,7 @@ namespace NUnit.Framework.Compatibility
         {
             return type.GetRuntimeProperties()
                 .ApplyBindingFlags(flags)
+                .Where(p => p.Name == name)
                 .FirstOrDefault();
         }
 
