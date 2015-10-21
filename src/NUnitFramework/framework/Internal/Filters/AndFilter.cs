@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if all the component filters pass, otherwise false</returns>
         public override bool Pass( ITest test )
         {
-            foreach( ITestFilter filter in _filters )
+            foreach( ITestFilter filter in Filters )
                 if ( !filter.Pass( test ) )
                     return false;
 
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if all the component filters match, otherwise false</returns>
         public override bool Match( ITest test )
         {
-            foreach( TestFilter filter in _filters )
+            foreach( TestFilter filter in Filters )
                 if ( !filter.Match( test ) )
                     return false;
 

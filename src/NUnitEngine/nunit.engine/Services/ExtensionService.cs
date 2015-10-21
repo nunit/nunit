@@ -294,6 +294,7 @@ namespace NUnit.Engine.Services
         {
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(Path.GetDirectoryName(assemblyName));
+            resolver.AddSearchDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             var parameters = new ReaderParameters() { AssemblyResolver = resolver };
             var module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
             foreach (var type in module.GetTypes())

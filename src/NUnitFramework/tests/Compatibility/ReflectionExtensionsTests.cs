@@ -321,7 +321,9 @@ namespace NUnit.Framework.Tests.Compatibility
 
     public class DerivedTestClass : BaseTestClass
     {
+#pragma warning disable 0169
         private string _private;
+#pragma warning restore
         public string _public;
 
         static DerivedTestClass() { StaticString = "static"; }

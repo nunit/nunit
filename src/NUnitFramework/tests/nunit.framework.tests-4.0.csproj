@@ -55,18 +55,6 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
-      <Link>Runner\DefaultOptionsProviderTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>Runner\ExtendedTextWrapperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
-      <Link>Runner\TestSelectionParserTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
-      <Link>Runner\TokenizerTests.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -240,12 +228,6 @@
     <Compile Include="Internal\WorkItemQueueTests.cs" />
     <Compile Include="Internal\WorkShiftTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\CommandLineTests.cs" />
-    <Compile Include="Runner\CreateTestFilterTests.cs" />
-    <Compile Include="Runner\MakeRunSettingsTests.cs" />
-    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="Runner\TeamCityEventListenerTests.cs" />
-    <Compile Include="Runner\TextUITests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
@@ -342,10 +324,6 @@
     <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-4.0.csproj">
       <Project>{DDCE1AE3-AA0D-4E2D-AD1B-8CA322AFA7DD}</Project>
       <Name>mock-nunit-assembly-4.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-4.0.csproj">
-      <Project>{DBD0C8B0-BE4E-4CBF-AAD4-44BEA2EA830B}</Project>
-      <Name>nunitlite.runner-4.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-4.0.csproj">
       <Project>{A35E6AD6-6D46-41E1-8DB1-A41086793893}</Project>

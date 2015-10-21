@@ -55,18 +55,6 @@
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
-      <Link>Runner\DefaultOptionsProviderTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>Runner\ExtendedTextWrapperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
-      <Link>Runner\TestSelectionParserTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
-      <Link>Runner\TokenizerTests.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -243,14 +231,6 @@
     <Compile Include="Internal\UnhandledExceptionTests.cs" />
     <Compile Include="Internal\WorkItemQueueTests.cs" />
     <Compile Include="Internal\WorkShiftTests.cs" />
-    <Compile Include="Runner\CommandLineTests.cs" />
-    <Compile Include="Runner\CreateTestFilterTests.cs" />
-    <Compile Include="Runner\MakeRunSettingsTests.cs" />
-    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="Runner\TextUITests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Runner\TeamCityEventListenerTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
@@ -318,10 +298,6 @@
     <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-2.0.csproj">
       <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
       <Name>mock-nunit-assembly-2.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-2.0.csproj">
-      <Project>{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}</Project>
-      <Name>nunitlite.runner-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-2.0.csproj">
       <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
