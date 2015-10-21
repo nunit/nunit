@@ -49,19 +49,32 @@ namespace NUnit.Common
         /// <returns></returns>
         public static ConsoleColor GetColor(ColorStyle style)
         {
+            ConsoleColor color = GetColorForStyle(style);
+            ConsoleColor bg = Console.BackgroundColor;
+
+            if (color == bg || color == ConsoleColor.Red && bg == ConsoleColor.Magenta)
+                return bg == ConsoleColor.Black
+                    ? ConsoleColor.White
+                    : ConsoleColor.Black;
+
+            return color;
+        }
+
+        private static ConsoleColor GetColorForStyle(ColorStyle style)
+        {
             switch (Console.BackgroundColor)
             {
                 case ConsoleColor.White:
                     switch (style)
                     {
                         case ColorStyle.Header:
-                            return ConsoleColor.DarkBlue;
+                            return ConsoleColor.Black;
                         case ColorStyle.SubHeader:
-                            return ConsoleColor.DarkGray;
+                            return ConsoleColor.Black;
                         case ColorStyle.SectionHeader:
-                            return ConsoleColor.DarkBlue;
+                            return ConsoleColor.Blue;
                         case ColorStyle.Label:
-                            return ConsoleColor.DarkGreen;
+                            return ConsoleColor.Black;
                         case ColorStyle.Value:
                             return ConsoleColor.Blue;
                         case ColorStyle.Pass:
@@ -69,33 +82,37 @@ namespace NUnit.Common
                         case ColorStyle.Failure:
                             return ConsoleColor.Red;
                         case ColorStyle.Warning:
-                            return ConsoleColor.Yellow;
+                            return ConsoleColor.Black;
                         case ColorStyle.Error:
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
-                            return ConsoleColor.DarkGray;
+                            return ConsoleColor.Black;
                         case ColorStyle.Help:
-                            return ConsoleColor.DarkGray;
+                            return ConsoleColor.Black;
                         case ColorStyle.Default:
                         default:
-                            return ConsoleColor.Green;
+                            return ConsoleColor.Black;
                     }
 
-                case ConsoleColor.Gray:
+                case ConsoleColor.Cyan:
+                case ConsoleColor.Green:
+                case ConsoleColor.Red:
+                case ConsoleColor.Magenta:
+                case ConsoleColor.Yellow:
                     switch (style)
                     {
                         case ColorStyle.Header:
-                            return ConsoleColor.White;
+                            return ConsoleColor.Black;
                         case ColorStyle.SubHeader:
-                            return ConsoleColor.DarkGray;
+                            return ConsoleColor.Black;
                         case ColorStyle.SectionHeader:
-                            return ConsoleColor.Cyan;
+                            return ConsoleColor.Blue;
                         case ColorStyle.Label:
-                            return ConsoleColor.Green;
+                            return ConsoleColor.Black;
                         case ColorStyle.Value:
-                            return ConsoleColor.White;
+                            return ConsoleColor.Black;
                         case ColorStyle.Pass:
-                            return ConsoleColor.Green;
+                            return ConsoleColor.Black;
                         case ColorStyle.Failure:
                             return ConsoleColor.Red;
                         case ColorStyle.Warning:
@@ -103,12 +120,12 @@ namespace NUnit.Common
                         case ColorStyle.Error:
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
-                            return ConsoleColor.DarkGray;
+                            return ConsoleColor.Black;
                         case ColorStyle.Help:
-                            return ConsoleColor.DarkGray;
+                            return ConsoleColor.Black;
                         case ColorStyle.Default:
                         default:
-                            return ConsoleColor.Green;
+                            return ConsoleColor.Black;
                     }
 
                 default:
