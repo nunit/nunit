@@ -146,6 +146,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-sl-5.0", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.portable.tests", "src\NUnitFramework\nunit.portable.tests\nunit.portable.tests.csproj", "{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-portable", "src\NUnitFramework\nunitlite.tests\nunitlite.tests-portable.csproj", "{6872DB53-3250-4A70-2A4C-567A55A6C4B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -336,6 +338,10 @@ Global
 		{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6872DB53-3250-4A70-2A4C-567A55A6C4B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6872DB53-3250-4A70-2A4C-567A55A6C4B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6872DB53-3250-4A70-2A4C-567A55A6C4B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6872DB53-3250-4A70-2A4C-567A55A6C4B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -395,6 +401,7 @@ Global
 		{8472DB53-5950-4A70-864C-567A55A6C4A1} = {7B573D52-181D-482F-A61C-82E543B3E958}
 		{5249870F-7119-45DE-A269-66D6451E2507} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
+		{6872DB53-3250-4A70-2A4C-567A55A6C4B3} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj

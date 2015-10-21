@@ -6,9 +6,13 @@ namespace NUnitLite.Tests
 {
     class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            new AutoRun().Execute(args);
+#if PORTABLE
+            return new AutoRun().Execute(typeof(Program).Assembly, Console.Out, Console.In, args);
+#else
+            return new AutoRun().Execute(args);
+#endif
         }
     }
 }
