@@ -30,6 +30,8 @@
     <file src="bin/net-4.0/nunitlite.dll" target="lib/net40" />
     <file src="bin/net-4.5/nunitlite.dll" target="lib/net45" />
     <file src="bin/sl-5.0/nunitlite.dll" target="lib/sl5" />
+    <file src="bin/portable/nunitlite.dll" target="lib/dotnet" />
+    <file src="bin/portable/nunitlite.dll" target="lib/portable-net45+win8+wp8+wpa81" />
     <file src="..\..\nuget\Program.cs" target="content" />
     <file src="..\..\nuget\Program.vb" target="content" />
     <file src="..\..\nuget\install.ps1" target="tools" />
