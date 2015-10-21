@@ -256,7 +256,7 @@ namespace NUnit.Framework.Compatibility
         /// <returns></returns>
         public static MethodInfo[] GetMethods(this Type type)
         {
-            return type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+            return type.GetAllMethods().Where(m => m.IsPublic).ToArray();
         }
 
         /// <summary>
@@ -272,9 +272,27 @@ namespace NUnit.Framework.Compatibility
             if (declaredOnly)
                 methods = type.GetTypeInfo().DeclaredMethods;
             else
-                methods = type.GetRuntimeMethods().Where(m => !m.IsConstructor);
+                methods = type.GetAllMethods();
 
             return methods.ApplyBindingFlags(flags).ToArray();
+        }
+
+        /// <summary>
+        /// Gets all methods for a given type, walking up the class hierarchy
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        static IList<MethodInfo> GetAllMethods(this Type type)
+        {
+            List<MethodInfo> methods = type.GetTypeInfo().DeclaredMethods.ToList();
+            type = type.GetTypeInfo().BaseType;
+            if (type != null)
+            {
+                var baseMethods = type.GetAllMethods();
+                methods.AddRange(baseMethods.Where(b => !methods.Any(m => m.GetRuntimeBaseDefinition() == b)));
+            }
+
+            return methods;
         }
 
         static IEnumerable<PropertyInfo> ApplyBindingFlags(this IEnumerable<PropertyInfo> infos, BindingFlags flags)
@@ -326,6 +344,7 @@ namespace NUnit.Framework.Compatibility
             return true;
         }
 
+        // §6.1.2 (Implicit numeric conversions) of the specification
         static Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
             { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
             { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
