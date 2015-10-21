@@ -158,6 +158,7 @@
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
+    <Compile Include="Compatibility\BindingFlags.cs" />
     <Compile Include="Compatibility\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
     <Compile Include="Compatibility\Path.cs" />

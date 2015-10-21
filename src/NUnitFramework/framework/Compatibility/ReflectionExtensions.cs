@@ -98,12 +98,12 @@ namespace NUnit.Framework.Compatibility
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IList<ConstructorInfo> GetConstructors(this Type type)
+        public static ConstructorInfo[] GetConstructors(this Type type)
         {
             return type.GetTypeInfo()
                 .DeclaredConstructors
                 .Where(c => c.IsPublic && !c.IsStatic)
-                .ToList();
+                .ToArray();
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Compatibility
         /// <returns></returns>
         public static MemberInfo[] GetMember(this Type type, string name, BindingFlags ignored)
         {
-            return type.GetMembers(ignored)
+            return type.GetAllMembers()
                 .Where(m => m.Name == name)
                 .ToArray();
         }
@@ -158,12 +158,49 @@ namespace NUnit.Framework.Compatibility
         /// <param name="type"></param>
         /// <param name="ignored"></param>
         /// <returns></returns>
-        public static IEnumerable<MemberInfo> GetMembers(this Type type, BindingFlags ignored)
+        public static MemberInfo[] GetMembers(this Type type, BindingFlags ignored)
         {
             // We only use this in two places and ask for public, private, static and instance
             // members. Since none of that info is available on MemberInfo, I am skipping and
             // returning all.
-            return type.GetTypeInfo().DeclaredMembers;
+            return type.GetAllMembers().ToArray();
+        }
+
+        static IList<MemberInfo> GetAllMembers(this Type type)
+        {
+            List<MemberInfo> members = type.GetTypeInfo().DeclaredMembers.ToList();
+            type = type.GetTypeInfo().BaseType;
+            if (type != null)
+            {
+                // Skip statics on all base classes
+                var baseMembers = type.GetAllMembers();
+                members.AddRange(DiscardStatic(baseMembers));
+            }
+            return members;
+        }
+
+        static IEnumerable<MemberInfo> DiscardStatic(IEnumerable<MemberInfo> members)
+        {
+            foreach(var info in members)
+            {
+                var einfo = info as EventInfo;
+                if (einfo != null && einfo.RaiseMethod.IsPublic && !einfo.RaiseMethod.IsStatic)
+                    yield return einfo;
+
+                var finfo = info as FieldInfo;
+                if (finfo != null && finfo.IsPublic && !finfo.IsStatic)
+                    yield return finfo;
+
+                var minfo = info as MethodBase;
+                if (minfo != null && minfo.IsPublic && !minfo.IsStatic)
+                    yield return minfo;
+
+                var pinfo = info as PropertyInfo;
+                if (pinfo != null && 
+                    ((pinfo.GetMethod != null && !pinfo.GetMethod.IsStatic) || (pinfo.SetMethod != null && !pinfo.SetMethod.IsStatic)) &&
+                    ((pinfo.GetMethod == null || !pinfo.GetMethod.IsPrivate) && (pinfo.SetMethod == null || !pinfo.SetMethod.IsPrivate)))
+                    yield return pinfo;
+            }
         }
 
         /// <summary>
@@ -176,7 +213,7 @@ namespace NUnit.Framework.Compatibility
         {
             return type.GetTypeInfo()
                 .DeclaredFields
-                .Where(p => (p.Name == name))
+                .Where(p => p.Name == name && p.IsPublic)
                 .FirstOrDefault();
         }
 
@@ -272,24 +309,20 @@ namespace NUnit.Framework.Compatibility
             if (declaredOnly)
                 methods = type.GetTypeInfo().DeclaredMethods;
             else
-                methods = type.GetAllMethods();
+                methods = type.GetAllMethods(flags.HasFlag(BindingFlags.Static) && flags.HasFlag(BindingFlags.FlattenHierarchy));
 
             return methods.ApplyBindingFlags(flags).ToArray();
         }
 
-        /// <summary>
-        /// Gets all methods for a given type, walking up the class hierarchy
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        static IList<MethodInfo> GetAllMethods(this Type type)
+        static IList<MethodInfo> GetAllMethods(this Type type, bool includeBaseStatic = false)
         {
             List<MethodInfo> methods = type.GetTypeInfo().DeclaredMethods.ToList();
             type = type.GetTypeInfo().BaseType;
             if (type != null)
             {
-                var baseMethods = type.GetAllMethods();
-                methods.AddRange(baseMethods.Where(b => !methods.Any(m => m.GetRuntimeBaseDefinition() == b)));
+                var baseMethods = type.GetAllMethods(includeBaseStatic)
+                    .Where(b => b.IsPublic && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b));
+                methods.AddRange(baseMethods);
             }
 
             return methods;
@@ -301,6 +334,8 @@ namespace NUnit.Framework.Compatibility
             bool priv = flags.HasFlag(BindingFlags.NonPublic);
             if (pub && !priv)
                 infos = infos.Where(p => (p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic));
+            if (priv && !pub)
+                infos = infos.Where(p => (p.GetMethod == null || p.GetMethod.IsPrivate) && (p.SetMethod == null || p.SetMethod.IsPrivate));
 
             bool stat = flags.HasFlag(BindingFlags.Static);
             bool inst = flags.HasFlag(BindingFlags.Instance);

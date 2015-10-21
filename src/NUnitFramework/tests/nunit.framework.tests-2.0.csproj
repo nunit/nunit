@@ -79,6 +79,7 @@
     <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
+    <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
