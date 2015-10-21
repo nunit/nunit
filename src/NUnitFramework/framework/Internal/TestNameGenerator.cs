@@ -81,6 +81,19 @@ namespace NUnit.Framework.Internal
                     case "{a}":
                         _fragments.Add(new ArgListFragment(40));
                         break;
+                    case "{0}":
+                    case "{1}":
+                    case "{2}":
+                    case "{3}":
+                    case "{4}":
+                    case "{5}":
+                    case "{6}":
+                    case "{7}":
+                    case "{8}":
+                    case "{9}":
+                        int index = token[1] - '0';
+                        _fragments.Add(new ArgumentFragment(index, 40));
+                        break;
                     default:
                         if (token.Length >= 5 && token[1] == 'a' && token[2] == ':')
                         {
@@ -89,6 +102,19 @@ namespace NUnit.Framework.Internal
                             {
                                 _fragments.Add(new ArgListFragment(length));
                                 break;
+                            }
+                        }
+                        else if (char.IsDigit(token[1]))
+                        {
+                            string[] split = token.Substring(1, token.Length - 2).Split(new char[] { ':' });
+                            if (int.TryParse(split[0], out index))
+                            {
+                                int length = 40;
+                                if (split.Length < 2 || int.TryParse(split[1], out length))
+                                {
+                                    _fragments.Add(new ArgumentFragment(index, length));
+                                    break;
+                                }
                             }
                         }
 
@@ -402,6 +428,25 @@ namespace NUnit.Framework.Internal
                 }
 
                 return sb.ToString();
+            }
+        }
+
+        private class ArgumentFragment : NameFragment
+        {
+            private int _index;
+            private int _maxStringLength;
+
+            public ArgumentFragment(int index, int maxStringLength)
+            {
+                _index = index;
+                _maxStringLength = maxStringLength;
+            }
+
+            public override string GetText(MethodInfo method, object[] args)
+            {
+                return _index < args.Length
+                    ? GetDisplayString(args[_index], _maxStringLength)
+                    : string.Empty;
             }
         }
 
