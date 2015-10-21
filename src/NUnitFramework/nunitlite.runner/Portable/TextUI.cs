@@ -120,7 +120,11 @@ namespace NUnitLite
             _writer.WriteLine("      directory or on the Documents folder if running on a under the ");
             _writer.WriteLine("      compact framework.");
             _writer.WriteLine();
+#if PORTABLE
+            if (Environment.NewLine == "\r\n")
+#else
             if (System.IO.Path.DirectorySeparatorChar != '/')
+#endif
             {
                 _writer.WriteLine("    * On Windows, options may be prefixed by a '/' character if desired");
                 _writer.WriteLine();

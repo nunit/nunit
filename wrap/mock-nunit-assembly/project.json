@@ -2,10 +2,10 @@
   "version": "3.0.0-*",
   "frameworks": {
     "dnxcore50": {
-      "wrappedProject": "../../src/NUnitFramework/mock-assembly/mock-nunit-assembly-netcore/mock-nunit-assembly.csproj",
+      "wrappedProject": "../../src/NUnitFramework/mock-assembly/mock-nunit-assembly-portable.csproj",
       "bin": {
-        "assembly": "../../bin/Debug/netcore/mock-nunit-assembly.dll",
-        "pdb": "../../bin/Debug/netcore/mock-nunit-assembly.pdb"
+        "assembly": "../../bin/Debug/portable/mock-nunit-assembly.dll",
+        "pdb": "../../bin/Debug/portable/mock-nunit-assembly.pdb"
       }
     }
   }

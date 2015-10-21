@@ -106,13 +106,15 @@ namespace NUnitLite
         {
             _textUI = textUI;
             _options = options;
-
+            
+#if !PORTABLE
             if (!Directory.Exists(_options.WorkDirectory))
                 Directory.CreateDirectory(_options.WorkDirectory);
 
-#if !NETCF && !PORTABLE
+#if !NETCF
             if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
+#endif
 #endif
         }
 #endif
@@ -261,9 +263,10 @@ namespace NUnitLite
             if (options.RandomSeed >= 0)
                 runSettings[PackageSettings.RandomSeed] = options.RandomSeed;
 
+#if !PORTABLE
             if (options.WorkDirectory != null)
                 runSettings[PackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
-
+#endif
             if (options.DefaultTimeout >= 0)
                 runSettings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
 

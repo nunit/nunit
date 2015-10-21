@@ -138,7 +138,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-#if !PORTABLE
+#if PORTABLE
+using NUnit.Framework.Compatibility;
+#else
 using System.Security.Permissions;
 #endif
 

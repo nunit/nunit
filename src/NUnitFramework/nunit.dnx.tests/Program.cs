@@ -10,7 +10,7 @@ namespace NUnitLite.Runner
     {
         public int Main(string[] args)
         {   
-            return new AutoRun().Execute(typeof(NUnit.Framework.Tests.ThrowsTests).GetTypeInfo().Assembly, Console.Out, Console.In, args);
+            return new AutoRun().Execute(typeof(NUnit.Framework.Tests.TestContextTests).GetTypeInfo().Assembly, Console.Out, Console.In, args);
         }
     }
 }

@@ -121,12 +121,14 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
+#if !PORTABLE
         private string workDirectory = null;
         public string WorkDirectory 
         {
             get { return workDirectory ?? NUnit.Env.DefaultWorkDirectory; }
         }
         public bool WorkDirectorySpecified { get { return workDirectory != null; } }
+#endif
 
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
@@ -158,9 +160,9 @@ namespace NUnit.Common
         public List<string> errorMessages = new List<string>();
         public IList<string> ErrorMessages { get { return errorMessages; } }
 
-        #endregion
+#endregion
         
-        #region Public Methods
+#region Public Methods
 
         public bool Validate()
         {
@@ -174,9 +176,9 @@ namespace NUnit.Common
             return ErrorMessages.Count == 0;
         }
 
-        #endregion
+#endregion
         
-        #region Helper Methods
+#region Helper Methods
 
         /// <summary>
         /// Case is ignored when val is compared to validValues. When a match is found, the
@@ -234,7 +236,7 @@ namespace NUnit.Common
         {
             if (path == null) return null;
 
-#if NETCF
+#if NETCF || PORTABLE
             return Path.Combine(NUnit.Env.DocumentFolder, path);
 #else
             return Path.GetFullPath(path);
@@ -352,13 +354,17 @@ namespace NUnit.Common
             // Default
             this.Add("<>", v =>
             {
+#if PORTABLE
+                if (v.StartsWith("-") || v.StartsWith("/") && Environment.NewLine == "\r\n")
+#else
                 if (v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/')
+#endif
                     ErrorMessages.Add("Invalid argument: " + v);
                 else
                     InputFiles.Add(v);
             });
         }
 
-        #endregion
+#endregion
     }
 }

@@ -2,10 +2,10 @@
   "version": "3.0.0-*",
   "frameworks": {
     "dnxcore50": {
-      "wrappedProject": "../../src/NUnitFramework/nunitlite.runner/nunitlite.runner-netcore/nunitlite.runner.csproj",
+      "wrappedProject": "../../src/NUnitFramework/nunitlite.runner/nunitlite.runner-portable.csproj",
       "bin": {
-        "assembly": "../../bin/Debug/netcore/nunitlite.runner.dll",
-        "pdb": "../../bin/Debug/netcore/nunitlite.runner.pdb"
+        "assembly": "../../bin/Debug/portable/nunitlite.dll",
+        "pdb": "../../bin/Debug/portable/nunitlite.pdb"
       }
     }
   }

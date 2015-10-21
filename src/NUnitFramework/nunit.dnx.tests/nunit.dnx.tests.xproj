@@ -18,12 +18,5 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <ProduceOutputsOnBuild>True</ProduceOutputsOnBuild>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-netcore\nunit.framework.csproj" />
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-netcore\mock-nunit-assembly.csproj" />
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-netcore\nunitlite.runner.csproj" />
-    <ProjectReference Include="..\testdata\nunit.testdata-netcore\nunit.testdata.csproj" />
-    <ProjectReference Include="..\tests\nunit.framework.tests-netcore\nunit.framework.tests.csproj" />
-  </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>
