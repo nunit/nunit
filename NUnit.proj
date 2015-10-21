@@ -277,7 +277,7 @@
 
     <CallTarget Targets="TestNUnitLite"
           ContinueOnError="$(ContinueOnFailure)"
-          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
+          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 
   </Target>
 
@@ -293,7 +293,7 @@
 
     <Exec Condition="'$(Runtime)' == 'portable'" 
         WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
-        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunitlite.exe nunit.framework.tests "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml" $(TestOptions)'
+        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunit.portable.tests.exe $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
 
     <Exec Condition="'$(Runtime)' != 'portable'"
@@ -310,9 +310,14 @@
     <Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
     <Message Text="******************************************************************" />
 
-    <Exec Condition="'$(Runtime)' != 'portable'"
+    <Exec Condition="'$(Runtime)' != 'silverlight' AND '$(Runtime)' != 'portable' "
           WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) nunitlite.tests.exe "-result:$(ResultDir)/NUnitliteResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
+          ContinueOnError="$(ContinueOnFailure)" />
+
+		<Exec Condition="'$(Runtime)' == 'portable'"
+          WorkingDirectory="$(FrameworkBuildDir)"
+          Command='$(ManagedExeLauncher) nunitlite.tests.exe $(TestOptions)'
           ContinueOnError="$(ContinueOnFailure)" />
 
   </Target>
@@ -629,6 +634,8 @@
     <NUnitProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-$(ProjectSuffix).csproj"
       Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
+		<NUnitProjects Include="$(FrameworkSrcDir)\nunit.portable.tests\nunit.portable.tests.csproj"
+      Condition="'$(Runtime)' == 'portable'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-$(ProjectSuffix).csproj"
       Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"></NUnitProjects>
