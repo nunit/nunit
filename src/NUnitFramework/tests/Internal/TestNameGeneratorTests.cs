@@ -65,7 +65,10 @@ namespace NUnit.Framework.Internal.Tests
             ExpectedResult = "TestMethod(\"Now is the time for all good men to come to the aid of their country.\")")]
         [TestCase("{m}{a:20}", new object[] { 42, "Now is the time for all good men to come to the aid of their country.", 5.2 },
             ExpectedResult = "TestMethod(42,\"Now is the time f...\",5.2d)")]
+        [TestCase("{m}({0})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod(1)")]
         [TestCase("{m}({1})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod(2)")]
+        [TestCase("{m}({2})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod(3)")]
+        [TestCase("{m}({3})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod()")]
         [TestCase("{m}({1:20})", new object[] { 42, "Now is the time for all good men to come to the aid of their country.", 5.2 },
             ExpectedResult = "TestMethod(\"Now is the time f...\")")]
         public string ParameterizedTests(string pattern, object[] args)
@@ -81,11 +84,23 @@ namespace NUnit.Framework.Internal.Tests
         [TestCase("{M}", ExpectedResult = "NUnit.Framework.Internal.Tests.TestNameGeneratorTests.GenericTest<T,U,V>")]
         [TestCase("{m}_SpecialCase", ExpectedResult = "GenericTest<T,U,V>_SpecialCase")]
         [TestCase("{n}.{c}.{m}", ExpectedResult = "NUnit.Framework.Internal.Tests.TestNameGeneratorTests.GenericTest<T,U,V>")]
-        [TestCase("{x}", ExpectedResult = "{x}")]
-        [TestCase("{n}.{c.{m}", ExpectedResult = "NUnit.Framework.Internal.Tests.{c.{m}")]
         public string GenericTestNames(string pattern)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_genericTest);
+        }
+
+        [TestCase("{x}", ExpectedResult = "{x}")]
+        [TestCase("{xy}", ExpectedResult = "{xy}")]
+        [TestCase("{x:}", ExpectedResult = "{x:}")]
+        [TestCase("{x:50}", ExpectedResult = "{x:50}")]
+        [TestCase("{n}.{c.{m}", ExpectedResult = "NUnit.Framework.Internal.Tests.{c.{m}")]
+        [TestCase("{m}{a:X}", ExpectedResult = "TestMethod{a:X}")]
+        [TestCase("{m}{0:X}", ExpectedResult = "TestMethod{0:X}")]
+        [TestCase("{m}{a:}", ExpectedResult = "TestMethod{a:}")]
+        [TestCase("{m}{0:}", ExpectedResult = "TestMethod{0:}")]
+        public string ErrorInPattern(string pattern)
+        {
+            return new TestNameGenerator(pattern).GetDisplayName(_simpleTest);
         }
 
         #region Methods Used as Data

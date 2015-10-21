@@ -95,26 +95,28 @@ namespace NUnit.Framework.Internal
                         _fragments.Add(new ArgumentFragment(index, 40));
                         break;
                     default:
-                        if (token.Length >= 5 && token[1] == 'a' && token[2] == ':')
+                        char c = token[1];
+                        if (token.Length >= 5 && token[2] == ':' && (c == 'a' || char.IsDigit(c)))
                         {
                             int length;
-                            if (int.TryParse(token.Substring(3, token.Length - 4), out length))
+
+                            // NOTE: The code would be much simpler using TryParse. However,
+                            // that method doesn't exist in the Compact Framework.
+                            try
                             {
-                                _fragments.Add(new ArgListFragment(length));
-                                break;
+                                length = int.Parse(token.Substring(3, token.Length - 4));
                             }
-                        }
-                        else if (char.IsDigit(token[1]))
-                        {
-                            string[] split = token.Substring(1, token.Length - 2).Split(new char[] { ':' });
-                            if (int.TryParse(split[0], out index))
+                            catch
                             {
-                                int length = 40;
-                                if (split.Length < 2 || int.TryParse(split[1], out length))
-                                {
-                                    _fragments.Add(new ArgumentFragment(index, length));
-                                    break;
-                                }
+                                length = -1;
+                            }
+                            if (length > 0)
+                            {
+                                if (c == 'a')
+                                    _fragments.Add(new ArgListFragment(length));
+                                else // It's a digit
+                                    _fragments.Add(new ArgumentFragment(c - '0', length));
+                                break;
                             }
                         }
 
