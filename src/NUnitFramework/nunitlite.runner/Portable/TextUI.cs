@@ -196,9 +196,7 @@ namespace NUnitLite
             if (overallResult == "Skipped")
                 overallResult = "Warning";
 
-            if (_testCreatedOutput)
-                _writer.WriteLine();
-
+            _writer.WriteLine();
             _writer.WriteLine("Test Run Summary");
             WriteLabelLine("   Overall result: ", overallResult);
 
@@ -219,7 +217,6 @@ namespace NUnitLite
             WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
             WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
             WriteLabelLine("    Duration: ", summary.Duration.ToString("0.000") + " seconds");
-            _writer.WriteLine();
         }
 
         private void WriteSummaryCount(string label, int count)
@@ -230,25 +227,26 @@ namespace NUnitLite
         public void DisplayErrorsAndFailuresReport(ITestResult result)
         {
             _reportIndex = 0;
+
+            _writer.WriteLine();
             _writer.WriteLine("Errors and Failures");
             DisplayErrorsAndFailures(result);
-            _writer.WriteLine();
 
             if (_options.StopOnError)
             {
-                _writer.WriteLine("Execution terminated after first error");
                 _writer.WriteLine();
+                _writer.WriteLine("Execution terminated after first error");
             }
         }
 
         public void DisplayNotRunReport(ITestResult result)
         {
             _reportIndex = 0;
+
+            _writer.WriteLine();
             _writer.WriteLine("Tests Not Run");
 
             DisplayNotRunResults(result);
-
-            _writer.WriteLine();
         }
 
         #endregion

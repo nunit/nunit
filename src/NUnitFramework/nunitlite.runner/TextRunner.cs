@@ -216,18 +216,18 @@ namespace NUnitLite
         {
             Summary = new ResultSummary(result);
 
-            _textUI.DisplaySummaryReport(Summary);
+            if (Summary.SkipCount + Summary.IgnoreCount > 0)
+                _textUI.DisplayNotRunReport(result);
 
             if (result.ResultState.Status == TestStatus.Failed)
                 _textUI.DisplayErrorsAndFailuresReport(result);
-
-            if (Summary.SkipCount + Summary.IgnoreCount > 0)
-                _textUI.DisplayNotRunReport(result);
 
 #if FULL
             if (_options.Full)
                 _textUI.PrintFullReport(_result);
 #endif
+
+            _textUI.DisplaySummaryReport(Summary);
         }
 
 #if !SILVERLIGHT
