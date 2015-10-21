@@ -40,7 +40,7 @@ namespace NUnit.Common
     public class CommandLineOptions : OptionSet
     {
         private bool validated;
-#if !NETCORE
+#if !PORTABLE
         private bool noresult;
 #endif
 
@@ -50,7 +50,7 @@ namespace NUnit.Common
         {
             // Apply default oprions
             if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
-#if !NETCORE
+#if !PORTABLE
             TeamCity = defaultOptionsProvider.TeamCity;
 #endif
             
@@ -134,7 +134,7 @@ namespace NUnit.Common
         /// <summary>Indicates whether a full report should be displayed.</summary>
         public bool Full { get; private set; }
 
-#if !NETCORE
+#if !PORTABLE
         private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
@@ -249,7 +249,7 @@ namespace NUnit.Common
             // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
-#if !NETCORE
+#if !PORTABLE
             this.Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
                 v =>
                 {
@@ -290,7 +290,7 @@ namespace NUnit.Common
 
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
-#if !NETCORE
+#if !PORTABLE
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => numWorkers = RequiredInt(v, "--workers"));
 #endif
@@ -299,7 +299,7 @@ namespace NUnit.Common
 
             this.Add("wait", "Wait for input before closing console window.",
                 v => WaitBeforeExit = v != null);
-#if !NETCORE
+#if !PORTABLE
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
                 v => workDirectory = RequiredValue(v, "--work"));
@@ -328,7 +328,7 @@ namespace NUnit.Common
 #endif
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
-#if !NETCORE
+#if !PORTABLE
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 

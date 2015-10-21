@@ -71,7 +71,7 @@ namespace NUnitLite.Runner
 
 #if !SILVERLIGHT
         private NUnitLiteOptions _options;
-#if !NETCF && !NETCORE
+#if !NETCF && !PORTABLE
         private TeamCityEventListener _teamCity;
 #endif
 #endif
@@ -110,7 +110,7 @@ namespace NUnitLite.Runner
             if (!Directory.Exists(_options.WorkDirectory))
                 Directory.CreateDirectory(_options.WorkDirectory);
 
-#if !NETCF && !NETCORE
+#if !NETCF && !PORTABLE
             if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
 #endif
@@ -197,7 +197,7 @@ namespace NUnitLite.Runner
 #endif
             ReportResults(result);
 
-#if !SILVERLIGHT && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
             if (_options.ResultOutputSpecifications.Count > 0)
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
@@ -231,7 +231,7 @@ namespace NUnitLite.Runner
 #if !SILVERLIGHT
         private int ExploreTests()
         {
-#if !NETCORE
+#if !PORTABLE
             ITest testNode = _runner.LoadedTest;
 
             var specs = _options.ExploreOutputSpecifications;
@@ -317,7 +317,7 @@ namespace NUnitLite.Runner
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-#if !SILVERLIGHT && !NETCF && !NETCORE
+#if !SILVERLIGHT && !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
 #endif
@@ -330,7 +330,7 @@ namespace NUnitLite.Runner
         public void TestFinished(ITestResult result)
         {
 #if !SILVERLIGHT
-#if !NETCF && !NETCORE
+#if !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 #endif

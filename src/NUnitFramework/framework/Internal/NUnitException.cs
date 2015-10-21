@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
             base(message, inner) 
         { }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Serialization Constructor
         /// </summary>

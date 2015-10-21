@@ -41,7 +41,7 @@ namespace NUnit.Common
     {
         #region GetAssemblyPath
 
-#if !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the path from which the assembly defining a type was loaded.
         /// </summary>
@@ -76,7 +76,7 @@ namespace NUnit.Common
 
         #region GetDirectoryName
 
-#if !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>
@@ -109,7 +109,7 @@ namespace NUnit.Common
         #endregion
 
         #region Load
-#if NETCORE
+#if PORTABLE
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
         /// </summary>
@@ -130,7 +130,7 @@ namespace NUnit.Common
         /// <returns></returns>
         public static Assembly Load(string nameOrPath)
         {
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
             var ext = Path.GetExtension(nameOrPath).ToLower();
 
             // It's a path to an assembly, get the AssemblyName and load it
@@ -153,7 +153,7 @@ namespace NUnit.Common
 
         #region Helper Methods
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         private static bool IsFileUri(string uri)
         {
             return uri.ToLower().StartsWith(Uri.UriSchemeFile);

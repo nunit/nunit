@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Common;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -73,7 +74,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary options)
         {
-#if PORTABLE || NETCORE
+#if PORTABLE
             log.Debug("Loading {0}", assembly.FullName);
 #else
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
@@ -81,7 +82,7 @@ namespace NUnit.Framework.Api
 
 #if SILVERLIGHT
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).Name;
-#elif PORTABLE || NETCORE
+#elif PORTABLE
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).FullName;
 #else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
@@ -100,7 +101,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(string assemblyName, IDictionary options)
         {
-#if PORTABLE || NETCORE
+#if PORTABLE
             log.Debug("Loading {0}", assemblyName);
 #else
             log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
@@ -235,7 +236,7 @@ namespace NUnit.Framework.Api
 
             testAssembly.ApplyAttributesToTest(assembly);
 
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
 #if !SILVERLIGHT
             testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
 #endif

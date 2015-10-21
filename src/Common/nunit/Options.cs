@@ -138,7 +138,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-#if !NETCORE
+#if !PORTABLE
 using System.Security.Permissions;
 #endif
 
@@ -353,7 +353,7 @@ namespace Mono.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-#if NETCORE
+#if PORTABLE
             bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType && 
                 !tt.GetTypeInfo().IsGenericTypeDefinition && 
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
@@ -365,13 +365,13 @@ namespace Mono.Options
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 #endif
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if NETCF || SILVERLIGHT || PORTABLE || NETCORE
+#if NETCF || SILVERLIGHT || PORTABLE
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -504,7 +504,7 @@ namespace Mono.Options
             this.option = optionName;
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -516,7 +516,7 @@ namespace Mono.Options
             get {return this.option;}
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {
@@ -530,7 +530,7 @@ namespace Mono.Options
 
     public class OptionSet : KeyedCollection<string, Option>
     {
-#if !NETCORE
+#if !PORTABLE
         public OptionSet ()
             : this (delegate (string f) {return f;})
         {

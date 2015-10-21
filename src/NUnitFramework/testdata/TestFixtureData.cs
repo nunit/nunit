@@ -484,7 +484,7 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {

@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal
         public InvalidDataSourceException(string message, Exception inner) : base(message, inner)
         { }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Serialization Constructor
         /// </summary>

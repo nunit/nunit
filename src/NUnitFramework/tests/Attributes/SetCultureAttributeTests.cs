@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF
+#if !NETCF && !PORTABLE
 using System;
 using System.Threading;
 using System.Globalization;

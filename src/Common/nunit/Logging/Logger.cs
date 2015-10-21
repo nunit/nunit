@@ -171,7 +171,7 @@ namespace NUnit.Common
             writer.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
-#if NETCORE
+#if PORTABLE
                 System.Environment.CurrentManagedThreadId,
 #else
                 System.Threading.Thread.CurrentThread.ManagedThreadId,

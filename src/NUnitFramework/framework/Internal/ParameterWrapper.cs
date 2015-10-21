@@ -27,7 +27,7 @@ using System.Reflection;
 using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 
-#if NETCORE
+#if PORTABLE
 using System.Linq;
 #endif
 
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-#if NETCORE
+#if PORTABLE
             return ParameterInfo.GetAttributes<T>(inherit).ToArray();
 #else
             return (T[])ParameterInfo.GetCustomAttributes(typeof(T), inherit);
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsDefined<T>(bool inherit)
         {
-#if NETCORE
+#if PORTABLE
             return ParameterInfo.GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
 #else
             return ParameterInfo.IsDefined(typeof(T), inherit);

@@ -406,7 +406,7 @@ namespace NUnit.Framework.Internal
                 SetResult(((ResultStateException)ex).ResultState,
                     ex.Message,
                     StackFilter.Filter(ex.StackTrace));
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled,
                     "Test cancelled by user",
@@ -432,7 +432,7 @@ namespace NUnit.Framework.Internal
                 SetResult(((ResultStateException)ex).ResultState.WithSite(site),
                     ex.Message,
                     StackFilter.Filter(ex.StackTrace));
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled.WithSite(site),
                     "Test cancelled by user",

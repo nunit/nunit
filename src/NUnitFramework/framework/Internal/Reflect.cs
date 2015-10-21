@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Compatibility;
 
-#if NETCORE
+#if PORTABLE
 using System.Linq;
 #endif
 
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-#if NETCORE
+#if PORTABLE
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
                 .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
 #else
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
                 catch (System.Threading.ThreadAbortException)
                 {
                     // No need to wrap or rethrow ThreadAbortException
