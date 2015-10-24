@@ -45,6 +45,10 @@ namespace NUnit.Framework.Compatibility
     /// Provides NUnit specific extensions to aid in Reflection
     /// across multiple frameworks
     /// </summary>
+    /// <remarks>
+    /// This version of the class supplies GetTypeInfo() on platforms
+    /// that don't support it.
+    /// </remarks>
     public static class TypeExtensions
     {
         /// <summary>
@@ -67,6 +71,11 @@ namespace NUnit.Framework.Compatibility
     /// Provides NUnit specific extensions to aid in Reflection
     /// across multiple frameworks
     /// </summary>
+    /// <remarks>
+    /// This version of the class allows direct calls on Type on
+    /// those platforms that would normally require use of 
+    /// GetTypeInfo().
+    /// </remarks>
     public static class TypeExtensions
     {
         /// <summary>
