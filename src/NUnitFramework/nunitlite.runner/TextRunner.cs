@@ -71,7 +71,7 @@ namespace NUnitLite
 
 #if !SILVERLIGHT
         private NUnitLiteOptions _options;
-#if !NETCF && !NETCORE
+#if !NETCF && !PORTABLE
         private TeamCityEventListener _teamCity;
 #endif
 #endif
@@ -106,13 +106,15 @@ namespace NUnitLite
         {
             _textUI = textUI;
             _options = options;
-
+            
+#if !PORTABLE
             if (!Directory.Exists(_options.WorkDirectory))
                 Directory.CreateDirectory(_options.WorkDirectory);
 
-#if !NETCF && !NETCORE
+#if !NETCF
             if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
+#endif
 #endif
         }
 #endif
@@ -197,7 +199,7 @@ namespace NUnitLite
 #endif
             ReportResults(result);
 
-#if !SILVERLIGHT && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
             if (_options.ResultOutputSpecifications.Count > 0)
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
@@ -214,24 +216,24 @@ namespace NUnitLite
         {
             Summary = new ResultSummary(result);
 
-            _textUI.DisplaySummaryReport(Summary);
+            if (Summary.SkipCount + Summary.IgnoreCount > 0)
+                _textUI.DisplayNotRunReport(result);
 
             if (result.ResultState.Status == TestStatus.Failed)
                 _textUI.DisplayErrorsAndFailuresReport(result);
-
-            if (Summary.SkipCount + Summary.IgnoreCount > 0)
-                _textUI.DisplayNotRunReport(result);
 
 #if FULL
             if (_options.Full)
                 _textUI.PrintFullReport(_result);
 #endif
+
+            _textUI.DisplaySummaryReport(Summary);
         }
 
 #if !SILVERLIGHT
         private int ExploreTests()
         {
-#if !NETCORE
+#if !PORTABLE
             ITest testNode = _runner.LoadedTest;
 
             var specs = _options.ExploreOutputSpecifications;
@@ -261,9 +263,10 @@ namespace NUnitLite
             if (options.RandomSeed >= 0)
                 runSettings[PackageSettings.RandomSeed] = options.RandomSeed;
 
+#if !PORTABLE
             if (options.WorkDirectory != null)
                 runSettings[PackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
-
+#endif
             if (options.DefaultTimeout >= 0)
                 runSettings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
 
@@ -317,7 +320,7 @@ namespace NUnitLite
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-#if !SILVERLIGHT && !NETCF && !NETCORE
+#if !SILVERLIGHT && !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
 #endif
@@ -330,7 +333,7 @@ namespace NUnitLite
         public void TestFinished(ITestResult result)
         {
 #if !SILVERLIGHT
-#if !NETCF && !NETCORE
+#if !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 #endif

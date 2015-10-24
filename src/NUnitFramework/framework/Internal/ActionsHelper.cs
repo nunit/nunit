@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Compatibility;
 
-#if NETCORE
+#if PORTABLE
 using System.Linq;
 #endif
 
@@ -60,30 +60,8 @@ namespace NUnit.Framework.Internal
                     action.AfterTest(test);
             }
         }
-
+        
 #if PORTABLE
-        public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
-        {
-            if (attributeProvider == null)
-                return new ITestAction[0];
-
-            var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
-            actions.Sort(SortByTargetDescending);
-
-            return actions.ToArray();
-        }
-
-        public static ITestAction[] GetActionsFromAttributeProvider(MemberInfo attributeProvider)
-        {
-            if (attributeProvider == null)
-                return new ITestAction[0];
-
-            var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
-            actions.Sort(SortByTargetDescending);
-
-            return actions.ToArray();
-        }
-#elif NETCORE
         public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
         {
             if (attributeProvider == null)

@@ -25,7 +25,7 @@ using System;
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-#if !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
 using NUnitLite;
 #endif
 
@@ -87,7 +87,7 @@ namespace NUnit.Tests
 
             public const int Categories = MockTestFixture.Categories;
 
-#if !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 
             public static void Main(string[] args)

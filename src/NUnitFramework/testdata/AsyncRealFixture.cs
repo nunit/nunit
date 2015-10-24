@@ -26,7 +26,7 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-#if NET_4_0 || PORTABLE
+#if NET_4_0
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 

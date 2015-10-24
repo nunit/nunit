@@ -353,7 +353,7 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
         [Test]
         public void PlatformAttributeRunsTest()
         {
@@ -413,7 +413,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !NETCF && !PORTABLE
 
         #region RequiresMTAAttribute
 
@@ -461,7 +461,7 @@ namespace NUnit.Framework.Attributes
 
         #region RequiresThreadAttribute
 
-#if !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -478,7 +478,7 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !NETCF && !PORTABLE
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -510,7 +510,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETCF
+#if !NETCF && !PORTABLE
 
         #region SetCultureAttribute
 

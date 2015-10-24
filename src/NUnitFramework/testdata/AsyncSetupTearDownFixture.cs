@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-#if NET_4_0 || PORTABLE
+#if NET_4_0
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 

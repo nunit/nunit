@@ -48,7 +48,7 @@ namespace NUnit.Framework
             base(message, inner)
         { }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Serialization Constructor
         /// </summary>

@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal.Builders
             ITypeInfo returnType = testMethod.Method.ReturnType;
 #endif
 
-#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
+#if NET_4_0 || NET_4_5 || PORTABLE
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
                 if (returnType.IsType(typeof(void)))

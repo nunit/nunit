@@ -45,8 +45,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NUnit Framework CF 3.5")]
 #elif PORTABLE
 [assembly: AssemblyTitle("NUnit Framework Portable")]
-#elif NETCORE
-[assembly: AssemblyTitle("NUnit Framework .NET Core")]
 #else
 [assembly: AssemblyTitle("NUnit Framework")]
 #endif

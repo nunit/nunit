@@ -45,7 +45,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(_context.ParallelScope, Is.EqualTo(ParallelScope.Fixtures));
         }
 
-#if !NETCF
+#if !NETCF && !PORTABLE
         [Test]
         public void SetCultureAttribute()
         {
@@ -61,8 +61,7 @@ namespace NUnit.Framework.Attributes
             attr.ApplyToContext(_context);
             Assert.That(_context.CurrentUICulture, Is.EqualTo(new CultureInfo("fr-FR")));
         }
-
-#if !PORTABLE && !NETCORE
+        
         [Test]
         public void TimeoutAttribute()
         {
@@ -70,7 +69,6 @@ namespace NUnit.Framework.Attributes
             attr.ApplyToContext(_context);
             Assert.That(_context.TestCaseTimeout, Is.EqualTo(50));
         }
-#endif
 #endif
     }
 }

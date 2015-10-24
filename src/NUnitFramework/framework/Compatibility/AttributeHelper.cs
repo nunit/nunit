@@ -42,7 +42,7 @@ namespace NUnit.Framework.Compatibility
         /// <returns>A list of the given attribute on the given object.</returns>
         public static Attribute[] GetCustomAttributes(object actual, Type attributeType, bool inherit)
         {
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
             var attrProvider = actual as ICustomAttributeProvider;
             if (attrProvider == null)
                 throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider.", actual), "actual");

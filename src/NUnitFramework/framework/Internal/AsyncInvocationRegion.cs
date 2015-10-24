@@ -21,14 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using NUnit.Framework.Compatibility;
 
-#if NET_4_5 || NETCORE
+#if NET_4_5 || PORTABLE
 using System.Runtime.ExceptionServices;
 #endif
 
@@ -39,7 +40,7 @@ namespace NUnit.Framework.Internal
         private const string TaskTypeName = "System.Threading.Tasks.Task";
         private const string AsyncAttributeTypeName = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
 
-#if NET_4_0 || PORTABLE
+#if NET_4_0
         private static readonly Action<Exception> PreserveStackTrace;
 
         static AsyncInvocationRegion()
@@ -65,7 +66,7 @@ namespace NUnit.Framework.Internal
 
         public static AsyncInvocationRegion Create(Delegate @delegate)
         {
-#if NETCORE
+#if PORTABLE
             return Create(@delegate.GetMethodInfo());
 #else
             return Create(@delegate.Method);
@@ -92,7 +93,7 @@ at wrapping a non-async method invocation in an async region was done");
 
         public static bool IsAsyncOperation(Delegate @delegate)
         {
-#if NETCORE
+#if PORTABLE
             return IsAsyncOperation(@delegate.GetMethodInfo());
 #else
             return IsAsyncOperation(@delegate.Method);
@@ -128,9 +129,9 @@ at wrapping a non-async method invocation in an async region was done");
                 {
                     IList<Exception> innerExceptions = GetAllExceptions(e.InnerException);
 
-#if NET_4_5 || NETCORE
+#if NET_4_5 || PORTABLE
                     ExceptionDispatchInfo.Capture(innerExceptions[0]).Throw();
-#elif NET_4_0 || PORTABLE
+#elif NET_4_0
                     PreserveStackTrace(innerExceptions[0]);
                     throw innerExceptions[0];
 #endif

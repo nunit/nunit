@@ -702,14 +702,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\framework\nunit.framework-netcore\nunit.framework.csproj">
-      <Project>{0030ac1c-25b9-44d4-b676-f30606c1912c}</Project>
-      <Name>nunit.framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mock-assembly\mock-nunit-assembly-netcore\mock-nunit-assembly.csproj">
-      <Project>{75bd51cb-ab1d-4c2b-81f3-bb42ac9ab847}</Project>
-      <Name>mock-nunit-assembly</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\nunitlite.runner\nunitlite.runner-netcore\nunitlite.runner.csproj">
       <Project>{2a6a6c3f-486c-4547-a050-aca60bb28a16}</Project>
       <Name>nunitlite.runner</Name>
