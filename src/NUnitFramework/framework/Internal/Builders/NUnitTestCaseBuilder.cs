@@ -83,12 +83,12 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     // The test is simply for efficiency
                     testMethod.Name = parms.TestName.Contains("{")
-                        ? new TestNameGenerator(parms.TestName).GetDisplayName(method.MethodInfo, parms.OriginalArguments)
+                        ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                         : parms.TestName;
                 }
                 else if (parms.OriginalArguments != null)
                 {
-                    testMethod.Name = _nameGenerator.GetDisplayName(method.MethodInfo, parms.OriginalArguments);
+                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
                 }
 
                 testMethod.FullName = prefix + "." + testMethod.Name;

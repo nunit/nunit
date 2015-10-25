@@ -66,6 +66,9 @@ namespace NUnit.Framework.Internal
                     case "{m}":
                         _fragments.Add(new MethodNameFragment());
                         break;
+                    case "{i}":
+                        _fragments.Add(new TestIDFragment());
+                        break;
                     case "{n}":
                         _fragments.Add(new NamespaceFragment());
                         break;
@@ -134,12 +137,39 @@ namespace NUnit.Framework.Internal
                 _fragments.Add(new FixedTextFragment(pattern.Substring(start)));
         }
 
+
         /// <summary>
-        /// Get the display name for a method
+        /// Get the display name for a TestMethod and it's arguments
+        /// </summary>
+        /// <param name="testMethod">A TestMethod</param>
+        /// <returns>The display name</returns>
+        public string GetDisplayName(TestMethod testMethod)
+        {
+            return GetDisplayName(testMethod, null);
+        }
+
+        /// <summary>
+        /// Get the display name for a TestMethod and it's arguments
+        /// </summary>
+        /// <param name="testMethod">A TestMethod</param>
+        /// <param name="args">Arguments to be used</param>
+        /// <returns>The display name</returns>
+        public string GetDisplayName(TestMethod testMethod, object[] args)
+        {
+            var result = new StringBuilder();
+
+            foreach (var fragment in _fragments)
+                result.Append(fragment.GetText(testMethod, args));
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Get the display name for a MethodInfo
         /// </summary>
         /// <param name="method">A MethodInfo</param>
         /// <returns>The display name</returns>
-        public string GetDisplayName(MethodInfo method)
+        private string GetDisplayName(MethodInfo method)
         {
             return GetDisplayName(method, null);
         }
@@ -150,7 +180,7 @@ namespace NUnit.Framework.Internal
         /// <param name="method">A MethodInfo</param>
         /// <param name="args">Argument list for the method</param>
         /// <returns>The display name</returns>
-        public string GetDisplayName(MethodInfo method, object[] args)
+        private string GetDisplayName(MethodInfo method, object[] args)
         {
             var result = new StringBuilder();
 
@@ -165,6 +195,11 @@ namespace NUnit.Framework.Internal
         private abstract class NameFragment
         {
             private const string THREE_DOTS = "...";
+
+            public virtual string GetText(TestMethod testMethod, object[] args)
+            {
+                return GetText(testMethod.Method.MethodInfo, args);
+            }
 
             public abstract string GetText(MethodInfo method, object[] args);
 
@@ -362,6 +397,19 @@ namespace NUnit.Framework.Internal
                     default:
                         return c.ToString();
                 }
+            }
+        }
+
+        private class TestIDFragment : NameFragment
+        {
+            public override string GetText(MethodInfo method, object[] args)
+            {
+                return "{i}"; // No id available using MethodInfo
+            }
+
+            public override string GetText(TestMethod testMethod, object[] args)
+            {
+                return testMethod.Id;
             }
         }
 

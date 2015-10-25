@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Reflection;
 using NUnit.Framework.Compatibility;
 
@@ -28,14 +29,18 @@ namespace NUnit.Framework.Internal.Tests
 {
     public class TestNameGeneratorTests
     {
-        private MethodInfo _simpleTest;
-        private MethodInfo _genericTest;
+        private TestMethod _simpleTest;
+        private TestMethod _genericTest;
 
         [SetUp]
         public void InitializeMethodInfos()
         {
-            _simpleTest = GetType().GetMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-            _genericTest = GetType().GetMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
+            Type thisType = GetType();
+            var simpleMethod = thisType.GetMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+            var genericMethod = thisType.GetMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
+            _simpleTest = new TestMethod(new MethodWrapper(thisType, simpleMethod));
+            _genericTest = new TestMethod(new MethodWrapper(thisType, genericMethod));
+            _simpleTest.Id = "THE_ID";
         }
 
         [TestCase("FIXED", ExpectedResult = "FIXED")]
@@ -49,6 +54,7 @@ namespace NUnit.Framework.Internal.Tests
         [TestCase("{x}", ExpectedResult = "{x}")]
         [TestCase("{n}.{c.{m}", ExpectedResult = "NUnit.Framework.Internal.Tests.{c.{m}")]
         [TestCase("{m}{a}", ExpectedResult = "TestMethod")]
+        [TestCase("{i}", ExpectedResult="THE_ID")]
         public string SimpleTestNames(string pattern)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest);
@@ -66,6 +72,8 @@ namespace NUnit.Framework.Internal.Tests
             ExpectedResult = "TestMethod(\"Now is the time for all good men to come to the aid of their country.\")")]
         [TestCase("{m}{a:20}", new object[] { 42, "Now is the time for all good men to come to the aid of their country.", 5.2 },
             ExpectedResult = "TestMethod(42,\"Now is the time f...\",5.2d)")]
+        [TestCase("{m}{a:20}%{i}", new object[] { 42, "Now is the time for all good men to come to the aid of their country.", 5.2 },
+            ExpectedResult = "TestMethod(42,\"Now is the time f...\",5.2d)%THE_ID")]
         [TestCase("{m}({0})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod(1)")]
         [TestCase("{m}({1})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod(2)")]
         [TestCase("{m}({2})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod(3)")]
