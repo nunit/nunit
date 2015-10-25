@@ -104,6 +104,37 @@ namespace NUnit.Framework.Internal.Tests
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest);
         }
 
+        [TestCase(double.MaxValue, ExpectedResult = "double.MaxValue")]
+        [TestCase(double.MinValue, ExpectedResult = "double.MinValue")]
+        [TestCase(double.NaN, ExpectedResult = "double.NaN")]
+        [TestCase(double.PositiveInfinity, ExpectedResult = "double.PositiveInfinity")]
+        [TestCase(double.NegativeInfinity, ExpectedResult = "double.NegativeInfinity")]
+        [TestCase(float.MaxValue, ExpectedResult = "float.MaxValue")]
+        [TestCase(float.MinValue, ExpectedResult = "float.MinValue")]
+        [TestCase(float.NaN, ExpectedResult = "float.NaN")]
+        [TestCase(float.PositiveInfinity, ExpectedResult = "float.PositiveInfinity")]
+        [TestCase(float.NegativeInfinity, ExpectedResult = "float.NegativeInfinity")]
+        [TestCase(int.MaxValue, ExpectedResult = "int.MaxValue")]
+        [TestCase(int.MinValue, ExpectedResult = "int.MinValue")]
+        [TestCase(uint.MaxValue, ExpectedResult = "uint.MaxValue")]
+        [TestCase(uint.MinValue, ExpectedResult = "uint.MinValue")]
+        [TestCase(long.MaxValue, ExpectedResult = "long.MaxValue")]
+        [TestCase(long.MinValue, ExpectedResult = "long.MinValue")]
+        [TestCase(ulong.MaxValue, ExpectedResult = "ulong.MaxValue")]
+        [TestCase(ulong.MinValue, ExpectedResult = "ulong.MinValue")]
+        [TestCase(short.MaxValue, ExpectedResult = "short.MaxValue")]
+        [TestCase(short.MinValue, ExpectedResult = "short.MinValue")]
+        [TestCase(ushort.MaxValue, ExpectedResult = "ushort.MaxValue")]
+        [TestCase(ushort.MinValue, ExpectedResult = "ushort.MinValue")]
+        [TestCase(byte.MaxValue, ExpectedResult = "byte.MaxValue")]
+        [TestCase(byte.MinValue, ExpectedResult = "byte.MinValue")]
+        [TestCase(sbyte.MaxValue, ExpectedResult = "sbyte.MaxValue")]
+        [TestCase(sbyte.MinValue, ExpectedResult = "sbyte.MinValue")]
+        public string SpecialNamedValues(object arg)
+        {
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg } );
+        }
+
         #region Methods Used as Data
 
         private void TestMethod() { }

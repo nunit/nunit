@@ -240,10 +240,9 @@ namespace NUnit.Framework.Internal
                 }
                 else if (arg is long)
                 {
-                    long l = (long)arg;
-                    if (l == long.MinValue)
+                    if (arg.Equals(long.MinValue))
                         display = "long.MinValue";
-                    else if (l == long.MinValue)
+                    else if (arg.Equals(long.MaxValue))
                         display = "long.MaxValue";
                     else
                         display += "L";
@@ -253,7 +252,7 @@ namespace NUnit.Framework.Internal
                     ulong ul = (ulong)arg;
                     if (ul == ulong.MinValue)
                         display = "ulong.MinValue";
-                    else if (ul == ulong.MinValue)
+                    else if (ul == ulong.MaxValue)
                         display = "ulong.MaxValue";
                     else
                         display += "UL";
@@ -266,7 +265,7 @@ namespace NUnit.Framework.Internal
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append("\"");
-                    foreach (char c in (string)arg)
+                    foreach (char c in str)
                     {
                         sb.Append(EscapeControlChar(c));
                         if (tooLong && sb.Length > limit)
@@ -284,50 +283,44 @@ namespace NUnit.Framework.Internal
                 }
                 else if (arg is int)
                 {
-                    int ival = (int)arg;
-                    if (ival == int.MaxValue)
+                    if (arg.Equals(int.MaxValue))
                         display = "int.MaxValue";
-                    else if (ival == int.MinValue)
+                    else if (arg.Equals(int.MinValue))
                         display = "int.MinValue";
                 }
                 else if (arg is uint)
                 {
-                    uint val = (uint)arg;
-                    if (val == uint.MaxValue)
+                    if (arg.Equals(uint.MaxValue))
                         display = "uint.MaxValue";
-                    else if (val == uint.MinValue)
+                    else if (arg.Equals(uint.MinValue))
                         display = "uint.MinValue";
                 }
                 else if (arg is short)
                 {
-                    short val = (short)arg;
-                    if (val == short.MaxValue)
+                    if (arg.Equals(short.MaxValue))
                         display = "short.MaxValue";
-                    else if (val == short.MinValue)
+                    else if (arg.Equals(short.MinValue))
                         display = "short.MinValue";
                 }
                 else if (arg is ushort)
                 {
-                    ushort val = (ushort)arg;
-                    if (val == ushort.MaxValue)
+                    if (arg.Equals(ushort.MaxValue))
                         display = "ushort.MaxValue";
-                    else if (val == ushort.MinValue)
+                    else if (arg.Equals(ushort.MinValue))
                         display = "ushort.MinValue";
                 }
                 else if (arg is byte)
                 {
-                    byte val = (byte)arg;
-                    if (val == byte.MaxValue)
+                    if (arg.Equals(byte.MaxValue))
                         display = "byte.MaxValue";
-                    else if (val == byte.MinValue)
+                    else if (arg.Equals(byte.MinValue))
                         display = "byte.MinValue";
                 }
                 else if (arg is sbyte)
                 {
-                    sbyte val = (sbyte)arg;
-                    if (val == sbyte.MaxValue)
+                    if (arg.Equals(sbyte.MaxValue))
                         display = "sbyte.MaxValue";
-                    else if (val == sbyte.MinValue)
+                    else if (arg.Equals(sbyte.MinValue))
                         display = "sbyte.MinValue";
                 }
 
