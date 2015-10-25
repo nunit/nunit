@@ -290,6 +290,46 @@ namespace NUnit.Framework.Internal
                     else if (ival == int.MinValue)
                         display = "int.MinValue";
                 }
+                else if (arg is uint)
+                {
+                    uint val = (uint)arg;
+                    if (val == uint.MaxValue)
+                        display = "uint.MaxValue";
+                    else if (val == uint.MinValue)
+                        display = "uint.MinValue";
+                }
+                else if (arg is short)
+                {
+                    short val = (short)arg;
+                    if (val == short.MaxValue)
+                        display = "short.MaxValue";
+                    else if (val == short.MinValue)
+                        display = "short.MinValue";
+                }
+                else if (arg is ushort)
+                {
+                    ushort val = (ushort)arg;
+                    if (val == ushort.MaxValue)
+                        display = "ushort.MaxValue";
+                    else if (val == ushort.MinValue)
+                        display = "ushort.MinValue";
+                }
+                else if (arg is byte)
+                {
+                    byte val = (byte)arg;
+                    if (val == byte.MaxValue)
+                        display = "byte.MaxValue";
+                    else if (val == byte.MinValue)
+                        display = "byte.MinValue";
+                }
+                else if (arg is sbyte)
+                {
+                    sbyte val = (sbyte)arg;
+                    if (val == sbyte.MaxValue)
+                        display = "sbyte.MaxValue";
+                    else if (val == sbyte.MinValue)
+                        display = "sbyte.MinValue";
+                }
 
                 return display;
             }
