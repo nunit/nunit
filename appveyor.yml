@@ -21,4 +21,7 @@ artifacts:
 - path: package\*.nupkg
 - path: package\*.msi
 
+# AppVeyor defaults to just its build number
 version: '{build}'
+# disable built-in tests.
+test: off
