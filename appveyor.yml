@@ -6,7 +6,7 @@ before_build:
   - nuget restore nunit.sln
 
 build_script: 
-  - ps: appveyor.ps1
+  - ps: .\appveyor.ps1
   
 test_script:
   - msbuild NUnit.proj /t:TestAll /p:Configuration=Release /p:ResultFormat=nunit2 /p:ContinueOnFailure=ErrorAndContinue
@@ -18,3 +18,5 @@ test_script:
 artifacts:
 - path: package\*.nupkg
 - path: package\*.msi
+
+version: '{build}'
