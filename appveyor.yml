@@ -8,8 +8,8 @@ before_build:
 build_script: 
   - ps: .\appveyor.ps1
   
-test_script:
-  - msbuild NUnit.proj /t:TestAll /p:Configuration=Release /p:ResultFormat=nunit2 /p:ContinueOnFailure=ErrorAndContinue
+#test_script:
+#  - msbuild NUnit.proj /t:TestAll /p:Configuration=Release /p:ResultFormat=nunit2 /p:ContinueOnFailure=ErrorAndContinue
 #  - ps: $wc = New-Object 'System.Net.WebClient'
 #  - ps: $dir = "bin\Release\Results"
 #  - ps: $uri = "https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)"
