@@ -125,14 +125,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Returns the display name for the method, called with specific arguments.
-        /// </summary>
-        public string GetDisplayName(object[] args)
-        {
-            return MethodHelper.GetDisplayName(MethodInfo, args);
-        }
-
-        /// <summary>
         /// Gets the parameters of the method.
         /// </summary>
         /// <returns></returns>

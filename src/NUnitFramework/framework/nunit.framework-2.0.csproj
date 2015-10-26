@@ -146,6 +146,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\ParameterWrapper.cs" />
+    <Compile Include="Internal\TestNameGenerator.cs" />
     <Compile Include="Internal\TypeWrapper.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="DirectoryAssert.cs" />
@@ -382,7 +383,6 @@
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
-    <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\TestCaseParameters.cs" />
