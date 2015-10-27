@@ -2,7 +2,7 @@
 <Include>
 
     <Condition Message="NUnit requires .NET 2.0, .NET 4.0 or Mono to be installed as a prerequisite.">
-        FRAMEWORK20 OR FRAMEWORK40 OR MONODIRECTORY
+        <![CDATA[Installed OR FRAMEWORK20 OR FRAMEWORK40 OR MONODIRECTORY]]>
     </Condition>
 
     <!-- ***************************************************************** -->
