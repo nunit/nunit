@@ -154,8 +154,6 @@ namespace NUnitLite
             // TODO: Add where clause here
         }
 
-        private bool _testCreatedOutput = false;
-
         public void TestFinished(ITestResult result)
         {
             bool isSuite = result.Test.IsSuite;
@@ -168,13 +166,11 @@ namespace NUnitLite
             if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
             {
                 _writer.WriteLine("=> " + result.Test.Name);
-                _testCreatedOutput = true;
             }
 
             if (result.Output.Length > 0)
             {
                 _writer.Write(result.Output);
-                _testCreatedOutput = true;
                 if (!result.Output.EndsWith("\n"))
                     _writer.WriteLine();
             }
