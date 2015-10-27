@@ -109,9 +109,8 @@ namespace NUnit.Framework.Internal
                 new OSPlatform( PlatformID.Win32Windows, new Version( 4, 90 ) ),
                 "WinMe,Win32Windows,Win32,Win" );
         }
-
-        // WinCE isn't defined in .NET 1.0.
-        [Test, Platform(Exclude="Net-1.0")]
+        
+        [Test]
         public void DetectWinCE()
         {
             PlatformID winCE = (PlatformID)Enum.Parse(typeof(PlatformID), "WinCE", false);
@@ -255,9 +254,8 @@ namespace NUnit.Framework.Internal
                 new OSPlatform(OSPlatform.UnixPlatformID_Microsoft, new Version(0,0)),
                 "UNIX,Linux");
         }
-
-        // This throws under Microsoft .Net due to the invalid enumeration value of 128
-        [Test, Platform(Exclude="Net")]
+        
+        [Test]
         public void DetectUnixUnderMono()
         {
             CheckOSPlatforms(
