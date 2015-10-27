@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.ConsoleRunner.Tests</RootNamespace>
-    <AssemblyName>nunit-console.tests</AssemblyName>
+    <AssemblyName>nunit3-console.tests</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -92,9 +92,9 @@
       <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
       <Name>mock-nunit-assembly-2.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit-console\nunit-console.csproj">
+    <ProjectReference Include="..\nunit3-console\nunit3-console.csproj">
       <Project>{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}</Project>
-      <Name>nunit-console</Name>
+      <Name>nunit3-console</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NUnitEngine\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>

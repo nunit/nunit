@@ -30,7 +30,7 @@ namespace NUnit.Common
 {
     /// <summary>
     /// ConsoleOptions encapsulates the option settings for
-    /// the nunit-console program.
+    /// the nunit3-console program.
     /// </summary>
     public class ConsoleOptions : CommandLineOptions
     {

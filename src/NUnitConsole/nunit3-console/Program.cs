@@ -72,9 +72,9 @@ namespace NUnit.ConsoleRunner
             //if (options.trace != InternalTraceLevel.Default)
             //    level = options.trace;
 
-            //InternalTrace.Initialize("nunit-console_%p.log", level);
+            //InternalTrace.Initialize("nunit3-console_%p.log", level);
             
-            //log.Info("NUnit-console.exe starting");
+            //log.Info("NUnit3-console.exe starting");
             try
             {
                 if (!Options.NoHeader)
@@ -147,7 +147,7 @@ namespace NUnit.ConsoleRunner
                             }
                         }
 
-                        //    log.Info( "NUnit-console.exe terminating" );
+                        //    log.Info( "NUnit3-console.exe terminating" );
                     }
                 }
             }
@@ -192,7 +192,7 @@ namespace NUnit.ConsoleRunner
         private static void WriteHelpText()
         {
             OutWriter.WriteLine();
-            OutWriter.WriteLine(ColorStyle.Header, "NUNIT-CONSOLE [inputfiles] [options]");
+            OutWriter.WriteLine(ColorStyle.Header, "NUNIT3-CONSOLE [inputfiles] [options]");
             OutWriter.WriteLine();
             OutWriter.WriteLine(ColorStyle.Default, "Runs a set of NUnit tests from the console.");
             OutWriter.WriteLine();

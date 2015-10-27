@@ -9760,7 +9760,7 @@
         <member name="P:MSBuild.Community.Tasks.NUnit.Process">
             <summary>
             The /process option controls how NUnit loads tests in processes. The following values are recognized.
-            Single - All the tests are run in the nunit-console process. This is the default.
+            Single - All the tests are run in the nunit3-console process. This is the default.
             Separate - A separate process is created to run the tests.
             Multiple - A separate process is created for each test assembly, whether specified on the command line or listed in an NUnit project file.
             Note: This option is not available using the .NET 1.1 build of nunit-console.

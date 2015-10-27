@@ -102,7 +102,7 @@
   <PropertyGroup Label="Properties for running tests">
     <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
     <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
-    <ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
+    <ConsoleRunner>$(ConsoleBuildDir)\nunit3-console.exe</ConsoleRunner>
     <ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
     <ResultFormat Condition="'$(ResultFormat)' == ''">nunit3</ResultFormat>
     <ContinueOnFailure Condition="'$(ContinueOnFailure)' == ''">false</ContinueOnFailure>
@@ -373,7 +373,7 @@
     <Message Text="******************************************************************" />
     
     <Exec WorkingDirectory="$(ConsoleBuildDir)"
-        Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll "-result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat)" $(TestOptions)'
+        Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit3-console.tests.dll "-result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
     
   </Target>
@@ -665,8 +665,8 @@
   </ItemGroup>
 
   <ItemGroup Label="Projects for building the console runner">
-    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console\nunit-console.csproj" />
-    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console.tests\nunit-console.tests.csproj" />
+    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit3-console\nunit3-console.csproj" />
+    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit3-console.tests\nunit3-console.tests.csproj" />
   </ItemGroup>
   
   <!-- End Region -->

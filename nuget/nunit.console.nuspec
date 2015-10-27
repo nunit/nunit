@@ -11,7 +11,7 @@
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Console runner for version 3.0 of the NUnit unit-testing framework.</summary>
-    <description>This package includes the nunit-console runner and test engine for version 3.0 of the NUnit unit-testing framework. The runner will run 2.6 tests using a plugin.&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</description>
+    <description>This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework. The runner will run 2.6 tests using a plugin.&#10;&#13;This is an beta release, but is ready for production use for people with prior NUnit experience.</description>
     <releaseNotes>This is an beta release, but is ready for production use for people with prior NUnit experience.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd runner</tags>
@@ -25,8 +25,8 @@
     <file src="bin/nunit-agent.exe.config" target="tools" />
     <file src="bin/nunit-agent-x86.exe" target="tools" />
     <file src="bin/nunit-agent-x86.exe.config" target="tools" />
-    <file src="bin/nunit-console.exe" target="tools" />
-    <file src="bin/nunit-console.exe.config" target="tools" />
+    <file src="bin/nunit3-console.exe" target="tools" />
+    <file src="bin/nunit3-console.exe.config" target="tools" />
     <file src="bin/nunit.engine.api.dll" target="tools" />
     <file src="bin/nunit.engine.api.xml" target="tools" />
     <file src="bin/nunit.engine.dll" target="tools" />
