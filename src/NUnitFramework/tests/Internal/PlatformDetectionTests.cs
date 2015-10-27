@@ -281,15 +281,6 @@ namespace NUnit.Framework.Internal
                 new OSPlatform(PlatformID.MacOSX, new Version(0, 0)),
                 "MacOSX");
         }
-
-#if !PORTABLE
-        [Test]
-        [Platform(Include = "MacOSX")]
-        public void CurrentPlatformIsMacOSX()
-        {
-            Assert.That(OSPlatform.CurrentPlatform.IsMacOSX);
-        }
-#endif
 #endif
 
         [Test]
