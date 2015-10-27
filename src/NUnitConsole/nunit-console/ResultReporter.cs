@@ -62,7 +62,7 @@ namespace NUnit.ConsoleRunner
         {
             _writer.WriteLine();
 
-            if (Summary.SkipCount + Summary.IgnoreCount > 0)
+            if (Summary.ExplicitCount + Summary.SkipCount + Summary.IgnoreCount > 0)
                 WriteNotRunReport();
 
             if (_overallResult == "Failed")
