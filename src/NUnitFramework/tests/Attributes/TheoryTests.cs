@@ -96,13 +96,6 @@ namespace NUnit.Framework.Attributes
             SquareRootTest(d);
         }
 
-        [Theory, Explicit("Used to demonstrate display of failing Theory")]
-        public void SquareRootWithAllBadValues(
-            [Values(-12.0, -4.0, -9.0)] double d)
-        {
-            SquareRootTest(d);
-        }
-
         [Datapoints]
         string[] vals = new string[] { "xyz1", "xyz2", "xyz3" };
 

@@ -216,7 +216,7 @@ namespace NUnitLite
         {
             Summary = new ResultSummary(result);
 
-            if (Summary.SkipCount + Summary.IgnoreCount > 0)
+            if (Summary.ExplicitCount + Summary.SkipCount + Summary.IgnoreCount > 0)
                 _textUI.DisplayNotRunReport(result);
 
             if (result.ResultState.Status == TestStatus.Failed)

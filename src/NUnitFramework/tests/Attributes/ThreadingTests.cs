@@ -26,7 +26,6 @@ using System.Threading;
 
 namespace NUnit.Framework.Attributes
 {
-    // [Platform(Exclude = "Mono", Reason = "Runner hangs at end when these are run")]
     public class ThreadingTests
     {
         protected Thread ParentThread { get; private set; }
