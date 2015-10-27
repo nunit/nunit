@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 #if !SILVERLIGHT && !PORTABLE && !NETCORE
@@ -89,7 +88,6 @@ namespace NUnit.Tests
 
 #if !SILVERLIGHT && !PORTABLE && !NETCORE
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
-            public static readonly string AssemblyName = "mock-nunit-assembly.exe";
 
             public static void Main(string[] args)
             {

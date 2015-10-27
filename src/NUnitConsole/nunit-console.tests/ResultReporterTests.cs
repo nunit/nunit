@@ -21,24 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using NUnit.Common;
-using NUnit.ConsoleRunner.Utilities;
 using NUnit.Engine;
-using NUnit.Engine.Drivers;
-using NUnit.Engine.Runners;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Tests.Assemblies;
 using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
-using TestFilter = NUnit.Engine.TestFilter;
 using NUnit.Engine.Internal;
 
 namespace NUnit.ConsoleRunner.Tests
@@ -50,30 +43,19 @@ namespace NUnit.ConsoleRunner.Tests
         private ResultReporter _reporter;
         private StringBuilder _report;
 
-        public class NullListener : ITestEventListener
-        {
-            public void OnTestEvent(string testEvent)
-            {
-                // No action
-            }
-        }
-
-        private ITestEngine engine;
-        protected TestEngineResult EngineResult { get; private set; }
-
         [OneTimeSetUp]
         public void CreateResult()
         {
-            engine = TestEngineActivator.CreateInstance();
-            engine.InternalTraceLevel = InternalTraceLevel.Off;
+            var mockAssembly = typeof (MockAssembly).Assembly;
+            var emptySettings = new Dictionary<string, object>();
+
             var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-            runner.Load(MockAssembly.AssemblyPath, new Dictionary<string, object>()).RunState.ToString();
+            runner.Load(mockAssembly, emptySettings);
             var xmlText = runner.Run(TestListener.NULL, Framework.Internal.TestFilter.Empty).ToXml(true).OuterXml;
-            this.EngineResult = new TestEngineResult(xmlText);
-            this.EngineResult.Add("<settings><setting name=\"WorkDirectory\" value=\"D:\\Dev\\NUnit\\nunit - 3.0\\bin\\Debug\"></setting></settings>");
-            this.EngineResult = this.EngineResult.Aggregate("test-run start-time=\"2015-10-19 02:12:28Z\" end-time=\"2015-10-19 02:12:29Z\" duration=\"0.348616\"", MockAssembly.AssemblyName, MockAssembly.AssemblyPath);
-            _result = EngineResult.Xml;
-            Assert.NotNull(_result, "Unable to create test result XmlNode");
+            var engineResult = AddMetadata(new TestEngineResult(xmlText));
+            _result = engineResult.Xml;
+
+            Assert.NotNull(_result, "Unable to create report result.");
         }
 
         [SetUp]
@@ -208,6 +190,12 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         #region Helper Methods
+
+        private TestEngineResult AddMetadata(TestEngineResult input)
+        {
+            input.Add("<settings><setting name=\"WorkDirectory\" value=\"NotImportantValue\"></setting></settings>");
+            return input.Aggregate("test-run start-time=\"2015-10-19 02:12:28Z\" end-time=\"2015-10-19 02:12:29Z\" duration=\"0.348616\"", string.Empty, string.Empty);
+        }
 
         private string GetReport(TestDelegate del)
         {
