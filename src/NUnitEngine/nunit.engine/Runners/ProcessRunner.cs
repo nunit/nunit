@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
@@ -59,7 +60,15 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult ExploreTests(TestFilter filter)
         {
-            return _remoteRunner.Explore(filter);
+            try
+            {
+                return _remoteRunner.Explore(filter);
+            }
+            catch (Exception e)
+            {
+                log.Error("Failed to run remote tests {0}", e.Message);
+                return CreateFailedResult(e);
+            }
         }
 
         /// <summary>
@@ -101,10 +110,18 @@ namespace NUnit.Engine.Runners
         /// </summary>
         public override void UnloadPackage()
         {
-            if (_remoteRunner != null)
+            try
             {
-                log.Info("Unloading remote runner");
-                _remoteRunner.Unload();
+                if (_remoteRunner != null)
+                {
+                    log.Info("Unloading remote runner");
+                    _remoteRunner.Unload();
+                    _remoteRunner = null;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Warning("Failed to unload the remote runner. {0}", e.Message);
                 _remoteRunner = null;
             }
         }
@@ -117,7 +134,15 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases</returns>
         protected override int CountTests(TestFilter filter)
         {
-            return _remoteRunner.CountTestCases(filter);
+            try
+            {
+                return _remoteRunner.CountTestCases(filter);
+            }
+            catch (Exception e)
+            {
+                log.Error("Failed to count remote tests {0}", e.Message);
+                return 0;
+            }
         }
 
         /// <summary>
@@ -128,7 +153,15 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestResult giving the result of the test execution</returns>
         protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
-            return _remoteRunner.Run(listener, filter);
+            try
+            {
+                return _remoteRunner.Run(listener, filter);
+            }
+            catch (Exception e)
+            {
+                log.Error("Failed to run remote tests {0}", e.Message);
+                return CreateFailedResult(e);
+            }
         }
 
         /// <summary>
@@ -141,7 +174,17 @@ namespace NUnit.Engine.Runners
         /// <returns>An AsyncTestRun that will provide the result of the test execution</returns>
         protected override AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
         {
-            return _remoteRunner.RunAsync(listener, filter);
+            try
+            {
+                return _remoteRunner.RunAsync(listener, filter);
+            }
+            catch (Exception e)
+            {
+                log.Error("Failed to run remote tests {0}", e.Message);
+                var result = new AsyncTestEngineResult();
+                result.SetResult(CreateFailedResult(e));
+                return result;
+            }
         }
 
         /// <summary>
@@ -150,19 +193,62 @@ namespace NUnit.Engine.Runners
         /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
         public override void StopRun(bool force)
         {
-            _remoteRunner.StopRun(force);
+            try
+            {
+                _remoteRunner.StopRun(force);
+            }
+            catch (Exception e)
+            {
+                log.Error("Failed to stop the remote run. {0}", e.Message);
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
-            if (disposing && _agent != null)
+            try
             {
-                log.Info("Stopping remote agent");
-                _agent.Stop();
+                if (disposing && _agent != null)
+                {
+                    log.Info("Stopping remote agent");
+                    _agent.Stop();
+                    _agent = null;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Failed to stop the remote agent. {0}", e.Message);
                 _agent = null;
             }
+        }
+
+        TestEngineResult CreateFailedResult(Exception e)
+        {
+            var suite = XmlHelper.CreateTopLevelElement("test-suite");
+            XmlHelper.AddAttribute(suite, "type", "Assembly");
+            XmlHelper.AddAttribute(suite, "id", TestPackage.ID);
+            XmlHelper.AddAttribute(suite, "name", TestPackage.Name);
+            XmlHelper.AddAttribute(suite, "fullname", TestPackage.FullName);
+            XmlHelper.AddAttribute(suite, "runstate", "NotRunnable");
+            XmlHelper.AddAttribute(suite, "testcasecount", "1");
+            XmlHelper.AddAttribute(suite, "result", "Failed");
+            XmlHelper.AddAttribute(suite, "label", "Error");
+            XmlHelper.AddAttribute(suite, "start-time", DateTime.UtcNow.ToString("u"));
+            XmlHelper.AddAttribute(suite, "end-time", DateTime.UtcNow.ToString("u"));
+            XmlHelper.AddAttribute(suite, "duration", "0.001");
+            XmlHelper.AddAttribute(suite, "total", "1");
+            XmlHelper.AddAttribute(suite, "passed", "0");
+            XmlHelper.AddAttribute(suite, "failed", "1");
+            XmlHelper.AddAttribute(suite, "inconclusive", "0");
+            XmlHelper.AddAttribute(suite, "skipped", "0");
+            XmlHelper.AddAttribute(suite, "asserts", "0");
+
+            var failure = suite.AddElement("failure");
+            var message = failure.AddElementWithCDataSection("message", e.Message);
+            var stack = failure.AddElementWithCDataSection("stack-trace", e.StackTrace);
+
+            return new TestEngineResult(suite);
         }
 
         #endregion
