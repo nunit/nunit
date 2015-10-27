@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Filters
     //    <id>1,2,3</id>
     // 
     // TestName filter
-    //    <tests><test>xxxxxxx.xxx</test><test>yyyyyyy.yyy</test></tests>
+    //    <test>xxxxxxx.xxx</test>
     //
     // Name filter
     //    <name>xxxxx</name>
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal.Filters
     //    <cat>cat1,cat2,cat3</cat>
     //
     // Property filter
-    //    <prop>name=value</prop>
+    //    <prop name="xxxx">value</prop>
     //
     // And Filter
     //    <and><filter>...</filter><filter>...</filter></and>
@@ -59,10 +59,11 @@ namespace NUnit.Framework.Internal.Filters
 
     public abstract class TestFilterTests
     {
+        public const string DUMMY_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+DummyFixture";
+
         protected static readonly TestSuite _dummyFixture = TestBuilder.MakeFixture(typeof(DummyFixture));
         protected static readonly TestSuite _anotherFixture = TestBuilder.MakeFixture(typeof(AnotherFixture));
         protected static readonly TestSuite _yetAnotherFixture = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
-        protected static readonly TestSuite _fixtureWithExplicitTest = TestBuilder.MakeFixture (typeof (FixtureWithExplicitTest));
         protected static readonly TestSuite _fixtureWithMultipleTests = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
         protected static readonly TestSuite _topLevelSuite = new TestSuite("MySuite");
 
@@ -71,11 +72,12 @@ namespace NUnit.Framework.Internal.Filters
             _topLevelSuite.Add(_dummyFixture);
             _topLevelSuite.Add(_anotherFixture);
             _topLevelSuite.Add(_yetAnotherFixture);
+            _topLevelSuite.Add(_fixtureWithMultipleTests);
         }
 
         #region Fixtures Used by Tests
 
-        [Category("Dummy")]
+        [Category("Dummy"), Property("Priority", "High"), Author("Charlie Poole")]
         private class DummyFixture
         {
             [Test]
@@ -83,15 +85,7 @@ namespace NUnit.Framework.Internal.Filters
 
         }
 
-        [Category("Dummy")]
-        private class FixtureWithExplicitTest
-        {
-            [Test, Explicit]
-            public void ExplicitTest() { }
-
-        }
-
-        [Category("Another")]
+        [Category("Another"), Property("Priority", "Low"), Author("Fred Smith")]
         private class AnotherFixture
         {
             [Test]

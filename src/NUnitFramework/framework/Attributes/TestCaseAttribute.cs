@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -284,7 +286,7 @@ namespace NUnit.Framework
                         if (argsProvided == argsNeeded)
                         {
                             Type lastArgumentType = parms.Arguments[argsProvided - 1].GetType();
-                            if (!lastParameterType.IsAssignableFrom(lastArgumentType))
+                            if (!lastParameterType.GetTypeInfo().IsAssignableFrom(lastArgumentType.GetTypeInfo()))
                             {
                                 Array array = Array.CreateInstance(elementType, 1);
                                 array.SetValue(parms.Arguments[argsProvided - 1], 0);
@@ -383,7 +385,7 @@ namespace NUnit.Framework
 
                 if (convert)
                 {
-                    Type convertTo = targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ? 
+                    Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ? 
                         targetType.GetGenericArguments()[0] : targetType;
                     arglist[i] = Convert.ChangeType(arg, convertTo, System.Globalization.CultureInfo.InvariantCulture);
                 }

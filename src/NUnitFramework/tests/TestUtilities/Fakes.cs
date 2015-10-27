@@ -22,10 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-
-using BF = System.Reflection.BindingFlags;
 
 namespace NUnit.TestUtilities
 {
@@ -94,7 +94,7 @@ namespace NUnit.TestUtilities
             : this(obj.GetType(), name) { }
 
         public FakeTestMethod(Type type, string name)
-            : base(new MethodWrapper(type, type.GetMethod(name, BF.Public | BF.NonPublic | BF.Static | BF.Instance))) { }
+            : base(new MethodWrapper(type, type.GetMethod(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))) { }
     }
 
     #endregion

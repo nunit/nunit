@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
         /// <summary>
         /// Do our best to kill a thread, passing state info
         /// </summary>

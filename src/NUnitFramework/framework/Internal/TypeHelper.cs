@@ -22,11 +22,12 @@
 // ***********************************************************************
 
 using System;
-#if NETCF
+#if NETCF || PORTABLE
 using System.Linq;
 #endif
 using System.Reflection;
 using System.Text;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -60,7 +61,7 @@ namespace NUnit.Framework.Internal
             if (type.IsGenericParameter)
                 return type.Name;
 
-            if (type.IsGenericType)
+            if (type.GetTypeInfo().IsGenericType)
             {
                 string name = type.FullName;
                 int index = name.IndexOf('[');
@@ -231,7 +232,11 @@ namespace NUnit.Framework.Internal
             {
                 object arg = arglist[i];
 
+#if PORTABLE
+                if (arg != null)
+#else
                 if (arg != null && arg is IConvertible)
+#endif
                 {
                     Type argType = arg.GetType();
                     Type targetType = parameters[i].ParameterType;
@@ -272,9 +277,9 @@ namespace NUnit.Framework.Internal
         {
             Type[] typeParameters = type.GetGenericArguments();
 
-#if NETCF
+#if NETCF || PORTABLE
             Type[] argTypes = arglist.Select(a => a == null ? typeof(object) : a.GetType()).ToArray();
-            if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.IsGenericType))
+            if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.GetTypeInfo().IsGenericType))
                 return false;
             try
             {

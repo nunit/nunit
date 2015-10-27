@@ -87,11 +87,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public static void ProperConfigFileIsUsed()
         {
-#if CORE_ENGINE
-            var configFileName = "nunit.core.engine.tests.dll.config";
-#else
             var configFileName = "nunit.engine.tests.dll.config";
-#endif
             var expectedPath = Path.Combine(TestContext.CurrentContext.TestDirectory, configFileName);
             Assert.That(expectedPath, Is.EqualTo(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile));
         }

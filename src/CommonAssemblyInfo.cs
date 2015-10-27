@@ -38,8 +38,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 4.0 Debug")]
 #elif NET_2_0
 [assembly: AssemblyConfiguration(".NET 2.0 Debug")]
-#elif SL_5_0 && PORTABLE
-[assembly: AssemblyConfiguration("Silverlight 5.0 Debug using Portable Framework")]
 #elif SL_5_0
 [assembly: AssemblyConfiguration("Silverlight 5.0 Debug")]
 #elif SL_4_0
@@ -60,8 +58,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 4.0")]
 #elif NET_2_0
 [assembly: AssemblyConfiguration(".NET 2.0")]
-#elif SL_5_0 && PORTABLE
-[assembly: AssemblyConfiguration("Silverlight 5.0 using Portable Framework")]
 #elif SL_5_0
 [assembly: AssemblyConfiguration("Silverlight 5.0")]
 #elif SL_4_0

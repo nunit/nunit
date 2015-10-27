@@ -24,7 +24,7 @@
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
+//using System.Runtime.Remoting.Messaging;
 
 namespace NUnit.Framework.Internal.Execution
 {

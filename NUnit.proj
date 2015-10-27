@@ -7,8 +7,8 @@
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     <PackageVersion>3.0.0</PackageVersion>
-    <PackageModifier>-beta-4</PackageModifier>
-    <DisplayVersion>3.0 Beta 4</DisplayVersion>
+    <PackageModifier>-beta-5</PackageModifier>
+    <DisplayVersion>3.0 Beta 5</DisplayVersion>
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
   </PropertyGroup>
@@ -257,7 +257,7 @@
       Label="Test the framework for the current config and all runtimes">
     
     <MSBuild Projects="$(MSBuildProjectFullPath)"
-         Targets="TestFrameworkIfSupported"
+         Targets="TestFrameworkIfSupported;TestNUnitLiteIfSupported"
          Properties="Framework=%(SupportedFrameworks.Identity)"
          ContinueOnError="$(ContinueOnFailure)" />
     
@@ -272,9 +272,18 @@
 
   </Target>
 
+  <Target Name="TestNUnitLiteIfSupported"
+      Label="Run NUnitLite tests conditionally, for use by TestAllFrameworks">
+
+    <CallTarget Targets="TestNUnitLite"
+          ContinueOnError="$(ContinueOnFailure)"
+          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+
+  </Target>
+
   <Target Name="TestFramework" DependsOnTargets="_CreateResultDir"
       Label="Run framework tests for a runtime without checking for errors">
-    
+
     <Message Text="******************************************************************" />
     <Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
     <Message Text="******************************************************************" />
@@ -284,14 +293,33 @@
 
     <Exec Condition="'$(Runtime)' == 'portable'" 
         WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
-        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunitlite.exe nunit.framework.tests "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml" $(TestOptions)'
+        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunit.portable.tests.exe $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
 
     <Exec Condition="'$(Runtime)' != 'portable'"
         WorkingDirectory="$(ConsoleBuildDir)"
         Command='$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
-    
+
+  </Target>
+
+  <Target Name="TestNUnitLite" DependsOnTargets="_CreateResultDir"
+          Label="Run tests of the NUnitLite runner">
+
+    <Message Text="******************************************************************" />
+    <Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
+    <Message Text="******************************************************************" />
+
+    <Exec Condition="'$(Runtime)' != 'silverlight' AND '$(Runtime)' != 'portable' "
+          WorkingDirectory="$(FrameworkBuildDir)"
+          Command='$(ManagedExeLauncher) nunitlite.tests.exe "-result:$(ResultDir)/NUnitliteResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
+          ContinueOnError="$(ContinueOnFailure)" />
+
+		<Exec Condition="'$(Runtime)' == 'portable'"
+          WorkingDirectory="$(FrameworkBuildDir)"
+          Command='$(ManagedExeLauncher) nunitlite.tests.exe $(TestOptions)'
+          ContinueOnError="$(ContinueOnFailure)" />
+
   </Target>
 
   <Target Name="TestEngine"
@@ -606,9 +634,12 @@
     <NUnitProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-$(ProjectSuffix).csproj"
       Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
+		<NUnitProjects Include="$(FrameworkSrcDir)\nunit.portable.tests\nunit.portable.tests.csproj"
+      Condition="'$(Runtime)' == 'portable'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-$(ProjectSuffix).csproj"
       Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"></NUnitProjects>
+    <NUnitProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitProjects>
   </ItemGroup>
   
   <ItemGroup Label="Projects for building the engine">

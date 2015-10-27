@@ -34,7 +34,6 @@
     <file src="bin/nunit.engine.addin.xml" target="tools" />
     <file src="bin/Mono.Cecil.dll" target="tools" />
     <file src="bin/addins/nunit.v2.driver.dll" target="tools/addins" />
-    <file src="bin/addins/nunit.engine.api.dll" target="tools/addins" />
     <file src="bin/addins/nunit.core.dll" target="tools/addins" />
     <file src="bin/addins/nunit.core.interfaces.dll" target="tools/addins" />
     <file src="bin/addins/nunit-v2-result-writer.dll" target="tools/addins" />

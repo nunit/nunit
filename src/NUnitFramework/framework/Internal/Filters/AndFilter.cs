@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,75 +27,50 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
-	/// <summary>
-	/// Combines multiple filters so that a test must pass all 
-	/// of them in order to pass this filter.
-	/// </summary>
-	[Serializable]
-	public class AndFilter : TestFilter
-	{
-		private List<ITestFilter> filters = new List<ITestFilter>();
+    /// <summary>
+    /// Combines multiple filters so that a test must pass all 
+    /// of them in order to pass this filter.
+    /// </summary>
+    [Serializable]
+    public class AndFilter : CompositeFilter
+    {
+        /// <summary>
+        /// Constructs an empty AndFilter
+        /// </summary>
+        public AndFilter() { }
 
-		/// <summary>
-		/// Constructs an empty AndFilter
-		/// </summary>
-		public AndFilter() { }
+        /// <summary>
+        /// Constructs an AndFilter from an array of filters
+        /// </summary>
+        /// <param name="filters"></param>
+        public AndFilter(params ITestFilter[] filters) : base(filters) { }
 
-		/// <summary>
-		/// Constructs an AndFilter from an array of filters
-		/// </summary>
-		/// <param name="filters"></param>
-		public AndFilter( params ITestFilter[] filters )
-		{
-			this.filters.AddRange( filters );
-		}
+        /// <summary>
+        /// Checks whether the AndFilter is matched by a test
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        /// <returns>True if all the component filters pass, otherwise false</returns>
+        public override bool Pass( ITest test )
+        {
+            foreach( ITestFilter filter in Filters )
+                if ( !filter.Pass( test ) )
+                    return false;
 
-		/// <summary>
-		/// Adds a filter to the list of filters
-		/// </summary>
-		/// <param name="filter">The filter to be added</param>
-		public void Add( ITestFilter filter )
-		{
-			this.filters.Add( filter );
-		}
+            return true;
+        }
 
-		/// <summary>
-		/// Return an array of the composing filters
-		/// </summary>
-		public ITestFilter[] Filters
-		{
-			get
-			{
-				return filters.ToArray();
-			}
-		}
+        /// <summary>
+        /// Checks whether the AndFilter is matched by a test
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        /// <returns>True if all the component filters match, otherwise false</returns>
+        public override bool Match( ITest test )
+        {
+            foreach( TestFilter filter in Filters )
+                if ( !filter.Match( test ) )
+                    return false;
 
-		/// <summary>
-		/// Checks whether the AndFilter is matched by a test
-		/// </summary>
-		/// <param name="test">The test to be matched</param>
-		/// <returns>True if all the component filters pass, otherwise false</returns>
-		public override bool Pass( ITest test )
-		{
-			foreach( ITestFilter filter in filters )
-				if ( !filter.Pass( test ) )
-					return false;
-
-			return true;
-		}
-
-		/// <summary>
-		/// Checks whether the AndFilter is matched by a test
-		/// </summary>
-		/// <param name="test">The test to be matched</param>
-		/// <returns>True if all the component filters match, otherwise false</returns>
-		public override bool Match( ITest test )
-		{
-			foreach( TestFilter filter in filters )
-				if ( !filter.Match( test ) )
-					return false;
-
-			return true;
-		}
-	}
+            return true;
+        }
+    }
 }

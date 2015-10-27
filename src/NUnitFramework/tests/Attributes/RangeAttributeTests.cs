@@ -23,7 +23,12 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Internal;
+
+#if PORTABLE
+using System.Linq;
+#endif
 
 namespace NUnit.Framework.Attributes
 {
@@ -408,7 +413,11 @@ namespace NUnit.Framework.Attributes
         {
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
+#if PORTABLE
+            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
+#else
             var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+#endif
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
         }
 
@@ -416,7 +425,11 @@ namespace NUnit.Framework.Attributes
         {
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
+#if PORTABLE
+            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
+#else
             var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+#endif
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), 
                 Is.EqualTo(expected).Within(0.000001));
         }

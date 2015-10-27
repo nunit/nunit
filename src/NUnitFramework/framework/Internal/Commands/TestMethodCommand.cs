@@ -56,7 +56,6 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="context">The execution context</param>
         public override TestResult Execute(TestExecutionContext context)
         {
-            var thisThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
             // TODO: Decide if we should handle exceptions here
             object result = RunTestMethod(context);
 

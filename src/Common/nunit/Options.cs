@@ -133,10 +133,16 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
+
+#if PORTABLE
+using NUnit.Framework.Compatibility;
+#else
+using System.Security.Permissions;
+#endif
 
 #if LINQ
 using System.Linq;
@@ -349,10 +355,18 @@ namespace Mono.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
+#if PORTABLE
+            bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType && 
+                !tt.GetTypeInfo().IsGenericTypeDefinition && 
+                tt.GetGenericTypeDefinition () == typeof (Nullable<>);
+            Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
+#else
             bool nullable = tt.IsValueType && tt.IsGenericType && 
                 !tt.IsGenericTypeDefinition && 
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
+#endif
+
 #if !NETCF && !SILVERLIGHT && !PORTABLE
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
@@ -518,6 +532,7 @@ namespace Mono.Options
 
     public class OptionSet : KeyedCollection<string, Option>
     {
+#if !PORTABLE
         public OptionSet ()
             : this (delegate (string f) {return f;})
         {
@@ -533,6 +548,17 @@ namespace Mono.Options
         public Converter<string, string> MessageLocalizer {
             get {return localizer;}
         }
+#else
+        string localizer(string msg)
+        {
+            return msg;
+        }
+
+        public string MessageLocalizer(string msg)
+        {
+            return msg;
+        }
+#endif
 
         protected override string GetKeyForItem (Option item)
         {

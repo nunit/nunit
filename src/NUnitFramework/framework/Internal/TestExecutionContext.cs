@@ -399,7 +399,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !NETCF
+#if !NETCF && !PORTABLE
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
@@ -414,7 +414,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
-#if !NETCF
+#if !NETCF && !PORTABLE
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
@@ -461,7 +461,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void EstablishExecutionEnvironment()
         {
-#if !NETCF
+#if !NETCF && !PORTABLE
             Thread.CurrentThread.CurrentCulture = _currentCulture;
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif

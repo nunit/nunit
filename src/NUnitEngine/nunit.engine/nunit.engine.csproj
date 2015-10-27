@@ -34,6 +34,12 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\packages\Mono.Cecil.0.9.6.1\lib\net20\Mono.Cecil.dll</HintPath>
@@ -67,6 +73,12 @@
     </Compile>
     <Compile Include="..\..\Common\nunit\PackageSettings.cs">
       <Link>PackageSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
+      <Link>Services\TestSelectionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Tokenizer.cs">
+      <Link>Services\Tokenizer.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\XmlHelper.cs">
       <Link>Internal\XmlHelper.cs</Link>
@@ -139,6 +151,8 @@
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />
+    <Compile Include="Services\TestFilterBuilder.cs" />
+    <Compile Include="Services\TestFilterService.cs" />
     <Compile Include="TestEngine.cs" />
     <Compile Include="TestEngineResult.cs" />
   </ItemGroup>
@@ -159,6 +173,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -40,7 +40,9 @@ namespace NUnit.Common
     public class CommandLineOptions : OptionSet
     {
         private bool validated;
+#if !PORTABLE
         private bool noresult;
+#endif
 
         #region Constructor
 
@@ -48,7 +50,9 @@ namespace NUnit.Common
         {
             // Apply default oprions
             if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
+#if !PORTABLE
             TeamCity = defaultOptionsProvider.TeamCity;
+#endif
             
             ConfigureOptions();            
             if (args != null)
@@ -63,7 +67,7 @@ namespace NUnit.Common
         }
         
         #endregion
-
+        
         #region Properties
 
         // Action to Perform
@@ -80,11 +84,8 @@ namespace NUnit.Common
         private List<string> testList = new List<string>();
         public IList<string> TestList { get { return testList; } }
 
-        public string Include { get; private set; }
-        public bool IncludeSpecified { get { return Include != null; } }
-
-        public string Exclude { get; private set; }
-        public bool ExcludeSpecified { get { return Exclude != null; } }
+        public string WhereClause { get; private set; }
+        public bool WhereClauseSpecified { get { return WhereClause != null; } }
 
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }
@@ -120,12 +121,14 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
+#if !PORTABLE
         private string workDirectory = null;
         public string WorkDirectory 
         {
             get { return workDirectory ?? NUnit.Env.DefaultWorkDirectory; }
         }
         public bool WorkDirectorySpecified { get { return workDirectory != null; } }
+#endif
 
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
@@ -133,6 +136,7 @@ namespace NUnit.Common
         /// <summary>Indicates whether a full report should be displayed.</summary>
         public bool Full { get; private set; }
 
+#if !PORTABLE
         private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
@@ -150,15 +154,15 @@ namespace NUnit.Common
 
         private List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ExploreOutputSpecifications { get { return exploreOutputSpecifications; } }
-
+#endif
         // Error Processing
 
         public List<string> errorMessages = new List<string>();
         public IList<string> ErrorMessages { get { return errorMessages; } }
 
-        #endregion
-
-        #region Public Methods
+#endregion
+        
+#region Public Methods
 
         public bool Validate()
         {
@@ -172,9 +176,9 @@ namespace NUnit.Common
             return ErrorMessages.Count == 0;
         }
 
-        #endregion
-
-        #region Helper Methods
+#endregion
+        
+#region Helper Methods
 
         /// <summary>
         /// Case is ignored when val is compared to validValues. When a match is found, the
@@ -192,7 +196,7 @@ namespace NUnit.Common
                 isValid = false;
 
                 foreach (string valid in validValues)
-                    if (string.Compare(valid, val, StringComparison.InvariantCultureIgnoreCase) == 0)
+                    if (string.Compare(valid, val, StringComparison.OrdinalIgnoreCase) == 0)
                         return valid;
 
             }
@@ -232,7 +236,7 @@ namespace NUnit.Common
         {
             if (path == null) return null;
 
-#if NETCF
+#if NETCF || PORTABLE
             return Path.Combine(NUnit.Env.DocumentFolder, path);
 #else
             return Path.GetFullPath(path);
@@ -247,7 +251,7 @@ namespace NUnit.Common
             // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
-
+#if !PORTABLE
             this.Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
                 v =>
                 {
@@ -279,27 +283,25 @@ namespace NUnit.Common
                     }
                 });
 
-            this.Add("include=", "Test {CATEGORIES} to be included. May be a single category, a comma-separated list of categories or a category expression.",
-                v => Include = RequiredValue(v, "--include"));
-
-            this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
-                v => Exclude = RequiredValue(v, "--exclude"));
+            this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
+                v => WhereClause = RequiredValue(v, "--where"));
+#endif
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
 
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
-
+#if !PORTABLE
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => numWorkers = RequiredInt(v, "--workers"));
-
+#endif
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v != null);
 
             this.Add("wait", "Wait for input before closing console window.",
                 v => WaitBeforeExit = v != null);
-
+#if !PORTABLE
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
                 v => workDirectory = RequiredValue(v, "--work"));
@@ -325,10 +327,10 @@ namespace NUnit.Common
 
             this.Add("noresult", "Don't save any test results.",
                 v => noresult = v != null);
-
+#endif
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
-
+#if !PORTABLE
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
@@ -342,7 +344,7 @@ namespace NUnit.Common
 
             this.Add("nocolor|noc", "Displays console output without color.",
                 v => NoColor = v != null);
-
+#endif
             this.Add("verbose|v", "Display additional information as the test runs.",
                 v => Verbose = v != null);
 
@@ -352,13 +354,17 @@ namespace NUnit.Common
             // Default
             this.Add("<>", v =>
             {
+#if PORTABLE
+                if (v.StartsWith("-") || v.StartsWith("/") && Environment.NewLine == "\r\n")
+#else
                 if (v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/')
+#endif
                     ErrorMessages.Add("Invalid argument: " + v);
                 else
                     InputFiles.Add(v);
             });
         }
 
-        #endregion
+#endregion
     }
 }

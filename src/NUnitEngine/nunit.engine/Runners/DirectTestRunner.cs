@@ -61,10 +61,8 @@ namespace NUnit.Engine.Runners
             foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Explore(filter.Text));
 
-#if NUNIT_ENGINE
             if (IsProjectPackage(TestPackage))
                 result = result.MakePackageResult(TestPackage.Name, TestPackage.FullName);
-#endif
 
             return result;
         }
@@ -94,10 +92,8 @@ namespace NUnit.Engine.Runners
                 _drivers.Add(driver);
             }
 
-#if NUNIT_ENGINE
             if (IsProjectPackage(TestPackage))
                 result = result.MakePackageResult(TestPackage.Name, TestPackage.FullName);
-#endif
 
             return result;
         }
@@ -134,10 +130,8 @@ namespace NUnit.Engine.Runners
             foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Run(listener, filter.Text));
 
-#if NUNIT_ENGINE
             if (IsProjectPackage(TestPackage))
                 result = result.MakePackageResult(TestPackage.Name, TestPackage.FullName);
-#endif
 
             return result;
         }

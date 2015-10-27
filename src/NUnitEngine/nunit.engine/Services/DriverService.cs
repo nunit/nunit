@@ -70,7 +70,8 @@ namespace NUnit.Engine.Services
                 return new NotRunnableFrameworkDriver(assemblyPath, ex.Message);
             }
 
-            return new NotRunnableFrameworkDriver(assemblyPath, "Unable to locate a driver for " + assemblyPath);
+            return new NotRunnableFrameworkDriver(assemblyPath, string.Format("No suitable tests found in '{0}'.\n" +
+                                                                              "Either assembly contains no tests or proper test driver has not been found.", assemblyPath));
         }
 
         #endregion
@@ -85,7 +86,6 @@ namespace NUnit.Engine.Services
             {
                 _factories.Add(new NUnit3DriverFactory());
 
-#if NUNIT_ENGINE
                 var extensionService = ServiceContext.GetService<ExtensionService>();
                 if (extensionService != null)
                 {
@@ -96,7 +96,6 @@ namespace NUnit.Engine.Services
                 var node = extensionService.GetExtensionNode("/NUnit/Engine/NUnitV2Driver");
                 if (node != null)
                     _factories.Add(new NUnit2DriverFactory(node));
-#endif
  
                 Status = ServiceStatus.Started;
             }

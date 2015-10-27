@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -89,7 +90,7 @@ namespace NUnit.Framework.Internal
             {
                 ApplyArgType(parmType, argType);
             }
-            else if (parmType.ContainsGenericParameters)
+            else if (parmType.GetTypeInfo().ContainsGenericParameters)
             {
                 var genericArgTypes = parmType.GetGenericArguments();
 
@@ -97,7 +98,7 @@ namespace NUnit.Framework.Internal
                 {
                     ApplyArgType(genericArgTypes[0], argType.GetElementType());
                 }
-                else if (argType.IsGenericType && IsAssignableToGenericType(argType, parmType))
+                else if (argType.GetTypeInfo().IsGenericType && IsAssignableToGenericType(argType, parmType))
                 {
                     Type[] argTypes = argType.GetGenericArguments();
 
@@ -126,7 +127,7 @@ namespace NUnit.Framework.Internal
 
             foreach (var iterator in interfaceTypes)
             {
-                if (iterator.IsGenericType)
+                if (iterator.GetTypeInfo().IsGenericType)
                 {
                     // The Type returned by GetGenericTyeDefinition may have the
                     // FullName set to null, so we do our own comparison
@@ -136,7 +137,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            if (givenType.IsGenericType)
+            if (givenType.GetTypeInfo().IsGenericType)
             {
                 // The Type returned by GetGenericTyeDefinition may have the
                 // FullName set to null, so we do our own comparison
@@ -145,7 +146,7 @@ namespace NUnit.Framework.Internal
                     return true;
             }
 
-            Type baseType = givenType.BaseType;
+            Type baseType = givenType.GetTypeInfo().BaseType;
             if (baseType == null)
                 return false;
 

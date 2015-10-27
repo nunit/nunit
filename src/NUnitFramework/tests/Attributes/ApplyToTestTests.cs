@@ -510,7 +510,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETCF
+#if !NETCF && !PORTABLE
 
         #region SetCultureAttribute
 

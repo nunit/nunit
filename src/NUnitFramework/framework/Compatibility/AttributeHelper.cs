@@ -69,7 +69,7 @@ namespace NUnit.Framework.Compatibility
 
             throw new ArgumentException(string.Format("Actual value {0} must be a MemberInfo, ParameterInfo or Assembly.", actual), "actual");
 #endif
-        }
+            }
 
-    }
+        }
 }

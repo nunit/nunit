@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>net-2.0/nunit.framework.tests.dll -process:Single</Commandlineparameters>
+    <Commandlineparameters>net-4.5/nunit.framework.tests.dll -process:Single --help</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -72,6 +72,9 @@
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>ExtendedTextWriter.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\Guard.cs">
+      <Link>Utilities\Guard.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
       <Link>IDefaultOptionsProvider.cs</Link>
     </Compile>
@@ -105,10 +108,10 @@
     <Compile Include="ResultSummary.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\SaveConsoleOutput.cs" />
-    <Compile Include="Utilities\TeamCityEventHandler.cs" />
-    <Compile Include="Utilities\TestFilterBuilder.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\TeamCityEventHandler.cs" />
+    <Compile Include="Utilities\TeamCityServiceMessagePublisher.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />

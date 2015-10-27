@@ -54,6 +54,7 @@ namespace NUnit.ConsoleRunner
         private ITestEngine _engine;
         private ConsoleOptions _options;
         private IResultService _resultService;
+        private ITestFilterService _filterService;
 
         private ExtendedTextWriter _outWriter;
         private TextWriter _errorWriter = Console.Error;
@@ -78,6 +79,7 @@ namespace NUnit.ConsoleRunner
                 Directory.CreateDirectory(_workDirectory);
 
             _resultService = _engine.Services.GetService<IResultService>();
+            _filterService = _engine.Services.GetService<ITestFilterService>();
         }
 
         #endregion
@@ -90,14 +92,15 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public int Execute()
         {
-            _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files");
-            foreach (string file in _options.InputFiles)
-                _outWriter.WriteLine(ColorStyle.Default, "    " + file);
-            _outWriter.WriteLine();
+            DisplayRuntimeEnvironment(_outWriter);
 
-            WriteRuntimeEnvironment(_outWriter);
+            DisplayTestFiles();
 
             TestPackage package = MakeTestPackage(_options);
+
+            // We display the filters at this point so  that any exception message
+            // thrown by CreateTestFilter will be understandable.
+            DisplayTestFilters();
 
             TestFilter filter = CreateTestFilter(_options);
 
@@ -105,6 +108,14 @@ namespace NUnit.ConsoleRunner
                 return ExploreTests(package, filter);
             else
                 return RunTests(package, filter);
+        }
+
+        private void DisplayTestFiles()
+        {
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files");
+            foreach (string file in _options.InputFiles)
+                _outWriter.WriteLine(ColorStyle.Default, "    " + file);
+            _outWriter.WriteLine();
         }
 
         #endregion
@@ -136,10 +147,11 @@ namespace NUnit.ConsoleRunner
 
         private int RunTests(TestPackage package, TestFilter filter)
         {
-            DisplaySelectedTests();
-
             foreach (var spec in _options.ResultOutputSpecifications)
-                GetResultWriter(spec).CheckWritability(spec.OutputPath);
+            {
+                var outputPath = Path.Combine(_workDirectory, spec.OutputPath);
+                GetResultWriter(spec).CheckWritability(outputPath);
+            }
 
             // TODO: Incorporate this in EventCollector?
             RedirectErrorOutputAsRequested();
@@ -173,7 +185,8 @@ namespace NUnit.ConsoleRunner
 
             foreach (var spec in _options.ResultOutputSpecifications)
             {
-                GetResultWriter(spec).WriteResultFile(result, spec.OutputPath);
+                var outputPath = Path.Combine(_workDirectory, spec.OutputPath);
+                GetResultWriter(spec).WriteResultFile(result, outputPath);
                 _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
             }
 
@@ -183,7 +196,7 @@ namespace NUnit.ConsoleRunner
 
         }
 
-        private void WriteRuntimeEnvironment(ExtendedTextWriter OutWriter)
+        private void DisplayRuntimeEnvironment(ExtendedTextWriter OutWriter)
         {
             OutWriter.WriteLine(ColorStyle.SectionHeader, "Runtime Environment");
             OutWriter.WriteLabelLine("   OS Version: ", GetOSVersion());
@@ -214,14 +227,20 @@ namespace NUnit.ConsoleRunner
         [DllImport("libc")]
         static extern int uname(IntPtr buf);
 
-        private void DisplaySelectedTests()
+        private void DisplayTestFilters()
         {
-            if (_options.TestList.Count > 0)
+            if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
             {
-                _outWriter.WriteLine(ColorStyle.Label, "Selected test(s):");
-                using (new ColorConsole(ColorStyle.Default))
+                _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Filters");
+
+                if (_options.TestList.Count > 0)
                     foreach (string testName in _options.TestList)
-                        _outWriter.WriteLine("    " + testName);
+                        _outWriter.WriteLabelLine("    Test: ", testName);
+
+                if (_options.WhereClauseSpecified)
+                    _outWriter.WriteLabelLine("    Where: ", _options.WhereClause.Trim());
+
+                _outWriter.WriteLine();
             }
         }
 
@@ -292,8 +311,9 @@ namespace NUnit.ConsoleRunner
             if (options.ActiveConfigSpecified)
                 package.AddSetting(PackageSettings.ActiveConfig, options.ActiveConfig);
 
-            // Always add work directory, in case current directory is chnaged
-            package.AddSetting(PackageSettings.WorkDirectory, options.WorkDirectory);
+            // Always add work directory, in case current directory is changed
+            var workDirectory = options.WorkDirectory ?? Environment.CurrentDirectory;
+            package.AddSetting(PackageSettings.WorkDirectory, workDirectory);
 
             if (options.StopOnError)
                 package.AddSetting(PackageSettings.StopOnError, true);
@@ -330,20 +350,15 @@ namespace NUnit.ConsoleRunner
             return package;
         }
 
-        // This is public static for ease of testing
-        public static TestFilter CreateTestFilter(ConsoleOptions options)
+        private TestFilter CreateTestFilter(ConsoleOptions options)
         {
-            TestFilterBuilder builder = new TestFilterBuilder();
+            ITestFilterBuilder builder = _filterService.GetTestFilterBuilder();
+
             foreach (string testName in options.TestList)
-                builder.Tests.Add(testName);
+                builder.AddTest(testName);
 
-            // TODO: Support multiple include / exclude options
-
-            if (options.IncludeSpecified)
-                builder.Include.Add(options.Include);
-
-            if (options.ExcludeSpecified)
-                builder.Exclude.Add(options.Exclude);
+            if (options.WhereClauseSpecified)
+                builder.SelectWhere(options.WhereClause);
 
             return builder.GetFilter();
         }

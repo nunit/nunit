@@ -41,7 +41,7 @@ namespace NUnit.Framework.Api
         private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private ITestAssemblyBuilder _builder;
-        private ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private AutoResetEvent _runComplete = new AutoResetEvent(false);
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
         // Saved Console.Out and Console.Error
@@ -235,21 +235,25 @@ namespace NUnit.Framework.Api
 #endif
 
 #if PARALLEL
-            QueuingEventListener queue = new QueuingEventListener();
-            Context.Listener = queue;
+            // Queue and pump events, unless settings have SynchronousEvents == false
+            if (!Settings.Contains(PackageSettings.SynchronousEvents) || !(bool)Settings[PackageSettings.SynchronousEvents])
+            {
+                QueuingEventListener queue = new QueuingEventListener();
+                Context.Listener = queue;
 
-            _pump = new EventPump(listener, queue.Events);
-            _pump.Start();
-#else
-            Context.Dispatcher = new SimpleWorkItemDispatcher();
+                _pump = new EventPump(listener, queue.Events);
+                _pump.Start();
+            }
 #endif
 
+#if !NETCF
             if (!System.Diagnostics.Debugger.IsAttached &&
                 Settings.Contains(PackageSettings.DebugTests) &&
                 (bool)Settings[PackageSettings.DebugTests])
             {
                 System.Diagnostics.Debugger.Launch();
             }
+#endif
 
             Context.Dispatcher.Dispatch(TopLevelWorkItem);
         }
@@ -311,6 +315,8 @@ namespace NUnit.Framework.Api
             }
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
+#else
+                Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
         }
 
@@ -320,7 +326,8 @@ namespace NUnit.Framework.Api
         private void OnRunCompleted(object sender, EventArgs e)
         {
 #if PARALLEL
-            _pump.Dispose();
+            if (_pump != null)
+                _pump.Dispose();
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE

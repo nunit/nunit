@@ -86,10 +86,22 @@ namespace NUnit.Framework.Internal.Execution
             _queue.Stop();
             Assert.That(_queue.State, Is.EqualTo(WorkItemQueueState.Stopped));
 
-            Thread.Sleep(20);  // Allow time for workers to stop
+            int iters = 10;
+            int alive = workers.Length;
 
-            foreach (var worker in workers)
-                Assert.False(worker.IsAlive, "Worker thread {0} did not stop", worker.Name);
+            while (iters-- > 0 && alive > 0)
+            {
+                Thread.Sleep(20);  // Allow time for workers to stop
+
+                alive = 0;
+                foreach (var worker in workers)
+                    if (worker.IsAlive)
+                        alive++;
+            }
+
+            if (alive > 0)
+                foreach (var worker in workers)
+                    Assert.False(worker.IsAlive, "Worker thread {0} did not stop", worker.Name);
         }
 
         [Test]

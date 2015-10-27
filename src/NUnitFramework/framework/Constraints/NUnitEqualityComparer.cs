@@ -26,6 +26,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -145,8 +146,8 @@ namespace NUnit.Framework.Constraints
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            Type xGenericTypeDefinition = xType.IsGenericType ? xType.GetGenericTypeDefinition() : null;
-            Type yGenericTypeDefinition = yType.IsGenericType ? yType.GetGenericTypeDefinition() : null;
+            Type xGenericTypeDefinition = xType.GetTypeInfo().IsGenericType ? xType.GetGenericTypeDefinition() : null;
+            Type yGenericTypeDefinition = yType.GetTypeInfo().IsGenericType ? yType.GetGenericTypeDefinition() : null;
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
@@ -261,7 +262,7 @@ namespace NUnit.Framework.Constraints
 
             foreach (Type @interface in type.GetInterfaces())
             {
-                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
+                if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
                 {
                     genericArgs.Add(@interface.GetGenericArguments()[0]);
                 }

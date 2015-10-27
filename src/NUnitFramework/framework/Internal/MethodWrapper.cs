@@ -23,7 +23,12 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
+
+#if PORTABLE
+using System.Linq;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -120,14 +125,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Returns the display name for the method, called with specific arguments.
-        /// </summary>
-        public string GetDisplayName(object[] args)
-        {
-            return MethodHelper.GetDisplayName(MethodInfo, args);
-        }
-
-        /// <summary>
         /// Gets the parameters of the method.
         /// </summary>
         /// <returns></returns>
@@ -165,7 +162,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
+#if PORTABLE
+            return MethodInfo.GetAttributes<T>(inherit).ToArray();
+#else
             return (T[])MethodInfo.GetCustomAttributes(typeof(T), inherit);
+#endif
         }
 
         /// <summary>
@@ -173,7 +174,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsDefined<T>(bool inherit)
         {
+#if PORTABLE
+            return MethodInfo.GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
+#else
             return MethodInfo.IsDefined(typeof(T), inherit);
+#endif
         }
 
         /// <summary>

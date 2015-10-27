@@ -431,7 +431,7 @@ namespace NUnit.Framework.Assertions
             using (var one = new TestDirectory())
             using (var two = new TestDirectory())
             {
-#if SILVERLIGHT
+#if SILVERLIGHT || PORTABLE
                 var expectedMessage = System.String.Format(
                     "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.Directory.Name, Env.NewLine, two.Directory.Name );
 #else

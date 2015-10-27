@@ -33,10 +33,10 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(LevelOfParallelismAttribute), PropertyNames.LevelOfParallelism, 7)]
         [TestCase(typeof(MaxTimeAttribute), PropertyNames.MaxTime, 50)]
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Fixtures)]
-#if !NETCF
+#if !NETCF && !PORTABLE
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
 #endif

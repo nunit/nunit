@@ -213,6 +213,18 @@ namespace NUnit.ConsoleRunner
                 OutWriter.WriteLine("      is used, no tests are executed but a description of the tests");
                 OutWriter.WriteLine("      is saved in the specified or default format.");
                 OutWriter.WriteLine();
+                OutWriter.WriteLine("      The --where option is intended to extend or replace the earlier");
+                OutWriter.WriteLine("      --test, --include and --exclude options by use of a selection expression");
+                OutWriter.WriteLine("      describing exactly which tests to use. Examples of usage are:");
+                OutWriter.WriteLine("          --where:cat==Data");
+                OutWriter.WriteLine("          --where \"method =~ /DataTest*/ && cat = Slow\"");
+                OutWriter.WriteLine();
+                OutWriter.WriteLine("      Care should be taken in combining --where with --test or --testlist.");
+                OutWriter.WriteLine("      The test and where specifications are implicitly joined using &&, so");
+                OutWriter.WriteLine("      that BOTH sets of criteria must be satisfied in order for a test to run.");
+                OutWriter.WriteLine("      See the docs for more information and a full description of the syntax");
+                OutWriter.WriteLine("      information and a full description of the syntax.");
+                OutWriter.WriteLine();
                 OutWriter.WriteLine("      Several options that specify processing of XML output take");
                 OutWriter.WriteLine("      an output specification as a value. A SPEC may take one of");
                 OutWriter.WriteLine("      the following forms:");

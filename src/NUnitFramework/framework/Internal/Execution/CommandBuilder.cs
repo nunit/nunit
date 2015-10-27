@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
@@ -144,7 +145,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (node.HasMethods)
                     list.Add(node);
 
-                fixtureType = fixtureType.BaseType;
+                fixtureType = fixtureType.GetTypeInfo().BaseType;
             }
 
             return list;

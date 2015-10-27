@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-#if NUNIT_ENGINE || CORE_ENGINE
+#if NUNIT_ENGINE
 namespace NUnit.Engine.Internal
 #elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Internal
@@ -109,6 +109,18 @@ namespace NUnit.Common
         #endregion
 
         #region Load
+#if PORTABLE
+        /// <summary>
+        /// Loads an assembly given a string, which is the AssemblyName
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Assembly Load(string name)
+        {
+            var asmName = new AssemblyName { Name = Path.GetFileNameWithoutExtension(name) };
+            return Assembly.Load(asmName);
+        }
+#else
 
         /// <summary>
         /// Loads an assembly given a string, which may be the 
@@ -118,7 +130,7 @@ namespace NUnit.Common
         /// <returns></returns>
         public static Assembly Load(string nameOrPath)
         {
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
             var ext = Path.GetExtension(nameOrPath).ToLower();
 
             // It's a path to an assembly, get the AssemblyName and load it
@@ -136,7 +148,7 @@ namespace NUnit.Common
             // Assume it's the string representation of an AssemblyName
             return Assembly.Load(nameOrPath);
         }
-
+#endif
         #endregion
 
         #region Helper Methods

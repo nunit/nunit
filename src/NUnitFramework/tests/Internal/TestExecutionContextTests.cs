@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal
         public void Initialize()
         {
             setupContext = new TestExecutionContext(TestExecutionContext.CurrentContext);
-#if !NETCF
+#if !NETCF && !PORTABLE
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
 #endif
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !NETCF
+#if !NETCF && !PORTABLE
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentCulture and CurrentUICulture
 
-#if !NETCF
+#if !NETCF && !PORTABLE
         CultureInfo originalCulture;
         CultureInfo originalUICulture;
 

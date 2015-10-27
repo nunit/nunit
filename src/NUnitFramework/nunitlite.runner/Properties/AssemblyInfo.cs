@@ -24,7 +24,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("nunit.framework.tests, PublicKey=002400000480000094" +
+[assembly: InternalsVisibleTo("nunitlite.tests, PublicKey=002400000480000094" +
                               "000000060200000024000052534131000400000100010031eea" +
                               "370b1984bfa6d1ea760e1ca6065cee41a1a279ca234933fe977" +
                               "a096222c0e14f9e5a17d5689305c6d7f1206a85a53c48ca0100" +

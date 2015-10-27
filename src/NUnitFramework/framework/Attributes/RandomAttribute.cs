@@ -25,6 +25,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -176,7 +178,7 @@ namespace NUnit.Framework
                     _source = new SByteDataSource(_count);
                 else if (parmType == typeof(decimal))
                     _source = new DecimalDataSource(_count);
-                else if (parmType.IsEnum)
+                else if (parmType.GetTypeInfo().IsEnum)
                     _source = new EnumDataSource(_count);
                 else // Default
                     _source = new IntDataSource(_count);
@@ -534,7 +536,7 @@ namespace NUnit.Framework
 
             public override IEnumerable GetData(IParameterInfo parameter)
             {
-                Guard.ArgumentValid(parameter.ParameterType.IsEnum, "EnumDataSource requires an enum parameter", "parameter");
+                Guard.ArgumentValid(parameter.ParameterType.GetTypeInfo().IsEnum, "EnumDataSource requires an enum parameter", "parameter");
 
                 Randomizer randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
                 DataType = parameter.ParameterType;
