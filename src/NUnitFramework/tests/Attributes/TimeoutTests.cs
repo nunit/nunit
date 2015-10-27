@@ -137,7 +137,7 @@ namespace NUnit.Framework.Attributes
         // TODO: The test in TimeoutTestCaseFixture work as expected when run
         // directly by NUnit. It's only when run via TestBuilder as a second
         // level test that the result is incorrect. We need to fix this.
-        [Test, Ignore("Timing issue")]
+        [Test, Explicit("Timing issue")]
         public void TestTimeOutTestCaseWithOutElapsed()
         {
             TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
