@@ -5,7 +5,7 @@
                 xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" 
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- We should update the version number if we remember, but it is not required -->
-  <assemblyIdentity version="3.0.0.0" name="nunit-console"/>
+  <assemblyIdentity version="3.0.0.0" name="nunit3-console"/>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">

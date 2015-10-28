@@ -30,7 +30,7 @@ namespace NUnit.Common
 {
     /// <summary>
     /// CommandLineOptions is the base class the specific option classes
-    /// used for nunit-console and nunitlite. It encapsulates all common
+    /// used for nunit3-console and nunitlite. It encapsulates all common
     /// settings and features of both. This is done to ensure that common
     /// features remain common and for the convenience of having the code
     /// in a common location. The class inherits from the Mono

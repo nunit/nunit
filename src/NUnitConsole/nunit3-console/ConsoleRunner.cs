@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 namespace NUnit.ConsoleRunner
 {
     /// <summary>
-    /// ConsoleRunner provides the nunit-console text-based
+    /// ConsoleRunner provides the nunit3-console text-based
     /// user interface, running the tests and reporting the results.
     /// </summary>
     public class ConsoleRunner
