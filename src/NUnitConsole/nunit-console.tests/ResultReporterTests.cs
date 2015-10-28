@@ -31,7 +31,6 @@ using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Tests.Assemblies;
-using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
 using NUnit.Engine.Internal;
 
 namespace NUnit.ConsoleRunner.Tests
@@ -91,6 +90,19 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
+        public void CheckReportSettingsTest()
+        {
+            var expected = new [] {
+                "Run Settings",
+                "Setting1Name: Setting1Value",
+                "Setting2Name: Setting2Value"
+            };
+
+            var actualSummary = GetReportLines(_reporter.WriteRunSettingsReport);
+            this.VerifyOrderAndContent(expected, actualSummary);
+        }
+
+        [Test]
         public void SummaryReportTest()
         {
             var expected = new [] {
@@ -115,7 +127,7 @@ namespace NUnit.ConsoleRunner.Tests
                 "",
                 "1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest",
                 "Intentional failure",
-                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest() in",
+                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest()",
                 "",
                 "2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5",
                 "Method is not public",
@@ -125,19 +137,19 @@ namespace NUnit.ConsoleRunner.Tests
                 "",
                 "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException",
                 "System.Exception : Intentional Exception",
-                "at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException() in",
-                "at NUnit.Tests.Assemblies.MockTestFixture.TestWithException() in",
+                "at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException()",
+                "at NUnit.Tests.Assemblies.MockTestFixture.TestWithException()",
                 "",
                 "5) Invalid : NUnit.Tests.BadFixture",
                 "No suitable constructor was found",
                 "",
                 "6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage",
                 "The CDATA was: <![CDATA[ My <xml> ]]>",
-                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage() in",
+                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage()",
                 "",
                 "7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage",
                 "Deliberate failure to illustrate ]]> in message ",
-                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage() in",
+                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage()",
                 ""
             };
 
@@ -185,7 +197,7 @@ namespace NUnit.ConsoleRunner.Tests
                 var expectedLine = expected[i];
                 var actualLine = actual[i];
 
-                StringAssert.StartsWith(expectedLine.Trim(), actualLine.Trim());
+                StringAssert.Contains(expectedLine.Trim(), actualLine.Trim());
             }
         }
 
@@ -193,7 +205,7 @@ namespace NUnit.ConsoleRunner.Tests
 
         private TestEngineResult AddMetadata(TestEngineResult input)
         {
-            input.Add("<settings><setting name=\"WorkDirectory\" value=\"NotImportantValue\"></setting></settings>");
+            input.Add("<settings><setting name=\"Setting1Name\" value=\"Setting1Value\"></setting><setting name=\"Setting2Name\" value=\"Setting2Value\"></setting></settings>");
             return input.Aggregate("test-run start-time=\"2015-10-19 02:12:28Z\" end-time=\"2015-10-19 02:12:29Z\" duration=\"0.348616\"", string.Empty, string.Empty);
         }
 
