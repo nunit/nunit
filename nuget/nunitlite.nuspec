@@ -16,7 +16,6 @@
 Supported platforms:
 - .NET 2.0+
 - .NET Core (Universal Windows Apps 10+, DNX Core 5+)
-- SilverLight 5.0
 - Portable Libraries (supporting Profile259)
         
 How to use this package:
@@ -40,7 +39,6 @@ How to use this package:
     <file src="bin/net-2.0/nunitlite.dll" target="lib/net20" />
     <file src="bin/net-4.0/nunitlite.dll" target="lib/net40" />
     <file src="bin/net-4.5/nunitlite.dll" target="lib/net45" />
-    <file src="bin/sl-5.0/nunitlite.dll" target="lib/sl5" />
     <file src="bin/portable/nunitlite.dll" target="lib/dotnet" />
     <file src="bin/portable/nunitlite.dll" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac" />
     <file src="..\..\nuget\Program.cs" target="content" />

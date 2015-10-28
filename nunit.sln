@@ -64,6 +64,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{A972031D
 		nuget\nunit.console.nuspec = nuget\nunit.console.nuspec
 		nuget\nunit.nuspec = nuget\nunit.nuspec
 		nuget\nunitlite.nuspec = nuget\nunitlite.nuspec
+		nuget\nunitliteSL.nuspec = nuget\nunitliteSL.nuspec
+		nuget\nunitSL.nuspec = nuget\nunitSL.nuspec
 		nuget\Program.cs = nuget\Program.cs
 		nuget\Program.vb = nuget\Program.vb
 	EndProjectSection

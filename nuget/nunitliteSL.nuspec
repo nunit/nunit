@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>NUnitLiteCF</id>
-    <title>NUnitLite Version 3 for Compact Framework</title>
+    <id>NUnitLite.SL50</id>
+    <title>NUnitLite Version 3 for SilverLight 5.0</title>
     <version>$version$</version>
     <authors>Charlie Poole</authors>
     <owners>Charlie Poole</owners>
@@ -11,13 +11,13 @@
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
-    <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. This package contains a build of the NUnitLite runner for the .NET compact framework 3.5.</description>
+    <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. This package contains a build of the NUnitLite runner for SilverLight 5.0.</description>
     <language>en-US</language>
-    <tags>test unit testing tdd framework fluent assert device phone embedded cf compact</tags>
+    <tags>test unit testing tdd framework fluent assert</tags>
     <copyright>Copyright (c) 2015 Charlie Poole</copyright>
     <dependencies>
       <group>
-        <dependency id="NUnitCF" version="[$version$]" />
+        <dependency id="NUnit.SL50" version="[$version$]" />
       </group>
     </dependencies>
   </metadata>
@@ -25,9 +25,6 @@
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
-    <file src="bin\netcf-3.5\nunitlite.dll" target="lib\net35-cf" />
-    <file src="..\..\nuget\Program.cs" target="content" />
-    <file src="..\..\nuget\Program.vb" target="content" />
-    <file src="..\..\nuget\install.ps1" target="tools" />
+    <file src="bin\sl-5.0\nunitlite.dll" target="lib\sl50" />
   </files>
 </package>
