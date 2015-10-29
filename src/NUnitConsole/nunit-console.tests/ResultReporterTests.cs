@@ -94,12 +94,13 @@ namespace NUnit.ConsoleRunner.Tests
         {
             var expected = new [] {
                 "Run Settings",
-                "Setting1Name: Setting1Value",
-                "Setting2Name: Setting2Value"
+                "    Setting1Name: Setting1Value",
+                "    Setting2Name: Setting2Value",
+                ""
             };
 
-            var actualSummary = GetReportLines(_reporter.WriteRunSettingsReport);
-            this.VerifyOrderAndContent(expected, actualSummary);
+            var actualSettingsReport  = GetReportLines(_reporter.WriteRunSettingsReport);
+            Assert.That(expected, Is.EqualTo(actualSettingsReport));
         }
 
         [Test]
@@ -107,54 +108,46 @@ namespace NUnit.ConsoleRunner.Tests
         {
             var expected = new [] {
                 "Test Run Summary",
-                "Overall result: Failed",
-                "Tests run: 35, Passed: 30, Errors: 1, Failures: 3, Inconclusive: 1",
-                "Not run: 10, Invalid: 3, Ignored: 4, Explicit: 3, Skipped: 0",
-                "Start time: 2015-10-19 02:12:28Z",
-                "End time: 2015-10-19 02:12:29Z",
-                "Duration: 0.349 seconds"
+                "    Overall result: Failed",
+                "   Tests run: 35, Passed: 30, Errors: 1, Failures: 3, Inconclusive: 1",
+                "     Not run: 10, Invalid: 3, Ignored: 4, Explicit: 3, Skipped: 0",
+                "  Start time: 2015-10-19 02:12:28Z",
+                "    End time: 2015-10-19 02:12:29Z",
+                "    Duration: 0.349 seconds",
+                ""
             };
 
             var actualSummary = GetReportLines(_reporter.WriteSummaryReport);
-            this.VerifyOrderAndContent(expected, actualSummary);
+            Assert.That(expected, Is.EqualTo(actualSummary));
         }
 
         [Test]
         public void ErrorsAndFailuresReportTest()
         {
-            var expected = new List<string> {
+            var expected = new [] {
                 "Errors and Failures",
-                "",
-                "1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest",
-                "Intentional failure",
-                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest()",
-                "",
-                "2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5",
-                "Method is not public",
-                "",
-                "3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest",
-                "No arguments were provided",
-                "",
-                "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException",
-                "System.Exception : Intentional Exception",
-                "at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException()",
-                "at NUnit.Tests.Assemblies.MockTestFixture.TestWithException()",
-                "",
-                "5) Invalid : NUnit.Tests.BadFixture",
-                "No suitable constructor was found",
-                "",
-                "6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage",
-                "The CDATA was: <![CDATA[ My <xml> ]]>",
-                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage()",
-                "",
-                "7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage",
-                "Deliberate failure to illustrate ]]> in message ",
-                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage()",
-                ""
+@"1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest
+Intentional failure",
+@"2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5
+Method is not public",
+@"3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest
+No arguments were provided",
+@"4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException
+System.Exception : Intentional Exception",
+@"5) Invalid : NUnit.Tests.BadFixture
+No suitable constructor was found",
+@"6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage
+The CDATA was: <![CDATA[ My <xml> ]]>",
+@"7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage
+Deliberate failure to illustrate ]]> in message",
             };
 
-            var report = GetReportLines(_reporter.WriteErrorsAndFailuresReport);
-            this.VerifyOrderAndContent(expected, report);
+            var actualErrorFailuresReport = GetReport(_reporter.WriteErrorsAndFailuresReport);
+
+            foreach (var ex in expected)
+            {
+                Assert.That(actualErrorFailuresReport, Does.Contain(ex));
+            }
         }
 
         [Test]
@@ -187,18 +180,7 @@ namespace NUnit.ConsoleRunner.Tests
             };
 
             var report = GetReportLines(_reporter.WriteNotRunReport);
-            this.VerifyOrderAndContent(expected, report);
-        }
-
-        private void VerifyOrderAndContent(IList<string> expected, IList<string> actual)
-        {
-            for (int i = 0; i < expected.Count; i++)
-            {
-                var expectedLine = expected[i];
-                var actualLine = actual[i];
-
-                StringAssert.Contains(expectedLine.Trim(), actualLine.Trim());
-            }
+            Assert.That(expected, Is.EqualTo(report));
         }
 
         #region Helper Methods
