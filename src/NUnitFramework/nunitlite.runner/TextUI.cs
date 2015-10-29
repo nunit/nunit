@@ -218,6 +218,27 @@ namespace NUnitLite
 
         #endregion
 
+        #region DisplayTestFilters
+
+        public void DisplayTestFilters()
+        {
+            if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
+            {
+                _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Filters");
+
+                if (_options.TestList.Count > 0)
+                    foreach (string testName in _options.TestList)
+                        _outWriter.WriteLabelLine("    Test: ", testName);
+
+                if (_options.WhereClauseSpecified)
+                    _outWriter.WriteLabelLine("    Where: ", _options.WhereClause.Trim());
+
+                _outWriter.WriteLine();
+            }
+        }
+
+        #endregion
+
         #region TestFinished
 
         private bool _testCreatedOutput = false;
