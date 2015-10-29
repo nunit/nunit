@@ -2,7 +2,7 @@
 <Include>
     <Fragment>
         <DirectoryRef Id="INSTALLDIR">
-            <Directory Id="BIN" Name="bin">
+            <Directory Id="CONSOLE-BIN" Name="nunit-console">
                 <Directory Id="ADDINS" Name="addins" />
             </Directory>
         </DirectoryRef>
