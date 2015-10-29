@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
     <Fragment>
-        <ComponentGroup Id="NUNIT.CONSOLE" Directory="CONSOLE-BIN">
+        <ComponentGroup Id="NUNIT.CONSOLE" Directory="CONSOLE_BIN">
             <Component Id="NUNIT_CONSOLE" Location="local" Guid="EEABEE65-D977-46B7-99B4-73814BF7BE63">
                 <File Id="nunit_console.exe"
                       ProcessorArchitecture="msil"

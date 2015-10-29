@@ -8,7 +8,6 @@
                     <Directory Id="NET40" Name="net-4.0" />
                     <Directory Id="NET45" Name="net-4.5" />
                     <Directory Id="PORTABLE" Name="portable" />
-                    <Directory Id="SL50" Name="sl-5.0" />
                 </Directory>
             </Directory>
         </DirectoryRef>

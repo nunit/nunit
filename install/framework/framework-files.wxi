@@ -96,30 +96,5 @@
                 </RegistryKey>
             </Component>
         </ComponentGroup>
-
-        <!-- Silverlight 5.0 -->
-        <ComponentGroup Id="SL50" Directory="SL50">
-            <Component Id="SL50" Location="local" Guid="FE2ADBC4-DFEC-41A6-8D5A-6DCACC167059">
-                <File Id="nunit.framework.sl50.dll"
-                      Name="nunit.framework.dll"
-                      ProcessorArchitecture="msil"
-                      Source="$(var.Binaries)\sl-5.0\nunit.framework.dll" />
-                <File Id="nunit.framework.sl50.xml"
-                      Name="nunit.framework.xml"
-                      Source="$(var.Binaries)\sl-5.0\nunit.framework.xml"
-                      CompanionFile="nunit.framework.sl50.dll" />
-            </Component>
-            <Component Id="SL50_RUNNER" Location="local" Guid="4E09ED33-A575-4438-91F6-8130F416CDDC">
-                <File Id="nunitlite.sl50.dll"
-                      Name="nunitlite.dll"
-                      ProcessorArchitecture="msil"
-                      Source="$(var.Binaries)\sl-5.0\nunitlite.dll" />
-            </Component>
-            <Component Id="AssemblyReferenceFolderSL50" Guid="18C5D635-921C-4983-AD4C-65A7DAAA6476">
-                <RegistryKey Root="HKMU" Key="Software\Microsoft\Microsoft SDKs\Silverlight\v5.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
-                    <RegistryValue Action="write" Type="string" Value="[SL50]" />
-                </RegistryKey>
-            </Component>
-        </ComponentGroup>
     </Fragment>
 </Include>
