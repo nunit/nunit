@@ -23,7 +23,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Web.UI;
@@ -203,13 +205,19 @@ namespace NUnit.Framework.Api
         {
             Guard.ArgumentNotNull(filter, "filter");
 
-            ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+            TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
+
+            // Insert elements as first child in reverse order
+            InsertSettingsElement(result);
+#if !PORTABLE && !SILVERLIGHT
+            InsertEnvironmentElement(result);
+#endif
 
             // Ensure that the CallContext of the thread is not polluted
             // by our TestExecutionContext, which is not serializable.
             TestExecutionContext.ClearCurrentContext();
 
-            handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
+            handler.RaiseCallbackEvent(result.OuterXml);
         }
 
         private void RunAsync(ICallbackEventHandler handler, string filter)
@@ -230,6 +238,63 @@ namespace NUnit.Framework.Api
 
             var count = Runner.CountTestCases(TestFilter.FromXml(filter));
             handler.RaiseCallbackEvent(count.ToString());
+        }
+
+#if !PORTABLE && !SILVERLIGHT
+        private TNode InsertEnvironmentElement(TNode targetNode)
+        {
+            TNode env = new TNode("environment");
+            targetNode.ChildNodes.Insert(0, env);
+
+            env.AddAttribute("framework-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            env.AddAttribute("clr-version", Environment.Version.ToString());
+            env.AddAttribute("os-version", Environment.OSVersion.ToString());
+            env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
+#if !NETCF
+            env.AddAttribute("cwd", Environment.CurrentDirectory);
+            env.AddAttribute("machine-name", Environment.MachineName);
+            env.AddAttribute("user", Environment.UserName);
+            env.AddAttribute("user-domain", Environment.UserDomainName);
+#endif
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("os-architecture", GetProcessorArchitecture());
+
+            return env;
+        }
+
+        private static string GetProcessorArchitecture()
+        {
+            return IntPtr.Size == 8 ? "x64" : "x86";
+        }
+#endif
+
+        private TNode InsertSettingsElement(TNode targetNode)
+        {
+            TNode settingsNode = new TNode("settings");
+            targetNode.ChildNodes.Insert(0, settingsNode);
+
+            foreach (string key in Settings.Keys)
+                AddSetting(settingsNode, key, Settings[key]);
+
+            // Add default values for display
+            if (!Settings.Contains(PackageSettings.NumberOfTestWorkers))
+#if NETCF
+                AddSetting(settingsNode, PackageSettings.NumberOfTestWorkers, 2);
+#else
+                AddSetting(settingsNode, PackageSettings.NumberOfTestWorkers, Math.Max(Environment.ProcessorCount, 2));
+#endif
+
+                return settingsNode;
+        }
+
+        private void AddSetting(TNode settingsNode, string name, object value)
+        {
+            TNode setting = new TNode("setting");
+            setting.AddAttribute("name", name);
+            setting.AddAttribute("value", value.ToString());
+
+            settingsNode.ChildNodes.Add(setting);
         }
 
         #endregion
