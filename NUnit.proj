@@ -407,7 +407,7 @@
   <!--   creates the package to first make sure that the build is up to date.  -->
   <!-- *********************************************************************** -->
   
-  <Target Name="Package" Label="Packages the source code and standard binaries. Excludes CF."
+  <Target Name="Package" Label="Packages the source code and standard binaries. Excludes CF and SilverLight."
     DependsOnTargets="@(AllPackages)">
   </Target>
 
@@ -467,7 +467,7 @@
 
   </Target>
 
-  <Target Name="PackageMasterMsi" Label="Creates the master MSI installer for NUnit"
+  <Target Name="PackageMsi" Label="Creates the master MSI installer for NUnit"
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\master\nunit.wixproj"
       Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier)$(ConfigSuffix); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
@@ -483,10 +483,6 @@
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
       Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier)$(ConfigSuffix); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
-  </Target>
-
-  <Target Name="PackageAllMsis" Label="Creates all of the MSI installers for NUnit"
-      DependsOnTargets="PackageMasterMsi;PackageFrameworkMsi;PackageConsoleMsi">
   </Target>
 
   <!-- Packaging for the Compact framework -->
@@ -595,9 +591,9 @@
                                        
   <ItemGroup Label ="Targets for Packaging">
     <AllPackages Include="PackageSource" />
-      <AllPackages Include="PackageBinaries" />
-      <AllPackages Include="PackageNuGet" Condition="$(IsWindows)" />
-      <AllPackages Include="PackageAllMsis" Condition="$(IsWindows)" />
+    <AllPackages Include="PackageBinaries" />
+    <AllPackages Include="PackageNuGet" Condition="$(IsWindows)" />
+    <AllPackages Include="PackageMsi" Condition="$(IsWindows)" />
   </ItemGroup>
 
   <ItemGroup Label="MSI Installer Files">
