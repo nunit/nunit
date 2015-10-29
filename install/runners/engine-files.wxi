@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
     <Fragment>
-        <ComponentGroup Id="NUNIT.ENGINE" Directory="BIN">
+        <ComponentGroup Id="NUNIT.ENGINE" Directory="CONSOLE-BIN">
             <Component Id="NUNIT.ENGINE" Location="local" Guid="033DE5BC-4AC4-4F98-9E5D-E5F3221FCD46">
                 <File Id="nunit.engine.dll"
                       ProcessorArchitecture="msil"
@@ -42,7 +42,7 @@
             </Component>
             <Component Id="NUNIT.ENGINE.REGISTRY">
                 <RegistryKey Root="HKMU" Key="Software\NUnit.org\Engine" >
-                    <RegistryValue Action="write" Type="string" Name="!(bind.FileVersion.nunit.engine.dll)" Value="[BIN]nunit.engine.dll" />
+                    <RegistryValue Action="write" Type="string" Name="!(bind.FileVersion.nunit.engine.dll)" Value="[CONSOLE-BIN]nunit.engine.dll" />
                 </RegistryKey>
             </Component>
         </ComponentGroup>
