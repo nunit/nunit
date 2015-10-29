@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Xml;
 using NUnit.Common;
 using NUnit.Engine.Internal;
@@ -38,45 +39,6 @@ namespace NUnit.Engine.Runners
         public MasterTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
 
         public bool IsTestRunning { get; private set; }
-
-        /// <summary>
-        /// Gets a dictionary of the package settings with defaults resolved by the engine.
-        /// </summary>
-        public IDictionary<string, object> EffectiveSettings
-        {
-            get 
-            {
-                if (_effectiveSettings == null)
-                {
-                    _effectiveSettings = new Dictionary<string, object>();
-                    foreach (string key in TestPackage.Settings.Keys)
-                        _effectiveSettings.Add(key, TestPackage.Settings[key]);
-
-                    bool processModelSpecified = _effectiveSettings.ContainsKey(PackageSettings.ProcessModel);
-                    string processModel = processModelSpecified
-                        ? (string)_effectiveSettings[PackageSettings.ProcessModel]
-                        : TestPackage.SubPackages.Count > 1
-                            ? "Multiple"
-                            : "Separate";
-
-                    if (!processModelSpecified)
-                        _effectiveSettings.Add(PackageSettings.ProcessModel, processModel);
-
-                    if (!_effectiveSettings.ContainsKey(PackageSettings.DomainUsage))
-                    {
-                        string domainUsage = processModel == "Multiple" || TestPackage.SubPackages.Count <= 1 ? "Single" : "Multiple";
-                        _effectiveSettings.Add(PackageSettings.DomainUsage, domainUsage);
-                    }
-
-                    // This incorporates knowledge of the NUNit 3.0 frameowrk.
-                    if (!_effectiveSettings.ContainsKey(PackageSettings.NumberOfTestWorkers))
-                        _effectiveSettings.Add(PackageSettings.NumberOfTestWorkers, Math.Max(Environment.ProcessorCount, 2));
-                }
-
-                return _effectiveSettings; 
-            }
-        }
-        private Dictionary<string, object> _effectiveSettings;
 
         #region AbstractTestRunner Overrides
 
@@ -146,10 +108,11 @@ namespace NUnit.Engine.Runners
             TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             // These are inserted in reverse order, since each is added as the first child.
-            result.Xml.InsertFilterElement(filter);
-            result.Xml.InsertSettingsElement(EffectiveSettings);
-            result.Xml.InsertCommandLineElement();
-            result.Xml.InsertEnvironmentElement();
+            InsertFilterElement(result.Xml, filter);
+            InsertCommandLineElement(result.Xml);
+
+            result.Xml.AddAttribute("engine-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            result.Xml.AddAttribute("clr-version", Environment.Version.ToString());
 
             double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
             result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
@@ -277,6 +240,48 @@ namespace NUnit.Engine.Runners
                         throw new NUnitEngineException(string.Format(
                             "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
                 }
+            }
+        }
+
+        private static void InsertCommandLineElement(XmlNode resultNode)
+        {
+            var doc = resultNode.OwnerDocument;
+
+            XmlNode cmd = doc.CreateElement("command-line");
+            resultNode.InsertAfter(cmd, null);
+
+            var cdata = doc.CreateCDataSection(Environment.CommandLine);
+            cmd.AppendChild(cdata);
+        }
+
+        private static void InsertSettingsElement(XmlNode resultNode, IDictionary<string, object> settings)
+        {
+            var doc = resultNode.OwnerDocument;
+
+            XmlNode settingsNode = doc.CreateElement("settings");
+            resultNode.InsertAfter(settingsNode, null);
+
+            foreach (string name in settings.Keys)
+            {
+                string value = settings[name].ToString();
+                XmlNode settingNode = doc.CreateElement("setting");
+                settingNode.AddAttribute("name", name);
+                settingNode.AddAttribute("value", value);
+                settingsNode.AppendChild(settingNode);
+            }
+        }
+
+        private static void InsertFilterElement(XmlNode resultNode, TestFilter filter)
+        {
+            // Convert the filter to an XmlNode
+            var tempNode = XmlHelper.CreateXmlNode(filter.Text);
+
+            // Don't include it if it's an empty filter
+            if (tempNode.ChildNodes.Count > 0)
+            {
+                var doc = resultNode.OwnerDocument;
+                var filterElement = doc.ImportNode(tempNode, true);
+                resultNode.InsertAfter(filterElement, null);
             }
         }
 
