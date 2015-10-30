@@ -651,7 +651,7 @@ Global
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30} = {576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\NUnitConsole\nunit3-console\nunit3-console.csproj
+		StartupItem = src\NUnitFramework\mock-assembly\mock-nunit-assembly-4.5.csproj
 		{28B605B2-E2E9-417E-8369-49E263F1F31B} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{FFF45826-991F-465B-8A03-0E1DB7E8F38C} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{11640C9F-03A3-456B-848D-9B4A126F9506} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}

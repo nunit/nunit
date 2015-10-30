@@ -102,9 +102,8 @@ namespace NUnitLite
             }
 #endif
 
-            _textUI.DisplayTestFiles(new string[] { callingAssembly.GetName().Name });
             _textUI.DisplayRuntimeEnvironment();
-            _textUI.DisplayRequestedOptions();
+            _textUI.DisplayTestFiles(new string[] { callingAssembly.GetName().Name });
 
             if (options.WaitBeforeExit && options.OutFile != null)
                 _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
