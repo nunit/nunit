@@ -84,8 +84,6 @@ namespace NUnit.Tests
             public const int Inconclusive = MockTestFixture.Inconclusive;
             public const int Success = TestsRun - Errors - Failures - Inconclusive;
 
-            public const int Categories = MockTestFixture.Categories;
-
 #if !SILVERLIGHT && !PORTABLE && !NETCORE
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 
@@ -100,7 +98,7 @@ namespace NUnit.Tests
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
-            public const int Tests = 9;
+            public const int Tests = 8;
             public const int Suites = 1;
 
             public const int Ignored = 1;
@@ -117,18 +115,10 @@ namespace NUnit.Tests
 
             public const int Inconclusive = 1;
 
-            public const int Categories = 5;
-            public const int MockCategoryTests = 1;
 
             [Test(Description="Mock Test #1")]
             public void MockTest1()
             {}
-
-            [Test]
-            [Category("MockCategory")]
-            [Category("AnotherCategory")]
-            public void MockTest3()
-            { Assert.Pass("Succeeded!"); }
 
             [Test]
             protected static void MockTest5()
@@ -141,13 +131,11 @@ namespace NUnit.Tests
             }
 
             [Test]
-            [Ignore("ignoring this test method for now")]
-            [Category("Foo")]
+            [Ignore("Ignore Message")]
             public void MockTest4()
             {}
 
             [Test, Explicit]
-            [Category( "Special" )]
             public void ExplicitlyRunTest()
             {}
 
