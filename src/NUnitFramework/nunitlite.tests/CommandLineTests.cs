@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
 using System;
 using System.Reflection;
 using System.Text;
@@ -49,10 +49,12 @@ namespace NUnitLite.Tests
         [TestCase("ShowHelp", "help|h")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
+#if !PORTABLE
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
 #if !SILVERLIGHT && !NETCF
         [TestCase("TeamCity", "teamcity")]
+#endif
 #endif
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
@@ -82,11 +84,13 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
+        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
+#if !PORTABLE
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
+#endif
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -114,7 +118,9 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
+#if !PORTABLE
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
+#endif
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
         {
             PropertyInfo property = GetPropertyInfo(propertyName);
@@ -173,10 +179,12 @@ namespace NUnitLite.Tests
 
         [TestCase("--where")]
         [TestCase("--timeout")]
+#if !PORTABLE
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
+#endif
         public void MissingValuesAreReported(string option)
         {
             var options = new NUnitLiteOptions(option + "=");
@@ -275,6 +283,16 @@ namespace NUnitLite.Tests
 #region EngineResult Option
 
         [Test]
+        public void FileNameWithoutResultOptionLooksLikeParameter()
+        {
+            var options = new NUnitLiteOptions("tests.dll", "results.xml");
+            Assert.True(options.Validate());
+            Assert.AreEqual(0, options.ErrorMessages.Count);
+            Assert.AreEqual(2, options.InputFiles.Count);
+        }
+
+#if !PORTABLE
+        [Test]
         public void ResultOptionWithFilePath()
         {
             var options = new NUnitLiteOptions("tests.dll", "-result:results.xml");
@@ -314,15 +332,6 @@ namespace NUnitLite.Tests
             Assert.AreEqual("results.xml", spec.OutputPath);
             Assert.AreEqual("user", spec.Format);
             Assert.AreEqual("transform.xslt", spec.Transform);
-        }
-
-        [Test]
-        public void FileNameWithoutResultOptionLooksLikeParameter()
-        {
-            var options = new NUnitLiteOptions("tests.dll", "results.xml");
-            Assert.True(options.Validate());
-            Assert.AreEqual(0, options.ErrorMessages.Count);
-            Assert.AreEqual(2, options.InputFiles.Count);
         }
 
         [Test]
@@ -383,11 +392,13 @@ namespace NUnitLite.Tests
             var options = new NUnitLiteOptions("test.dll", "-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
+#endif
 
 #endregion
 
-#region Explore Option
+        #region Explore Option
 
+#if !PORTABLE
         [Test]
         public void ExploreOptionWithoutPath()
         {
@@ -485,10 +496,11 @@ namespace NUnitLite.Tests
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
         }
 #endif
-        
-#endregion
+#endif
 
-#region Helper Methods
+        #endregion
+
+        #region Helper Methods
 
         //private static FieldInfo GetFieldInfo(string fieldName)
         //{
