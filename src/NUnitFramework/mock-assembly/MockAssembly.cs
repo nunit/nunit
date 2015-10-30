@@ -115,14 +115,11 @@ namespace NUnit.Tests
 
             public const int Inconclusive = 1;
 
-
             [Test(Description="Mock Test #1")]
-            public void MockTest1()
-            {}
+            public void TestWithDescription() { }
 
             [Test]
-            protected static void MockTest5()
-            {}
+            protected static void NonPublicTest() { }
 
             [Test]
             public void FailingTest()
@@ -130,19 +127,14 @@ namespace NUnit.Tests
                 Assert.Fail("Intentional failure");
             }
 
-            [Test]
-            [Ignore("Ignore Message")]
-            public void MockTest4()
-            {}
+            [Test, Ignore("Ignore Message")]
+            public void IgnoreTest() { }
 
             [Test, Explicit]
-            public void ExplicitlyRunTest()
-            {}
+            public void ExplicitTest() { }
 
             [Test]
-            public void NotRunnableTest( int a, int b)
-            {
-            }
+            public void NotRunnableTest( int a, int b) { }
 
             [Test]
             public void InconclusiveTest()

@@ -128,7 +128,7 @@ namespace NUnit.ConsoleRunner.Tests
                 "Errors and Failures",
 @"1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest
 Intentional failure",
-@"2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5
+@"2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest
 Method is not public",
 @"3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest
 No arguments were provided",
@@ -156,11 +156,11 @@ Deliberate failure to illustrate ]]> in message",
             var expected = new [] {
                 "Tests Not Run",
                 "",
-                "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitlyRunTest",
+                "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest",
                 "",
                 "",
-                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
-                "ignoring this test method for now",
+                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest",
+                "Ignore Message",
                 "",
                 "3) Explicit : NUnit.Tests.ExplicitFixture.Test1",
                 "OneTimeSetUp: ",
