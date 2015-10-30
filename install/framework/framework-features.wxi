@@ -23,9 +23,5 @@
                     Description="Installs the NUnit framework for Portable .NET" >
             <ComponentGroupRef Id="PORTABLE"/>
         </Feature>
-        <Feature Id="SL50" Level="1" Title="Silverlight 5.0"
-                    Description="Installs the NUnit framework for Silverlight 5.0" >
-            <ComponentGroupRef Id="SL50"/>
-        </Feature>
     </Feature>
 </Include>
