@@ -100,7 +100,7 @@ namespace NUnit.Tests
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
-            public const int Tests = 11;
+            public const int Tests = 9;
             public const int Suites = 1;
 
             public const int Ignored = 1;
@@ -118,17 +118,10 @@ namespace NUnit.Tests
             public const int Inconclusive = 1;
 
             public const int Categories = 5;
-            public const int MockCategoryTests = 2;
+            public const int MockCategoryTests = 1;
 
             [Test(Description="Mock Test #1")]
             public void MockTest1()
-            {}
-
-            [Test]
-            [Category("MockCategory")]
-            [Property("Severity","Critical")]
-            [Description("This is a really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really long description")]
-            public void MockTest2()
             {}
 
             [Test]
@@ -146,10 +139,6 @@ namespace NUnit.Tests
             {
                 Assert.Fail("Intentional failure");
             }
-
-            [Test, Property("TargetMethod", "SomeClassName"), Property("Size", 5), /*Property("TargetType", typeof( System.Threading.Thread ))*/]
-            public void TestWithManyProperties()
-            {}
 
             [Test]
             [Ignore("ignoring this test method for now")]
