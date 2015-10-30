@@ -11,6 +11,7 @@
     <DisplayVersion>3.0 Beta 5</DisplayVersion>
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
+		<PackageNameSL>$(ProjectName)SL-$(PackageVersion)$(PackageModifier)</PackageNameSL>
   </PropertyGroup>
 
   <PropertyGroup Label="Platform-specific properties">
@@ -86,10 +87,6 @@
     <ProjectSuffix>netcf-3.5</ProjectSuffix>
     <Runtime>netcf</Runtime>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Framework)'=='netcf-2.0'">
-    <ProjectSuffix>netcf-2.0</ProjectSuffix>
-    <Runtime>netcf</Runtime>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='sl-5.0'">
     <ProjectSuffix>sl-5.0</ProjectSuffix>
     <Runtime>silverlight</Runtime>
@@ -102,7 +99,7 @@
   <PropertyGroup Label="Properties for running tests">
     <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
     <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
-    <ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
+    <ConsoleRunner>$(ConsoleBuildDir)\nunit3-console.exe</ConsoleRunner>
     <ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
     <ResultFormat Condition="'$(ResultFormat)' == ''">nunit3</ResultFormat>
     <ContinueOnFailure Condition="'$(ContinueOnFailure)' == ''">false</ContinueOnFailure>
@@ -277,7 +274,7 @@
 
     <CallTarget Targets="TestNUnitLite"
           ContinueOnError="$(ContinueOnFailure)"
-          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
+          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 
   </Target>
 
@@ -293,7 +290,7 @@
 
     <Exec Condition="'$(Runtime)' == 'portable'" 
         WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
-        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunitlite.exe nunit.framework.tests "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml" $(TestOptions)'
+        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunit.portable.tests.exe $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
 
     <Exec Condition="'$(Runtime)' != 'portable'"
@@ -310,9 +307,14 @@
     <Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
     <Message Text="******************************************************************" />
 
-    <Exec Condition="'$(Runtime)' != 'portable'"
+    <Exec Condition="'$(Runtime)' != 'silverlight' AND '$(Runtime)' != 'portable' "
           WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) nunitlite.tests.exe "-result:$(ResultDir)/NUnitliteResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
+          ContinueOnError="$(ContinueOnFailure)" />
+
+		<Exec Condition="'$(Runtime)' == 'portable'"
+          WorkingDirectory="$(FrameworkBuildDir)"
+          Command='$(ManagedExeLauncher) nunitlite.tests.exe $(TestOptions)'
           ContinueOnError="$(ContinueOnFailure)" />
 
   </Target>
@@ -368,7 +370,7 @@
     <Message Text="******************************************************************" />
     
     <Exec WorkingDirectory="$(ConsoleBuildDir)"
-        Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll "-result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat)" $(TestOptions)'
+        Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit3-console.tests.dll "-result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
     
   </Target>
@@ -405,7 +407,7 @@
   <!--   creates the package to first make sure that the build is up to date.  -->
   <!-- *********************************************************************** -->
   
-  <Target Name="Package" Label="Packages the source code and standard binaries. Excludes CF."
+  <Target Name="Package" Label="Packages the source code and standard binaries. Excludes CF and SilverLight."
     DependsOnTargets="@(AllPackages)">
   </Target>
 
@@ -465,7 +467,7 @@
 
   </Target>
 
-  <Target Name="PackageMasterMsi" Label="Creates the master MSI installer for NUnit"
+  <Target Name="PackageMsi" Label="Creates the master MSI installer for NUnit"
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\master\nunit.wixproj"
       Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier)$(ConfigSuffix); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
@@ -481,10 +483,6 @@
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
       Properties="Configuration=$(Configuration); Platform=x86; PackageVersion=$(PackageVersion)$(PackageModifier)$(ConfigSuffix); DisplayVersion=$(DisplayVersion); OutDir=$(ProjectPackageDir)\; InstallImage=$(CurrentImageDir)" />
-  </Target>
-
-  <Target Name="PackageAllMsis" Label="Creates all of the MSI installers for NUnit"
-      DependsOnTargets="PackageMasterMsi;PackageFrameworkMsi;PackageConsoleMsi">
   </Target>
 
   <!-- Packaging for the Compact framework -->
@@ -505,7 +503,7 @@
       DependsOnTargets="_CreateImageIfNotPresent">
 
     <Message Text="******************************************************************" />
-    <Message Text="* Creating the nunit Nuget $(Configuration) package" />
+    <Message Text="* Creating the nunit Nuget CF $(Configuration) package" />
     <Message Text="******************************************************************" />
 
     <Exec WorkingDirectory="$(ProjectBaseDir)"
@@ -517,13 +515,51 @@
       DependsOnTargets="_CreateImageIfNotPresent">
 
     <Message Text="******************************************************************" />
-    <Message Text="* Creating the nunitlite Nuget $(Configuration) package" />
+    <Message Text="* Creating the nunitlite Nuget CF $(Configuration) package" />
     <Message Text="******************************************************************" />
 
     <Exec WorkingDirectory="$(ProjectBaseDir)"
         Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlitecf.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
+
+	<!-- Packaging for SilverLight -->
+	<Target Name="PackageSL" Label="Creates all packages for SilverLight"
+    DependsOnTargets="PackageBinariesSL;PackageNuGetNUnitSL;PackageNuGetNUnitLiteSL" />
+
+	<Target Name="PackageBinariesSL" Label="Packages the SilverLight binaries as a zip" DependsOnTargets="_CreateImageIfNotPresent">
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the binary $(Configuration) package as $(PackageNameSL)$(ConfigSuffix).zip" />
+		<Message Text="******************************************************************" />
+
+		<Zip Files="@(SLBinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
+         ZipFileName="$(ProjectPackageDir)\$(PackageNameSL)$(ConfigSuffix).zip" />
+
+	</Target>
+
+	<Target Name="PackageNuGetNUnitSL" Label="Creates the NUnit Framework NuGet package for SilverLight"
+      DependsOnTargets="_CreateImageIfNotPresent">
+
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the nunit Nuget SilverLight $(Configuration) package" />
+		<Message Text="******************************************************************" />
+
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitSL.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+	</Target>
+
+	<Target Name="PackageNuGetNUnitLiteSL" Label="Creates the NUnitlite NuGet package for SilverLight"
+      DependsOnTargets="_CreateImageIfNotPresent">
+
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the nunitlite Nuget SilverLight $(Configuration) package" />
+		<Message Text="******************************************************************" />
+
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitliteSL.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+	</Target>
 
   <Target Name="CreateImage" DependsOnTargets="_CleanCurrentImageDir">
 
@@ -555,9 +591,9 @@
                                        
   <ItemGroup Label ="Targets for Packaging">
     <AllPackages Include="PackageSource" />
-      <AllPackages Include="PackageBinaries" />
-      <AllPackages Include="PackageNuGet" Condition="$(IsWindows)" />
-      <AllPackages Include="PackageAllMsis" Condition="$(IsWindows)" />
+    <AllPackages Include="PackageBinaries" />
+    <AllPackages Include="PackageNuGet" Condition="$(IsWindows)" />
+    <AllPackages Include="PackageMsi" Condition="$(IsWindows)" />
   </ItemGroup>
 
   <ItemGroup Label="MSI Installer Files">
@@ -607,12 +643,15 @@
     <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.0\*.*" />
     <BinZipFiles Include="$(CurrentImageDir)\bin\net-4.5\*.*" />
     <BinZipFiles Include="$(CurrentImageDir)\bin\portable\*.*" />
-    <BinZipFiles Include="$(CurrentImageDir)\bin\sl-5.0\*.*" Condition="$(IsWindows)" />
   </ItemGroup>
 
   <ItemGroup>
     <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\*.*" />
   </ItemGroup>
+
+	<ItemGroup>
+		<SLBinZipFiles Include="$(CurrentImageDir)\bin\sl-5.0\*.*" />
+	</ItemGroup>
 
   <ItemGroup Label="Supported Frameworks">
     <SupportedFrameworks Include="net-4.5" />
@@ -629,6 +668,8 @@
     <NUnitProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-$(ProjectSuffix).csproj"
       Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
+		<NUnitProjects Include="$(FrameworkSrcDir)\nunit.portable.tests\nunit.portable.tests.csproj"
+      Condition="'$(Runtime)' == 'portable'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-$(ProjectSuffix).csproj"
       Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
     <NUnitProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"></NUnitProjects>
@@ -658,8 +699,8 @@
   </ItemGroup>
 
   <ItemGroup Label="Projects for building the console runner">
-    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console\nunit-console.csproj" />
-    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console.tests\nunit-console.tests.csproj" />
+    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit3-console\nunit3-console.csproj" />
+    <ConsoleProjects Include="$(ConsoleSrcDir)\nunit3-console.tests\nunit3-console.tests.csproj" />
   </ItemGroup>
   
   <!-- End Region -->

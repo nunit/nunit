@@ -14,7 +14,7 @@
 		
 		<!--Other files are excluded only for efficiency.-->
 		<ScanExclude path="nunit.engine.tests.dll" />
-		<ScanExclude path="nunit-console.tests.dll" />
+		<ScanExclude path="nunit3-console.tests.dll" />
 		<ScanExclude path="nunit-agent.exe" />
 		<ScanExclude path="nunit-agent-x86.exe" />
 	</Runtime>

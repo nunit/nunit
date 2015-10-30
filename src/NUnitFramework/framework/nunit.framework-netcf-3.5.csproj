@@ -175,6 +175,7 @@
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
+    <Compile Include="Compatibility\BindingFlags.cs" />
     <Compile Include="Compatibility\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
     <Compile Include="Compatibility\Path.cs" />
@@ -384,7 +385,6 @@
     <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
-    <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\MethodWrapper.cs" />
     <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\NUnitException.cs" />
@@ -407,6 +407,7 @@
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestFixtureParameters.cs" />
     <Compile Include="Internal\TestListener.cs" />
+    <Compile Include="Internal\TestNameGenerator.cs" />
     <Compile Include="Internal\TestParameters.cs" />
     <Compile Include="Internal\TestProgressReporter.cs" />
     <Compile Include="Internal\Tests\ParameterizedFixtureSuite.cs" />

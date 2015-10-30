@@ -35,7 +35,18 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class NUnitTestCaseBuilder
     {
-        private readonly Randomizer randomizer = Randomizer.CreateRandomizer();
+        private const string DEFAULT_TEST_NAME_PATTERN = "{m}{a:40}";
+
+        private readonly Randomizer _randomizer = Randomizer.CreateRandomizer();
+        private readonly TestNameGenerator _nameGenerator;
+
+        /// <summary>
+        /// Constructs an <see cref="NUnitTestCaseBuilder"/>
+        /// </summary>
+        public NUnitTestCaseBuilder()
+        {
+            _nameGenerator = new TestNameGenerator(DEFAULT_TEST_NAME_PATTERN);
+        }
 
         /// <summary>
         /// Builds a single NUnitTestMethod, either as a child of the fixture
@@ -49,7 +60,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             var testMethod = new TestMethod(method, parentSuite)
             {
-                Seed = randomizer.Next()
+                Seed = _randomizer.Next()
             };
 
             CheckTestMethodSignature(testMethod, parms);
@@ -73,15 +84,17 @@ namespace NUnit.Framework.Internal.Builders
 
                 if (parms.TestName != null)
                 {
-                    testMethod.Name = parms.TestName;
-                    testMethod.FullName = prefix + "." + parms.TestName;
+                    // The test is simply for efficiency
+                    testMethod.Name = parms.TestName.Contains("{")
+                        ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
+                        : parms.TestName;
                 }
                 else if (parms.OriginalArguments != null)
                 {
-                    string name = method.GetDisplayName(parms.OriginalArguments);
-                    testMethod.Name = name;
-                    testMethod.FullName = prefix + "." + name;
+                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
                 }
+
+                testMethod.FullName = prefix + "." + testMethod.Name;
 
                 parms.ApplyToTest(testMethod);
             }
@@ -172,7 +185,7 @@ namespace NUnit.Framework.Internal.Builders
             ITypeInfo returnType = testMethod.Method.ReturnType;
 #endif
 
-#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
+#if NET_4_0 || NET_4_5 || PORTABLE
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
                 if (returnType.IsType(typeof(void)))

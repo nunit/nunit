@@ -201,12 +201,22 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void CanSpecifyTestName()
+        public void CanSpecifyTestName_FixedText()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified").Tests[0];
+                typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified_FixedText").Tests[0];
             Assert.AreEqual("XYZ", test.Name);
             Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.FullName);
+        }
+
+        [Test]
+        public void CanSpecifyTestName_WithMethodName()
+        {
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified_WithMethodName").Tests[0];
+            var expectedName = "MethodHasTestNameSpecified_WithMethodName+XYZ";
+            Assert.AreEqual(expectedName, test.Name);
+            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture." + expectedName, test.FullName);
         }
 
         [Test]
@@ -261,7 +271,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
 
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
         [Test]
         public void CanIncludePlatform()
         {

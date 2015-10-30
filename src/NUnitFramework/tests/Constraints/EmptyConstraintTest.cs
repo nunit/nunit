@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-#if !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
             new ArrayList(),
 #endif
             new System.Collections.Generic.List<int>()
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Constraints
         {
             var testPath = new DirectoryInfo(NUnit.Env.DefaultWorkDirectory);
             Assume.That(testPath, Does.Exist);
-#if !NETCORE
+#if !PORTABLE
             Assert.That(testPath, Is.Not.Empty, "{0} should not be empty", testPath.FullName);
 #endif
         }

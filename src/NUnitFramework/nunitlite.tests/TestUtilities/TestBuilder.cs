@@ -80,7 +80,11 @@ namespace NUnit.TestUtilities
         // depending on whether the method takes arguments or not
         internal static Test MakeTestFromMethod(Type type, string methodName)
         {
+#if PORTABLE
+            var method = type.GetMethod(methodName);
+#else
             var method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+#endif
             if (method == null)
                 Assert.Fail("Method not found: " + methodName);
             return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
@@ -124,8 +128,6 @@ namespace NUnit.TestUtilities
             while (work.State != WorkItemState.Complete)
             {
 #if PORTABLE
-                System.Threading.Tasks.TaskEx.Delay(1);
-#elif NETCORE
                 System.Threading.Tasks.Task.Delay(1);
 #else
                 Thread.Sleep(1);
@@ -192,8 +194,6 @@ namespace NUnit.TestUtilities
             while (work.State != WorkItemState.Complete)
             {
 #if PORTABLE
-                System.Threading.Tasks.TaskEx.Delay(1);
-#elif NETCORE
                 System.Threading.Tasks.Task.Delay(1);
 #else
                 Thread.Sleep(1);

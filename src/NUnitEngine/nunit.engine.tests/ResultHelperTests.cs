@@ -113,26 +113,5 @@ namespace NUnit.Engine.Internal.Tests
             Assert.That(combined.Attributes["skipped"].Value, Is.EqualTo("2"));
             Assert.That(combined.Attributes["asserts"].Value, Is.EqualTo("93"));
         }
-
-        [Test]
-        public void InsertEnvironmentElement()
-        {
-            result1.Xml.InsertEnvironmentElement();
-
-            var env = result1.Xml.SelectSingleNode("environment");
-            Assert.NotNull(env);
-
-            Assert.NotNull(env.GetAttribute("nunit-version"));
-            Assert.NotNull(env.GetAttribute("clr-version"));
-            Assert.NotNull(env.GetAttribute("os-version"));
-            Assert.NotNull(env.GetAttribute("platform"));
-            Assert.NotNull(env.GetAttribute("cwd"));
-            Assert.NotNull(env.GetAttribute("machine-name"));
-            Assert.NotNull(env.GetAttribute("user"));
-            Assert.NotNull(env.GetAttribute("user-domain"));
-            Assert.NotNull(env.GetAttribute("culture"));
-            Assert.NotNull(env.GetAttribute("uiculture"));
-            Assert.NotNull(env.GetAttribute("os-architecture"));
-        }
     }
 }

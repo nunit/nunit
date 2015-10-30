@@ -269,6 +269,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
+#if false
         /// <summary>
         /// Floods the queue of an EventPump with multiple concurrent event producers.
         /// Prints the maximum queue length to Console, but does not implement an
@@ -308,7 +309,7 @@ namespace NUnit.Framework.Internal.Execution
                 Assert.IsNull(p.Exception, "{0}", p.Exception);
             }
         }
-
+#endif
         #endregion
 
         public abstract class ProducerConsumerTest

@@ -21,12 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !PORTABLE
 using System.Threading;
 
 namespace NUnit.Framework.Attributes
 {
-    // [Platform(Exclude = "Mono", Reason = "Runner hangs at end when these are run")]
     public class ThreadingTests
     {
         protected Thread ParentThread { get; private set; }

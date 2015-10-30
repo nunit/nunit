@@ -101,9 +101,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.v2.driver.tests", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitConsole", "NUnitConsole", "{576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "src\NUnitConsole\nunit-console\nunit-console.csproj", "{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit3-console", "src\NUnitConsole\nunit3-console\nunit3-console.csproj", "{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.tests", "src\NUnitConsole\nunit-console.tests\nunit-console.tests.csproj", "{B310A760-8AE1-41CA-81F8-03B12E2FCE30}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit3-console.tests", "src\NUnitConsole\nunit3-console.tests\nunit3-console.tests.csproj", "{B310A760-8AE1-41CA-81F8-03B12E2FCE30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -651,7 +651,7 @@ Global
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30} = {576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\NUnitConsole\nunit-console\nunit-console.csproj
+		StartupItem = src\NUnitConsole\nunit3-console\nunit3-console.csproj
 		{28B605B2-E2E9-417E-8369-49E263F1F31B} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{FFF45826-991F-465B-8A03-0E1DB7E8F38C} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{11640C9F-03A3-456B-848D-9B4A126F9506} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}

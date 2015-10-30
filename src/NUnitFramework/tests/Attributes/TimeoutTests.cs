@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE && !NETCORE
+#if !PORTABLE
 using System;
 using System.Threading;
 using NUnit.Framework;
@@ -87,6 +87,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
 
+        /* TODO: Uncomment this test when issue #352 is fixed, ignoring causes build warnings
         [Test, Ignore("Issue #352 - Test with infinite loop in TearDown cannot be aborted")]
         public void TearDownTimesOutAndNoFurtherTearDownIsRun()
         {
@@ -98,6 +99,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.Message, Does.Contain("50ms"));
             Assert.That(fixture.TearDownWasRun, "Base TearDown should not have been run but was");
         }
+        */
 
         [Test]
         [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
@@ -135,7 +137,7 @@ namespace NUnit.Framework.Attributes
         // TODO: The test in TimeoutTestCaseFixture work as expected when run
         // directly by NUnit. It's only when run via TestBuilder as a second
         // level test that the result is incorrect. We need to fix this.
-        [Test, Ignore("Timing issue")]
+        [Test, Explicit("Timing issue")]
         public void TestTimeOutTestCaseWithOutElapsed()
         {
             TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();

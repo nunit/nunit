@@ -70,7 +70,8 @@ namespace NUnit.Engine.Services
                 return new NotRunnableFrameworkDriver(assemblyPath, ex.Message);
             }
 
-            return new NotRunnableFrameworkDriver(assemblyPath, "Unable to locate a driver for " + assemblyPath);
+            return new NotRunnableFrameworkDriver(assemblyPath, string.Format("No suitable tests found in '{0}'.\n" +
+                                                                              "Either assembly contains no tests or proper test driver has not been found.", assemblyPath));
         }
 
         #endregion

@@ -37,10 +37,14 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodHasDescriptionSpecified(int x, int y, int z)
         {}
 
-        [TestCase(2,3,4,TestName="XYZ")]
-        public void MethodHasTestNameSpecified(int x, int y, int z)
-        {}
- 
+        [TestCase(2, 3, 4, TestName = "XYZ")]
+        public void MethodHasTestNameSpecified_FixedText(int x, int y, int z)
+        { }
+
+        [TestCase(2, 3, 4, TestName = "{m}+XYZ")]
+        public void MethodHasTestNameSpecified_WithMethodName(int x, int y, int z)
+        { }
+
         [TestCase(2, 3, 4, Category = "XYZ")]
         public void MethodHasSingleCategory(int x, int y, int z)
         { }

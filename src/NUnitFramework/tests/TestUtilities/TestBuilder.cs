@@ -124,8 +124,6 @@ namespace NUnit.TestUtilities
             while (work.State != WorkItemState.Complete)
             {
 #if PORTABLE
-                System.Threading.Tasks.TaskEx.Delay(1);
-#elif NETCORE
                 System.Threading.Tasks.Task.Delay(1);
 #else
                 Thread.Sleep(1);
@@ -192,8 +190,6 @@ namespace NUnit.TestUtilities
             while (work.State != WorkItemState.Complete)
             {
 #if PORTABLE
-                System.Threading.Tasks.TaskEx.Delay(1);
-#elif NETCORE
                 System.Threading.Tasks.Task.Delay(1);
 #else
                 Thread.Sleep(1);

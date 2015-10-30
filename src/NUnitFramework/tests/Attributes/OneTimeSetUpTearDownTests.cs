@@ -374,7 +374,7 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE && !NETCORE
+#if !SILVERLIGHT && !NETCF && !PORTABLE
     [TestFixture]
     class ChangesMadeInFixtureSetUp
     {

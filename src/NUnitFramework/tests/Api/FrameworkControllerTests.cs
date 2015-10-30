@@ -43,7 +43,7 @@ namespace NUnit.Framework.Api
         private const string EMPTY_FILTER = "<filter/>";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
-#if SILVERLIGHT || PORTABLE || NETCORE
+#if SILVERLIGHT || PORTABLE
         private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_NAME;
 #else
         private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_FILE;
@@ -57,9 +57,9 @@ namespace NUnit.Framework.Api
         [SetUp]
         public void CreateController()
         {
-#if NETCORE
+#if PORTABLE
             _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
-#elif SILVERLIGHT || PORTABLE || NETCORE
+#elif SILVERLIGHT
             _controller = new FrameworkController(MOCK_ASSEMBLY_NAME, "ID", _settings);
 #else
             _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, "ID", _settings);
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Api
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
             Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());
-#if SILVERLIGHT || PORTABLE || NETCORE
+#if SILVERLIGHT || PORTABLE
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_NAME));
 #else
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_PATH));
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
-#if !NETCORE
+#if !PORTABLE
         [Test]
         public void LoadTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
         }
 
-#if !NETCORE
+#if !PORTABLE
         [Test]
         public void ExploreTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
 
-#if !NETCORE
+#if !PORTABLE
         [Test]
         public void CountTestsAction_FileNotFound_ReturnsZero()
         {
@@ -279,8 +279,8 @@ namespace NUnit.Framework.Api
                 () => new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler));
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
-        
-#if !NETCORE
+
+#if !PORTABLE
         [Test]
         public void RunTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -347,7 +347,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
-#if !NETCORE
+#if !PORTABLE
         [Test]
         public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
         {

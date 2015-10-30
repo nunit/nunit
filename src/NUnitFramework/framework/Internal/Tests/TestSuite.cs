@@ -27,7 +27,7 @@ using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
-#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System.Threading.Tasks;
 #endif
 
@@ -254,7 +254,7 @@ namespace NUnit.Framework.Internal
                      !method.IsPublic && !method.IsFamily ||
                      method.GetParameters().Length > 0 ||
                      method.ReturnType != typeof(void)
-#if NET_4_0 || NET_4_5 || PORTABLE || NETCORE
+#if NET_4_0 || NET_4_5 || PORTABLE
                      &&
                      method.ReturnType != typeof(Task)
 #endif

@@ -28,7 +28,7 @@ namespace NUnitLite
     /// <summary>
     /// NUnitLiteOptions encapsulates the option settings for NUnitLite.
     /// Currently, there are no additional options beyond those common
-    /// options that are shared with nunit-console. If NUnitLite should
+    /// options that are shared with nunit3-console. If NUnitLite should
     /// acquire some unique options, they should be placed here.
     /// </summary>
     public class NUnitLiteOptions : CommandLineOptions
