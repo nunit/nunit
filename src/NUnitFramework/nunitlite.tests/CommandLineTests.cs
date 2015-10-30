@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
 using System;
 using System.Reflection;
 using System.Text;
@@ -275,6 +275,16 @@ namespace NUnitLite.Tests
 #region EngineResult Option
 
         [Test]
+        public void FileNameWithoutResultOptionLooksLikeParameter()
+        {
+            var options = new NUnitLiteOptions("tests.dll", "results.xml");
+            Assert.True(options.Validate());
+            Assert.AreEqual(0, options.ErrorMessages.Count);
+            Assert.AreEqual(2, options.InputFiles.Count);
+        }
+
+#if !PORTABLE
+        [Test]
         public void ResultOptionWithFilePath()
         {
             var options = new NUnitLiteOptions("tests.dll", "-result:results.xml");
@@ -314,15 +324,6 @@ namespace NUnitLite.Tests
             Assert.AreEqual("results.xml", spec.OutputPath);
             Assert.AreEqual("user", spec.Format);
             Assert.AreEqual("transform.xslt", spec.Transform);
-        }
-
-        [Test]
-        public void FileNameWithoutResultOptionLooksLikeParameter()
-        {
-            var options = new NUnitLiteOptions("tests.dll", "results.xml");
-            Assert.True(options.Validate());
-            Assert.AreEqual(0, options.ErrorMessages.Count);
-            Assert.AreEqual(2, options.InputFiles.Count);
         }
 
         [Test]
@@ -383,10 +384,11 @@ namespace NUnitLite.Tests
             var options = new NUnitLiteOptions("test.dll", "-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
+#endif
 
 #endregion
 
-#region Explore Option
+        #region Explore Option
 
         [Test]
         public void ExploreOptionWithoutPath()
@@ -396,6 +398,7 @@ namespace NUnitLite.Tests
             Assert.True(options.Explore);
         }
 
+#if !PORTABLE
         [Test]
         public void ExploreOptionWithFilePath()
         {
@@ -485,10 +488,11 @@ namespace NUnitLite.Tests
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
         }
 #endif
-        
-#endregion
+#endif
 
-#region Helper Methods
+        #endregion
+
+        #region Helper Methods
 
         //private static FieldInfo GetFieldInfo(string fieldName)
         //{
