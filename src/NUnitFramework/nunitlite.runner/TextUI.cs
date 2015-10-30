@@ -220,6 +220,7 @@ namespace NUnitLite
 
         #region DisplayTestFilters
 
+#if !SILVERLIGHT
         public void DisplayTestFilters()
         {
             if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
@@ -236,6 +237,7 @@ namespace NUnitLite
                 _outWriter.WriteLine();
             }
         }
+#endif
 
         #endregion
 

@@ -92,6 +92,27 @@ namespace NUnitLite
             _writer.WriteLine();
         }
 
+        #region DisplayTestFilters
+
+        public void DisplayTestFilters()
+        {
+            if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
+            {
+                _writer.WriteLine("Test Filters");
+
+                if (_options.TestList.Count > 0)
+                    foreach (string testName in _options.TestList)
+                        _writer.WriteLine("    Test: " + testName);
+
+                if (_options.WhereClauseSpecified)
+                    _writer.WriteLine("    Where: " + _options.WhereClause.Trim());
+
+                _writer.WriteLine();
+            }
+        }
+
+        #endregion
+
         public void DisplayHelp()
         {
             _writer.WriteLine("Usage: NUNITLITE [options]");
