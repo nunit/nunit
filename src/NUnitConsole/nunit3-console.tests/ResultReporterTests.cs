@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -124,22 +125,24 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void ErrorsAndFailuresReportTest()
         {
+            var nl = Environment.NewLine;
+
             var expected = new [] {
                 "Errors and Failures",
-@"1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest
-Intentional failure",
-@"2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest
-Method is not public",
-@"3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest
-No arguments were provided",
-@"4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException
-System.Exception : Intentional Exception",
-@"5) Invalid : NUnit.Tests.BadFixture
-No suitable constructor was found",
-@"6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage
-The CDATA was: <![CDATA[ My <xml> ]]>",
-@"7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage
-Deliberate failure to illustrate ]]> in message",
+                "1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest" + nl +
+                "Intentional failure",
+                "2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest" + nl +
+                "Method is not public",
+                "3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest" + nl +
+                "No arguments were provided",
+                "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException" + nl +
+                "System.Exception : Intentional Exception",
+                "5) Invalid : NUnit.Tests.BadFixture" + nl +
+                "No suitable constructor was found",
+                "6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage" + nl +
+                "The CDATA was: <![CDATA[ My <xml> ]]>",
+                "7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage" + nl +
+                "Deliberate failure to illustrate ]]> in message",
             };
 
             var actualErrorFailuresReport = GetReport(_reporter.WriteErrorsAndFailuresReport);
