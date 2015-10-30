@@ -49,10 +49,12 @@ namespace NUnitLite.Tests
         [TestCase("ShowHelp", "help|h")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
+#if !PORTABLE
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
 #if !SILVERLIGHT && !NETCF
         [TestCase("TeamCity", "teamcity")]
+#endif
 #endif
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
@@ -82,11 +84,13 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
+        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
+#if !PORTABLE
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
+#endif
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -114,7 +118,9 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
+#if !PORTABLE
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
+#endif
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
         {
             PropertyInfo property = GetPropertyInfo(propertyName);
@@ -173,10 +179,12 @@ namespace NUnitLite.Tests
 
         [TestCase("--where")]
         [TestCase("--timeout")]
+#if !PORTABLE
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
+#endif
         public void MissingValuesAreReported(string option)
         {
             var options = new NUnitLiteOptions(option + "=");
@@ -390,6 +398,7 @@ namespace NUnitLite.Tests
 
         #region Explore Option
 
+#if !PORTABLE
         [Test]
         public void ExploreOptionWithoutPath()
         {
@@ -398,7 +407,6 @@ namespace NUnitLite.Tests
             Assert.True(options.Explore);
         }
 
-#if !PORTABLE
         [Test]
         public void ExploreOptionWithFilePath()
         {
