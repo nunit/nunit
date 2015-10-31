@@ -29,39 +29,45 @@ namespace NUnit.Framework.Internal.Filters
 {
     public class IdFilterTests : TestFilterTests
     {
-        private readonly TestFilter filter = new IdFilter(_dummyFixture.Id);
+        private TestFilter _filter;
+
+        [SetUp]
+        public void CreateFilter()
+        {
+            _filter = new IdFilter(_dummyFixture.Id);
+        }
 
         [Test]
         public void IsNotEmpty()
         {
-            Assert.False(filter.IsEmpty);
+            Assert.False(_filter.IsEmpty);
         }
 
         [Test]
         public void MatchTest()
         {
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(_filter.Match(_dummyFixture));
+            Assert.False(_filter.Match(_anotherFixture));
         }
 
         [Test]
         public void PassTest()
         {
-            Assert.That(filter.Pass(_topLevelSuite));
-            Assert.That(filter.Pass(_dummyFixture));
-            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
+            Assert.That(_filter.Pass(_topLevelSuite));
+            Assert.That(_filter.Pass(_dummyFixture));
+            Assert.That(_filter.Pass(_dummyFixture.Tests[0]));
 
-            Assert.False(filter.Pass(_anotherFixture));
+            Assert.False(_filter.Pass(_anotherFixture));
         }
 
         [Test]
         public void ExplicitMatchTest()
         {
-            Assert.That(filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
+            Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
+            Assert.That(_filter.IsExplicitMatch(_dummyFixture));
+            Assert.False(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
 
-            Assert.False(filter.IsExplicitMatch(_anotherFixture));
+            Assert.False(_filter.IsExplicitMatch(_anotherFixture));
         }
     }
 }

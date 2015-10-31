@@ -61,13 +61,14 @@ namespace NUnit.Framework.Internal.Filters
     {
         public const string DUMMY_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+DummyFixture";
 
-        protected static readonly TestSuite _dummyFixture = TestBuilder.MakeFixture(typeof(DummyFixture));
-        protected static readonly TestSuite _anotherFixture = TestBuilder.MakeFixture(typeof(AnotherFixture));
-        protected static readonly TestSuite _yetAnotherFixture = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
-        protected static readonly TestSuite _fixtureWithMultipleTests = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
-        protected static readonly TestSuite _topLevelSuite = new TestSuite("MySuite");
+        protected readonly TestSuite _dummyFixture = TestBuilder.MakeFixture(typeof(DummyFixture));
+        protected readonly TestSuite _anotherFixture = TestBuilder.MakeFixture(typeof(AnotherFixture));
+        protected readonly TestSuite _yetAnotherFixture = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
+        protected readonly TestSuite _fixtureWithMultipleTests = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
+        protected readonly TestSuite _topLevelSuite = new TestSuite("MySuite");
 
-        static TestFilterTests()
+        [OneTimeSetUp]
+        public void SetUpSuite()
         {
             _topLevelSuite.Add(_dummyFixture);
             _topLevelSuite.Add(_anotherFixture);
