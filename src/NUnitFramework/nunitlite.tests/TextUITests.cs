@@ -202,10 +202,10 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Tests Not Run",
                 "",
-                "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
-                "ignoring this test method for now",
+                "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest",
+                "Ignore Message",
                 "",
-                "2) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitlyRunTest",
+                "2) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest",
                 ""
             };
 
@@ -219,7 +219,7 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Test Run Summary",
                 "   Overall result: Failed",
-                "   Tests run: 7, Passed: 4, Errors: 1, Failures: 1, Inconclusive: 1",
+                "   Tests run: 4, Passed: 1, Errors: 1, Failures: 1, Inconclusive: 1",
                 "     Not run: 4, Invalid: 2, Ignored: 1, Explicit: 1, Skipped: 0",
                 "  Start time: 2014-12-02 12:34:56Z",
                 "    End time: 2014-12-02 12:34:56Z",
@@ -238,7 +238,7 @@ namespace NUnitLite.Tests
             var lines = GetReportLines();
 
             Assert.That(lines[0], Is.EqualTo("Errors and Failures"));
-            Assert.That(lines[2], Is.EqualTo("1) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5"));
+            Assert.That(lines[2], Is.EqualTo("1) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest"));
             Assert.That(lines[3], Is.EqualTo("Method is not public"));
             Assert.That(lines[5], Is.EqualTo("2) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest"));
             Assert.That(lines[6], Is.EqualTo("Intentional failure"));

@@ -70,7 +70,6 @@
     <Compile Include="TeamCityServiceMessagePublisherTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MockTestResult.xml" />
     <Content Include="TextSummary.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

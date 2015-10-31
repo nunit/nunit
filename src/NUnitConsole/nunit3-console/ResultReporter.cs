@@ -73,9 +73,9 @@ namespace NUnit.ConsoleRunner
             WriteSummaryReport();
         }
 
-        #region
+        #region Summary Report
 
-        private void WriteRunSettingsReport()
+        public void WriteRunSettingsReport()
         {
             var settings = _result.SelectNodes("settings/setting");
 
@@ -94,10 +94,6 @@ namespace NUnit.ConsoleRunner
                 _writer.WriteLine();
             }
         }
-
-        #endregion
-
-        #region Summary Report
 
         public void WriteSummaryReport()
         {
