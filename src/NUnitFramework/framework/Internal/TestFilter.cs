@@ -217,6 +217,22 @@ namespace NUnit.Framework.Internal
             {
                 return false;
             }
+
+            public override TNode AddToXml(TNode parentNode, bool recursive)
+            {
+                return parentNode.AddElement("filter");
+            }
         }
+
+        #region IXmlNodeBuilder Implementation
+
+        public TNode ToXml(bool recursive)
+        {
+            return AddToXml(new TNode("dummy"), recursive);
+        }
+
+        public abstract TNode AddToXml(TNode parentNode, bool recursive);
+
+        #endregion
     }
 }

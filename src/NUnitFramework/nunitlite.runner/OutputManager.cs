@@ -22,11 +22,13 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite
 {
@@ -52,7 +54,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result">The test result</param>
         /// <param name="spec">An output specification</param>
-        public void WriteResultFile(ITestResult result, OutputSpecification spec)
+        public void WriteResultFile(ITestResult result, OutputSpecification spec, IDictionary runSettings, TestFilter filter)
         {
             string outputPath = Path.Combine(_workDirectory, spec.OutputPath);
             OutputWriter outputWriter = null;
@@ -79,7 +81,7 @@ namespace NUnitLite
                         "spec");
             }
 
-            outputWriter.WriteResultFile(result, outputPath);
+            outputWriter.WriteResultFile(result, outputPath, runSettings, filter);
             Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
         }
 

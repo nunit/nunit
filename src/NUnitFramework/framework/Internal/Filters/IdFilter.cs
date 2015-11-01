@@ -48,5 +48,10 @@ namespace NUnit.Framework.Internal.Filters
             // because regular expressions are not supported for ID.
             return test.Id == ExpectedValue;
         }
+
+        protected override string ElementName
+        {
+            get { return "id"; }
+        }
     }
 }

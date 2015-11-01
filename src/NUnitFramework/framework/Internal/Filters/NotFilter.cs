@@ -99,5 +99,13 @@ namespace NUnit.Framework.Internal.Filters
 
         //    return false;
         //}	
+
+        public override TNode AddToXml(TNode parentNode, bool recursive)
+        {
+            TNode result = parentNode.AddElement("not");
+            if (recursive)
+                BaseFilter.AddToXml(result, true);
+            return result;
+        }
     }
 }

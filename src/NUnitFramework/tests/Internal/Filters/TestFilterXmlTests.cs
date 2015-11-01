@@ -28,8 +28,10 @@ namespace NUnit.Framework.Internal.Filters
 {
     public class TestFilterXmlTests : TestFilterTests
     {
+        #region ClassNameFilter
+
         [Test]
-        public void BuildClassNameFilter()
+        public void ClassNameFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><class>" + TestFilterTests.DUMMY_CLASS + "</class></filter>");
@@ -40,7 +42,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildClassNameFilter_Regex()
+        public void ClassNameFilter_ToXml()
+        {
+            TestFilter filter = new ClassNameFilter("FULLNAME");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<class>FULLNAME</class>"));
+        }
+
+        [Test]
+        public void ClassNameFilter_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><class re='1'>Dummy</class></filter>");
@@ -51,7 +60,18 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildMethodNameFilter()
+        public void ClassNameFilter_ToXml_Regex()
+        {
+            TestFilter filter = new ClassNameFilter("FULLNAME") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<class re=\"1\">FULLNAME</class>"));
+        }
+
+        #endregion
+
+        #region MethodNameFilter
+
+        [Test]
+        public void MethodNameFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><method>Test</method></filter>");
@@ -63,7 +83,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildMethodNameFilter_Regex()
+        public void MethodNameFilter_ToXml()
+        {
+            TestFilter filter = new MethodNameFilter("Test");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<method>Test</method>"));
+        }
+
+        [Test]
+        public void BuildMethodNameFilter_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><method re='1'>T.st</method></filter>");
@@ -75,7 +102,18 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildTestNameFilter()
+        public void MethodNameFilter_ToXml_Regex()
+        {
+            TestFilter filter = new MethodNameFilter("Test") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<method re=\"1\">Test</method>"));
+        }
+
+        #endregion
+
+        #region TestNameFilter
+
+        [Test]
+        public void TestNameFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><name>TestFilterTests+DummyFixture</name></filter>");
@@ -86,7 +124,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildTestNameFilter_Regex()
+        public void TestNameFilter_ToXml()
+        {
+            TestFilter filter = new TestNameFilter("TestFilterTests+DummyFixture");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<name>TestFilterTests+DummyFixture</name>"));
+        }
+
+        [Test]
+        public void TestNameFilter_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><name re='1'>Dummy</name></filter>");
@@ -97,7 +142,18 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildFullNameFilter()
+        public void TestNameFilter_ToXml_Regex()
+        {
+            TestFilter filter = new TestNameFilter("TestFilterTests+DummyFixture") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<name re=\"1\">TestFilterTests+DummyFixture</name>"));
+        }
+
+        #endregion
+
+        #region FullNameFilter
+
+        [Test]
+        public void FullNameFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><test>" + TestFilterTests.DUMMY_CLASS + "</test></filter>");
@@ -108,7 +164,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildFullNameFilter_Regex()
+        public void FullNameFilter_ToXml()
+        {
+            TestFilter filter = new FullNameFilter("FULLNAME");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<test>FULLNAME</test>"));
+        }
+
+        [Test]
+        public void FullNameFilter_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><test re='1'>Dummy</test></filter>");
@@ -119,7 +182,18 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildCategoryFilter()
+        public void FullNameFilter_ToXml_Regex()
+        {
+            TestFilter filter = new FullNameFilter("FULLNAME") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<test re=\"1\">FULLNAME</test>"));
+        }
+
+        #endregion
+
+        #region CategoryFilter
+
+        [Test]
+        public void CategoryFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><cat>Dummy</cat></filter>");
@@ -130,7 +204,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildCategoryFilter_Regex()
+        public void CategoryFilter_ToXml()
+        {
+            TestFilter filter = new CategoryFilter("CATEGORY");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat>CATEGORY</cat>"));
+        }
+
+        [Test]
+        public void CategoryFilter_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><cat re='1'>D.mmy</cat></filter>");
@@ -141,7 +222,18 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildPropertyFilter()
+        public void CategoryFilter_ToXml_Regex()
+        {
+            TestFilter filter = new CategoryFilter("CATEGORY") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat re=\"1\">CATEGORY</cat>"));
+        }
+
+        #endregion
+
+        #region PropertyFilter
+
+        [Test]
+        public void PropertyFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><prop name='Priority'>High</prop></filter>");
@@ -153,7 +245,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildPropertyFilter_Regex()
+        public void PropertyFilter_ToXml()
+        {
+            TestFilter filter = new PropertyFilter("Priority", "High");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<prop name=\"Priority\">High</prop>"));
+        }
+
+        [Test]
+        public void PropertyFilter_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><prop name='Author' re='1'>Charlie P</prop></filter>");
@@ -165,7 +264,18 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildIdFilter()
+        public void PropertyFilter_ToXml_Regex()
+        {
+            TestFilter filter = new PropertyFilter("Priority", "High") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<prop re=\"1\" name=\"Priority\">High</prop>"));
+        }
+
+        #endregion
+
+        #region IdFilter
+
+        [Test]
+        public void IdFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
                 string.Format("<filter><id>{0}</id></filter>", _dummyFixture.Id));
@@ -174,5 +284,14 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(filter.Match(_dummyFixture));
             Assert.False(filter.Match(_anotherFixture));
         }
+
+        [Test]
+        public void IdFilter_ToXml()
+        {
+            TestFilter filter = new IdFilter("ID-123");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<id>ID-123</id>"));
+        }
+
+        #endregion
     }
 }

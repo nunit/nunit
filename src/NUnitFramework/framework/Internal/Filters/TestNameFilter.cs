@@ -45,5 +45,10 @@ namespace NUnit.Framework.Internal.Filters
         {
             return Match(test.Name);
         }
+
+        protected override string ElementName
+        {
+            get { return "name"; }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -48,7 +48,7 @@ namespace NUnitLite.Tests
 
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
-            new NUnit2XmlOutputWriter().WriteResultFile(result, writer);
+            new NUnit2XmlOutputWriter().WriteResultFile(result, writer, null, null);
             writer.Close();
 
 #if DEBUG

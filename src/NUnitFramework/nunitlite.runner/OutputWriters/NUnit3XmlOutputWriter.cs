@@ -22,11 +22,13 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using NUnit.Common;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -38,8 +40,6 @@ namespace NUnitLite
     /// </summary>
     public class NUnit3XmlOutputWriter : OutputWriter
     {
-        private XmlWriter xmlWriter;
-
         /// <summary>
         /// Writes test info to the specified TextWriter
         /// </summary>
@@ -61,93 +61,85 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result">The result to be written to a file</param>
         /// <param name="writer">A TextWriter to which the result is written</param>
-        public override void WriteResultFile(ITestResult result, TextWriter writer)
+        public override void WriteResultFile(ITestResult result, TextWriter writer, IDictionary runSettings, TestFilter filter)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
+            XmlWriterSettings xmlSettings = new XmlWriterSettings();
+            xmlSettings.Indent = true;
 
-            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
+            using (XmlWriter xmlWriter = XmlWriter.Create(writer, xmlSettings))
             {
-                WriteXmlResultOutput(result, xmlWriter);
+                WriteXmlResultOutput(result, xmlWriter, runSettings, filter);
             }
         }
 
-        private void WriteXmlResultOutput(ITestResult result, XmlWriter xmlWriter)
+        private void WriteXmlResultOutput(ITestResult result, XmlWriter xmlWriter, IDictionary runSettings, TestFilter filter)
         {
-            this.xmlWriter = xmlWriter;
+            TNode resultNode = result.ToXml(true);
 
-            InitializeXmlFile(result);
-
-            result.ToXml(true).WriteTo(xmlWriter);
-
-            TerminateXmlFile();
-        }
-
-        private void InitializeXmlFile(ITestResult result)
-        {
-            xmlWriter.WriteStartDocument(false);
-
-            // In order to match the format used by NUnit 3.0, we
-            // wrap the entire result from the framework in a 
-            // <test-run> element.
-            xmlWriter.WriteStartElement("test-run");
-
-            xmlWriter.WriteAttributeString("id", "2"); // TODO: Should not be hard-coded
-            xmlWriter.WriteAttributeString("name", result.Name);
-            xmlWriter.WriteAttributeString("fullname", result.FullName);
-            xmlWriter.WriteAttributeString("testcasecount", result.Test.TestCaseCount.ToString());
-
-            xmlWriter.WriteAttributeString("result", result.ResultState.Status.ToString());
-            if (result.ResultState.Label != string.Empty) // && result.ResultState.Label != ResultState.Status.ToString())
-                xmlWriter.WriteAttributeString("label", result.ResultState.Label);
-
-            xmlWriter.WriteAttributeString("start-time", result.StartTime.ToString("u"));
-            xmlWriter.WriteAttributeString("end-time", result.EndTime.ToString("u"));
-            xmlWriter.WriteAttributeString("duration", result.Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
-
-            xmlWriter.WriteAttributeString("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
-            xmlWriter.WriteAttributeString("passed", result.PassCount.ToString());
-            xmlWriter.WriteAttributeString("failed", result.FailCount.ToString());
-            xmlWriter.WriteAttributeString("inconclusive", result.InconclusiveCount.ToString());
-            xmlWriter.WriteAttributeString("skipped", result.SkipCount.ToString());
-            xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
-
-            xmlWriter.WriteAttributeString("random-seed", Randomizer.InitialSeed.ToString());
-
-            WriteEnvironmentElement();
-        }
-
-        private void WriteEnvironmentElement()
-        {
-            xmlWriter.WriteStartElement("environment");
-
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(assembly);
-            xmlWriter.WriteAttributeString("nunit-version", assemblyName.Version.ToString());
-
-            xmlWriter.WriteAttributeString("clr-version", Environment.Version.ToString());
-            xmlWriter.WriteAttributeString("os-version", Environment.OSVersion.ToString());
-            xmlWriter.WriteAttributeString("platform", Environment.OSVersion.Platform.ToString());
-#if !NETCF
-            xmlWriter.WriteAttributeString("cwd", Environment.CurrentDirectory);
+            // Insert elements as first child in reverse order
+            if (runSettings != null) // Some platforms don't have settings
+                FrameworkController.InsertSettingsElement(resultNode, runSettings);
 #if !SILVERLIGHT
-            xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
-            xmlWriter.WriteAttributeString("user", Environment.UserName);
-            xmlWriter.WriteAttributeString("user-domain", Environment.UserDomainName);
+            FrameworkController.InsertEnvironmentElement(resultNode);
 #endif
-#endif
-            xmlWriter.WriteAttributeString("culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
-            xmlWriter.WriteAttributeString("uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
 
-            xmlWriter.WriteEndElement();
+            TNode testRun = MakeTestRunElement(result);
+
+#if !SILVERLIGHT && !NETCF
+            testRun.ChildNodes.Add(MakeCommandLineElement());
+#endif
+            testRun.ChildNodes.Add(MakeTestFilterElement(filter));
+            testRun.ChildNodes.Add(resultNode);
+
+            testRun.WriteTo(xmlWriter);
         }
 
-        private void TerminateXmlFile()
+        private TNode MakeTestRunElement(ITestResult result)
         {
-            xmlWriter.WriteEndElement(); // test-run
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
-            xmlWriter.Close();
+            TNode testRun = new TNode("test-run");
+
+            testRun.AddAttribute("id", "2");
+            testRun.AddAttribute("name", result.Name);
+            testRun.AddAttribute("fullname", result.FullName);
+            testRun.AddAttribute("testcasecount", result.Test.TestCaseCount.ToString());
+
+            testRun.AddAttribute("result", result.ResultState.Status.ToString());
+            if (result.ResultState.Label != string.Empty)
+                testRun.AddAttribute("label", result.ResultState.Label);
+
+            testRun.AddAttribute("start-time", result.StartTime.ToString("u"));
+            testRun.AddAttribute("end-time", result.EndTime.ToString("u"));
+            testRun.AddAttribute("duration", result.Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
+
+            testRun.AddAttribute("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
+            testRun.AddAttribute("passed", result.PassCount.ToString());
+            testRun.AddAttribute("failed", result.FailCount.ToString());
+            testRun.AddAttribute("inconclusive", result.InconclusiveCount.ToString());
+            testRun.AddAttribute("skipped", result.SkipCount.ToString());
+            testRun.AddAttribute("asserts", result.AssertCount.ToString());
+
+            testRun.AddAttribute("random-seed", Randomizer.InitialSeed.ToString());
+
+            // NOTE: The console runner adds attributes for engine-version and clr-version
+            // Neither of these is needed under nunitlite since there is no engine involved
+            // and we are running under the same runtime as the tests.
+
+            return testRun;
+        }
+
+#if !SILVERLIGHT && !NETCF
+        private static TNode MakeCommandLineElement()
+        {
+            return new TNode("command-line", Environment.CommandLine, true);
+        }
+#endif
+
+        private static TNode MakeTestFilterElement(TestFilter filter)
+        {
+            TNode result = new TNode("filter");
+            if (!filter.IsEmpty)
+                filter.AddToXml(result, true);
+            return result;
         }
     }
 }

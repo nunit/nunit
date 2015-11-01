@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -56,7 +57,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result">The test result for the run</param>
         /// <param name="writer">The TextWriter to which the xml will be written</param>
-        public override void WriteResultFile(ITestResult result, TextWriter writer)
+        public override void WriteResultFile(ITestResult result, TextWriter writer, IDictionary runSettings, TestFilter filter)
         {
             // NOTE: Under .NET 1.1, XmlTextWriter does not implement IDisposable,
             // but does implement Close(). Hence we cannot use a 'using' clause.

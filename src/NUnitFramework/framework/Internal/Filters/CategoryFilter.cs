@@ -59,5 +59,10 @@ namespace NUnit.Framework.Internal.Filters
 
             return false;
         }
+
+        protected override string ElementName
+        {
+            get { return "cat"; }
+        }
     }
 }

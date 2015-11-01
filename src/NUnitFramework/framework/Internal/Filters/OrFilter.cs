@@ -27,50 +27,55 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
-	/// <summary>
-	/// Combines multiple filters so that a test must pass one 
-	/// of them in order to pass this filter.
-	/// </summary>
-	[Serializable]
-	public class OrFilter : CompositeFilter
-	{
-		/// <summary>
-		/// Constructs an empty OrFilter
-		/// </summary>
-		public OrFilter() { }
+    /// <summary>
+    /// Combines multiple filters so that a test must pass one 
+    /// of them in order to pass this filter.
+    /// </summary>
+    [Serializable]
+    public class OrFilter : CompositeFilter
+    {
+        /// <summary>
+        /// Constructs an empty OrFilter
+        /// </summary>
+        public OrFilter() { }
 
-		/// <summary>
-		/// Constructs an AndFilter from an array of filters
-		/// </summary>
-		/// <param name="filters"></param>
-		public OrFilter( params ITestFilter[] filters ) : base(filters) { }
+        /// <summary>
+        /// Constructs an AndFilter from an array of filters
+        /// </summary>
+        /// <param name="filters"></param>
+        public OrFilter( params ITestFilter[] filters ) : base(filters) { }
 
-		/// <summary>
-		/// Checks whether the OrFilter is matched by a test
-		/// </summary>
-		/// <param name="test">The test to be matched</param>
-		/// <returns>True if any of the component filters pass, otherwise false</returns>
-		public override bool Pass( ITest test )
-		{
-			foreach( ITestFilter filter in Filters )
-				if ( filter.Pass( test ) )
-					return true;
+        /// <summary>
+        /// Checks whether the OrFilter is matched by a test
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        /// <returns>True if any of the component filters pass, otherwise false</returns>
+        public override bool Pass( ITest test )
+        {
+            foreach( ITestFilter filter in Filters )
+                if ( filter.Pass( test ) )
+                    return true;
 
-			return false;
-		}
+            return false;
+        }
 
-		/// <summary>
-		/// Checks whether the OrFilter is matched by a test
-		/// </summary>
-		/// <param name="test">The test to be matched</param>
-		/// <returns>True if any of the component filters match, otherwise false</returns>
-		public override bool Match( ITest test )
-		{
-			foreach( TestFilter filter in Filters )
-				if ( filter.Match( test ) )
-					return true;
+        /// <summary>
+        /// Checks whether the OrFilter is matched by a test
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        /// <returns>True if any of the component filters match, otherwise false</returns>
+        public override bool Match( ITest test )
+        {
+            foreach( TestFilter filter in Filters )
+                if ( filter.Match( test ) )
+                    return true;
 
-			return false;
-		}
-	}
+            return false;
+        }
+
+        protected override string ElementName
+        {
+            get { return "or"; }
+        }
+    }
 }
