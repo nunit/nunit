@@ -196,8 +196,6 @@ namespace NUnitLite
                     _outWriter.WriteLine(ColorStyle.Value, "    " + testName);
                 SkipLine();
             }
-
-            // TODO: Add where clause here
         }
 #endif
 
@@ -236,6 +234,37 @@ namespace NUnitLite
 
                 _outWriter.WriteLine();
             }
+        }
+#endif
+
+        #endregion
+
+        #region DisplayRunSettings
+
+#if !SILVERLIGHT
+        public void DisplayRunSettings()
+        {
+            WriteSectionHeader("Run Settings");
+
+            if (_options.DefaultTimeout >= 0)
+                WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
+
+#if PARALLEL
+            WriteLabelLine(
+                "    Number of Test Workers: ", 
+                _options.NumberOfTestWorkers >= 0
+                    ? _options.NumberOfTestWorkers
+                    : Math.Max(Environment.ProcessorCount, 2));
+#endif
+
+            WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? NUnit.Env.DefaultWorkDirectory);
+
+            WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
+
+            if (_options.TeamCity)
+                _outWriter.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
+
+            SkipLine();
         }
 #endif
 

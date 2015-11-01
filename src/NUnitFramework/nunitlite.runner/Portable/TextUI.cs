@@ -155,24 +155,17 @@ namespace NUnitLite
             _writer.WriteLine();
         }
 
-        public void DisplayRequestedOptions()
+        public void DisplayRunSettings()
         {
-            _writer.WriteLine("Options");
+            WriteLine("Run Settings");
 
             if (_options.DefaultTimeout >= 0)
                 WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 
+            if (_options.TeamCity)
+                WriteLine("    Display TeamCity Service Messages");
+
             _writer.WriteLine();
-
-            if (_options.TestList.Count > 0)
-            {
-                _writer.WriteLine("Selected test(s) -");
-                foreach (string testName in _options.TestList)
-                    _writer.WriteLine("    " + testName);
-                _writer.WriteLine();
-            }
-
-            // TODO: Add where clause here
         }
 
         public void TestFinished(ITestResult result)

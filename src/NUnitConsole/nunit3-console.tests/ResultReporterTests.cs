@@ -40,7 +40,7 @@ namespace NUnit.ConsoleRunner.Tests
         private static readonly string[] REPORT_SEQUENCE = new string[] {
             "Tests Not Run",
             "Errors and Failures",
-            "Run Settings",
+            //"Run Settings",
             "Test Run Summary"
         };
 
