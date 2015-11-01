@@ -1,4 +1,60 @@
-﻿NUnit 3.0.0 Beta 5 - October 16, 2015
+NUnit 3.0.0 Release Candidate - November 1, 2015
+
+Framework
+
+ * The portable build now supports ASP.NET 5 and the new Core CLR.
+ 
+   NOTE: The `nunit3-console` runner cannot run tests that reference the portable build.
+   You may run such tests using NUnitLite or a platform-specific runner.
+
+ * `TestCaseAttribute` and `TestCaseData` now allow modifying the test name without replacing it entirely.
+ * The Silverlight packages are now separate downloads.
+
+NUnitLite
+
+ * The NUnitLite runner now produces the same output display and XML results as the console runner.
+ 
+Engine
+
+ * The format of the XML result file has been finalized and documented.
+
+Console Runner
+
+ * The console runner program is now called `nunit3-console`.
+ * Console runner output has been modified so that the summary comes at the end, to reduce the need for scrolling.
+
+Issues Resolved
+
+ *  59 Length of generated test names should be limited
+ *  68 Customization of test case name generation
+ * 404 Split tests between nunitlite.runner and nunit.framework
+ * 575 Add support for ASP.NET 5 and the new Core CLR
+ * 783 Package separately for Silverlight
+ * 833 Intermittent failure of WorkItemQueueTests.StopQueue_WithWorkers
+ * 859 NUnit-Console output - move Test Run Summary to end
+ * 867 Remove Warnings from Ignored tests
+ * 868 Review skipped tests
+ * 887 Move environment and settings elements to the assembly suite in the result file
+ * 899 Colors for ColorConsole on grey background are too light
+ * 904 InternalPreserveStackTrace is not supported on all Portable platforms
+ * 914 Unclear error message from console runner when assembly has no tests
+ * 916 Console runner dies when test agent dies
+ * 918 Console runner --where parameter is case sensitive
+ * 920 Remove addins\nunit.engine.api.dll from NuGet package
+ * 929 Rename nunit-console.exe
+ * 931 Remove beta warnings from NuGet packages
+ * 936 Explicit skipped tests not displayed
+ * 939 Installer complains about .NET even if already installed
+ * 940 Confirm or modify list of packages for release
+ * 947 Breaking API change in ValueSourceAttribute
+ * 949 Update copyright in NUnit Console
+ * 954 NUnitLite XML output is not consistent with the engine's
+ * 955 NUnitLite does not display the where clause
+ * 959 Restore filter options for NUnitLite portable build
+ * 960 Intermittent failure of CategoryFilterTests
+ * 967 Run Settings Report is not being displayed.
+
+NUnit 3.0.0 Beta 5 - October 16, 2015
 
 Framework
 
