@@ -65,5 +65,17 @@ namespace NUnit.Framework.Internal.Filters
 
             return false;
         }
+
+        public override TNode AddToXml(TNode parentNode, bool recursive)
+        {
+            TNode result = base.AddToXml(parentNode, recursive);
+            result.AddAttribute("name", _propertyName);
+            return result;
+        }
+
+        protected override string ElementName
+        {
+            get { return "prop"; }
+        }
     }
 }

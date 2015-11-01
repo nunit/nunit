@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2013 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -66,5 +66,15 @@ namespace NUnit.Framework.Internal.Filters
             else
                 return ExpectedValue == input;
         }
+
+        public override TNode AddToXml(TNode parentNode, bool recursive)
+        {
+            TNode result = parentNode.AddElement(ElementName, ExpectedValue);
+            if (IsRegex)
+                result.AddAttribute("re", "1");
+            return result;
+        }
+
+        protected abstract string ElementName { get; }
     }
 }

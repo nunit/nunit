@@ -62,5 +62,18 @@ namespace NUnit.Framework.Internal.Filters
         /// Return a list of the composing filters.
         /// </summary>
         public IList<ITestFilter> Filters { get; private set; }
+
+        public override TNode AddToXml(TNode parentNode, bool recursive)
+        {
+            TNode result = parentNode.AddElement(ElementName);
+
+            if (recursive)
+                foreach (ITestFilter filter in Filters)
+                    filter.AddToXml(result, true);
+
+            return result;
+        }
+
+        protected abstract string ElementName { get; }
     }
 }

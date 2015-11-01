@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -163,11 +164,11 @@ namespace NUnitLite
                 TestFilter filter = CreateTestFilter(_options);
 
                 if (_runner.Load(assembly, runSettings) != null)
-                    return _options.Explore ? ExploreTests() : RunTests(filter);
+                    return _options.Explore ? ExploreTests() : RunTests(filter, runSettings);
 #else
                 Assembly assembly = callingAssembly;
                 if (_runner.Load(assembly, new Dictionary<string, object>()) != null)
-                    return RunTests(TestFilter.Empty);
+                    return RunTests(TestFilter.Empty, null);
 #endif
 
                 var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
@@ -190,7 +191,7 @@ namespace NUnitLite
 
         #region Helper Methods
 
-        private int RunTests(ITestFilter filter)
+        private int RunTests(TestFilter filter, IDictionary runSettings)
         {
             var startTime = DateTime.UtcNow;
 
@@ -210,7 +211,7 @@ namespace NUnitLite
                 var outputManager = new OutputManager(_options.WorkDirectory);
 
                 foreach (var spec in _options.ResultOutputSpecifications)
-                    outputManager.WriteResultFile(result, spec);
+                    outputManager.WriteResultFile(result, spec, runSettings, filter);
             }
 #endif
 

@@ -208,7 +208,8 @@ namespace NUnit.Framework.Api
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
-            InsertSettingsElement(result);
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
 #if !PORTABLE && !SILVERLIGHT
             InsertEnvironmentElement(result);
 #endif
@@ -241,7 +242,7 @@ namespace NUnit.Framework.Api
         }
 
 #if !PORTABLE && !SILVERLIGHT
-        private TNode InsertEnvironmentElement(TNode targetNode)
+        public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
             targetNode.ChildNodes.Insert(0, env);
@@ -269,16 +270,16 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-        private TNode InsertSettingsElement(TNode targetNode)
+        public static TNode InsertSettingsElement(TNode targetNode, IDictionary settings)
         {
             TNode settingsNode = new TNode("settings");
             targetNode.ChildNodes.Insert(0, settingsNode);
 
-            foreach (string key in Settings.Keys)
-                AddSetting(settingsNode, key, Settings[key]);
+            foreach (string key in settings.Keys)
+                AddSetting(settingsNode, key, settings[key]);
 
             // Add default values for display
-            if (!Settings.Contains(PackageSettings.NumberOfTestWorkers))
+            if (!settings.Contains(PackageSettings.NumberOfTestWorkers))
 #if NETCF
                 AddSetting(settingsNode, PackageSettings.NumberOfTestWorkers, 2);
 #else
@@ -288,7 +289,7 @@ namespace NUnit.Framework.Api
                 return settingsNode;
         }
 
-        private void AddSetting(TNode settingsNode, string name, object value)
+        private static void AddSetting(TNode settingsNode, string name, object value)
         {
             TNode setting = new TNode("setting");
             setting.AddAttribute("name", name);

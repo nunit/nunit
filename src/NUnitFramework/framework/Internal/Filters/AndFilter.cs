@@ -72,5 +72,10 @@ namespace NUnit.Framework.Internal.Filters
 
             return true;
         }
+
+        protected override string ElementName
+        {
+            get { return "and"; }
+        }
     }
 }

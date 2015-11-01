@@ -50,5 +50,10 @@ namespace NUnit.Framework.Internal.Filters
 
             return Match(test.ClassName);
         }
+
+        protected override string ElementName
+        {
+            get { return "class"; }
+        }
     }
 }

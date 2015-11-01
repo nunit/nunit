@@ -21,9 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections;
 using System.IO;
-using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite
 {
@@ -51,7 +52,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result"></param>
         /// <param name="writer"></param>
-        public override void WriteResultFile(ITestResult result, TextWriter writer)
+        public override void WriteResultFile(ITestResult result, TextWriter writer, IDictionary runSettings, TestFilter filter)
         {
             WriteTestFile(result.Test, writer);
         }

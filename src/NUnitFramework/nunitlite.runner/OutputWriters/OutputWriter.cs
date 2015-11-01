@@ -21,9 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections;
 using System.IO;
 using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite
 {
@@ -39,11 +41,12 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result">The result to be written</param>
         /// <param name="outputPath">Path to the file to which the result is written</param>
-        public void WriteResultFile(ITestResult result, string outputPath)
+        /// <param name="runSettings">A dictionary of settings used for this test run</param>
+        public void WriteResultFile(ITestResult result, string outputPath, IDictionary runSettings, TestFilter filter)
         {
             using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
             {
-                WriteResultFile(result, writer);
+                WriteResultFile(result, writer, runSettings, filter);
             }
         }
 
@@ -65,7 +68,8 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result">The result to be written</param>
         /// <param name="writer">A TextWriter to which the result is written</param>
-        public abstract void WriteResultFile(ITestResult result, TextWriter writer);
+        /// <param name="runSettings">A dictionary of settings used for this test run</param>
+        public abstract void WriteResultFile(ITestResult result, TextWriter writer, IDictionary runSettings, TestFilter filter);
 
         /// <summary>
         /// Abstract method that writes test info to a TextWriter
