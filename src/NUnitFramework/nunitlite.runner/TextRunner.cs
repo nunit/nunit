@@ -232,6 +232,10 @@ namespace NUnitLite
                 _textUI.PrintFullReport(_result);
 #endif
 
+#if !SILVERLIGHT
+            _textUI.DisplayRunSettings();
+#endif
+
             _textUI.DisplaySummaryReport(Summary);
         }
 

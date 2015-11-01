@@ -77,21 +77,25 @@ namespace NUnit.ConsoleRunner
 
         private void WriteRunSettingsReport()
         {
-            var settings = _result.SelectNodes("settings/setting");
-
-            if (settings.Count > 0)
+            var firstSuite = _result.SelectSingleNode("test-suite");
+            if (firstSuite != null)
             {
-                _writer.WriteLine(ColorStyle.SectionHeader, "Run Settings");
+                var settings = firstSuite.SelectNodes("settings/setting");
 
-                foreach (XmlNode node in settings)
+                if (settings.Count > 0)
                 {
-                    string name = node.GetAttribute("name");
-                    string val = node.GetAttribute("value");
-                    string label = string.Format("    {0}: ", name);
-                    _writer.WriteLabelLine(label, val);
-                }
+                    _writer.WriteLine(ColorStyle.SectionHeader, "Run Settings");
 
-                _writer.WriteLine();
+                    foreach (XmlNode node in settings)
+                    {
+                        string name = node.GetAttribute("name");
+                        string val = node.GetAttribute("value");
+                        string label = string.Format("    {0}: ", name);
+                        _writer.WriteLabelLine(label, val);
+                    }
+
+                    _writer.WriteLine();
+                }
             }
         }
 
