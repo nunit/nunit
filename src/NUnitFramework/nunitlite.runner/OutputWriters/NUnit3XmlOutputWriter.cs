@@ -85,7 +85,7 @@ namespace NUnitLite
 
             TNode testRun = MakeTestRunElement(result);
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
             testRun.ChildNodes.Add(MakeCommandLineElement());
 #endif
             testRun.ChildNodes.Add(MakeTestFilterElement(filter));
@@ -127,7 +127,7 @@ namespace NUnitLite
             return testRun;
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
         private static TNode MakeCommandLineElement()
         {
             return new TNode("command-line", Environment.CommandLine, true);
