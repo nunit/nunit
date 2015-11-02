@@ -278,12 +278,10 @@ namespace NUnit.Framework.Api
             foreach (string key in settings.Keys)
                 AddSetting(settingsNode, key, settings[key]);
 
+#if PARALLEL
             // Add default values for display
             if (!settings.Contains(PackageSettings.NumberOfTestWorkers))
-#if NETCF
-                AddSetting(settingsNode, PackageSettings.NumberOfTestWorkers, 2);
-#else
-                AddSetting(settingsNode, PackageSettings.NumberOfTestWorkers, Math.Max(Environment.ProcessorCount, 2));
+                AddSetting(settingsNode, PackageSettings.NumberOfTestWorkers, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
 #endif
 
                 return settingsNode;

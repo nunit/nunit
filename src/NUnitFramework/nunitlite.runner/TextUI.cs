@@ -27,6 +27,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using NUnit.Common;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -250,11 +251,10 @@ namespace NUnitLite
                 WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 
 #if PARALLEL
-            WriteLabelLine(
-                "    Number of Test Workers: ", 
-                _options.NumberOfTestWorkers >= 0
-                    ? _options.NumberOfTestWorkers
-                    : Math.Max(Environment.ProcessorCount, 2));
+            WriteLabelLine("    Number of Test Workers: ", 
+                _options.NumberOfTestWorkers >= 0 
+                    ? _options.NumberOfTestWorkers 
+                    : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
 #endif
 
             WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? NUnit.Env.DefaultWorkDirectory);

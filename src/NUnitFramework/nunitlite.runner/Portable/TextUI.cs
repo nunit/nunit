@@ -157,15 +157,18 @@ namespace NUnitLite
 
         public void DisplayRunSettings()
         {
-            WriteLine("Run Settings");
+            if (_options.DefaultTimeout >= 0 || _options.TeamCity)
+            {
+                WriteLine("Run Settings");
 
-            if (_options.DefaultTimeout >= 0)
-                WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
+                if (_options.DefaultTimeout >= 0)
+                    WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 
-            if (_options.TeamCity)
-                WriteLine("    Display TeamCity Service Messages");
+                if (_options.TeamCity)
+                    WriteLine("    Display TeamCity Service Messages");
 
-            _writer.WriteLine();
+                _writer.WriteLine();
+            }
         }
 
         public void TestFinished(ITestResult result)
