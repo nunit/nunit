@@ -19,20 +19,20 @@ namespace nunit.integration.tests
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("NUnit should support platforms")]
-    public partial class NUnitShouldSupportPlatformsFeature
+    [NUnit.Framework.DescriptionAttribute("NUnit allows to load config files for tests")]
+    public partial class NUnitAllowsToLoadConfigFilesForTestsFeature
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "SupportPlatforms.feature"
+#line 1 "AppConfig.feature"
 #line hidden
         
         [NUnit.Framework.TestFixtureSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "NUnit should support platforms", "", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "NUnit allows to load config files for tests", "", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -73,16 +73,12 @@ namespace nunit.integration.tests
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I can run test for different platforms")]
-        [NUnit.Framework.TestCaseAttribute("Version45", "AnyCpu", null)]
-        [NUnit.Framework.TestCaseAttribute("Version40", "AnyCpu", null)]
-        [NUnit.Framework.TestCaseAttribute("Version20", "AnyCpu", null)]
-        [NUnit.Framework.TestCaseAttribute("Version45", "X86", null)]
-        [NUnit.Framework.TestCaseAttribute("Version40", "X86", null)]
-        [NUnit.Framework.TestCaseAttribute("Version20", "X86", null)]
-        public virtual void ICanRunTestForDifferentPlatforms(string frameworkVersion, string platform, string[] exampleTags)
+        [NUnit.Framework.DescriptionAttribute("I can the test with config file")]
+        [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version45", null)]
+        [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version40", null)]
+        public virtual void ICanTheTestWithConfigFile(string configurationType, string frameworkVersion, string[] exampleTags)
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can run test for different platforms", exampleTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can the test with config file", exampleTags);
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 3
@@ -90,8 +86,8 @@ this.FeatureBackground();
 #line 7
  testRunner.Given(string.Format("Framework version is {0}", frameworkVersion), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
- testRunner.And("I have added successful method as SuccessfulTest to the class Foo.Tests.UnitTests" +
-                    "1 for foo.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have added successfulWithConfig method as SuccessfulTest to the class Foo.Tests" +
+                    ".UnitTests1 for foo.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 9
  testRunner.And("I have created folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 10
@@ -99,14 +95,18 @@ this.FeatureBackground();
 #line 11
  testRunner.And("I have copied NUnit framework references to folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 12
- testRunner.And(string.Format("I have specified {0} platform for assembly foo.tests", platform), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 13
  testRunner.And("I have compiled assembly foo.tests to file mocks\\foo.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 13
+ testRunner.And("I have added config file mocks\\foo.tests.dll.config", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 14
  testRunner.And("I have added mocks\\foo.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 15
- testRunner.When("I run NUnit tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And("I want to use CmdArguments type of TeamCity integration", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 16
+ testRunner.And(string.Format("I want to use {0} configuration type", configurationType), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 17
+ testRunner.When("I run NUnit tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 18
  testRunner.Then("the exit code should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
@@ -142,7 +142,7 @@ this.FeatureBackground();
             table1.AddRow(new string[] {
                         "Skipped",
                         "0"});
-#line 17
+#line 19
  testRunner.And("the Test Run Summary should has following:", ((string)(null)), table1, "And ");
 #line hidden
             this.ScenarioCleanup();

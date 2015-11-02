@@ -102,6 +102,8 @@
     <Compile Include="Dsl\ArgumentsCommandLineSetupFactory.cs" />
     <Compile Include="Dsl\CommandLineArtifact.cs" />
     <Compile Include="Dsl\CommandLineSetup.cs" />
+    <Compile Include="Dsl\ConfigFile.cs" />
+    <Compile Include="Dsl\Const.cs" />
     <Compile Include="Dsl\EnvironmentManager.cs" />
     <Compile Include="Dsl\EnvVariable.cs" />
     <Compile Include="Dsl\CmdArg.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Dsl\OutputSummary.cs" />
     <Compile Include="Dsl\PathUtilities.cs" />
     <Compile Include="Dsl\ProjectCommandLineSetupFactory.cs" />
+    <Compile Include="Dsl\ResourceManager.cs" />
     <Compile Include="Dsl\StringEnumExtensions.cs" />
     <Compile Include="Dsl\TeamCityIntegration.cs" />
     <Compile Include="Dsl\TestAssembly.cs" />
@@ -126,6 +129,11 @@
     <Compile Include="Dsl\TestSession.cs" />
     <EmbeddedResource Include="Templates\AssemblyInfo.cs" />
     <EmbeddedResource Include="Templates\UnitTest.cs" />
+    <Compile Include="AppConfig.feature.cs">
+      <DependentUpon>AppConfig.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="ExcludeIncludeTests.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -157,6 +165,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="AppConfig.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AppConfig.feature.cs</LastGenOutput>
+    </None>
     <None Include="ExcludeIncludeTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ExcludeIncludeTests.feature.cs</LastGenOutput>
@@ -178,6 +190,7 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>TeamCity.feature.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Templates\App.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

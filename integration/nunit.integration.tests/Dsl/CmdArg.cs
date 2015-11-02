@@ -19,7 +19,7 @@
             switch (version)
             {
                 case NUnitVersion.NUnit3:
-                    switch (this._argType)
+                    switch (_argType)
                     {
                         case DataType.TeamCity:
                             return "--teamcity";
@@ -32,7 +32,10 @@
 
                         case DataType.Agents:
                             return $"--agents={_value}";
-                                                        
+
+                        case DataType.WorkingDirectory:
+                            return $"--work={_value}";
+
                         default:
                             throw new NotSupportedException(_argType.ToString());
                     }

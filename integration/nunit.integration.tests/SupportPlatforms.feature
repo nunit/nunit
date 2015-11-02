@@ -1,4 +1,4 @@
-﻿Feature: NUnit should support platforms AnyCpu, x86, x64
+﻿Feature: NUnit should support platforms
 
 Background:
 	Given NUnit path is ..\

@@ -8,7 +8,7 @@
 
     internal class EnvironmentManager
     {
-        private static readonly string[] NUnitFiles = { "nunit-console.exe", "nunit.engine.api.dll", "nunit.engine.dll", "Mono.Cecil.dll", "nunit-agent.exe", "nunit-agent.exe.config", "nunit-agent-x86.exe", "nunit-agent-x86.exe.config", "nunit.engine.addins", "addins" };
+        private static readonly string[] NUnitFiles = { Const.NUnitConsoleFileName, "nunit.engine.api.dll", "nunit.engine.dll", "Mono.Cecil.dll", "nunit-agent.exe", "nunit-agent.exe.config", "nunit-agent-x86.exe", "nunit-agent-x86.exe.config", "nunit.engine.addins", "addins" };
 
         public void CopyNUnitFrameworkAssemblies(string directoryName, string originNUnitPath, TargetDotNetFrameworkVersion frameworkVersion)
         {

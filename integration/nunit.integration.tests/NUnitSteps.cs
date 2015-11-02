@@ -123,7 +123,15 @@
             {
                 environmentManager.CopyReference(targetDirectoryName, reference);
             }
-    }
+        }
+
+        [Given(@"I have added config file (.+)")]
+        public void AddConfigFile(string configFile)
+        {
+            var ctx = ScenarioContext.Current.GetTestContext();
+            var configuration = ctx.GetOrCreateNUnitConfiguration();            
+            configuration.AddConfigFile(new ConfigFile(Path.Combine(ctx.SandboxPath, configFile)));
+        }
 
         [Given(@"I have added reference (.+) to (.+)")]
         public void AddReference(string referenceFileName, string assemblyName)
@@ -161,17 +169,23 @@
         {
             var ctx = ScenarioContext.Current.GetTestContext();
             var configuration = ctx.GetOrCreateNUnitConfiguration();
-            configuration.AddArg(new CmdArg(arg.Trim().ConvertToNUnitArg(), value.Trim()));
+            var nUnitArg = arg.Trim().ConvertToNUnitArg();
+            switch (nUnitArg)
+            {
+                case DataType.WorkingDirectory:
+                    value = Path.Combine(ctx.SandboxPath, value);                    
+                    break;
+            }
+
+            configuration.AddArg(string.IsNullOrEmpty(value) ? new CmdArg(nUnitArg) : new CmdArg(nUnitArg, value.Trim()));
         }
 
         [Given(@"I have added ([^=]+) arg to NUnit console args")]
         public void AddArg(string arg)
         {
-            var ctx = ScenarioContext.Current.GetTestContext();
-            var configuration = ctx.GetOrCreateNUnitConfiguration();
-            configuration.AddArg(new CmdArg(arg.ConvertToNUnitArg()));
+            AddArg(arg, string.Empty);
         }
-
+        
         [When(@"I run NUnit tests")]
         public void RunNUnitConsole()
         {

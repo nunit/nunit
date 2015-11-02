@@ -1,6 +1,7 @@
 ﻿namespace nunit.integration.tests.Templates
 {
     using System;
+    using System.Configuration;
 
     using NUnit.Framework;
 
@@ -56,7 +57,7 @@
         public void SuccessfulParallelizable()
         {
             Console.WriteLine($"!!! ManagedThreadId = {System.Threading.Thread.CurrentThread.ManagedThreadId}");
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(100);            
         }
 
         [Test]
@@ -75,6 +76,14 @@
             {
                 bytes.Add(new byte[0xffffff]);
             }
+        }
+
+        [Test]
+        public void SuccessfulWithConfig()
+        {
+            Console.WriteLine($"ConfigurationFile = {AppDomain.CurrentDomain.SetupInformation.ConfigurationFile}");            
+            var message = System.Configuration.ConfigurationManager.AppSettings["TestMessage"];
+            Assert.IsNotNull(message);
         }
     }
 }
