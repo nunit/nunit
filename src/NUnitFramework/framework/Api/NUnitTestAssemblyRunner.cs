@@ -69,6 +69,20 @@ namespace NUnit.Framework.Api
 
         #region Properties
 
+#if PARALLEL
+        /// <summary>
+        /// Gets the default level of parallel execution (worker threads)
+        /// </summary>
+        public static int DefaultLevelOfParallelism
+        {
+#if NETCF
+            get { return 2; }
+#else
+            get { return Math.Max(Environment.ProcessorCount, 2); }
+#endif
+        }
+#endif
+
         /// <summary>
         /// The tree of tests that was loaded by the builder
         /// </summary>
@@ -365,13 +379,10 @@ namespace NUnit.Framework.Api
                 ? (int)Settings[PackageSettings.NumberOfTestWorkers]
                 : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
-#if NETCF
-                   : 2);
-#else
-                   : Math.Max(Environment.ProcessorCount, 2));
-#endif
+                   : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
 #endif
+
 
         #endregion
     }

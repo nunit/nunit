@@ -42,7 +42,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;NUNITLITE;PARALLEL</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
