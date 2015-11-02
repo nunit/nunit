@@ -8,6 +8,8 @@
 
         Workers,
 
-        Agents
+        Agents,
+
+        WorkingDirectory
     }
 }
