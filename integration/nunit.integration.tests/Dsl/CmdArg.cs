@@ -36,6 +36,9 @@
                         case DataType.WorkingDirectory:
                             return $"--work={_value}";
 
+                        case DataType.Process:
+                            return $"--process={_value}";
+
                         default:
                             throw new NotSupportedException(_argType.ToString());
                     }

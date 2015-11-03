@@ -6,15 +6,18 @@ Background:
 Scenario Outline: The NUnit returns negative exit -2 code when I run it without any assemblies
 	Given Framework version is <frameworkVersion>	
 	And I have added mocks\notInTheDir.dll to the list of testing assemblies
+	And I have added Process=<process> arg to NUnit console args
 	When I run NUnit tests
 	Then the exit code should be -2
 	
 Examples:
-	| frameworkVersion |
-	| Version20        |
-	| Version45        |
-	| Version40        |
-	
+	| frameworkVersion | process   |
+	| Version45        | InProcess |
+	| Version40        | InProcess |
+	| Version45        | Separate  |
+	| Version40        | Separate  |
+	| Version45        | Multiple  |
+	| Version40        | Multiple  |
 
 Scenario Outline: The NUnit returns negative exit -2 code when I run it without nunit.framework.dll
 	Given Framework version is <frameworkVersion>	
@@ -23,14 +26,18 @@ Scenario Outline: The NUnit returns negative exit -2 code when I run it without 
 	And I have added NUnit framework references to foo.tests
 	And I have compiled assembly foo.tests to file mocks\foo.tests.dll	
 	And I have added mocks\foo.tests.dll to the list of testing assemblies
+	And I have added Process=<process> arg to NUnit console args
 	When I run NUnit tests
 	Then the exit code should be -2
 	
 Examples:
-	| frameworkVersion |
-	| Version20        |
-	| Version45        |
-	| Version40        |
+	| frameworkVersion | process   |
+	| Version45        | InProcess |
+	| Version40        | InProcess |
+	| Version45        | Separate  |
+	| Version40        | Separate  |
+	| Version45        | Multiple  |
+	| Version40        | Multiple  |
 	
 Scenario Outline: The NUnit returns negative exit code when the some part of NUnit console is not exist
 	Given Framework version is <frameworkVersion>	
@@ -57,7 +64,7 @@ Examples:
 	| Version40        | Mono.Cecil.dll       |
 	| Version20        | nunit-agent.exe      |
 	| Version45        | nunit-agent.exe      |
-	| Version40        | nunit-agent.exe      |
+	| Version40        | nunit-agent.exe      |	
 	
 Scenario Outline: The NUnit returns exit code -100 when the test throws StackOverflow exception
 	Given Framework version is <frameworkVersion>	
@@ -68,13 +75,18 @@ Scenario Outline: The NUnit returns exit code -100 when the test throws StackOve
 	And I have compiled assembly foo.tests to file mocks\foo.tests.dll	
 	And I have added mocks\foo.tests.dll to the list of testing assemblies
 	And I want to use CmdArguments type of TeamCity integration
+	And I have added Process=<process> arg to NUnit console args
 	When I run NUnit tests
 	Then the exit code should be -100
 	
 Examples:
-	| frameworkVersion |
-	| Version45        |
-	| Version40        |
+	| frameworkVersion | process   |
+	| Version45        | InProcess |
+	| Version40        | InProcess |
+	| Version45        | Separate  |
+	| Version40        | Separate  |
+	| Version45        | Multiple  |
+	| Version40        | Multiple  |
 
 Scenario Outline: The NUnit returns positive exit code when the test throws OutOfMemory exception
 	Given Framework version is <frameworkVersion>	
@@ -85,6 +97,7 @@ Scenario Outline: The NUnit returns positive exit code when the test throws OutO
 	And I have compiled assembly foo.tests to file mocks\foo.tests.dll	
 	And I have added mocks\foo.tests.dll to the list of testing assemblies
 	And I want to use CmdArguments type of TeamCity integration
+	And I have added Process=<process> arg to NUnit console args
 	When I run NUnit tests
 	Then the exit code should be 1
 	And the Test Run Summary should has following:
@@ -102,7 +115,11 @@ Scenario Outline: The NUnit returns positive exit code when the test throws OutO
 
 	
 Examples:
-	| frameworkVersion |
-	| Version45        |
-	| Version40        |
+	| frameworkVersion | process   |
+	| Version45        | InProcess |
+	| Version40        | InProcess |
+	| Version45        | Separate  |
+	| Version40        | Separate  |
+	| Version45        | Multiple  |
+	| Version40        | Multiple  |
 
