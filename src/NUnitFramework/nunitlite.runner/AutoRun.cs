@@ -86,6 +86,10 @@ namespace NUnitLite
                 return TextRunner.OK;
             }
 
+            // We already showed version as a part of the header
+            if (options.ShowVersion)
+                return TextRunner.OK;
+
             if (options.ErrorMessages.Count > 0)
             {
                 _textUI.DisplayErrors(options.ErrorMessages);

@@ -86,6 +86,10 @@ namespace NUnit.ConsoleRunner
                     return ConsoleRunner.OK;
                 }
 
+                // We already showed version as a part of the header
+                if (Options.ShowVersion)
+                    return ConsoleRunner.OK;
+
                 if (!Options.Validate())
                 {
                     using (new ColorConsole(ColorStyle.Error))

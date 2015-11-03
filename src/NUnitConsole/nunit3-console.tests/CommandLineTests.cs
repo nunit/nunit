@@ -47,6 +47,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [TestCase("ShowHelp", "help|h")]
+        [TestCase("ShowVersion", "version")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
@@ -67,17 +68,24 @@ namespace NUnit.ConsoleRunner.Tests
 
             foreach (string option in prototypes)
             {
-                ConsoleOptions options = new ConsoleOptions("-" + option);
-                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option);
+                ConsoleOptions options;
 
-                options = new ConsoleOptions("-" + option + "+");
-                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "+");
+                if (option.Length == 1)
+                {
+                    options = new ConsoleOptions("-" + option);
+                    Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option);
 
-                options = new ConsoleOptions("-" + option + "-");
-                Assert.AreEqual(false, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "-");
+                    options = new ConsoleOptions("-" + option + "+");
+                    Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "+");
 
-                options = new ConsoleOptions("--" + option);
-                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize --" + option);
+                    options = new ConsoleOptions("-" + option + "-");
+                    Assert.AreEqual(false, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "-");
+                }
+                else
+                {
+                    options = new ConsoleOptions("--" + option);
+                    Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize --" + option);
+                }
 
                 options = new ConsoleOptions("/" + option);
                 Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize /" + option);
