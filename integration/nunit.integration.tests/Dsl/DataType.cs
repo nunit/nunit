@@ -10,6 +10,8 @@
 
         Agents,
 
-        WorkingDirectory
+        WorkingDirectory,
+
+        Process
     }
 }
