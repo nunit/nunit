@@ -77,7 +77,7 @@ namespace NUnitLite
 
             var _textUI = new TextUI(outWriter, options);
 
-            if (!options.NoHeader)
+            if (options.ShowVersion || !options.NoHeader)
                 _textUI.DisplayHeader();
 
             if (options.ShowHelp)

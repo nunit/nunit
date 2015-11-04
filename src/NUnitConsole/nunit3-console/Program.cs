@@ -77,7 +77,7 @@ namespace NUnit.ConsoleRunner
             //log.Info("NUnit3-console.exe starting");
             try
             {
-                if (!Options.NoHeader)
+                if (Options.ShowVersion || !Options.NoHeader)
                     WriteHeader();
 
                 if (Options.ShowHelp || args.Length == 0)
