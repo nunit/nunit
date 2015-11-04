@@ -47,7 +47,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [TestCase("ShowHelp", "help|h")]
-        [TestCase("ShowVersion", "version")]
+        [TestCase("ShowVersion", "version|V")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
