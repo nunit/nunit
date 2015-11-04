@@ -77,7 +77,7 @@ namespace NUnit.ConsoleRunner
             //log.Info("NUnit3-console.exe starting");
             try
             {
-                if (!Options.NoHeader)
+                if (Options.ShowVersion || !Options.NoHeader)
                     WriteHeader();
 
                 if (Options.ShowHelp || args.Length == 0)
@@ -85,6 +85,10 @@ namespace NUnit.ConsoleRunner
                     WriteHelpText();
                     return ConsoleRunner.OK;
                 }
+
+                // We already showed version as a part of the header
+                if (Options.ShowVersion)
+                    return ConsoleRunner.OK;
 
                 if (!Options.Validate())
                 {

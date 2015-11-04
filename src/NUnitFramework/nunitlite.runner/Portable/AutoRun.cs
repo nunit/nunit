@@ -43,7 +43,7 @@ namespace NUnitLite
 
             var _textUI = new TextUI(writer, reader, options);
 
-            if (!options.NoHeader)
+            if ( options.ShowVersion || !options.NoHeader)
                 _textUI.DisplayHeader();
 
             if (options.ShowHelp)
@@ -51,6 +51,10 @@ namespace NUnitLite
                 _textUI.DisplayHelp();
                 return TextRunner.OK;
             }
+
+            // We already showed version as a part of the header
+            if (options.ShowVersion)
+                return TextRunner.OK;
 
             if (options.ErrorMessages.Count > 0)
             {

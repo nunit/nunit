@@ -47,6 +47,7 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("ShowHelp", "help|h")]
+        [TestCase("ShowVersion", "version|V")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
 #if !PORTABLE
@@ -64,19 +65,19 @@ namespace NUnitLite.Tests
             PropertyInfo property = GetPropertyInfo(propertyName);
             Assert.AreEqual(typeof(bool), property.PropertyType, "Property '{0}' is wrong type", propertyName);
 
+            NUnitLiteOptions options;
             foreach (string option in prototypes)
             {
-                var options = new NUnitLiteOptions("-" + option);
-                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option);
-
-                options = new NUnitLiteOptions("-" + option + "+");
-                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "+");
-
-                options = new NUnitLiteOptions("-" + option + "-");
-                Assert.AreEqual(false, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "-");
-
-                options = new NUnitLiteOptions("--" + option);
-                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize --" + option);
+                if (option.Length == 1)
+                {
+                    options = new NUnitLiteOptions("-" + option);
+                    Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option);
+                }
+                else
+                {
+                    options = new NUnitLiteOptions("--" + option);
+                    Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize --" + option);
+                }
 
                 options = new NUnitLiteOptions("/" + option);
                 Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize /" + option);

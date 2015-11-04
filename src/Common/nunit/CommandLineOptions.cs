@@ -76,6 +76,8 @@ namespace NUnit.Common
 
         public bool ShowHelp { get; private set; }
 
+        public bool ShowVersion { get; private set; }
+
         // Select tests
 
         private List<string> inputFiles = new List<string>();
@@ -350,6 +352,9 @@ namespace NUnit.Common
 
             this.Add("help|h", "Display this message and exit.",
                 v => ShowHelp = v != null);
+
+            this.Add("version|V", "Display the header and exit.",
+                v => ShowVersion = v != null);
 
             // Default
             this.Add("<>", v =>
