@@ -150,9 +150,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests.exe-4.5", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-sl-5.0", "src\NUnitFramework\nunitlite.tests\nunitlite.tests-sl-5.0.csproj", "{5249870F-7119-45DE-A269-66D6451E2507}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.testrunner-4.5", "src\NUnitFramework\nunit.portable.tests\nunit.framework.testrunner-4.5.csproj", "{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.testrunner-portable", "src\NUnitFramework\nunit.portable.tests\nunit.framework.testrunner-portable.csproj", "{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-portable", "src\NUnitFramework\nunitlite.tests\nunitlite.tests-portable.csproj", "{6872DB53-3250-4A70-2A4C-567A55A6C4B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests.exe-portable", "src\NUnitFramework\nunitlite.tests\nunitlite.tests.exe-portable.csproj", "{6872DB53-3250-4A70-2A4C-567A55A6C4B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
