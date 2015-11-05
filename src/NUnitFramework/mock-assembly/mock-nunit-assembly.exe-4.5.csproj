@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProjectGuid>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</ProjectGuid>
+    <ProjectGuid>{C3264FF3-E2D7-48D7-93A7-CDC9A827AD9D}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AssemblyKeyContainerName>
@@ -20,15 +20,16 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;NET_2_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_4_5</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <Optimize>false</Optimize>
@@ -37,15 +38,16 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
     <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>-V</Commandlineparameters>
+    <Commandlineparameters>--test:NUnit.Tests.Assemblies.MockTestFixture -V --noheader</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;NET_2_0</DefineConstants>
+    <DefineConstants>TRACE;NET_4_5</DefineConstants>
     <FileAlignment>4096</FileAlignment>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
@@ -53,6 +55,7 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -78,23 +81,21 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
-    <Compile Include="MockAssembly.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="MockAssembly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
+      <Project>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</Project>
+      <Name>nunit.framework-4.5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite.runner\nunitlite-4.5.csproj">
+      <Project>{46EC0BC1-8F51-4B4D-B967-2EE452EA68FC}</Project>
+      <Name>nunitlite-4.5</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
-      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
-      <Name>nunit.framework-2.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-2.0.csproj">
-      <Project>{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}</Project>
-      <Name>nunitlite.runner-2.0</Name>
-    </ProjectReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\nunit.snk">

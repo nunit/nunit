@@ -38,6 +38,8 @@ namespace NUnit.Tests
         /// </summary>
         public class MockAssembly
         {
+            public const string FileName = "mock.nunit.assembly.exe";
+
             public const int Classes = 9;
             public const int NamespaceSuites = 6; // assembly, NUnit, Tests, Assemblies, Singletons, TestAssembly
 

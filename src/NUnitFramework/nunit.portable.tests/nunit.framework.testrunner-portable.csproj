@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnitLite</RootNamespace>
-    <AssemblyName>nunit.portable.tests</AssemblyName>
+    <AssemblyName>nunit.framework.testrunner</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -73,9 +73,9 @@
       <Project>{8c53c716-3e54-4dfe-8cd9-f4099042fcfa}</Project>
       <Name>mock-nunit-assembly-portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-portable.csproj">
+    <ProjectReference Include="..\nunitlite.runner\nunitlite-portable.csproj">
       <Project>{d339bfc2-af3f-46fa-899a-14bad4bca35b}</Project>
-      <Name>nunitlite.runner-portable</Name>
+      <Name>nunitlite-portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
       <Project>{9ed200e4-2026-4955-87e0-d8cea7bd9e7f}</Project>

@@ -78,9 +78,9 @@
       <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
       <Name>nunit.framework-sl-5.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-sl-5.0.csproj">
+    <ProjectReference Include="..\nunitlite.runner\nunitlite-sl-5.0.csproj">
       <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
-      <Name>nunitlite.runner-sl-5.0</Name>
+      <Name>nunitlite-sl-5.0</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
