@@ -187,9 +187,13 @@ namespace NUnit.Engine.Drivers
                     return new Core.Filters.NotFilter(FromXml(xmlNode.FirstChild));
 
                 case "test":
+                    if (xmlNode.Attributes["re"] != null)
+                        throw new NUnitEngineException("Filters with regular expressions are only supported when running NUnit 3 tests");
                     return new Core.Filters.SimpleNameFilter(xmlNode.InnerText);
 
                 case "cat":
+                    if (xmlNode.Attributes["re"] != null)
+                        throw new NUnitEngineException("Filters with regular expressions are only supported when running NUnit 3 tests");
                     var catFilter = new Core.Filters.CategoryFilter();
                     foreach (string cat in xmlNode.InnerText.Split(COMMA))
                         catFilter.AddCategory(cat);
