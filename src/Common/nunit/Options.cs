@@ -124,7 +124,10 @@
 //
 // The NUnit version of this file introduces conditional compilation for 
 // building under the Compact Framework (NETCF) and Silverlight (SILVERLIGHT) 
-// as well as for use with a portable class library  (PORTABLE). 
+// as well as for use with a portable class library  (PORTABLE).
+//
+// 11/5/2015 -
+// Change namespace to avoid conflict with user code use of mono.options 
 
 using System;
 using System.Collections;
@@ -152,7 +155,9 @@ using System.Linq;
 using NDesk.Options;
 #endif
 
-#if NDESK_OPTIONS
+#if NUNIT_CONSOLE || NUNITLITE
+namespace NUnit.Options
+#elif NDESK_OPTIONS
 namespace NDesk.Options
 #else
 namespace Mono.Options

@@ -21,16 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
 using System.Reflection;
-using System.Text;
 using NUnit.Common;
+using NUnit.Options;
 
 namespace NUnit.ConsoleRunner.Tests
 {
     using System.Collections.Generic;
-    using Engine;
     using Framework;
 
     [TestFixture]
@@ -280,7 +277,7 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
-            Assert.Throws<Mono.Options.OptionException>(() => new ConsoleOptions("tests.dll", "-timeout"));
+            Assert.Throws<OptionException>(() => new ConsoleOptions("tests.dll", "-timeout"));
         }
 
         [Test]

@@ -24,8 +24,8 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Mono.Options;
 using NUnit.Common;
+using NUnit.Options;
 using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner

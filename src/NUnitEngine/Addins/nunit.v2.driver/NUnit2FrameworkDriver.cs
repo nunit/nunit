@@ -149,7 +149,7 @@ namespace NUnit.Engine.Drivers
             doc.LoadXml(filter);
             var topNode = doc.FirstChild;
             if (topNode.Name != "filter")
-                throw new Exception("Expected filter element at top level");
+                throw new Exception("Invalid filter passed to NUnit V2 driver: no filter element at top level");
 
             switch (topNode.ChildNodes.Count)
             {
@@ -184,15 +184,10 @@ namespace NUnit.Engine.Drivers
                     return orFilter;
 
                 case "not":
-                    return new NotFilter(FromXml(xmlNode.FirstChild));
+                    return new Core.Filters.NotFilter(FromXml(xmlNode.FirstChild));
 
-                case "tests":
-                    var testFilter = new Core.Filters.SimpleNameFilter();
-                    var testNodes = xmlNode.SelectNodes("test");
-                    if(testNodes != null)
-                        foreach (XmlNode childNode in testNodes)
-                            testFilter.Add(childNode.InnerText);
-                    return testFilter;
+                case "test":
+                    return new Core.Filters.SimpleNameFilter(xmlNode.InnerText);
 
                 case "cat":
                     var catFilter = new Core.Filters.CategoryFilter();
@@ -200,8 +195,15 @@ namespace NUnit.Engine.Drivers
                         catFilter.AddCategory(cat);
                     return catFilter;
 
+                case "id":
+                case "name":
+                case "class":
+                case "method":
+                    throw new NUnitEngineException(string.Format("Filtering on {0} is only valid when running NUnit 3 tests", xmlNode.Name));
+                case "prop":
+                    throw new NUnitEngineException("Filtering on a property value is only valid when running NUnit 3 tests");
                 default:
-                    throw new ArgumentException("Invalid filter element: " + xmlNode.Name, "xmlNode");
+                    throw new NUnitEngineException(string.Format("Invalid filter passed to the NUnit V2 driver: {0} is not a known filter type", xmlNode.Name));
             }
         }
     }

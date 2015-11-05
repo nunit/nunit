@@ -24,9 +24,9 @@
 #if !SILVERLIGHT
 using System;
 using System.Reflection;
-using System.Text;
 using System.Globalization;
 using NUnit.Common;
+using NUnit.Options;
 using NUnit.Framework;
 
 namespace NUnitLite.Tests
@@ -260,7 +260,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
-            Assert.Throws<Mono.Options.OptionException>(() => new NUnitLiteOptions("tests.dll", "-timeout"));
+            Assert.Throws<OptionException>(() => new NUnitLiteOptions("tests.dll", "-timeout"));
         }
 
         [Test]
