@@ -218,7 +218,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("System.Exception : my message", result.Message);
         }
 
-        [TestCaseSource("exception_source"), Explicit]
+        [TestCaseSource("exception_source"), Explicit("Used for GUI tests")]
         public void HandlesExceptionInTestCaseSource_GuiDisplay(string lhs, string rhs)
         {
             Assert.AreEqual(lhs, rhs);

@@ -23,6 +23,7 @@
 
 using System.IO;
 using System.Reflection;
+using NUnit.Common;
 
 namespace NUnitLite
 {
@@ -37,7 +38,7 @@ namespace NUnitLite
         /// a list of arguments.
         /// </summary>
         /// <param name="args">Execution options</param>
-        public int Execute(Assembly callingAssembly, TextWriter writer, TextReader reader, string[] args)
+        public int Execute(Assembly callingAssembly, ExtendedTextWriter writer, TextReader reader, string[] args)
         {
             var options = new NUnitLiteOptions(args);
 

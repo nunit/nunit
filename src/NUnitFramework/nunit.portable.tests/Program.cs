@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Common;
 
 namespace NUnitLite
 {
@@ -30,7 +31,11 @@ namespace NUnitLite
     {
         static int Main(string[] args)
         {
-            return new AutoRun().Execute(typeof(NUnit.Framework.Tests.TestContextTests).GetTypeInfo().Assembly, Console.Out, Console.In, args);
+            return new AutoRun().Execute(
+                typeof(NUnit.Framework.Tests.TestContextTests).GetTypeInfo().Assembly,
+                args,
+                new ColorConsoleWriter(), 
+                Console.In);
         }
     }
 }

@@ -43,8 +43,14 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorStyle.cs">
+      <Link>ColorStyle.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\CommandLineOptions.cs">
       <Link>CommandLineOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
+      <Link>ExtendedTextWriter.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
       <Link>IDefaultOptionsProvider.cs</Link>
@@ -67,12 +73,12 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="AutoRun.cs" />
     <Compile Include="NUnitLiteOptions.cs" />
-    <Compile Include="Portable\AutoRun.cs" />
-    <Compile Include="Portable\TextUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="TextRunner.cs" />
+    <Compile Include="TextUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
@@ -85,7 +91,9 @@
       <Link>nunit.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Portable\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -87,6 +87,7 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

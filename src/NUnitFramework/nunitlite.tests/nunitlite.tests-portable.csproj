@@ -57,6 +57,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
+      <Link>ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>ExtendedTextWrapper.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
       <Link>DefaultOptionsProviderTests.cs</Link>
     </Compile>

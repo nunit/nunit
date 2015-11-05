@@ -169,18 +169,6 @@ namespace NUnitLite.Tests
         }
 
         [Test]
-        public void DisplayRequestedOptions()
-        {
-            _textUI.DisplayRequestedOptions();
-            
-            var lines = GetReportLines();
-            Assert.That(lines[0], Is.EqualTo("Options"));
-            Assert.That(lines[1], Does.StartWith("    Work Directory:"));
-            Assert.That(lines[2], Is.EqualTo("    Internal Trace: Off"));
-            Assert.That(lines[3], Is.Empty);
-        }
-
-        [Test]
         public void ReportSequenceTest()
         {
             var textRunner = new TextRunner(_textUI, new NUnitLiteOptions());
