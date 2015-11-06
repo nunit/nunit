@@ -232,7 +232,7 @@ namespace NUnit.Engine.Runners
             XmlHelper.AddAttribute(suite, "fullname", TestPackage.FullName);
             XmlHelper.AddAttribute(suite, "runstate", "NotRunnable");
             XmlHelper.AddAttribute(suite, "testcasecount", "1");
-            XmlHelper.AddAttribute(suite, "result", "Failed");
+            XmlHelper.AddAttribute(suite, "result", "UnexpectedError");
             XmlHelper.AddAttribute(suite, "label", "Error");
             XmlHelper.AddAttribute(suite, "start-time", DateTime.UtcNow.ToString("u"));
             XmlHelper.AddAttribute(suite, "end-time", DateTime.UtcNow.ToString("u"));

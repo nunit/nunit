@@ -190,6 +190,9 @@ namespace NUnit.ConsoleRunner
                 _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
             }
 
+            if (reporter.Summary.UnexpectedError)
+                return ConsoleRunner.UNEXPECTED_ERROR;
+
             return reporter.Summary.InvalidAssemblies > 0
                     ? ConsoleRunner.INVALID_ASSEMBLY
                     : reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
