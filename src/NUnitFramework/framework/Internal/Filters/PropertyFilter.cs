@@ -66,6 +66,12 @@ namespace NUnit.Framework.Internal.Filters
             return false;
         }
 
+        /// <summary>
+        /// Adds an XML node
+        /// </summary>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="recursive">True if recursive</param>
+        /// <returns>The added XML node</returns>
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             TNode result = base.AddToXml(parentNode, recursive);
@@ -73,6 +79,10 @@ namespace NUnit.Framework.Internal.Filters
             return result;
         }
 
+        /// <summary>
+        /// Gets the element name
+        /// </summary>
+        /// <value>Element name</value>
         protected override string ElementName
         {
             get { return "prop"; }

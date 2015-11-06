@@ -100,6 +100,12 @@ namespace NUnit.Framework.Internal.Filters
         //    return false;
         //}	
 
+        /// <summary>
+        /// Adds an XML node
+        /// </summary>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="recursive">True if recursive</param>
+        /// <returns>The added XML node</returns>
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             TNode result = parentNode.AddElement("not");
