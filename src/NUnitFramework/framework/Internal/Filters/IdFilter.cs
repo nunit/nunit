@@ -49,6 +49,10 @@ namespace NUnit.Framework.Internal.Filters
             return test.Id == ExpectedValue;
         }
 
+        /// <summary>
+        /// Gets the element name
+        /// </summary>
+        /// <value>Element name</value>
         protected override string ElementName
         {
             get { return "id"; }

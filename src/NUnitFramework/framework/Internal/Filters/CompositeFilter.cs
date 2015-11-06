@@ -63,6 +63,12 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public IList<ITestFilter> Filters { get; private set; }
 
+        /// <summary>
+        /// Adds an XML node
+        /// </summary>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="recursive">True if recursive</param>
+        /// <returns>The added XML node</returns>
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             TNode result = parentNode.AddElement(ElementName);
@@ -74,6 +80,10 @@ namespace NUnit.Framework.Internal.Filters
             return result;
         }
 
+        /// <summary>
+        /// Gets the element name
+        /// </summary>
+        /// <value>Element name</value>
         protected abstract string ElementName { get; }
     }
 }

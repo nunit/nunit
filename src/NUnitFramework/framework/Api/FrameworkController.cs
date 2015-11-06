@@ -242,6 +242,11 @@ namespace NUnit.Framework.Api
         }
 
 #if !PORTABLE && !SILVERLIGHT
+        /// <summary>
+        /// Inserts environment element
+        /// </summary>
+        /// <param name="targetNode">Target node</param>
+        /// <returns>The new node</returns>
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
@@ -270,6 +275,12 @@ namespace NUnit.Framework.Api
         }
 #endif
 
+        /// <summary>
+        /// Inserts settings element
+        /// </summary>
+        /// <param name="targetNode">Target node</param>
+        /// <param name="settings">Settings dictionary</param>
+        /// <returns>The new node</returns>
         public static TNode InsertSettingsElement(TNode targetNode, IDictionary settings)
         {
             TNode settingsNode = new TNode("settings");

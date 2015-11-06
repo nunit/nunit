@@ -226,11 +226,22 @@ namespace NUnit.Framework.Internal
 
         #region IXmlNodeBuilder Implementation
 
+        /// <summary>
+        /// Adds an XML node
+        /// </summary>
+        /// <param name="recursive">True if recursive</param>
+        /// <returns>The added XML node</returns>
         public TNode ToXml(bool recursive)
         {
             return AddToXml(new TNode("dummy"), recursive);
         }
 
+        /// <summary>
+        /// Adds an XML node
+        /// </summary>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="recursive">True if recursive</param>
+        /// <returns>The added XML node</returns>
         public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
         #endregion
