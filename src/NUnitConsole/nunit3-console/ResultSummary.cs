@@ -120,6 +120,11 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public int InvalidAssemblies { get; private set; }
 
+        /// <summary>
+        /// An Unexpected error occurred
+        /// </summary>
+        public bool UnexpectedError { get; private set; }
+
         #endregion
 
         #region Helper Methods
@@ -182,6 +187,11 @@ namespace NUnit.ConsoleRunner
                 case "test-suite":
                     if (type == "Assembly" && status == "Failed" && label == "Invalid")
                         InvalidAssemblies++;
+                    if (type == "Assembly" && status == "Failed" && label == "Error")
+                    {
+                        InvalidAssemblies++;
+                        UnexpectedError = true;
+                    }
 
                     Summarize(node.ChildNodes);
                     break;
