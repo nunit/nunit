@@ -187,7 +187,7 @@ namespace NUnit.ConsoleRunner
                 case "test-suite":
                     if (type == "Assembly" && status == "Failed" && label == "Invalid")
                         InvalidAssemblies++;
-                    else if (type == "Assembly" && status == "UnexpectedError")
+                    if (type == "Assembly" && status == "Failed" && label == "Error")
                     {
                         InvalidAssemblies++;
                         UnexpectedError = true;
