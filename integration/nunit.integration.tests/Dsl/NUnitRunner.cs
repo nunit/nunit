@@ -37,7 +37,7 @@
             var output = process.StandardOutput.ReadToEnd();
 
             process.WaitForExit();
-            return new TestSession(ctx, process.StartInfo.FileName, process.StartInfo.Arguments, process.ExitCode, output);            
+            return new TestSession(ctx, process.ExitCode, output);            
         }        
     }
 }

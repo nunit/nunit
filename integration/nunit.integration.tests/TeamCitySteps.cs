@@ -6,7 +6,7 @@
 
     using JetBrains.TeamCity.ServiceMessages;
 
-    using nunit.integration.tests.Dsl;
+    using Dsl;
 
     using NUnit.Framework;
 
@@ -38,8 +38,8 @@
         [Then(@"the output should contain TeamCity service messages:")]
         public void ResultShouldContainServiceMessage(Table data)
         {
-            var ctx = ScenarioContext.Current.GetTestContext();
-            var messages = ctx.TestSession.TeamCityServiceMessages.ToList();
+            var ctx = ScenarioContext.Current.GetTestContext();            
+            var messages = new TeamCityServiceMessageParser().Parse(ctx.TestSession.Output).ToList();
             Assert.AreEqual(data.RowCount, messages.Count, $"{ctx}\nExpected service messages are {data.RowCount} but actual is {messages.Count}");
 
             var invalidMessages = (

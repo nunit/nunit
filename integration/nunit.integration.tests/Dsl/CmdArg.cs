@@ -39,6 +39,12 @@
                         case DataType.Process:
                             return $"--process={_value}";
 
+                        case DataType.Explore:
+                            return $"--explore={_value}";
+
+                        case DataType.TestList:
+                            return $"--testlist={_value}";
+
                         default:
                             throw new NotSupportedException(_argType.ToString());
                     }
