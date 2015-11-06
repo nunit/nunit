@@ -111,6 +111,7 @@
     <Compile Include="Dsl\ConfigurationType.cs" />
     <Compile Include="Dsl\DataType.cs" />
     <Compile Include="Dsl\ICommandLineSetupFactory.cs" />
+    <Compile Include="Dsl\IParser.cs" />
     <Compile Include="Dsl\NUnitConfiguration.cs" />
     <Compile Include="Dsl\NUnitRunner.cs" />
     <Compile Include="Dsl\NUnitVersion.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Dsl\ResourceManager.cs" />
     <Compile Include="Dsl\StringEnumExtensions.cs" />
     <Compile Include="Dsl\TeamCityIntegration.cs" />
+    <Compile Include="Dsl\TeamCityServiceMessageParser.cs" />
     <Compile Include="Dsl\TestAssembly.cs" />
     <Compile Include="Dsl\ScenarioContextExtensions.cs" />
     <Compile Include="Dsl\TestClass.cs" />
@@ -131,6 +133,12 @@
     <EmbeddedResource Include="Templates\UnitTest.cs" />
     <Compile Include="AppConfig.feature.cs">
       <DependentUpon>AppConfig.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Dsl\XmlParser.cs" />
+    <Compile Include="ListOfTests.feature.cs">
+      <DependentUpon>ListOfTests.feature</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -168,6 +176,10 @@
     <None Include="AppConfig.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>AppConfig.feature.cs</LastGenOutput>
+    </None>
+    <None Include="ListOfTests.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ListOfTests.feature.cs</LastGenOutput>
     </None>
     <None Include="ExcludeIncludeTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

@@ -12,6 +12,10 @@
 
         WorkingDirectory,
 
-        Process
+        Process,
+
+        Explore,
+
+        TestList
     }
 }
