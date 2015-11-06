@@ -31,6 +31,12 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Copyright (C) 2015 Charlie Poole")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
+#if PORTABLE
+[assembly: AssemblyMetadata("PCL", "True")]
+#else
+[assembly: AssemblyMetadata("PCL", "False")]
+#endif
+
 #if DEBUG
 #if NET_4_5
 [assembly: AssemblyConfiguration(".NET 4.5 Debug")]
