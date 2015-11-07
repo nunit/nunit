@@ -33,8 +33,6 @@ using System.Reflection;
 
 #if PORTABLE
 [assembly: AssemblyMetadata("PCL", "True")]
-#else
-[assembly: AssemblyMetadata("PCL", "False")]
 #endif
 
 #if DEBUG
