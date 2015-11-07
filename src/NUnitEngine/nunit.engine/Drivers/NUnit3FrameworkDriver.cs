@@ -26,6 +26,7 @@ using System.IO;
 using System.Collections.Generic;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Extensibility;
+using System.Runtime.Serialization;
 
 namespace NUnit.Engine.Drivers
 {
@@ -73,7 +74,14 @@ namespace NUnit.Engine.Drivers
 
             var idPrefix = string.IsNullOrEmpty(ID) ? "" : ID + "-";
             _testAssemblyPath = testAssemblyPath;
-            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, idPrefix, (System.Collections.IDictionary)settings);
+            try
+            {
+                _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, idPrefix, (System.Collections.IDictionary)settings);
+            }
+            catch (SerializationException ex)
+            {
+                throw new NUnitEngineException("The NUnit 3.0 driver does not support the portable version of NUnit. Use a platform specific runner.", ex);
+            }
 
             CallbackHandler handler = new CallbackHandler();
 
