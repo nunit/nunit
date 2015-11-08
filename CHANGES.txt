@@ -6,15 +6,16 @@ Engine
  
 Issues Resolved
 
- * 970 Define PARALLEL in CF build of nunitlite
- * 978 It should be possible to determine version of NUnit using nunit console tool
- * 983 Inconsistent return codes depending on ProcessModel
- * 986 Update docs for parallel execution
- * 988 Don't run portable tests from NUnit Console
- * 990 V2 driver is passing invalid filter elements to NUnit
- * 991 Mono.Options should not be exposed to public directly
- * 993 Give error message when a regex filter is used with NUnit V2
- * 997 Add missing XML Documentation
+ * 970  Define PARALLEL in CF build of nunitlite
+ * 978  It should be possible to determine version of NUnit using nunit console tool
+ * 983  Inconsistent return codes depending on ProcessModel
+ * 986  Update docs for parallel execution
+ * 988  Don't run portable tests from NUnit Console
+ * 990  V2 driver is passing invalid filter elements to NUnit
+ * 991  Mono.Options should not be exposed to public directly
+ * 993  Give error message when a regex filter is used with NUnit V2
+ * 997  Add missing XML Documentation
+ * 1008 NUnitLite namespace not updated in the NuGet Packages
 
 NUnit 3.0.0 Release Candidate - November 1, 2015
 

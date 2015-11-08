@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnitLite.Runner;
+using NUnitLite;
 
 namespace NUnitLite.Tests
 {
