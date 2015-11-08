@@ -54,14 +54,16 @@ namespace NUnit.Engine.Services
 
             try
             {
-                var references = AssemblyDefinition.ReadAssembly(assemblyPath).MainModule.AssemblyReferences;
+                var references = new List<AssemblyName>();
+                foreach (var cecilRef in AssemblyDefinition.ReadAssembly(assemblyPath).MainModule.AssemblyReferences)
+                    references.Add(new AssemblyName(cecilRef.FullName));
 
                 foreach (var factory in _factories)
                 {
                     foreach (var reference in references)
                     {
-                        if (factory.IsSupportedTestFramework(reference.Name, reference.Version))
-                            return factory.GetDriver(domain, reference.Name, reference.Version);
+                        if (factory.IsSupportedTestFramework(reference))
+                            return factory.GetDriver(domain, reference);
                     }
                 }
             }
