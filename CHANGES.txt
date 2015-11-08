@@ -1,5 +1,9 @@
 ﻿NUnit 3.0.0 Release Candidate 2 - November 8, 2015
 
+Engine
+
+ * The IDriverFactory extensibility interface has been modified.
+ 
 Issues Resolved
 
  * 970 Define PARALLEL in CF build of nunitlite
