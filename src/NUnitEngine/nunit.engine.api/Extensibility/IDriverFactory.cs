@@ -34,19 +34,19 @@ namespace NUnit.Engine.Extensibility
     public interface IDriverFactory
     {
         /// <summary>
-        /// Gets a flag indicating whether a given assembly name and version
-        /// represent a test framework supported by this factory.
+        /// Gets a flag indicating whether a given AssemblyName
+        /// represents a test framework supported by this factory.
         /// </summary>
-        bool IsSupportedTestFramework(string assemblyName, Version version);
+        /// <param name="reference">An AssemblyName referring to the possible test framework.</param>
+        bool IsSupportedTestFramework(AssemblyName reference);
 
         /// <summary>
         /// Gets a driver for a given test assembly and a framework
         /// which the assembly is already known to reference.
         /// </summary>
         /// <param name="domain">The domain in which the assembly will be loaded</param>
-        /// <param name="assemblyName">The Name of the test framework reference</param>
-        /// <param name="version">The version of the test framework reference</param>
+        /// <param name="reference">An AssemblyName referring to the test framework.</param>
         /// <returns></returns>
-        IFrameworkDriver GetDriver(AppDomain domain, string assemblyName, Version version);
+        IFrameworkDriver GetDriver(AppDomain domain, AssemblyName reference);
     }
 }

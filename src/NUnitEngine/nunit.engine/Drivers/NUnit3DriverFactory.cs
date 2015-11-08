@@ -35,9 +35,10 @@ namespace NUnit.Engine.Drivers
         /// Gets a flag indicating whether a given assembly name and version
         /// represent a test framework supported by this factory.
         /// </summary>
-        public bool IsSupportedTestFramework(string assemblyName, Version version)
+        /// <param name="reference">An AssemblyName referring to the possible test framework.</param>
+        public bool IsSupportedTestFramework(AssemblyName reference)
         {
-            return assemblyName == NUNIT_FRAMEWORK && version.Major == 3;
+            return reference.Name == NUNIT_FRAMEWORK && reference.Version.Major == 3;
         }
 
         /// <summary>
@@ -45,12 +46,11 @@ namespace NUnit.Engine.Drivers
         /// which the assembly is already known to reference.
         /// </summary>
         /// <param name="domain">The domain in which the assembly will be loaded</param>
-        /// <param name="assemblyName">The Name of the test framework reference</param>
-        /// <param name="version">The version of the test framework reference</param>
+        /// <param name="reference">An AssemblyName referring to the test framework.</param>
         /// <returns></returns>
-        public IFrameworkDriver GetDriver(AppDomain domain, string assemblyName, Version version)
+        public IFrameworkDriver GetDriver(AppDomain domain, AssemblyName reference)
         {
-            Guard.ArgumentValid(IsSupportedTestFramework(assemblyName, version), "Invalid framework name", "frameworkAssemblyName");
+            Guard.ArgumentValid(IsSupportedTestFramework(reference), "Invalid framework", "reference");
 
             return new NUnit3FrameworkDriver(domain);
         }
