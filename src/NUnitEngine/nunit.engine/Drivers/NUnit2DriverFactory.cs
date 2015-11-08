@@ -61,7 +61,7 @@ namespace NUnit.Engine.Drivers
         public IFrameworkDriver GetDriver(AppDomain domain, AssemblyName reference)
         {
             if (!IsSupportedTestFramework(reference))
-                throw new ArgumentException("Invalid framework name", "frameworkAssemblyName");
+                throw new ArgumentException("Invalid framework", "reference");
 
             return _driverNode.CreateExtensionObject(domain) as IFrameworkDriver;
         }

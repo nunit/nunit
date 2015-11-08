@@ -50,7 +50,7 @@ namespace NUnit.Engine.Drivers
         /// <returns></returns>
         public IFrameworkDriver GetDriver(AppDomain domain, AssemblyName reference)
         {
-            Guard.ArgumentValid(IsSupportedTestFramework(reference), "Invalid framework name", "frameworkAssemblyName");
+            Guard.ArgumentValid(IsSupportedTestFramework(reference), "Invalid framework", "reference");
 
             return new NUnit3FrameworkDriver(domain);
         }
