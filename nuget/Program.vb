@@ -21,7 +21,7 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ' ***********************************************************************
 
-Imports NUnitLite.Runner
+Imports NUnitLite
 
 Public Class Program
 
