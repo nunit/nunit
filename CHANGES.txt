@@ -1,10 +1,11 @@
-NUnit 3.0.0 Release Candidate 2 - November 8, 2015
+﻿NUnit 3.0.0 Release Candidate 2 - November 8, 2015
 
 Issues Resolved
 
  * 970 Define PARALLEL in CF build of nunitlite
  * 978 It should be possible to determine version of NUnit using nunit console tool
  * 983 Inconsistent return codes depending on ProcessModel
+ * 986 Update docs for parallel execution
  * 988 Don't run portable tests from NUnit Console
  * 990 V2 driver is passing invalid filter elements to NUnit
  * 991 Mono.Options should not be exposed to public directly
