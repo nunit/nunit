@@ -55,8 +55,7 @@
 
         public void AddConfigFile(ConfigFile configFile)
         {
-            _configFiles.Add(configFile);
-            ;
+            _configFiles.Add(configFile);            
         }
     }
 }
