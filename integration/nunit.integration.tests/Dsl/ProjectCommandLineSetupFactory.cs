@@ -24,7 +24,18 @@
                 let normRelativePath = relativePath.Length > 0 && relativePath[0] == Path.DirectorySeparatorChar ? relativePath.Substring(1) : relativePath
                 select Path.Combine(normRelativePath, assembly)).ToList();
 
-            var singleConfigFile = configuration.ConfigFiles.Single();
+            var singleConfigFile = configuration.ConfigFiles.FirstOrDefault();
+            var configElement = new XElement(
+                "Config",
+                new XAttribute("binpath", string.Join(",", assemblies.Select(Path.GetDirectoryName).Distinct())),
+                new XAttribute("name", "active"),                
+                assemblies.Select(path => new XElement("assembly", new XAttribute("path", path))));
+
+            if (singleConfigFile != null)
+            {
+                configElement.Add(new XAttribute("configfile", singleConfigFile.ConfigFileName));
+            }
+
             var projectContent = new XDocument(
                 new XElement(
                     "NUnitProject",
@@ -32,12 +43,8 @@
                         "Settings",
                         new XAttribute("activeconfig", "active"),
                         new XAttribute("appbase", appBase)),
-                    new XElement(
-                        "Config",
-                        new XAttribute("binpath", string.Join(",", assemblies.Select(Path.GetDirectoryName).Distinct())),
-                        new XAttribute("name", "active"),
-                        new XAttribute("configfile", singleConfigFile.ConfigFileName),
-                        assemblies.Select(path => new XElement("assembly", new XAttribute("path", path)))))).ToString();
+                    configElement
+                    )).ToString();
 
 
             var projectFile = new CommandLineArtifact(Path.GetFullPath(Path.Combine(ctx.SandboxPath, "project.nunit")), projectContent);
