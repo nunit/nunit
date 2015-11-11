@@ -76,6 +76,8 @@ namespace nunit.integration.tests
         [NUnit.Framework.DescriptionAttribute("I can the test with config file")]
         [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version45", null)]
         [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version40", null)]
+        [NUnit.Framework.TestCaseAttribute("ProjectFile", "Version45", null)]
+        [NUnit.Framework.TestCaseAttribute("ProjectFile", "Version40", null)]
         public virtual void ICanTheTestWithConfigFile(string configurationType, string frameworkVersion, string[] exampleTags)
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can the test with config file", exampleTags);
@@ -101,12 +103,10 @@ this.FeatureBackground();
 #line 14
  testRunner.And("I have added the assembly mocks\\foo.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 15
- testRunner.And("I want to use CmdArguments type of TeamCity integration", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 16
  testRunner.And(string.Format("I want to use {0} configuration type", configurationType), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 17
+#line 16
  testRunner.When("I run NUnit console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 18
+#line 17
  testRunner.Then("the exit code should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
@@ -142,7 +142,7 @@ this.FeatureBackground();
             table1.AddRow(new string[] {
                         "Skipped",
                         "0"});
-#line 19
+#line 18
  testRunner.And("the Test Run Summary should has following:", ((string)(null)), table1, "And ");
 #line hidden
             this.ScenarioCleanup();

@@ -12,7 +12,6 @@ Scenario Outline: I can the test with config file
 	And I have compiled the assembly foo.tests to file mocks\foo.tests.dll
 	And I have added config file mocks\foo.tests.dll.config
 	And I have added the assembly mocks\foo.tests.dll to the list of testing assemblies		
-	And I want to use CmdArguments type of TeamCity integration
 	And I want to use <configurationType> configuration type
 	When I run NUnit console
 	Then the exit code should be 0
@@ -33,4 +32,6 @@ Scenario Outline: I can the test with config file
 Examples:
 	| configurationType | frameworkVersion |
 	| CmdArguments      | Version45        |
-	| CmdArguments      | Version40        |	
+	| CmdArguments      | Version40        |
+	| ProjectFile       | Version45        |
+	| ProjectFile       | Version40        |

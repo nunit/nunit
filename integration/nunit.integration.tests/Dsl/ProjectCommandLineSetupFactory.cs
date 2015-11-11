@@ -22,8 +22,9 @@
                 let fullPath = Path.GetFullPath(Path.GetDirectoryName(assemblyName) ?? string.Empty)
                 let relativePath = fullPath.Replace(appBase, string.Empty)
                 let normRelativePath = relativePath.Length > 0 && relativePath[0] == Path.DirectorySeparatorChar ? relativePath.Substring(1) : relativePath
-                select Path.Combine(normRelativePath, assembly)).ToList();            
+                select Path.Combine(normRelativePath, assembly)).ToList();
 
+            var singleConfigFile = configuration.ConfigFiles.Single();
             var projectContent = new XDocument(
                 new XElement(
                     "NUnitProject",
@@ -35,6 +36,7 @@
                         "Config",
                         new XAttribute("binpath", string.Join(",", assemblies.Select(Path.GetDirectoryName).Distinct())),
                         new XAttribute("name", "active"),
+                        new XAttribute("configfile", singleConfigFile.ConfigFileName),
                         assemblies.Select(path => new XElement("assembly", new XAttribute("path", path)))))).ToString();
 
 
