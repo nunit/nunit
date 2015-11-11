@@ -81,7 +81,7 @@
         [Test]
         public void SuccessfulWithConfig()
         {
-            Console.WriteLine($"ConfigurationFile = {AppDomain.CurrentDomain.SetupInformation.ConfigurationFile}");            
+            Console.Write(System.IO.Path.GetFileName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile));
             var message = System.Configuration.ConfigurationManager.AppSettings["TestMessage"];
             Assert.IsNotNull(message);
         }
