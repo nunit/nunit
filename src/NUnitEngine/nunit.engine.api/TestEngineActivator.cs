@@ -105,7 +105,7 @@ namespace NUnit.Engine
             // allows the console or other runner to be executed with
             // a different application base and still function. In
             // particular, we do this in some tests of NUnit.
-            if (newestAssemblyFound == null)
+            if (newestAssemblyFound == null && AppDomain.CurrentDomain.RelativeSearchPath != null)
             {
                 foreach (string relpath in AppDomain.CurrentDomain.RelativeSearchPath.Split(new char[] { ';' }))
                 {
