@@ -100,6 +100,22 @@ namespace NUnit.Engine
             // Check the Application BaseDirectory
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DefaultAssemblyName);
             Assembly newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, null);
+
+            // Check Probing Path is not found in Base Directory. This
+            // allows the console or other runner to be executed with
+            // a different application base and still function. In
+            // particular, we do this in some tests of NUnit.
+            if (newestAssemblyFound == null)
+            {
+                foreach (string relpath in AppDomain.CurrentDomain.RelativeSearchPath.Split(new char[] { ';' }))
+                {
+                    path = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relpath), DefaultAssemblyName);
+                    newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, null);
+                    if (newestAssemblyFound != null)
+                        break;
+                }
+            }
+
             if (!privateCopy)
             {
                 // Check the install for the current user, 32 bit process
