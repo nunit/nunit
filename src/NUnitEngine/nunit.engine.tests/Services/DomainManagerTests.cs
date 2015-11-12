@@ -31,17 +31,15 @@ namespace NUnit.Engine.Services.Tests
     public class DomainManagerTests
     {
         private DomainManager _domainManager;
-        private AppDomain _domain;
+        private TestPackage _package = new TestPackage(MockAssembly.AssemblyPath);
 
         [SetUp]
-        public void CreateDomainManagerAndDomain()
+        public void CreateDomainManager()
         {
             var context = new ServiceContext();
             _domainManager = new DomainManager();
             context.Add(_domainManager);
             context.ServiceManager.StartServices();
-
-            _domain = _domainManager.CreateDomain(new TestPackage(MockAssembly.AssemblyPath));
         }
 
         [Test]
@@ -53,8 +51,10 @@ namespace NUnit.Engine.Services.Tests
         [Test, Platform("Linux,Net", Reason = "get_SetupInformation() fails on Windows+Mono")]
         public void CanCreateDomain()
         {
-            Assert.NotNull(_domain);
-            var setup = _domain.SetupInformation;
+            var domain = _domainManager.CreateDomain(_package);
+
+            Assert.NotNull(domain);
+            var setup = domain.SetupInformation;
 
             Assert.That(setup.ApplicationName, Does.StartWith("Tests_"));
             Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(MockAssembly.AssemblyPath)), "ApplicationBase");
@@ -67,27 +67,48 @@ namespace NUnit.Engine.Services.Tests
             //Assert.That(setup.ShadowCopyDirectories, Is.SamePath(Path.GetDirectoryName(MockAssembly.AssemblyPath)), "ShadowCopyDirectories" );
         }
 
+        [Test, Platform("Linux,Net", Reason = "get_SetupInformation() fails on Windows+Mono")]
+        public void CanCreateDomainWithApplicationBaseSpecified()
+        {
+            string basePath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(_package.FullName)));
+            _package.Settings["BasePath"] = basePath;
+            var domain = _domainManager.CreateDomain(_package);
+
+            Assert.NotNull(domain);
+            var setup = domain.SetupInformation;
+
+            Assert.That(setup.ApplicationName, Does.StartWith("Tests_"));
+            Assert.That(setup.ApplicationBase, Is.SamePath(basePath), "ApplicationBase");
+            Assert.That(
+                Path.GetFileName(setup.ConfigurationFile),
+                Is.EqualTo("mock-nunit-assembly.exe.config").IgnoreCase,
+                "ConfigurationFile");
+            Assert.That(setup.PrivateBinPath, Is.SamePath(@"bin\Debug"), "PrivateBinPath");
+            Assert.That(setup.ShadowCopyFiles, Is.Null.Or.EqualTo("false"));
+        }
+
         [Test]
         public void CanUnloadDomain()
         {
-            _domainManager.Unload(_domain);
+            var domain = _domainManager.CreateDomain(_package);
+            _domainManager.Unload(domain);
 
-            CheckDomainIsUnloaded();
+            CheckDomainIsUnloaded(domain);
         }
 
         [Test]
         public void UnloadingTwiceDoesNoHarm()
         {
+            var domain = _domainManager.CreateDomain(_package);
+            _domainManager.Unload(domain);
+            _domainManager.Unload(domain);
 
-            _domainManager.Unload(_domain);
-            _domainManager.Unload(_domain);
-
-            CheckDomainIsUnloaded();
+            CheckDomainIsUnloaded(domain);
         }
 
         #region Helper Methods
 
-        private void CheckDomainIsUnloaded()
+        private void CheckDomainIsUnloaded(AppDomain domain)
         {
             // HACK: Either the Assert will succeed or the
             // exception should be thrown.
@@ -95,7 +116,7 @@ namespace NUnit.Engine.Services.Tests
 
             try
             {
-                unloaded = _domain.IsFinalizingForUnload();
+                unloaded = domain.IsFinalizingForUnload();
             }
             catch (AppDomainUnloadedException)
             {

@@ -141,6 +141,7 @@ namespace NUnit.Engine.Internal
 
             string aggregateResult = "Inconclusive";
             string aggregateLabel = null;
+            string aggregateSite = null;
 
             //double totalDuration = 0.0d;
             int testcasecount = 0;
@@ -180,6 +181,8 @@ namespace NUnit.Engine.Internal
                         case "Failed":
                             aggregateResult = "Failed";
                             aggregateLabel = label;
+                            if (elementName == "test-suite")
+                                aggregateSite = "Child";
                             break;
                     }
 
@@ -202,6 +205,8 @@ namespace NUnit.Engine.Internal
                 combinedNode.AddAttribute("result", aggregateResult);
                 if (aggregateLabel != null)
                     combinedNode.AddAttribute("label", aggregateLabel);
+                if (aggregateSite != null)
+                    combinedNode.AddAttribute("site", aggregateSite);
 
                 //combinedNode.AddAttribute("duration", totalDuration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
                 combinedNode.AddAttribute("total", total.ToString());

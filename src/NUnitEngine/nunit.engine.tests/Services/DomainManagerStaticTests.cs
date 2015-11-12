@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using NUnit.Framework;
@@ -98,6 +99,52 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(ConfigurationManager.AppSettings.Get("test.setting"), Is.EqualTo("54321"));
         }
 
+        [TestCase("/path/to/mytest.dll", null, "/path/to/")]
+        [TestCase("/path/to/mytest.dll", "/path", "/path/")]
+        public static void ApplicationBaseTests(string filePath, string appBase, string expected)
+        {
+            filePath = TestPath(filePath);
+            appBase = TestPath(appBase);
+            expected = TestPath(expected);
+
+            var package = new TestPackage(filePath);
+            if (appBase != null)
+                package.Settings["BasePath"] = appBase;
+
+            Assert.That(DomainManager.GetApplicationBase(package), Is.SamePath(expected));
+        }
+
+        [TestCase("/path/to/mytest.dll", "/path/to", null)]
+        [TestCase("/path/to/mytest.dll", "/path", "to")]
+        public static void PrivateBinPathTests(string filePath, string appBase, string expected)
+        {
+            filePath = TestPath(filePath);
+            appBase = TestPath(appBase);
+            expected = TestPath(expected);
+
+            var package = new TestPackage(filePath);
+
+            Assert.That(DomainManager.GetPrivateBinPath(appBase, package), Is.EqualTo(expected));
+        }
+
+        [TestCase("/path/to/mytest.dll", "/path/to", null, "/path/to/mytest.dll.config")]
+        [TestCase("/path/to/mytest.dll", "/path", null, "/path/to/mytest.dll.config")]
+        [TestCase("/path/to/mytest.nunit", "/path/to", null, null)]
+        [TestCase("/path/to/mytest.nunit", "/path/to", "/path/to/mytest.config", "/path/to/mytest.config")]
+        public static void ConfigFileTests(string filePath, string appBase, string configSetting, string expected)
+        {
+            filePath = TestPath(filePath);
+            appBase = TestPath(appBase);
+            configSetting = TestPath(configSetting);
+            expected = TestPath(expected);
+
+            var package = new TestPackage(filePath);
+            if (configSetting != null)
+                package.Settings["ConfigurationFile"] = configSetting;
+
+            Assert.That(DomainManager.GetConfigFile(appBase, package), Is.EqualTo(expected));
+        }
+
         /// <summary>
         /// Take a valid Linux filePath and make a valid windows filePath out of it
         /// if we are on Windows. Change slashes to backslashes and, if the
@@ -105,7 +152,7 @@ namespace NUnit.Engine.Services.Tests
         /// </summary>
         private static string TestPath(string path)
         {
-            if (Path.DirectorySeparatorChar != '/')
+            if (path != null && Path.DirectorySeparatorChar != '/')
             {
                 path = path.Replace('/', Path.DirectorySeparatorChar);
                 if (path[0] == Path.DirectorySeparatorChar)
@@ -113,6 +160,11 @@ namespace NUnit.Engine.Services.Tests
             }
 
             return path;
+        }
+
+        private static IEnumerable<TestCaseData> AppDomainData()
+        {
+            yield return new TestCaseData(new TestPackage(@"C:\path\to\mytest.dll"), @"C:\path\to");
         }
     }
 }
