@@ -78,6 +78,16 @@ namespace NUnit.Engine.Services
 
             foreach (var subPackage in tempPackage.SubPackages)
                 package.AddSubPackage(subPackage);
+
+            // If no config is specified (by user or by the proejct loader) check
+            // to see if one exists in same directory as the package. If so, we
+            // use it. If not, each assembly will use it's own config, if present.
+            if (!package.Settings.ContainsKey(PackageSettings.ConfigurationFile))
+            {
+                var packageConfig = Path.ChangeExtension(path, ".config");
+                if (File.Exists(packageConfig))
+                    package.Settings[PackageSettings.ConfigurationFile] = packageConfig;
+            }
         }
 
         #endregion
