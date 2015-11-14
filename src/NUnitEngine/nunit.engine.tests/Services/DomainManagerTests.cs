@@ -70,7 +70,10 @@ namespace NUnit.Engine.Services.Tests
         [Test, Platform("Linux,Net", Reason = "get_SetupInformation() fails on Windows+Mono")]
         public void CanCreateDomainWithApplicationBaseSpecified()
         {
-            string basePath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(_package.FullName)));
+            string assemblyDir = Path.GetDirectoryName(_package.FullName);
+            string basePath = Path.GetDirectoryName(Path.GetDirectoryName(assemblyDir));
+            string relPath = assemblyDir.Substring(basePath.Length + 1);
+
             _package.Settings["BasePath"] = basePath;
             var domain = _domainManager.CreateDomain(_package);
 
@@ -83,11 +86,7 @@ namespace NUnit.Engine.Services.Tests
                 Path.GetFileName(setup.ConfigurationFile),
                 Is.EqualTo("mock-nunit-assembly.exe.config").IgnoreCase,
                 "ConfigurationFile");
-#if DEBUG
-            Assert.That(setup.PrivateBinPath, Is.SamePath(@"bin\Debug"), "PrivateBinPath");
-#else
-            Assert.That(setup.PrivateBinPath, Is.SamePath(@"bin\Release"), "PrivateBinPath");
-#endif
+            Assert.That(setup.PrivateBinPath, Is.SamePath(relPath), "PrivateBinPath");
             Assert.That(setup.ShadowCopyFiles, Is.Null.Or.EqualTo("false"));
         }
 
