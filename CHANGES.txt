@@ -1,4 +1,10 @@
-﻿NUnit 3.0.0 Release Candidate 3 - November 13, 2015
+﻿NUnit 3.0.0 Final Release - November 15, 2015
+
+Issues Resolved
+
+ * 635 Mono 4.0 Support
+
+NUnit 3.0.0 Release Candidate 3 - November 13, 2015
 
 Engine
 
