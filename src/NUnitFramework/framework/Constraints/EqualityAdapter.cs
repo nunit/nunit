@@ -24,11 +24,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
+
+#if NET_2_0
+
+    public delegate TResult Func<in T1, in T2, out TResult>(T1 arg1, T2 arg2); 
+
+#endif
+
     /// <summary>
     /// EqualityAdapter class handles all equality comparisons
     /// that use an <see cref="IEqualityComparer"/>, <see cref="IEqualityComparer{T}"/>
@@ -56,7 +62,7 @@ namespace NUnit.Framework.Constraints
             return true;
         }
 
-        #region Nested IComparer Adapter
+#region Nested IComparer Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
@@ -84,9 +90,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested IEqualityComparer Adapter
+#region Nested IEqualityComparer Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IEqualityComparer"/>.
@@ -111,9 +117,48 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Returns an EqualityAdapter that uses a predicate function for items comparison.
+        /// </summary>
+        /// <typeparam name="TExpected"></typeparam>
+        /// <typeparam name="TActual"></typeparam>
+        /// <param name="comparison"></param>
+        /// <returns></returns>
+        public static EqualityAdapter For<TExpected, TActual>(Func<TExpected, TActual, bool> comparison)
+        {
+            return new PredicateEqualityAdapter<TExpected, TActual>(comparison);
+        }
 
-        #region Nested GenericEqualityAdapter<T>
+        internal class PredicateEqualityAdapter<TActual, TExpected> : EqualityAdapter
+        {
+            private readonly Func<TActual, TExpected, bool> _comparison;
+
+            /// <summary>
+            /// Returns true if the two objects can be compared by this adapter.
+            /// The base adapter cannot handle IEnumerables except for strings.
+            /// </summary>
+            public override bool CanCompare(object x, object y)
+            {
+                return true;
+            }
+
+            /// <summary>
+            /// Compares two objects, returning true if they are equal
+            /// </summary>
+            public override bool AreEqual(object x, object y)
+            {
+                return _comparison.Invoke((TActual)y, (TExpected)x);
+            }
+
+            public PredicateEqualityAdapter(Func<TActual, TExpected, bool> comparison)
+            {
+                _comparison = comparison;
+            }
+        }
+
+#endregion
+
+#region Nested GenericEqualityAdapter<T>
 
         abstract class GenericEqualityAdapter<T> : EqualityAdapter
         {
@@ -137,9 +182,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested IEqualityComparer<T> Adapter
+#region Nested IEqualityComparer<T> Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IEqualityComparer{T}"/>.
@@ -165,9 +210,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested IComparer<T> Adapter
+#region Nested IComparer<T> Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer{T}"/>.
@@ -196,9 +241,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested Comparison<T> Adapter
+#region Nested Comparison<T> Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps a <see cref="Comparison{T}"/>.
@@ -224,6 +269,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
     }
 }

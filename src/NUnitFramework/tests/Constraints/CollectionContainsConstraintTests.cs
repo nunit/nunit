@@ -100,5 +100,13 @@ namespace NUnit.Framework.Constraints
             Assert.That(new string[] { "Hello", "World" },
                 new CollectionContainsConstraint("WORLD").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
         }
+
+        [Test]
+        public void HasMemberHonorsUsingWhenCollectionsAreOfDifferentTypes()
+        {
+            ICollection strings = new SimpleObjectCollection("1", "2", "3");
+            Assert.That(strings, Has.Member(2).Using<string, int>((s, i) => i.ToString() == s));
+        }
+
     }
 }

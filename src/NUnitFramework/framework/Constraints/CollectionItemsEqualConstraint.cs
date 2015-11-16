@@ -116,12 +116,18 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
-        #endregion
+        internal CollectionItemsEqualConstraint Using(EqualityAdapter adapter)
+        {
+            comparer.ExternalComparers.Add(adapter);
+            return this;
+        }
 
-        /// <summary>
-        /// Compares two collection members for equality
-        /// </summary>
-        protected bool ItemsEqual(object x, object y)
+#endregion
+
+    /// <summary>
+    /// Compares two collection members for equality
+    /// </summary>
+    protected bool ItemsEqual(object x, object y)
         {
             Tolerance tolerance = Tolerance.Default;
             return comparer.AreEqual(x, y, ref tolerance);
