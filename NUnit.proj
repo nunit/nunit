@@ -467,6 +467,17 @@
 
   </Target>
 
+  <Target Name="PackageNugetEngine" Label="Creates the NUnit.Engine NuGet package"
+      DependsOnTargets="_CreateImageIfNotPresent">
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the NUnit.Engine Nuget $(Configuration) package" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.engine.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+  </Target>
+
   <Target Name="PackageMsi" Label="Creates the master MSI installer for NUnit"
       DependsOnTargets="_CreateImageIfNotPresent">
     <MSBuild Targets="Rebuild" Projects="$(InstallDir)\master\nunit.wixproj"
