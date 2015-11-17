@@ -467,6 +467,17 @@
 
   </Target>
 
+  <Target Name="PackageNuGetRunners" Label="Creates the NUnit.Runners NuGet package"
+      DependsOnTargets="_CreateImageIfNotPresent">
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the NUnit.Runners Nuget $(Configuration) package" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.runners.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+  </Target>
+
   <Target Name="PackageNugetEngine" Label="Creates the NUnit.Engine NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
     <Message Text="******************************************************************" />
