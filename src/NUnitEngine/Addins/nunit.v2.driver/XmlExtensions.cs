@@ -193,6 +193,10 @@ namespace NUnit.Engine.Drivers
         // Adds a property element and its contents
         private static void AddProperty(this XmlNode parent, string key, object val)
         {
+            if (parent == null)
+                throw new ArgumentNullException("parent");
+            if (val == null)
+                throw new ArgumentNullException("val");
             var node = parent.AddElement("property");
             node.AddAttribute("name", key);
             node.AddAttribute("value", val.ToString());
