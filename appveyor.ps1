@@ -1,6 +1,6 @@
 # the version under development, update after a release
 $version = '3.0.0'
-$modifier = '-beta-6'
+$modifier = '-ci'
 
 function isVersion($s){
     $v = New-Object Version
