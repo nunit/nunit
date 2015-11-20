@@ -30,7 +30,7 @@ using System.Xml;
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-    sealed class ExtensionAttribute : Attribute { }
+    public sealed class ExtensionAttribute : Attribute { }
 }
 #endif
 
