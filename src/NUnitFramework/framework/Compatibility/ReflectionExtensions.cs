@@ -34,7 +34,7 @@ namespace System.Runtime.CompilerServices
     /// Enables compiling extension methods in .NET 2.0
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class ExtensionAttribute : Attribute { }
+    sealed class ExtensionAttribute : Attribute { }
 }
 #endif
 

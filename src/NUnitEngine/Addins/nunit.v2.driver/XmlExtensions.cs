@@ -31,7 +31,7 @@ using NUnit.Core;
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class ExtensionAttribute : Attribute { }
+    sealed class ExtensionAttribute : Attribute { }
 }
 
 namespace NUnit.Engine.Drivers
