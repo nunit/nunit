@@ -11,7 +11,7 @@ function isVersion($s){
 if ($env:appveyor){
 	# force build number to four digits for correct ordering
 	$build_number = [int]::Parse($env:appveyor_build_number).ToString('0000');
-    $modifier = "-" + $build_number + $modifier;
+    $modifier = $modifier + '-' + $build_number;
 
 	# if there is a tag, it provides both version and modifier
     if ($env:appveyor_repo_tag -eq 'true'){
