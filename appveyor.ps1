@@ -26,17 +26,9 @@ if ($env:appveyor){
 		$build_number = [int]::Parse($env:appveyor_build_number).ToString('0000');
 		$modifier = $modifier + '-' + $build_number;
 
-		# add branch if not master
-		$branch = $env:appveyor_repo_branch;
-		if($branch -ne 'master')
+		if($env:appveyor_pull_request_number -ne '')
 		{
-			$modifier = $modifier + '-' + $branch;
-		}
-
-		$pr_number = $env:appveyor_pull_request_number;
-		if($pr_number -ne '')
-		{
-			$modifier = $modifier + '-pr' + $pr_number;
+			$modifier = $modifier + '-pr';
 		}
 	}
 
