@@ -26,7 +26,7 @@ if ($env:appveyor){
 		$build_number = [int]::Parse($env:appveyor_build_number).ToString('0000');
 		$modifier = $modifier + '-' + $build_number;
 
-		if($env:appveyor_pull_request_number -ne '')
+		if($env:appveyor_pull_request_number)
 		{
 			$modifier = $modifier + '-pr';
 		}
