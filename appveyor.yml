@@ -19,7 +19,7 @@ build_script:
   
 artifacts:
 - path: package\*.nupkg
-- path: package\*.msi
+#  - path: package\*.msi
 
 # AppVeyor defaults to just its build number
 version: '{build}'
