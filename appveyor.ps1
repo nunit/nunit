@@ -37,5 +37,4 @@ if ($env:appveyor){
 
 ./build.cmd NUnit.proj /t:BuildAll /p:Configuration=Release /p:PackageVersion="$version" /p:PackageModifier="$modifier" /v:m
 ./build.cmd NUnit.proj /t:TestAll /p:Configuration=Release /p:PackageVersion="$version" /p:PackageModifier="$modifier" /v:m
-./build.cmd NUnit.proj /t:PackageNuget /p:Configuration=Release /p:PackageVersion="$version" /p:PackageModifier="$modifier" /v:m
-./build.cmd NUnit.proj /t:PackageNugetNUnitSL /p:Configuration=Release /p:PackageVersion="$version" /p:PackageModifier="$modifier" /v:m
+./build.cmd NUnit.proj /t:Package /p:Configuration=Release /p:PackageVersion="$version" /p:PackageModifier="$modifier" /v:m
