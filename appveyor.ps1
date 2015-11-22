@@ -9,10 +9,6 @@ function isVersion($s){
 
 # append the AppVeyor build number as the pre-release version
 if ($env:appveyor){
-	# force build number to four digits for correct ordering
-	$build_number = [int]::Parse($env:appveyor_build_number).ToString('0000');
-    $modifier = $modifier + '-' + $build_number;
-
 	# if there is a tag, it provides both version and modifier
     if ($env:appveyor_repo_tag -eq 'true'){
         $tag = $env:appveyor_repo_tag_name
@@ -25,7 +21,24 @@ if ($env:appveyor){
             $version = $tag
             $modifier = ''
         }
-    }
+    } else {
+		# force build number to four digits for correct ordering
+		$build_number = [int]::Parse($env:appveyor_build_number).ToString('0000');
+		$modifier = $modifier + '-' + $build_number;
+
+		# add branch if not master
+		$branch = $env:appveyor_repo_branch;
+		if($branch -ne 'master')
+		{
+			$modifier = $modifier + '-' + $branch;
+		}
+
+		$pr_number = $env:appveyor_pull_request_number;
+		if($pr_number -ne '')
+		{
+			$modifier = $modifier + '-pr' + $pr_number;
+		}
+	}
 
     if(-not(isVersion($version)))
     {
