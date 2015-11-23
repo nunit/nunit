@@ -26,4 +26,4 @@ using System.Reflection;
 //
 // Current version for the NUnit Console
 //
-[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyVersion("3.1.*")]
