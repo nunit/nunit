@@ -115,6 +115,7 @@ at wrapping a non-async method invocation in an async region was done");
         {
             private const string TaskWaitMethod = "Wait";
             private const string TaskResultProperty = "Result";
+            private const string VoidTaskResultType = "VoidTaskResult";
             private const string SystemAggregateException = "System.AggregateException";
             private const string InnerExceptionsProperty = "InnerExceptions";
             private const BindingFlags TaskResultPropertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
@@ -135,6 +136,11 @@ at wrapping a non-async method invocation in an async region was done");
                     PreserveStackTrace(innerExceptions[0]);
                     throw innerExceptions[0];
 #endif
+                }
+                var args = invocationResult.GetType().GetGenericArguments();
+                if (args != null && args.Length == 1 && args[0].Name == VoidTaskResultType)
+                {
+                    return null;
                 }
 
                 PropertyInfo taskResultProperty = invocationResult.GetType().GetProperty(TaskResultProperty, TaskResultPropertyBindingFlags);
