@@ -6,9 +6,11 @@
 
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
-    <PackageVersion>3.0.0</PackageVersion>
-    <PackageModifier></PackageModifier>
-    <DisplayVersion>3.0</DisplayVersion>
+    
+    <PackageVersion Condition="'$(PackageVersion)' == ''">3.1.0</PackageVersion>
+    <PackageModifier Condition="'$(PackageModifier)' == ''"></PackageModifier>
+    <DisplayVersion Condition="'$(DisplayVersion)' == ''">3.1</DisplayVersion>
+    
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
 		<PackageNameSL>$(ProjectName)SL-$(PackageVersion)$(PackageModifier)</PackageNameSL>
