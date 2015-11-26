@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
       <Link>ILogger.cs</Link>
@@ -60,7 +60,7 @@
       <Link>TestSelectionParserException.cs</Link>
     </Compile>
     <Compile Include="..\EngineApiVersion.cs">
-      <Link>EngineApiVersion.cs</Link>
+      <Link>Properties\EngineApiVersion.cs</Link>
     </Compile>
     <Compile Include="Extensibility\TypeExtensionPointAttribute.cs" />
     <Compile Include="Extensibility\ExtensionPropertyAttribute.cs" />

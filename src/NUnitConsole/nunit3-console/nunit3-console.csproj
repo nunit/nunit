@@ -100,7 +100,7 @@
       <Link>Utilities\XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\ConsoleVersion.cs">
-      <Link>ConsoleVersion.cs</Link>
+      <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>
     <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
