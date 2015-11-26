@@ -37,6 +37,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         private XmlNode _envNode;
         private XmlNode _cultureNode;
         private XmlNode _fixtureNode;
+        private XmlNode _testCaseNode;
 
         [OneTimeSetUp]
         public void ConvertEngineResultToXml()
@@ -69,6 +70,9 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
 
             _fixtureNode = _topNode.SelectSingleNode("descendant::test-suite[@name='MockTestFixture']");
             Assert.NotNull(_fixtureNode, "MockTestFixture element not found");
+
+            _testCaseNode = _fixtureNode.SelectSingleNode("descendant::test-case[@name='NUnit.Tests.Assemblies.MockTestFixture.MockTest2']");
+            Assert.NotNull(_testCaseNode, "ExplicitlyRunTest element not found");
         }
 
         #region Document Level Tests
@@ -236,6 +240,75 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         [Test]
         public void TestFixture_ResultIsFailure()
         {
+            Assert.That(RequiredAttribute(_fixtureNode, "result"), Is.EqualTo("Failure"));
+        }
+
+        [Test]
+        public void TestFixture_SuccessIsFalse()
+        {
+            Assert.That(RequiredAttribute(_fixtureNode, "success"), Is.EqualTo("False"));
+        }
+
+        [Test]
+        public void TestFixture_HasCategoryElement()
+        {
+            var categoryNode = _fixtureNode.SelectSingleNode("descendant::category[@name='FixtureCategory']");
+            Assert.That(categoryNode, Is.Not.Null);
+        }
+
+        [Test]
+        public void TestFixture_HasPropertyElement()
+        {
+            var propertyNode = _fixtureNode.SelectSingleNode("descendant::property[@name='Description']");
+            Assert.That(propertyNode, Is.Not.Null);
+            Assert.That(RequiredAttribute(propertyNode, "value"), Is.EqualTo("Fake Test Fixture"));
+        }
+
+        #endregion
+
+        #region test-case tests
+
+        [Test]
+        public void TestCase_ResultIsSuccess()
+        {
+            Assert.That(RequiredAttribute(_testCaseNode, "result"), Is.EqualTo("Success"));
+        }
+
+        [Test]
+        public void TestCase_ExecutedIsTrue()
+        {
+            Assert.That(RequiredAttribute(_testCaseNode, "executed"), Is.EqualTo("True"));
+        }
+
+        [Test]
+        public void TestCase_HasCategoryElement()
+        {
+            var categoryNode = _testCaseNode.SelectSingleNode("descendant::category[@name='MockCategory']");
+            Assert.That(categoryNode, Is.Not.Null);
+        }
+
+        [Test]
+        public void TestCase_HasPropertyElement()
+        {
+            var propertyNode = _testCaseNode.SelectSingleNode("descendant::property[@name='Severity']");
+            Assert.That(propertyNode, Is.Not.Null);
+            Assert.That(RequiredAttribute(propertyNode, "value"), Is.EqualTo("Critical"));
+        }
+
+        [Test]
+        public void TestCase_CategoryElementsDoNotContainProperties()
+        {
+            var categoryNodes = _testCaseNode.SelectNodes("descendant::category");
+            Assert.That(categoryNodes, Is.Not.Null);
+            Assert.That(categoryNodes.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void TestCase_PropertyElementsDoNotContainCategories()
+        {
+            var propertyNodes = _testCaseNode.SelectNodes("descendant::property");
+            Assert.That(propertyNodes, Is.Not.Null);
+            Assert.That(propertyNodes.Count, Is.EqualTo(2));
         }
 
         #endregion
