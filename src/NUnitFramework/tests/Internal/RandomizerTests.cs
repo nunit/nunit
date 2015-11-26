@@ -377,8 +377,7 @@ namespace NUnit.Framework.Internal
         public void RandomSByte()
         {
             sbyte b = _randomizer.NextSByte();
-            Assert.That(b, Is.GreaterThanOrEqualTo(sbyte.MinValue));
-            Assert.That(b, Is.Not.EqualTo(sbyte.MaxValue));
+            Assert.That(b, Is.InRange(sbyte.MinValue, sbyte.MaxValue));
         }
 
         [Test]
@@ -468,8 +467,7 @@ namespace NUnit.Framework.Internal
         public void RandomDouble()
         {
             double d = _randomizer.NextDouble();
-            Assert.That(d, Is.GreaterThanOrEqualTo(0.0));
-            Assert.That(d, Is.LessThan(1.0));
+            Assert.That(d, Is.InRange(0.0, 1.0));
         }
 
         [Test]
@@ -519,8 +517,7 @@ namespace NUnit.Framework.Internal
         public void RandomFloat()
         {
             float f = _randomizer.NextFloat();
-            Assert.That(f, Is.GreaterThanOrEqualTo(0.0f));
-            Assert.That(f, Is.LessThan(1.0f));
+            Assert.That(f, Is.InRange(0.0f, 1.0f));
         }
 
         [Test]
