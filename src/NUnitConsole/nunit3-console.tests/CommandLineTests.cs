@@ -53,6 +53,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("ShadowCopyFiles", "shadowcopy")]
         [TestCase("TeamCity", "teamcity")]
         [TestCase("DebugTests", "debug")]
+        [TestCase("PauseBeforeRun", "pause")]
 #if DEBUG
         [TestCase("DebugAgent", "debug-agent")]
 #endif
