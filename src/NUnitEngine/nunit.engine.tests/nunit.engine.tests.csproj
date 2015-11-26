@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
@@ -64,7 +64,7 @@
       <Link>Internal\XmlHelperTests.cs</Link>
     </Compile>
     <Compile Include="..\EngineVersion.cs">
-      <Link>EngineVersion.cs</Link>
+      <Link>Properties\EngineVersion.cs</Link>
     </Compile>
     <Compile Include="Api\ServiceLocatorTests.cs" />
     <Compile Include="Api\TestFilterTests.cs" />
