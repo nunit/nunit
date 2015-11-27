@@ -38,6 +38,7 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         private XmlNode _cultureNode;
         private XmlNode _fixtureNode;
         private XmlNode _testCaseNode;
+        private XmlNode _invalidTestCaseNode;
 
         [OneTimeSetUp]
         public void ConvertEngineResultToXml()
@@ -72,7 +73,10 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
             Assert.NotNull(_fixtureNode, "MockTestFixture element not found");
 
             _testCaseNode = _fixtureNode.SelectSingleNode("descendant::test-case[@name='NUnit.Tests.Assemblies.MockTestFixture.MockTest2']");
-            Assert.NotNull(_testCaseNode, "ExplicitlyRunTest element not found");
+            Assert.NotNull(_testCaseNode, "MockTest2 element not found");
+
+            _invalidTestCaseNode = _fixtureNode.SelectSingleNode("descendant::test-case[@name='NUnit.Tests.Assemblies.MockTestFixture.MockTest5']");
+            Assert.NotNull(_invalidTestCaseNode, "MockTest5 element not found");
         }
 
         #region Document Level Tests
@@ -309,6 +313,12 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
             var propertyNodes = _testCaseNode.SelectNodes("descendant::property");
             Assert.That(propertyNodes, Is.Not.Null);
             Assert.That(propertyNodes.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void InvalidTestCase_HasFailedResult()
+        {
+            Assert.That(RequiredAttribute(_invalidTestCaseNode, "result"), Is.EqualTo("Failure"));
         }
 
         #endregion
