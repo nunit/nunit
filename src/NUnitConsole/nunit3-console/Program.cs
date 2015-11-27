@@ -27,7 +27,6 @@ using System.Reflection;
 using NUnit.Common;
 using NUnit.Options;
 using NUnit.Engine;
-using System.Diagnostics;
 
 namespace NUnit.ConsoleRunner
 {
@@ -108,11 +107,6 @@ namespace NUnit.ConsoleRunner
                         Console.Error.WriteLine("Error: no inputs specified");
                     return ConsoleRunner.OK;
                 }
-
-                // Only pause before run if we are running in-process, otherwise
-                // the agents will pause before running.
-                if (Options.PauseBeforeRun && Options.ProcessModel == "InProcess")
-                    PauseBeforeRun();
 
                 using (ITestEngine engine = TestEngineActivator.CreateInstance())
                 {
@@ -261,15 +255,6 @@ namespace NUnit.ConsoleRunner
                 //writer.WriteLine("or a space to separate the option from its value.");
                 //writer.WriteLine();
             }
-        }
-
-        private static void PauseBeforeRun()
-        {
-            var process = Process.GetCurrentProcess();
-            string attachMessage = string.Format("Attach debugger to Process {0}.exe with Id {1} if desired.", process.ProcessName, process.Id);
-            OutWriter.WriteLine(ColorStyle.Pass, attachMessage);
-            OutWriter.WriteLine(ColorStyle.SubHeader, "Press ENTER to continue...");
-            Console.ReadLine();
         }
     }
 }

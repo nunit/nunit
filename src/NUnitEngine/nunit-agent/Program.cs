@@ -25,7 +25,6 @@ using System;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Diagnostics;
-using System.Windows.Forms;
 using NUnit.Engine;
 using NUnit.Engine.Agents;
 using NUnit.Engine.Internal;
@@ -58,31 +57,19 @@ namespace NUnit.Agent
         {
             AgentId = new Guid(args[0]);
             AgencyUrl = args[1];
-
-            bool debug = false;
-            bool pause = false;
+            
             bool verbose = false;
             for (int i = 2; i < args.Length; i++)
-            {
                 switch (args[i])
                 {
                     case "--debug-agent":
-                        debug = true;
-                        break;
-                    case "--pause":
-                        pause = true;
+                        if (!System.Diagnostics.Debugger.IsAttached)
+                            System.Diagnostics.Debugger.Launch();
                         break;
                     case "--verbose":
                         verbose = true;
                         break;
                 }
-            }
-
-            if (debug && !Debugger.IsAttached)
-                Debugger.Launch();
-
-            if (pause)
-                PauseBeforeRun();
 
             // Create SettingsService early so we know the trace level right at the start
             SettingsService settingsService = new SettingsService(false);
@@ -174,13 +161,6 @@ namespace NUnit.Agent
             //InternalTrace.Close();
 
             return 0;
-        }
-
-        private static void PauseBeforeRun()
-        {
-            var process = Process.GetCurrentProcess();
-            string attachMessage = string.Format("Attach debugger to Process {0}.exe with Id {1} if desired.", process.ProcessName, process.Id);
-            MessageBox.Show(attachMessage, process.ProcessName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

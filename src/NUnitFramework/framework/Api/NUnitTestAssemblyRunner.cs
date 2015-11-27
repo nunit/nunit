@@ -31,6 +31,11 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
+using System.Diagnostics;
+using System.Windows.Forms;
+#endif
+
 namespace NUnit.Framework.Api
 {
     /// <summary>
@@ -267,6 +272,13 @@ namespace NUnit.Framework.Api
             {
                 System.Diagnostics.Debugger.Launch();
             }
+#if !SILVERLIGHT && !PORTABLE
+            if (Settings.Contains(PackageSettings.PauseBeforeRun) &&
+                (bool)Settings[PackageSettings.PauseBeforeRun])
+            {
+                PauseBeforeRun();
+            }
+#endif
 #endif
 
             Context.Dispatcher.Dispatch(TopLevelWorkItem);
@@ -383,6 +395,14 @@ namespace NUnit.Framework.Api
         }
 #endif
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
+        private static void PauseBeforeRun()
+        {
+            var process = Process.GetCurrentProcess();
+            string attachMessage = string.Format("Attach debugger to Process {0}.exe with Id {1} if desired.", process.ProcessName, process.Id);
+            MessageBox.Show(attachMessage, process.ProcessName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+#endif
 
         #endregion
     }
