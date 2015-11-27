@@ -236,9 +236,6 @@ namespace NUnit.Engine.Addins
             double duration = result.GetAttribute("duration", 0.0);
             string asserts = result.GetAttribute("asserts");
 
-            if (label != null && label != string.Empty)
-                resultState += ":" + label;
-
             xmlWriter.WriteAttributeString("executed", executed);
             xmlWriter.WriteAttributeString("result", TranslateResult(resultState, label));
 
