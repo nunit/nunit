@@ -89,8 +89,8 @@ namespace NUnit.Engine.Internal
             }
             catch (Exception ex)
             {
-                string msg = string.Format("Error loading settings {0}.", _settingsFile);
-                throw new ApplicationException(msg, ex);
+                string msg = string.Format("Error loading settings {0}. {1}", _settingsFile, ex.Message);
+                throw new NUnitEngineException(msg);
             }
         }
 
