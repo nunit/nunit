@@ -38,6 +38,12 @@ namespace NUnit.Common
         public const string DebugTests = "DebugTests";
 
         /// <summary>
+        /// Flag (bool) indicating whether to pause execution of tests to allow
+        /// the user to attache a debugger.
+        /// </summary>
+        public const string PauseBeforeRun = "PauseBeforeRun";
+
+        /// <summary>
         /// The InternalTraceLevel for this run. Values are: "Default",
         /// "Off", "Error", "Warning", "Info", "Debug", "Verbose".
         /// Default is "Off". "Debug" and "Verbose" are synonyms.
