@@ -159,30 +159,43 @@ namespace NUnit.Common
 
         private static string EmitFilterElement(Token lhs, Token op, Token rhs)
         {
+            string fmt = null;
+
             if (op == EQ_OP1 || op == EQ_OP2)
-                return string.Format("<{0}>{1}</{0}>", lhs.Text, rhs.Text);
+                fmt = "<{0}>{1}</{0}>";
             else if (op == NE_OP)
-                return string.Format("<not><{0}>{1}</{0}></not>", lhs.Text, rhs.Text);
+                fmt = "<not><{0}>{1}</{0}></not>";
             else if (op == MATCH_OP)
-                return string.Format("<{0} re='1'>{1}</{0}>", lhs.Text, rhs.Text);
+                fmt = "<{0} re='1'>{1}</{0}>";
             else if (op == NOMATCH_OP)
-                return string.Format("<not><{0} re='1'>{1}</{0}></not>", lhs.Text, rhs.Text);
+                fmt = "<not><{0} re='1'>{1}</{0}></not>";
             else
-                return string.Format("<{0} op='{1}'>{2}</{0}>", lhs.Text, op.Text, rhs.Text);
+                fmt = "<{0} op='" + op.Text + "'>{1}</{0}>";
+
+            return EmitElement(fmt, lhs, rhs);
         }
 
         private static string EmitPropertyElement(Token lhs, Token op, Token rhs)
         {
+            string fmt = null;
+
             if (op == EQ_OP1 || op == EQ_OP2)
-                return string.Format("<prop name='{0}'>{1}</prop>", lhs.Text, rhs.Text);
+                fmt = "<prop name='{0}'>{1}</prop>";
             else if (op == NE_OP)
-                return string.Format("<not><prop name='{0}'>{1}</prop></not>", lhs.Text, rhs.Text);
+                fmt = "<not><prop name='{0}'>{1}</prop></not>";
             else if (op == MATCH_OP)
-                return string.Format("<prop name='{0}' re='1'>{1}</prop>", lhs.Text, rhs.Text);
+                fmt = "<prop name='{0}' re='1'>{1}</prop>";
             else if (op == NOMATCH_OP)
-                return string.Format("<not><prop name='{0}' re='1'>{1}</prop></not>", lhs.Text, rhs.Text);
+                fmt = "<not><prop name='{0}' re='1'>{1}</prop></not>";
             else
-                return string.Format("<prop name='{0}' op='{1}'>{2}</prop>", lhs.Text, op.Text, rhs.Text);
+                fmt = "<prop name='{0}' op='" + op.Text + "'>{1}</prop>";
+
+            return EmitElement(fmt, lhs, rhs);
+        }
+
+        private static string EmitElement(string fmt, Token lhs, Token rhs)
+        {
+            return string.Format(fmt, lhs.Text, XmlEscape(rhs.Text));
         }
 
         private string ParseExpressionInParentheses()
@@ -248,6 +261,16 @@ namespace NUnit.Common
         private Token NextToken()
         {
             return _tokenizer.NextToken();
+        }
+
+        private static string XmlEscape(string text)
+        {
+            return text
+                .Replace("&", "&amp;")
+                .Replace("\"", "&quot;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("'", "&apos;");
         }
     }
 }

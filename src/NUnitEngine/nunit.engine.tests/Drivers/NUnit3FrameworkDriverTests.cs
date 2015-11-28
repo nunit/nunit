@@ -41,6 +41,7 @@ namespace NUnit.Engine.Drivers.Tests
         private const string LOAD_MESSAGE = "Method called without calling Load first";
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();
+
         private NUnit3FrameworkDriver _driver;
         private string _mockAssemblyPath;
 

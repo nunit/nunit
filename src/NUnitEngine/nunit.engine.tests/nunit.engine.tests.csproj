@@ -70,9 +70,9 @@
     <Compile Include="Api\TestFilterTests.cs" />
     <Compile Include="Api\TestPackageTests.cs" />
     <Compile Include="AsyncTestEngineResultTests.cs" />
+    <Compile Include="Drivers\NUnit3FrameworkDriverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drivers\NotRunnableFrameworkDriverTests.cs" />
-    <Compile Include="Drivers\NUnit3FrameworkDriverTests.cs" />
     <Compile Include="Internal\PathUtilTests.cs" />
     <Compile Include="Internal\ServerUtilityTests.cs" />
     <Compile Include="Internal\SettingsGroupTests.cs" />
@@ -103,6 +103,7 @@
     <Compile Include="Services\DefaultTestRunnerFactoryTests.cs" />
     <Compile Include="Services\ServiceDependencyTests.cs" />
     <Compile Include="Services\TestFilterBuilderTests.cs" />
+    <Compile Include="Services\TestFilteringTests.cs" />
     <Compile Include="TempResourceFile.cs" />
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
