@@ -56,6 +56,16 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [Test]
+        public void OneTestSelected_XmlEscape()
+        {
+            builder.AddTest("My.Test.Name<T>(\"abc\")");
+            TestFilter filter = builder.GetFilter();
+
+            Assert.That(filter.Text, Is.EqualTo(
+                "<filter><test>My.Test.Name&lt;T&gt;(&quot;abc&quot;)</test></filter>"));
+        }
+
+        [Test]
         public void ThreeTestsSelected()
         {
             builder.AddTest("My.First.Test");
@@ -74,6 +84,16 @@ namespace NUnit.Engine.Services.Tests
             TestFilter filter = builder.GetFilter();
 
             Assert.That(filter.Text, Is.EqualTo("<filter><cat>Dummy</cat></filter>"));
+        }
+
+        [Test]
+        public void WhereClause_XmlEscape()
+        {
+            builder.SelectWhere("test=='My.Test.Name<T>(\"abc\")'");
+            TestFilter filter = builder.GetFilter();
+
+            Assert.That(filter.Text, Is.EqualTo(
+                "<filter><test>My.Test.Name&lt;T&gt;(&quot;abc&quot;)</test></filter>"));
         }
 
         [Test]
