@@ -302,7 +302,7 @@ namespace NUnit.Framework.Internal
                     sb.Append("\"");
                     foreach (char c in str)
                     {
-                        sb.Append(EscapeControlChar(c));
+                        sb.Append(EscapeCharInString(c));
                         if (tooLong && sb.Length > limit)
                         {
                             sb.Append(THREE_DOTS);
@@ -314,7 +314,7 @@ namespace NUnit.Framework.Internal
                 }
                 else if (arg is char)
                 {
-                    display = "\'" + EscapeControlChar((char)arg) + "\'";
+                    display = "\'" + EscapeSingleChar((char)arg) + "\'";
                 }
                 else if (arg is int)
                 {
@@ -362,14 +362,26 @@ namespace NUnit.Framework.Internal
                 return display;
             }
 
+            private static string EscapeSingleChar(char c)
+            {
+                if (c == '\'')
+                    return "\\\'";
+
+                return EscapeControlChar(c);
+            }
+
+            private static string EscapeCharInString(char c)
+            {
+                if (c == '"')
+                    return "\\\"";
+
+                return EscapeControlChar(c);
+            }
+            
             private static string EscapeControlChar(char c)
             {
                 switch (c)
                 {
-                    case '\'':
-                        return "\\\'";
-                    case '\"':
-                        return "\\\"";
                     case '\\':
                         return "\\\\";
                     case '\0':

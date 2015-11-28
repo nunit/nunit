@@ -64,7 +64,7 @@ namespace NUnit.Engine
                 if (_testList.Count > 1)
                     filter.Append("<or>");
                 foreach (string test in _testList)
-                    filter.AppendFormat("<test>{0}</test>", test);
+                    filter.AppendFormat("<test>{0}</test>", XmlEscape(test));
                 if (_testList.Count > 1)
                     filter.Append("</or>");
             }
@@ -76,6 +76,16 @@ namespace NUnit.Engine
             filter.Append("</filter>");
 
             return new TestFilter(filter.ToString());
+        }
+
+        private static string XmlEscape(string text)
+        {
+            return text
+                .Replace("&", "&amp;")
+                .Replace("\"", "&quot;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("'", "&apos;");
         }
     }
 }
