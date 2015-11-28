@@ -40,9 +40,11 @@ namespace NUnit.Common
         private static readonly Token AND_OP1 = new Token(TokenKind.Symbol, "&");
         private static readonly Token AND_OP2 = new Token(TokenKind.Symbol, "&&");
         private static readonly Token AND_OP3 = new Token(TokenKind.Word, "and");
+        private static readonly Token AND_OP4 = new Token(TokenKind.Word, "AND");
         private static readonly Token OR_OP1 = new Token(TokenKind.Symbol, "|");
         private static readonly Token OR_OP2 = new Token(TokenKind.Symbol, "||");
         private static readonly Token OR_OP3 = new Token(TokenKind.Word, "or");
+        private static readonly Token OR_OP4 = new Token(TokenKind.Word, "OR");
         private static readonly Token NOT_OP = new Token(TokenKind.Symbol, "!");
 
         private static readonly Token EQ_OP1 = new Token(TokenKind.Symbol, "=");
@@ -51,8 +53,8 @@ namespace NUnit.Common
         private static readonly Token MATCH_OP = new Token(TokenKind.Symbol, "=~");
         private static readonly Token NOMATCH_OP = new Token(TokenKind.Symbol, "!~");
 
-        private static readonly Token[] AND_OPS = new Token[] { AND_OP1, AND_OP2, AND_OP3 };
-        private static readonly Token[] OR_OPS = new Token[] { OR_OP1, OR_OP2, OR_OP3 };
+        private static readonly Token[] AND_OPS = new Token[] { AND_OP1, AND_OP2, AND_OP3, AND_OP4 };
+        private static readonly Token[] OR_OPS = new Token[] { OR_OP1, OR_OP2, OR_OP3, OR_OP4 };
         private static readonly Token[] EQ_OPS = new Token[] { EQ_OP1, EQ_OP2 };
         private static readonly Token[] REL_OPS = new Token[] { EQ_OP1, EQ_OP2, NE_OP, MATCH_OP, NOMATCH_OP };
 
@@ -65,7 +67,10 @@ namespace NUnit.Common
             if (_tokenizer.LookAhead == EOF)
                 throw new TestSelectionParserException("No input provided for test selection.");
 
-            return ParseFilterExpression();
+            var result = ParseFilterExpression();
+
+            Expect(EOF);
+            return result;
         }
 
         /// <summary>
