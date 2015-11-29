@@ -63,6 +63,10 @@ namespace NUnit.ConsoleRunner
                 case "test-case":
                     TestFinished(testEvent);
                     break;
+
+                case "test-suite":
+                    SuiteFinished(testEvent);
+                    break;
             }
 
             if (_teamCity != null)
@@ -89,7 +93,21 @@ namespace NUnit.ConsoleRunner
                     WriteTestLabel(testName);
 
                 WriteTestOutput(outputNode);
-            }            
+            }
+        }
+
+        private void SuiteFinished(XmlNode testResult)
+        {
+            var suiteName = testResult.Attributes["fullname"].Value;
+            var outputNode = testResult.SelectSingleNode("output");
+
+            if (outputNode != null)
+            {
+                if (_displayLabels == "ON" || _displayLabels == "ALL")
+                    WriteTestLabel(suiteName);
+
+                WriteTestOutput(outputNode);
+            }
         }
 
         private void WriteTestLabel(string name)
