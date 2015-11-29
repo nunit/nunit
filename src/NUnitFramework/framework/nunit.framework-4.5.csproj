@@ -318,6 +318,7 @@
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
     <Compile Include="Internal\Builders\PairwiseStrategy.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
+    <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />

@@ -43,28 +43,31 @@ namespace NUnit.Framework
     public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest
     {
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
-        private IParameterDataProvider _dataProvider = new ParameterDataProvider();
 
         private ICombiningStrategy _strategy;
+        private IParameterDataProvider _dataProvider;
 
         /// <summary>
-        /// Construct a CombiningStrategyAttribute incorporating an object
-        /// that implements ICombiningStrategy.
+        /// Construct a CombiningStrategyAttribute incorporating an
+        /// ICombiningStrategy and an IParamterDataProvider.
         /// </summary>
-        /// <param name="strategy">Combining strategy to be used</param>
-        protected CombiningStrategyAttribute(ICombiningStrategy strategy)
+        /// <param name="strategy">Combining strategy to be used in combining data</param>
+        /// <param name="provider">An IParameterDataProvider to supply data</param>
+        protected CombiningStrategyAttribute(ICombiningStrategy strategy, IParameterDataProvider provider)
         {
             _strategy = strategy;
+            _dataProvider = provider;
         }
 
         /// <summary>
         /// Construct a CombiningStrategyAttribute incorporating an object
-        /// that implements ICombiningStrategy. This constructor is provided
-        /// for CLS compliance.
+        /// that implements ICombiningStrategy and an IParameterDataProvider.
+        /// This constructor is provided for CLS compliance.
         /// </summary>
-        /// <param name="strategy">Combining strategy to be used</param>
-        protected CombiningStrategyAttribute(object strategy)
-            : this((ICombiningStrategy)strategy)
+        /// <param name="strategy">Combining strategy to be used in combining data</param>
+        /// <param name="provider">An IParameterDataProvider to supply data</param>
+        protected CombiningStrategyAttribute(object strategy, IParameterDataProvider provider)
+            : this((ICombiningStrategy)strategy, provider)
         {
         }
 

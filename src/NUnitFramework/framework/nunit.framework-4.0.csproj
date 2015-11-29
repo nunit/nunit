@@ -315,6 +315,7 @@
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
     <Compile Include="Internal\Builders\PairwiseStrategy.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
+    <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />

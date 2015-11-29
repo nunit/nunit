@@ -137,6 +137,7 @@
     <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
+    <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
     <Compile Include="Internal\Filters\TestNameFilter.cs" />
@@ -369,7 +370,7 @@
     <Compile Include="Internal\Builders\DefaultTestCaseBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
     <Compile Include="Internal\Builders\PairwiseStrategy.cs" />
-    <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
+    <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
