@@ -63,6 +63,7 @@
     <Compile Include="ColorConsoleTests.cs" />
     <Compile Include="ColorStyleTests.cs" />
     <Compile Include="CommandLineTests.cs" />
+    <Compile Include="ConsoleOutputTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultReporterTests.cs" />
