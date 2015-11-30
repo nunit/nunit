@@ -47,6 +47,9 @@ namespace NUnit.Framework.Constraints
             Assert.IsFalse(
                 FloatingPointNumerics.AreAlmostEqualUlps(1000000.00f, 1000000.13f, 1)
             );
+            Assert.IsFalse( // Ensure we don't overflow on twos compelment values
+                FloatingPointNumerics.AreAlmostEqualUlps(2.0f, -2.0f, 1)
+            );
         }
 
         /// <summary>Tests the double precision floating point value comparison helper</summary>
@@ -65,6 +68,9 @@ namespace NUnit.Framework.Constraints
             );
             Assert.IsFalse(
                 FloatingPointNumerics.AreAlmostEqualUlps(1000000.00, 1000000.0000000002, 1)
+            );
+            Assert.IsFalse( // Ensure we don't overflow on twos complement values
+                FloatingPointNumerics.AreAlmostEqualUlps(2.0, -2.0, 1)
             );
         }
 
