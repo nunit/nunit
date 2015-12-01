@@ -219,7 +219,7 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Test Run Summary",
                 "   Overall result: Failed",
-                "   Tests run: 7, Passed: 4, Errors: 1, Failures: 1, Inconclusive: 1",
+                "   Tests run: 7, Passed: 4, Failed: 1, Errors: 1, Inconclusive: 1",
                 "     Not run: 4, Invalid: 2, Ignored: 1, Explicit: 1, Skipped: 0",
                 "  Start time: 2014-12-02 12:34:56Z",
                 "    End time: 2014-12-02 12:34:56Z",
