@@ -118,8 +118,8 @@ namespace NUnit.ConsoleRunner
 
             WriteSummaryCount("   Tests run: ", Summary.RunCount);
             WriteSummaryCount(", Passed: ", Summary.PassCount);
-            WriteSummaryCount(", Errors: ", Summary.ErrorCount, ColorStyle.Error);
-            WriteSummaryCount(", Failures: ", Summary.FailureCount, ColorStyle.Failure);
+            WriteSummaryCount(", Failed: ", Summary.ErrorCount, ColorStyle.Error);
+            WriteSummaryCount(", Errors: ", Summary.FailureCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", Summary.InconclusiveCount);
             _writer.WriteLine();
 

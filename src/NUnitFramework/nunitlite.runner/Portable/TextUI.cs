@@ -215,8 +215,8 @@ namespace NUnitLite
 
             WriteSummaryCount("   Tests run: ", summary.RunCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
-            WriteSummaryCount(", Errors: ", summary.ErrorCount);
-            WriteSummaryCount(", Failures: ", summary.FailureCount);
+            WriteSummaryCount(", Failed: ", summary.ErrorCount);
+            WriteSummaryCount(", Errors: ", summary.FailureCount);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
             _writer.WriteLine();
 
