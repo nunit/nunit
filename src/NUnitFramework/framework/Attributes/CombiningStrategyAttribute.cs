@@ -66,8 +66,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="strategy">Combining strategy to be used in combining data</param>
         /// <param name="provider">An IParameterDataProvider to supply data</param>
-        protected CombiningStrategyAttribute(object strategy, IParameterDataProvider provider)
-            : this((ICombiningStrategy)strategy, provider)
+        protected CombiningStrategyAttribute(object strategy, object provider)
+            : this((ICombiningStrategy)strategy, (IParameterDataProvider)provider)
         {
         }
 
