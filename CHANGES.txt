@@ -3,7 +3,7 @@
 Console Runner
 
  * The Nunit.Runners NuGet package was updated to become a meta-package that pulls in the NUnit.Console package
- * Added a --pause command line option that will display a message box allowing you to attach a debugger if the --debug option does not work
+ * Reinstated the --pause command line option that will display a message box allowing you to attach a debugger if the --debug option does not work
 
 Issues Resolved
 
