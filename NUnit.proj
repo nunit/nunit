@@ -432,7 +432,7 @@
 
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
+  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetEngine" />
   
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
