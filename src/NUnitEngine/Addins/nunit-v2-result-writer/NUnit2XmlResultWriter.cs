@@ -172,13 +172,12 @@ namespace NUnit.Engine.Addins
         {
             StartTestElement(result);
 
-            var categories = result.SelectSingleNode("categories");
-            if (categories != null)
-                WriteCategoriesElement(categories);
-
             var properties = result.SelectSingleNode("properties");
             if (properties != null)
+            {
+                WriteCategoriesElement(properties);
                 WritePropertiesElement(properties);
+            }
 
             var message = result.SelectSingleNode("reason/message");
             if (message != null)
@@ -211,7 +210,7 @@ namespace NUnit.Engine.Addins
             if (result.Name == "test-case")
             {
                 xmlWriter.WriteStartElement("test-case");
-                xmlWriter.WriteAttributeString("name", result.GetAttribute("name"));
+                xmlWriter.WriteAttributeString("name", result.GetAttribute("fullname"));
             }
             else
             {
@@ -237,9 +236,6 @@ namespace NUnit.Engine.Addins
             double duration = result.GetAttribute("duration", 0.0);
             string asserts = result.GetAttribute("asserts");
 
-            if (label != null && label != string.Empty)
-                resultState += ":" + label;
-
             xmlWriter.WriteAttributeString("executed", executed);
             xmlWriter.WriteAttributeString("result", TranslateResult(resultState, label));
 
@@ -251,14 +247,17 @@ namespace NUnit.Engine.Addins
             }
         }
 
-        private void WriteCategoriesElement(XmlNode categories)
+        private void WriteCategoriesElement(XmlNode properties)
         {
+            var items = properties.SelectNodes("property[@name='Category']");
+            if (items.Count == 0)
+                return; // No category properties found
+
             xmlWriter.WriteStartElement("categories");
-            var items = categories.SelectNodes("category");
             foreach (XmlNode item in items)
             {
                 xmlWriter.WriteStartElement("category");
-                xmlWriter.WriteAttributeString("name", item.GetAttribute("name"));
+                xmlWriter.WriteAttributeString("name", item.GetAttribute("value"));
                 xmlWriter.WriteEndElement();
             }
             xmlWriter.WriteEndElement();
@@ -266,11 +265,17 @@ namespace NUnit.Engine.Addins
 
         private void WritePropertiesElement(XmlNode properties)
         {
-            xmlWriter.WriteStartElement("properties");
-
             var items = properties.SelectNodes("property");
+            var categories = properties.SelectNodes("property[@name='Category']");
+            if (items.Count == categories.Count)
+                return; // No non-category properties found
+
+            xmlWriter.WriteStartElement("properties");
             foreach (XmlNode item in items)
             {
+                if (item.GetAttribute("name") == "Category")
+                    continue;
+
                 xmlWriter.WriteStartElement("property");
                 xmlWriter.WriteAttributeString("name", item.GetAttribute("name"));
                 xmlWriter.WriteAttributeString("value", item.GetAttribute("value"));

@@ -23,6 +23,7 @@
 
 using System;
 using System.Xml;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
@@ -33,6 +34,9 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class ProcessRunner : AbstractTestRunner
     {
+        private const int NORMAL_TIMEOUT = 30000;               // 30 seconds
+        private const int DEBUG_TIMEOUT = NORMAL_TIMEOUT * 10;  // 5 minutes
+
         private static readonly Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
         private ITestAgent _agent;
@@ -84,7 +88,11 @@ namespace NUnit.Engine.Runners
             {
                 if (_agent == null)
                 {
-                    _agent = _agency.GetAgent(TestPackage, 30000);
+                    // Increase the timeout to give time to attach a debugger
+                    bool debug = TestPackage.GetSetting(PackageSettings.DebugAgent, false) ||
+                                 TestPackage.GetSetting(PackageSettings.PauseBeforeRun, false);
+
+                    _agent = _agency.GetAgent(TestPackage, debug ? DEBUG_TIMEOUT : NORMAL_TIMEOUT);
 
                     if (_agent == null)
                         throw new Exception("Unable to acquire remote process agent");

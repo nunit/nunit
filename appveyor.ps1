@@ -1,5 +1,5 @@
 # the default version under development, update after a release
-$version = '3.1.0'
+$version = '3.0.1'
 $modifier = '-ci'
 
 function isVersion($s){

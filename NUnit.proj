@@ -7,9 +7,9 @@
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     
-    <PackageVersion Condition="'$(PackageVersion)' == ''">3.1.0</PackageVersion>
+    <PackageVersion Condition="'$(PackageVersion)' == ''">3.0.1</PackageVersion>
     <PackageModifier Condition="'$(PackageModifier)' == ''"></PackageModifier>
-    <DisplayVersion Condition="'$(DisplayVersion)' == ''">3.1</DisplayVersion>
+    <DisplayVersion Condition="'$(DisplayVersion)' == ''">3.0.1</DisplayVersion>
     
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
@@ -432,7 +432,7 @@
 
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
+  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetEngine" />
   
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">

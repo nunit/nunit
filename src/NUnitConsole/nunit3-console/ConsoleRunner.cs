@@ -341,6 +341,9 @@ namespace NUnit.ConsoleRunner
                     package.AddSetting(PackageSettings.NumberOfTestWorkers, 0);
             }
 
+            if (options.PauseBeforeRun)
+                package.AddSetting(PackageSettings.PauseBeforeRun, true);
+
 #if DEBUG
             if (options.DebugAgent)
                 package.AddSetting(PackageSettings.DebugAgent, true);

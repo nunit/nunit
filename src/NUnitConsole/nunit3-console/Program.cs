@@ -125,6 +125,11 @@ namespace NUnit.ConsoleRunner
                         OutWriter.WriteLine(ColorStyle.Error, ex.Message);
                         return ConsoleRunner.INVALID_ARG;
                     }
+                    catch (TestSelectionParserException ex)
+                    {
+                        OutWriter.WriteLine(ColorStyle.Error, ex.Message);
+                        return ConsoleRunner.INVALID_ARG;
+                    }
                     catch (FileNotFoundException ex)
                     {
                         OutWriter.WriteLine(ColorStyle.Error, ex.Message);
