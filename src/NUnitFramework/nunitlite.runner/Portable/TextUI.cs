@@ -217,7 +217,7 @@ namespace NUnitLite
             WriteSummaryCount(", Passed: ", summary.PassCount);
             WriteSummaryCount(", Failed: ", summary.FailedCount);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
-            WriteSummaryCount(", Skipped: ", summary.SkipCount);
+            WriteSummaryCount(", Skipped: ", summary.TotalSkippedCount);
             _writer.WriteLine();
 
             _writer.Write("    Failed Tests - "); 
