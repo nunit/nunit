@@ -77,6 +77,14 @@ namespace NUnitLite
         }
 
         /// <summary>
+        /// Returns the number of failed test cases (including errors and invalid tests)
+        /// </summary>
+        public int FailedCount
+        {
+            get { return FailureCount + InvalidCount + ErrorCount;  }
+        }
+
+        /// <summary>
         /// Gets the count of passed tests
         /// </summary>
         public int PassCount { get; private set; }

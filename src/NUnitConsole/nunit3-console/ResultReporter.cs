@@ -118,16 +118,20 @@ namespace NUnit.ConsoleRunner
 
             WriteSummaryCount("   Tests run: ", Summary.RunCount);
             WriteSummaryCount(", Passed: ", Summary.PassCount);
-            WriteSummaryCount(", Failed: ", Summary.FailureCount, ColorStyle.Failure);
-            WriteSummaryCount(", Errors: ", Summary.ErrorCount, ColorStyle.Error);
+            WriteSummaryCount(", Failed: ", Summary.FailedCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", Summary.InconclusiveCount);
             _writer.WriteLine();
 
-            WriteSummaryCount("     Not run: ", Summary.NotRunCount);
-            WriteSummaryCount(", Invalid: ", Summary.InvalidCount, ColorStyle.Error);
-            WriteSummaryCount(", Ignored: ", Summary.IgnoreCount, ColorStyle.Warning);
+            _writer.Write("     Failed Tests - "); 
+            WriteSummaryCount("Failures: ", Summary.FailureCount);
+            WriteSummaryCount(", Errors: ", Summary.ErrorCount);
+            WriteSummaryCount(", Invalid: ", Summary.InvalidCount);
+            _writer.WriteLine();
+
+            _writer.Write("     Skipped Tests - "); 
+            WriteSummaryCount("Ignored: ", Summary.IgnoreCount);
             WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
-            WriteSummaryCount(", Skipped: ", Summary.SkipCount);
+            WriteSummaryCount(", Other: ", Summary.SkipCount);
             _writer.WriteLine();
 
             var duration = _result.GetAttribute("duration", 0.0);
