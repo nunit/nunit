@@ -342,22 +342,22 @@ namespace NUnitLite
                 SkipLine();
 
             WriteSectionHeader("Test Run Summary");
-            WriteLabelLine("   Overall result: ", overallResult, overallStyle);
+            WriteLabelLine("  Overall result: ", overallResult, overallStyle);
 
-            WriteSummaryCount("   Tests run: ", summary.RunCount);
+            WriteSummaryCount("  Tests run: ", summary.RunCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
             WriteSummaryCount(", Failed: ", summary.FailedCount);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
             WriteSummaryCount(", Skipped: ", summary.SkipCount);
             _outWriter.WriteLine();
 
-            _outWriter.Write("     Failed Tests - "); 
+            _outWriter.Write("    Failed Tests - "); 
             WriteSummaryCount("Failures: ", summary.FailureCount);
             WriteSummaryCount(", Errors: ", summary.ErrorCount);
             WriteSummaryCount(", Invalid: ", summary.InvalidCount);
             _outWriter.WriteLine();
 
-            _outWriter.Write("     Skipped Tests - "); 
+            _outWriter.Write("    Skipped Tests - "); 
             WriteSummaryCount("Ignored: ", summary.IgnoreCount);
             WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
             WriteSummaryCount(", Other: ", summary.SkipCount);
