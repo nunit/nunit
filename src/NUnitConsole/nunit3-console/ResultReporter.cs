@@ -114,22 +114,22 @@ namespace NUnit.ConsoleRunner
                         : ColorStyle.Output;
             
             _writer.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
-            _writer.WriteLabelLine("    Overall result: ", _overallResult, overall);
+            _writer.WriteLabelLine("  Overall result: ", _overallResult, overall);
 
-            WriteSummaryCount("   Tests run: ", Summary.RunCount);
+            WriteSummaryCount("  Tests run: ", Summary.RunCount);
             WriteSummaryCount(", Passed: ", Summary.PassCount);
             WriteSummaryCount(", Failed: ", Summary.FailedCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", Summary.InconclusiveCount);
             WriteSummaryCount(", Skipped: ", Summary.TotalSkippedCount);
             _writer.WriteLine();
 
-            _writer.Write("     Failed Tests - "); 
+            _writer.Write("    Failed Tests - "); 
             WriteSummaryCount("Failures: ", Summary.FailureCount);
             WriteSummaryCount(", Errors: ", Summary.ErrorCount);
             WriteSummaryCount(", Invalid: ", Summary.InvalidCount);
             _writer.WriteLine();
 
-            _writer.Write("     Skipped Tests - "); 
+            _writer.Write("    Skipped Tests - "); 
             WriteSummaryCount("Ignored: ", Summary.IgnoreCount);
             WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
             WriteSummaryCount(", Other: ", Summary.SkipCount);
