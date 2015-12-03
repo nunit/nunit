@@ -215,16 +215,21 @@ namespace NUnitLite
 
             WriteSummaryCount("   Tests run: ", summary.RunCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
-            WriteSummaryCount(", Failed: ", summary.FailureCount);
-            WriteSummaryCount(", Errors: ", summary.ErrorCount);
+            WriteSummaryCount(", Failed: ", summary.FailedCount);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
+            WriteSummaryCount(", Skipped: ", summary.SkipCount);
             _writer.WriteLine();
 
-            WriteSummaryCount("     Not run: ", summary.NotRunCount);
+            _writer.Write("    Failed Tests - "); 
+            WriteSummaryCount("Failures: ", summary.FailureCount);
+            WriteSummaryCount(", Errors: ", summary.ErrorCount);
             WriteSummaryCount(", Invalid: ", summary.InvalidCount);
-            WriteSummaryCount(", Ignored: ", summary.IgnoreCount);
+            _writer.WriteLine();
+
+            _writer.Write("    Skipped Tests - "); 
+            WriteSummaryCount("Ignored: ", summary.IgnoreCount);
             WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
-            WriteSummaryCount(", Skipped: ", summary.SkipCount);
+            WriteSummaryCount(", Other: ", summary.SkipCount);
             _writer.WriteLine();
 
             WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
