@@ -120,6 +120,7 @@ namespace NUnit.ConsoleRunner
             WriteSummaryCount(", Passed: ", Summary.PassCount);
             WriteSummaryCount(", Failed: ", Summary.FailedCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", Summary.InconclusiveCount);
+            WriteSummaryCount(", Skipped: ", Summary.SkipCount);
             _writer.WriteLine();
 
             _writer.Write("     Failed Tests - "); 
