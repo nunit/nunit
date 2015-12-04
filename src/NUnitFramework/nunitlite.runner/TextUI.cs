@@ -342,21 +342,31 @@ namespace NUnitLite
                 SkipLine();
 
             WriteSectionHeader("Test Run Summary");
-            WriteLabelLine("   Overall result: ", overallResult, overallStyle);
+            WriteLabelLine("  Overall result: ", overallResult, overallStyle);
 
-            WriteSummaryCount("   Tests run: ", summary.RunCount);
+            WriteSummaryCount("  Test Count: ", summary.TestCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
-            WriteSummaryCount(", Errors: ", summary.ErrorCount, ColorStyle.Error);
-            WriteSummaryCount(", Failures: ", summary.FailureCount, ColorStyle.Failure);
+            WriteSummaryCount(", Failed: ", summary.FailedCount);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
+            WriteSummaryCount(", Skipped: ", summary.TotalSkipCount);
             _outWriter.WriteLine();
 
-            WriteSummaryCount("     Not run: ", summary.NotRunCount);
-            WriteSummaryCount(", Invalid: ", summary.InvalidCount, ColorStyle.Error);
-            WriteSummaryCount(", Ignored: ", summary.IgnoreCount, ColorStyle.Warning);
-            WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
-            WriteSummaryCount(", Skipped: ", summary.SkipCount);
-            _outWriter.WriteLine();
+            if (summary.FailedCount > 0)
+            {
+                _outWriter.Write("    Failed Tests - "); 
+                WriteSummaryCount("Failures: ", summary.FailureCount);
+                WriteSummaryCount(", Errors: ", summary.ErrorCount);
+                WriteSummaryCount(", Invalid: ", summary.InvalidCount);
+                _outWriter.WriteLine();
+            }
+            if (summary.TotalSkipCount > 0)
+            {
+                _outWriter.Write("    Skipped Tests - "); 
+                WriteSummaryCount("Ignored: ", summary.IgnoreCount);
+                WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
+                WriteSummaryCount(", Other: ", summary.SkipCount);
+                _outWriter.WriteLine();
+            }
 
             WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
             WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));

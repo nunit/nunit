@@ -114,21 +114,31 @@ namespace NUnit.ConsoleRunner
                         : ColorStyle.Output;
             
             _writer.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
-            _writer.WriteLabelLine("    Overall result: ", _overallResult, overall);
+            _writer.WriteLabelLine("  Overall result: ", _overallResult, overall);
 
-            WriteSummaryCount("   Tests run: ", Summary.RunCount);
+            WriteSummaryCount("  Test Count: ", Summary.TestCount);
             WriteSummaryCount(", Passed: ", Summary.PassCount);
-            WriteSummaryCount(", Errors: ", Summary.ErrorCount, ColorStyle.Error);
-            WriteSummaryCount(", Failures: ", Summary.FailureCount, ColorStyle.Failure);
+            WriteSummaryCount(", Failed: ", Summary.FailedCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", Summary.InconclusiveCount);
+            WriteSummaryCount(", Skipped: ", Summary.TotalSkipCount);
             _writer.WriteLine();
 
-            WriteSummaryCount("     Not run: ", Summary.NotRunCount);
-            WriteSummaryCount(", Invalid: ", Summary.InvalidCount, ColorStyle.Error);
-            WriteSummaryCount(", Ignored: ", Summary.IgnoreCount, ColorStyle.Warning);
-            WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
-            WriteSummaryCount(", Skipped: ", Summary.SkipCount);
-            _writer.WriteLine();
+            if (Summary.FailedCount > 0)
+            {
+                _writer.Write("    Failed Tests - "); 
+                WriteSummaryCount("Failures: ", Summary.FailureCount);
+                WriteSummaryCount(", Errors: ", Summary.ErrorCount);
+                WriteSummaryCount(", Invalid: ", Summary.InvalidCount);
+                _writer.WriteLine();
+            }
+            if (Summary.TotalSkipCount > 0)
+            {
+                _writer.Write("    Skipped Tests - "); 
+                WriteSummaryCount("Ignored: ", Summary.IgnoreCount);
+                WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
+                WriteSummaryCount(", Other: ", Summary.SkipCount);
+                _writer.WriteLine();
+            }
 
             var duration = _result.GetAttribute("duration", 0.0);
             var startTime = _result.GetAttribute("start-time", DateTime.MinValue);

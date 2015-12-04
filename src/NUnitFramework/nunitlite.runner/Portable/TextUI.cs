@@ -211,21 +211,31 @@ namespace NUnitLite
 
             _writer.WriteLine();
             _writer.WriteLine("Test Run Summary");
-            WriteLabelLine("   Overall result: ", overallResult);
+            WriteLabelLine("  Overall result: ", overallResult);
 
-            WriteSummaryCount("   Tests run: ", summary.RunCount);
+            WriteSummaryCount("  Test Count: ", summary.TestCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
-            WriteSummaryCount(", Errors: ", summary.ErrorCount);
-            WriteSummaryCount(", Failures: ", summary.FailureCount);
+            WriteSummaryCount(", Failed: ", summary.FailedCount);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
+            WriteSummaryCount(", Skipped: ", summary.TotalSkipCount);
             _writer.WriteLine();
 
-            WriteSummaryCount("     Not run: ", summary.NotRunCount);
-            WriteSummaryCount(", Invalid: ", summary.InvalidCount);
-            WriteSummaryCount(", Ignored: ", summary.IgnoreCount);
-            WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
-            WriteSummaryCount(", Skipped: ", summary.SkipCount);
-            _writer.WriteLine();
+            if (summary.FailedCount > 0)
+            {
+                _writer.Write("    Failed Tests - "); 
+                WriteSummaryCount("Failures: ", summary.FailureCount);
+                WriteSummaryCount(", Errors: ", summary.ErrorCount);
+                WriteSummaryCount(", Invalid: ", summary.InvalidCount);
+                _writer.WriteLine();
+            }
+            if (summary.TotalSkipCount > 0)
+            {
+                _writer.Write("    Skipped Tests - "); 
+                WriteSummaryCount("Ignored: ", summary.IgnoreCount);
+                WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
+                WriteSummaryCount(", Other: ", summary.SkipCount);
+                _writer.WriteLine();
+            }
 
             WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
             WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
