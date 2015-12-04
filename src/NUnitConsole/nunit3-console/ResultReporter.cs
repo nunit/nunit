@@ -116,24 +116,29 @@ namespace NUnit.ConsoleRunner
             _writer.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
             _writer.WriteLabelLine("  Overall result: ", _overallResult, overall);
 
-            WriteSummaryCount("  Tests run: ", Summary.RunCount);
+            WriteSummaryCount("  Test Count: ", Summary.TestCount);
             WriteSummaryCount(", Passed: ", Summary.PassCount);
             WriteSummaryCount(", Failed: ", Summary.FailedCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", Summary.InconclusiveCount);
-            WriteSummaryCount(", Skipped: ", Summary.TotalSkippedCount);
+            WriteSummaryCount(", Skipped: ", Summary.TotalSkipCount);
             _writer.WriteLine();
 
-            _writer.Write("    Failed Tests - "); 
-            WriteSummaryCount("Failures: ", Summary.FailureCount);
-            WriteSummaryCount(", Errors: ", Summary.ErrorCount);
-            WriteSummaryCount(", Invalid: ", Summary.InvalidCount);
-            _writer.WriteLine();
-
-            _writer.Write("    Skipped Tests - "); 
-            WriteSummaryCount("Ignored: ", Summary.IgnoreCount);
-            WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
-            WriteSummaryCount(", Other: ", Summary.SkipCount);
-            _writer.WriteLine();
+            if (Summary.FailedCount > 0)
+            {
+                _writer.Write("    Failed Tests - "); 
+                WriteSummaryCount("Failures: ", Summary.FailureCount);
+                WriteSummaryCount(", Errors: ", Summary.ErrorCount);
+                WriteSummaryCount(", Invalid: ", Summary.InvalidCount);
+                _writer.WriteLine();
+            }
+            if (Summary.TotalSkipCount > 0)
+            {
+                _writer.Write("    Skipped Tests - "); 
+                WriteSummaryCount("Ignored: ", Summary.IgnoreCount);
+                WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
+                WriteSummaryCount(", Other: ", Summary.SkipCount);
+                _writer.WriteLine();
+            }
 
             var duration = _result.GetAttribute("duration", 0.0);
             var startTime = _result.GetAttribute("start-time", DateTime.MinValue);

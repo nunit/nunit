@@ -87,7 +87,7 @@ namespace NUnitLite
         /// <summary>
         /// Returns the sum of skipped test cases, including ignored and explicit tests
         /// </summary>
-        public int TotalSkippedCount
+        public int TotalSkipCount
         {
             get { return SkipCount + IgnoreCount + ExplicitCount;  }
         }
