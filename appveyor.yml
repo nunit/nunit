@@ -6,9 +6,7 @@ before_build:
   - nuget restore nunit.sln
 
 build_script: 
-  - ps: |
-      .\appveyor.ps1
-      if ($lastexitcode -ne 0){ exit $lastexitcode }
+  - ps: .\build.ps1 -Target "Appveyor"
   
 #test_script:
 #  - msbuild NUnit.proj /t:TestAll /p:Configuration=Release /p:ResultFormat=nunit2 /p:ContinueOnFailure=ErrorAndContinue
