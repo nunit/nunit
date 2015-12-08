@@ -88,7 +88,6 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
 
         [TestCase("NUnitProject.nunit")]
         [TestCase("NUnitProject_XmlDecl.nunit")]
-        [Test]
         public void LoadNormalProject(string resourceName)
         {
             using (TestResource file = new TestResource(resourceName))
