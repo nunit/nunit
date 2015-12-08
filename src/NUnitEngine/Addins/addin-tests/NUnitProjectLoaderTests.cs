@@ -86,10 +86,12 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             }
         }
 
+        [TestCase("NUnitProject.nunit")]
+        [TestCase("NUnitProject_XmlDecl.nunit")]
         [Test]
-        public void LoadNormalProject()
+        public void LoadNormalProject(string resourceName)
         {
-            using (TestResource file = new TestResource("NUnitProject.nunit"))
+            using (TestResource file = new TestResource(resourceName))
             {
                 IProject _project = _loader.LoadFrom(file.Path);
 
