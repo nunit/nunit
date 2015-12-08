@@ -50,13 +50,13 @@
   -->
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
       <Link>Internal\AssemblyHelperTests.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
-      <Link>FrameworkVersion.cs</Link>
+      <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />

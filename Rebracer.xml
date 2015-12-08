@@ -30,6 +30,7 @@
         <PropertyValue name="Indent_FlushLabelsLeft">0</PropertyValue>
         <PropertyValue name="Indent_UnindentLabels">1</PropertyValue>
         <PropertyValue name="NewLines_AnonymousTypeInitializer_EachMember">1</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Accessor">1</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousMethod">1</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousTypeInitializer">1</PropertyValue>
         <PropertyValue name="NewLines_Braces_ArrayInitializer">0</PropertyValue>
@@ -38,6 +39,7 @@
         <PropertyValue name="NewLines_Braces_LambdaExpressionBody">1</PropertyValue>
         <PropertyValue name="NewLines_Braces_Method">1</PropertyValue>
         <PropertyValue name="NewLines_Braces_ObjectInitializer">1</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Property">1</PropertyValue>
         <PropertyValue name="NewLines_Braces_Type">1</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Catch">1</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Else">1</PropertyValue>

@@ -55,7 +55,9 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
         {
-            return (TestSuite)MakeTestFromMethod(type, methodName);
+            var suite = MakeTestFromMethod(type, methodName) as TestSuite;
+            Assert.NotNull(suite, "Unable to create parameterized suite - most likely there is no data provided");
+            return suite;
         }
 
         public static TestSuite MakeParameterizedMethodSuite(object fixture, string methodName)

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using NUnit.Framework;
 
 #if NUNIT_ENGINE
@@ -56,6 +57,10 @@ namespace NUnit.Common.Tests
         [TestCase("method=TestMethod", "<method>TestMethod</method>")]
         [TestCase("method=Test1||method=Test2||method=Test3", "<or><method>Test1</method><method>Test2</method><method>Test3</method></or>")]
         [TestCase("test='My.Test.Fixture.Method(42)'", "<test>My.Test.Fixture.Method(42)</test>")]
+        [TestCase("test='My.Test.Fixture.Method(\"xyz\")'", "<test>My.Test.Fixture.Method(&quot;xyz&quot;)</test>")]
+        [TestCase("test='My.Test.Fixture.Method(\"abc\\'s\")'", "<test>My.Test.Fixture.Method(&quot;abc&apos;s&quot;)</test>")]
+        [TestCase("test='My.Test.Fixture.Method(\"x&y&z\")'", "<test>My.Test.Fixture.Method(&quot;x&amp;y&amp;z&quot;)</test>")]
+        [TestCase("test='My.Test.Fixture.Method(\"<xyz>\")'", "<test>My.Test.Fixture.Method(&quot;&lt;xyz&gt;&quot;)</test>")]
         [TestCase("cat==Urgent && test=='My.Tests'", "<and><cat>Urgent</cat><test>My.Tests</test></and>")]
         [TestCase("cat==Urgent and test=='My.Tests'", "<and><cat>Urgent</cat><test>My.Tests</test></and>")]
         [TestCase("cat==Urgent || test=='My.Tests'", "<or><cat>Urgent</cat><test>My.Tests</test></or>")]
@@ -67,6 +72,9 @@ namespace NUnit.Common.Tests
         public void TestParser(string input, string output)
         {
             Assert.That(_parser.Parse(input), Is.EqualTo(output));
+
+            XmlDocument doc = new XmlDocument();
+            Assert.DoesNotThrow(() => doc.LoadXml(output));
         }
 
         [TestCase(null, typeof(ArgumentNullException))]

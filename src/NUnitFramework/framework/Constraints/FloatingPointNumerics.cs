@@ -132,7 +132,14 @@ namespace NUnit.Framework.Constraints
             uint rightTemp = ((0x80000000 - rightUnion.UInt) & rightSignMask);
             rightUnion.UInt = rightTemp | (rightUnion.UInt & ~rightSignMask);
 
-            return (Math.Abs(leftUnion.Int - rightUnion.Int) <= maxUlps);
+            if (leftSignMask != rightSignMask) // Overflow possible, check each against zero
+            {
+                if (Math.Abs(leftUnion.Int) > maxUlps || Math.Abs(rightUnion.Int) > maxUlps)
+                    return false;
+            }
+
+            // Either they have the same sign or both are very close to zero
+            return Math.Abs(leftUnion.Int - rightUnion.Int) <= maxUlps;
         }
 
         /// <summary>Compares two double precision floating point _values for equality</summary>
@@ -177,7 +184,14 @@ namespace NUnit.Framework.Constraints
             ulong rightTemp = ((0x8000000000000000 - rightUnion.ULong) & rightSignMask);
             rightUnion.ULong = rightTemp | (rightUnion.ULong & ~rightSignMask);
 
-            return (Math.Abs(leftUnion.Long - rightUnion.Long) <= maxUlps);
+            if (leftSignMask != rightSignMask) // Overflow possible, check each against zero
+            {
+                if (Math.Abs(leftUnion.Long) > maxUlps || Math.Abs(rightUnion.Long) > maxUlps)
+                    return false;
+            }
+
+            // Either they have the same sign or both are very close to zero
+            return Math.Abs(leftUnion.Long - rightUnion.Long) <= maxUlps;
         }
 
         /// <summary>

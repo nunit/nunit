@@ -73,6 +73,8 @@ namespace NUnit.Common
 
         public bool DebugAgent { get; private set; }
 
+        public bool PauseBeforeRun { get; private set; }
+
         #endregion
 
         #region Configure Additional Options for Console
@@ -118,6 +120,9 @@ namespace NUnit.Common
 
             this.Add("debug", "Launch debugger to debug tests.",
                 v => DebugTests = v != null);
+
+            this.Add("pause", "Pause before running to allow attaching a debugger.",
+                v => PauseBeforeRun = v != null);
 
 #if DEBUG
             this.Add("debug-agent", "Launch debugger in nunit-agent when it starts.",

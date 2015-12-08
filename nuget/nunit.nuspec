@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NUnit</id>
-    <title>NUnit Version 3</title>
+    <title>NUnit</title>
     <version>$version$</version>
     <authors>Charlie Poole</authors>
     <owners>Charlie Poole</owners>

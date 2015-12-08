@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
       <Link>DefaultOptionsProviderTests.cs</Link>
@@ -58,11 +58,12 @@
       <Link>XmlHelperTests.cs</Link>
     </Compile>
     <Compile Include="..\ConsoleVersion.cs">
-      <Link>ConsoleVersion.cs</Link>
+      <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>
     <Compile Include="ColorConsoleTests.cs" />
     <Compile Include="ColorStyleTests.cs" />
     <Compile Include="CommandLineTests.cs" />
+    <Compile Include="ConsoleOutputTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultReporterTests.cs" />

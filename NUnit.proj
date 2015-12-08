@@ -6,9 +6,11 @@
 
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
-    <PackageVersion>3.0.0</PackageVersion>
-    <PackageModifier>-rc-2</PackageModifier>
-    <DisplayVersion>3.0</DisplayVersion>
+    
+    <PackageVersion Condition="'$(PackageVersion)' == ''">3.0.1</PackageVersion>
+    <PackageModifier Condition="'$(PackageModifier)' == ''"></PackageModifier>
+    <DisplayVersion Condition="'$(DisplayVersion)' == ''">3.0.1</DisplayVersion>
+    
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
 		<PackageNameSL>$(ProjectName)SL-$(PackageVersion)$(PackageModifier)</PackageNameSL>
@@ -430,7 +432,7 @@
 
   </Target>
 
-  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
+  <Target Name="PackageNuGet" Label="Creates all NuGet packages" Condition="$(IsWindows)" DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole;PackageNugetEngine" />
   
   <Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
       DependsOnTargets="_CreateImageIfNotPresent">
@@ -464,6 +466,28 @@
 
     <Exec WorkingDirectory="$(ProjectBaseDir)"
         Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.console.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+  </Target>
+
+  <Target Name="PackageNuGetRunners" Label="Creates the NUnit.Runners NuGet package"
+      DependsOnTargets="_CreateImageIfNotPresent">
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the NUnit.Runners Nuget $(Configuration) package" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.runners.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
+
+  </Target>
+
+  <Target Name="PackageNugetEngine" Label="Creates the NUnit.Engine NuGet package"
+      DependsOnTargets="_CreateImageIfNotPresent">
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the NUnit.Engine Nuget $(Configuration) package" />
+    <Message Text="******************************************************************" />
+
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
+        Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.engine.nuspec -NoPackageAnalysis -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
   </Target>
 

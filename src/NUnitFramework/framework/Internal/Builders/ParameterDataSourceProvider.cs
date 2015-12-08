@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -24,40 +24,29 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
-    /// The ParameterDataProvider class implements IParameterDataProvider
-    /// and hosts one or more individual providers.
+    /// ParameterDataSourceProvider supplies individual argument _values for
+    /// single parameters using attributes implementing IParameterDataSource.
     /// </summary>
-    public class ParameterDataProvider : IParameterDataProvider
+    public class ParameterDataSourceProvider : IParameterDataProvider
     {
-        private List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
-
-        /// <summary>
-        /// Construct with a collection of individual providers
-        /// </summary>
-        public ParameterDataProvider(params IParameterDataProvider[] providers)
-        {
-            _providers.AddRange(providers);
-        }
+        #region IParameterDataProvider Members
 
         /// <summary>
         /// Determine whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
+        /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
-        /// <returns>True if any data is available, otherwise false.</returns>
+        /// <returns>
+        /// True if any data is available, otherwise false.
+        /// </returns>
         public bool HasDataFor(IParameterInfo parameter)
         {
-            foreach (var provider in _providers)
-                if (provider.HasDataFor(parameter))
-                    return true;
-
-            return false;
+            return parameter.IsDefined<IParameterDataSource>(false);
         }
 
         /// <summary>
@@ -66,12 +55,21 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="parameter">An IParameterInfo representing one
         /// argument to a parameterized test</param>
-        /// <returns>An IEnumerable providing the required data</returns>
+        /// <returns>
+        /// An IEnumerable providing the required data
+        /// </returns>
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
-            foreach (var provider in _providers)
-                foreach (object data in provider.GetDataFor(parameter))
-                    yield return data;
+            var data = new List<object>();
+
+            foreach (IParameterDataSource source in parameter.GetCustomAttributes<IParameterDataSource>(false))
+            {
+                foreach (object item in source.GetData(parameter))
+                    data.Add(item);
+            }
+
+            return data;
         }
+        #endregion
     }
 }

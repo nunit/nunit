@@ -31,7 +31,7 @@ using NUnit.Core;
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class ExtensionAttribute : Attribute { }
+    sealed class ExtensionAttribute : Attribute { }
 }
 
 namespace NUnit.Engine.Drivers
@@ -193,6 +193,10 @@ namespace NUnit.Engine.Drivers
         // Adds a property element and its contents
         private static void AddProperty(this XmlNode parent, string key, object val)
         {
+            if (parent == null)
+                throw new ArgumentNullException("parent");
+            if (val == null)
+                throw new ArgumentNullException("val");
             var node = parent.AddElement("property");
             node.AddAttribute("name", key);
             node.AddAttribute("value", val.ToString());

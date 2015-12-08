@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>nunit3-console.tests.dll -Vh --noheader</Commandlineparameters>
+    <Commandlineparameters>net-4.5/nunit.framework.tests.dll --inprocess</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,6 +38,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\..\..\nunit.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -100,7 +103,7 @@
       <Link>Utilities\XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\ConsoleVersion.cs">
-      <Link>ConsoleVersion.cs</Link>
+      <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>
     <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
@@ -113,9 +116,6 @@
     <Compile Include="Utilities\TeamCityServiceMessagePublisher.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="app.manifest" />
   </ItemGroup>
@@ -124,6 +124,11 @@
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\nunit.ico">
+      <Link>nunit.ico</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
