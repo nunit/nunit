@@ -109,9 +109,9 @@ namespace NUnit.Framework.Constraints
 #if NET_4_0 || NET_4_5 || PORTABLE
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (var region = AsyncInvocationRegion.Create(del))
-                    return ApplyTo(region.WaitForPendingOperationsToComplete(del()));
+                    return ApplyTo(GetTestObject(() => region.WaitForPendingOperationsToComplete(del())));
 #endif
-            return ApplyTo(del());
+            return ApplyTo(GetTestObject(del));
         }
 
 #pragma warning disable 3006
@@ -127,6 +127,18 @@ namespace NUnit.Framework.Constraints
             return ApplyTo(actual);
         }
 #pragma warning restore 3006
+
+        /// <summary>
+        /// Retrieves the value to be tested from an ActualValueDelegate.
+        /// The default implementation simply evaluates the delegate but derived
+        /// classes may override it to provide for delayed processing.
+        /// </summary>
+        /// <param name="del">An ActualValueDelegate</param>
+        /// <returns>Delegate evaluation result</returns>
+        protected virtual object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        {
+            return del();
+        }
 
         #endregion
 
