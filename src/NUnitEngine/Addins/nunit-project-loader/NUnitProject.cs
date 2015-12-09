@@ -156,7 +156,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// </summary>
         internal XmlNode RootNode
         {
-            get { return xmlDoc.FirstChild; }
+            get { return xmlDoc.DocumentElement ; }
         }
 
         /// <summary>
