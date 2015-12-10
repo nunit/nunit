@@ -310,27 +310,25 @@ namespace NUnitLite
                 _writer.WriteLine();
 
             WriteSectionHeader("Test Run Summary");
-            _writer.WriteLabelLine("   Overall result: ", overallResult, overallStyle);
+            _writer.WriteLabelLine("  Overall result: ", overallResult, overallStyle);
 
             WriteSummaryCount("  Test Count: ", summary.TestCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
-            WriteSummaryCount(", Failed: ", summary.FailedCount);
+            WriteSummaryCount(", Failed: ", summary.FailedCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
             WriteSummaryCount(", Skipped: ", summary.TotalSkipCount);
             _writer.WriteLine();
 
             if (summary.FailedCount > 0)
             {
-                _writer.Write("    Failed Tests - "); 
-                WriteSummaryCount("Failures: ", summary.FailureCount);
-                WriteSummaryCount(", Errors: ", summary.ErrorCount);
-                WriteSummaryCount(", Invalid: ", summary.InvalidCount);
+                WriteSummaryCount("    Failed Tests - Failures: ", summary.FailureCount, ColorStyle.Failure);
+                WriteSummaryCount(", Errors: ", summary.ErrorCount, ColorStyle.Error);
+                WriteSummaryCount(", Invalid: ", summary.InvalidCount, ColorStyle.Error);
                 _writer.WriteLine();
             }
             if (summary.TotalSkipCount > 0)
             {
-                _writer.Write("    Skipped Tests - "); 
-                WriteSummaryCount("Ignored: ", summary.IgnoreCount);
+                WriteSummaryCount("    Skipped Tests - Ignored: ", summary.IgnoreCount, ColorStyle.Warning);
                 WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
                 WriteSummaryCount(", Other: ", summary.SkipCount);
                 _writer.WriteLine();
