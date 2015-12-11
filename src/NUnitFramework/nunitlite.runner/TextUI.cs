@@ -27,7 +27,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using NUnit.Common;
-using NUnit.Framework.Api;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -35,7 +35,8 @@ namespace NUnitLite
 {
     public class TextUI
     {
-        private ExtendedTextWriter _outWriter;
+        private ExtendedTextWriter _writer;
+        private TextReader _reader;
 #if !SILVERLIGHT
         private NUnitLiteOptions _options;
 #endif
@@ -45,15 +46,20 @@ namespace NUnitLite
 #if SILVERLIGHT
         public TextUI(ExtendedTextWriter writer)
         {
-            _outWriter = writer;
+            _writer = writer;
+            _reader = null;
         }
 #else
-        public TextUI(NUnitLiteOptions options) : this(null, options) { }
-
+#if !PORTABLE
         public TextUI(ExtendedTextWriter writer, NUnitLiteOptions options)
+            : this(writer, Console.In, options) { }
+#endif
+
+        public TextUI(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
         {
             _options = options;
-            _outWriter = writer ?? new ColorConsoleWriter(!options.NoColor);
+            _writer = writer;
+            _reader = reader;
         }
 #endif
 
@@ -68,29 +74,23 @@ namespace NUnitLite
         /// </summary>
         public void DisplayHeader()
         {
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            Assembly executingAssembly = GetType().GetTypeInfo().Assembly;
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
             string copyright = "Copyright (C) 2015, Charlie Poole";
             string build = "";
 
-            object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-            if (attrs.Length > 0)
-            {
-                var copyrightAttr = (AssemblyCopyrightAttribute)attrs[0];
+            var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
+            if (copyrightAttr != null)
                 copyright = copyrightAttr.Copyright;
-            }
 
-            attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
-            if (attrs.Length > 0)
-            {
-                var configAttr = (AssemblyConfigurationAttribute)attrs[0];
+            var configAttr = executingAssembly.GetCustomAttribute<AssemblyConfigurationAttribute>();
+            if (configAttr != null)
                 build = string.Format("({0})", configAttr.Configuration);
-            }
 
             WriteHeader(String.Format("NUnitLite {0} {1}", version.ToString(3), build));
             WriteSubHeader(copyright);
-            SkipLine();
+            _writer.WriteLine();
         }
 
         #endregion
@@ -102,9 +102,9 @@ namespace NUnitLite
             WriteSectionHeader("Test Files");
 
             foreach (string testFile in testFiles)
-                WriteLine(ColorStyle.Default, "    " + testFile);
+                _writer.WriteLine(ColorStyle.Default, "    " + testFile);
 
-            SkipLine();
+            _writer.WriteLine();
         }
 
         #endregion
@@ -114,11 +114,10 @@ namespace NUnitLite
 #if !SILVERLIGHT
         public void DisplayHelp()
         {
-            // TODO: The NETCF code is just a placeholder. Figure out how to do it correctly.
             WriteHeader("Usage: NUNITLITE [assembly] [options]");
-            SkipLine();
+            _writer.WriteLine();
             WriteHelpLine("Runs a set of NUnitLite tests from the console.");
-            SkipLine();
+            _writer.WriteLine();
 
             WriteSectionHeader("Assembly:");
             WriteHelpLine("      An alternate assembly from which to execute tests. Normally, the tests");
@@ -126,13 +125,13 @@ namespace NUnitLite
             WriteHelpLine("      assembly is specified using the assembly name, without any path or.");
             WriteHelpLine("      extension. It must be in the same in the same directory as the executable");
             WriteHelpLine("      or on the probing path.");
-            SkipLine();
+            _writer.WriteLine();
 
             WriteSectionHeader("Options:");
             using (var sw = new StringWriter())
             {
                 _options.WriteOptionDescriptions(sw);
-                _outWriter.Write(ColorStyle.Help, sw.ToString());
+                _writer.Write(ColorStyle.Help, sw.ToString());
             }
 
             WriteSectionHeader("Notes:");
@@ -140,63 +139,29 @@ namespace NUnitLite
             WriteHelpLine("      using an absolute path. Any relative path is based on the current ");
             WriteHelpLine("      directory or on the Documents folder if running on a under the ");
             WriteHelpLine("      compact framework.");
-            SkipLine();
-            if (System.IO.Path.DirectorySeparatorChar != '/')
-            {
-                WriteHelpLine("    * On Windows, options may be prefixed by a '/' character if desired");
-                SkipLine();
-            }
+            _writer.WriteLine();
+            WriteHelpLine("    * On Windows, options may be prefixed by a '/' character if desired");
+            _writer.WriteLine();
             WriteHelpLine("    * Options that take values may use an equal sign or a colon");
             WriteHelpLine("      to separate the option from its value.");
-            SkipLine();
+            _writer.WriteLine();
             WriteHelpLine("    * Several options that specify processing of XML output take");
             WriteHelpLine("      an output specification as a value. A SPEC may take one of");
             WriteHelpLine("      the following forms:");
             WriteHelpLine("          --OPTION:filename");
             WriteHelpLine("          --OPTION:filename;format=formatname");
             WriteHelpLine("          --OPTION:filename;transform=xsltfile");
-            SkipLine();
+            _writer.WriteLine();
             WriteHelpLine("      The --result option may use any of the following formats:");
             WriteHelpLine("          nunit3 - the native XML format for NUnit 3.0");
             WriteHelpLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
-            SkipLine();
+            _writer.WriteLine();
             WriteHelpLine("      The --explore option may use any of the following formats:");
             WriteHelpLine("          nunit3 - the native XML format for NUnit 3.0");
             WriteHelpLine("          cases  - a text file listing the full names of all test cases.");
             WriteHelpLine("      If --explore is used without any specification following, a list of");
             WriteHelpLine("      test cases is output to the console.");
-            SkipLine();
-        }
-#endif
-
-        #endregion
-
-        #region DisplayRequestedOptions
-
-#if !SILVERLIGHT
-        public void DisplayRequestedOptions()
-        {
-            WriteSectionHeader("Options");
-
-            if (_options.DefaultTimeout >= 0)
-                WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
-
-            WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? NUnit.Env.DefaultWorkDirectory);
-
-            WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
-
-            if (_options.TeamCity)
-                _outWriter.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
-
-            SkipLine();
-
-            if (_options.TestList.Count > 0)
-            {
-                WriteSectionHeader("Selected test(s) -");
-                foreach (string testName in _options.TestList)
-                    _outWriter.WriteLine(ColorStyle.Value, "    " + testName);
-                SkipLine();
-            }
+            _writer.WriteLine();
         }
 #endif
 
@@ -204,16 +169,18 @@ namespace NUnitLite
 
         #region DisplayRuntimeEnvironment
 
+#if !PORTABLE
         /// <summary>
         /// Displays info about the runtime environment.
         /// </summary>
         public void DisplayRuntimeEnvironment()
         {
             WriteSectionHeader("Runtime Environment");
-            WriteLabelLine("   OS Version: ", Environment.OSVersion);
-            WriteLabelLine("  CLR Version: ", Environment.Version);
-            SkipLine();
+            _writer.WriteLabelLine("   OS Version: ", Environment.OSVersion);
+            _writer.WriteLabelLine("  CLR Version: ", Environment.Version);
+            _writer.WriteLine();
         }
+#endif
 
         #endregion
 
@@ -224,16 +191,16 @@ namespace NUnitLite
         {
             if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
             {
-                _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Filters");
+                WriteSectionHeader("Test Filters");
 
                 if (_options.TestList.Count > 0)
                     foreach (string testName in _options.TestList)
-                        _outWriter.WriteLabelLine("    Test: ", testName);
+                        _writer.WriteLabelLine("    Test: ", testName);
 
                 if (_options.WhereClauseSpecified)
-                    _outWriter.WriteLabelLine("    Where: ", _options.WhereClause.Trim());
+                    _writer.WriteLabelLine("    Where: ", _options.WhereClause.Trim());
 
-                _outWriter.WriteLine();
+                _writer.WriteLine();
             }
         }
 #endif
@@ -248,23 +215,26 @@ namespace NUnitLite
             WriteSectionHeader("Run Settings");
 
             if (_options.DefaultTimeout >= 0)
-                WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
+                _writer.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 
 #if PARALLEL
-            WriteLabelLine("    Number of Test Workers: ", 
-                _options.NumberOfTestWorkers >= 0 
-                    ? _options.NumberOfTestWorkers 
-                    : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
+            _writer.WriteLabelLine(
+                "    Number of Test Workers: ", 
+                _options.NumberOfTestWorkers >= 0
+                    ? _options.NumberOfTestWorkers
+                    : Math.Max(Environment.ProcessorCount, 2));
 #endif
 
-            WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? NUnit.Env.DefaultWorkDirectory);
+#if !PORTABLE
+            _writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? NUnit.Env.DefaultWorkDirectory);
+#endif
 
-            WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
+            _writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
 
             if (_options.TeamCity)
-                _outWriter.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
+                _writer.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
 
-            SkipLine();
+            _writer.WriteLine();
         }
 #endif
 
@@ -282,21 +252,21 @@ namespace NUnitLite
 
 #if !SILVERLIGHT
             if (_options.DisplayTestLabels != null)
-                labels = _options.DisplayTestLabels.ToUpper(CultureInfo.InvariantCulture);
+                labels = _options.DisplayTestLabels.ToUpperInvariant();
 #endif
 
             if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
             {
-                _outWriter.WriteLine(ColorStyle.SectionHeader, "=> " + result.Test.Name);
+                _writer.WriteLine(ColorStyle.SectionHeader, "=> " + result.Test.Name);
                 _testCreatedOutput = true;
             }
 
             if (result.Output.Length > 0)
             {
-                _outWriter.Write(ColorStyle.Output, result.Output);
+                _writer.Write(ColorStyle.Output, result.Output);
                 _testCreatedOutput = true;
                 if (!result.Output.EndsWith("\n"))
-                    SkipLine();
+                    _writer.WriteLine();
             }
         }
 
@@ -304,17 +274,15 @@ namespace NUnitLite
 
         #region WaitForUser
 
-#if !SILVERLIGHT
         public void WaitForUser(string message)
         {
-            // Ignore if we are not using the console
-            if (_outWriter is ColorConsoleWriter)
+            // Ignore if we don't have a TextReader
+            if (_reader != null)
             {
-                _outWriter.WriteLine(ColorStyle.Label, message);
-                Console.ReadLine();
+                _writer.WriteLine(ColorStyle.Label, message);
+                _reader.ReadLine();
             }
         }
-#endif
 
         #endregion
 
@@ -339,49 +307,47 @@ namespace NUnitLite
                         : ColorStyle.Output;
 
             if (_testCreatedOutput)
-                SkipLine();
+                _writer.WriteLine();
 
             WriteSectionHeader("Test Run Summary");
-            WriteLabelLine("  Overall result: ", overallResult, overallStyle);
+            _writer.WriteLabelLine("  Overall result: ", overallResult, overallStyle);
 
             WriteSummaryCount("  Test Count: ", summary.TestCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
-            WriteSummaryCount(", Failed: ", summary.FailedCount);
+            WriteSummaryCount(", Failed: ", summary.FailedCount, ColorStyle.Failure);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
             WriteSummaryCount(", Skipped: ", summary.TotalSkipCount);
-            _outWriter.WriteLine();
+            _writer.WriteLine();
 
             if (summary.FailedCount > 0)
             {
-                _outWriter.Write("    Failed Tests - "); 
-                WriteSummaryCount("Failures: ", summary.FailureCount);
-                WriteSummaryCount(", Errors: ", summary.ErrorCount);
-                WriteSummaryCount(", Invalid: ", summary.InvalidCount);
-                _outWriter.WriteLine();
+                WriteSummaryCount("    Failed Tests - Failures: ", summary.FailureCount, ColorStyle.Failure);
+                WriteSummaryCount(", Errors: ", summary.ErrorCount, ColorStyle.Error);
+                WriteSummaryCount(", Invalid: ", summary.InvalidCount, ColorStyle.Error);
+                _writer.WriteLine();
             }
             if (summary.TotalSkipCount > 0)
             {
-                _outWriter.Write("    Skipped Tests - "); 
-                WriteSummaryCount("Ignored: ", summary.IgnoreCount);
+                WriteSummaryCount("    Skipped Tests - Ignored: ", summary.IgnoreCount, ColorStyle.Warning);
                 WriteSummaryCount(", Explicit: ", summary.ExplicitCount);
                 WriteSummaryCount(", Other: ", summary.SkipCount);
-                _outWriter.WriteLine();
+                _writer.WriteLine();
             }
 
-            WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
-            WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
-            WriteLabelLine("    Duration: ", summary.Duration.ToString("0.000") + " seconds");
-            SkipLine();
+            _writer.WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
+            _writer.WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
+            _writer.WriteLabelLine("    Duration: ", summary.Duration.ToString("0.000") + " seconds");
+            _writer.WriteLine();
         }
 
         private void WriteSummaryCount(string label, int count)
         {
-            _outWriter.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture));
         }
 
         private void WriteSummaryCount(string label, int count, ColorStyle color)
         {
-            _outWriter.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture), count > 0 ? color : ColorStyle.Value);
+            _writer.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture), count > 0 ? color : ColorStyle.Value);
         }
 
         #endregion
@@ -393,13 +359,13 @@ namespace NUnitLite
             _reportIndex = 0;
             WriteSectionHeader("Errors and Failures");
             DisplayErrorsAndFailures(result);
-            SkipLine();
+            _writer.WriteLine();
 
 #if !SILVERLIGHT
             if (_options.StopOnError)
             {
-                WriteLine(ColorStyle.Failure, "Execution terminated after first error");
-                SkipLine();
+                _writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
+                _writer.WriteLine();
             }
 #endif
         }
@@ -415,7 +381,7 @@ namespace NUnitLite
 
             DisplayNotRunResults(result);
 
-            SkipLine();
+            _writer.WriteLine();
         }
 
         #endregion
@@ -429,11 +395,11 @@ namespace NUnitLite
         public void DisplayFullReport(ITestResult result)
         {
             WriteLine(ColorStyle.SectionHeader, "All Test Results -");
-            SkipLine();
+            _writer.WriteLine();
 
             DisplayAllResults(result, " ");
 
-            SkipLine();
+            _writer.WriteLine();
         }
 #endif
 
@@ -445,7 +411,7 @@ namespace NUnitLite
 
         public void DisplayWarning(string text)
         {
-            WriteLine(ColorStyle.Warning, text);
+            _writer.WriteLine(ColorStyle.Warning, text);
         }
 
         #endregion
@@ -454,7 +420,7 @@ namespace NUnitLite
 
         public void DisplayError(string text)
         {
-            WriteLine(ColorStyle.Error, text);
+            _writer.WriteLine(ColorStyle.Error, text);
         }
 
         #endregion
@@ -532,15 +498,15 @@ namespace NUnitLite
                     break;
             }
 
-            SkipLine();
-            WriteLine(
+            _writer.WriteLine();
+            _writer.WriteLine(
                 style, string.Format("{0}) {1} : {2}", ++_reportIndex, status, result.FullName));
 
             if (!string.IsNullOrEmpty(result.Message))
-                WriteLine(style, result.Message.TrimEnd(TRIM_CHARS));
+                _writer.WriteLine(style, result.Message.TrimEnd(TRIM_CHARS));
 
             if (!string.IsNullOrEmpty(result.StackTrace))
-                WriteLine(style, result.StackTrace.TrimEnd(TRIM_CHARS));
+                _writer.WriteLine(style, result.StackTrace.TrimEnd(TRIM_CHARS));
         }
 
 #if FULL
@@ -584,49 +550,24 @@ namespace NUnitLite
         }
 #endif
 
-        private void WriteLine(ColorStyle style, string text)
-        {
-            _outWriter.WriteLine(style, text);
-        }
-
         private void WriteHeader(string text)
         {
-            WriteLine(ColorStyle.Header, text);
+            _writer.WriteLine(ColorStyle.Header, text);
         }
 
         private void WriteSubHeader(string text)
         {
-            WriteLine(ColorStyle.SubHeader, text);
+            _writer.WriteLine(ColorStyle.SubHeader, text);
         }
 
         private void WriteSectionHeader(string text)
         {
-            WriteLine(ColorStyle.SectionHeader, text);
+            _writer.WriteLine(ColorStyle.SectionHeader, text);
         }
 
         private void WriteHelpLine(string text)
         {
-            WriteLine(ColorStyle.Help, text);
-        }
-
-        private void WriteLabel(string label, object option)
-        {
-            _outWriter.WriteLabel(label, option);
-        }
-
-        private void WriteLabelLine(string label, object option)
-        {
-            _outWriter.WriteLabelLine(label, option);
-        }
-
-        private void WriteLabelLine(string label, object option, ColorStyle valueStyle)
-        {
-            _outWriter.WriteLabelLine(label, option, valueStyle);
-        }
-
-        private void SkipLine()
-        {
-            _outWriter.WriteLine();
+            _writer.WriteLine(ColorStyle.Help, text);
         }
 
         #endregion

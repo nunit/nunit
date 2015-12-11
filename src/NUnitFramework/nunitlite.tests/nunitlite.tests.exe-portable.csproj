@@ -57,6 +57,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
+      <Link>ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>ExtendedTextWrapper.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
       <Link>DefaultOptionsProviderTests.cs</Link>
     </Compile>
@@ -103,24 +112,6 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</Project>
-      <Name>nunit.framework-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-portable.csproj">
-      <Project>{C3264FF3-E2D7-48D7-93A7-CDC9A827AD9D}</Project>
-      <Name>mock-nunit-assembly-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-portable.csproj">
-      <Project>{46ec0bc1-8f51-4b4d-b967-2ee452ea68fc}</Project>
-      <Name>nunitlite.runner-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
-      <Project>{E7541163-D7BB-4E9A-A722-D7737B7A2995}</Project>
-      <Name>nunit.testdata-portable</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
@@ -128,5 +119,18 @@
       <Link>nunit.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
+      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Name>nunit.framework-portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-portable.csproj">
+      <Project>{8c53c716-3e54-4dfe-8cd9-f4099042fcfa}</Project>
+      <Name>mock-nunit-assembly-portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite.runner\nunitlite-portable.csproj">
+      <Project>{d339bfc2-af3f-46fa-899a-14bad4bca35b}</Project>
+      <Name>nunitlite-portable</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

@@ -123,9 +123,9 @@
       <Project>{c4d16df1-b6fa-42f5-834e-b01da1baa1ff}</Project>
       <Name>mock-nunit-assembly-sl-5.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-sl-5.0.csproj">
+    <ProjectReference Include="..\nunitlite.runner\nunitlite-sl-5.0.csproj">
       <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
-      <Name>nunitlite.runner-sl-5.0</Name>
+      <Name>nunitlite-sl-5.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-sl-5.0.csproj">
       <Project>{a76794da-29a4-4d63-9850-e0e363a2fafd}</Project>

@@ -293,9 +293,9 @@
       <Project>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</Project>
       <Name>nunit.framework-4.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-4.5.csproj">
+    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly.exe-4.5.csproj">
       <Project>{C3264FF3-E2D7-48D7-93A7-CDC9A827AD9D}</Project>
-      <Name>mock-nunit-assembly-4.5</Name>
+      <Name>mock-nunit-assembly.exe-4.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-4.5.csproj">
       <Project>{E7541163-D7BB-4E9A-A722-D7737B7A2995}</Project>
