@@ -62,39 +62,30 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
-    <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>NET</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='net-4.0'">
-    <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>NET</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='net-2.0'">
-    <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>NET</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-4.5'">
-    <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-4.0'">
-    <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-2.0'">
-    <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='netcf-3.5'">
-    <ProjectSuffix>netcf-3.5</ProjectSuffix>
     <Runtime>netcf</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='sl-5.0'">
-    <ProjectSuffix>sl-5.0</ProjectSuffix>
     <Runtime>silverlight</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='portable'">
-    <ProjectSuffix>portable</ProjectSuffix>
     <Runtime>portable</Runtime>
   </PropertyGroup>
 
@@ -143,7 +134,6 @@
     <Message Text="  Configuration:     $(Configuration)" />
     <Message Text="  Current Framework: $(Framework)" />
     <Message Text="    Runtime:         $(Runtime)" />
-    <Message Text="    Proj. suffix:    $(ProjectSuffix)" />
     <Message Text=" " />
     <Message Text="Test Settings:" />
     <Message Text="  Result Directory:  $(ResultDir)" />
