@@ -30,6 +30,8 @@ namespace NUnit.Common
     /// </summary>
     public class ColorConsole : IDisposable
     {
+        private ConsoleColor _originalColor;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorConsole"/> class.
         /// </summary>
@@ -37,6 +39,7 @@ namespace NUnit.Common
         public ColorConsole(ColorStyle style)
         {
 #if !SILVERLIGHT && !NETCF
+            _originalColor = Console.ForegroundColor;
             Console.ForegroundColor = GetColor(style);
 #endif
         }
@@ -169,7 +172,7 @@ namespace NUnit.Common
         public void Dispose()
         {
 #if !SILVERLIGHT && !NETCF
-            Console.ResetColor();
+            Console.ForegroundColor = _originalColor;
 #endif
         }
 
