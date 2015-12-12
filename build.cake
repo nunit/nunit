@@ -373,7 +373,7 @@ void BuildFramework(string configuration, string framework)
 			BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			BuildProject("src/NUnitFramework/testdata/nunit.testdata-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			break;
 	}
 }
