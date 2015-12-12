@@ -258,6 +258,7 @@ var FrameworkFiles = new FilePath[]
 Task("PackageSource")
   .Does(() =>
 	{
+		CreateDirectory(PACKAGE_DIR);
 		RunGitCommand(string.Format("archive -o {0} HEAD", SRC_PACKAGE));
 	});
 
@@ -294,6 +295,7 @@ Task("PackageZip")
   .IsDependentOn("CreateImage")
 	.Does(() =>
 	{
+		CreateDirectory(PACKAGE_DIR);
 		Zip(MakeAbsolute(Directory(IMAGE_DIR)), File(ZIP_PACKAGE));
 	});
 
@@ -301,6 +303,7 @@ Task("PackageNuGet")
   .IsDependentOn("CreateImage")
 	.Does(() =>
 	{
+		CreateDirectory(PACKAGE_DIR);
 		NuGetPack("nuget/nunit.nuspec", new NuGetPackSettings()
 		{
 			Version = PACKAGE_VERSION,
