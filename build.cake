@@ -286,8 +286,11 @@ Task("CreateImage")
 			var sourceDir = BIN_DIR + Directory(runtime);
 			CreateDirectory(targetDir);
 			foreach (FilePath file in FrameworkFiles)
-				if (FileExists(sourceDir + file))
-					CopyFileToDirectory(sourceDir + file, targetDir);
+			{
+				var sourcePath = sourceDir + "/" + file;
+				if (FileExists(sourcePath))
+					CopyFileToDirectory(sourcePath, targetDir);
+			}
 		}
 	});
 
