@@ -23,9 +23,9 @@ var WindowsFrameworks = new string[] {
 
 var LinuxFrameworks = new string[] {
 	"net-4.5", "net-4.0", "net-2.0" };
-	
-var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
 
+var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
+	
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
@@ -119,7 +119,6 @@ Task("BuildConsole")
 //////////////////////////////////////////////////////////////////////
 // TEST
 //////////////////////////////////////////////////////////////////////
-
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
 	.Does(() =>
@@ -398,8 +397,6 @@ void BuildProject(string projectPath, string configuration)
         // Use MSBuild
         MSBuild(projectPath, new MSBuildSettings()
             .SetConfiguration(configuration)
-            .SetPlatformTarget(PlatformTarget.MSIL)
-//            .WithProperty("TreatWarningsAsErrors", "true")
             .SetVerbosity(Verbosity.Minimal)
             .SetNodeReuse(false)
         );
@@ -410,7 +407,6 @@ void BuildProject(string projectPath, string configuration)
         XBuild(projectPath, new XBuildSettings()
             .WithTarget("Build")
             .WithProperty("Configuration", configuration)
-//            .WithProperty("TreatWarningsAsErrors", "true")
             .SetVerbosity(Verbosity.Minimal)
         );
     }
