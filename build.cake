@@ -343,24 +343,39 @@ Task("PackageNuGet")
 
 void BuildFramework(string configuration, string framework)
 {
-    var suffix = framework.StartsWith("net-") ? framework.Substring(4) : framework;
+	switch(framework)
+	{
+		case "net-4.5":
+		case "net-4.0":
+		case "net-2.0":
+			var suffix = framework.Substring(4);
+			BuildProject("src/NUnitFramework/framework/nunit.framework-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/mock-assembly/mock-nunit-assembly-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/testdata/nunit.testdata-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-" + suffix +".csproj", configuration);
+			break;
 
-    BuildProject("src/NUnitFramework/framework/nunit.framework-" + suffix +".csproj", configuration);
-    BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-" + suffix +".csproj", configuration);
+		case "portable":
+			BuildProject("src/NUnitFramework/framework/nunit.framework-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/mock-assembly/mock-nunit-assembly-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/testdata/nunit.testdata-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/nunit.portable.tests/nunit.portable.tests.csproj", configuration);
+			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-portable.csproj", configuration);
+			break;
 
-    if (framework != "netcf-3.5" && framework != "sl-5.0")
-      BuildProject("src/NUnitFramework/mock-assembly/mock-nunit-assembly-" + suffix +".csproj", configuration);
-
-    BuildProject("src/NUnitFramework/testdata/nunit.testdata-" + suffix +".csproj", configuration);
-
-    if (framework == "portable")
-	    BuildProject("src/NUnitFramework/nunit.portable.tests/nunit.portable.tests.csproj", configuration);
-
-    if (framework != "netcf-3.5" && framework != "sl-5.0" && framework != "portable")
-      BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-" + suffix +".csproj", configuration);
-
-    BuildProject("src/NUnitFramework/tests/nunit.framework.tests-" + suffix +".csproj", configuration);
-    BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-" + suffix +".csproj", configuration);
+		case "sl-5.0":
+			BuildProject("src/NUnitFramework/framework/nunit.framework-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/testdata/nunit.testdata-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration);
+			break;
+	}
 }
 
 void BuildEngine(string configuration)
@@ -392,11 +407,17 @@ void BuildConsole(string configuration)
 
 void BuildProject(string projectPath, string configuration)
 {
+	BuildProject(projectPath, configuration, MSBuildPlatform.Automatic);
+}
+
+void BuildProject(string projectPath, string configuration, MSBuildPlatform buildPlatform)
+{
     if(IsRunningOnWindows())
     {
         // Use MSBuild
         MSBuild(projectPath, new MSBuildSettings()
             .SetConfiguration(configuration)
+			.SetMSBuildPlatform(buildPlatform)
             .SetVerbosity(Verbosity.Minimal)
             .SetNodeReuse(false)
         );
