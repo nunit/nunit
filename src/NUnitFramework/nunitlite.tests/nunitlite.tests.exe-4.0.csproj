@@ -40,9 +40,6 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -112,11 +109,11 @@
       <Name>nunit.framework-4.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-nunit-assembly.exe-4.0.csproj">
-      <Project>{ddce1ae3-aa0d-4e2d-ad1b-8ca322afa7dd}</Project>
+      <Project>{DDCE1AE3-AA0D-4E2D-AD1B-8CA322AFA7DD}</Project>
       <Name>mock-nunit-assembly.exe-4.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunitlite.runner\nunitlite-4.0.csproj">
-      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
+      <Project>{DBD0C8B0-BE4E-4CBF-AAD4-44BEA2EA830B}</Project>
       <Name>nunitlite-4.0</Name>
     </ProjectReference>
   </ItemGroup>

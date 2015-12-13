@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -66,23 +67,23 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-portable.csproj">
-      <Project>{8c53c716-3e54-4dfe-8cd9-f4099042fcfa}</Project>
+      <Project>{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}</Project>
       <Name>mock-nunit-assembly-portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunitlite.runner\nunitlite-portable.csproj">
-      <Project>{d339bfc2-af3f-46fa-899a-14bad4bca35b}</Project>
+      <Project>{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}</Project>
       <Name>nunitlite-portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
-      <Project>{9ed200e4-2026-4955-87e0-d8cea7bd9e7f}</Project>
+      <Project>{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}</Project>
       <Name>nunit.testdata-portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\tests\nunit.framework.tests-portable.csproj">
-      <Project>{3afa44b9-9df0-494e-b633-6e6b9f2bb808}</Project>
+      <Project>{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}</Project>
       <Name>nunit.framework.tests-portable</Name>
     </ProjectReference>
   </ItemGroup>
