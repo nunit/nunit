@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8472DB53-5950-4A70-864C-567A55A6C4A1}</ProjectGuid>
+    <ProjectGuid>{F0BA2671-5160-4164-B1FC-2883728C42D9}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnitLite.Tests</RootNamespace>
@@ -13,27 +13,25 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
+    <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_5;PARALLEL;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_5;PARALLEL;NUNITLITE</DefineConstants>
-    <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
-    <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -94,6 +92,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -103,30 +102,26 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
-      <Project>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</Project>
-      <Name>nunit.framework-4.5</Name>
+    <None Include="..\..\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-4.0.csproj">
+      <Project>{6A281C98-B74D-403B-8536-966871B992E3}</Project>
+      <Name>nunit.framework-4.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly.exe-4.5.csproj">
-      <Project>{C3264FF3-E2D7-48D7-93A7-CDC9A827AD9D}</Project>
-      <Name>mock-nunit-assembly.exe-4.5</Name>
+    <ProjectReference Include="..\mock-assembly\mock-assembly-4.0.csproj">
+      <Project>{ddce1ae3-aa0d-4e2d-ad1b-8ca322afa7dd}</Project>
+      <Name>mock-assembly-4.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite-4.5.csproj">
-      <Project>{46ec0bc1-8f51-4b4d-b967-2ee452ea68fc}</Project>
-      <Name>nunitlite-4.5</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-4.5.csproj">
-      <Project>{E7541163-D7BB-4E9A-A722-D7737B7A2995}</Project>
-      <Name>nunit.testdata-4.5</Name>
+    <ProjectReference Include="..\nunitlite\nunitlite-4.0.csproj">
+      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
+      <Name>nunitlite-4.0</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\nunit.snk">
-      <Link>nunit.snk</Link>
-    </None>
   </ItemGroup>
   <ItemGroup />
 </Project>

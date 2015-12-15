@@ -37,8 +37,8 @@ namespace NUnit.Framework.Api
     // Functional tests of the FrameworkController and all subordinate classes
     public class FrameworkControllerTests
     {
-        private const string MOCK_ASSEMBLY_FILE = "mock-nunit-assembly.exe";
-        private const string BAD_FILE = "mock-nunit-assembly.pdb";
+        private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
+        private const string BAD_FILE = "mock-assembly.pdb";
         private const string MISSING_FILE = "junk.dll";
         private const string EMPTY_FILTER = "<filter/>";
 
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
 #if SILVERLIGHT
-            Assert.That(result.Attributes["name"], Is.EqualTo("mock-nunit-assembly"));
+            Assert.That(result.Attributes["name"], Is.EqualTo("mock-assembly"));
 #else
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
 #endif

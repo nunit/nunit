@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>mock-nunit-assembly</AssemblyName>
+    <AssemblyName>mock-assembly</AssemblyName>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -85,8 +85,8 @@
       <Project>{6A281C98-B74D-403B-8536-966871B992E3}</Project>
       <Name>nunit.framework-4.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite-4.0.csproj">
-      <Project>{DBD0C8B0-BE4E-4CBF-AAD4-44BEA2EA830B}</Project>
+    <ProjectReference Include="..\nunitlite\nunitlite-4.0.csproj">
+      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
       <Name>nunitlite-4.0</Name>
     </ProjectReference>
   </ItemGroup>

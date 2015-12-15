@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Tests</RootNamespace>
-    <AssemblyName>mock-nunit-assembly</AssemblyName>
+    <AssemblyName>mock-assembly</AssemblyName>
     <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -40,6 +40,10 @@
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
       <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
       <Name>nunit.framework-portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite\nunitlite-portable.csproj">
+      <Project>{d339bfc2-af3f-46fa-899a-14bad4bca35b}</Project>
+      <Name>nunitlite-portable</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

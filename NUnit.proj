@@ -678,48 +678,48 @@
 
   <ItemGroup Label="Projects for building the .NET 4.5 framework" Condition="'$(Framework)'=='net-4.5' Or '$(Framework)'=='mono-4.5'">
     <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-4.5.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite-4.5.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly.exe-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-4.5.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-4.5.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-4.5.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-4.5.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests.exe-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-4.5.csproj"/>
   </ItemGroup>
   
   <ItemGroup Label="Projects for building the .NET 4.0 framework" Condition="'$(Framework)'=='net-4.0' Or '$(Framework)'=='mono-4.0'">
     <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-4.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite-4.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly.exe-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-4.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-4.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-4.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-4.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests.exe-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-4.0.csproj"/>
   </ItemGroup>
 
   <ItemGroup Label="Projects for building the .NET 2.0 framework" Condition="'$(Framework)'=='net-2.0' Or '$(Framework)'=='mono-2.0'">
     <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-2.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite-2.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly.exe-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-2.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-2.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-2.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-2.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests.exe-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-2.0.csproj"/>
   </ItemGroup>
   
   <ItemGroup Label="Projects for building the portable framework" Condition="'$(Framework)'=='portable'">
     <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-portable.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite-portable.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-portable.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-portable.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-portable.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests.exe-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-portable.csproj"/>
     <FrameworkProjects_Portable Include="$(FrameworkSrcDir)\nunit.portable.tests\nunit.framework.testrunner-portable.csproj"/>
   </ItemGroup>
 
   <ItemGroup Label="Projects for building the silverlight framework" Condition="'$(Framework)'=='sl-5.0'">
     <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-sl-5.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite-sl-5.0.csproj"/>
-    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-sl-5.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-sl-5.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-sl-5.0.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-sl-5.0.csproj"/>

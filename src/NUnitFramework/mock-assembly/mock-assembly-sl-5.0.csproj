@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Tests</RootNamespace>
-    <AssemblyName>mock-nunit-assembly</AssemblyName>
+    <AssemblyName>mock-assembly</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -77,10 +77,6 @@
     <ProjectReference Include="..\framework\nunit.framework-sl-5.0.csproj">
       <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
       <Name>nunit.framework-sl-5.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite-sl-5.0.csproj">
-      <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
-      <Name>nunitlite-sl-5.0</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

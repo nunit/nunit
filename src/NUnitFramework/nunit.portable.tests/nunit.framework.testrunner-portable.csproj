@@ -69,11 +69,11 @@
       <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-portable.csproj">
+    <ProjectReference Include="..\mock-assembly\mock-assembly-portable.csproj">
       <Project>{8c53c716-3e54-4dfe-8cd9-f4099042fcfa}</Project>
-      <Name>mock-nunit-assembly-portable</Name>
+      <Name>mock-assembly-portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite-portable.csproj">
+    <ProjectReference Include="..\nunitlite\nunitlite-portable.csproj">
       <Project>{d339bfc2-af3f-46fa-899a-14bad4bca35b}</Project>
       <Name>nunitlite-portable</Name>
     </ProjectReference>

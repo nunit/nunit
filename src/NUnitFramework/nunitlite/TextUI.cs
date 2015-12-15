@@ -219,10 +219,14 @@ namespace NUnitLite
 
 #if PARALLEL
             _writer.WriteLabelLine(
-                "    Number of Test Workers: ", 
+                "    Number of Test Workers: ",
                 _options.NumberOfTestWorkers >= 0
                     ? _options.NumberOfTestWorkers
+#if NETCF
+                    : 2);
+#else
                     : Math.Max(Environment.ProcessorCount, 2));
+#endif
 #endif
 
 #if !PORTABLE
