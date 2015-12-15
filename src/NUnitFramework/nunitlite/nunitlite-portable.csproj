@@ -49,6 +49,9 @@
     <Compile Include="..\..\Common\nunit\CommandLineOptions.cs">
       <Link>CommandLineOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>ExtendedTextWrapper.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>ExtendedTextWriter.cs</Link>
     </Compile>

@@ -84,7 +84,7 @@ namespace NUnitLite
 
             try
             {
-                return Execute(testAssembly, new NUnitLiteOptions(args), new ColorConsoleWriter(), Console.In);
+                return Execute(testAssembly, options, outWriter, Console.In);
             }
             finally
             {

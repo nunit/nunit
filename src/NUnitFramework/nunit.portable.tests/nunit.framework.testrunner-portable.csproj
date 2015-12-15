@@ -53,9 +53,6 @@
     <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
       <Link>ColorConsoleWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
-      <Link>ExtendedTextWrapper.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>

@@ -76,14 +76,6 @@ namespace NUnit.Common
         }
 
         /// <summary>
-        /// Close the ExtendedTextWriter
-        /// </summary>
-        public override void Close()
-        {
-            _writer.Close();
-        }
-
-        /// <summary>
         /// Dispose the Extended TextWriter
         /// </summary>
         protected override void Dispose(bool disposing)

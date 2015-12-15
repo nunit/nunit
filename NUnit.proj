@@ -713,7 +713,7 @@
     <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-portable.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-portable.csproj"/>
     <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-portable.csproj"/>
-    <FrameworkProjects_Portable Include="$(FrameworkSrcDir)\nunit.portable.tests\nunit.framework.testrunner-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunit.portable.tests\nunit.framework.testrunner-portable.csproj"/>
   </ItemGroup>
 
   <ItemGroup Label="Projects for building the silverlight framework" Condition="'$(Framework)'=='sl-5.0'">
