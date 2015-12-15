@@ -90,7 +90,7 @@
       <Name>nunit.framework-4.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunitlite\nunitlite-4.5.csproj">
-      <Project>{46ec0bc1-8f51-4b4d-b967-2ee452ea68fc}</Project>
+      <Project>{46EC0BC1-8F51-4B4D-B967-2EE452EA68FC}</Project>
       <Name>nunitlite-4.5</Name>
     </ProjectReference>
   </ItemGroup>

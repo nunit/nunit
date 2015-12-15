@@ -284,13 +284,13 @@
       <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
+    <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
+      <Project>{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}</Project>
+      <Name>nunit.testdata-portable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-assembly-portable.csproj">
       <Project>{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}</Project>
       <Name>mock-assembly-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
-      <Project>{9ed200e4-2026-4955-87e0-d8cea7bd9e7f}</Project>
-      <Name>nunit.testdata-portable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

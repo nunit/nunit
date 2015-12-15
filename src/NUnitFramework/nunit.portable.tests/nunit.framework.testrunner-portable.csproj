@@ -67,14 +67,6 @@
       <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-assembly-portable.csproj">
-      <Project>{8c53c716-3e54-4dfe-8cd9-f4099042fcfa}</Project>
-      <Name>mock-assembly-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite\nunitlite-portable.csproj">
-      <Project>{d339bfc2-af3f-46fa-899a-14bad4bca35b}</Project>
-      <Name>nunitlite-portable</Name>
-    </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
       <Project>{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}</Project>
       <Name>nunit.testdata-portable</Name>
@@ -82,6 +74,14 @@
     <ProjectReference Include="..\tests\nunit.framework.tests-portable.csproj">
       <Project>{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}</Project>
       <Name>nunit.framework.tests-portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite\nunitlite-portable.csproj">
+      <Project>{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}</Project>
+      <Name>nunitlite-portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-assembly-portable.csproj">
+      <Project>{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}</Project>
+      <Name>mock-assembly-portable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

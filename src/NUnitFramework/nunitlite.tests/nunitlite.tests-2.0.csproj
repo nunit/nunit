@@ -102,13 +102,13 @@
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework-2.0</Name>
     </ProjectReference>
+    <ProjectReference Include="..\nunitlite\nunitlite-2.0.csproj">
+      <Project>{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}</Project>
+      <Name>nunitlite-2.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-assembly-2.0.csproj">
       <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
       <Name>mock-assembly-2.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite\nunitlite-2.0.csproj">
-      <Project>{28c7b9d6-be1f-45e5-952c-0d5c9ca3efdf}</Project>
-      <Name>nunitlite-2.0</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
