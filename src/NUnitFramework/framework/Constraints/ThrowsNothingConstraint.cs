@@ -50,23 +50,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if no exception is thrown, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            //TestDelegate code = actual as TestDelegate;
-            //if (code == null)
-            //    throw new ArgumentException("The actual value must be a TestDelegate", "actual");
-
-            //caughtException = null;
-
-            //try
-            //{
-            //    code();
-            //}
-            //catch (Exception ex)
-            //{
-            //    caughtException = ex;
-            //}
-
-            caughtException = ThrowsConstraint.ExceptionInterceptor.Intercept(actual);
-
+            caughtException = actual as Exception;
+            if (caughtException == null && actual != null)
+                caughtException = ThrowsConstraint.ExceptionInterceptor.Intercept(actual);
             return new ConstraintResult(this, caughtException, caughtException == null);
         }
 

@@ -95,6 +95,9 @@
     <Compile Include="Assert.Equality.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Assert.Exceptions.Async.cs">
+        <DependentUpon>Assert.cs</DependentUpon>
+    </Compile>
     <Compile Include="Assert.Exceptions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
