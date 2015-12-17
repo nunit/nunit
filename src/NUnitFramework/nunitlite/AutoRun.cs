@@ -34,6 +34,23 @@ namespace NUnitLite
     /// <summary>
     /// The AutoRun class is used by executable test
     /// assemblies to control their own execution.
+    /// 
+    /// Call it from your executable test like this:
+    ///    new AutoRun().Execute(args);
+    /// The arguments can be those passed into your exe
+    /// or constructed for the purpose in your code.
+    /// 
+    /// If the tests are in a dll, you can write a stub
+    /// executable that runs them like this:
+    ///    new Autorun().Execute(testAssembly, args);
+    ///
+    /// When running tests compiled against the portable
+    /// framework, the methods above are not available.
+    /// Run your tests like this:
+    ///    new AutoRun().Execute(testAssembly, args, output, input);
+    /// Where output is an ExtendedTextWriter (normally a
+    /// ColorConsoleWriter) and input is usually Console.In
+    /// and is used by the --wait option.
     /// </summary>
     public class AutoRun
     {
@@ -46,7 +63,7 @@ namespace NUnitLite
         /// <param name="args">Arguments for NUnitLite to use</param>
         public int Execute(string[] args)
         {
-            return Execute(args, Assembly.GetCallingAssembly());
+            return Execute(Assembly.GetCallingAssembly(), args);
         }
 
         /// <summary>
@@ -58,7 +75,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="testAssembly">The test assembly</param>
         /// <param name="args">arguments for NUnitLite to use</param>
-        public int Execute(string[] args, Assembly testAssembly)
+        public int Execute(Assembly testAssembly, string[] args)
         {
             var options = new NUnitLiteOptions(args);
 
@@ -84,7 +101,8 @@ namespace NUnitLite
 
             try
             {
-                return Execute(testAssembly, options, outWriter, Console.In);
+                var textUI = new TextUI(outWriter, Console.In, options);
+                return new TextRunner(textUI, options).Execute(testAssembly);
             }
             finally
             {
@@ -108,67 +126,9 @@ namespace NUnitLite
         /// <param name="reader">A TextReader used when waiting for input</param>
         public int Execute(Assembly testAssembly, string[] args, ExtendedTextWriter writer, TextReader reader)
         {
-            return Execute(testAssembly, new NUnitLiteOptions(args), writer, reader);
-        }
-
-        /// <summary>
-        /// Execute the tests in the assembly, passing in
-        /// a list of arguments, a test assembly a writer
-        /// and a reader. This is the workhorse overload,
-        /// to which all other overloads delegate.
-        /// </summary>
-        /// <param name="testAssembly">The test assembly</param>
-        /// <param name="options">NUnitLite options object, constructed on the arguments</param>
-        /// <param name="writer">An ExtendedTextWriter to which output will be written</param>
-        /// <param name="reader">A TextReader used when waiting for input</param>
-        private int Execute(Assembly testAssembly, NUnitLiteOptions options, ExtendedTextWriter writer, TextReader reader)
-        {
-            var _textUI = new TextUI(writer, reader, options);
-
-            if (options.ShowVersion || !options.NoHeader)
-                _textUI.DisplayHeader();
-
-            if (options.ShowHelp)
-            {
-                _textUI.DisplayHelp();
-                return TextRunner.OK;
-            }
-
-            // We already showed version as a part of the header
-            if (options.ShowVersion)
-                return TextRunner.OK;
-
-            if (options.ErrorMessages.Count > 0)
-            {
-                _textUI.DisplayErrors(options.ErrorMessages);
-                _textUI.DisplayHelp();
-
-                return TextRunner.INVALID_ARG;
-            }
-
-            if (options.InputFiles.Count > 0)
-            {
-                _textUI.DisplayError("Input assemblies may not be specified when using the NUnitLite AutoRunner");
-                return TextRunner.INVALID_ARG;
-            }
-
-#if !PORTABLE
-            _textUI.DisplayRuntimeEnvironment();
-#endif
-            _textUI.DisplayTestFiles(new string[] { testAssembly.GetName().Name });
-
-            if (options.WaitBeforeExit && options.OutFile != null)
-                _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
-
-            try
-            {
-                return new TextRunner(_textUI, options).Execute(testAssembly);
-            }
-            finally
-            {
-                if (options.WaitBeforeExit)
-                    _textUI.WaitForUser("Press Enter key to continue . . .");
-            }
+            var options = new NUnitLiteOptions(args);
+            var textUI = new TextUI(writer, reader, options);
+            return new TextRunner(textUI, options).Execute(testAssembly);
         }
 
 #if !PORTABLE
@@ -212,11 +172,7 @@ namespace NUnitLite
                 "InternalTrace.{0}.{1}.log";
 #endif
 
-#if !SILVERLIGHT
             return string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
-#else
-            return string.Format(LOG_FILE_FORMAT, DateTime.Now.ToString("o"), Path.GetFileName(assemblyPath));
-#endif
         }
 #endif
     }

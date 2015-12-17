@@ -72,10 +72,8 @@ namespace NUnitLite
 
 #if !SILVERLIGHT
         private NUnitLiteOptions _options;
-#if !NETCF && !PORTABLE
-        private TeamCityEventListener _teamCity;
 #endif
-#endif
+        private ITestListener _teamCity = null;
 
         private TextUI _textUI;
 
@@ -130,6 +128,9 @@ namespace NUnitLite
 
         #region Public Methods
 
+        /// <summary>
+        /// Execute a test run
+        /// </summary>
         public int Execute()
         {
             return Execute(null);
@@ -146,6 +147,41 @@ namespace NUnitLite
             try
             {
 #if !SILVERLIGHT
+                if (_options.ShowVersion || !_options.NoHeader)
+                    _textUI.DisplayHeader();
+
+                if (_options.ShowHelp)
+                {
+                    _textUI.DisplayHelp();
+                    return TextRunner.OK;
+                }
+
+                // We already showed version as a part of the header
+                if (_options.ShowVersion)
+                    return TextRunner.OK;
+
+                if (_options.ErrorMessages.Count > 0)
+                {
+                    _textUI.DisplayErrors(_options.ErrorMessages);
+                    _textUI.DisplayHelp();
+
+                    return TextRunner.INVALID_ARG;
+                }
+
+                if (_options.InputFiles.Count > 0 && callingAssembly != null)
+                {
+                    _textUI.DisplayError("Input assemblies may not be specified when using the NUnitLite AutoRunner");
+                    return TextRunner.INVALID_ARG;
+                }
+
+#if !PORTABLE
+                _textUI.DisplayRuntimeEnvironment();
+#endif
+                _textUI.DisplayTestFiles(new string[] { callingAssembly.GetName().Name });
+
+                if (_options.WaitBeforeExit && _options.OutFile != null)
+                    _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
+
                 foreach (string nameOrPath in _options.InputFiles)
                     _assemblies.Add(AssemblyHelper.Load(nameOrPath));
 
@@ -185,6 +221,13 @@ namespace NUnitLite
                 _textUI.DisplayError(ex.ToString());
                 return UNEXPECTED_ERROR;
             }
+#if !SILVERLIGHT
+            finally
+            {
+                if (_options.WaitBeforeExit)
+                    _textUI.WaitForUser("Press Enter key to continue . . .");
+            }
+#endif
         }
 
         #endregion
@@ -330,10 +373,8 @@ namespace NUnitLite
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-#if !SILVERLIGHT && !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
-#endif
         }
 
         /// <summary>
@@ -342,12 +383,10 @@ namespace NUnitLite
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
-#if !SILVERLIGHT
-#if !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
-#endif
 
+#if !SILVERLIGHT
             _textUI.TestFinished(result);
 #else
             // For Silverlight, we can't display the results

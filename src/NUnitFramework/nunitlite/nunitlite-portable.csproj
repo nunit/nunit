@@ -73,6 +73,9 @@
     <Compile Include="..\..\Common\nunit\Tokenizer.cs">
       <Link>Tokenizer.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
+      <Link>TokenizerTests.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>

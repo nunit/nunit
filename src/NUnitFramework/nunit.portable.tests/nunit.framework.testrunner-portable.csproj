@@ -36,12 +36,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
@@ -63,14 +57,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
-      <Name>nunit.framework-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
-      <Project>{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}</Project>
-      <Name>nunit.testdata-portable</Name>
-    </ProjectReference>
     <ProjectReference Include="..\tests\nunit.framework.tests-portable.csproj">
       <Project>{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}</Project>
       <Name>nunit.framework.tests-portable</Name>
@@ -78,10 +64,6 @@
     <ProjectReference Include="..\nunitlite\nunitlite-portable.csproj">
       <Project>{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}</Project>
       <Name>nunitlite-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-assembly-portable.csproj">
-      <Project>{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}</Project>
-      <Name>mock-assembly-portable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
