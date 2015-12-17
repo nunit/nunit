@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if NET_4_5 || PORTABLE
+
+using System;
 using System.Threading.Tasks;
 
 namespace NUnit.TestUtilities
@@ -44,3 +46,5 @@ namespace NUnit.TestUtilities
         }
     }
 }
+
+#endif

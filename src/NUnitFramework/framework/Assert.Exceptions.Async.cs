@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
@@ -54,7 +55,7 @@ namespace NUnit.Framework
                     var ex = t.IsFaulted ? t.Exception.InnerException : null;
                     Assert.That(ex, expression, message, args);
                     return ex;
-                });
+                }, TaskScheduler.Default);
             }
             // Case where code() failed synchronously
             catch (Exception ex)
@@ -205,6 +206,8 @@ namespace NUnit.Framework
 
         #region DoesNotThrowAsync
 
+        private static readonly Task CompletedTask = TaskFromResult(0);
+
         /// <summary>
         /// Verifies that an async delegate does not throw an exception
         /// </summary>
@@ -223,9 +226,8 @@ namespace NUnit.Framework
                     // - succeeded (synchronously or asynchronously)
                     // - failed asynchronously
                     var ex = t.IsFaulted ? t.Exception.InnerException : null;
-                    Assert.That(ex, new ThrowsNothingConstraint(), message, args);
-                    return ex;
-                });
+                    Assert.That(ex, new ExceptionNotThrownConstraint(), message, args);
+                }, TaskScheduler.Default);
             }
             // Case where code() failed synchronously
             catch (Exception ex)
@@ -233,9 +235,9 @@ namespace NUnit.Framework
                 caughtException = ex;
             }
 
-            Assert.That(caughtException, new ThrowsNothingConstraint(), message, args);
+            Assert.That(caughtException, new ExceptionNotThrownConstraint(), message, args);
 
-            return TaskFromResult(caughtException);
+            return CompletedTask;
         }
         /// <summary>
         /// Verifies that an async delegate does not throw an exception.
@@ -252,17 +254,14 @@ namespace NUnit.Framework
 
         private static Task<T> TaskFromResult<T>(T value)
         {
-            #if NET_4_5 || PORTABLE
-
+#if NET_4_5 || PORTABLE
             return Task.FromResult(value);
-
-            #else
-
+#else
             var tcs = new TaskCompletionSource<T>();
             tcs.SetResult(value);
             return tcs.Task;
 
-            #endif
+#endif
         }
 
         private static Task<TActual> Cast<TActual>(Task<Exception> task) where TActual : Exception
@@ -273,9 +272,10 @@ namespace NUnit.Framework
                     if (t.IsFaulted)
                         ExceptionHelper.Rethrow(t.Exception.InnerException);
                     return (TActual)t.Result;
-                });
+                }, TaskScheduler.Default);
         }
 
         #endregion
     }
 }
+#endif
