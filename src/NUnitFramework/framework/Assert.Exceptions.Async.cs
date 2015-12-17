@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 
 
 namespace NUnit.Framework
@@ -50,7 +51,7 @@ namespace NUnit.Framework
                     // Case where code() either
                     // - succeeded (synchronously or asynchronously)
                     // - failed asynchronously
-                    var ex = t.Exception?.InnerException;
+                    var ex = t.IsFaulted ? t.Exception.InnerException : null;
                     Assert.That(ex, expression, message, args);
                     return ex;
                 });
@@ -221,7 +222,7 @@ namespace NUnit.Framework
                     // Case where code() either
                     // - succeeded (synchronously or asynchronously)
                     // - failed asynchronously
-                    var ex = t.Exception?.InnerException;
+                    var ex = t.IsFaulted ? t.Exception.InnerException : null;
                     Assert.That(ex, new ThrowsNothingConstraint(), message, args);
                     return ex;
                 });
@@ -270,7 +271,7 @@ namespace NUnit.Framework
                 .ContinueWith(t =>
                 {
                     if (t.IsFaulted)
-                        throw t.Exception.InnerException;
+                        ExceptionHelper.Rethrow(t.Exception.InnerException);
                     return (TActual)t.Result;
                 });
         }
