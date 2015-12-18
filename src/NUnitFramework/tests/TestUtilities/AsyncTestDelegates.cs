@@ -14,7 +14,7 @@ namespace NUnit.TestUtilities
 
         public static Task ThrowsArgumentExceptionAsync()
         {
-            return Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); });
+            return Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }, TaskScheduler.Default);
         }
 
         public static Task ThrowsNothing()
@@ -35,7 +35,7 @@ namespace NUnit.TestUtilities
 
         public static Task ThrowsNullReferenceExceptionAsync()
         {
-            return Delay(5).ContinueWith(t => { throw new NullReferenceException("my message"); });
+            return Delay(5).ContinueWith(t => { throw new NullReferenceException("my message"); }, TaskScheduler.Default);
         }
 
         public static Task ThrowsSystemException()
@@ -45,15 +45,15 @@ namespace NUnit.TestUtilities
 
         public static Task ThrowsSystemExceptionAsync()
         {
-            return Delay(5).ContinueWith(t => { throw new Exception("my message"); });
+            return Delay(5).ContinueWith(t => { throw new Exception("my message"); }, TaskScheduler.Default);
         }
 
         public static Task Delay(int milliseconds)
         {
 #if NET_4_0
             var tcs = new TaskCompletionSource<int>();
-            new System.Threading.Timer(_ => tcs.SetResult(0), null, milliseconds, System.Threading.Timeout.Infinite);
-            return tcs.Task;
+            var timer = new System.Threading.Timer(_ => tcs.SetResult(0), null, milliseconds, System.Threading.Timeout.Infinite);
+            return tcs.Task.ContinueWith(t => timer.Dispose(), TaskScheduler.Default);
 #else
             return Task.Delay(milliseconds);
 #endif

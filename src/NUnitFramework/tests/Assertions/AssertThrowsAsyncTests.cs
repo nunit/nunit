@@ -1,5 +1,6 @@
 ﻿#if NET_4_0 || NET_4_5 || PORTABLE
 using System;
+using System.Threading.Tasks;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
@@ -28,15 +29,15 @@ namespace NUnit.Framework.Assertions
         {
             Assert.ThrowsAsync(typeof(ArgumentException), AsyncTestDelegates.ThrowsArgumentExceptionAsync);
             Assert.ThrowsAsync(typeof(ArgumentException),
-                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }); });
+                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }, TaskScheduler.Default); });
 
             Assert.ThrowsAsync<ArgumentException>(
-                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }); });
+                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }, TaskScheduler.Default); });
             Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
 
             // Without cast, delegate is ambiguous before C# 3.0.
             Assert.That(
-                (AsyncTestDelegate)delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }); },
+                (AsyncTestDelegate)delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }, TaskScheduler.Default); },
                     Throws.Exception.TypeOf<ArgumentException>());
         }
 
@@ -92,7 +93,7 @@ namespace NUnit.Framework.Assertions
 #endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(
-                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }); });
+                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }, TaskScheduler.Default); });
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
@@ -101,7 +102,7 @@ namespace NUnit.Framework.Assertions
 #endif
 
             ex = Assert.ThrowsAsync(typeof(ArgumentException),
-                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }); }) as ArgumentException;
+                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }, TaskScheduler.Default); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
