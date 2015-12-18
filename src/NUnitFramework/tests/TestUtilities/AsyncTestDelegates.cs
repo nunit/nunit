@@ -1,4 +1,4 @@
-﻿#if NET_4_5 || PORTABLE
+﻿#if NET_4_0 || NET_4_5 || PORTABLE
 
 using System;
 using System.Threading.Tasks;
@@ -7,42 +7,56 @@ namespace NUnit.TestUtilities
 {
     public class AsyncTestDelegates
     {
-        public static Task ThrowsArgumentExceptionSync()
+        public static Task ThrowsArgumentException()
         {
             throw new ArgumentException("myMessage", "myParam");
         }
 
-        public static async Task ThrowsArgumentExceptionAsync()
+        public static Task ThrowsArgumentExceptionAsync()
         {
-            await Task.Yield();
-            throw new ArgumentException("myMessage", "myParam");
+            return Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); });
         }
 
         public static Task ThrowsNothing()
         {
+#if NET_4_0
+            var tcs = new TaskCompletionSource<int>();
+            tcs.SetResult(0);
+            return tcs.Task;
+#else
             return Task.FromResult(0);
+#endif
         }
 
-        public static Task ThrowsNullReferenceExceptionSync()
+        public static Task ThrowsNullReferenceException()
         {
             throw new NullReferenceException("my message");
         }
 
-        public static async Task ThrowsNullReferenceExceptionAsync()
+        public static Task ThrowsNullReferenceExceptionAsync()
         {
-            await Task.Yield();
-            throw new NullReferenceException("my message");
+            return Delay(5).ContinueWith(t => { throw new NullReferenceException("my message"); });
         }
 
-        public static Task ThrowsSystemExceptionSync()
+        public static Task ThrowsSystemException()
         {
             throw new Exception("my message");
         }
 
-        public static async Task ThrowsSystemExceptionAsync()
+        public static Task ThrowsSystemExceptionAsync()
         {
-            await Task.Yield();
-            throw new Exception("my message");
+            return Delay(5).ContinueWith(t => { throw new Exception("my message"); });
+        }
+
+        public static Task Delay(int milliseconds)
+        {
+#if NET_4_0
+            var tcs = new TaskCompletionSource<int>();
+            new System.Threading.Timer(_ => tcs.SetResult(0), null, milliseconds, System.Threading.Timeout.Infinite);
+            return tcs.Task;
+#else
+            return Task.Delay(milliseconds);
+#endif
         }
     }
 }
