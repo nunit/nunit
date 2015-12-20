@@ -4,21 +4,23 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1A48458D-31A4-48D3-8EB2-2C79CFE4E82C}</ProjectGuid>
+    <ProjectGuid>{C861E6BA-852B-4BC1-ACE7-77C8D6E7898B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnitLite</RootNamespace>
-    <AssemblyName>nunit.framework.testrunner</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyName>nunitlite-runner</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PORTABLE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -28,7 +30,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
     <DefineConstants>TRACE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,12 +43,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
-      <Link>ColorConsole.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
-      <Link>ColorConsoleWriter.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
@@ -57,13 +53,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\tests\nunit.framework.tests-portable.csproj">
-      <Project>{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}</Project>
-      <Name>nunit.framework.tests-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite\nunitlite-portable.csproj">
-      <Project>{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}</Project>
-      <Name>nunitlite-portable</Name>
+    <ProjectReference Include="..\nunitlite\nunitlite-4.0.csproj">
+      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
+      <Name>nunitlite-4.0</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -27,15 +27,21 @@ using NUnit.Common;
 
 namespace NUnitLite
 {
+    /// <summary>
+    /// NUnitLite-Runner is a console program that is able to run NUnitLite
+    /// tests as an alternative to using an executable NUnitLite test.
+    /// 
+    /// Since it references a particular version of NUnitLite, it may only
+    /// be used for test assemblies built against that framework version.
+    /// 
+    /// In the special case of the portable version of nunitlite-runner,
+    /// the program is a .NET 4.5 console application.
+    /// </summary>
     class Program
     {
         static int Main(string[] args)
         {
-            return new AutoRun().Execute(
-                typeof(NUnit.Framework.Tests.TestContextTests).GetTypeInfo().Assembly,
-                args,
-                new ColorConsoleWriter(), 
-                Console.In);
+            return new TextRunner().Execute(new ColorConsoleWriter(), Console.In, args);
         }
     }
 }

@@ -54,127 +54,48 @@ namespace NUnitLite
     /// </summary>
     public class AutoRun
     {
-#if !PORTABLE
-        /// <summary>
-        /// Execute the tests in the assembly, passing in
-        /// a list of arguments. The calling assembly itself
-        /// must contain the tests to be executed.
-        /// </summary>
-        /// <param name="args">Arguments for NUnitLite to use</param>
-        public int Execute(string[] args)
-        {
-            return Execute(Assembly.GetCallingAssembly(), args);
-        }
+        private Assembly _testAssembly;
 
         /// <summary>
-        /// Execute the tests in the assembly, passing in
-        /// a list of arguments and a test assembly.
-        /// This is for use on platforms where the there is
-        /// no Assembly.GetCallingAssembly() method or when
-        /// it is desired to pass in a different assembly.
+        /// Constructor for use where GetCallingAssembly is not
+        /// available, requiring the assembly to be passed.
         /// </summary>
         /// <param name="testAssembly">The test assembly</param>
-        /// <param name="args">arguments for NUnitLite to use</param>
-        public int Execute(Assembly testAssembly, string[] args)
+        public AutoRun(Assembly testAssembly)
         {
-            var options = new NUnitLiteOptions(args);
+            _testAssembly = testAssembly;
+        }
 
-            InitializeInternalTrace(testAssembly, options);
+#if !PORTABLE
+        /// <summary>
+        /// Default Constructor, only used where GetCallingAssembly is available
+        /// </summary>
+        public AutoRun() : this(Assembly.GetCallingAssembly()) { }
 
-            ExtendedTextWriter outWriter = null;
-            if (options.OutFile != null)
-            {
-                outWriter = new ExtendedTextWrapper(new StreamWriter(Path.Combine(options.WorkDirectory, options.OutFile)));
-                Console.SetOut(outWriter);
-            }
-            else
-            {
-                outWriter = new ColorConsoleWriter();
-            }
-
-            TextWriter errWriter = null;
-            if (options.ErrFile != null)
-            {
-                errWriter = new StreamWriter(Path.Combine(options.WorkDirectory, options.ErrFile));
-                Console.SetError(errWriter);
-            }
-
-            try
-            {
-                var textUI = new TextUI(outWriter, Console.In, options);
-                return new TextRunner(textUI, options).Execute(testAssembly);
-            }
-            finally
-            {
-                if (options.OutFile != null && outWriter != null)
-                    outWriter.Close();
-
-                if (options.ErrFile != null && errWriter != null)
-                    errWriter.Close();
-            }
+        /// <summary>
+        /// Execute the tests in the assembly, passing in
+        /// a list of arguments.
+        /// </summary>
+        /// <param name="args">arguments for NUnitLite to use</param>
+        public int Execute(string[] args)
+        {
+            return new TextRunner(_testAssembly).Execute(args);
         }
 #endif
 
         /// <summary>
         /// Execute the tests in the assembly, passing in
         /// a list of arguments, a test assembly a writer
-        /// and a reader. For use in the portable build.
+        /// and a reader. For use in builds for runtimes
+        /// that don't support Assembly.GetCallingAssembly().
         /// </summary>
-        /// <param name="testAssembly">The test assembly</param>
         /// <param name="args">Arguments passed to NUnitLite</param>
         /// <param name="writer">An ExtendedTextWriter to which output will be written</param>
         /// <param name="reader">A TextReader used when waiting for input</param>
-        public int Execute(Assembly testAssembly, string[] args, ExtendedTextWriter writer, TextReader reader)
+        public int Execute(string[] args, ExtendedTextWriter writer, TextReader reader)
         {
-            var options = new NUnitLiteOptions(args);
-            var textUI = new TextUI(writer, reader, options);
-            return new TextRunner(textUI, options).Execute(testAssembly);
+            return new TextRunner(_testAssembly).Execute(writer, reader, args);
         }
-
-#if !PORTABLE
-        private void InitializeInternalTrace(Assembly testAssembly, NUnitLiteOptions _options)
-        {
-#if NETCF  // NETCF: Try to unify
-            var assemblyPath = testAssembly.GetName().CodeBase;
-#else
-            var assemblyPath = testAssembly.Location;
-#endif
-            
-            var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel ?? "Off", true);
-
-            if (traceLevel != InternalTraceLevel.Off)
-            {
-                var logName = GetLogFileName(assemblyPath);
-
-#if NETCF // NETCF: Try to encapsulate this
-                InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
-#else
-                StreamWriter streamWriter = null;
-                if (traceLevel > InternalTraceLevel.Off)
-                {
-                    string logPath = Path.Combine(Environment.CurrentDirectory, logName);
-                    streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
-                    streamWriter.AutoFlush = true;
-                }
-                InternalTrace.Initialize(streamWriter, traceLevel);
-#endif
-            }
-        }
-
-        private string GetLogFileName(string assemblyPath)
-        {
-            // Some mobiles don't have an Open With menu item,
-            // so we use .txt, which is opened easily.
-            const string LOG_FILE_FORMAT =
-#if NETCF
-                "InternalTrace.{0}.{1}.txt";
-#else
-                "InternalTrace.{0}.{1}.log";
-#endif
-
-            return string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
-        }
-#endif
     }
 }
 #endif

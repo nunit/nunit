@@ -40,6 +40,7 @@ namespace NUnit.Framework.Api
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
         private const string BAD_FILE = "mock-assembly.pdb";
         private const string MISSING_FILE = "junk.dll";
+        private const string MISSING_NAME = "junk";
         private const string EMPTY_FILTER = "<filter/>";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
@@ -130,7 +131,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -189,7 +190,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
 
@@ -294,7 +295,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 

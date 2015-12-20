@@ -37,23 +37,9 @@ namespace NUnitLite
     {
         private ExtendedTextWriter _writer;
         private TextReader _reader;
-#if !SILVERLIGHT
         private NUnitLiteOptions _options;
-#endif
 
         #region Constructors
-
-#if SILVERLIGHT
-        public TextUI(ExtendedTextWriter writer)
-        {
-            _writer = writer;
-            _reader = null;
-        }
-#else
-#if !PORTABLE
-        public TextUI(ExtendedTextWriter writer, NUnitLiteOptions options)
-            : this(writer, Console.In, options) { }
-#endif
 
         public TextUI(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
         {
@@ -61,11 +47,20 @@ namespace NUnitLite
             _writer = writer;
             _reader = reader;
         }
+
+        public TextUI(ExtendedTextWriter writer, TextReader reader)
+            : this(writer, reader, new NUnitLiteOptions()) { }
+
+        public TextUI(ExtendedTextWriter writer)
+#if SILVERLIGHT || PORTABLE
+            : this(writer, null, new NUnitLiteOptions()) { }
+#else
+            : this(writer, Console.In, new NUnitLiteOptions()) { }
 #endif
 
-        #endregion
+    #endregion
 
-        #region Public Methods
+    #region Public Methods
 
         #region DisplayHeader
 
@@ -97,7 +92,7 @@ namespace NUnitLite
 
         #region DisplayTestFiles
 
-        public void DisplayTestFiles(string[] testFiles)
+        public void DisplayTestFiles(IEnumerable<string> testFiles)
         {
             WriteSectionHeader("Test Files");
 
@@ -111,7 +106,6 @@ namespace NUnitLite
 
         #region DisplayHelp
 
-#if !SILVERLIGHT
         public void DisplayHelp()
         {
             WriteHeader("Usage: NUNITLITE [assembly] [options]");
@@ -163,30 +157,28 @@ namespace NUnitLite
             WriteHelpLine("      test cases is output to the console.");
             _writer.WriteLine();
         }
-#endif
 
         #endregion
 
         #region DisplayRuntimeEnvironment
 
-#if !PORTABLE
         /// <summary>
         /// Displays info about the runtime environment.
         /// </summary>
         public void DisplayRuntimeEnvironment()
         {
+#if !PORTABLE
             WriteSectionHeader("Runtime Environment");
             _writer.WriteLabelLine("   OS Version: ", Environment.OSVersion);
             _writer.WriteLabelLine("  CLR Version: ", Environment.Version);
             _writer.WriteLine();
-        }
 #endif
+        }
 
         #endregion
 
         #region DisplayTestFilters
 
-#if !SILVERLIGHT
         public void DisplayTestFilters()
         {
             if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
@@ -203,13 +195,11 @@ namespace NUnitLite
                 _writer.WriteLine();
             }
         }
-#endif
 
         #endregion
 
         #region DisplayRunSettings
 
-#if !SILVERLIGHT
         public void DisplayRunSettings()
         {
             WriteSectionHeader("Run Settings");
@@ -240,7 +230,6 @@ namespace NUnitLite
 
             _writer.WriteLine();
         }
-#endif
 
         #endregion
 
@@ -261,7 +250,7 @@ namespace NUnitLite
 
             if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
             {
-                _writer.WriteLine(ColorStyle.SectionHeader, "=> " + result.Test.Name);
+                _writer.WriteLine(ColorStyle.SectionHeader, "=> " + result.Test.FullName);
                 _testCreatedOutput = true;
             }
 
@@ -271,6 +260,12 @@ namespace NUnitLite
                 _testCreatedOutput = true;
                 if (!result.Output.EndsWith("\n"))
                     _writer.WriteLine();
+            }
+
+            if (result.Test is TestAssembly && _testCreatedOutput)
+            {
+                _writer.WriteLine();
+                _testCreatedOutput = false;
             }
         }
 

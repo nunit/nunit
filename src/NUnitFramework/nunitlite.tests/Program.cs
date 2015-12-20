@@ -10,7 +10,7 @@ namespace NUnitLite.Tests
         public static int Main(string[] args)
         {
 #if PORTABLE
-            return new AutoRun().Execute(typeof(Program).Assembly, args, new ColorConsoleWriter(), Console.In);
+            return new AutoRun(typeof(Program).Assembly).Execute(args, new ColorConsoleWriter(), Console.In);
 #else
             return new AutoRun().Execute(args);
 #endif
