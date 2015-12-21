@@ -37,10 +37,15 @@ How to use this package:
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
     <file src="bin/net-2.0/nunitlite.dll" target="lib/net20" />
+    <file src="bin/net-2.0/nunitlite-runner.exe" target="lib/net20" />
     <file src="bin/net-4.0/nunitlite.dll" target="lib/net40" />
+    <file src="bin/net-4.0/nunitlite-runner.exe" target="lib/net40" />
     <file src="bin/net-4.5/nunitlite.dll" target="lib/net45" />
+    <file src="bin/net-4.5/nunitlite-runner.exe" target="lib/net45" />
     <file src="bin/portable/nunitlite.dll" target="lib/dotnet" />
+    <file src="bin/portable/nunitlite-runner.exe" target="lib/dotnet" />
     <file src="bin/portable/nunitlite.dll" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac" />
+    <file src="bin/portable/nunitlite-runner.exe" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac" />
     <file src="..\..\nuget\Program.cs" target="content" />
     <file src="..\..\nuget\Program.vb" target="content" />
     <file src="..\..\nuget\install.ps1" target="tools" />
