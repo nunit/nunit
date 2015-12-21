@@ -38,6 +38,7 @@
     <Compile Include="..\..\..\Common\nunit\XmlHelper.cs">
       <Link>XmlHelper.cs</Link>
     </Compile>
+    <Compile Include="StringHelper.cs" />
     <Compile Include="NUnitProject.cs" />
     <Compile Include="NUnitProjectLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
