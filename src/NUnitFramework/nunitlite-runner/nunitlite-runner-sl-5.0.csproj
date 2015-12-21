@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\sl-5.0\</OutputPath>
-    <DefineConstants>TRACE;PORTABLE</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -58,6 +58,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-sl-5.0.csproj">
+      <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
+      <Name>nunit.framework-sl-5.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\nunitlite\nunitlite-sl-5.0.csproj">
       <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
       <Name>nunitlite-sl-5.0</Name>
