@@ -26,5 +26,6 @@
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
     <file src="bin\sl-5.0\nunitlite.dll" target="lib\sl50" />
+    <file src="bin\sl-5.0\nunitlite-runner.exe" target="tools\sl50" />
   </files>
 </package>

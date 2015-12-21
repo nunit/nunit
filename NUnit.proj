@@ -13,7 +13,7 @@
     
     <PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
     <PackageNameCF>$(ProjectName)CF-$(PackageVersion)$(PackageModifier)</PackageNameCF>
-		<PackageNameSL>$(ProjectName)SL-$(PackageVersion)$(PackageModifier)</PackageNameSL>
+    <PackageNameSL>$(ProjectName)SL-$(PackageVersion)$(PackageModifier)</PackageNameSL>
   </PropertyGroup>
 
   <PropertyGroup Label="Platform-specific properties">
@@ -62,39 +62,30 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
-    <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>NET</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='net-4.0'">
-    <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>NET</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='net-2.0'">
-    <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>NET</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-4.5'">
-    <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-4.0'">
-    <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-2.0'">
-    <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='netcf-3.5'">
-    <ProjectSuffix>netcf-3.5</ProjectSuffix>
     <Runtime>netcf</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='sl-5.0'">
-    <ProjectSuffix>sl-5.0</ProjectSuffix>
     <Runtime>silverlight</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='portable'">
-    <ProjectSuffix>portable</ProjectSuffix>
     <Runtime>portable</Runtime>
   </PropertyGroup>
 
@@ -102,6 +93,7 @@
     <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
     <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
     <ConsoleRunner>$(ConsoleBuildDir)\nunit3-console.exe</ConsoleRunner>
+    <NUnitLiteRunner>nunitlite-runner.exe</NUnitLiteRunner>
     <ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
     <ResultFormat Condition="'$(ResultFormat)' == ''">nunit3</ResultFormat>
     <ContinueOnFailure Condition="'$(ContinueOnFailure)' == ''">false</ContinueOnFailure>
@@ -143,7 +135,6 @@
     <Message Text="  Configuration:     $(Configuration)" />
     <Message Text="  Current Framework: $(Framework)" />
     <Message Text="    Runtime:         $(Runtime)" />
-    <Message Text="    Proj. suffix:    $(ProjectSuffix)" />
     <Message Text=" " />
     <Message Text="Test Settings:" />
     <Message Text="  Result Directory:  $(ResultDir)" />
@@ -218,7 +209,7 @@
   </Target>
 
   <Target Name="BuildFramework" Label="Build the framework for the current config and runtime">
-    <MSBuild Targets="Build" Projects="@(NUnitProjects)" 
+    <MSBuild Targets="Build" Projects="@(FrameworkProjects)" 
       Properties="Configuration=$(Configuration); Platform=AnyCPU" />
   </Target>
   
@@ -267,7 +258,7 @@
 
     <CallTarget Targets="TestFramework"
           ContinueOnError="$(ContinueOnFailure)"
-          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+          Condition="'$(Runtime)' != 'netcf'" />
 
   </Target>
 
@@ -276,7 +267,7 @@
 
     <CallTarget Targets="TestNUnitLite"
           ContinueOnError="$(ContinueOnFailure)"
-          Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+          Condition="'$(Runtime)' != 'netcf'" />
 
   </Target>
 
@@ -287,16 +278,29 @@
     <Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
     <Message Text="******************************************************************" />
 
-    <Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
+    <Error Condition="'$(Runtime)' == 'netcf'"
       Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
-    <Exec Condition="'$(Runtime)' == 'portable'" 
-        WorkingDirectory="$(ConsoleBuildDir)\$(Runtime)" 
-        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Runtime)\nunit.portable.tests.exe $(TestOptions)'
+    <Exec WorkingDirectory="$(ConsoleBuildDir)\$(Framework)" 
+        Command='$(ManagedExeLauncher) $(ConsoleBuildDir)\$(Framework)/$(NUnitLiteRunner) nunit.framework.tests.dll $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
 
-    <Exec Condition="'$(Runtime)' != 'portable'"
-        WorkingDirectory="$(ConsoleBuildDir)"
+  </Target>
+
+  <Target Name="TestFrameworkUsingConsole" DependsOnTargets="_CreateResultDir"
+      Label="Run framework tests for a runtime without checking for errors">
+
+    <Message Text="******************************************************************" />
+    <Message Text="* Testing NUnitFramework $(Framework) - $(Configuration) using Console Runner" />
+    <Message Text="******************************************************************" />
+
+    <Error Condition="'$(Runtime)' == 'netcf'"
+      Text="The full NUnit framework cannot be tested under $(Runtime)" />
+    
+    <Error Condition="'$(Runtime)' == 'portable' Or '$(Runtime) == 'silverlight'"
+      Text="The console runner does not support $(Runtime) tests" />
+
+    <Exec WorkingDirectory="$(ConsoleBuildDir)"
         Command='$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
         ContinueOnError="$(ContinueOnFailure)" />
 
@@ -309,14 +313,19 @@
     <Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
     <Message Text="******************************************************************" />
 
-    <Exec Condition="'$(Runtime)' != 'silverlight' AND '$(Runtime)' != 'portable' "
+    <Exec Condition="'$(Runtime)' != 'portable' And '$(Runtime)' != 'silverlight'"
           WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) nunitlite.tests.exe "-result:$(ResultDir)/NUnitliteResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
           ContinueOnError="$(ContinueOnFailure)" />
 
-		<Exec Condition="'$(Runtime)' == 'portable'"
+    <Exec Condition="'$(Runtime)' == 'portable'"
           WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) nunitlite.tests.exe $(TestOptions)'
+          ContinueOnError="$(ContinueOnFailure)" />
+
+    <Exec Condition="'$(Runtime)' == 'silverlight'"
+          WorkingDirectory="$(FrameworkBuildDir)"
+          Command='$(ManagedExeLauncher) $(NUnitLiteRunner) nunitlite.tests.dll $(TestOptions)'
           ContinueOnError="$(ContinueOnFailure)" />
 
   </Target>
@@ -547,43 +556,43 @@
 
   </Target>
 
-	<!-- Packaging for SilverLight -->
-	<Target Name="PackageSL" Label="Creates all packages for SilverLight"
+  <!-- Packaging for SilverLight -->
+  <Target Name="PackageSL" Label="Creates all packages for SilverLight"
     DependsOnTargets="PackageBinariesSL;PackageNuGetNUnitSL;PackageNuGetNUnitLiteSL" />
 
-	<Target Name="PackageBinariesSL" Label="Packages the SilverLight binaries as a zip" DependsOnTargets="_CreateImageIfNotPresent">
-		<Message Text="******************************************************************" />
-		<Message Text="* Creating the binary $(Configuration) package as $(PackageNameSL)$(ConfigSuffix).zip" />
-		<Message Text="******************************************************************" />
+  <Target Name="PackageBinariesSL" Label="Packages the SilverLight binaries as a zip" DependsOnTargets="_CreateImageIfNotPresent">
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the binary $(Configuration) package as $(PackageNameSL)$(ConfigSuffix).zip" />
+    <Message Text="******************************************************************" />
 
-		<Zip Files="@(SLBinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
+    <Zip Files="@(SLBinZipFiles)" WorkingDirectory="$(CurrentImageDir)"
          ZipFileName="$(ProjectPackageDir)\$(PackageNameSL)$(ConfigSuffix).zip" />
 
-	</Target>
+  </Target>
 
-	<Target Name="PackageNuGetNUnitSL" Label="Creates the NUnit Framework NuGet package for SilverLight"
+  <Target Name="PackageNuGetNUnitSL" Label="Creates the NUnit Framework NuGet package for SilverLight"
       DependsOnTargets="_CreateImageIfNotPresent">
 
-		<Message Text="******************************************************************" />
-		<Message Text="* Creating the nunit Nuget SilverLight $(Configuration) package" />
-		<Message Text="******************************************************************" />
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the nunit Nuget SilverLight $(Configuration) package" />
+    <Message Text="******************************************************************" />
 
-		<Exec WorkingDirectory="$(ProjectBaseDir)"
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
         Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitSL.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
-	</Target>
+  </Target>
 
-	<Target Name="PackageNuGetNUnitLiteSL" Label="Creates the NUnitlite NuGet package for SilverLight"
+  <Target Name="PackageNuGetNUnitLiteSL" Label="Creates the NUnitlite NuGet package for SilverLight"
       DependsOnTargets="_CreateImageIfNotPresent">
 
-		<Message Text="******************************************************************" />
-		<Message Text="* Creating the nunitlite Nuget SilverLight $(Configuration) package" />
-		<Message Text="******************************************************************" />
+    <Message Text="******************************************************************" />
+    <Message Text="* Creating the nunitlite Nuget SilverLight $(Configuration) package" />
+    <Message Text="******************************************************************" />
 
-		<Exec WorkingDirectory="$(ProjectBaseDir)"
+    <Exec WorkingDirectory="$(ProjectBaseDir)"
         Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitliteSL.nuspec -BasePath &quot;$(CurrentImageDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion)" />
 
-	</Target>
+  </Target>
 
   <Target Name="CreateImage" DependsOnTargets="_CleanCurrentImageDir">
 
@@ -673,9 +682,9 @@
     <CFBinZipFiles Include="$(CurrentImageDir)\bin\netcf-3.5\*.*" />
   </ItemGroup>
 
-	<ItemGroup>
-		<SLBinZipFiles Include="$(CurrentImageDir)\bin\sl-5.0\*.*" />
-	</ItemGroup>
+  <ItemGroup>
+    <SLBinZipFiles Include="$(CurrentImageDir)\bin\sl-5.0\*.*" />
+  </ItemGroup>
 
   <ItemGroup Label="Supported Frameworks">
     <SupportedFrameworks Include="net-4.5" />
@@ -685,21 +694,60 @@
     <SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0" />
     <SupportedFrameworks Include="portable" />
   </ItemGroup>
-  
-  <ItemGroup Label="Projects for building the framework">
-    <NUnitProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"></NUnitProjects>
-    <NUnitProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite.runner-$(ProjectSuffix).csproj"></NUnitProjects>
-    <NUnitProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-$(ProjectSuffix).csproj"
-      Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitProjects>
-    <NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
-		<NUnitProjects Include="$(FrameworkSrcDir)\nunit.portable.tests\nunit.portable.tests.csproj"
-      Condition="'$(Runtime)' == 'portable'"></NUnitProjects>
-    <NUnitProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-$(ProjectSuffix).csproj"
-      Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
-    <NUnitProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"></NUnitProjects>
-    <NUnitProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitProjects>
+
+  <ItemGroup Label="Projects for building the .NET 4.5 framework" Condition="'$(Framework)'=='net-4.5' Or '$(Framework)'=='mono-4.5'">
+    <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-4.5.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite-runner\nunitlite-runner-4.5.csproj"/>
   </ItemGroup>
   
+  <ItemGroup Label="Projects for building the .NET 4.0 framework" Condition="'$(Framework)'=='net-4.0' Or '$(Framework)'=='mono-4.0'">
+    <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-4.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite-runner\nunitlite-runner-4.0.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup Label="Projects for building the .NET 2.0 framework" Condition="'$(Framework)'=='net-2.0' Or '$(Framework)'=='mono-2.0'">
+    <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-2.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite-runner\nunitlite-runner-2.0.csproj"/>
+  </ItemGroup>
+  
+  <ItemGroup Label="Projects for building the portable framework" Condition="'$(Framework)'=='portable'">
+    <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-portable.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite-runner\nunitlite-runner-portable.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup Label="Projects for building the silverlight framework" Condition="'$(Framework)'=='sl-5.0'">
+    <FrameworkProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite\nunitlite-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-assembly-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite.tests\nunitlite.tests-sl-5.0.csproj"/>
+    <FrameworkProjects Include="$(FrameworkSrcDir)\nunitlite-runner\nunitlite-runner-sl-5.0.csproj"/>
+  </ItemGroup>
+
   <ItemGroup Label="Projects for building the engine">
     <!-- The engine and agent -->
     <EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />

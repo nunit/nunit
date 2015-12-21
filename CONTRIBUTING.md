@@ -49,11 +49,11 @@ To help new contributors get their feet wet, we have marked a number of issues w
 
 It is also a good idea to add a comment to an issue that you are working on to let everyone know. If you stop working on it, also please let us know.
 
-Please read through the [NUnit Dev Wiki]() before contributing to understand our coding standards and contribution guidelines.
+Please read through the [NUnit Dev Wiki](https://github.com/nunit/dev/wiki) before contributing to understand our coding standards and contribution guidelines.
 
 ## License
 
-NUnit is under the [MIT license](). By contributing to NUnit, you assert that:
+NUnit is under the [MIT license](https://github.com/nunit/nunit/blob/master/LICENSE.txt). By contributing to NUnit, you assert that:
 
 * The contribution is your own original work.
 * You have the right to assign the copyright for the work (it is not owned by your employer, or

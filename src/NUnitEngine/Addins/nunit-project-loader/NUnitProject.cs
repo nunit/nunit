@@ -88,30 +88,26 @@ namespace NUnit.Engine.Services.ProjectLoaders
         public TestPackage GetTestPackage(string configName)
         {
             var package = new TestPackage(ProjectPath);
-
             if (configName == null)
                 configName = ActiveConfigName;
 
             if (configName != null)
             {
                 XmlNode configNode = GetConfigNode(configName);
+                
+                string basePath = GetBasePathForConfig(configNode);
 
-                if (configNode != null)
+                foreach (XmlNode node in configNode.SelectNodes("assembly"))
                 {
-                    string basePath = GetBasePathForConfig(configNode);
-
-                    foreach (XmlNode node in configNode.SelectNodes("assembly"))
-                    {
-                        string assembly = node.GetAttribute("path");
-                        if (basePath != null)
-                            assembly = Path.Combine(basePath, assembly);
-                        package.AddSubPackage(new TestPackage(assembly));
-                    }
-
-                    var settings = GetSettingsForConfig(configNode);
-                    foreach (var key in settings.Keys)
-                        package.Settings.Add(key, settings[key]);
+                    string assembly = node.GetAttribute("path");
+                    if (basePath != null)
+                        assembly = Path.Combine(basePath, assembly);
+                    package.AddSubPackage(new TestPackage(assembly));
                 }
+
+                var settings = GetSettingsForConfig(configNode);
+                foreach (var key in settings.Keys)
+                    package.Settings.Add(key, settings[key]);
             }
 
             return package;
@@ -156,7 +152,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// </summary>
         internal XmlNode RootNode
         {
-            get { return xmlDoc.FirstChild; }
+            get { return xmlDoc.DocumentElement ; }
         }
 
         /// <summary>
@@ -179,13 +175,27 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
         #region Helper Methods
 
+        private IEnumerable<string> GetConfigNodeNames()
+        {
+            foreach (XmlNode node in ConfigNodes)
+            {
+                yield return node.GetAttribute("name");            
+            }
+        }
+
         private XmlNode GetConfigNode(string name)
         {
             foreach (XmlNode node in ConfigNodes)
                 if (node.GetAttribute("name") == name)
                     return node;
 
-            return null;
+            var configNodeNames = new List<string>(GetConfigNodeNames()).ToArray();
+            var errorMessage = "Unable to find a configuration named " + name.Enquote() + ".";
+            var tip =
+                configNodeNames.Length == 0 ? " There are no configuration nodes defined in " + ProjectPath + "." :
+                configNodeNames.Length == 1 ? " The only configuration defined is " + name.Enquote() :
+                                              " Available configuration names are " + configNodeNames.Enquote().Join(", ") + ".";
+            throw new NUnitEngineException(errorMessage + tip);
         }
 
         /// <summary>

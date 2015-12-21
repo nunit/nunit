@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <test-run id="2" testcasecount="45" result="Failed" total="45" passed="30" failed="7" inconclusive="1" skipped="7" asserts="2" start-time="2015-10-19 02:12:28Z" end-time="2015-10-19 02:12:29Z" duration="0.348616">
   <environment nunit-version="3.0.5766.32177" clr-version="4.0.30319.34209" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="D:\Dev\NUnit\nunit-3.0\bin\Debug" machine-name="CHARLIE-LAPTOP" user="charlie" user-domain="charlie-laptop" culture="en-US" uiculture="en-US" os-architecture="x86" />
-  <command-line><![CDATA["D:\Dev\NUnit\nunit-3.0\bin\Debug\nunit3-console.exe"  mock-nunit-assembly.exe ]]></command-line>
+  <command-line><![CDATA["D:\Dev\NUnit\nunit-3.0\bin\Debug\nunit3-console.exe"  mock-assembly.exe ]]></command-line>
   <settings>
     <setting name="WorkDirectory" value="D:\Dev\NUnit\nunit-3.0\bin\Debug" />
     <setting name="RuntimeFramework" value="net-2.0" />
@@ -9,7 +9,7 @@
     <setting name="DomainUsage" value="Single" />
     <setting name="NumberOfTestWorkers" value="4" />
   </settings>
-  <test-suite type="Assembly" id="0-1064" name="mock-nunit-assembly.exe" fullname="D:\Dev\NUnit\nunit-3.0\bin\Debug\mock-nunit-assembly.exe" runstate="Runnable" testcasecount="45" result="Failed" site="Child" start-time="2015-10-19 02:12:28Z" end-time="2015-10-19 02:12:29Z" duration="0.239888" total="45" passed="30" failed="7" inconclusive="1" skipped="7" asserts="2">
+  <test-suite type="Assembly" id="0-1064" name="mock-assembly.exe" fullname="D:\Dev\NUnit\nunit-3.0\bin\Debug\mock-assembly.exe" runstate="Runnable" testcasecount="45" result="Failed" site="Child" start-time="2015-10-19 02:12:28Z" end-time="2015-10-19 02:12:29Z" duration="0.239888" total="45" passed="30" failed="7" inconclusive="1" skipped="7" asserts="2">
     <properties>
       <property name="_PID" value="7472" />
       <property name="_APPDOMAIN" value="test-domain-" />

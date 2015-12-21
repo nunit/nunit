@@ -65,6 +65,24 @@ namespace NUnit.Framework.Compatibility
         }
     }
 
+    /// <summary>
+    /// Extensions for Assembly that are not available in pre-4.5 .NET releases
+    /// </summary>
+    public static class AssemblyExtensions
+    {
+        /// <summary>
+        /// An easy way to get a single custom attribute from an assembly
+        /// </summary>
+        /// <typeparam name="T">The attribute Type</typeparam>
+        /// <param name="assembly">The assembly</param>
+        /// <returns>An attribute of Type T</returns>
+        public static T GetCustomAttribute<T>(this Assembly assembly) where T : Attribute
+        {
+            T[] attrs = (T[])assembly.GetCustomAttributes(typeof(T), false);
+            return attrs.Length > 0 ? attrs[0] : null;
+        }
+    }
+
 #elif PORTABLE
 
     /// <summary>

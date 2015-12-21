@@ -285,13 +285,13 @@
       <Project>{5F6CB3DC-5CE5-4C6A-AB23-936DB3B35DCC}</Project>
       <Name>nunit.framework-netcf-3.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-netcf-3.5.csproj">
+    <ProjectReference Include="..\mock-assembly\mock-assembly-netcf-3.5.csproj">
       <Project>{D40A4728-2F9B-41D7-AAD9-7AD95D0032C3}</Project>
-      <Name>mock-nunit-assembly-netcf-3.5</Name>
+      <Name>mock-assembly-netcf-3.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-netcf-3.5.csproj">
+    <ProjectReference Include="..\nunitlite\nunitlite-netcf-3.5.csproj">
       <Project>{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}</Project>
-      <Name>nunitlite.runner-netcf-3.5</Name>
+      <Name>nunitlite-netcf-3.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\slow-tests\slow-nunit-tests-netcf-3.5.csproj">
       <Project>{48C7F514-CA22-4405-9804-AE1703B8BC3F}</Project>

@@ -66,6 +66,16 @@ namespace NUnit.Framework.Constraints
             return new ThrowsExceptionConstraintResult(this, caughtException);
         }
 
+        /// <summary>
+        /// Returns the ActualValueDelegate itself as the value to be tested.
+        /// </summary>
+        /// <param name="del">A delegate representing the code to be tested</param>
+        /// <returns>The delegate itself</returns>
+        protected override object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        {
+            return new TestDelegate(() => del());
+        }
+
         #region Nested Result Class
 
         class ThrowsExceptionConstraintResult : ConstraintResult

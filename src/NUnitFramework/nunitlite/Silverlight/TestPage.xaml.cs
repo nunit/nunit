@@ -25,18 +25,17 @@ namespace NUnitLite.Runner.Silverlight
         {
             InitializeComponent();
 
-            _callingAssembly = Assembly.GetCallingAssembly();
             _textUI = new TextUI(new TextBlockWriter(this.ScratchArea));
-            _textRunner = new TextRunner(_textUI);
+            _callingAssembly = Assembly.GetCallingAssembly();
+            _textRunner = new TextRunner(_callingAssembly);
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            // Display initial information so user sees something
             _textUI.DisplayHeader();
-
-            _textUI.DisplayTestFiles(new string[] { AssemblyHelper.GetAssemblyName(_callingAssembly).Name });
-
             _textUI.DisplayRuntimeEnvironment();
+            _textUI.DisplayTestFiles(new string[] { AssemblyHelper.GetAssemblyName(_callingAssembly).Name });
 
             Dispatcher.BeginInvoke(() => ExecuteTests());
         }
@@ -45,7 +44,10 @@ namespace NUnitLite.Runner.Silverlight
 
         private void ExecuteTests()
         {
-            _textRunner.Execute(_callingAssembly);
+            // Clear original display so info won't appear twice
+            this.ScratchArea.Inlines.Clear();
+
+            _textRunner.Execute(_textUI, new NUnitLiteOptions());
 
             ResultSummary summary = _textRunner.Summary;
 

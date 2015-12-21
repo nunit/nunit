@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Tests</RootNamespace>
-    <AssemblyName>mock-nunit-assembly</AssemblyName>
+    <AssemblyName>mock-assembly</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
@@ -70,9 +70,9 @@
       <Project>{B41DB8FB-0D2F-45CE-9345-AF469FC05EE8}</Project>
       <Name>nunit.framework-netcf-3.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-netcf-3.5.csproj">
+    <ProjectReference Include="..\nunitlite\nunitlite-netcf-3.5.csproj">
       <Project>{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}</Project>
-      <Name>nunitlite.runner-netcf-3.5</Name>
+      <Name>nunitlite-netcf-3.5</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

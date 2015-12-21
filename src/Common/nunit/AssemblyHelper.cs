@@ -41,7 +41,6 @@ namespace NUnit.Common
     {
         #region GetAssemblyPath
 
-#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the path from which the assembly defining a type was loaded.
         /// </summary>
@@ -49,17 +48,25 @@ namespace NUnit.Common
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Type type)
         {
+#if PORTABLE
+            return GetAssemblyPath(type.GetTypeInfo().Assembly);
+#else
             return GetAssemblyPath(type.Assembly);
+#endif
         }
 
         /// <summary>
         /// Gets the path from which an assembly was loaded.
+        /// For builds where this is not possible, returns
+        /// the name of the assembly.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if NETCF
+#if SILVERLIGHT
+            return GetAssemblyName(assembly).Name;
+#elif NETCF || PORTABLE
             return assembly.ManifestModule.FullyQualifiedName;
 #else
             string codeBase = assembly.CodeBase;
@@ -70,11 +77,10 @@ namespace NUnit.Common
             return assembly.Location;
 #endif
         }
-#endif
 
-        #endregion
+#endregion
 
-        #region GetDirectoryName
+#region GetDirectoryName
 
 #if !SILVERLIGHT && !PORTABLE
         /// <summary>
@@ -88,9 +94,9 @@ namespace NUnit.Common
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region GetAssemblyName
+#region GetAssemblyName
 
         /// <summary>
         /// Gets the AssemblyName of an assembly.
@@ -106,9 +112,9 @@ namespace NUnit.Common
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region Load
+#region Load
 #if PORTABLE
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
@@ -130,28 +136,27 @@ namespace NUnit.Common
         /// <returns></returns>
         public static Assembly Load(string nameOrPath)
         {
-#if !SILVERLIGHT
             var ext = Path.GetExtension(nameOrPath).ToLower();
 
-            // It's a path to an assembly, get the AssemblyName and load it
+            // Handle case where this is the path to an assembly
             if (ext == ".dll" || ext == ".exe")
             {
-#if NETCF
+#if SILVERLIGHT
+                return Assembly.Load(Path.GetFileNameWithoutExtension(nameOrPath));
+#elif NETCF
                 return Assembly.LoadFrom(nameOrPath);
 #else
-                var assemblyRef = AssemblyName.GetAssemblyName(nameOrPath);
-                return Assembly.Load(assemblyRef);
+                return Assembly.Load(AssemblyName.GetAssemblyName(nameOrPath));
 #endif
             }
-#endif
 
             // Assume it's the string representation of an AssemblyName
             return Assembly.Load(nameOrPath);
         }
 #endif
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
         private static bool IsFileUri(string uri)
@@ -187,6 +192,6 @@ namespace NUnit.Common
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

@@ -35,15 +35,13 @@
     <DebugSymbols>true</DebugSymbols>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>0414</NoWarn>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -56,6 +54,12 @@
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
+      <Link>ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
       <Link>DefaultOptionsProviderTests.cs</Link>
@@ -103,24 +107,6 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</Project>
-      <Name>nunit.framework-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-portable.csproj">
-      <Project>{C3264FF3-E2D7-48D7-93A7-CDC9A827AD9D}</Project>
-      <Name>mock-nunit-assembly-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-portable.csproj">
-      <Project>{46ec0bc1-8f51-4b4d-b967-2ee452ea68fc}</Project>
-      <Name>nunitlite.runner-portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
-      <Project>{E7541163-D7BB-4E9A-A722-D7737B7A2995}</Project>
-      <Name>nunit.testdata-portable</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
@@ -128,5 +114,18 @@
       <Link>nunit.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
+      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
+      <Name>nunit.framework-portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite\nunitlite-portable.csproj">
+      <Project>{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}</Project>
+      <Name>nunitlite-portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-assembly-portable.csproj">
+      <Project>{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}</Project>
+      <Name>mock-assembly-portable</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

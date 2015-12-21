@@ -4,55 +4,62 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E71A76CA-0089-4E1A-A7FB-210429DBED6E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{3FA7B726-8AF9-4554-B41A-0BD915E4EAB5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.Engine.Services.ProjectLoaders</RootNamespace>
-    <AssemblyName>nunit-project-loader</AssemblyName>
+    <RootNamespace>NUnitLite</RootNamespace>
+    <AssemblyName>nunitlite-runner</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\bin\Debug\addins\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Externalconsole>true</Externalconsole>
+    <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\bin\Release\addins\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Common\nunit\XmlHelper.cs">
-      <Link>XmlHelper.cs</Link>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="StringHelper.cs" />
-    <Compile Include="NUnitProject.cs" />
-    <Compile Include="NUnitProjectLoader.cs" />
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>Properties\FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RunnerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\nunit.engine.api\nunit.engine.api.csproj">
-      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api</Name>
-      <Private>False</Private>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
+      <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
+      <Name>nunit.framework-2.0</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="nunit-project-loader.addin.xml" />
+    <ProjectReference Include="..\nunitlite\nunitlite-2.0.csproj">
+      <Project>{28c7b9d6-be1f-45e5-952c-0d5c9ca3efdf}</Project>
+      <Name>nunitlite-2.0</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

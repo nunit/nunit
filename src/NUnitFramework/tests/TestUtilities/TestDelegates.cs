@@ -61,6 +61,11 @@ namespace NUnit.TestUtilities
             throw new DerivedException();
         }
 
+        public static int ThrowsInsteadOfReturns()
+        {
+            throw new Exception("my message");
+        }
+
         public class BaseException : Exception
         {
         }
