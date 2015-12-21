@@ -52,6 +52,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
+      <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
+      <Name>nunit.framework-2.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\nunitlite\nunitlite-2.0.csproj">
       <Project>{28c7b9d6-be1f-45e5-952c-0d5c9ca3efdf}</Project>
       <Name>nunitlite-2.0</Name>
