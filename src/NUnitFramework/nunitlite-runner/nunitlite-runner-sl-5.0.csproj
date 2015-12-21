@@ -2,62 +2,72 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{901DA110-F30A-4515-880D-E9D59B6ECB4E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.Tests</RootNamespace>
-    <AssemblyName>mock-nunit-assembly</AssemblyName>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <RootNamespace>NUnitLite</RootNamespace>
+    <AssemblyName>nunitlite-runner</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+    <IntermediateOutputPath>obj\$(Configuration)\sl-5.0\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PORTABLE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\sl-5.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
-    <DefineConstants>TRACE;PORTABLE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\sl-5.0\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
-      <Name>nunit.framework-portable</Name>
-    </ProjectReference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
+      <Link>ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
-    <Compile Include="MockAssembly.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\nunit.snk">
-      <Link>nunit.snk</Link>
-    </None>
+    <None Include="App.config" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-sl-5.0.csproj">
+      <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
+      <Name>nunit.framework-sl-5.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite\nunitlite-sl-5.0.csproj">
+      <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
+      <Name>nunitlite-sl-5.0</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -39,8 +39,8 @@ namespace NUnit.Framework.Api
     // Functional tests of the TestAssemblyRunner and all subordinate classes
     public class TestAssemblyRunnerTests : ITestListener
     {
-        private const string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
-        private const string BAD_FILE = "mock-nunit-assembly.pdb";
+        private const string MOCK_ASSEMBLY = "mock-assembly.exe";
+        private const string BAD_FILE = "mock-assembly.pdb";
         private const string SLOW_TESTS = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
 

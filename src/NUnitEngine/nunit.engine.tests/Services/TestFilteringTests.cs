@@ -33,7 +33,7 @@ namespace NUnit.Engine.Services.Tests
 
     public class TestFilteringTests
     {
-        private const string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
+        private const string MOCK_ASSEMBLY = "mock-assembly.exe";
 
         private NUnit3FrameworkDriver _driver;
 

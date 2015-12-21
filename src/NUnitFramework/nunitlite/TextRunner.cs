@@ -24,8 +24,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using NUnit.Common;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -67,15 +69,12 @@ namespace NUnitLite
 
         #endregion
 
+        private Assembly _testAssembly;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private ITestAssemblyRunner _runner;
 
-#if !SILVERLIGHT
         private NUnitLiteOptions _options;
-#if !NETCF && !PORTABLE
-        private TeamCityEventListener _teamCity;
-#endif
-#endif
+        private ITestListener _teamCity = null;
 
         private TextUI _textUI;
 
@@ -88,37 +87,18 @@ namespace NUnitLite
         //// <summary>
         //// Initializes a new instance of the <see cref="TextRunner"/> class.
         //// </summary>
-        //// <param name="writer">The TextWriter to use.</param>
-        //public TextRunner(ConsoleOptions options) : this(null, options) { }
+        public TextRunner() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextRunner"/> class.
+        /// Initializes a new instance of the <see cref="TextRunner"/> class
+        /// specifying a test assembly whose tests are to be run.
         /// </summary>
-        /// <param name="textUI">The text-based user interface to output results of the run</param>
-#if SILVERLIGHT
-        public TextRunner(TextUI textUI)
+        /// <param name="testAssembly"></param>
+        /// </summary>
+        public TextRunner(Assembly testAssembly)
         {
-            _textUI = textUI;
-            //_workDirectory = NUnit.Env.DefaultWorkDirectory;
+            _testAssembly = testAssembly;
         }
-#else
-        /// <param name="options">The options to use when running the test</param>
-        public TextRunner(TextUI textUI, NUnitLiteOptions options)
-        {
-            _textUI = textUI;
-            _options = options;
-            
-#if !PORTABLE
-            if (!Directory.Exists(_options.WorkDirectory))
-                Directory.CreateDirectory(_options.WorkDirectory);
-
-#if !NETCF
-            if (_options.TeamCity)
-                _teamCity = new TeamCityEventListener();
-#endif
-#endif
-        }
-#endif
 
         #endregion
 
@@ -130,30 +110,123 @@ namespace NUnitLite
 
         #region Public Methods
 
-        public int Execute()
+#if !SILVERLIGHT && !PORTABLE
+        public int Execute(string[] args)
         {
-            return Execute(null);
+            var options = new NUnitLiteOptions(args);
+
+            InitializeInternalTrace(options);
+
+            ExtendedTextWriter outWriter = null;
+            if (options.OutFile != null)
+            {
+                outWriter = new ExtendedTextWrapper(new StreamWriter(Path.Combine(options.WorkDirectory, options.OutFile)));
+                Console.SetOut(outWriter);
+            }
+            else
+            {
+                outWriter = new ColorConsoleWriter();
+            }
+
+            TextWriter errWriter = null;
+            if (options.ErrFile != null)
+            {
+                errWriter = new StreamWriter(Path.Combine(options.WorkDirectory, options.ErrFile));
+                Console.SetError(errWriter);
+            }
+
+            try
+            {
+                return Execute(outWriter, Console.In, options);
+            }
+            finally
+            {
+                if (options.OutFile != null && outWriter != null)
+                    outWriter.Close();
+
+                if (options.ErrFile != null && errWriter != null)
+                    errWriter.Close();
+            }
+        }
+#endif
+
+        public int Execute(ExtendedTextWriter writer, TextReader reader, string[] args)
+        {
+            var options = new NUnitLiteOptions(args);
+            var textUI = new TextUI(writer, reader, options);
+            return Execute(textUI, options);
+        }
+
+        public int Execute(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
+        {
+            var textUI = new TextUI(writer, reader, options);
+            return Execute(textUI, options);
         }
 
         /// <summary>
         /// Execute a test run
         /// </summary>
         /// <param name="callingAssembly">The assembly from which tests are loaded</param>
-        public int Execute(Assembly callingAssembly)
+        public int Execute(TextUI textUI, NUnitLiteOptions options)
         {
+            _textUI = textUI;
+            _options = options;
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
             try
             {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
+                if (!Directory.Exists(_options.WorkDirectory))
+                    Directory.CreateDirectory(_options.WorkDirectory);
+
+#if !NETCF
+                if (_options.TeamCity)
+                    _teamCity = new TeamCityEventListener();
+#endif
+#endif
+
+                if (_options.ShowVersion || !_options.NoHeader)
+                    _textUI.DisplayHeader();
+
+                if (_options.ShowHelp)
+                {
+                    _textUI.DisplayHelp();
+                    return TextRunner.OK;
+                }
+
+                // We already showed version as a part of the header
+                if (_options.ShowVersion)
+                    return TextRunner.OK;
+
+                if (_options.ErrorMessages.Count > 0)
+                {
+                    _textUI.DisplayErrors(_options.ErrorMessages);
+                    _textUI.DisplayHelp();
+
+                    return TextRunner.INVALID_ARG;
+                }
+
+                _textUI.DisplayRuntimeEnvironment();
+
+                var testFile = _testAssembly != null
+                    ? AssemblyHelper.GetAssemblyPath(_testAssembly)
+                    : _options.InputFiles.Count > 0
+                        ? _options.InputFiles[0]
+                        : null;
+
+                if (testFile != null)
+                {
+                    _textUI.DisplayTestFiles(new string[] { testFile });
+                    if (_testAssembly == null)
+                        _testAssembly = AssemblyHelper.Load(testFile);
+                }
+
+
+                if (_options.WaitBeforeExit && _options.OutFile != null)
+                    _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
+
                 foreach (string nameOrPath in _options.InputFiles)
                     _assemblies.Add(AssemblyHelper.Load(nameOrPath));
-
-                if (_assemblies.Count == 0)
-                    _assemblies.Add(callingAssembly);
-
-                // TODO: For now, ignore all but first assembly
-                Assembly assembly = _assemblies[0];
 
                 var runSettings = MakeRunSettings(_options);
 
@@ -163,17 +236,8 @@ namespace NUnitLite
 
                 TestFilter filter = CreateTestFilter(_options);
 
-                if (_runner.Load(assembly, runSettings) != null)
-                    return _options.Explore ? ExploreTests() : RunTests(filter, runSettings);
-#else
-                Assembly assembly = callingAssembly;
-                if (_runner.Load(assembly, new Dictionary<string, object>()) != null)
-                    return RunTests(TestFilter.Empty, null);
-#endif
-
-                var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
-                _textUI.DisplayError(string.Format("No tests found in assembly {0}", assemblyName.Name));
-                return OK;
+                _runner.Load(_testAssembly, runSettings);
+                return _options.Explore ? ExploreTests() : RunTests(filter, runSettings);
             }
             catch (FileNotFoundException ex)
             {
@@ -185,13 +249,20 @@ namespace NUnitLite
                 _textUI.DisplayError(ex.ToString());
                 return UNEXPECTED_ERROR;
             }
+#if !SILVERLIGHT
+            finally
+            {
+                if (_options.WaitBeforeExit)
+                    _textUI.WaitForUser("Press Enter key to continue . . .");
+            }
+#endif
         }
 
-        #endregion
+#endregion
 
         #region Helper Methods
 
-        private int RunTests(TestFilter filter, IDictionary runSettings)
+        public int RunTests(TestFilter filter, IDictionary runSettings)
         {
             var startTime = DateTime.UtcNow;
 
@@ -233,17 +304,14 @@ namespace NUnitLite
                 _textUI.PrintFullReport(_result);
 #endif
 
-#if !SILVERLIGHT
             _textUI.DisplayRunSettings();
-#endif
 
             _textUI.DisplaySummaryReport(Summary);
         }
 
-#if !SILVERLIGHT
         private int ExploreTests()
         {
-#if !PORTABLE
+#if !PORTABLE && !SILVERLIGHT
             ITest testNode = _runner.LoadedTest;
 
             var specs = _options.ExploreOutputSpecifications;
@@ -318,9 +386,53 @@ namespace NUnitLite
 
             return filter;
         }
+
+#if !PORTABLE && !SILVERLIGHT
+        private void InitializeInternalTrace(NUnitLiteOptions _options)
+        {
+            var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel ?? "Off", true);
+
+            if (traceLevel != InternalTraceLevel.Off)
+            {
+                var logName = GetLogFileName();
+
+#if NETCF // NETCF: Try to encapsulate this
+                InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
+#else
+                StreamWriter streamWriter = null;
+                if (traceLevel > InternalTraceLevel.Off)
+                {
+                    string logPath = Path.Combine(Environment.CurrentDirectory, logName);
+                    streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
+                    streamWriter.AutoFlush = true;
+                }
+                InternalTrace.Initialize(streamWriter, traceLevel);
+#endif
+            }
+        }
+
+        private string GetLogFileName()
+        {
+            const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.{2}";
+
+            // Some mobiles don't have an Open With menu item,
+            // so we use .txt, which is opened easily.
+#if NETCF
+            const string ext = "txt";
+#else
+            const string ext = "log";
+#endif
+            var baseName = _testAssembly != null
+                ? _testAssembly.GetName().Name
+                : _options.InputFiles.Count > 0
+                    ? Path.GetFileNameWithoutExtension(_options.InputFiles[0])
+                    : "NUnitLite";
+
+            return string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, baseName, ext);
+        }
 #endif
 
-#endregion
+        #endregion
 
         #region ITestListener Members
 
@@ -330,10 +442,8 @@ namespace NUnitLite
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-#if !SILVERLIGHT && !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
-#endif
         }
 
         /// <summary>
@@ -342,12 +452,10 @@ namespace NUnitLite
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
-#if !SILVERLIGHT
-#if !NETCF && !PORTABLE
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
-#endif
 
+#if !SILVERLIGHT
             _textUI.TestFinished(result);
 #else
             // For Silverlight, we can't display the results
@@ -359,6 +467,6 @@ namespace NUnitLite
 #endif
         }
 
-        #endregion
+#endregion
     }
 }

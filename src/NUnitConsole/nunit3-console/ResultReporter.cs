@@ -125,16 +125,14 @@ namespace NUnit.ConsoleRunner
 
             if (Summary.FailedCount > 0)
             {
-                _writer.Write("    Failed Tests - "); 
-                WriteSummaryCount("Failures: ", Summary.FailureCount);
-                WriteSummaryCount(", Errors: ", Summary.ErrorCount);
+                WriteSummaryCount("    Failed Tests - Failures: ", Summary.FailureCount);
+                WriteSummaryCount(", Errors: ", Summary.ErrorCount, ColorStyle.Error);
                 WriteSummaryCount(", Invalid: ", Summary.InvalidCount);
                 _writer.WriteLine();
             }
             if (Summary.TotalSkipCount > 0)
             {
-                _writer.Write("    Skipped Tests - "); 
-                WriteSummaryCount("Ignored: ", Summary.IgnoreCount);
+                WriteSummaryCount("    Skipped Tests - Ignored: ", Summary.IgnoreCount);
                 WriteSummaryCount(", Explicit: ", Summary.ExplicitCount);
                 WriteSummaryCount(", Other: ", Summary.SkipCount);
                 _writer.WriteLine();

@@ -313,13 +313,13 @@
       <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
       <Name>nunit.framework-sl-5.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-sl-5.0.csproj">
+    <ProjectReference Include="..\mock-assembly\mock-assembly-sl-5.0.csproj">
       <Project>{c4d16df1-b6fa-42f5-834e-b01da1baa1ff}</Project>
-      <Name>mock-nunit-assembly-sl-5.0</Name>
+      <Name>mock-assembly-sl-5.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-sl-5.0.csproj">
+    <ProjectReference Include="..\nunitlite\nunitlite-sl-5.0.csproj">
       <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
-      <Name>nunitlite.runner-sl-5.0</Name>
+      <Name>nunitlite-sl-5.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-sl-5.0.csproj">
       <Project>{a76794da-29a4-4d63-9850-e0e363a2fafd}</Project>

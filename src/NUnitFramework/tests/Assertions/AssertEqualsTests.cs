@@ -29,7 +29,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Assertions
 {
     [TestFixture]
-    public class EqualsFixture
+    public class AssertEqualsTests
     {
         [Test]
         public void Equals()
@@ -431,16 +431,7 @@ namespace NUnit.Framework.Assertions
             using (var one = new TestDirectory())
             using (var two = new TestDirectory())
             {
-#if SILVERLIGHT || PORTABLE
-                var expectedMessage = System.String.Format(
-                    "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.Directory.Name, Env.NewLine, two.Directory.Name );
-#else
-                var expectedMessage = System.String.Format(
-                    "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.ToString(), Env.NewLine, two.ToString());
-#endif
-
                 var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one.Directory, two.Directory));
-                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
 #endif
