@@ -45,7 +45,7 @@ var IMAGE_BIN_DIR = IMAGE_DIR + "bin/";
 
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
-var PORTABLE_RUNNER = BIN_DIR + "portable/nunit.portable.tests.exe";
+var NUNITLITE_RUNNER = "nunitlite-runner.exe";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
@@ -125,16 +125,12 @@ Task("TestAllFrameworks")
 	{
 		foreach(string runtime in AllFrameworks)
 		{
-		  // We currently have no way to run silverlight tests in CI
-		  if (runtime != "sl-5.0")
-		  {
-			  if (runtime == "portable")
-				  RunTest(PORTABLE_RUNNER, BIN_DIR);
-			  else
-				  RunTest(NUNIT3_CONSOLE, BIN_DIR, runtime + "/" + FRAMEWORK_TESTS);
-      
-			  RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR);
-			}
+			RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS);
+
+			if (runtime == "sl-5.0")
+				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll");
+			else
+				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR);
 		}
 	});
 
@@ -142,8 +138,15 @@ Task("TestFramework")
   .IsDependentOn("Build")
 	.Does(() => 
 	{ 
-		if (framework == "portable")
-			RunTest(PORTABLE_RUNNER, BIN_DIR);
+		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS);
+	});
+
+Task("TestFrameworkUsingConsole")
+  .IsDependentOn("Build")
+	.Does(() => 
+	{ 
+		if (framework == "portable" || framework == "sl-5.0")
+			Error("The console runner is not able to run {0} tests", framework);
 		else
 			RunTest(NUNIT3_CONSOLE, BIN_DIR, framework + "/" + FRAMEWORK_TESTS);
 	});
@@ -152,7 +155,10 @@ Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
 	.Does(() => 
 	{ 
-		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR);
+			if (framework == "sl-5.0")
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll");
+			else
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR);
 	});
 
 Task("TestEngine")
@@ -242,8 +248,8 @@ var BinFiles = new FilePath[]
 var FrameworkFiles = new FilePath[]
 {
 	"AppManifest.xaml",
-	"mock-nunit-assembly.dll",
-	"mock-nunit-assembly.exe",
+	"mock-assembly.dll",
+	"mock-assembly.exe",
 	"nunit.framework.dll",
 	"nunit.framework.xml",
 	"nunit.framework.tests.dll",
@@ -252,7 +258,9 @@ var FrameworkFiles = new FilePath[]
 	"nunit.testdata.dll",
 	"nunitlite.dll",
 	"nunitlite.tests.exe",
-	"slow-nunit-tests.dll"
+	"nunitlite.tests.dll",
+	"slow-nunit-tests.dll",
+	"nunitlite-runner.exe"
 };
 
 Task("PackageSource")
@@ -313,7 +321,19 @@ Task("PackageNuGet")
 			BasePath = IMAGE_DIR,
 			OutputDirectory = PACKAGE_DIR
 		});
+		NuGetPack("nuget/nunitSL.nuspec", new NuGetPackSettings()
+		{
+			Version = PACKAGE_VERSION,
+			BasePath = IMAGE_DIR,
+			OutputDirectory = PACKAGE_DIR
+		});
 		NuGetPack("nuget/nunitlite.nuspec", new NuGetPackSettings()
+		{
+			Version = PACKAGE_VERSION,
+			BasePath = IMAGE_DIR,
+			OutputDirectory = PACKAGE_DIR
+		});
+		NuGetPack("nuget/nunitliteSL.nuspec", new NuGetPackSettings()
 		{
 			Version = PACKAGE_VERSION,
 			BasePath = IMAGE_DIR,
@@ -356,30 +376,33 @@ void BuildFramework(string configuration, string framework)
 		case "net-2.0":
 			var suffix = framework.Substring(4);
 			BuildProject("src/NUnitFramework/framework/nunit.framework-" + suffix +".csproj", configuration);
-			BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-" + suffix +".csproj", configuration);
-			BuildProject("src/NUnitFramework/mock-assembly/mock-nunit-assembly-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite/nunitlite-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-" + suffix +".csproj", configuration);
 			BuildProject("src/NUnitFramework/testdata/nunit.testdata-" + suffix +".csproj", configuration);
 			BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-" + suffix +".csproj", configuration);
 			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-" + suffix +".csproj", configuration);
 			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-" + suffix +".csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-" + suffix + ".csproj", configuration);
 			break;
 
 		case "portable":
 			BuildProject("src/NUnitFramework/framework/nunit.framework-portable.csproj", configuration);
-			BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-portable.csproj", configuration);
-			BuildProject("src/NUnitFramework/mock-assembly/mock-nunit-assembly-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite/nunitlite-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-portable.csproj", configuration);
 			BuildProject("src/NUnitFramework/testdata/nunit.testdata-portable.csproj", configuration);
-			BuildProject("src/NUnitFramework/nunit.portable.tests/nunit.portable.tests.csproj", configuration);
 			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-portable.csproj", configuration);
 			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-portable.csproj", configuration);
+			BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-portable.csproj", configuration);
 			break;
 
 		case "sl-5.0":
 			BuildProject("src/NUnitFramework/framework/nunit.framework-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-			BuildProject("src/NUnitFramework/nunitlite.runner/nunitlite.runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/nunitlite/nunitlite-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-sl-5.0.csproj", configuration);
 			BuildProject("src/NUnitFramework/testdata/nunit.testdata-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			break;
 	}
 }
