@@ -81,7 +81,7 @@ Task("InitializeBuild")
 	{
 		var tag = AppVeyor.Environment.Repository.Tag;
 		var buildNumber = AppVeyor.Environment.Build.Number;
-		packageVersion = version + "CI" + buildNumber + dbgSuffix;
+		packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
 		AppVeyor.UpdateBuildVersion(packageVersion);
 	}
 });
