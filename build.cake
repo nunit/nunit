@@ -34,9 +34,11 @@ var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
 
-// Directories
-var PACKAGE_DIR = "package/";
-var BIN_DIR = "bin/" + configuration + "/";
+// Directories - Use CWD since there seems to be no defined project dir in Cake
+var CWD = Context.Environment.WorkingDirectory.FullPath + "\\";
+var PACKAGE_DIR = CWD + "package\\";
+var BIN_DIR = CWD + "bin\\" + configuration + "\\";
+var IMAGE_DIR = CWD + "images\\";
 
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
@@ -268,14 +270,15 @@ Task("PackageSource")
 Task("CreateImage")
 	.Does(() =>
 	{
-		var imageDir = "images/NUnit-" + packageVersion + "/";
-		var imageBinDir = imageDir + "bin/";
+		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+		var imageBinDir = currentImageDir + "bin\\";
 
-		CleanDirectory(imageDir);
+		CleanDirectory(currentImageDir);
 
-		CopyFiles(RootFiles, imageDir);
+		CopyFiles(RootFiles, currentImageDir);
 
 		CreateDirectory(imageBinDir);
+		Information("Created directory " + imageBinDir);
 
 		foreach(FilePath file in BinFiles)
 		{
@@ -304,65 +307,80 @@ Task("PackageZip")
   .IsDependentOn("CreateImage")
 	.Does(() =>
 	{
-		var imageDir = "images/NUnit-" + packageVersion + "/";
+		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
 		CreateDirectory(PACKAGE_DIR);
-		Zip(MakeAbsolute(Directory(imageDir)), File(ZIP_PACKAGE));
+		Zip(MakeAbsolute(Directory(currentImageDir)), File(ZIP_PACKAGE));
 	});
 
 Task("PackageNuGet")
   .IsDependentOn("CreateImage")
 	.Does(() =>
 	{
-		var imageDir = "images/NUnit-" + packageVersion + "/";
+		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
 
 		CreateDirectory(PACKAGE_DIR);
 		NuGetPack("nuget/nunit.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
-			BasePath = imageDir,
+			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunitSL.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
-			BasePath = imageDir,
+			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunitlite.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
-			BasePath = imageDir,
+			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunitliteSL.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
-			BasePath = imageDir,
+			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunit.console.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
-			BasePath = imageDir,
+			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
 		NuGetPack("nuget/nunit.runners.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
-			BasePath = imageDir,
+			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
 		NuGetPack("nuget/nunit.engine.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
-			BasePath = imageDir,
+			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
 	});
 
+Task("PackageMsi")
+  .IsDependentOn("CreateImage")
+	.Does(() =>
+	{
+        MSBuild("install/master/nunit.wixproj", new MSBuildSettings()
+			.WithTarget("Rebuild")
+            .SetConfiguration(configuration)
+			.WithProperty("PackageVersion", packageVersion)
+			.WithProperty("DisplayVersion", version)
+			.WithProperty("OutDir", PACKAGE_DIR)
+			.WithProperty("InstallImage", IMAGE_DIR + "NUnit-" + packageVersion)
+			.SetMSBuildPlatform(MSBuildPlatform.x86)
+            .SetNodeReuse(false)
+        );
+	});
 
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS
@@ -533,7 +551,8 @@ Task("Test")
 Task("Package")
 	.IsDependentOn("PackageSource")
 	.IsDependentOn("PackageZip")
-	.IsDependentOn("PackageNuGet");
+	.IsDependentOn("PackageNuGet")
+	.IsDependentOn("PackageMsi");
 
 Task("Appveyor")
 	.IsDependentOn("Build")
