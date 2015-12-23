@@ -10,9 +10,13 @@ var framework = Argument("framework", "net-4.5");
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var baseVersion = "3.1.0";
-var preRelease = "";
+var version = "3.1.0";
+var modifier = "";
 var displayVersion = "3.1";
+
+var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
+var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
+var packageVersion = version + modifier + dbgSuffix;
 
 //////////////////////////////////////////////////////////////////////
 // SUPPORTED FRAMEWORKS
@@ -30,18 +34,9 @@ var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
 
-var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
-var PACKAGE_VERSION = baseVersion + preRelease + dbgSuffix;
-
-var PACKAGE_NAME = "NUnit-" + PACKAGE_VERSION;
-var PACKAGE_NAME_CF = "NUnitCF-" + PACKAGE_VERSION;
-var PACKAGE_NAME_SL = "NUnitSL-" + PACKAGE_VERSION;
-
 // Directories
 var PACKAGE_DIR = "package/";
 var BIN_DIR = "bin/" + configuration + "/";
-var IMAGE_DIR = "images/" + PACKAGE_NAME + "/";
-var IMAGE_BIN_DIR = IMAGE_DIR + "bin/";
 
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
@@ -56,8 +51,8 @@ var V2_DRIVER_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
 var CONSOLE_TESTS = "nunit3-console.tests.dll";
 
 // Packages
-var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + baseVersion + dbgSuffix + "-src.zip";
-var ZIP_PACKAGE = PACKAGE_DIR + PACKAGE_NAME + ".zip";
+var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
+var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
 
 //////////////////////////////////////////////////////////////////////
 // CLEAN
@@ -71,16 +66,24 @@ Task("Clean")
 
 
 //////////////////////////////////////////////////////////////////////
-// RESTORE PACKAGES
+// INITIALIZE FOR BUILD
 //////////////////////////////////////////////////////////////////////
 
-Task("Restore-NuGet-Packages")
+Task("InitializeBuild")
     .Does(() =>
 {
     if (IsRunningOnWindows())
         NuGetRestore("./nunit.sln");
     else
         NuGetRestore("./nunit.linux.sln");
+
+	if (BuildSystem.IsRunningOnAppVeyor)
+	{
+		var tag = AppVeyor.Environment.Repository.Tag;
+		var buildNumber = AppVeyor.Environment.Build.Number;
+		packageVersion = version + "CI" + buildNumber + dbgSuffix;
+		AppVeyor.UpdateBuildVersion(packageVersion);
+	}
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -88,7 +91,7 @@ Task("Restore-NuGet-Packages")
 //////////////////////////////////////////////////////////////////////
 
 Task("BuildAllFrameworks")
-    .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("InitializeBuild")
     .Does(() =>
     {
         foreach (var runtime in AllFrameworks)
@@ -96,21 +99,21 @@ Task("BuildAllFrameworks")
     });
 
 Task("BuildFramework")
-    .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("InitializeBuild")
     .Does(() =>
     {
         BuildFramework(configuration, framework);
     });
 
 Task("BuildEngine")
-    .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("InitializeBuild")
     .Does(() =>
     {
         BuildEngine(configuration);
     });
 
 Task("BuildConsole")
-    .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("InitializeBuild")
     .Does(() =>
     {
         BuildConsole(configuration);
@@ -139,16 +142,6 @@ Task("TestFramework")
 	.Does(() => 
 	{ 
 		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS);
-	});
-
-Task("TestFrameworkUsingConsole")
-  .IsDependentOn("Build")
-	.Does(() => 
-	{ 
-		if (framework == "portable" || framework == "sl-5.0")
-			Error("The console runner is not able to run {0} tests", framework);
-		else
-			RunTest(NUNIT3_CONSOLE, BIN_DIR, framework + "/" + FRAMEWORK_TESTS);
 	});
 
 Task("TestNUnitLite")
@@ -273,24 +266,27 @@ Task("PackageSource")
 Task("CreateImage")
 	.Does(() =>
 	{
-		CleanDirectory(IMAGE_DIR);
+		var imageDir = "images/NUnit-" + packageVersion + "/";
+		var imageBinDir = imageDir + "bin/";
 
-		CopyFiles(RootFiles, IMAGE_DIR);
+		CleanDirectory(imageDir);
 
-		CreateDirectory(IMAGE_BIN_DIR);
+		CopyFiles(RootFiles, imageDir);
+
+		CreateDirectory(imageBinDir);
 
 		foreach(FilePath file in BinFiles)
 		{
 		  if (FileExists(BIN_DIR + file))
 		  {
-			  CreateDirectory(IMAGE_BIN_DIR + file.GetDirectory());
-			  CopyFile(BIN_DIR + file, IMAGE_BIN_DIR + file);
+			  CreateDirectory(imageBinDir + file.GetDirectory());
+			  CopyFile(BIN_DIR + file, imageBinDir + file);
 			}
 		}			
 
 		foreach (var runtime in AllFrameworks)
 		{
-			var targetDir = IMAGE_BIN_DIR + Directory(runtime);
+			var targetDir = imageBinDir + Directory(runtime);
 			var sourceDir = BIN_DIR + Directory(runtime);
 			CreateDirectory(targetDir);
 			foreach (FilePath file in FrameworkFiles)
@@ -306,57 +302,60 @@ Task("PackageZip")
   .IsDependentOn("CreateImage")
 	.Does(() =>
 	{
+		var imageDir = "images/NUnit-" + packageVersion + "/";
 		CreateDirectory(PACKAGE_DIR);
-		Zip(MakeAbsolute(Directory(IMAGE_DIR)), File(ZIP_PACKAGE));
+		Zip(MakeAbsolute(Directory(imageDir)), File(ZIP_PACKAGE));
 	});
 
 Task("PackageNuGet")
   .IsDependentOn("CreateImage")
 	.Does(() =>
 	{
+		var imageDir = "images/NUnit-" + packageVersion + "/";
+
 		CreateDirectory(PACKAGE_DIR);
 		NuGetPack("nuget/nunit.nuspec", new NuGetPackSettings()
 		{
-			Version = PACKAGE_VERSION,
-			BasePath = IMAGE_DIR,
+			Version = packageVersion,
+			BasePath = imageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunitSL.nuspec", new NuGetPackSettings()
 		{
-			Version = PACKAGE_VERSION,
-			BasePath = IMAGE_DIR,
+			Version = packageVersion,
+			BasePath = imageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunitlite.nuspec", new NuGetPackSettings()
 		{
-			Version = PACKAGE_VERSION,
-			BasePath = IMAGE_DIR,
+			Version = packageVersion,
+			BasePath = imageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunitliteSL.nuspec", new NuGetPackSettings()
 		{
-			Version = PACKAGE_VERSION,
-			BasePath = IMAGE_DIR,
+			Version = packageVersion,
+			BasePath = imageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
 		NuGetPack("nuget/nunit.console.nuspec", new NuGetPackSettings()
 		{
-			Version = PACKAGE_VERSION,
-			BasePath = IMAGE_DIR,
+			Version = packageVersion,
+			BasePath = imageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
 		NuGetPack("nuget/nunit.runners.nuspec", new NuGetPackSettings()
 		{
-			Version = PACKAGE_VERSION,
-			BasePath = IMAGE_DIR,
+			Version = packageVersion,
+			BasePath = imageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
 		NuGetPack("nuget/nunit.engine.nuspec", new NuGetPackSettings()
 		{
-			Version = PACKAGE_VERSION,
-			BasePath = IMAGE_DIR,
+			Version = packageVersion,
+			BasePath = imageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
