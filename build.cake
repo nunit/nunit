@@ -54,6 +54,7 @@ var CONSOLE_TESTS = "nunit3-console.tests.dll";
 // Packages
 var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
+var ZIP_PACKAGE_SL = PACKAGE_DIR + "NUnitSL-" + packageVersion + ".zip";
 
 //////////////////////////////////////////////////////////////////////
 // CLEAN
@@ -306,9 +307,26 @@ Task("PackageZip")
   .IsDependentOn("CreateImage")
 	.Does(() =>
 	{
-		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
 		CreateDirectory(PACKAGE_DIR);
-		Zip(MakeAbsolute(Directory(currentImageDir)), File(ZIP_PACKAGE));
+
+		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+
+		var zipFiles = 
+			GetFiles(currentImageDir + "*.*") +
+			GetFiles(currentImageDir + "bin/*.*") +
+			GetFiles(currentImageDir + "bin/addins/*.*") +
+			GetFiles(currentImageDir + "bin/addins/tests/*.*") +
+			GetFiles(currentImageDir + "bin/addins/v2-tests/*.*") +
+			GetFiles(currentImageDir + "bin/net-2.0/*.*") +
+			GetFiles(currentImageDir + "bin/net-4.0/*.*") +
+			GetFiles(currentImageDir + "bin/net-4.5/*.*") +
+			GetFiles(currentImageDir + "bin/portable/*.*");
+		Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
+
+		zipFiles =
+			GetFiles(currentImageDir + "*.*") +
+			GetFiles(currentImageDir + "bin/sl-5.0/*.*");
+		Zip(currentImageDir, File(ZIP_PACKAGE_SL), zipFiles);
 	});
 
 Task("PackageNuGet")
