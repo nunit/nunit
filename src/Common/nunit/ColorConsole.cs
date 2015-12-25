@@ -30,7 +30,9 @@ namespace NUnit.Common
     /// </summary>
     public class ColorConsole : IDisposable
     {
+#if !NETCF
         private ConsoleColor _originalColor;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorConsole"/> class.

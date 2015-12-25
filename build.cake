@@ -23,7 +23,7 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var WindowsFrameworks = new string[] {
-	"net-4.5", "net-4.0", "net-2.0", "portable", "sl-5.0" };
+	"net-4.5", "net-4.0", "net-2.0", "portable", "sl-5.0", "netcf-3.5" };
 
 var LinuxFrameworks = new string[] {
 	"net-4.5", "net-4.0", "net-2.0" };
@@ -55,6 +55,7 @@ var CONSOLE_TESTS = "nunit3-console.tests.dll";
 var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
 var ZIP_PACKAGE_SL = PACKAGE_DIR + "NUnitSL-" + packageVersion + ".zip";
+var ZIP_PACKAGE_CF = PACKAGE_DIR + "NUnitCF-" + packageVersion + ".zip";
 
 //////////////////////////////////////////////////////////////////////
 // CLEAN
@@ -99,7 +100,8 @@ Task("BuildAllFrameworks")
     .Does(() =>
     {
         foreach (var runtime in AllFrameworks)
-            BuildFramework(configuration, runtime);
+			if (runtime != "netcf-3.5")
+				BuildFramework(configuration, runtime);
     });
 
 Task("BuildFramework")
@@ -122,6 +124,25 @@ Task("BuildConsole")
     {
         BuildConsole(configuration);
     });
+
+Task("BuildCppTestFiles")
+	.IsDependentOn("InitializeBuild")
+	.WithCriteria(IsRunningOnWindows)
+	.Does(() =>
+	{
+        MSBuild("./src/NUnitEngine/mock-cpp-clr/mock-cpp-clr-x86.vcxproj", new MSBuildSettings()
+            .SetConfiguration(configuration)
+			.WithProperty("Platform", "x86")
+            .SetVerbosity(Verbosity.Minimal)
+            .SetNodeReuse(false)
+        );
+        MSBuild("./src/NUnitEngine/mock-cpp-clr/mock-cpp-clr-x64.vcxproj", new MSBuildSettings()
+            .SetConfiguration(configuration)
+			.WithProperty("Platform", "x64")
+            .SetVerbosity(Verbosity.Minimal)
+            .SetNodeReuse(false)
+        );
+	});
     
 //////////////////////////////////////////////////////////////////////
 // TEST
@@ -132,12 +153,15 @@ Task("TestAllFrameworks")
 	{
 		foreach(string runtime in AllFrameworks)
 		{
-			RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS);
+			if (runtime != "netcf-3.5")
+			{
+				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS);
 
-			if (runtime == "sl-5.0")
-				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll");
-			else
-				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR);
+				if (runtime == "sl-5.0")
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll");
+				else
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR);
+			}
 		}
 	});
 
@@ -385,6 +409,7 @@ Task("PackageNuGet")
 
 Task("PackageMsi")
   .IsDependentOn("CreateImage")
+  .WithCriteria(IsRunningOnWindows)
 	.Does(() =>
 	{
         MSBuild("install/master/nunit.wixproj", new MSBuildSettings()
@@ -397,6 +422,34 @@ Task("PackageMsi")
 			.SetMSBuildPlatform(MSBuildPlatform.x86)
             .SetNodeReuse(false)
         );
+	});
+
+Task("PackageCF")
+	.IsDependentOn("CreateImage")
+	.Does(() =>
+	{
+		CreateDirectory(PACKAGE_DIR);
+
+		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+
+		var zipFiles = 
+			GetFiles(currentImageDir + "*.*") +
+			GetFiles(currentImageDir + "bin/netcf-3.5/*.*");
+
+		Zip(currentImageDir, File(ZIP_PACKAGE_CF), zipFiles);
+
+		NuGetPack("nuget/nunitCF.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR
+		});
+		NuGetPack("nuget/nunitLiteCF.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR
+		});
 	});
 
 //////////////////////////////////////////////////////////////////////
