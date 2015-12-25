@@ -34,11 +34,10 @@ var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
 
-// Directories - Use CWD since there seems to be no defined project dir in Cake
-var CWD = Context.Environment.WorkingDirectory.FullPath + "\\";
-var PACKAGE_DIR = CWD + "package\\";
-var BIN_DIR = CWD + "bin\\" + configuration + "\\";
-var IMAGE_DIR = CWD + "images\\";
+var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
+var PACKAGE_DIR = PROJECT_DIR + "package/";
+var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
+var IMAGE_DIR = PROJECT_DIR + "images/";
 
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
@@ -271,7 +270,7 @@ Task("CreateImage")
 	.Does(() =>
 	{
 		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-		var imageBinDir = currentImageDir + "bin\\";
+		var imageBinDir = currentImageDir + "bin/";
 
 		CleanDirectory(currentImageDir);
 
