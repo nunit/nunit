@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-netcf-3.5",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-netcf-3.5", "src\NUnitFramework\nunitlite\nunitlite-netcf-3.5.csproj", "{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-runner-netcf-3.5", "src\NUnitFramework\nunitlite-runner\nunitlite-runner-netcf-3.5.csproj", "{D8D5220D-E155-4A60-AB63-0DEC87A54C87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,12 @@ Global
 		{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8D5220D-E155-4A60-AB63-0DEC87A54C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8D5220D-E155-4A60-AB63-0DEC87A54C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8D5220D-E155-4A60-AB63-0DEC87A54C87}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D8D5220D-E155-4A60-AB63-0DEC87A54C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8D5220D-E155-4A60-AB63-0DEC87A54C87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8D5220D-E155-4A60-AB63-0DEC87A54C87}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
