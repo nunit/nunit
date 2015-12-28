@@ -4,16 +4,6 @@ mono:
   - latest
   - 3.2.8
 
-before_script:
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings"
-
 script: 
-  - mono ./tools/nuget.exe restore nunit.sln
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework /t:$Targets
-  
-env:
-  matrix:
-    - Framework="net-2.0" Targets="Build;Test"
-    - Framework="net-4.0" Targets="Build;TestFramework"
-    - Framework="net-4.5" Targets="Build;TestFramework"
+  - ./build.sh --target "Travis"
     
