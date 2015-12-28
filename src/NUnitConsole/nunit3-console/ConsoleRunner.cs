@@ -96,6 +96,9 @@ namespace NUnit.ConsoleRunner
 
             DisplayTestFiles();
 
+			// Throw a FileNotFoundException if any input file is missing.
+			CheckExistenceOfInputFiles(_options);
+
             TestPackage package = MakeTestPackage(_options);
 
             // We display the filters at this point so  that any exception message
@@ -368,6 +371,17 @@ namespace NUnit.ConsoleRunner
 
             return builder.GetFilter();
         }
+
+		private void CheckExistenceOfInputFiles(ConsoleOptions options)
+		{
+			var workDirectory = options.WorkDirectory ?? Environment.CurrentDirectory;
+
+			foreach (string filepath in options.InputFiles)
+			{
+				if (!File.Exists(Path.Combine(workDirectory, filepath)))
+					throw new FileNotFoundException(String.Format("Input file \"{0}\" not found. Did you specify the correct filename?", filepath));
+			}
+		}
 
         #endregion
 
