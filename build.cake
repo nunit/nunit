@@ -513,12 +513,12 @@ void BuildEngine(string configuration)
     BuildProject("./src/NUnitEngine/nunit-agent/nunit-agent-x86.csproj", configuration);
     
     // Engine tests
-    BuildProject("./src/NUnitEngine/Portable/nunit.driver/nunit.driver.csproj", configuration);
+    BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration); 
 
     // Driver and tests
     if(IsRunningOnWindows())
     {
-        BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration); 
+        BuildProject("./src/NUnitEngine/Portable/nunit.driver/nunit.driver.csproj", configuration);
         BuildProject("./src/NUnitEngine/Portable/nunit.driver.tests/nunit.driver.tests.csproj", configuration);
     }
 
