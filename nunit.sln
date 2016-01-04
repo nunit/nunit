@@ -46,6 +46,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{49D441DF-39FD-4F4D-AECA-86CF8EFE23AF}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 		.travis.yml = .travis.yml
 		appveyor.yml = appveyor.yml
 		build.cake = build.cake
@@ -160,6 +162,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-runner-4.0", "src\NUnitFramework\nunitlite-runner\nunitlite-runner-4.0.csproj", "{C861E6BA-852B-4BC1-ACE7-77C8D6E7898B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-runner-sl-5.0", "src\NUnitFramework\nunitlite-runner\nunitlite-runner-sl-5.0.csproj", "{901DA110-F30A-4515-880D-E9D59B6ECB4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portable", "Portable", "{32405F86-07E7-41A7-94EB-2AD6B290ED07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.driver", "src\NUnitEngine\Portable\nunit.driver\nunit.driver.csproj", "{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.driver.tests", "src\NUnitEngine\Portable\nunit.driver.tests\nunit.driver.tests.csproj", "{8CDC481D-DB17-4145-9963-9E895C29CBC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -371,6 +379,14 @@ Global
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -435,6 +451,9 @@ Global
 		{3FA7B726-8AF9-4554-B41A-0BD915E4EAB5} = {64FE69B2-CE0B-4A47-83A3-9DE803851447}
 		{C861E6BA-852B-4BC1-ACE7-77C8D6E7898B} = {83154E24-B0DD-48E7-8BB5-55CF3D7B0FE3}
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
+		{32405F86-07E7-41A7-94EB-2AD6B290ED07} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj

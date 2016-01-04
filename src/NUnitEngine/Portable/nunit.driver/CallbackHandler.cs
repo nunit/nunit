@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,26 +22,27 @@
 // ***********************************************************************
 
 using System;
+using System.Web.UI;
 
-namespace NUnit.Framework.Compatibility
+namespace NUnit.Engine
 {
-    /// <summary>
-    /// A MarshalByRefObject that lives forever
-    /// </summary>
-#if PORTABLE || SILVERLIGHT || NETCF
-    public class LongLivedMarshalByRefObject
+    internal class CallbackHandler : ICallbackEventHandler
     {
-    }
-#else
-    public class LongLivedMarshalByRefObject : MarshalByRefObject
-    {
-        /// <summary>
-        /// Obtains a lifetime service object to control the lifetime policy for this instance.
-        /// </summary>
-        public override object InitializeLifetimeService()
+        public string Result { get; private set; }
+
+        public virtual void ReportProgress(string report)
         {
-            return null;
+        }
+
+        public string GetCallbackResult()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RaiseCallbackEvent(string report)
+        {
+            Result = report;
+            ReportProgress(report);
         }
     }
-#endif
 }

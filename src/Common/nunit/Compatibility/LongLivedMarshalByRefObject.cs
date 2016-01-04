@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010-2014 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,34 +22,32 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Xml;
 
-namespace NUnit.Engine
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Compatibility
+#elif NUNIT_FRAMEWORK
+namespace NUnit.Framework.Compatibility
+#else
+namespace NUnit.Common.Compatibility
+#endif
 {
-    internal class RunTestsCallbackHandler : CallbackHandler
+    /// <summary>
+    /// A MarshalByRefObject that lives forever
+    /// </summary>
+#if PORTABLE || SILVERLIGHT || NETCF
+    public class LongLivedMarshalByRefObject
     {
-        private ITestEventListener listener;
-
-        public RunTestsCallbackHandler(ITestEventListener listener)
-        {
-            // TODO: Move this substitution into the framework?
-            this.listener = listener ?? new NullListener();
-        }
-
-        public override void ReportProgress(string state)
-        {
-            listener.OnTestEvent(state);
-        }
-
-        #region Nested NullListener class
-        class NullListener : ITestEventListener
-        {
-            public void OnTestEvent(string report)
-            {
-            }
-        }
-        #endregion
     }
+#else
+    public class LongLivedMarshalByRefObject : MarshalByRefObject
+    {
+        /// <summary>
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
+        /// </summary>
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+    }
+#endif
 }

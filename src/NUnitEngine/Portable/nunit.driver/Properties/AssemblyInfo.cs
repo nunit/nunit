@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010-2014 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,35 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Xml;
+using System.Resources;
+using System.Reflection;
 
-namespace NUnit.Engine
-{
-    internal class RunTestsCallbackHandler : CallbackHandler
-    {
-        private ITestEventListener listener;
-
-        public RunTestsCallbackHandler(ITestEventListener listener)
-        {
-            // TODO: Move this substitution into the framework?
-            this.listener = listener ?? new NullListener();
-        }
-
-        public override void ReportProgress(string state)
-        {
-            listener.OnTestEvent(state);
-        }
-
-        #region Nested NullListener class
-        class NullListener : ITestEventListener
-        {
-            public void OnTestEvent(string report)
-            {
-            }
-        }
-        #endregion
-    }
-}
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("nunit.driver")]
+[assembly: AssemblyDescription("Driver for running portable tests")]

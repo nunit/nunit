@@ -46,9 +46,11 @@ namespace NUnit.Engine
         /// <param name="innerException"></param>
         public NUnitEngineException(string message, Exception innerException) : base(message, innerException) { }
 
+#if !PORTABLE
         /// <summary>
         /// Serialization constructor
         /// </summary>
         public NUnitEngineException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
     }
 }
