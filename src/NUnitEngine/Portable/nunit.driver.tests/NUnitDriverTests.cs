@@ -32,7 +32,7 @@ using System.Reflection;
 
 namespace NUnit.Engine.Tests
 {
-    public class NUnit3PortableDriverTests
+    public class NUnitDriverTests
     {
         const string EMPTY_FILTER = "<filter />";
         const string MOCK_ASSEMBLY = "mock-assembly.exe";

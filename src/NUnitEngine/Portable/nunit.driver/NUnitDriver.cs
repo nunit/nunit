@@ -55,6 +55,10 @@ namespace NUnit.Engine
         object _frameworkController;
         Type _frameworkControllerType;
 
+        /// <summary>
+        /// An id prefix that will be passed to the test framework and used as part of the
+        /// test ids created.
+        /// </summary>
         public string ID { get; set; }
 
         /// <summary>
@@ -72,7 +76,7 @@ namespace NUnit.Engine
 
             _frameworkController = CreateObject(CONTROLLER_TYPE, testAssembly, idPrefix, (System.Collections.IDictionary)settings);
             if (_frameworkController == null)
-                throw new NUnitEngineException(INVALID_FRAMEWORK_MESSAGE);
+                throw new NUnitDriverException(INVALID_FRAMEWORK_MESSAGE);
 
             _frameworkControllerType = _frameworkController.GetType();
 
@@ -173,7 +177,7 @@ namespace NUnit.Engine
         {
             if (method == null)
             {
-                throw new NUnitEngineException(INVALID_FRAMEWORK_MESSAGE);
+                throw new NUnitDriverException(INVALID_FRAMEWORK_MESSAGE);
             }
             return method.Invoke(_frameworkController, args);
         }

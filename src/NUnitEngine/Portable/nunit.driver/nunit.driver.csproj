@@ -48,23 +48,11 @@
     <Compile Include="..\..\..\Common\nunit\Compatibility\BindingFlags.cs">
       <Link>Compatibility\BindingFlags.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Common\nunit\Compatibility\ICallbackEventHandler.cs">
-      <Link>Compatibility\ICallbackEventHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
-      <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\Common\nunit\Compatibility\Path.cs">
       <Link>Compatibility\Path.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Common\nunit\Compatibility\ReflectionExtensions.cs">
       <Link>Compatibility\ReflectionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\Compatibility\SerializableAttribute.cs">
-      <Link>Compatibility\SerializableAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Common\nunit\Compatibility\Stopwatch.cs">
-      <Link>Compatibility\Stopwatch.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Common\nunit\Guard.cs">
       <Link>Guard.cs</Link>
@@ -87,12 +75,9 @@
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
-    <Compile Include="..\..\nunit.engine.api\NUnitEngineException.cs">
-      <Link>NUnitEngineException.cs</Link>
-    </Compile>
     <Compile Include="NUnitDriver.cs" />
+    <Compile Include="NUnitDriverException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
