@@ -34,6 +34,7 @@ namespace NUnit.Engine.Tests
 {
     public class NUnit3PortableDriverTests
     {
+        const string EMPTY_FILTER = "<filter />";
         const string MOCK_ASSEMBLY = "mock-assembly.exe";
         const string MISSING_FILE = "junk.dll";
         const string NUNIT_FRAMEWORK = "nunit.framework.dll";
@@ -41,7 +42,7 @@ namespace NUnit.Engine.Tests
 
         IDictionary<string, object> _settings = new Dictionary<string, object>();
 
-        NUnit3PortableDriver _driver;
+        NUnitDriver _driver;
         Assembly _mockAssembly;
         Assembly _frameworkAssembly;
 
@@ -52,15 +53,14 @@ namespace NUnit.Engine.Tests
             _mockAssembly = Assembly.LoadFrom(mockAssemblyPath);
             var frameworkAssemblyPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, NUNIT_FRAMEWORK);
             _frameworkAssembly = Assembly.LoadFrom(frameworkAssemblyPath);
-            _driver = new NUnit3PortableDriver();
-            _driver.ID = "1";
+            _driver = new NUnitDriver();
         }
 
         #region Construction Test
 
         public void ConstructController_MissingFile_ThrowsArgumentInvalid()
         {
-            Assert.That(new NUnit3PortableDriver(), Throws.ArgumentException);
+            Assert.That(new NUnitDriver(), Throws.ArgumentException);
         }
         #endregion
 
@@ -70,7 +70,7 @@ namespace NUnit.Engine.Tests
         {
             var result = XmlHelper.CreateXElement(_driver.Load(_frameworkAssembly, _mockAssembly, _settings));
 
-            Assert.That(result.Name, Is.EqualTo("test-suite"));
+            Assert.That(result.Name.LocalName, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("Runnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
@@ -83,9 +83,9 @@ namespace NUnit.Engine.Tests
         public void Explore_AfterLoad_ReturnsRunnableSuite()
         {
             _driver.Load(_frameworkAssembly, _mockAssembly, _settings);
-            var result = XmlHelper.CreateXElement(_driver.Explore(TestFilter.Empty.Text));
+            var result = XmlHelper.CreateXElement(_driver.Explore(EMPTY_FILTER));
 
-            Assert.That(result.Name, Is.EqualTo("test-suite"));
+            Assert.That(result.Name.LocalName, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("Runnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
@@ -95,7 +95,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void ExploreTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
-            var ex = Assert.Catch(() => _driver.Explore(TestFilter.Empty.Text));
+            var ex = Assert.Catch(() => _driver.Explore(EMPTY_FILTER));
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
@@ -108,13 +108,13 @@ namespace NUnit.Engine.Tests
         public void CountTestsAction_AfterLoad_ReturnsCorrectCount()
         {
             _driver.Load(_frameworkAssembly, _mockAssembly, _settings);
-            Assert.That(_driver.CountTestCases(TestFilter.Empty.Text), Is.EqualTo(MockAssembly.Tests));
+            Assert.That(_driver.CountTestCases(EMPTY_FILTER), Is.EqualTo(MockAssembly.Tests));
         }
 
         [Test]
         public void CountTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
-            var ex = Assert.Catch(() => _driver.CountTestCases(TestFilter.Empty.Text));
+            var ex = Assert.Catch(() => _driver.CountTestCases(EMPTY_FILTER));
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
@@ -127,9 +127,9 @@ namespace NUnit.Engine.Tests
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite()
         {
             _driver.Load(_frameworkAssembly, _mockAssembly, _settings);
-            var result = XmlHelper.CreateXElement(_driver.Run(new NullListener(), TestFilter.Empty.Text));
+            var result = XmlHelper.CreateXElement(_driver.Run(null, EMPTY_FILTER));
 
-            Assert.That(result.Name, Is.EqualTo("test-suite"));
+            Assert.That(result.Name.LocalName, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("Runnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
@@ -144,7 +144,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void RunTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
-            var ex = Assert.Catch(() => _driver.Run(new NullListener(), TestFilter.Empty.Text));
+            var ex = Assert.Catch(() => _driver.Run(null, EMPTY_FILTER));
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
@@ -153,29 +153,16 @@ namespace NUnit.Engine.Tests
         #endregion
 
         #region Nested Callback Class
-        private class CallbackEventHandler : System.Web.UI.ICallbackEventHandler
+        private class CallbackEventHandler
         {
-            private string _result;
+            public Action<string> Action { get; private set; }
 
-            public string GetCallbackResult()
+            public CallbackEventHandler()
             {
-                return _result;
+                Action = s => Result = s;
             }
 
-            public void RaiseCallbackEvent(string eventArgument)
-            {
-                _result = eventArgument;
-            }
-        }
-        #endregion
-
-        #region Nested NullListener Class
-        public class NullListener : ITestEventListener
-        {
-            public void OnTestEvent(string testEvent)
-            {
-                // No action
-            }
+            public string Result { get; private set; }
         }
         #endregion
     }

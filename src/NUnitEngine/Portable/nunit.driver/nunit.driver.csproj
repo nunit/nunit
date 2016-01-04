@@ -87,20 +87,10 @@
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
-    <Compile Include="..\..\nunit.engine.api\ITestEventListener.cs">
-      <Link>ITestEventListener.cs</Link>
-    </Compile>
     <Compile Include="..\..\nunit.engine.api\NUnitEngineException.cs">
       <Link>NUnitEngineException.cs</Link>
     </Compile>
-    <Compile Include="..\..\nunit.engine.api\TestFilter.cs">
-      <Link>TestFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\nunit.engine\RunTestsCallbackHandler.cs">
-      <Link>RunTestsCallbackHandler.cs</Link>
-    </Compile>
-    <Compile Include="CallbackHandler.cs" />
-    <Compile Include="NUnit3PortableDriver.cs" />
+    <Compile Include="NUnitDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>

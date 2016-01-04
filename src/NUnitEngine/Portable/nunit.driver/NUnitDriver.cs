@@ -16,7 +16,7 @@
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN METHOD
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
@@ -24,6 +24,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using NUnit.Engine.Compatibility;
 using NUnit.Engine.Internal;
 using System.Runtime.Serialization;
 using System.Reflection;
@@ -31,25 +32,28 @@ using System.Reflection;
 namespace NUnit.Engine
 {
     /// <summary>
-    /// NUnit3PortableDriver is used by the test-runner to load and run
+    /// NUnitDriver is used by the test-runner to load and run
     /// tests using the NUnit framework assembly.
     /// </summary>
-    public class NUnit3PortableDriver
+    public class NUnitDriver
     {
-        private const string LOAD_MESSAGE = "Method called without calling Load first";
+        const string LOAD_MESSAGE = "Method called without calling Load first";
+        const string INVALID_FRAMEWORK_MESSAGE = "Running tests against this version of the framework using this driver is not supported. Please update NUnit.Framework to the latest version.";
 
-        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
-        private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
-        private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
-        private static readonly string COUNT_ACTION = CONTROLLER_TYPE + "+CountTestsAction";
-        private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
-        private static readonly string STOP_RUN_ACTION = CONTROLLER_TYPE + "+StopRunAction";
+        static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
+        static readonly string LOAD_METHOD = "LoadTests";
+        static readonly string EXPLORE_METHOD = "ExploreTests";
+        static readonly string COUNT_METHOD = "CountTests";
+        static readonly string RUN_METHOD = "RunTests";
+        static readonly string RUN_ASYNC_METHOD = "RunTests";
+        static readonly string STOP_RUN_METHOD = "StopRun";
 
         static ILogger log = InternalTrace.GetLogger("NUnit3PortableDriver");
 
         Assembly _testAssembly;
         Assembly _frameworkAssembly;
         object _frameworkController;
+        Type _frameworkControllerType;
 
         public string ID { get; set; }
 
@@ -67,13 +71,13 @@ namespace NUnit.Engine
             _testAssembly = testAssembly;
 
             _frameworkController = CreateObject(CONTROLLER_TYPE, testAssembly, idPrefix, (System.Collections.IDictionary)settings);
+            if (_frameworkController == null)
+                throw new NUnitEngineException(INVALID_FRAMEWORK_MESSAGE);
 
-            CallbackHandler handler = new CallbackHandler();
+            _frameworkControllerType = _frameworkController.GetType();
 
             log.Info("Loading {0} - see separate log file", _testAssembly.FullName);
-            CreateObject(LOAD_ACTION, _frameworkController, handler);
-
-            return handler.Result;
+            return ExecuteMethod(LOAD_METHOD) as string;
         }
 
         /// <summary>
@@ -84,30 +88,33 @@ namespace NUnit.Engine
         public int CountTestCases(string filter)
         {
             CheckLoadWasCalled();
-
-            CallbackHandler handler = new CallbackHandler();
-
-            CreateObject(COUNT_ACTION, _frameworkController, filter, handler);
-
-            return int.Parse(handler.Result);
+            object count = ExecuteMethod(COUNT_METHOD, filter);
+            return count != null ? (int)count : 0;
         }
 
         /// <summary>
         /// Executes the tests in an assembly.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler that receives progress notices</param>
+        /// <param name="callback">A callback that receives XML progress notices</param>
         /// <param name="filter">A filter that controls which tests are executed</param>
         /// <returns>An Xml string representing the result</returns>
-        public string Run(ITestEventListener listener, string filter)
+        public string Run(Action<string> callback, string filter)
         {
             CheckLoadWasCalled();
-
-            CallbackHandler handler = new RunTestsCallbackHandler(listener);
-
             log.Info("Running {0} - see separate log file", _testAssembly.FullName);
-            CreateObject(RUN_ACTION, _frameworkController, filter, handler);
+            return ExecuteMethod(RUN_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter) as string;
+        }
 
-            return handler.Result;
+        /// <summary>
+        /// Executes the tests in an assembly asyncronously.
+        /// </summary>
+        /// <param name="callback">A callback that receives XML progress notices</param>
+        /// <param name="filter">A filter that controls which tests are executed</param>
+        public void RunAsync(Action<string> callback, string filter)
+        {
+            CheckLoadWasCalled();
+            log.Info("Running {0} - see separate log file", _testAssembly.FullName);
+            ExecuteMethod(RUN_ASYNC_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter);
         }
 
         /// <summary>
@@ -116,7 +123,7 @@ namespace NUnit.Engine
         /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
         public void StopRun(bool force)
         {
-            CreateObject(STOP_RUN_ACTION, _frameworkController, force);
+            ExecuteMethod(STOP_RUN_METHOD, force);
         }
 
         /// <summary>
@@ -128,23 +135,19 @@ namespace NUnit.Engine
         {
             CheckLoadWasCalled();
 
-            CallbackHandler handler = new CallbackHandler();
-
             log.Info("Exploring {0} - see separate log file", _testAssembly.FullName);
-            CreateObject(EXPLORE_ACTION, _frameworkController, filter, handler);
-
-            return handler.Result;
+            return ExecuteMethod(EXPLORE_METHOD, filter) as string;
         }
 
         #region Helper Methods
 
-        private void CheckLoadWasCalled()
+        void CheckLoadWasCalled()
         {
             if (_frameworkController == null)
                 throw new InvalidOperationException(LOAD_MESSAGE);
         }
 
-        private object CreateObject(string typeName, params object[] args)
+        object CreateObject(string typeName, params object[] args)
         {
             var typeinfo = _frameworkAssembly.DefinedTypes.FirstOrDefault(t => t.FullName == typeName);
             if (typeinfo == null)
@@ -152,6 +155,27 @@ namespace NUnit.Engine
                 log.Error("Could not find type {0}", typeName);
             }
             return Activator.CreateInstance(typeinfo.AsType(), args);
+        }
+
+        object ExecuteMethod(string methodName, params object[] args)
+        {
+            var method = _frameworkControllerType.GetMethod(methodName, BindingFlags.Public);
+            return ExecuteMethod(method, args);
+        }
+
+        object ExecuteMethod(string methodName, Type[] ptypes, params object[] args)
+        {
+            var method = _frameworkControllerType.GetMethod(methodName, ptypes);
+            return ExecuteMethod(method, args);
+        }
+
+        object ExecuteMethod(MethodInfo method, params object[] args)
+        {
+            if (method == null)
+            {
+                throw new NUnitEngineException(INVALID_FRAMEWORK_MESSAGE);
+            }
+            return method.Invoke(_frameworkController, args);
         }
 
         #endregion
