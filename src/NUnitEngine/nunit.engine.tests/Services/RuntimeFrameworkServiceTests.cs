@@ -53,7 +53,7 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(_runtimeService.Status, Is.EqualTo(ServiceStatus.Started));
         }
 
-        [TestCase("mock-assembly.exe", "2.0.50727", false)]
+        [TestCase("mock-assembly.exe", "4.0.30319", false)]
         [TestCase("net-2.0/mock-assembly.exe", "2.0.50727", false)]
         [TestCase("net-4.0/mock-assembly.exe", "4.0.30319", false)]
         // TODO: Change this case when the 4.0/4.5 bug is fixed
