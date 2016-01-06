@@ -20,20 +20,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Debug\driver\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\..\bin\Debug\nunit.driver.XML</DocumentationFile>
+    <DocumentationFile>..\..\..\..\bin\Debug\driver\nunit.driver.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Release\driver\</OutputPath>
     <DefineConstants>TRACE;NUNIT_ENGINE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\..\bin\Release\nunit.driver.XML</DocumentationFile>
+    <DocumentationFile>..\..\..\..\bin\Release\driver\nunit.driver.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->

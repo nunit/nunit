@@ -8,13 +8,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Engine.Tests</RootNamespace>
     <AssemblyName>nunit.engine.tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +23,6 @@
     <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,22 +31,20 @@
     <DefineConstants>TRACE;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Mono.Cecil.0.9.6.1\lib\net20\Mono.Cecil.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.9.6.1\lib\net20\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
@@ -112,13 +108,9 @@
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-4.5.csproj">
-      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
-      <Name>nunit.framework-4.5</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NUnitFramework\mock-assembly\mock-assembly-4.5.csproj">
-      <Project>{c3264ff3-e2d7-48d7-93a7-cdc9a827ad9d}</Project>
-      <Name>mock-assembly-4.5</Name>
+    <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-2.0.csproj">
+      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
+      <Name>nunit.framework-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
@@ -127,6 +119,10 @@
     <ProjectReference Include="..\nunit.engine\nunit.engine.csproj">
       <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
       <Name>nunit.engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NUnitFramework\mock-assembly\mock-assembly-2.0.csproj">
+      <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
+      <Name>mock-assembly-2.0</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
@@ -140,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
