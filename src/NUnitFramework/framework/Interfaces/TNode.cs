@@ -320,6 +320,8 @@ namespace NUnit.Framework.Interfaces
 
         private static string EscapeInvalidXmlCharacters(string str)
         {
+            if (str == null) return null;
+
             // Based on the XML spec http://www.w3.org/TR/xml/#charsets
             // For detailed explanation of the regex see http://mnaoumov.wordpress.com/2014/06/15/escaping-invalid-xml-unicode-characters/
 
