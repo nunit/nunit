@@ -111,31 +111,16 @@ this.FeatureBackground();
                         "field",
                         "value"});
             table1.AddRow(new string[] {
-                        "Tests run",
+                        "Test Count",
                         "1"});
             table1.AddRow(new string[] {
                         "Passed",
                         "1"});
             table1.AddRow(new string[] {
-                        "Errors",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Failures",
+                        "Failed",
                         "0"});
             table1.AddRow(new string[] {
                         "Inconclusive",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Not run",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Invalid",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Ignored",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Explicit",
                         "0"});
             table1.AddRow(new string[] {
                         "Skipped",
@@ -155,68 +140,53 @@ this.FeatureBackground();
         public virtual void ICanRunTestsFromParentDirectory(string configurationType, string frameworkVersion, string[] exampleTags)
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can run tests from parent directory", exampleTags);
-#line 37
+#line 32
 this.ScenarioSetup(scenarioInfo);
 #line 3
 this.FeatureBackground();
-#line 38
+#line 33
  testRunner.Given(string.Format("Framework version is {0}", frameworkVersion), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 39
+#line 34
  testRunner.And("I have added successful method as SuccessfulTest to the class Foo.Tests.UnitTests" +
                     "1 for foo.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 40
+#line 35
  testRunner.And("I have created the folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 41
+#line 36
  testRunner.And("I have added NUnit framework references to foo.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 42
+#line 37
  testRunner.And("I have copied NUnit framework references to folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 43
+#line 38
  testRunner.And("I have compiled the assembly foo.tests to file mocks\\foo.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 44
+#line 39
  testRunner.And("I have added the assembly mocks\\foo.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 45
+#line 40
  testRunner.And(string.Format("I want to use {0} configuration type", configurationType), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 46
+#line 41
  testRunner.And("I have change current directory to ..\\..\\..\\", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 47
+#line 42
  testRunner.When("I run NUnit console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 48
+#line 43
  testRunner.Then("the exit code should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "field",
                         "value"});
             table2.AddRow(new string[] {
-                        "Tests run",
+                        "Test Count",
                         "1"});
             table2.AddRow(new string[] {
                         "Passed",
                         "1"});
             table2.AddRow(new string[] {
-                        "Errors",
-                        "0"});
-            table2.AddRow(new string[] {
-                        "Failures",
+                        "Failed",
                         "0"});
             table2.AddRow(new string[] {
                         "Inconclusive",
                         "0"});
             table2.AddRow(new string[] {
-                        "Not run",
-                        "0"});
-            table2.AddRow(new string[] {
-                        "Invalid",
-                        "0"});
-            table2.AddRow(new string[] {
-                        "Ignored",
-                        "0"});
-            table2.AddRow(new string[] {
-                        "Explicit",
-                        "0"});
-            table2.AddRow(new string[] {
                         "Skipped",
                         "0"});
-#line 49
+#line 44
  testRunner.And("the Test Run Summary should has following:", ((string)(null)), table2, "And ");
 #line hidden
             this.ScenarioCleanup();

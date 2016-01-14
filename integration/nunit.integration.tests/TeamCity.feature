@@ -190,15 +190,10 @@ Scenario Outline: The NUnit sends TeamCity service messages when I run it for pa
 	Then the exit code should be 0
 	And the Test Run Summary should has following:
 	| field        | value |
-	| Tests run    | 6     |
+	| Test Count   | 6     |
 	| Passed       | 6     |
-	| Errors       | 0     |
-	| Failures     | 0     |
+	| Failed       | 0     |
 	| Inconclusive | 0     |
-	| Not run      | 0     |
-	| Invalid      | 0     |
-	| Ignored      | 0     |
-	| Explicit     | 0     |
 	| Skipped      | 0     |
 
 Examples:

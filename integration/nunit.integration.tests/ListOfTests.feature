@@ -84,15 +84,10 @@ Scenario Outline: I can run tests from the list of tests
 	Then the exit code should be 0
 	And the Test Run Summary should has following:
 	| field        | value |
-	| Tests run    | 2     |
+	| Test Count   | 2     |
 	| Passed       | 2     |
-	| Errors       | 0     |
-	| Failures     | 0     |
+	| Failed       | 0     |
 	| Inconclusive | 0     |
-	| Not run      | 0     |
-	| Invalid      | 0     |
-	| Ignored      | 0     |
-	| Explicit     | 0     |
 	| Skipped      | 0     |
 
 		
@@ -124,15 +119,10 @@ Scenario Outline: I can run tests from the list of tests for several assemblies
 	Then the exit code should be 0
 	And the Test Run Summary should has following:
 	| field        | value |
-	| Tests run    | 3     |
+	| Test Count   | 3     |
 	| Passed       | 3     |
-	| Errors       | 0     |
-	| Failures     | 0     |
+	| Failed       | 0     |
 	| Inconclusive | 0     |
-	| Not run      | 0     |
-	| Invalid      | 0     |
-	| Ignored      | 0     |
-	| Explicit     | 0     |
 	| Skipped      | 0     |
 
 		

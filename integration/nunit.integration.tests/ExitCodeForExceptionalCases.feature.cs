@@ -310,31 +310,16 @@ this.FeatureBackground();
                         "field",
                         "value"});
             table1.AddRow(new string[] {
-                        "Tests run",
+                        "Test Count",
                         "1"});
             table1.AddRow(new string[] {
                         "Passed",
                         "0"});
             table1.AddRow(new string[] {
-                        "Errors",
+                        "Failed",
                         "1"});
             table1.AddRow(new string[] {
-                        "Failures",
-                        "0"});
-            table1.AddRow(new string[] {
                         "Inconclusive",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Not run",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Invalid",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Ignored",
-                        "0"});
-            table1.AddRow(new string[] {
-                        "Explicit",
                         "0"});
             table1.AddRow(new string[] {
                         "Skipped",

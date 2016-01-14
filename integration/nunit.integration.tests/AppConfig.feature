@@ -17,15 +17,10 @@ Scenario Outline: I can the test with config file
 	Then the exit code should be 0
 	And the Test Run Summary should has following:
 	| field        | value |
-	| Tests run    | 1     |
+	| Test Count   | 1     |
 	| Passed       | 1     |
-	| Errors       | 0     |
-	| Failures     | 0     |
+	| Failed       | 0     |
 	| Inconclusive | 0     |
-	| Not run      | 0     |
-	| Invalid      | 0     |
-	| Ignored      | 0     |
-	| Explicit     | 0     |
 	| Skipped      | 0     |
 
 		
@@ -57,15 +52,10 @@ Scenario Outline: I can the test with config file for several assemblies using t
 	Then the exit code should be 0
 	And the Test Run Summary should has following:
 	| field        | value |
-	| Tests run    | 2     |
+	| Test Count   | 2     |
 	| Passed       | 2     |
-	| Errors       | 0     |
-	| Failures     | 0     |
+	| Failed       | 0     |
 	| Inconclusive | 0     |
-	| Not run      | 0     |
-	| Invalid      | 0     |
-	| Ignored      | 0     |
-	| Explicit     | 0     |
 	| Skipped      | 0     |
 	And the output should contain TeamCity service messages:
 	|                   | name                                 | out                   |
@@ -112,15 +102,10 @@ Scenario Outline: I can the test with config file for several assemblies using t
 	Then the exit code should be 0
 	And the Test Run Summary should has following:
 	| field        | value |
-	| Tests run    | 2     |
+	| Test Count   | 2     |
 	| Passed       | 2     |
-	| Errors       | 0     |
-	| Failures     | 0     |
+	| Failed       | 0     |
 	| Inconclusive | 0     |
-	| Not run      | 0     |
-	| Invalid      | 0     |
-	| Ignored      | 0     |
-	| Explicit     | 0     |
 	| Skipped      | 0     |
 	And the output should contain TeamCity service messages:
 	|                   | name                                 | out                   |

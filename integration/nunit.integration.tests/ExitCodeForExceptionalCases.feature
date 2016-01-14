@@ -107,15 +107,10 @@ Scenario Outline: The NUnit returns positive exit code when the test throws OutO
 	Then the exit code should be 1
 	And the Test Run Summary should has following:
 	| field        | value |
-	| Tests run    | 1     |
+	| Test Count   | 1     |
 	| Passed       | 0     |
-	| Errors       | 1     |
-	| Failures     | 0     |
+	| Failed       | 1     |
 	| Inconclusive | 0     |
-	| Not run      | 0     |
-	| Invalid      | 0     |
-	| Ignored      | 0     |
-	| Explicit     | 0     |
 	| Skipped      | 0     |
 
 	

@@ -6,7 +6,7 @@
 
     internal class TestOutputSummaryParser : IParser<OutputSummary>
     {
-        private static readonly string[] Fields = { "Tests run", "Passed", "Errors", "Failures", "Inconclusive", "Not run", "Invalid", "Ignored", "Explicit", "Skipped" };
+        private static readonly string[] Fields = { "Test Count", "Passed", "Failed", "Inconclusive", "Skipped" };
         private static readonly Regex SummaryRegex = new Regex(string.Join(@"(,|)\s*", Fields.Select(f => $"{f}:\\s*(?<{GetKey(f)}>\\d+)")), RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         public OutputSummary Parse(string text)

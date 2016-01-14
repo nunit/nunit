@@ -273,31 +273,16 @@ this.FeatureBackground();
                         "field",
                         "value"});
             table5.AddRow(new string[] {
-                        "Tests run",
+                        "Test Count",
                         "2"});
             table5.AddRow(new string[] {
                         "Passed",
                         "2"});
             table5.AddRow(new string[] {
-                        "Errors",
-                        "0"});
-            table5.AddRow(new string[] {
-                        "Failures",
+                        "Failed",
                         "0"});
             table5.AddRow(new string[] {
                         "Inconclusive",
-                        "0"});
-            table5.AddRow(new string[] {
-                        "Not run",
-                        "0"});
-            table5.AddRow(new string[] {
-                        "Invalid",
-                        "0"});
-            table5.AddRow(new string[] {
-                        "Ignored",
-                        "0"});
-            table5.AddRow(new string[] {
-                        "Explicit",
                         "0"});
             table5.AddRow(new string[] {
                         "Skipped",
@@ -322,89 +307,74 @@ this.FeatureBackground();
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can run tests from the list of tests for several assemblies", @__tags);
-#line 105
+#line 100
 this.ScenarioSetup(scenarioInfo);
 #line 3
 this.FeatureBackground();
-#line 106
+#line 101
  testRunner.Given(string.Format("Framework version is {0}", frameworkVersion), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 107
+#line 102
  testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
                     "s1 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 108
+#line 103
  testRunner.And("I have added successful method as SuccessfulTest2 to the class Foo.Tests.UnitTest" +
                     "s2 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 109
+#line 104
  testRunner.And("I have added successful method as SuccessfulTest3 to the class Foo.Tests.UnitTest" +
                     "s3 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 110
+#line 105
  testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
                     "s4 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 111
+#line 106
  testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
                     "s1 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 112
+#line 107
  testRunner.And("I have created the folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 113
+#line 108
  testRunner.And("I have added NUnit framework references to foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 114
+#line 109
  testRunner.And("I have added NUnit framework references to foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 115
+#line 110
  testRunner.And("I have copied NUnit framework references to folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 116
+#line 111
  testRunner.And("I have compiled the assembly foo1.tests to file mocks\\foo1.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 117
+#line 112
  testRunner.And("I have compiled the assembly foo2.tests to file mocks\\foo2.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 118
+#line 113
  testRunner.And("I have added the assembly mocks\\foo1.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 119
+#line 114
  testRunner.And("I have added the assembly mocks\\foo2.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 120
+#line 115
  testRunner.And("I have append the line Foo.Tests.UnitTests1 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 121
+#line 116
  testRunner.And("I have append the line Foo.Tests.UnitTests2 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 122
+#line 117
  testRunner.And("I have added the arg TestList=mocks\\ListOfTests.txt to NUnit console command line" +
                     "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 123
+#line 118
  testRunner.When("I run NUnit console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 124
+#line 119
  testRunner.Then("the exit code should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "field",
                         "value"});
             table6.AddRow(new string[] {
-                        "Tests run",
+                        "Test Count",
                         "3"});
             table6.AddRow(new string[] {
                         "Passed",
                         "3"});
             table6.AddRow(new string[] {
-                        "Errors",
-                        "0"});
-            table6.AddRow(new string[] {
-                        "Failures",
+                        "Failed",
                         "0"});
             table6.AddRow(new string[] {
                         "Inconclusive",
                         "0"});
             table6.AddRow(new string[] {
-                        "Not run",
-                        "0"});
-            table6.AddRow(new string[] {
-                        "Invalid",
-                        "0"});
-            table6.AddRow(new string[] {
-                        "Ignored",
-                        "0"});
-            table6.AddRow(new string[] {
-                        "Explicit",
-                        "0"});
-            table6.AddRow(new string[] {
                         "Skipped",
                         "0"});
-#line 125
+#line 120
  testRunner.And("the Test Run Summary should has following:", ((string)(null)), table6, "And ");
 #line hidden
             this.ScenarioCleanup();
