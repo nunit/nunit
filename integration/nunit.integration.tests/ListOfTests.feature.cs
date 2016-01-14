@@ -296,9 +296,11 @@ this.FeatureBackground();
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I can run tests from the list of tests for several assemblies")]
         [NUnit.Framework.CategoryAttribute("teamcity")]
-        [NUnit.Framework.TestCaseAttribute("Version45", null)]
-        [NUnit.Framework.TestCaseAttribute("Version40", null)]
-        public virtual void ICanRunTestsFromTheListOfTestsForSeveralAssemblies(string frameworkVersion, string[] exampleTags)
+        [NUnit.Framework.TestCaseAttribute("ProjectFile", "Version45", null)]
+        [NUnit.Framework.TestCaseAttribute("ProjectFile", "Version40", null)]
+        [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version45", null)]
+        [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version40", null)]
+        public virtual void ICanRunTestsFromTheListOfTestsForSeveralAssemblies(string configurationType, string frameworkVersion, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "teamcity"};
@@ -307,53 +309,55 @@ this.FeatureBackground();
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can run tests from the list of tests for several assemblies", @__tags);
-#line 100
+#line 101
 this.ScenarioSetup(scenarioInfo);
 #line 3
 this.FeatureBackground();
-#line 101
- testRunner.Given(string.Format("Framework version is {0}", frameworkVersion), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 102
+ testRunner.Given(string.Format("Framework version is {0}", frameworkVersion), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 103
  testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
                     "s1 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 103
+#line 104
  testRunner.And("I have added successful method as SuccessfulTest2 to the class Foo.Tests.UnitTest" +
                     "s2 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 104
+#line 105
  testRunner.And("I have added successful method as SuccessfulTest3 to the class Foo.Tests.UnitTest" +
                     "s3 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 105
- testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
-                    "s4 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 106
  testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
-                    "s1 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+                    "s4 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 107
- testRunner.And("I have created the folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
+                    "s1 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 108
- testRunner.And("I have added NUnit framework references to foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have created the folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 109
- testRunner.And("I have added NUnit framework references to foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have added NUnit framework references to foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 110
- testRunner.And("I have copied NUnit framework references to folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have added NUnit framework references to foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 111
- testRunner.And("I have compiled the assembly foo1.tests to file mocks\\foo1.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have copied NUnit framework references to folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 112
- testRunner.And("I have compiled the assembly foo2.tests to file mocks\\foo2.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have compiled the assembly foo1.tests to file mocks\\foo1.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 113
- testRunner.And("I have added the assembly mocks\\foo1.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have compiled the assembly foo2.tests to file mocks\\foo2.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 114
- testRunner.And("I have added the assembly mocks\\foo2.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have added the assembly mocks\\foo1.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 115
- testRunner.And("I have append the line Foo.Tests.UnitTests1 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have added the assembly mocks\\foo2.tests.dll to the list of testing assemblies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 116
- testRunner.And("I have append the line Foo.Tests.UnitTests2 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have append the line Foo.Tests.UnitTests1 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 117
+ testRunner.And("I have append the line Foo.Tests.UnitTests2 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 118
  testRunner.And("I have added the arg TestList=mocks\\ListOfTests.txt to NUnit console command line" +
                     "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 118
- testRunner.When("I run NUnit console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 119
+ testRunner.And(string.Format("I want to use {0} configuration type", configurationType), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 120
+ testRunner.When("I run NUnit console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 121
  testRunner.Then("the exit code should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
@@ -374,8 +378,109 @@ this.FeatureBackground();
             table6.AddRow(new string[] {
                         "Skipped",
                         "0"});
-#line 120
+#line 122
  testRunner.And("the Test Run Summary should has following:", ((string)(null)), table6, "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can run tests from the list of tests for several assemblies from different dire" +
+            "ctories")]
+        [NUnit.Framework.CategoryAttribute("teamcity")]
+        [NUnit.Framework.TestCaseAttribute("ProjectFile", "Version45", null)]
+        [NUnit.Framework.TestCaseAttribute("ProjectFile", "Version40", null)]
+        [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version45", null)]
+        [NUnit.Framework.TestCaseAttribute("CmdArguments", "Version40", null)]
+        public virtual void ICanRunTestsFromTheListOfTestsForSeveralAssembliesFromDifferentDirectories(string configurationType, string frameworkVersion, string[] exampleTags)
+        {
+            string[] @__tags = new string[] {
+                    "teamcity"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can run tests from the list of tests for several assemblies from different dire" +
+                    "ctories", @__tags);
+#line 138
+this.ScenarioSetup(scenarioInfo);
+#line 3
+this.FeatureBackground();
+#line 139
+ testRunner.Given(string.Format("Framework version is {0}", frameworkVersion), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 140
+ testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
+                    "s1 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 141
+ testRunner.And("I have added successful method as SuccessfulTest2 to the class Foo.Tests.UnitTest" +
+                    "s2 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 142
+ testRunner.And("I have added successful method as SuccessfulTest3 to the class Foo.Tests.UnitTest" +
+                    "s3 for foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 143
+ testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
+                    "s4 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 144
+ testRunner.And("I have added successful method as SuccessfulTest1 to the class Foo.Tests.UnitTest" +
+                    "s1 for foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 145
+ testRunner.And("I have created the folder mocks", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 146
+ testRunner.And("I have added NUnit framework references to foo1.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 147
+ testRunner.And("I have added NUnit framework references to foo2.tests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 148
+ testRunner.And("I have created the folder mocks\\1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 149
+ testRunner.And("I have copied NUnit framework references to folder mocks\\1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 150
+ testRunner.And("I have compiled the assembly foo1.tests to file mocks\\1\\foo1.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 151
+ testRunner.And("I have created the folder mocks\\2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 152
+ testRunner.And("I have copied NUnit framework references to folder mocks\\2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 153
+ testRunner.And("I have compiled the assembly foo2.tests to file mocks\\2\\foo2.tests.dll", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 154
+ testRunner.And("I have added the assembly mocks\\1\\foo1.tests.dll to the list of testing assemblie" +
+                    "s", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 155
+ testRunner.And("I have added the assembly mocks\\2\\foo2.tests.dll to the list of testing assemblie" +
+                    "s", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 156
+ testRunner.And("I have append the line Foo.Tests.UnitTests1 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 157
+ testRunner.And("I have append the line Foo.Tests.UnitTests2 to file mocks\\ListOfTests.txt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 158
+ testRunner.And("I have added the arg TestList=mocks\\ListOfTests.txt to NUnit console command line" +
+                    "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 159
+ testRunner.And(string.Format("I want to use {0} configuration type", configurationType), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 160
+ testRunner.When("I run NUnit console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 161
+ testRunner.Then("the exit code should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "field",
+                        "value"});
+            table7.AddRow(new string[] {
+                        "Test Count",
+                        "3"});
+            table7.AddRow(new string[] {
+                        "Passed",
+                        "3"});
+            table7.AddRow(new string[] {
+                        "Failed",
+                        "0"});
+            table7.AddRow(new string[] {
+                        "Inconclusive",
+                        "0"});
+            table7.AddRow(new string[] {
+                        "Skipped",
+                        "0"});
+#line 162
+ testRunner.And("the Test Run Summary should has following:", ((string)(null)), table7, "And ");
 #line hidden
             this.ScenarioCleanup();
         }
