@@ -572,7 +572,7 @@ namespace NUnit.Engine
                 {
                     foreach (string name in key.GetSubKeyNames())
                     {
-                        if (name.StartsWith("v"))
+                        if (name.StartsWith("v") && name != "v4.0") // v4.0 is a duplicate, legacy key
                         {
                             var versionKey = key.OpenSubKey(name);
                             if (versionKey == null) continue;
