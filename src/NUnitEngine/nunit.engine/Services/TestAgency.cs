@@ -201,6 +201,10 @@ namespace NUnit.Engine.Services
             {
                 case RuntimeType.Mono:
                     p.StartInfo.FileName = NUnitConfiguration.MonoExePath;
+
+					if (targetRuntime.ClrVersion.Build < 0)
+						targetRuntime = RuntimeFramework.GetBestAvailableFramework(targetRuntime);
+
                     string monoOptions = "--runtime=v" + targetRuntime.ClrVersion.ToString(3);
                     if (debugTests || debugAgent) monoOptions += " --debug";
                     p.StartInfo.Arguments = string.Format("{0} \"{1}\" {2}", monoOptions, agentExePath, arglist);

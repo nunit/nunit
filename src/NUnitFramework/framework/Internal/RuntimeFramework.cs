@@ -376,9 +376,6 @@ namespace NUnit.Framework.Internal
                 && this.Runtime != target.Runtime)
                 return false;
 
-			if (this.ClrVersion.Build < 0 || target.ClrVersion.Build < 0)
-				return false;
-
             if (this.AllowAnyVersion || target.AllowAnyVersion)
                 return true;
 
