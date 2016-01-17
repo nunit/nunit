@@ -71,8 +71,8 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test to be used</param>
         public TestResult(ITest test)
         {
-            this.Test = test;
-            this.ResultState = ResultState.Inconclusive;
+            Test = test;
+            ResultState = ResultState.Inconclusive;
         }
 
         #endregion
@@ -239,7 +239,7 @@ namespace NUnit.Framework.Internal
         public virtual TNode AddToXml(TNode parentNode, bool recursive)
         {
             // A result node looks like a test node with extra info added
-            TNode thisNode = this.Test.AddToXml(parentNode, false);
+            TNode thisNode = Test.AddToXml(parentNode, false);
 
             thisNode.AddAttribute("result", ResultState.Status.ToString());
             if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
@@ -251,7 +251,7 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("end-time", EndTime.ToString("u"));
             thisNode.AddAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
-            if (this.Test is TestSuite)
+            if (Test is TestSuite)
             {
                 thisNode.AddAttribute("total", (PassCount + FailCount + SkipCount + InconclusiveCount).ToString());
                 thisNode.AddAttribute("passed", PassCount.ToString());
@@ -260,7 +260,7 @@ namespace NUnit.Framework.Internal
                 thisNode.AddAttribute("skipped", SkipCount.ToString());
             }
 
-            thisNode.AddAttribute("asserts", this.AssertCount.ToString());
+            thisNode.AddAttribute("asserts", AssertCount.ToString());
 
             switch (ResultState.Status)
             {
@@ -268,11 +268,9 @@ namespace NUnit.Framework.Internal
                     AddFailureElement(thisNode);
                     break;
                 case TestStatus.Skipped:
-                    AddReasonElement(thisNode);
-                    break;
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
-                    if (this.Message != null)
+                    if (Message != null)
                         AddReasonElement(thisNode);
                     break;
             }
@@ -297,34 +295,34 @@ namespace NUnit.Framework.Internal
         /// <param name="result">The result to be added</param>
         public virtual void AddResult(ITestResult result)
         {
-            this.Children.Add(result);
+            Children.Add(result);
 
-            //this.AssertCount += result.AssertCount;
+            //AssertCount += result.AssertCount;
 
             // If this result is marked cancelled, don't change it
-            if (this.ResultState != ResultState.Cancelled)
+            if (ResultState != ResultState.Cancelled)
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
 
-                        if (this.ResultState.Status == TestStatus.Inconclusive)
-                            this.SetResult(ResultState.Success);
+                        if (ResultState.Status == TestStatus.Inconclusive)
+                            SetResult(ResultState.Success);
 
                         break;
 
                     case TestStatus.Failed:
 
 
-                        if (this.ResultState.Status != TestStatus.Failed)
-                            this.SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
+                        if (ResultState.Status != TestStatus.Failed)
+                            SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
                         break;
 
                     case TestStatus.Skipped:
 
                         if (result.ResultState.Label == "Ignored")
-                            if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
-                                this.SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
+                            if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                                SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
 
                         break;
 
@@ -362,32 +360,32 @@ namespace NUnit.Framework.Internal
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
         public void SetResult(ResultState resultState, string message, string stackTrace)
         {
-            this.ResultState = resultState;
-            this.Message = message;
-            this.StackTrace = stackTrace;
+            ResultState = resultState;
+            Message = message;
+            StackTrace = stackTrace;
 
             // Set pseudo-counts for a test case
-            //if (IsTestCase(this.test))
+            //if (IsTestCase(test))
             //{
-            //    this.passCount = 0;
-            //    this.failCount = 0;
-            //    this.skipCount = 0;
-            //    this.inconclusiveCount = 0;
+            //    passCount = 0;
+            //    failCount = 0;
+            //    skipCount = 0;
+            //    inconclusiveCount = 0;
 
-            //    switch (this.ResultState.Status)
+            //    switch (ResultState.Status)
             //    {
             //        case TestStatus.Passed:
-            //            this.passCount++;
+            //            passCount++;
             //            break;
             //        case TestStatus.Failed:
-            //            this.failCount++;
+            //            failCount++;
             //            break;
             //        case TestStatus.Skipped:
-            //            this.skipCount++;
+            //            skipCount++;
             //            break;
             //        default:
             //        case TestStatus.Inconclusive:
-            //            this.inconclusiveCount++;
+            //            inconclusiveCount++;
             //            break;
             //    }
             //}
@@ -460,19 +458,19 @@ namespace NUnit.Framework.Internal
             if (ex is NUnitException)
                 ex = ex.InnerException;
 
-            ResultState resultState = this.ResultState == ResultState.Cancelled
+            ResultState resultState = ResultState == ResultState.Cancelled
                 ? ResultState.Cancelled
                 : ResultState.Error;
             if (Test.IsSuite)
                 resultState = resultState.WithSite(FailureSite.TearDown);
 
             string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-            if (this.Message != null)
-                message = this.Message + NUnit.Env.NewLine + message;
+            if (Message != null)
+                message = Message + NUnit.Env.NewLine + message;
 
             string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
-            if (this.StackTrace != null)
-                stackTrace = this.StackTrace + NUnit.Env.NewLine + stackTrace;
+            if (StackTrace != null)
+                stackTrace = StackTrace + NUnit.Env.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
         }
