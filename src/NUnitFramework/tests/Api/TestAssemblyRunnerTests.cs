@@ -131,7 +131,7 @@ namespace NUnit.Framework.Api
         public void CountTestCases_WithoutLoad_ThrowsInvalidOperation()
         {
             var ex = Assert.Throws<InvalidOperationException>(
-                () => _runner.CountTestCases(TestFilter.Empty));
+                    () => _runner.CountTestCases(TestFilter.Empty));
             Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
 
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Api
         public void Run_WithoutLoad_ReturnsError()
         {
             var ex = Assert.Throws<InvalidOperationException>(
-                () => _runner.Run(TestListener.NULL, TestFilter.Empty));
+                    () => _runner.Run(TestListener.NULL, TestFilter.Empty));
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
@@ -268,7 +268,7 @@ namespace NUnit.Framework.Api
         public void RunAsync_WithoutLoad_ReturnsError()
         {
             var ex = Assert.Throws<InvalidOperationException>(
-                () => _runner.RunAsync(TestListener.NULL, TestFilter.Empty));
+                    () => _runner.RunAsync(TestListener.NULL, TestFilter.Empty));
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
@@ -348,7 +348,7 @@ namespace NUnit.Framework.Api
             _runner.StopRun(true);
         }
 
-        [Test, Explicit("Intermittent failure")]
+        [Test]
         public void CancelRun_WhenTestIsRunning_StopsTest()
         {
             var tests = _runner.Load(_slowTestsPath, _settings);
@@ -358,7 +358,7 @@ namespace NUnit.Framework.Api
 
             // When cancelling, the completion event may not be signalled,
             // so we only wait a short time before checking.
-            _runner.WaitForCompletion(10000);
+            _runner.WaitForCompletion(Timeout.Infinite);
 
             Assert.True(_runner.IsTestComplete, "Test is not complete");
 

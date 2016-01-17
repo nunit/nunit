@@ -66,31 +66,35 @@ namespace NUnit.Framework.Internal.Execution
                 _topLevelWorkItem = work;
                 _runnerThread = new Thread(RunnerThreadProc);
                 _runnerThread.Start();
-            }	
+            }
 #endif
         }
 
 #if !PORTABLE
-    private void RunnerThreadProc()
-    {
-        _topLevelWorkItem.Execute();
-    }
+        private void RunnerThreadProc()
+        {
+            _topLevelWorkItem.Execute();
+        }
 #endif
 
+        private object cancelLock = new object();
+
         /// <summary>
-        /// Cancel the ongoing run completely.
+        /// Cancel (abort or stop) the ongoing run.
         /// If no run is in process, the call has no effect.
         /// </summary>
-        public void CancelRun()
+        /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
+        public void CancelRun(bool force)
         {
-#if !PORTABLE
-#if NETCF
-            if (_runnerThread != null && !_runnerThread.Join(0))
-#else
-            if (_runnerThread != null && _runnerThread.IsAlive)
-#endif
-                ThreadUtility.Kill(_runnerThread);
-#endif
+            lock (cancelLock)
+            {
+                if (_topLevelWorkItem != null)
+                {
+                    _topLevelWorkItem.Cancel(force);
+                    if (force)
+                        _topLevelWorkItem = null;
+                }
+            }
         }
         #endregion
     }
