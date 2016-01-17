@@ -77,7 +77,9 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
+#if !PORTABLE
         private object cancelLock = new object();
+#endif
 
         /// <summary>
         /// Cancel (abort or stop) the ongoing run.
@@ -86,6 +88,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
         public void CancelRun(bool force)
         {
+#if !PORTABLE
             lock (cancelLock)
             {
                 if (_topLevelWorkItem != null)
@@ -95,6 +98,7 @@ namespace NUnit.Framework.Internal.Execution
                         _topLevelWorkItem = null;
                 }
             }
+#endif
         }
         #endregion
     }

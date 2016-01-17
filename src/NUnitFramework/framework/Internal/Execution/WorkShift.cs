@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal.Execution
                         if (_busyCount == 0 && !HasWork)
                             this.EndShift();
                     }
-            }
+            };
 
             worker.Start();
         }

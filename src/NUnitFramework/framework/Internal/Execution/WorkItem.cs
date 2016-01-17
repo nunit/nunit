@@ -275,9 +275,9 @@ namespace NUnit.Framework.Internal.Execution
                 : "is TestMethod";
             log.Debug("Running test on own thread because it " + reason);
 
-            Thread thread = new Thread(new ThreadStart(RunTest));
+            thread = new Thread(new ThreadStart(RunTest));
 
-            thread.SetApartmentState(apartment);
+            thread.SetApartmentState(apartment == ApartmentState.Unknown ? currentApartment : apartment);
 
             RunThread(timeout);
         }
