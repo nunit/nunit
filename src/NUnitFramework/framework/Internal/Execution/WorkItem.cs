@@ -261,6 +261,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
+        private Thread thread;
         private ApartmentState currentApartment;
 
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
@@ -271,7 +272,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? "has Timeout value set."
                 : currentApartment != apartment && apartment != ApartmentState.Unknown
                 ? "requires a different apartment."
-                :; "is TestMethod"
+                : "is TestMethod";
             log.Debug("Running test on own thread because it " + reason);
 
             Thread thread = new Thread(new ThreadStart(RunTest));

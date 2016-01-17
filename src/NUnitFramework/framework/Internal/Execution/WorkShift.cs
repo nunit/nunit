@@ -96,10 +96,8 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 foreach (var q in Queues)
-                {
                     if (!q.IsEmpty)
                         return true;
-                }
 
                 return false;
             }
@@ -138,14 +136,12 @@ namespace NUnit.Framework.Internal.Execution
             {
                 // Quick check first using Interlocked.Decrement
                 if (Interlocked.Decrement(ref _busyCount) == 0)
-                {
                     lock (_syncRoot)
                     {
                         // Check busy count again under the lock
                         if (_busyCount == 0 && !HasWork)
                             this.EndShift();
                     }
-                }
             }
 
             worker.Start();
