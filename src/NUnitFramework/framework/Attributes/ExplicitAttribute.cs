@@ -36,14 +36,13 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
     public class ExplicitAttribute : NUnitAttribute, IApplyToTest
     {
-        private string reason;
+        private string _reason;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public ExplicitAttribute()
         {
-            this.reason = "";
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace NUnit.Framework
         /// <param name="reason">The reason test is marked explicit</param>
         public ExplicitAttribute(string reason)
         {
-            this.reason = reason;
+            _reason = reason;
         }
 
         #region IApplyToTest members
@@ -66,7 +65,8 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable && test.RunState != RunState.Ignored)
             {
                 test.RunState = RunState.Explicit;
-                test.Properties.Set(PropertyNames.SkipReason, reason);
+                if (_reason != null)
+                    test.Properties.Set(PropertyNames.SkipReason, _reason);
             }
         }
 
