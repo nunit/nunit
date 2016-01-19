@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #if !NETCF
                 if (work.TargetApartment == ApartmentState.STA)
-                    _runnerThread.SetApartment(ApartmentState.STA);
+                    _runnerThread.SetApartmentState(ApartmentState.STA);
 #endif
 
                 _runnerThread.Start();
