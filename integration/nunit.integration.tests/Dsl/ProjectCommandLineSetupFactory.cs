@@ -27,7 +27,6 @@
             var singleConfigFile = configuration.ConfigFiles.FirstOrDefault();
             var configElement = new XElement(
                 "Config",
-                new XAttribute("binpath", string.Join(";", assemblies.Select(Path.GetDirectoryName).Distinct())),
                 new XAttribute("name", "active"),                
                 assemblies.Select(path => new XElement("assembly", new XAttribute("path", path))));
 

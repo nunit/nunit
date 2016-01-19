@@ -26,7 +26,7 @@
 
         public void Compile(TestAssembly testAssembly, string assemblyFileName, TargetDotNetFrameworkVersion dotNetFrameworkVersion)
         {
-            DotNetFrameworkArchitecture architecture = DotNetFrameworkArchitecture.Current;
+            var architecture = DotNetFrameworkArchitecture.Current;
             switch (testAssembly.Platform)
             {                    
                 case Platform.X86:
