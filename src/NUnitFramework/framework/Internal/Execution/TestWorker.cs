@@ -151,13 +151,9 @@ namespace NUnit.Framework.Internal.Execution
             lock (cancelLock)
                 if (_workerThread != null && _currentWorkItem != null)
                 {
-                    {
-                        _currentWorkItem.Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
-
-                        _currentWorkItem.Cancel(force);
-                        if (force)
-                            _currentWorkItem = null;
-                    }
+                    _currentWorkItem.Cancel(force);
+                    if (force)
+                        _currentWorkItem = null;
                 }
         }
     }

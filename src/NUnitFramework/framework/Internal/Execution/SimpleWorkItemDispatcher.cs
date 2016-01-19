@@ -65,6 +65,12 @@ namespace NUnit.Framework.Internal.Execution
             {
                 _topLevelWorkItem = work;
                 _runnerThread = new Thread(RunnerThreadProc);
+
+#if !NETCF
+                if (work.TargetApartment == ApartmentState.STA)
+                    _runnerThread.SetApartment(ApartmentState.STA);
+#endif
+
                 _runnerThread.Start();
             }
 #endif

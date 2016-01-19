@@ -246,7 +246,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-#if (SILVERLIGHT || NETCF) && !PORTABLE
+#if SILVERLIGHT || NETCF
         private Thread thread;
 
         private void RunTestOnOwnThread(int timeout)
