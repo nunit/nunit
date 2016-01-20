@@ -30,7 +30,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    public class ValueSourceTests
+    public class ValueSourceTests : ValueSourceMayBeInherited
     {
         [Test]
         public void ValueSourceCanBeStaticProperty(
@@ -45,6 +45,13 @@ namespace NUnit.Framework.Attributes
             {
                 yield return "StaticProperty";
             }
+        }
+
+        [Test]
+        public void ValueSourceCanBeInheritedStaticProperty(
+            [ValueSource("InheritedStaticProperty")] bool source)
+        {
+            Assert.AreEqual(true, source);
         }
 
         [Test]
@@ -168,6 +175,14 @@ namespace NUnit.Framework.Attributes
 
                 return dataList;
             }
+        }
+    }
+
+    public class ValueSourceMayBeInherited
+    {
+        protected static IEnumerable<bool> InheritedStaticProperty
+        {
+            get { yield return true; }
         }
     }
 }
