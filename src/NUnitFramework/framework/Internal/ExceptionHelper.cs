@@ -24,6 +24,7 @@
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace NUnit.Framework.Internal
@@ -33,6 +34,41 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
+#if !NET_4_5 && !PORTABLE
+        private static readonly Action<Exception> PreserveStackTrace;
+
+        static ExceptionHelper()
+        {
+            var method = typeof(Exception).GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (method != null)
+            {
+                try
+                {
+                    PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), method);
+                    return;
+                }
+                catch (InvalidOperationException) { }
+            }
+            PreserveStackTrace = _ => { };
+        }
+#endif
+
+        /// <summary>
+        /// Rethrows an exception, preserving its stack trace
+        /// </summary>
+        /// <param name="exception">The exception to rethrow</param>
+        public static void Rethrow(Exception exception)
+        {
+#if NET_4_5 || PORTABLE
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
+#else
+            PreserveStackTrace(exception);
+            throw exception;
+#endif
+        }
+
+
         // TODO: Move to a utility class
         /// <summary>
         /// Builds up a message, using the Message field of the specified exception
