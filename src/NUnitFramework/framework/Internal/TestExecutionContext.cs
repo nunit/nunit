@@ -145,8 +145,8 @@ namespace NUnit.Framework.Internal
             this.TestCaseTimeout = other.TestCaseTimeout;
             this.UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
-            _currentCulture = CultureInfo.CurrentCulture;
-            _currentUICulture = CultureInfo.CurrentUICulture;
+            _currentCulture = other.CurrentCulture;
+            _currentUICulture = other.CurrentUICulture;
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
             _currentPrincipal = other.CurrentPrincipal;
