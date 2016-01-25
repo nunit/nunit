@@ -28,7 +28,7 @@ namespace NUnit.Tests
 {
     public class SlowTests
     {
-        const int DELAY = 100;
+        const int DELAY = 1000;
         
         public class AAA
         {
