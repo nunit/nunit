@@ -129,7 +129,7 @@ namespace NUnit.Framework.Tests.Compatibility
         [TestCase(typeof(DerivedTestClass), "Dispose")]
         public void CanGetMember(Type type, string name)
         {
-            var result = type.GetMember(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            var result = type.GetMember(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Length, Is.EqualTo(1));
         }
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Tests.Compatibility
         [Test]
         public void GetStaticMemberOnBaseClass()
         {
-            var result = typeof(DerivedTestClass).GetMember("StaticString", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            var result = typeof(DerivedTestClass).GetMember("StaticString", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Length, Is.GreaterThan(0));
         }
@@ -146,7 +146,7 @@ namespace NUnit.Framework.Tests.Compatibility
         [Test]
         public void GetsPrivateMemberOnBaseClass()
         {
-            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Length, Is.EqualTo(1));
         }
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Tests.Compatibility
         [Test]
         public void DoesNotGetPrivateMemberOnBaseClass()
         {
-            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Length, Is.EqualTo(0));
         }
