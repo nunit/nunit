@@ -135,11 +135,11 @@ namespace NUnit.Framework.Tests.Compatibility
         }
 
         [Test]
-        public void DoesNotGetStaticMemberOnBaseClass()
+        public void GetStaticMemberOnBaseClass()
         {
             var result = typeof(DerivedTestClass).GetMember("StaticString", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Length, Is.EqualTo(0));
+            Assert.That(result.Length, Is.GreaterThan(0));
         }
 
 #if NETCF
