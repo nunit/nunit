@@ -34,6 +34,14 @@ namespace NUnit.Framework
     /// </summary>
     public delegate void TestDelegate();
 
+#if NET_4_0 || NET_4_5 || PORTABLE
+    /// <summary>
+    /// Delegate used by tests that execute async code and
+    /// capture any thrown exception.
+    /// </summary>
+    public delegate System.Threading.Tasks.Task AsyncTestDelegate();
+#endif
+
     /// <summary>
     /// The Assert class contains a collection of static methods that
     /// implement the most common assertions used in NUnit.

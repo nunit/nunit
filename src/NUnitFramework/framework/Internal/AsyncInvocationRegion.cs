@@ -40,26 +40,6 @@ namespace NUnit.Framework.Internal
         private const string TaskTypeName = "System.Threading.Tasks.Task";
         private const string AsyncAttributeTypeName = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
 
-#if NET_4_0
-        private static readonly Action<Exception> PreserveStackTrace;
-
-        static AsyncInvocationRegion()
-        {
-            var method = typeof(Exception).GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (method != null)
-            {
-                try
-                {
-                    PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), method);
-                    return;
-                }
-                catch (InvalidOperationException) { }
-            }
-            PreserveStackTrace = _ => { };
-        }
-#endif
-
         private AsyncInvocationRegion()
         {
         }
@@ -129,13 +109,7 @@ at wrapping a non-async method invocation in an async region was done");
                 catch (TargetInvocationException e)
                 {
                     IList<Exception> innerExceptions = GetAllExceptions(e.InnerException);
-
-#if NET_4_5 || PORTABLE
-                    ExceptionDispatchInfo.Capture(innerExceptions[0]).Throw();
-#elif NET_4_0
-                    PreserveStackTrace(innerExceptions[0]);
-                    throw innerExceptions[0];
-#endif
+                    ExceptionHelper.Rethrow(innerExceptions[0]);
                 }
                 var args = invocationResult.GetType().GetGenericArguments();
                 if (args != null && args.Length == 1 && args[0].Name == VoidTaskResultType)

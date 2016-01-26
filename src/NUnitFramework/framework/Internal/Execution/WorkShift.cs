@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,23 +29,23 @@ using System.Threading;
 namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
-    /// The dispatcher needs to do different things at different, 
+    /// The dispatcher needs to do different things at different,
     /// non-overlapped times. For example, non-parallel tests may
     /// not be run at the same time as parallel tests. We model
     /// this using the metaphor of a working shift. The WorkShift
-    /// class associates one or more WorkItemQueues with one or 
-    /// more TestWorkers. 
-    /// 
-    /// Work in the queues is processed until all queues are empty 
-    /// and all workers are idle. Both tests are needed because a 
-    /// worker that is busy may end up adding more work to one of 
-    /// the queues. At that point, the shift is over and another 
-    /// shift may begin. This cycle continues until all the tests 
+    /// class associates one or more WorkItemQueues with one or
+    /// more TestWorkers.
+    ///
+    /// Work in the queues is processed until all queues are empty
+    /// and all workers are idle. Both tests are needed because a
+    /// worker that is busy may end up adding more work to one of
+    /// the queues. At that point, the shift is over and another
+    /// shift may begin. This cycle continues until all the tests
     /// have been run.
     /// </summary>
     public class WorkShift
     {
-        static Logger log = InternalTrace.GetLogger("WorkShift");
+        private static Logger log = InternalTrace.GetLogger("WorkShift");
 
         private object _syncRoot = new object();
         private int _busyCount = 0;
@@ -191,23 +191,20 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Cancel the shift without completing all work
+        /// Cancel (abort or stop) the shift without completing all work
         /// </summary>
-        public void Cancel()
+        /// <param name="force">true if the WorkShift should be aborted, false if it should allow its currently running tests to complete</param>
+        public void Cancel(bool force)
         {
-            this.IsActive = false;
+            if (force)
+                this.IsActive = false;
 
             foreach (var w in Workers)
-                w.Cancel();
-
-            foreach (var q in Queues)
-                q.Stop();
-
-            Workers.Clear();
-            Queues.Clear();
+                w.Cancel(force);
         }
 
         #endregion
     }
 }
+
 #endif
