@@ -32,6 +32,15 @@ namespace NUnit.Framework.Constraints
     public static class MsgUtilTests
     {
         #region FormatValue
+        class CustomFormattableType { }
+
+        [Test]
+        public static void FormatValue_CustomFormatterInvoked()
+        {
+            MsgUtils.AddFormatter(next => val => (val is CustomFormattableType) ? "custom_formatted" : next(val));
+
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted"));
+        }
 
         [Test]
         public static void FormatValue_IntegerIsWrittenAsIs()

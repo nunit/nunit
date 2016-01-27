@@ -29,9 +29,24 @@ using System.Globalization;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
+    /// Custom value formatter function
+    /// </summary>
+    /// <param name="val">The value</param>
+    /// <returns></returns>
+    public delegate string ValueFormatter(object val);
+
+    /// <summary>
+    /// Custom value formatter factory function
+    /// </summary>
+    /// <param name="next">The next formatter function</param>
+    /// <returns>ValueFormatter</returns>
+    /// <remarks>If the given formatter is unable to handle a certain format, it must call the next formatter in the chain</remarks>
+    public delegate ValueFormatter ValueFormatterFactory(ValueFormatter next);
+
+    /// <summary>
     /// Static methods used in creating messages
     /// </summary>
-    internal static class MsgUtils
+    public static class MsgUtils
     {
         /// <summary>
         /// Static string used when strings are clipped
@@ -52,48 +67,61 @@ namespace NUnit.Framework.Constraints
         private static readonly string Fmt_Default = "<{0}>";
 
         /// <summary>
+        /// Format function that will be invoked as last effort
+        /// for values of indeterminate type.
+        /// </summary>
+        static ValueFormatter ValueFormatter = val => string.Format(Fmt_Default, val);
+        static MsgUtils()
+        {
+            AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
+
+            AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
+
+            AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
+
+            AddFormatter(next => val => val is float ? FormatFloat((float)val) : next(val));
+
+            AddFormatter(next => val => val is double ? FormatDouble((double)val) : next(val));
+
+            AddFormatter(next => val => val is char ? string.Format(Fmt_Char, val) : next(val));
+
+            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val, 0, 10) : next(val));
+
+            AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
+
+            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
+
+            AddFormatter(next => val => val == null ? Fmt_Null : next(val));
+
+#if NETCF
+            AddFormatter(next => val =>
+            {
+                var vi = val as System.Reflection.MethodInfo;
+                return (vi != null && vi.IsGenericMethodDefinition)
+                        ? string.Format(Fmt_Default, vi.Name + "<>") 
+                        : next(val);
+            });
+#endif
+        }
+
+        /// <summary>
+        /// Add a formatter to the chain of responsibility.
+        /// </summary>
+        /// <param name="formatterFactory"></param>
+        public static void AddFormatter(ValueFormatterFactory formatterFactory)
+        {
+            ValueFormatter = formatterFactory(ValueFormatter);
+        }
+
+
+        /// <summary>
         /// Formats text to represent a generalized value.
         /// </summary>
         /// <param name="val">The value</param>
         /// <returns>The formatted text</returns>
         public static string FormatValue(object val)
         {
-            if (val == null)
-                return Fmt_Null;
-
-            if (val.GetType().IsArray)
-                return FormatArray((Array)val);
-
-            if (val is string)
-                return FormatString((string)val);
-
-            if (val is IEnumerable)
-                return FormatCollection((IEnumerable)val, 0, 10);
-
-            if (val is char)
-                return string.Format(Fmt_Char, val);
-
-            if (val is double)
-                return FormatDouble((double)val);
-
-            if (val is float)
-                return FormatFloat((float)val);
-
-            if (val is decimal)
-                return FormatDecimal((decimal)val);
-
-            if (val is DateTime)
-                return FormatDateTime((DateTime)val);
-
-            if (val is ValueType)
-                return string.Format(Fmt_ValueType, val);
-
-#if NETCF
-            var vi = val as System.Reflection.MethodInfo;
-            if (vi != null && vi.IsGenericMethodDefinition)
-                return string.Format(Fmt_Default, vi.Name + "<>");
-#endif
-            return string.Format(Fmt_Default, val);
+            return ValueFormatter(val);
         }
 
         /// <summary>
