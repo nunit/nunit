@@ -380,7 +380,7 @@ namespace NUnit.Framework.Internal.Execution
 
             if (!tThread.Join(0))
             {
-                log.Debug("Killing thread {0} for cancel", thread.ManagedThreadId);
+                log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
                 ThreadUtility.Kill(tThread);
 
                 tThread.Join();
