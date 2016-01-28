@@ -43,6 +43,15 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public static void FormatValue_CustomFormatterNotInvokedForNull()
+        {
+            // If this factory is actually called with null, it will throw
+            MsgUtils.AddFormatter(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val));
+
+            Assert.That(MsgUtils.FormatValue(null), Is.EqualTo("null"));
+        }
+
+        [Test]
         public static void FormatValue_IntegerIsWrittenAsIs()
         {
             Assert.That(MsgUtils.FormatValue(42), Is.EqualTo("42"));

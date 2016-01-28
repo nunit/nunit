@@ -91,8 +91,6 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
 
-            AddFormatter(next => val => val == null ? Fmt_Null : next(val));
-
 #if NETCF
             AddFormatter(next => val =>
             {
@@ -113,7 +111,6 @@ namespace NUnit.Framework.Constraints
             ValueFormatter = formatterFactory(ValueFormatter);
         }
 
-
         /// <summary>
         /// Formats text to represent a generalized value.
         /// </summary>
@@ -121,7 +118,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>The formatted text</returns>
         public static string FormatValue(object val)
         {
-            return ValueFormatter(val);
+            return val == null ? Fmt_Null : ValueFormatter(val);
         }
 
         /// <summary>
