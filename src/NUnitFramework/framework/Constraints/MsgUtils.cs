@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Globalization;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -42,37 +43,6 @@ namespace NUnit.Framework.Constraints
     /// <returns>ValueFormatter</returns>
     /// <remarks>If the given formatter is unable to handle a certain format, it must call the next formatter in the chain</remarks>
     public delegate ValueFormatter ValueFormatterFactory(ValueFormatter next);
-
-    /// <summary>
-    /// Small class to allow adding ValueFormatter instances to MsgUtils
-    /// without exposing MsgUtils publicly.
-    /// </summary>
-    public static class ValueFormatters
-    {
-        /// <summary>
-        /// This method adds the a new ValueFormatterFactory to the
-        /// chain of responsibility.
-        /// </summary>
-        /// <param name="formatterFactory">The factory delegate</param>
-        public static void Add(ValueFormatterFactory formatterFactory)
-        {
-            MsgUtils.AddFormatter(formatterFactory);
-        }
-
-        /// <summary>
-        /// This method provides a simplified way to add a ValueFormatter
-        /// delegate to the chain of responsibility, creating the factory
-        /// delegate internally. It is useful when the Type of the object
-        /// is the only criterion for selection of the formatter, since
-        /// it can be used without getting involved with a compould function.
-        /// </summary>
-        /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
-        /// <param name="formatter">The ValueFormatter delegate</param>
-        public static void Add<TSUPPORTED>(ValueFormatter formatter)
-        {
-            Add(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
-        }
-    }
 
     /// <summary>
     /// Static methods used in creating messages
@@ -98,12 +68,15 @@ namespace NUnit.Framework.Constraints
         private static readonly string Fmt_Default = "<{0}>";
 
         /// <summary>
-        /// Format function that will be invoked as last effort
-        /// for values of indeterminate type.
+        /// Current head of chain of value formatters. Public for testing.
         /// </summary>
-        static ValueFormatter ValueFormatter = val => string.Format(Fmt_Default, val);
+        public static ValueFormatter DefaultValueFormatter { get; set; }
+
         static MsgUtils()
         {
+            // Initialize formatter to default for values of indeterminate type.
+            DefaultValueFormatter = val => string.Format(Fmt_Default, val);
+
             AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
 
             AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
@@ -139,7 +112,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="formatterFactory"></param>
         public static void AddFormatter(ValueFormatterFactory formatterFactory)
         {
-            ValueFormatter = formatterFactory(ValueFormatter);
+            DefaultValueFormatter = formatterFactory(DefaultValueFormatter);
         }
 
         /// <summary>
@@ -149,7 +122,15 @@ namespace NUnit.Framework.Constraints
         /// <returns>The formatted text</returns>
         public static string FormatValue(object val)
         {
-            return val == null ? Fmt_Null : ValueFormatter(val);
+            if (val == null)
+                return Fmt_Null;
+
+            var context = TestExecutionContext.CurrentContext;
+
+            if (context != null)
+                return context.CurrentValueFormatter(val);
+            else
+                return DefaultValueFormatter(val);
         }
 
         /// <summary>
