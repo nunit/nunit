@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if !NET_4_5 && !PORTABLE
+#if !NET_4_5 && !PORTABLE && !NETCF
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()
@@ -54,6 +54,7 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+#if !NETCF
         /// <summary>
         /// Rethrows an exception, preserving its stack trace
         /// </summary>
@@ -67,6 +68,7 @@ namespace NUnit.Framework.Internal
             throw exception;
 #endif
         }
+#endif
 
 
         // TODO: Move to a utility class
