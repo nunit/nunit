@@ -35,9 +35,9 @@ namespace NUnit.Framework.Constraints
         class CustomFormattableType { }
 
         [Test]
-        public static void FormatValue_CustomFormatterInvoked()
+        public static void FormatValue_CustomFormatterInvoked_FactoryArg()
         {
-            MsgUtils.AddFormatter(next => val => (val is CustomFormattableType) ? "custom_formatted" : next(val));
+            ValueFormatters.Add(next => val => (val is CustomFormattableType) ? "custom_formatted" : next(val));
 
             Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted"));
         }
@@ -46,9 +46,17 @@ namespace NUnit.Framework.Constraints
         public static void FormatValue_CustomFormatterNotInvokedForNull()
         {
             // If this factory is actually called with null, it will throw
-            MsgUtils.AddFormatter(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val));
+            ValueFormatters.Add(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val));
 
             Assert.That(MsgUtils.FormatValue(null), Is.EqualTo("null"));
+        }
+
+        [Test]
+        public static void FormatValue_CustomFormatterInvoked_FormatterArg()
+        {
+            ValueFormatters.Add<CustomFormattableType>(val => "custom_formatted_using_type");
+
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted_using_type"));
         }
 
         [Test]

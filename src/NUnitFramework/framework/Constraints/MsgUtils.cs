@@ -44,9 +44,43 @@ namespace NUnit.Framework.Constraints
     public delegate ValueFormatter ValueFormatterFactory(ValueFormatter next);
 
     /// <summary>
+    /// Small class to allow adding ValueFormatter instances to MsgUtils
+    /// without exposing MsgUtils publicly.
+    /// </summary>
+    public static class ValueFormatters
+    {
+        /// <summary>
+        /// This method adds the a new ValueFormatterFactory to the
+        /// chain of responsibility.
+        /// </summary>
+        /// <param name="formatterFactory">The factory delegate</param>
+        public static void Add(ValueFormatterFactory formatterFactory)
+        {
+            if (Internal.TestExecutionContext.CurrentContext != null)
+                throw new InvalidOperationException("Cannot add global foratters once execution has started");
+
+            MsgUtils.AddFormatter(formatterFactory);
+        }
+
+        /// <summary>
+        /// This method provides a simplified way to add a ValueFormatter
+        /// delegate to the chain of responsibility, creating the factory
+        /// delegate internally. It is useful when the Type of the object
+        /// is the only criterion for selection of the formatter, since
+        /// it can be used without getting involved with a compould function.
+        /// </summary>
+        /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
+        /// <param name="formatter">The ValueFormatter delegate</param>
+        public static void Add<TSUPPORTED>(ValueFormatter formatter)
+        {
+            Add(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
+        }
+    }
+
+    /// <summary>
     /// Static methods used in creating messages
     /// </summary>
-    public static class MsgUtils
+    internal static class MsgUtils
     {
         /// <summary>
         /// Static string used when strings are clipped
