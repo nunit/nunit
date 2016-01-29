@@ -56,9 +56,6 @@ namespace NUnit.Framework.Constraints
         /// <param name="formatterFactory">The factory delegate</param>
         public static void Add(ValueFormatterFactory formatterFactory)
         {
-            if (Internal.TestExecutionContext.CurrentContext != null)
-                throw new InvalidOperationException("Cannot add global foratters once execution has started");
-
             MsgUtils.AddFormatter(formatterFactory);
         }
 
