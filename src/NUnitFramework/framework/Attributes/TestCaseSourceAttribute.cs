@@ -39,6 +39,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
     {
+
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         #region Constructors
@@ -52,6 +53,19 @@ namespace NUnit.Framework
             this.SourceName = sourceName;
         }
 
+        /// <summary>
+        /// Construct with a Type and name
+        /// </summary>
+        /// <param name="sourceType">The Type that will provide data</param>
+        /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
+        /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method. 
+        ///                     If the source name is a field or property has no effect.</param>
+        public TestCaseSourceAttribute(Type sourceType, string sourceName, object[] methodParams)
+        {
+            this.MethodParams = methodParams;
+            this.SourceType = sourceType;
+            this.SourceName = sourceName;
+        }
         /// <summary>
         /// Construct with a Type and name
         /// </summary>
@@ -75,7 +89,11 @@ namespace NUnit.Framework
         #endregion
 
         #region Properties
-
+        /// <summary>
+        /// A set of parameters passed to the method, works only if the Source Name is a method. 
+        /// If the source name is a field or property has no effect.
+        /// </summary>
+        public object[] MethodParams { get; private set; }
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
@@ -213,7 +231,7 @@ namespace NUnit.Framework
 
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)
-                return Reflect.Construct(sourceType) as IEnumerable;
+                return Reflect.Construct(sourceType, null) as IEnumerable;
 
             MemberInfo[] members = sourceType.GetMember(SourceName,
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
@@ -237,7 +255,7 @@ namespace NUnit.Framework
                 var m = member as MethodInfo;
                 if (m != null)
                     return m.IsStatic
-                        ? (IEnumerable)m.Invoke(null, null)
+                        ? (IEnumerable)m.Invoke(null, MethodParams)
                         : SourceMustBeStaticError();
             }
 

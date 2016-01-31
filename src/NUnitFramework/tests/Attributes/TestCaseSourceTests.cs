@@ -147,7 +147,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         [TestCaseSource("MyData")]
-        [TestCaseSource("MoreData", Category="Extra")]
+        [TestCaseSource("MoreData", Category = "Extra")]
         [TestCase(12, 2, 6)]
         public void TestMayUseMultipleSourceAttributes(int n, int d, int q)
         {
@@ -166,7 +166,11 @@ namespace NUnit.Framework.Attributes
         {
             Assert.AreEqual(q, n / d);
         }
-
+        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), "HereIsTheDataWithParameters", new object[] { 100, 4, 25 })]
+        public void SourceInAnotherClassPassingSomeDataToConstructor(int n, int d, int q)
+        {
+            Assert.AreEqual(q, n / d);
+        }
         [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), "TestCases")]
         public int SourceMayBeInAnotherClassWithReturn(int n, int d)
         {
@@ -190,7 +194,7 @@ namespace NUnit.Framework.Attributes
 
             Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
- 
+
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
@@ -204,10 +208,10 @@ namespace NUnit.Framework.Attributes
 
             Test testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
- 
+
             testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
- 
+
             testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
@@ -272,6 +276,12 @@ namespace NUnit.Framework.Attributes
 
         private class DivideDataProvider
         {
+            private static object[] myObject;
+
+            public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
+            {
+                yield return new object[] { inject1, inject2, inject3 };
+            }
             public static IEnumerable HereIsTheData
             {
                 get
@@ -284,6 +294,8 @@ namespace NUnit.Framework.Attributes
                     //    .Throws(typeof(System.DivideByZeroException));
                     yield return new object[] { 100, 20, 5 };
                     yield return new object[] { 100, 4, 25 };
+
+
                 }
             }
         }
