@@ -166,11 +166,13 @@ namespace NUnit.Framework.Attributes
         {
             Assert.AreEqual(q, n / d);
         }
+        
         [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), "HereIsTheDataWithParameters", new object[] { 100, 4, 25 })]
         public void SourceInAnotherClassPassingSomeDataToConstructor(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
         }
+        
         [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), "TestCases")]
         public int SourceMayBeInAnotherClassWithReturn(int n, int d)
         {
@@ -294,8 +296,6 @@ namespace NUnit.Framework.Attributes
                     //    .Throws(typeof(System.DivideByZeroException));
                     yield return new object[] { 100, 20, 5 };
                     yield return new object[] { 100, 4, 25 };
-
-
                 }
             }
         }
