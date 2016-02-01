@@ -35,55 +35,6 @@ namespace NUnit.Framework.Constraints
         class CustomFormattableType { }
 
         [Test]
-        public static void FormatValue_GlobalCustomFormatterInvoked_FactoryArg()
-        {
-            var originalFormatter = MsgUtils.DefaultValueFormatter;
-
-            try
-            {
-                GlobalSettings.AddFormatter(next => val => (val is CustomFormattableType) ? "custom_formatted" : next(val));
-                Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted"));
-            }
-            finally
-            {
-                MsgUtils.DefaultValueFormatter = originalFormatter;
-            }
-        }
-
-        [Test]
-        public static void FormatValue_GlobalCustomFormatterNotInvokedForNull()
-        {
-            var originalFormatter = MsgUtils.DefaultValueFormatter;
-
-            try
-            {
-                // If this factory is actually called with null, it will throw
-                GlobalSettings.AddFormatter(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val));
-                Assert.That(MsgUtils.FormatValue(null), Is.EqualTo("null"));
-            }
-            finally
-            {
-                MsgUtils.DefaultValueFormatter = originalFormatter;
-            }
-        }
-
-        [Test]
-        public static void FormatValue_GlobalCustomFormatterInvoked_FormatterArg()
-        {
-            var originalFormatter = MsgUtils.DefaultValueFormatter;
-
-            try
-            {
-                GlobalSettings.AddFormatter<CustomFormattableType>(val => "custom_formatted_using_type");
-                Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted_using_type"));
-            }
-            finally
-            {
-                MsgUtils.DefaultValueFormatter = originalFormatter;
-            }
-        }
-
-        [Test]
         public static void FormatValue_ContextualCustomFormatterInvoked_FactoryArg()
         {
             TestContext.AddFormatter(next => val => (val is CustomFormattableType) ? "custom_formatted" : next(val));

@@ -38,29 +38,5 @@ namespace NUnit.Framework
 		/// Default tolerance for floating point equality
 		/// </summary>
 		public static double DefaultFloatingPointTolerance = 0.0d;
-
-        /// <summary>
-        /// This method adds the a new ValueFormatterFactory to the
-        /// global chain of responsibility maintained by MsgUtils.
-        /// </summary>
-        /// <param name="formatterFactory">The factory delegate</param>
-        public static void AddFormatter(ValueFormatterFactory formatterFactory)
-        {
-            MsgUtils.AddFormatter(formatterFactory);
-        }
-
-        /// <summary>
-        /// This method provides a simplified way to add a ValueFormatter
-        /// delegate to the chain of responsibility, creating the factory
-        /// delegate internally. It is useful when the Type of the object
-        /// is the only criterion for selection of the formatter, since
-        /// it can be used without getting involved with a compould function.
-        /// </summary>
-        /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
-        /// <param name="formatter">The ValueFormatter delegate</param>
-        public static void AddFormatter<TSUPPORTED>(ValueFormatter formatter)
-        {
-            AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
-        }
     }
 }

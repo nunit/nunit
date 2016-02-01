@@ -323,6 +323,10 @@
       <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
       <Name>nunitlite-sl-5.0</Name>
     </ProjectReference>
+    <ProjectReference Include="..\slow-tests\slow-nunit-tests-sl-5.0.csproj">
+      <Project>{a2b973c4-ea96-4b00-b2be-04bfd9d5aa39}</Project>
+      <Name>slow-nunit-tests-sl-5.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-sl-5.0.csproj">
       <Project>{a76794da-29a4-4d63-9850-e0e363a2fafd}</Project>
       <Name>nunit.testdata-sl-5.0</Name>
