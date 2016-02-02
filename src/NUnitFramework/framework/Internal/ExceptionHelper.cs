@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if !NETCF && !SILVERLIGHT
         /// <summary>
         /// Rethrows an exception, preserving its stack trace
         /// </summary>
