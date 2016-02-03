@@ -218,6 +218,99 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertCount, Is.EqualTo(totalCount), "Fixture count is not correct");
         }
 
+        [Test]
+        public void AssertionIsNull()
+        {
+            Assert.That(null, Is.Null);
+        }
+
+        [Test]
+        public void AssertionNullIsNullOrEmpty()
+        {
+            Assert.That(null, Is.Null.Or.Empty);
+        }
+
+        [Test]
+        public void AssertionIsNotNull()
+        {
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(null, Is.Not.Null));
+        }
+
+        [Test]
+        public void AssertionTypedNullIsNotEmpty()
+        {
+            string actual = null;
+            Assert.That(actual, Is.Not.Empty);
+        }
+
+        [Test]
+        public void AssertionTypedNullIsEmptyFails()
+        {
+            string actual = null;
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(actual, Is.Empty));
+        }
+
+#if !NET_2_0 && !SL_5_0
+        [Test]
+        public void AssertionUntypedNullEmptyThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                Assert.That(null, Is.Empty));
+        }
+
+        [Test]
+        public void AssertionIntEmptyThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                Assert.That(1, Is.Empty));
+        }
+#endif
+
+        [Test]
+        public void AssertionIsEmpty()
+        {
+            Assert.That("", Is.Empty);
+        }
+
+        [Test]
+        public void AssertionIsNotEmpty()
+        {
+            Assert.Throws<AssertionException>(() =>
+                Assert.That("", Is.Not.Empty));
+        }
+
+        [Test]
+        public void AssertionThatWithDoubleNegative()
+        {
+            Assert.That("", Is.Not.Not.Empty);
+        }
+
+        [Test]
+        public void AssertionNullIsNotNullAndNotEmpty()
+        {
+            string actual = null;
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(actual, Is.Not.Null.And.Not.Empty));
+        }
+
+        [Test]
+        public void AssertionEmptyIsNotNullOrEmpty()
+        {
+            // ok because it evaluates to:
+            // var expected = "";
+            // if (expected != null || expected == "")
+            Assert.That("", Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        public void AssertionEmptyIsNotNullOrNotEmpty()
+        {
+            Assert.Throws<AssertionException>(() =>
+                Assert.That("", Is.Not.Null.And.Not.Empty));
+        }
+
         private int ReturnsFive()
         {
             return 5;
