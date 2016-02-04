@@ -50,8 +50,10 @@ namespace NUnit.Framework.Constraints
         {
             var actualType = GetBaseType(actual);
 
-            if (actual is string || actualType == typeof(string))
+            if (actualType == typeof(string))
                 realConstraint = new EmptyStringConstraint();
+            else if (actual == null)
+                throw new System.ArgumentException("The actual value must be a non-null string, IEnumerable or DirectoryInfo", "actual");
 #if !SILVERLIGHT && !PORTABLE
             else if (actual is System.IO.DirectoryInfo || actualType == typeof(System.IO.DirectoryInfo))
                 realConstraint = new EmptyDirectoryConstraint();

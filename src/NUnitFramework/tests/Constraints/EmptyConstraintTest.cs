@@ -63,6 +63,13 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
         }
 
+        [Test]
+        public void StringNullThrowsAssertionException()
+        {
+            string input = null;
+            var actual = theConstraint.ApplyTo(input);
+            Assert.AreEqual(ConstraintStatus.Failure, actual.Status);
+        }
     }
 
     [TestFixture]
@@ -85,6 +92,14 @@ namespace NUnit.Framework.Constraints
         {
             new TestCaseData( "Hello", "\"Hello\"" ),
         };
+
+        [Test]
+        public void StringNullReturnsNotSuccess()
+        {
+            string input = null;
+            var actual = theConstraint.ApplyTo(input);
+            Assert.AreEqual(ConstraintStatus.Failure, actual.Status);
+        }
     }
 
 #if !SILVERLIGHT && !PORTABLE
