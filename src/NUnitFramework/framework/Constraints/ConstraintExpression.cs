@@ -384,7 +384,19 @@ namespace NUnit.Framework.Constraints
         {
             get { return (LessThanConstraint)this.Append(new LessThanConstraint(0)); }
         }
- 
+
+        #endregion
+
+        #region Zero
+
+        /// <summary>
+        /// Returns a constraint that tests if item is equal to zero
+        /// </summary>
+        public EqualConstraint Zero
+        {
+            get { return (EqualConstraint)this.Append(new EqualConstraint(0)); }
+        }
+
         #endregion
 
         #region NaN
