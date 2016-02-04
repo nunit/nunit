@@ -174,7 +174,7 @@ namespace NUnit.Framework
                 return Reflect.Construct(sourceType) as IEnumerable;
 
             MemberInfo[] members = sourceType.GetMember(SourceName,
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
             if (members.Length == 1)
             {

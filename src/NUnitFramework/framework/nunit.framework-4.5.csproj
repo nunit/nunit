@@ -123,6 +123,9 @@
     <Compile Include="Assert.Equality.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Assert.Exceptions.Async.cs">
+      <DependentUpon>Assert.cs</DependentUpon>
+    </Compile>
     <Compile Include="Assert.Exceptions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
@@ -220,6 +223,7 @@
     <Compile Include="Constraints\EqualConstraint.cs" />
     <Compile Include="Constraints\EqualityAdapter.cs" />
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
+    <Compile Include="Constraints\ExceptionNotThrownConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />
     <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />

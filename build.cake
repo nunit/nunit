@@ -84,9 +84,20 @@ Task("InitializeBuild")
 	if (BuildSystem.IsRunningOnAppVeyor)
 	{
 		var tag = AppVeyor.Environment.Repository.Tag;
-		var buildNumber = AppVeyor.Environment.Build.Number;
-		
-		packageVersion = tag.IsTag ? tag.Name : version + "-CI-" + buildNumber + dbgSuffix;
+
+		if (tag.IsTag)
+		{
+			packageVersion = tag.Name;
+		}
+		else
+		{
+			var buildNumber = AppVeyor.Environment.Build.Number;
+			packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
+			if (AppVeyor.Environment.PullRequest.IsPullRequest)
+				packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
+			else
+				packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
+		}
 
 		AppVeyor.UpdateBuildVersion(packageVersion);
 	}

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,18 +22,21 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {
 	/// <summary>
-	/// GlobalSettings is a place for setting default _values used
-	/// by the framework in performing asserts.
+	/// GlobalSettings is a place for setting default values used
+	/// by the framework in performing asserts. Anything set through
+    /// this class applies to the entire test run. It should not normally
+    /// be used from within a test, since it is not thread-safe.
 	/// </summary>
-	public class GlobalSettings
+	public static class GlobalSettings
 	{
 		/// <summary>
 		/// Default tolerance for floating point equality
 		/// </summary>
 		public static double DefaultFloatingPointTolerance = 0.0d;
-	}
+    }
 }

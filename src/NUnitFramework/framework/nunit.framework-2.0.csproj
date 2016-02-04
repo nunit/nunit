@@ -122,6 +122,7 @@
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
+    <Compile Include="Constraints\ExceptionNotThrownConstraint.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />
     <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
@@ -134,6 +135,9 @@
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
     <Compile Include="Assert.Equality.cs">
+      <DependentUpon>Assert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Assert.Exceptions.Async.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
     <Compile Include="Assert.Types.cs">

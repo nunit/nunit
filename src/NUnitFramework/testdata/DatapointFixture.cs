@@ -135,4 +135,43 @@ namespace NUnit.TestData.DatapointFixture
             yield return double.PositiveInfinity;
         }
     }
+
+    public class InheritedDatapointSquareRoot : SquareRootTest
+    {
+        [Datapoint]
+        public double zero = 0;
+
+        [Datapoint]
+        public double positive = 1;
+
+        [Datapoint]
+        public double negative = -1;
+    }
+
+    public class DatapointCanBeInherited : InheritedDatapointSquareRoot
+    {
+        [Datapoint]
+        public double max = double.MaxValue;
+
+        [Datapoint]
+        public double infinity = double.PositiveInfinity;
+    }
+
+    public class InheritedDatapointsSquareRoot : SquareRootTest
+    {
+        [Datapoints]
+        public double[] GetCommonValues()
+        {
+            return new double[] { 0.0, 1.0, -1.0 };
+        }
+    }
+
+    public class DatapointsCanBeInherited : InheritedDatapointsSquareRoot
+    {
+        [Datapoints]
+        public double[] GetValues()
+        {
+            return new double[] { double.MaxValue, double.PositiveInfinity };
+        }
+    }
 }

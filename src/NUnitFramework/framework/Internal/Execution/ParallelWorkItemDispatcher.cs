@@ -141,10 +141,10 @@ namespace NUnit.Framework.Internal.Execution
         /// Cancel the ongoing run completely.
         /// If no run is in process, the call has no effect.
         /// </summary>
-        public void CancelRun()
+        public void CancelRun(bool force)
         {
             foreach (var shift in Shifts)
-                shift.Cancel();
+                shift.Cancel(force);
         }
 
         #endregion
