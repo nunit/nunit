@@ -47,9 +47,9 @@ var NUNITLITE_RUNNER = "nunitlite-runner.exe";
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
 var NUNITLITE_TESTS = "nunitlite.tests.exe";
 var ENGINE_TESTS = "nunit.engine.tests.dll";
-var DRIVER_TESTS = "driver/nunit.driver.tests.dll";
+var PORTABLE_AGENT_TESTS = "agents/nunit.portable.agent.tests.dll";
 var ADDIN_TESTS = "addins/tests/addin-tests.dll";
-var V2_DRIVER_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
+var V2_PORTABLE_AGENT_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
 var CONSOLE_TESTS = "nunit3-console.tests.dll";
 
 // Packages
@@ -206,7 +206,7 @@ Task("TestDriver")
   .WithCriteria(IsRunningOnWindows)
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, DRIVER_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS);
 	});
 
 Task("TestAddins")
@@ -220,7 +220,7 @@ Task("TestV2Driver")
   .IsDependentOn("Build")
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS);
 	});
 
 Task("TestConsole")
@@ -529,8 +529,8 @@ void BuildEngine(string configuration)
     // Driver and tests
     if(IsRunningOnWindows())
     {
-        BuildProject("./src/NUnitEngine/Portable/nunit.driver/nunit.driver.csproj", configuration);
-        BuildProject("./src/NUnitEngine/Portable/nunit.driver.tests/nunit.driver.tests.csproj", configuration);
+        BuildProject("./src/NUnitEngine/Portable/nunit.portable.agent/nunit.portable.agent.csproj", configuration);
+        BuildProject("./src/NUnitEngine/Portable/nunit.portable.agent.tests/nunit.portable.agent.tests.csproj", configuration);
     }
 
     // Addins

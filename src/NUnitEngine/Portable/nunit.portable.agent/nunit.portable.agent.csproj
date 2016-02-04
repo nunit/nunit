@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Engine</RootNamespace>
-    <AssemblyName>nunit.driver</AssemblyName>
+    <AssemblyName>nunit.portable.agent</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -20,20 +20,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\bin\Debug\driver\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Debug\agents\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\..\bin\Debug\driver\nunit.driver.XML</DocumentationFile>
+    <DocumentationFile>..\..\..\..\bin\Debug\agents\nunit.portable.agent.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\bin\Release\driver\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Release\agents\</OutputPath>
     <DefineConstants>TRACE;NUNIT_ENGINE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\..\bin\Release\driver\nunit.driver.XML</DocumentationFile>
+    <DocumentationFile>..\..\..\..\bin\Release\agents\nunit.portable.agent.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -75,8 +75,8 @@
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
-    <Compile Include="NUnitDriver.cs" />
-    <Compile Include="NUnitDriverException.cs" />
+    <Compile Include="NUnitPortableDriver.cs" />
+    <Compile Include="NUnitPortableDriverException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

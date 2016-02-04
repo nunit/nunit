@@ -32,7 +32,7 @@ using System.Reflection;
 
 namespace NUnit.Engine.Tests
 {
-    public class NUnitDriverTests
+    public class NUnitPortableDriverTests
     {
         const string EMPTY_FILTER = "<filter />";
         const string MOCK_ASSEMBLY = "mock-assembly.exe";
@@ -42,7 +42,7 @@ namespace NUnit.Engine.Tests
 
         IDictionary<string, object> _settings = new Dictionary<string, object>();
 
-        NUnitDriver _driver;
+        NUnitPortableDriver _driver;
         Assembly _mockAssembly;
         Assembly _frameworkAssembly;
 
@@ -53,14 +53,14 @@ namespace NUnit.Engine.Tests
             _mockAssembly = Assembly.LoadFrom(mockAssemblyPath);
             var frameworkAssemblyPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, NUNIT_FRAMEWORK);
             _frameworkAssembly = Assembly.LoadFrom(frameworkAssemblyPath);
-            _driver = new NUnitDriver();
+            _driver = new NUnitPortableDriver();
         }
 
         #region Construction Test
 
         public void ConstructController_MissingFile_ThrowsArgumentInvalid()
         {
-            Assert.That(new NUnitDriver(), Throws.ArgumentException);
+            Assert.That(new NUnitPortableDriver(), Throws.ArgumentException);
         }
         #endregion
 

@@ -30,18 +30,18 @@ namespace NUnit.Engine
     /// called with improper values or when a particular facility
     /// is not available.
     /// </summary>
-    public class NUnitDriverException : Exception
+    public class NUnitPortableDriverException : Exception
     {
         /// <summary>
         /// Construct with a message
         /// </summary>
-        public NUnitDriverException(string message) : base(message) { }
+        public NUnitPortableDriverException(string message) : base(message) { }
 
         /// <summary>
         /// Construct with a message and inner exception
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-        public NUnitDriverException(string message, Exception innerException) : base(message, innerException) { }
+        public NUnitPortableDriverException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

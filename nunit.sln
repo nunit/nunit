@@ -165,13 +165,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-runner-sl-5.0", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portable", "Portable", "{32405F86-07E7-41A7-94EB-2AD6B290ED07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.driver", "src\NUnitEngine\Portable\nunit.driver\nunit.driver.csproj", "{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.driver.tests", "src\NUnitEngine\Portable\nunit.driver.tests\nunit.driver.tests.csproj", "{8CDC481D-DB17-4145-9963-9E895C29CBC5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-portable", "src\NUnitFramework\slow-tests\slow-nunit-tests-portable.csproj", "{74CB429E-69D7-4525-BBDF-BBC47DBC7070}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-sl-5.0", "src\NUnitFramework\slow-tests\slow-nunit-tests-sl-5.0.csproj", "{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.portable.agent", "src\NUnitEngine\Portable\nunit.portable.agent\nunit.portable.agent.csproj", "{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.portable.agent.tests", "src\NUnitEngine\Portable\nunit.portable.agent.tests\nunit.portable.agent.tests.csproj", "{8CDC481D-DB17-4145-9963-9E895C29CBC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -383,14 +383,6 @@ Global
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74CB429E-69D7-4525-BBDF-BBC47DBC7070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74CB429E-69D7-4525-BBDF-BBC47DBC7070}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74CB429E-69D7-4525-BBDF-BBC47DBC7070}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -399,6 +391,14 @@ Global
 		{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -464,10 +464,10 @@ Global
 		{C861E6BA-852B-4BC1-ACE7-77C8D6E7898B} = {83154E24-B0DD-48E7-8BB5-55CF3D7B0FE3}
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{32405F86-07E7-41A7-94EB-2AD6B290ED07} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
-		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
-		{8CDC481D-DB17-4145-9963-9E895C29CBC5} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
 		{74CB429E-69D7-4525-BBDF-BBC47DBC7070} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 		{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
+		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
+		{8CDC481D-DB17-4145-9963-9E895C29CBC5} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj

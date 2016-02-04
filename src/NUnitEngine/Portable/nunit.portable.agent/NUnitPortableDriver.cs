@@ -35,7 +35,7 @@ namespace NUnit.Engine
     /// NUnitDriver is used by the test-runner to load and run
     /// tests using the NUnit framework assembly.
     /// </summary>
-    public class NUnitDriver
+    public class NUnitPortableDriver
     {
         const string LOAD_MESSAGE = "Method called without calling Load first";
         const string INVALID_FRAMEWORK_MESSAGE = "Running tests against this version of the framework using this driver is not supported. Please update NUnit.Framework to the latest version.";
@@ -76,7 +76,7 @@ namespace NUnit.Engine
 
             _frameworkController = CreateObject(CONTROLLER_TYPE, testAssembly, idPrefix, (System.Collections.IDictionary)settings);
             if (_frameworkController == null)
-                throw new NUnitDriverException(INVALID_FRAMEWORK_MESSAGE);
+                throw new NUnitPortableDriverException(INVALID_FRAMEWORK_MESSAGE);
 
             _frameworkControllerType = _frameworkController.GetType();
 
@@ -177,7 +177,7 @@ namespace NUnit.Engine
         {
             if (method == null)
             {
-                throw new NUnitDriverException(INVALID_FRAMEWORK_MESSAGE);
+                throw new NUnitPortableDriverException(INVALID_FRAMEWORK_MESSAGE);
             }
             return method.Invoke(_frameworkController, args);
         }

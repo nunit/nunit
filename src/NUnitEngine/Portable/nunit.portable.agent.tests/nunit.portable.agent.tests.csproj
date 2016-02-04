@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Engine.Tests</RootNamespace>
-    <AssemblyName>nunit.driver.tests</AssemblyName>
+    <AssemblyName>nunit.portable.agent.tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\bin\Debug\driver\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Debug\agents\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\bin\Release\driver\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Release\agents\</OutputPath>
     <DefineConstants>TRACE;NUNIT_ENGINE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,7 +45,7 @@
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
-    <Compile Include="NUnitDriverTests.cs" />
+    <Compile Include="NUnitPortableDriverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>
@@ -58,9 +58,9 @@
       <Project>{c3264ff3-e2d7-48d7-93a7-cdc9a827ad9d}</Project>
       <Name>mock-assembly-4.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.driver\nunit.driver.csproj">
+    <ProjectReference Include="..\nunit.portable.agent\nunit.portable.agent.csproj">
       <Project>{0f18f7a5-87ca-41e0-acb2-a13c68d6cc5b}</Project>
-      <Name>nunit.driver</Name>
+      <Name>nunit.portable.agent</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
