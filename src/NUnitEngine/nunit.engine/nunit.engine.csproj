@@ -109,9 +109,11 @@
     <Compile Include="Internal\NUnitConfiguration.cs" />
     <Compile Include="Internal\PathUtils.cs" />
     <Compile Include="Internal\ProcessModel.cs" />
+    <Compile Include="Internal\ProvidedPathsAssemblyResolver.cs" />
     <Compile Include="Internal\ResultHelper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\TestAssemblyDirectoryResolveHelper.cs" />
     <Compile Include="Internal\ServerBase.cs" />
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
