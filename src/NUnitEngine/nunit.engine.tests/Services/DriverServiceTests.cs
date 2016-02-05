@@ -52,8 +52,8 @@ namespace NUnit.Engine.Services.Tests
         }
 
 
-        [TestCase("mock-nunit-assembly.exe", typeof(NUnit3FrameworkDriver))]
-        [TestCase("mock-nunit-assembly.pdb", typeof(NotRunnableFrameworkDriver))]
+        [TestCase("mock-assembly.exe", typeof(NUnit3FrameworkDriver))]
+        [TestCase("mock-assembly.pdb", typeof(NotRunnableFrameworkDriver))]
         [TestCase("junk.dll", typeof(NotRunnableFrameworkDriver))]
         public void CorrectDriverIsUsed(string fileName, Type expectedType)
         {

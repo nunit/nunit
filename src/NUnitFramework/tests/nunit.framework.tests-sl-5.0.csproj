@@ -98,6 +98,7 @@
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
     <Compile Include="Assertions\AssertThatTests.cs" />
+    <Compile Include="Assertions\AssertThrowsAsyncTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestExpectedResult.cs" />
+    <Compile Include="TestUtilities\AsyncTestDelegates.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
     <Compile Include="Attributes\TestMethodBuilderTests.cs" />
@@ -313,13 +315,17 @@
       <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
       <Name>nunit.framework-sl-5.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-sl-5.0.csproj">
+    <ProjectReference Include="..\mock-assembly\mock-assembly-sl-5.0.csproj">
       <Project>{c4d16df1-b6fa-42f5-834e-b01da1baa1ff}</Project>
-      <Name>mock-nunit-assembly-sl-5.0</Name>
+      <Name>mock-assembly-sl-5.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-sl-5.0.csproj">
+    <ProjectReference Include="..\nunitlite\nunitlite-sl-5.0.csproj">
       <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
-      <Name>nunitlite.runner-sl-5.0</Name>
+      <Name>nunitlite-sl-5.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\slow-tests\slow-nunit-tests-sl-5.0.csproj">
+      <Project>{a2b973c4-ea96-4b00-b2be-04bfd9d5aa39}</Project>
+      <Name>slow-nunit-tests-sl-5.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-sl-5.0.csproj">
       <Project>{a76794da-29a4-4d63-9850-e0e363a2fafd}</Project>

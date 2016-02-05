@@ -24,6 +24,7 @@
 #if NETCF
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -31,6 +32,11 @@ namespace System
 {
     public static class StringExtensions
     {
+        public static string ToUpperInvariant(this string s)
+        {
+            return s.ToUpper(CultureInfo.InvariantCulture);
+        }
+
         public static String[] Split(this string s, char[] separator, StringSplitOptions options)
         {
             return s.Split(separator, Int32.MaxValue, options);

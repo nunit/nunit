@@ -78,10 +78,18 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public StaticProperty_SameClass(string arg) : base(arg, "StaticPropertyInClass") { }
 
-        static object[] StaticProperty
+        public StaticProperty_SameClass(string arg, string expected) : base(arg, expected) { }
+
+        public static object[] StaticProperty
         {
             get { return new object[] { new object[] { "StaticPropertyInClass" } }; }
         }
+    }
+
+    [TestFixtureSource("StaticProperty")]
+    public class StaticProperty_InheritedClass : StaticProperty_SameClass 
+    {
+        public StaticProperty_InheritedClass (string arg) : base(arg, "StaticPropertyInClass") { }
     }
 
     [TestFixtureSource("StaticMethod")]
@@ -235,6 +243,62 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
+    [TestFixture]
+    public abstract class Issue1118_Root
+    {
+        protected readonly string Browser;
+
+        protected Issue1118_Root(string browser)
+        {
+            Browser = browser;
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+        }
+    }
+
+    [TestFixtureSource(typeof(Issue1118_SourceData))]
+    public class Issue1118_Base : Issue1118_Root
+    {
+        public Issue1118_Base(string browser) : base(browser)
+        {
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+        }
+    }
+
+    public class Issue1118_Fixture : Issue1118_Base
+    {
+        public Issue1118_Fixture(string browser) : base(browser)
+        {
+        }
+
+        [Test]
+        public void DoSomethingOnAWebPageWithSelenium()
+        {
+        }
+
+        [Test]
+        public void DoSomethingElseOnAWebPageWithSelenium()
+        {
+        }
+    }
+
+    public class Issue1118_SourceData : IEnumerable
+    {
+        public IEnumerator GetEnumerator()
+        {
+            yield return "Firefox";
+            yield return "Chrome";
+            yield return "Internet Explorer";
+        }
+    }
+
     #region Source Data Classes
 
     class SourceData_IEnumerable : IEnumerable
@@ -251,6 +315,11 @@ namespace NUnit.TestData.TestFixtureSourceData
 
     class SourceData
     {
+        public static object[] InheritedStaticProperty
+        {
+            get { return new object[] { new object[] { "StaticProperty" } }; }
+        }
+
         static object[] StaticField = new object[] { "StaticField" };
 
         static object[] StaticProperty

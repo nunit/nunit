@@ -24,13 +24,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    public class ValueSourceTests
+    public class ValueSourceTests : ValueSourceMayBeInherited
     {
         [Test]
         public void ValueSourceCanBeStaticProperty(
@@ -45,6 +49,13 @@ namespace NUnit.Framework.Attributes
             {
                 yield return "StaticProperty";
             }
+        }
+
+        [Test]
+        public void ValueSourceCanBeInheritedStaticProperty(
+            [ValueSource("InheritedStaticProperty")] bool source)
+        {
+            Assert.AreEqual(true, source);
         }
 
         [Test]
@@ -168,6 +179,59 @@ namespace NUnit.Framework.Attributes
 
                 return dataList;
             }
+
+            public static IEnumerable<int> ForeignNullResultProvider()
+            {
+                return null;
+            }
+        }
+
+        public static string NullSource = null;
+
+        public static IEnumerable<int> NullDataSourceProvider()
+        {
+            return null;
+        }
+
+        public static IEnumerable<int> NullDataSourceProperty
+        {
+            get { return null; }
+        }
+
+        [Test, Explicit("Null or nonexisting data sources definitions should not prevent other tests from run #1121")]
+        public void ValueSourceMayNotBeNull(
+            [ValueSource("NullSource")] string nullSource,
+            [ValueSource("NullDataSourceProvider")] string nullDataSourceProvided,
+            [ValueSource(typeof(ValueProvider), "ForeignNullResultProvider")] string nullDataSourceProvider,
+            [ValueSource("NullDataSourceProperty")] int nullDataSourceProperty,
+            [ValueSource("SomeNonExistingMemberSource")] int nonExistingMember)
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ValueSourceAttributeShouldThrowInsteadOfReturningNull()
+        {
+            var method = new MethodWrapper(GetType(), "ValueSourceMayNotBeNull");
+            var parameters = method.GetParameters();
+
+            foreach (var parameter in parameters)
+            {
+                var dataSource = parameter.GetCustomAttributes<IParameterDataSource>(false)[0];
+
+                Assert.Throws<InvalidDataSourceException>(() =>
+                {
+                    var data = dataSource.GetData(parameter);
+                }); 
+            }
+        }
+    }
+
+    public class ValueSourceMayBeInherited
+    {
+        protected static IEnumerable<bool> InheritedStaticProperty
+        {
+            get { yield return true; }
         }
     }
 }

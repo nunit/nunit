@@ -60,7 +60,7 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(MockAssembly.AssemblyPath)), "ApplicationBase");
             Assert.That(
                 Path.GetFileName(setup.ConfigurationFile),
-                Is.EqualTo("mock-nunit-assembly.exe.config").IgnoreCase,
+                Is.EqualTo("mock-assembly.exe.config").IgnoreCase,
                 "ConfigurationFile");
             Assert.AreEqual(null, setup.PrivateBinPath, "PrivateBinPath");
             Assert.That(setup.ShadowCopyFiles, Is.Null.Or.EqualTo("false"));
@@ -84,7 +84,7 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(setup.ApplicationBase, Is.SamePath(basePath), "ApplicationBase");
             Assert.That(
                 Path.GetFileName(setup.ConfigurationFile),
-                Is.EqualTo("mock-nunit-assembly.exe.config").IgnoreCase,
+                Is.EqualTo("mock-assembly.exe.config").IgnoreCase,
                 "ConfigurationFile");
             Assert.That(setup.PrivateBinPath, Is.SamePath(relPath), "PrivateBinPath");
             Assert.That(setup.ShadowCopyFiles, Is.Null.Or.EqualTo("false"));

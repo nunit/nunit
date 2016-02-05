@@ -85,6 +85,18 @@ namespace NUnit.Framework.Syntax
         }
     }
 
+    public class ZeroTest : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<equal 0>";
+            staticSyntax = Is.Zero;
+            inheritedSyntax = Helper().Zero;
+            builderSyntax = Builder().Zero;
+        }
+    }
+
     public class NaNTest : SyntaxTest
     {
         [SetUp]

@@ -192,6 +192,12 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("c", array[0]);
         }
 
+        [TestCase("a", "b", Explicit = true)]
+        public void ShouldNotRunAndShouldNotFailInConsoleRunner()
+        {
+            Assert.Fail();
+        }
+
         [Test]
         public void CanSpecifyDescription()
         {

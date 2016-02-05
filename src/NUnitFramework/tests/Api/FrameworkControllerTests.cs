@@ -37,9 +37,10 @@ namespace NUnit.Framework.Api
     // Functional tests of the FrameworkController and all subordinate classes
     public class FrameworkControllerTests
     {
-        private const string MOCK_ASSEMBLY_FILE = "mock-nunit-assembly.exe";
-        private const string BAD_FILE = "mock-nunit-assembly.pdb";
+        private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
+        private const string BAD_FILE = "mock-assembly.pdb";
         private const string MISSING_FILE = "junk.dll";
+        private const string MISSING_NAME = "junk";
         private const string EMPTY_FILTER = "<filter/>";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
@@ -109,7 +110,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
 #if SILVERLIGHT
-            Assert.That(result.Attributes["name"], Is.EqualTo("mock-nunit-assembly"));
+            Assert.That(result.Attributes["name"], Is.EqualTo("mock-assembly"));
 #else
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
 #endif
@@ -130,7 +131,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -189,7 +190,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
 
@@ -294,7 +295,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 

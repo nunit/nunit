@@ -27,11 +27,13 @@ using System.Threading;
 using System.Globalization;
 using NUnit.Common;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
+using NUnit.TestData.TestContextData;
+using NUnit.TestUtilities;
+
 #if !NETCF
 using System.Security.Principal;
 #endif
-using NUnit.TestData.TestContextData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
@@ -195,7 +197,7 @@ namespace NUnit.Framework.Internal
         CultureInfo originalUICulture;
 
         [Test]
-        public void FixtureSetUpontextReflectsCurrentCulture()
+        public void FixtureSetUpContextReflectsCurrentCulture()
         {
             Assert.That(fixtureContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
         }
@@ -323,6 +325,34 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(setupContext.CurrentPrincipal, originalPrincipal, "Principal not in final context");
         }
 #endif
+
+        #endregion
+
+        #region ValueFormatter
+
+        [Test]
+        public void SetAndRestoreValueFormatter()
+        {
+            var context = new TestExecutionContext(setupContext);
+            var originalFormatter = context.CurrentValueFormatter;
+
+            try
+            {
+                ValueFormatter f = val => "dummy";
+                context.AddFormatter(next => f);
+                Assert.That(context.CurrentValueFormatter, Is.EqualTo(f));
+
+                context.EstablishExecutionEnvironment();
+                Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("dummy"));
+            }
+            finally
+            {
+                setupContext.EstablishExecutionEnvironment();
+            }
+
+            Assert.That(TestExecutionContext.CurrentContext.CurrentValueFormatter, Is.EqualTo(originalFormatter));
+            Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
+        }
 
         #endregion
 
