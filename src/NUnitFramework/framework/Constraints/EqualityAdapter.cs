@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
             return true;
         }
 
-#region Nested IComparer Adapter
+        #region Nested IComparer Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
@@ -85,9 +85,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested IEqualityComparer Adapter
+        #region Nested IEqualityComparer Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IEqualityComparer"/>.
@@ -151,9 +151,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested GenericEqualityAdapter<T>
+        #region Nested GenericEqualityAdapter<T>
 
         abstract class GenericEqualityAdapter<T> : EqualityAdapter
         {
@@ -177,9 +177,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested IEqualityComparer<T> Adapter
+        #region Nested IEqualityComparer<T> Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IEqualityComparer{T}"/>.
@@ -205,9 +205,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested IComparer<T> Adapter
+        #region Nested IComparer<T> Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer{T}"/>.
@@ -236,9 +236,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested Comparison<T> Adapter
+        #region Nested Comparison<T> Adapter
 
         /// <summary>
         /// Returns an <see cref="EqualityAdapter"/> that wraps a <see cref="Comparison{T}"/>.
