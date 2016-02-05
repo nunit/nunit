@@ -122,12 +122,12 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
-#endregion
+        #endregion
 
-    /// <summary>
-    /// Compares two collection members for equality
-    /// </summary>
-    protected bool ItemsEqual(object x, object y)
+        /// <summary>
+        /// Compares two collection members for equality
+        /// </summary>
+        protected bool ItemsEqual(object x, object y)
         {
             Tolerance tolerance = Tolerance.Default;
             return comparer.AreEqual(x, y, ref tolerance);

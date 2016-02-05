@@ -163,7 +163,7 @@ namespace NUnit.Framework.Constraints
         }
 
 #if (NET_4_0 || NET_4_5) && !PORTABLE
-    [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0,Net-4.5,Mono-4.5")]
+        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0,Net-4.5,Mono-4.5")]
         public void WorksWithHashSets()
         {
             var hash1 = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });

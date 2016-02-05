@@ -30,12 +30,6 @@ using System.Reflection;
 namespace NUnit.Framework.Constraints
 {
 
-#if NET_2_0
-
-    public delegate TResult Func<in T1, in T2, out TResult>(T1 arg1, T2 arg2); 
-
-#endif
-
     /// <summary>
     /// EqualityAdapter class handles all equality comparisons
     /// that use an <see cref="IEqualityComparer"/>, <see cref="IEqualityComparer{T}"/>
