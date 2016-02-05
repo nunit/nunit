@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -48,22 +49,54 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             TestDelegate code = actual as TestDelegate;
-            if (code == null)
-                throw new ArgumentException(
-                    string.Format("The actual value must be a TestDelegate but was {0}", actual.GetType().Name), "actual");
-
             Exception caughtException = null;
 
-            try
+            if (code != null)
             {
-                code();
+                try
+                {
+                    code();
+                }
+                catch (Exception ex)
+                {
+                    caughtException = ex;
+                }
             }
-            catch (Exception ex)
+#if NET_4_0 || NET_4_5 || PORTABLE
+            AsyncTestDelegate asyncCode = actual as AsyncTestDelegate;
+            if (asyncCode != null)
             {
-                caughtException = ex;
+                using (var region = AsyncInvocationRegion.Create(asyncCode))
+                {
+                    try
+                    {
+                        var task = asyncCode();
+                        region.WaitForPendingOperationsToComplete(task);
+                    }
+                    catch (Exception ex)
+                    {
+                        caughtException = ex;
+                    }
+                }
             }
-
+            if (code == null && asyncCode == null)
+#else
+            else
+#endif
+            {
+                throw new ArgumentException(string.Format("The actual value must be a TestDelegate or AsyncTestDelegate but was {0}", actual.GetType().Name), "actual");
+            }
             return new ThrowsExceptionConstraintResult(this, caughtException);
+        }
+
+        /// <summary>
+        /// Returns the ActualValueDelegate itself as the value to be tested.
+        /// </summary>
+        /// <param name="del">A delegate representing the code to be tested</param>
+        /// <returns>The delegate itself</returns>
+        protected override object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        {
+            return new TestDelegate(() => del());
         }
 
         #region Nested Result Class

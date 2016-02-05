@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
     /// from the abstract WorkItem class, which uses the template
     /// pattern to allow derived classes to perform work in
     /// whatever way is needed.
-    /// 
+    ///
     /// A WorkItem is created with a particular TestExecutionContext
     /// and is responsible for re-establishing that context in the
     /// current thread before it begins or resumes execution.
@@ -150,7 +150,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public List<ITestAction> Actions
         {
-            get { return _actions;  }
+            get { return _actions; }
         }
 
 #if PARALLEL
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsParallelizable
         {
-            get 
+            get
             {
                 ParallelScope scope = ParallelScope.None;
 
@@ -203,7 +203,7 @@ namespace NUnit.Framework.Internal.Execution
 #if !SILVERLIGHT && !NETCF && !PORTABLE
         internal ApartmentState TargetApartment
         {
-            get 
+            get
             {
                 return Test.Properties.ContainsKey(PropertyNames.ApartmentState)
                     ? (ApartmentState)_test.Properties.Get(PropertyNames.ApartmentState)
@@ -230,16 +230,16 @@ namespace NUnit.Framework.Internal.Execution
                 timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
 
 #if SILVERLIGHT || NETCF
-            if (Test.RequiresThread || Test is TestMethod && timeout > 0)
+            if (Test is TestMethod)
                 RunTestOnOwnThread(timeout);
             else
                 RunTest();
 #elif PORTABLE
             RunTest();
 #else
-            ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
+            currentApartment = Thread.CurrentThread.GetApartmentState();
 
-            if (Test.RequiresThread || Test is TestMethod && timeout > 0 || currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
+            if (Test is TestMethod)
                 RunTestOnOwnThread(timeout, TargetApartment);
             else
                 RunTest();
@@ -247,13 +247,45 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 #if SILVERLIGHT || NETCF
+        private Thread thread;
+
         private void RunTestOnOwnThread(int timeout)
         {
-            string reason = Test.RequiresThread ? "has RequiresThreadAttribute." : "has Timeout value set.";
+            string reason = Test.RequiresThread ? "has RequiresThreadAttribute." : timeout > 0 ? "has Timeout value set." : "is TestMethod";
             log.Debug("Running test on own thread because it " + reason);
 
-            Thread thread = new Thread(RunTest);
+            thread = new Thread(RunTest);
 
+            RunThread(timeout);
+        }
+#endif
+
+#if !SILVERLIGHT && !NETCF && !PORTABLE
+        private Thread thread;
+        private ApartmentState currentApartment;
+
+        private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
+        {
+            string reason = Test.RequiresThread
+                ? "has RequiresThreadAttribute."
+                : timeout > 0
+                ? "has Timeout value set."
+                : currentApartment != apartment && apartment != ApartmentState.Unknown
+                ? "requires a different apartment."
+                : "is TestMethod";
+            log.Debug("Running test on own thread because it " + reason);
+
+            thread = new Thread(new ThreadStart(RunTest));
+
+            thread.SetApartmentState(apartment == ApartmentState.Unknown ? currentApartment : apartment);
+
+            RunThread(timeout);
+        }
+#endif
+
+#if !PORTABLE
+        private void RunThread(int timeout)
+        {
 #if !NETCF
             thread.CurrentCulture = Context.CurrentCulture;
             thread.CurrentUICulture = Context.CurrentUICulture;
@@ -266,16 +298,23 @@ namespace NUnit.Framework.Internal.Execution
                 if (timeout <= 0)
                     timeout = Timeout.Infinite;
 
-                // Previous code:
-                // thread.Join(timeout);
-                //
-                // if (thread.IsAlive)
-                // Was this here for a reason?
-                // Is there some platform that needs it?
-
                 if (!thread.Join(timeout))
                 {
-                    ThreadUtility.Kill(thread);
+                    Thread tThread;
+                    lock (threadLock)
+                    {
+                        if (thread == null)
+                            return;
+
+                        tThread = thread;
+                        thread = null;
+                    }
+
+                    if (Context.ExecutionStatus == TestExecutionStatus.AbortRequested)
+                        return;
+
+                    log.Debug("Killing thread {0}, which exceeded timeout", tThread.ManagedThreadId);
+                    ThreadUtility.Kill(tThread);
 
                     // NOTE: Without the use of Join, there is a race condition here.
                     // The thread sets the result to Cancelled and our code below sets
@@ -284,56 +323,7 @@ namespace NUnit.Framework.Internal.Execution
                     // thread has terminated. There is a risk here: the test code might
                     // refuse to terminate. However, it's more important to deal with
                     // the normal rather than a pathological case.
-                    thread.Join();
-
-                    Result.SetResult(ResultState.Failure,
-                        string.Format("Test exceeded Timeout value of {0}ms", timeout));
-
-                    WorkItemComplete();
-                }
-            }
-        }
-#endif
-
-
-#if !SILVERLIGHT && !NETCF && !PORTABLE
-        private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
-        {
-            string reason = Test.RequiresThread
-                ? "has RequiresThreadAttribute."
-                : timeout > 0
-                    ? "has Timeout value set."
-                    : "requires a different apartment.";
-            log.Debug("Running test on own thread because it " + reason);
-
-            Thread thread = new Thread(new ThreadStart(RunTest));
-
-            thread.SetApartmentState(apartment);
-            thread.CurrentCulture = Context.CurrentCulture;
-            thread.CurrentUICulture = Context.CurrentUICulture;
-
-            thread.Start();
-
-            if (!Test.IsAsynchronous || timeout > 0)
-            {
-                if (timeout <= 0)
-                    timeout = Timeout.Infinite;
-
-                thread.Join(timeout);
-
-                if (thread.IsAlive)
-                {
-                    log.Debug("Killing thread {0}, which exceeded timeout", thread.ManagedThreadId);
-                    ThreadUtility.Kill(thread);
-
-                    // NOTE: Without the use of Join, there is a race condition here.
-                    // The thread sets the result to Cancelled and our code below sets
-                    // it to Failure. In order for the result to be shown as a failure,
-                    // we need to ensure that the following code executes after the
-                    // thread has terminated. There is a risk here: the test code might
-                    // refuse to terminate. However, it's more important to deal with
-                    // the normal rather than a pathological case.
-                    thread.Join();
+                    tThread.Join();
 
                     log.Debug("Changing result from {0} to Timeout Failure", Result.ResultState);
 
@@ -343,6 +333,7 @@ namespace NUnit.Framework.Internal.Execution
                     WorkItemComplete();
                 }
             }
+
         }
 #endif
 
@@ -356,16 +347,49 @@ namespace NUnit.Framework.Internal.Execution
             _context.EstablishExecutionEnvironment();
 
             _state = WorkItemState.Running;
-#if PORTABLE
+
             PerformWork();
-#else
-            try
+
+        }
+
+        private object threadLock = new object();
+
+        /// <summary>
+        /// Cancel (abort or stop) a WorkItem
+        /// </summary>
+        /// <param name="force">true if the WorkItem should be aborted, false if it should run to completion</param>
+        public virtual void Cancel(bool force)
+        {
+            if (_context != null)
+                _context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
+
+            if (!force)
+                return;
+
+#if !PORTABLE
+            Thread tThread;
+
+            lock (threadLock)
             {
-                PerformWork();
+                if (thread == null)
+                    return;
+
+                tThread = thread;
+                thread = null;
             }
-            catch (ThreadAbortException)
+
+            if (!tThread.Join(0))
             {
-                //Result.SetResult(ResultState.Cancelled);
+                log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
+                ThreadUtility.Kill(tThread);
+
+                tThread.Join();
+
+                log.Debug("Changing result from {0} to Cancelled", Result.ResultState);
+
+                Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+
+                WorkItemComplete();
             }
 #endif
         }
@@ -389,7 +413,7 @@ namespace NUnit.Framework.Internal.Execution
 
             Result.StartTime = Context.StartTime;
             Result.EndTime = DateTime.UtcNow;
-            
+
             long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
             double seconds = (double)tickCount / Stopwatch.Frequency;
             Result.Duration = seconds;

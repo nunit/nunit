@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -24,10 +24,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Reflection;
 using NUnit.Framework.Compatibility;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
-using System.Reflection;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class CompositeWorkItem : WorkItem
     {
-//        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
+        //        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
 
         private TestSuite _suite;
         private ITestFilter _childFilter;
@@ -55,7 +55,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="suite">The TestSuite to be executed</param>
         /// <param name="childFilter">A filter used to select child tests</param>
-        public CompositeWorkItem(TestSuite suite, ITestFilter childFilter) : base(suite)
+        public CompositeWorkItem(TestSuite suite, ITestFilter childFilter)
+            : base(suite)
         {
             _suite = suite;
             _childFilter = childFilter;
@@ -69,7 +70,7 @@ namespace NUnit.Framework.Internal.Execution
         protected override void PerformWork()
         {
             // Inititialize actions, setup and teardown
-            // We can't do this in the constructor because 
+            // We can't do this in the constructor because
             // the context is not available at that point.
             InitializeSetUpAndTearDownCommands();
 
@@ -77,63 +78,63 @@ namespace NUnit.Framework.Internal.Execution
                 if (Test.RunState == RunState.Explicit && !_childFilter.IsExplicitMatch(Test))
                     SkipFixture(ResultState.Explicit, GetSkipReason(), null);
                 else
-                switch (Test.RunState)
-                {
-                    default:
-                    case RunState.Runnable:
-                    case RunState.Explicit:
-                        // Assume success, since the result will be inconclusive
-                        // if there is no setup method to run or if the
-                        // context initialization fails.
-                        Result.SetResult(ResultState.Success);
+                    switch (Test.RunState)
+                    {
+                        default:
+                        case RunState.Runnable:
+                        case RunState.Explicit:
+                            // Assume success, since the result will be inconclusive
+                            // if there is no setup method to run or if the
+                            // context initialization fails.
+                            Result.SetResult(ResultState.Success);
 
-                        CreateChildWorkItems();
+                            CreateChildWorkItems();
 
-                        if (_children.Count > 0)
-                        {
-                            PerformOneTimeSetUp();
+                            if (_children.Count > 0)
+                            {
+                                PerformOneTimeSetUp();
 
-                            if (!CheckForCancellation())
-                                switch (Result.ResultState.Status)
-                                {
-                                    case TestStatus.Passed:
-                                        RunChildren();
-                                        return;
-                                    // Just return: completion event will take care
-                                    // of TestFixtureTearDown when all tests are done.
+                                if (!CheckForCancellation())
+                                    switch (Result.ResultState.Status)
+                                    {
+                                        case TestStatus.Passed:
+                                            RunChildren();
+                                            return;
+                                        // Just return: completion event will take care
+                                        // of TestFixtureTearDown when all tests are done.
 
-                                    case TestStatus.Skipped:
-                                    case TestStatus.Inconclusive:
-                                    case TestStatus.Failed:
-                                        SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
-                                        break;
-                                }
+                                        case TestStatus.Skipped:
+                                        case TestStatus.Inconclusive:
+                                        case TestStatus.Failed:
+                                            SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                                            break;
+                                    }
 
-                            // Directly execute the OneTimeFixtureTearDown for tests that
-                            // were skipped, failed or set to inconclusive in one time setup
-                            // unless we are aborting.
-                            if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                                PerformOneTimeTearDown();
-                        }
-                        break;
+                                // Directly execute the OneTimeFixtureTearDown for tests that
+                                // were skipped, failed or set to inconclusive in one time setup
+                                // unless we are aborting.
+                                if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                                    PerformOneTimeTearDown();
+                            }
+                            break;
 
-                    case RunState.Skipped:
-                        SkipFixture(ResultState.Skipped, GetSkipReason(), null);
-                        break;
+                        case RunState.Skipped:
+                            SkipFixture(ResultState.Skipped, GetSkipReason(), null);
+                            break;
 
-                    case RunState.Ignored:
-                        SkipFixture(ResultState.Ignored, GetSkipReason(), null);
-                        break;
+                        case RunState.Ignored:
+                            SkipFixture(ResultState.Ignored, GetSkipReason(), null);
+                            break;
 
-                    case RunState.NotRunnable:
-                        SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
-                        break;
-                }
+                        case RunState.NotRunnable:
+                            SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
+                            break;
+                    }
 
             // Fall through in case nothing was run.
             // Otherwise, this is done in the completion event.
             WorkItemComplete();
-        
+
         }
 
         #region Helper Methods
@@ -161,15 +162,15 @@ namespace NUnit.Framework.Internal.Execution
                 // Special handling here for ParameterizedMethodSuite is a bit ugly. However,
                 // it is needed because Tests are not supposed to know anything about Action
                 // Attributes (or any attribute) and Attributes don't know where they were
-                // initially applied unless we tell them. 
+                // initially applied unless we tell them.
                 //
-                // ParameterizedMethodSuites and individual test cases both use the same 
+                // ParameterizedMethodSuites and individual test cases both use the same
                 // MethodInfo as a source of attributes. We handle the Test and Default targets
                 // in the test case, so we don't want to doubly handle it here.
-                bool applyToSuite = (action.Targets & ActionTargets.Suite) == ActionTargets.Suite 
+                bool applyToSuite = (action.Targets & ActionTargets.Suite) == ActionTargets.Suite
                     || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
 
-                bool applyToTest = (action.Targets & ActionTargets.Test) == ActionTargets.Test 
+                bool applyToTest = (action.Targets & ActionTargets.Test) == ActionTargets.Test
                     && !(Test is ParameterizedMethodSuite);
 
                 if (applyToSuite)
@@ -194,7 +195,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                if (ex is NUnitException || ex is System.Reflection.TargetInvocationException)
+                if (ex is NUnitException || ex is TargetInvocationException)
                     ex = ex.InnerException;
 
                 Result.RecordException(ex, FailureSite.SetUp);
@@ -233,10 +234,8 @@ namespace NUnit.Framework.Internal.Execution
             _children = new List<WorkItem>();
 
             foreach (ITest test in _suite.Tests)
-            {
                 if (_childFilter.Pass(test))
                     _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
-            }
         }
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
@@ -329,6 +328,31 @@ namespace NUnit.Framework.Internal.Execution
         private static bool IsStaticClass(Type type)
         {
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
+        }
+
+        private object cancelLock = new object();
+
+        /// <summary>
+        /// Cancel (abort or stop) a CompositeWorkItem and all of its children
+        /// </summary>
+        /// <param name="force">true if the CompositeWorkItem and all of its children should be aborted, false if it should allow all currently running tests to complete</param>
+        public override void Cancel(bool force)
+        {
+            lock (cancelLock)
+            {
+                if (_children == null)
+                    return;
+
+                foreach (var child in _children)
+                {
+                    var ctx = child.Context;
+                    if (ctx != null)
+                        ctx.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
+
+                    if (child.State == WorkItemState.Running)
+                        child.Cancel(force);
+                }
+            }
         }
 
         #endregion

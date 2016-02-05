@@ -38,6 +38,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(StaticField_DifferentClass))]
         [TestCase(typeof(StaticProperty_DifferentClass))]
         [TestCase(typeof(StaticMethod_DifferentClass))]
+        [TestCase(typeof(StaticProperty_InheritedClass))]
         [TestCase(typeof(IEnumerableSource))]
         [TestCase(typeof(SourceReturnsObjectArray))]
         [TestCase(typeof(SourceReturnsFixtureParameters))]
@@ -83,6 +84,15 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.Tests[1].RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(suite.Tests[1].Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Runs long"));
             Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Explicit));
+        }
+
+        [Test]
+        public void Issue1118()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(Issue1118_Fixture));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.Tests.Count, Is.EqualTo(3));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(6));
         }
     }
 }

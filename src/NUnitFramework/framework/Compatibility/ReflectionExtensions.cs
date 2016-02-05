@@ -56,6 +56,24 @@ namespace NUnit.Framework.Compatibility
         }
     }
 
+    /// <summary>
+    /// Extensions for Assembly that are not available in pre-4.5 .NET releases
+    /// </summary>
+    public static class AssemblyExtensions
+    {
+        /// <summary>
+        /// An easy way to get a single custom attribute from an assembly
+        /// </summary>
+        /// <typeparam name="T">The attribute Type</typeparam>
+        /// <param name="assembly">The assembly</param>
+        /// <returns>An attribute of Type T</returns>
+        public static T GetCustomAttribute<T>(this Assembly assembly) where T : Attribute
+        {
+            T[] attrs = (T[])assembly.GetCustomAttributes(typeof(T), false);
+            return attrs.Length > 0 ? attrs[0] : null;
+        }
+    }
+
 #elif PORTABLE
 
     /// <summary>
@@ -172,35 +190,31 @@ namespace NUnit.Framework.Compatibility
             type = type.GetTypeInfo().BaseType;
             if (type != null)
             {
-                // Skip statics on all base classes
                 var baseMembers = type.GetAllMembers();
-                members.AddRange(DiscardStatic(baseMembers));
+                members.AddRange(baseMembers.Where(NotPrivate));
             }
             return members;
         }
 
-        static IEnumerable<MemberInfo> DiscardStatic(IEnumerable<MemberInfo> members)
+        static bool NotPrivate(MemberInfo info)
         {
-            foreach(var info in members)
-            {
-                var einfo = info as EventInfo;
-                if (einfo != null && einfo.RaiseMethod.IsPublic && !einfo.RaiseMethod.IsStatic)
-                    yield return einfo;
+            var pinfo = info as PropertyInfo;
+            if (pinfo != null)
+                return pinfo.GetMethod.IsPrivate == false;
 
-                var finfo = info as FieldInfo;
-                if (finfo != null && finfo.IsPublic && !finfo.IsStatic)
-                    yield return finfo;
+            var finfo = info as FieldInfo;
+            if (finfo != null)
+                return finfo.IsPrivate == false;
 
-                var minfo = info as MethodBase;
-                if (minfo != null && minfo.IsPublic && !minfo.IsStatic)
-                    yield return minfo;
+            var minfo = info as MethodBase;
+            if (minfo != null)
+                return minfo.IsPrivate == false;
 
-                var pinfo = info as PropertyInfo;
-                if (pinfo != null && 
-                    ((pinfo.GetMethod != null && !pinfo.GetMethod.IsStatic) || (pinfo.SetMethod != null && !pinfo.SetMethod.IsStatic)) &&
-                    ((pinfo.GetMethod == null || !pinfo.GetMethod.IsPrivate) && (pinfo.SetMethod == null || !pinfo.SetMethod.IsPrivate)))
-                    yield return pinfo;
-            }
+            var einfo = info as EventInfo;
+            if (einfo != null)
+                return einfo.RaiseMethod.IsPrivate == false;
+
+            return true;
         }
 
         /// <summary>

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
@@ -35,6 +36,22 @@ namespace NUnit.Framework.Constraints
             theConstraint = new ThrowsExceptionConstraint();
             expectedDescription = "an exception to be thrown";
             stringRepresentation = "<throwsexception>";
+        }
+
+        [Test]
+        public void SucceedsWithNonVoidReturningFunction()
+        {
+#if NETCF
+            var constraintResult = theConstraint.ApplyTo<int>(TestDelegates.ThrowsInsteadOfReturns);
+#else
+            var constraintResult = theConstraint.ApplyTo(TestDelegates.ThrowsInsteadOfReturns);
+#endif
+            if (!constraintResult.IsSuccess)
+            {
+                MessageWriter writer = new TextMessageWriter();
+                constraintResult.WriteMessageTo(writer);
+                Assert.Fail(writer.ToString());
+            }
         }
 
         static object[] SuccessData = new object[]

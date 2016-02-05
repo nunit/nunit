@@ -161,10 +161,9 @@ namespace NUnit.Framework.Constraints
                 {
                     using (var region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))
                     {
-                        object result = invocationDescriptor.Invoke();
-
                         try
                         {
+                            object result = invocationDescriptor.Invoke();
                             region.WaitForPendingOperationsToComplete(result);
                             return null;
                         }
@@ -197,22 +196,36 @@ namespace NUnit.Framework.Constraints
                 {
                     var testDelegate = actual as TestDelegate;
 
-                    if (testDelegate == null)
-                        throw new ArgumentException(
-                            String.Format("The actual value must be a TestDelegate or ActualValueDelegate but was {0}",
-                                actual.GetType().Name),
-                            "actual");
+                    if (testDelegate != null)
+                    {
+                        invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
+                    }
 
-                    invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
+#if NET_4_0 || NET_4_5 || PORTABLE
+                    else
+                    {
+                        var asyncTestDelegate = actual as AsyncTestDelegate;
+                        if (asyncTestDelegate != null)
+                        {
+                            invocationDescriptor = new GenericInvocationDescriptor<System.Threading.Tasks.Task>(() => asyncTestDelegate());
+                        }
+                    }
+#endif
                 }
+                if (invocationDescriptor == null)
+                    throw new ArgumentException(
+                        String.Format(
+                            "The actual value must be a TestDelegate or AsyncTestDelegate but was {0}",
+                            actual.GetType().Name),
+                        "actual");
 
                 return invocationDescriptor;
             }
         }
 
-        #endregion
+#endregion
 
-        #region InvocationDescriptor
+#region InvocationDescriptor
 
         internal class GenericInvocationDescriptor<T> : IInvocationDescriptor
         {
@@ -261,6 +274,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
     }
 }
