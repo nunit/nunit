@@ -63,6 +63,13 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
         }
 
+        [Test]
+        public void NullStringGivesFailureResult()
+        {
+            string actual = null;
+            var result = theConstraint.ApplyTo(actual);
+            Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
+        }
     }
 
     [TestFixture]
@@ -78,12 +85,13 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] 
         {
-            string.Empty,
+            string.Empty
         };
 
         static object[] FailureData = new object[]
         {
             new TestCaseData( "Hello", "\"Hello\"" ),
+            new TestCaseData( null, "null")
         };
     }
 
