@@ -32,7 +32,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<contains>";
             staticSyntax = Does.Contain("X");
-            inheritedSyntax = Helper().Contains("X");
             builderSyntax = Builder().Contains("X");
         }
     }
@@ -44,7 +43,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<contains>";
             staticSyntax = Does.Contain("X").IgnoreCase;
-            inheritedSyntax = Helper().Contains("X").IgnoreCase;
             builderSyntax = Builder().Contains("X").IgnoreCase;
         }
     }
@@ -56,7 +54,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<startswith ""X"">";
             staticSyntax = Does.StartWith("X");
-            inheritedSyntax = Helper().StartsWith("X");
             builderSyntax = Builder().StartsWith("X");
         }
     }
@@ -68,7 +65,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<startswith ""X"">";
             staticSyntax = Does.StartWith("X");
-            inheritedSyntax = Helper().StartsWith("X");
             builderSyntax = Builder().StartsWith("X");
         }
     }
@@ -80,7 +76,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<startswith ""X"">";
             staticSyntax = Does.StartWith("X").IgnoreCase;
-            inheritedSyntax = Helper().StartsWith("X").IgnoreCase;
             builderSyntax = Builder().StartsWith("X").IgnoreCase;
         }
     }
@@ -92,7 +87,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<endswith ""X"">";
             staticSyntax = Does.EndWith("X");
-            inheritedSyntax = Helper().EndsWith("X");
             builderSyntax = Builder().EndsWith("X");
         }
     }
@@ -104,7 +98,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<endswith ""X"">";
             staticSyntax = Does.EndWith("X").IgnoreCase;
-            inheritedSyntax = Helper().EndsWith("X").IgnoreCase;
             builderSyntax = Builder().EndsWith("X").IgnoreCase;
         }
     }
@@ -116,7 +109,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<regex ""X"">";
             staticSyntax = Does.Match("X");
-            inheritedSyntax = Helper().Matches("X");
             builderSyntax = Builder().Matches("X");
         }
     }
@@ -128,7 +120,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<regex ""X"">";
             staticSyntax = Does.Match("X").IgnoreCase;
-            inheritedSyntax = Helper().Matches("X").IgnoreCase;
             builderSyntax = Builder().Matches("X").IgnoreCase;
         }
     }
