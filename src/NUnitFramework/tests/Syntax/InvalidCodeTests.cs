@@ -30,7 +30,7 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework.Syntax
 {
     [TestFixture]
-    public class InvalidCodeTests : AssertionHelper
+    public class InvalidCodeTests
     {
         static readonly string template1 =
 @"using System;

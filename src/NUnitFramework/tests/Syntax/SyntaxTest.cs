@@ -30,13 +30,7 @@ namespace NUnit.Framework.Syntax
     {
         protected string parseTree;
         protected IResolveConstraint staticSyntax;
-        protected IResolveConstraint inheritedSyntax;
         protected IResolveConstraint builderSyntax;
-
-        protected AssertionHelper Helper()
-        {
-            return new AssertionHelper();
-        }
 
         protected ConstraintExpression Builder()
         {
@@ -56,14 +50,6 @@ namespace NUnit.Framework.Syntax
         {
             Assert.That(
                 builderSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
-        }
-
-        [Test]
-        public void SupportedByInheritedSyntax()
-        {
-            Assert.That(
-                inheritedSyntax.Resolve().ToString(),
                 Is.EqualTo(parseTree).NoClip);
         }
     }

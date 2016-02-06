@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if !NET_4_5 && !PORTABLE && !SILVERLIGHT
+#if !NET_4_5 && !PORTABLE && !SILVERLIGHT && !NETCF
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()

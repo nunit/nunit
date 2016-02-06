@@ -28,7 +28,7 @@ using System.Globalization;
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
-    public class TextMessageWriterTests : AssertionHelper
+    public class TextMessageWriterTests
     {
         private static readonly string NL = NUnit.Env.NewLine;
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
 
             writer.DisplayStringDifferences(s72, "abcde", 5, false, true);
             string message = writer.ToString();
-            Expect(message, EqualTo(
+            Assert.That(message, Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + Q(exp) + NL +
                 TextMessageWriter.Pfx_Actual + Q("abcde") + NL +
                 "  ----------------^" + NL));
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
 
             writer.DisplayStringDifferences(s72, "abcde", 5, false, false);
             string message = writer.ToString();
-            Expect(message, EqualTo(
+            Assert.That(message, Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + Q(s72) + NL +
                 TextMessageWriter.Pfx_Actual + Q("abcde") + NL +
                 "  ----------------^" + NL));
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
             writer.WriteMessageLine(0, message, null);
             message = writer.ToString();
 
-            Expect(message, EqualTo(expected));
+            Assert.That(message, Is.EqualTo(expected));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal
             writer.WriteMessageLine(0, message, arg0);
             message = writer.ToString();
 
-            Expect(message, EqualTo(expected));
+            Assert.That(message, Is.EqualTo(expected));
         }
 
         private string Q(string s)
