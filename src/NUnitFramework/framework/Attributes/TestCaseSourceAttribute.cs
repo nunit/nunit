@@ -243,32 +243,49 @@ namespace NUnit.Framework
                 var field = member as FieldInfo;
                 if (field != null)
                     return field.IsStatic
-                        ? (IEnumerable)field.GetValue(null)
-                        : SourceMustBeStaticError();
+                        ? (MethodParams == null ? (IEnumerable)field.GetValue(null) 
+                                                : ReturnErrorAsParameter(ParamGivenToField))
+                        : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var property = member as PropertyInfo;
                 if (property != null)
                     return property.GetGetMethod(true).IsStatic
-                        ? (IEnumerable)property.GetValue(null, null)
-                        : SourceMustBeStaticError();
+                        ? (MethodParams == null ? (IEnumerable)property.GetValue(null, null) 
+                                                : ReturnErrorAsParameter(ParamGivenToProperty))
+                        : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var m = member as MethodInfo;
-                if (m != null)
+                
+
+                    if (m != null)
                     return m.IsStatic
-                        ? (IEnumerable)m.Invoke(null, MethodParams)
-                        : SourceMustBeStaticError();
+                        ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length ? (IEnumerable)m.Invoke(null, MethodParams) 
+                                                              : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
+                        : ReturnErrorAsParameter(SourceMustBeStatic);
             }
 
             return null;
         }
-
-        private static IEnumerable SourceMustBeStaticError()
+        
+        private static IEnumerable ReturnErrorAsParameter(string errorMessage)
         {
             var parms = new TestCaseParameters();
             parms.RunState = RunState.NotRunnable;
-            parms.Properties.Set(PropertyNames.SkipReason, "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.");
+            parms.Properties.Set(PropertyNames.SkipReason, errorMessage);
             return new TestCaseParameters[] { parms };
         }
+
+        private const string SourceMustBeStatic =
+            "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.";
+        private const string ParamGivenToField = "You have specified a data source field but also given a set of parameters. Fields cannot take parameters, " +
+                                                 "please revise the 3rd parameter passed to the TestCaseSourceAttribute and either remove " +
+                                                 "it or specify a method.";
+        private const string ParamGivenToProperty = "You have specified a data source property but also given a set of parameters. " +
+                                                    "Properties cannot take parameters, please revise the 3rd parameter passed to the " +
+                                                    "TestCaseSource attribute and either remove it or specify a method.";
+        private const string NumberOfArgsDoesNotMatch = "You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
+                                                        ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
+                                                        "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.";
 
         #endregion
     }

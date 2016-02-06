@@ -172,7 +172,46 @@ namespace NUnit.Framework.Attributes
         {
             Assert.AreEqual(q, n / d);
         }
-        
+
+        [Test]
+        public void SourceInAnotherClassPassingParamsToField()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), "SourceInAnotherClassPassingParamsToField").Tests[0];
+            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
+            Assert.AreEqual("You have specified a data source field but also given a set of parameters. Fields cannot take parameters, " +
+                            "please revise the 3rd parameter passed to the TestCaseSourceAttribute and either remove " +
+                            "it or specify a method.", result.Message);
+        }
+
+        [Test]
+        public void SourceInAnotherClassPassingParamsToProperty()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), "SourceInAnotherClassPassingParamsToProperty").Tests[0];
+            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
+            Assert.AreEqual("You have specified a data source property but also given a set of parameters. " +
+                            "Properties cannot take parameters, please revise the 3rd parameter passed to the " +
+                            "TestCaseSource attribute and either remove it or specify a method.", result.Message);
+        }
+
+        [Test]
+        public void SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), "SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam").Tests[0];
+            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
+            Assert.AreEqual("You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
+                            ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
+                            "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.", result.Message);
+        }
+
         [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), "TestCases")]
         public int SourceMayBeInAnotherClassWithReturn(int n, int d)
         {
@@ -279,7 +318,7 @@ namespace NUnit.Framework.Attributes
         private class DivideDataProvider
         {
             private static object[] myObject;
-
+         
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
             {
                 yield return new object[] { inject1, inject2, inject3 };
@@ -288,12 +327,6 @@ namespace NUnit.Framework.Attributes
             {
                 get
                 {
-                    //yield return new TestCaseData(0, 0, 0)
-                    //    .SetName("ThisOneShouldThrow")
-                    //    .SetDescription("Demonstrates use of ExpectedException")
-                    //    .SetCategory("Junk")
-                    //    .SetProperty("MyProp", "zip")
-                    //    .Throws(typeof(System.DivideByZeroException));
                     yield return new object[] { 100, 20, 5 };
                     yield return new object[] { 100, 4, 25 };
                 }
