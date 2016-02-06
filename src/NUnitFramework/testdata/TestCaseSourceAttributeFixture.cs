@@ -139,7 +139,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             private static object[] myObject;
             public static string MyField;
-            public static int MyProperty { get; }
+            public static int MyProperty { get; set; }
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
             {
                 yield return new object[] { inject1, inject2, inject3 };
