@@ -99,6 +99,7 @@
     <Compile Include="Compatibility\BindingFlags.cs" />
     <Compile Include="Compatibility\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
+    <Compile Include="Compatibility\Net20Compatibility.cs" />
     <Compile Include="Compatibility\Path.cs" />
     <Compile Include="Compatibility\ReflectionExtensions.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />

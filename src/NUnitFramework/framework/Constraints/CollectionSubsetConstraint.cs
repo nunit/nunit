@@ -20,7 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
+using System;
 using System.Collections;
 
 namespace NUnit.Framework.Constraints
@@ -61,6 +61,18 @@ namespace NUnit.Framework.Constraints
         protected override bool Matches(IEnumerable actual)
         {
             return Tally(expected).TryRemove( actual );
+        }
+
+
+        /// <summary>
+        /// Flag the constraint to use the supplied predicate function
+        /// </summary>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public CollectionSubsetConstraint Using<TSubsetType, TSupersetType>(Func<TSubsetType, TSupersetType, bool> comparison)
+        {
+            base.Using(EqualityAdapter.For(comparison));
+            return this;
         }
     }
 }
