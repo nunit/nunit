@@ -29,7 +29,13 @@ using System.Reflection;
 using System.Linq;
 #endif
 
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Compatibility
+#elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Compatibility
+#else
+namespace NUnit.Common.Compatibility
+#endif
 {
 #if !NET_4_5 && !PORTABLE
     /// <summary>

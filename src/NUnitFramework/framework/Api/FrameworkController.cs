@@ -178,16 +178,158 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-        #region Private Action Methods Used by Nested Classes
+        #region Public Action methods Used by nunit.driver for running portable tests
 
-        private void LoadTests(ICallbackEventHandler handler)
+        /// <summary>
+        /// Loads the tests in the assembly
+        /// </summary>
+        /// <returns></returns>
+        public string LoadTests()
         {
             if (_testAssembly != null)
                 Runner.Load(_testAssembly, Settings);
             else
                 Runner.Load(AssemblyNameOrPath, Settings);
 
-            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
+            return Runner.LoadedTest.ToXml(false).OuterXml;
+        }
+
+        /// <summary>
+        /// Returns info about the tests in an assembly
+        /// </summary>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The XML result of exploring the tests</returns>
+        public string ExploreTests(string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            if (Runner.LoadedTest == null)
+                throw new InvalidOperationException("The Explore method was called but no test has been loaded");
+
+            // TODO: Make use of the filter
+            return Runner.LoadedTest.ToXml(true).OuterXml;
+        }
+
+        /// <summary>
+        /// Runs the tests in an assembly
+        /// </summary>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The XML result of the test run</returns>
+        public string RunTests(string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
+
+            // Insert elements as first child in reverse order
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
+#if !PORTABLE && !SILVERLIGHT
+            InsertEnvironmentElement(result);
+#endif
+
+            // Ensure that the CallContext of the thread is not polluted
+            // by our TestExecutionContext, which is not serializable.
+            TestExecutionContext.ClearCurrentContext();
+
+            return result.OuterXml;
+        }
+
+#if !NET_2_0
+
+        class ActionCallback : ICallbackEventHandler
+        {
+            Action<string> _callback;
+
+            public ActionCallback(Action<string> callback)
+            {
+                _callback = callback;
+            }
+
+            public string GetCallbackResult()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RaiseCallbackEvent(string report)
+            {
+                if(_callback != null)
+                    _callback.Invoke(report);
+            }
+        }
+
+        /// <summary>
+        /// Runs the tests in an assembly syncronously reporting back the test results through the callback
+        /// or through the return value
+        /// </summary>
+        /// <param name="callback">The callback that receives the test results</param>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The XML result of the test run</returns>
+        public string RunTests(Action<string> callback, string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            var handler = new ActionCallback(callback);
+
+            TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
+
+            // Insert elements as first child in reverse order
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
+#if !PORTABLE && !SILVERLIGHT
+            InsertEnvironmentElement(result);
+#endif
+
+            // Ensure that the CallContext of the thread is not polluted
+            // by our TestExecutionContext, which is not serializable.
+            TestExecutionContext.ClearCurrentContext();
+
+            return result.OuterXml;
+        }
+
+        /// <summary>
+        /// Runs the tests in an assembly asyncronously reporting back the test results through the callback
+        /// </summary>
+        /// <param name="callback">The callback that receives the test results</param>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        private void RunAsync(Action<string> callback, string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            var handler = new ActionCallback(callback);
+
+            Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+        }
+#endif
+
+        /// <summary>
+        /// Stops the test run
+        /// </summary>
+        /// <param name="force">True to force the stop, false for a cooperative stop</param>
+        public void StopRun(bool force)
+        {
+            Runner.StopRun(force);
+        }
+
+        /// <summary>
+        /// Counts the number of test cases in the loaded TestSuite
+        /// </summary>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The number of tests</returns>
+        public int CountTests(string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            return Runner.CountTestCases(TestFilter.FromXml(filter));
+        }
+
+        #endregion
+
+        #region Private Action Methods Used by Nested Classes
+
+        private void LoadTests(ICallbackEventHandler handler)
+        {
+            handler.RaiseCallbackEvent(LoadTests());
         }
 
         private void ExploreTests(ICallbackEventHandler handler, string filter)
@@ -230,15 +372,12 @@ namespace NUnit.Framework.Api
 
         private void StopRun(ICallbackEventHandler handler, bool force)
         {
-            Runner.StopRun(force);
+            StopRun(force);
         }
 
         private void CountTests(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
-            var count = Runner.CountTestCases(TestFilter.FromXml(filter));
-            handler.RaiseCallbackEvent(count.ToString());
+            handler.RaiseCallbackEvent(CountTests(filter).ToString());
         }
 
 #if !PORTABLE && !SILVERLIGHT
