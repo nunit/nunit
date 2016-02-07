@@ -92,5 +92,14 @@ namespace NUnit.Framework.Constraints
                 }
             }
         }
+
+        [Test]
+        public void IsSuperSetHonorsUsingWhenCollectionsAreOfDifferentTypes()
+        {
+            ICollection set = new SimpleObjectCollection("2", "3");
+            ICollection superSet = new SimpleObjectCollection(1, 2, 3, 4, 5);
+
+            Assert.That(superSet, Is.SupersetOf(set).Using<int, string>((i, s) => i.ToString() == s));
+        }
     }
 }

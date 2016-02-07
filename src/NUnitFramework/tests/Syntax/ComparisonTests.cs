@@ -32,7 +32,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<greaterthan 7>";
             staticSyntax = Is.GreaterThan(7);
-            inheritedSyntax = Helper().GreaterThan(7);
             builderSyntax = Builder().GreaterThan(7);
         }
     }
@@ -44,7 +43,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<greaterthanorequal 7>";
             staticSyntax = Is.GreaterThanOrEqualTo(7);
-            inheritedSyntax = Helper().GreaterThanOrEqualTo(7);
             builderSyntax = Builder().GreaterThanOrEqualTo(7);
         }
     }
@@ -56,7 +54,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<greaterthanorequal 7>";
             staticSyntax = Is.AtLeast(7);
-            inheritedSyntax = Helper().AtLeast(7);
             builderSyntax = Builder().AtLeast(7);
         }
     }
@@ -68,7 +65,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<lessthan 7>";
             staticSyntax = Is.LessThan(7);
-            inheritedSyntax = Helper().LessThan(7);
             builderSyntax = Builder().LessThan(7);
         }
     }
@@ -80,7 +76,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<lessthanorequal 7>";
             staticSyntax = Is.LessThanOrEqualTo(7);
-            inheritedSyntax = Helper().LessThanOrEqualTo(7);
             builderSyntax = Builder().LessThanOrEqualTo(7);
         }
     }
@@ -92,7 +87,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<lessthanorequal 7>";
             staticSyntax = Is.AtMost(7);
-            inheritedSyntax = Helper().AtMost(7);
             builderSyntax = Builder().AtMost(7);
         }
     }
