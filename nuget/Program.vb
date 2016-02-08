@@ -30,8 +30,8 @@ Public Class Program
     ''' various locations, depending on the arguments passed.
     ''' </summary>
     ''' <remarks>Run with --help for a full list of arguments supported</remarks>
-    Public Shared Sub Main(ByVal args() As String)
-        Call New AutoRun().Execute(args)
-    End Sub
+    Public Shared Function Main(ByVal args() As String) As Integer
+        Return New AutoRun().Execute(args)
+    End Function
 
 End Class

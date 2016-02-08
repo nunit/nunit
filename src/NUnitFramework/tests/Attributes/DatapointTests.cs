@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -88,6 +87,17 @@ namespace NUnit.Framework.Attributes
         {
             RunTestOnFixture(typeof(SquareRootTest_Iterator_IEnumerableOfDouble));
         }
+
+        [Test]
+        public void WorksOnInheritedDataPoint()
+        {
+            RunTestOnFixture(typeof(DatapointCanBeInherited));
+        }
+
+        [Test]
+        public void WorksOnInheritedDataPoints()
+        {
+            RunTestOnFixture(typeof(DatapointsCanBeInherited));
+        }
     }
 }
-#endif

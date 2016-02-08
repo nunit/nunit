@@ -176,3 +176,4 @@ test-results
 package
 images
 MockAssemblyResult.xml
+PortabilityAnalysis*.html

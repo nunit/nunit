@@ -33,7 +33,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<propertyexists X>";
             staticSyntax = Has.Property("X");
-            inheritedSyntax = Helper().Property("X");
             builderSyntax = Builder().Property("X");
         }
     }
@@ -45,7 +44,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<and <propertyexists X> <equal 7>>";
             staticSyntax = Has.Property("X").And.EqualTo(7);
-            inheritedSyntax = Helper().Property("X").And.EqualTo(7);
             builderSyntax = Builder().Property("X").And.EqualTo(7);
         }
     }
@@ -57,7 +55,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<property X <greaterthan 5>>";
             staticSyntax = Has.Property("X").GreaterThan(5);
-            inheritedSyntax = Helper().Property("X").GreaterThan(5);
             builderSyntax = Builder().Property("X").GreaterThan(5);
         }
     }
@@ -69,7 +66,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<property X <not <greaterthan 5>>>";
             staticSyntax = Has.Property("X").Not.GreaterThan(5);
-            inheritedSyntax = Helper().Property("X").Not.GreaterThan(5);
             builderSyntax = Builder().Property("X").Not.GreaterThan(5);
         }
     }
@@ -81,7 +77,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<property Length <greaterthan 5>>";
             staticSyntax = Has.Length.GreaterThan(5);
-            inheritedSyntax = Helper().Length.GreaterThan(5);
             builderSyntax = Builder().Length.GreaterThan(5);
         }
     }
@@ -93,7 +88,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<property Count <equal 5>>";
             staticSyntax = Has.Count.EqualTo(5);
-            inheritedSyntax = Helper().Count.EqualTo(5);
             builderSyntax = Builder().Count.EqualTo(5);
         }
     }
@@ -105,7 +99,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<property Message <startswith ""Expected"">>";
             staticSyntax = Has.Message.StartsWith("Expected");
-            inheritedSyntax = Helper().Message.StartsWith("Expected");
             builderSyntax = Builder().Message.StartsWith("Expected");
         }
     }
