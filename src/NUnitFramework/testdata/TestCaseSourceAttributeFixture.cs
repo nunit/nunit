@@ -104,6 +104,21 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
+        [Test, TestCaseSource(typeof(DivideDataProvider), "MyField", new object[] { 100, 4, 25 })]
+        public void SourceInAnotherClassPassingParamsToField(int n, int d, int q)
+        {
+        }
+
+        [Test, TestCaseSource(typeof(DivideDataProvider), "MyProperty", new object[] { 100, 4, 25 })]
+        public void SourceInAnotherClassPassingParamsToProperty(int n, int d, int q)
+        {
+        }
+
+        [Test, TestCaseSource(typeof(DivideDataProvider), "HereIsTheDataWithParameters", new object[] { 100, 4 })]
+        public void SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam(int n, int d, int q)
+        {
+        }
+
         [TestCaseSource("exception_source")]
         public void MethodWithSourceThrowingException(string lhs, string rhs)
         {
@@ -117,6 +132,25 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 yield return new TestCaseData("b", "b");
 
                 throw new System.Exception("my message");
+            }
+        }
+
+        private class DivideDataProvider
+        {
+            private static object[] myObject;
+            public static string MyField;
+            public static int MyProperty { get; set; }
+            public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
+            {
+                yield return new object[] { inject1, inject2, inject3 };
+            }
+            public static IEnumerable HereIsTheData
+            {
+                get
+                {
+                    yield return new object[] { 100, 20, 5 };
+                    yield return new object[] { 100, 4, 25 };
+                }
             }
         }
     }
