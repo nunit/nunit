@@ -160,6 +160,7 @@ Task("BuildCppTestFiles")
 //////////////////////////////////////////////////////////////////////
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
+    .ContinueOnError()
 	.Does(() =>
 	{
 		foreach(string runtime in AllFrameworks)
@@ -178,6 +179,7 @@ Task("TestAllFrameworks")
 
 Task("TestFramework")
   .IsDependentOn("Build")
+    .ContinueOnError()
 	.Does(() => 
 	{ 
 		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS);
@@ -185,6 +187,7 @@ Task("TestFramework")
 
 Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
+    .ContinueOnError()
 	.Does(() => 
 	{ 
 			if (framework == "sl-5.0")
@@ -195,12 +198,14 @@ Task("TestNUnitLite")
 
 Task("TestEngine")
   .IsDependentOn("Build")
+    .ContinueOnError()
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS);
 	});
 
 Task("TestAddins")
+    .ContinueOnError()
   .IsDependentOn("Build")
   .Does(() => 
 	{
@@ -209,6 +214,7 @@ Task("TestAddins")
 
 Task("TestV2Driver")
   .IsDependentOn("Build")
+    .ContinueOnError()
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS);
@@ -216,6 +222,7 @@ Task("TestV2Driver")
 
 Task("TestConsole")
   .IsDependentOn("Build")
+    .ContinueOnError()
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS);
