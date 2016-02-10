@@ -11,7 +11,7 @@ var legacyOutputXml = Argument("LegacyOutputXml", "false");
 // SET ERROR LEVELS
 //////////////////////////////////////////////////////////////////////
 var ErrorState = false;
-
+var ErrorDetail = new List<string>();
 //////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
@@ -168,7 +168,7 @@ Task("TestAllFrameworks")
   .IsDependentOn("Build")
     .OnError(exception =>
 {
-    ErrorState=true;
+    ErrorDetail.Add(exception.Message);
 }).Does(() =>
 	{
 		foreach(string runtime in AllFrameworks)
@@ -189,7 +189,7 @@ Task("TestFramework")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                ErrorState=true;
+                ErrorDetail.Add(exception.Message);
             })
 	.Does(() => 
 	{ 
@@ -200,7 +200,7 @@ Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
     .OnError(exception =>
             {
-                ErrorState=true;
+                ErrorDetail.Add(exception.Message);
             })
 	.Does(() => 
 	{ 
@@ -214,7 +214,7 @@ Task("TestEngine")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                ErrorState=true;
+                ErrorDetail.Add(exception.Message);
             })
   .Does(() => 
 	{ 
@@ -224,7 +224,7 @@ Task("TestEngine")
 Task("TestAddins")
     .OnError(exception =>
             {
-                ErrorState=true;
+                ErrorDetail.Add(exception.Message);
             })
   .IsDependentOn("Build")
   .Does(() => 
@@ -236,7 +236,7 @@ Task("TestV2Driver")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                ErrorState=true;
+                ErrorDetail.Add(exception.Message);
             })
   .Does(() => 
 	{ 
@@ -247,7 +247,7 @@ Task("TestConsole")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                ErrorState=true;
+                ErrorDetail.Add(exception.Message);
             })
   .Does(() => 
 	{ 
@@ -507,7 +507,9 @@ Setup(() =>
 Teardown(() =>
 {
     // Executed AFTER the last task.
-    if(ErrorState == true) throw new Exception("One or more unit test failed, breaking the build.");
+    if(ErrorDetail.Count != 0) 
+        throw new Exception("One or more unit test failed, breaking the build.\n" 
+                              + ErrorDetail.Aggregate((x,y) => x + "\n" + y));
 });
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS
