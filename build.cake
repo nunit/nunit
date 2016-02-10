@@ -6,10 +6,17 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var framework = Argument("framework", "net-4.5");
 var legacyOutputXml = Argument("LegacyOutputXml", "false");
+var UseNUnit2Ouput = System.Convert.ToBoolean(legacyOutputXml);
+
+//////////////////////////////////////////////////////////////////////
+// SET ERROR LEVELS
+//////////////////////////////////////////////////////////////////////
+var ErrorState = false;
+
 //////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
-var UseNUnit2Ouput = System.Convert.ToBoolean(legacyOutputXml);
+
 var version = "3.1.0";
 var modifier = "";
 var displayVersion = "3.1";
@@ -160,8 +167,10 @@ Task("BuildCppTestFiles")
 //////////////////////////////////////////////////////////////////////
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
-    .ContinueOnError()
-	.Does(() =>
+    .OnError(exception =>
+{
+    HandleTestRunEror(exception);
+}).Does(() =>
 	{
 		foreach(string runtime in AllFrameworks)
 		{
@@ -179,7 +188,10 @@ Task("TestAllFrameworks")
 
 Task("TestFramework")
   .IsDependentOn("Build")
-    .ContinueOnError()
+    .OnError(exception =>
+            {
+                HandleTestRunEror(exception);
+            })
 	.Does(() => 
 	{ 
 		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS);
@@ -187,7 +199,10 @@ Task("TestFramework")
 
 Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
-    .ContinueOnError()
+    .OnError(exception =>
+            {
+                HandleTestRunEror(exception);
+            })
 	.Does(() => 
 	{ 
 			if (framework == "sl-5.0")
@@ -198,14 +213,20 @@ Task("TestNUnitLite")
 
 Task("TestEngine")
   .IsDependentOn("Build")
-    .ContinueOnError()
+    .OnError(exception =>
+            {
+                HandleTestRunEror(exception);
+            })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS);
 	});
 
 Task("TestAddins")
-    .ContinueOnError()
+    .OnError(exception =>
+            {
+                HandleTestRunEror(exception);
+            })
   .IsDependentOn("Build")
   .Does(() => 
 	{
@@ -214,7 +235,10 @@ Task("TestAddins")
 
 Task("TestV2Driver")
   .IsDependentOn("Build")
-    .ContinueOnError()
+    .OnError(exception =>
+            {
+                HandleTestRunEror(exception);
+            })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS);
@@ -222,7 +246,10 @@ Task("TestV2Driver")
 
 Task("TestConsole")
   .IsDependentOn("Build")
-    .ContinueOnError()
+    .OnError(exception =>
+            {
+                HandleTestRunEror(exception);
+            })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS);
@@ -608,6 +635,10 @@ void RunGitCommand(string arguments)
 	{
 		Arguments = arguments
 	});
+}
+void HandleTestRunEror(Exception exception)
+{ 
+ErrorState=true;
 }
 
 //////////////////////////////////////////////////////////////////////
