@@ -168,7 +168,7 @@ Task("TestAllFrameworks")
   .IsDependentOn("Build")
     .OnError(exception =>
 {
-    HandleTestRunEror(exception);
+    ErrorState=true;
 }).Does(() =>
 	{
 		foreach(string runtime in AllFrameworks)
@@ -189,7 +189,7 @@ Task("TestFramework")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                HandleTestRunEror(exception);
+                ErrorState=true;
             })
 	.Does(() => 
 	{ 
@@ -200,7 +200,7 @@ Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
     .OnError(exception =>
             {
-                HandleTestRunEror(exception);
+                ErrorState=true;
             })
 	.Does(() => 
 	{ 
@@ -214,7 +214,7 @@ Task("TestEngine")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                HandleTestRunEror(exception);
+                ErrorState=true;
             })
   .Does(() => 
 	{ 
@@ -224,7 +224,7 @@ Task("TestEngine")
 Task("TestAddins")
     .OnError(exception =>
             {
-                HandleTestRunEror(exception);
+                ErrorState=true;
             })
   .IsDependentOn("Build")
   .Does(() => 
@@ -236,7 +236,7 @@ Task("TestV2Driver")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                HandleTestRunEror(exception);
+                ErrorState=true;
             })
   .Does(() => 
 	{ 
@@ -247,7 +247,7 @@ Task("TestConsole")
   .IsDependentOn("Build")
     .OnError(exception =>
             {
-                HandleTestRunEror(exception);
+                ErrorState=true;
             })
   .Does(() => 
 	{ 
@@ -632,10 +632,6 @@ void RunGitCommand(string arguments)
 	{
 		Arguments = arguments
 	});
-}
-void HandleTestRunEror(Exception exception)
-{ 
-ErrorState=true;
 }
 
 //////////////////////////////////////////////////////////////////////
