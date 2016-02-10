@@ -59,6 +59,12 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void FailingTestForTestingBuild()
+        {
+            Assert.Fail("Fail the build");
+        }
+
+        [Test]
         public void SubsequentFailureIsIrrelevant()
         {
             Assert.Pass("This test is OK!");
