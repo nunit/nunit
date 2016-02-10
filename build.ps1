@@ -6,6 +6,7 @@ Param(
     [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
     [string]$Verbosity = "Verbose",
     [switch]$Experimental,
+    [switch]$LegacyXmlOutput,
     [switch]$WhatIf
 )
 
@@ -17,6 +18,10 @@ $CAKE_EXE = Join-Path $TOOLS_DIR "Cake/Cake.exe"
 $UseExperimental = "";
 if($Experimental.IsPresent) {
     $UseExperimental = "-experimental"
+}
+
+if($LegacyXmlOutput.IsPresent) {
+ $UseLegacyXmlOutput= "-LegacyOutputXml=true"
 }
 
 # Is this a dry run?
@@ -50,6 +55,6 @@ if (!(Test-Path $CAKE_EXE)) {
 }
 
 # Start Cake
-Invoke-Expression "$CAKE_EXE `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseDryRun $UseExperimental"
+Invoke-Expression "$CAKE_EXE `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseDryRun $UseExperimental $UseLegacyXmlOutput"
 Write-Host
 exit $LASTEXITCODE

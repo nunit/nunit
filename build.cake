@@ -5,11 +5,11 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var framework = Argument("framework", "net-4.5");
-
+var legacyOutputXml = Argument("LegacyOutputXml", "false");
 //////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
-
+var UseNUnit2Ouput = System.Convert.ToBoolean(legacyOutputXml);
 var version = "3.1.0";
 var modifier = "";
 var displayVersion = "3.1";
@@ -575,10 +575,11 @@ void RunTest(FilePath exePath, DirectoryPath workingDir)
 	  MakeAbsolute(exePath), 
 	  new ProcessSettings()
 	  {
-		  WorkingDirectory = workingDir
-	  });
-	  	  
-	if (rc > 0)
+		  WorkingDirectory = workingDir,
+          Arguments = (!exePath.ToString().Contains("portable") ? (UseNUnit2Ouput ? " --result=TestResult.xml;format=nunit2" : "") : ""),
+      });
+
+    if (rc > 0)
 	  throw new Exception(string.Format("{0} tests failed", rc));
 	else if (rc < 0)
 	  throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
@@ -586,15 +587,16 @@ void RunTest(FilePath exePath, DirectoryPath workingDir)
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments)
 {
-	int rc = StartProcess(
+    int rc = StartProcess(
 	  MakeAbsolute(exePath), 
 	  new ProcessSettings()
 	  {
-		  Arguments = arguments,
+		  Arguments = arguments + 
+          (!exePath.ToString().Contains("portable") ? (UseNUnit2Ouput ? " --result=TestResult.xml;format=nunit2" : "") : ""),
 		  WorkingDirectory = workingDir
 	  });
-	  
-	if (rc > 0)
+
+    if (rc > 0)
 	  throw new Exception(string.Format("{0} tests failed", rc));
 	else if (rc < 0)
 	  throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
