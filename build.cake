@@ -6,7 +6,6 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var framework = Argument("framework", "net-4.5");
 var legacyOutputXml = Argument("LegacyOutputXml", "false");
-var UseNUnit2Ouput = System.Convert.ToBoolean(legacyOutputXml);
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -595,38 +594,36 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
         );
     }
 }
- 
+
 void RunTest(FilePath exePath, DirectoryPath workingDir)
 {
-	int rc = StartProcess(
-	  MakeAbsolute(exePath), 
-	  new ProcessSettings()
-	  {
-		  WorkingDirectory = workingDir,
-          Arguments = (!exePath.ToString().Contains("portable") ? (UseNUnit2Ouput ? " --result=TestResult.xml;format=nunit2" : "") : ""),
+    int rc = StartProcess(
+      MakeAbsolute(exePath),
+      new ProcessSettings()
+      {
+          WorkingDirectory = workingDir
       });
 
     if (rc > 0)
-	  throw new Exception(string.Format("{0} tests failed", rc));
-	else if (rc < 0)
-	  throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
+        throw new Exception(string.Format("{0} tests failed", rc));
+    else if (rc < 0)
+        throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments)
 {
     int rc = StartProcess(
-	  MakeAbsolute(exePath), 
-	  new ProcessSettings()
-	  {
-		  Arguments = arguments + 
-          (!exePath.ToString().Contains("portable") ? (UseNUnit2Ouput ? " --result=TestResult.xml;format=nunit2" : "") : ""),
-		  WorkingDirectory = workingDir
-	  });
+      MakeAbsolute(exePath),
+      new ProcessSettings()
+      {
+          Arguments = arguments,
+          WorkingDirectory = workingDir
+      });
 
     if (rc > 0)
-	  throw new Exception(string.Format("{0} tests failed", rc));
-	else if (rc < 0)
-	  throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
+        throw new Exception(string.Format("{0} tests failed", rc));
+    else if (rc < 0)
+        throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
 void RunGitCommand(string arguments)
