@@ -85,15 +85,9 @@ namespace NUnit.Engine.Services
             if (projectCount > 1 || projectCount > 0 && assemblyCount > 0)
                 return new AggregatingTestRunner(ServiceContext, package);
 
-            // If we have a single project by itself, expand it here.
+            // If we have a single project by itself, make it the top level project.
             if (projectCount > 0 && assemblyCount == 0)
-            {
-                var p = package.SubPackages[0];
-
-                _projectService.ExpandProjectPackage(p);
-
-                package = p;
-            }
+                package = package.SubPackages[0];
 
             // TODO: What about bad extensions?
 

@@ -64,6 +64,9 @@ namespace NUnit.Engine.Services
             Guard.ArgumentValid(package.SubPackages.Count == 0, "Package is already expanded", "package");
 
             string path = package.FullName;
+            if (!File.Exists(path))
+                return;
+
             IProject project = LoadFrom(path);
             Guard.ArgumentValid(project != null, "Unable to load project " + path, "package");
 
@@ -133,12 +136,15 @@ namespace NUnit.Engine.Services
 
         private IProject LoadFrom(string path)
         {
-            ExtensionNode node = GetNodeForPath(path);
-            if (node != null)
+            if (File.Exists(path))
             {
-                var loader = node.ExtensionObject as IProjectLoader;
-                if (loader.CanLoadFrom(path))
-                    return loader.LoadFrom(path);
+                ExtensionNode node = GetNodeForPath(path);
+                if (node != null)
+                {
+                    var loader = node.ExtensionObject as IProjectLoader;
+                    if (loader.CanLoadFrom(path))
+                        return loader.LoadFrom(path);
+                }
             }
 
             return null;

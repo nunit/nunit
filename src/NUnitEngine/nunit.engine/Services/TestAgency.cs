@@ -60,8 +60,6 @@ namespace NUnit.Engine.Services
 
         private AgentDataBase _agentData = new AgentDataBase();
 
-        private IRuntimeFrameworkService _runtimeService;
-
         #endregion
 
         #region Constructors
@@ -158,11 +156,10 @@ namespace NUnit.Engine.Services
         #region Helper Methods
         private Guid LaunchAgentProcess(TestPackage package)
         {
+            RuntimeFramework targetRuntime = RuntimeFramework.CurrentFramework;
             string runtimeSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
-            RuntimeFramework targetRuntime = RuntimeFramework.Parse(
-                runtimeSetting != ""
-                    ? runtimeSetting
-                    : _runtimeService.SelectRuntimeFramework(package));
+            if (runtimeSetting != "")
+                targetRuntime = RuntimeFramework.Parse(runtimeSetting);
 
             if (targetRuntime.Runtime == RuntimeType.Any)
                 targetRuntime = new RuntimeFramework(RuntimeFramework.CurrentFramework.Runtime, targetRuntime.ClrVersion);
@@ -369,27 +366,8 @@ namespace NUnit.Engine.Services
         {
             try
             {
-                // TestAgency requires on the RuntimeFrameworkService.
-                _runtimeService = ServiceContext.GetService<IRuntimeFrameworkService>();
-
-                // Any object returned from ServiceContext is an IService
-                if (_runtimeService != null && ((IService)_runtimeService).Status == ServiceStatus.Started)
-                {
-                    try
-                    {
-                        Start();
-                        Status = ServiceStatus.Started;
-                    }
-                    catch
-                    {
-                        Status = ServiceStatus.Error;
-                        throw;
-                    }
-                }
-                else
-                {
-                    Status = ServiceStatus.Error;
-                }
+                Start();
+                Status = ServiceStatus.Started;
             }
             catch
             {

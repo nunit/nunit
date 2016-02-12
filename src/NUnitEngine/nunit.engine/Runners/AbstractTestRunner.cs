@@ -40,8 +40,8 @@ namespace NUnit.Engine.Runners
 
         public AbstractTestRunner(IServiceLocator services, TestPackage package)
         {
-            this.Services = services;
-            this.TestPackage = package;
+            Services = services;
+            TestPackage = package;
             TestRunnerFactory = Services.GetService<ITestRunnerFactory>();
             ProjectService = Services.GetService<IProjectService>();
         }
