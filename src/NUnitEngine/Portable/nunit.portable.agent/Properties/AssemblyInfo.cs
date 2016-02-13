@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,36 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework.Constraints;
+using System.Resources;
+using System.Reflection;
 
-namespace NUnit.Framework.Syntax
-{
-    public abstract class SyntaxTest
-    {
-        protected string parseTree;
-        protected IResolveConstraint staticSyntax;
-        protected IResolveConstraint builderSyntax;
-
-        protected ConstraintExpression Builder()
-        {
-            return new ConstraintExpression();
-        }
-
-        [Test]
-        public void SupportedByStaticSyntax()
-        {
-            Assert.That(
-                staticSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
-        }
-
-        [Test]
-        public void SupportedByConstraintBuilder()
-        {
-            Assert.That(
-                builderSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
-        }
-    }
-}
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("nunit.driver")]
+[assembly: AssemblyDescription("Driver for running portable tests")]

@@ -52,8 +52,9 @@ var NUNITLITE_RUNNER = "nunitlite-runner.exe";
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
 var NUNITLITE_TESTS = "nunitlite.tests.exe";
 var ENGINE_TESTS = "nunit.engine.tests.dll";
+var PORTABLE_AGENT_TESTS = "agents/nunit.portable.agent.tests.dll";
 var ADDIN_TESTS = "addins/tests/addin-tests.dll";
-var V2_DRIVER_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
+var V2_PORTABLE_AGENT_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
 var CONSOLE_TESTS = "nunit3-console.tests.dll";
 
 // Packages
@@ -173,7 +174,7 @@ Task("TestAllFrameworks")
     {
         ErrorDetail.Add(exception.Message);
     })
-    .Does(() =>
+	.Does(() =>
 	{
 		foreach(string runtime in AllFrameworks)
 		{
@@ -206,7 +207,7 @@ Task("TestNUnitLite")
         {
             ErrorDetail.Add(exception.Message);
         })
-  .Does(() => 
+	.Does(() => 
 	{ 
 			if (framework == "sl-5.0")
 				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll", framework);
@@ -223,6 +224,14 @@ Task("TestEngine")
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine");
+	});
+
+Task("TestDriver")
+  .IsDependentOn("Build")
+  .WithCriteria(IsRunningOnWindows)
+  .Does(() => 
+	{ 
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS);
 	});
 
 Task("TestAddins")
@@ -244,7 +253,7 @@ Task("TestV2Driver")
         })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS, "TestV2Driver");
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver");
 	});
 
 Task("TestConsole")
@@ -506,7 +515,7 @@ Task("PackageCF")
 Setup(() =>
 {
     // Executed BEFORE the first task.
-});
+	});
 
 Teardown(() =>
 {
@@ -575,6 +584,13 @@ void BuildEngine(string configuration)
     // Engine tests
     BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration);  
 
+    // Driver and tests
+    if(IsRunningOnWindows())
+    {
+        BuildProject("./src/NUnitEngine/Portable/nunit.portable.agent/nunit.portable.agent.csproj", configuration);
+        BuildProject("./src/NUnitEngine/Portable/nunit.portable.agent.tests/nunit.portable.agent.tests.csproj", configuration);
+    }
+
     // Addins
     BuildProject("./src/NUnitEngine/Addins/nunit-project-loader/nunit-project-loader.csproj", configuration);  
     BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);  
@@ -619,35 +635,35 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
         );
     }
 }
-
+ 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string framework)
 {
-    int rc = StartProcess(
-      MakeAbsolute(exePath),
-      new ProcessSettings()
-      {
-          WorkingDirectory = workingDir
-      });
-        
-    if (rc > 0)
+	int rc = StartProcess(
+	  MakeAbsolute(exePath), 
+	  new ProcessSettings()
+	  {
+		  WorkingDirectory = workingDir
+	  });
+	  	  
+	if (rc > 0)
         ErrorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
-    else if (rc < 0)
+	else if (rc < 0)
         ErrorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework)
 {
-    int rc = StartProcess(
-      MakeAbsolute(exePath),
-      new ProcessSettings()
-      {
-          Arguments = arguments,
-          WorkingDirectory = workingDir
-      });
-
-    if (rc > 0)
+	int rc = StartProcess(
+	  MakeAbsolute(exePath), 
+	  new ProcessSettings()
+	  {
+		  Arguments = arguments,
+		  WorkingDirectory = workingDir
+	  });
+	  
+	if (rc > 0)
         ErrorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
-    else if (rc < 0)
+	else if (rc < 0)
         ErrorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
@@ -675,6 +691,7 @@ Task("Rebuild")
 Task("TestAll")
 	.IsDependentOn("TestAllFrameworks")
 	.IsDependentOn("TestEngine")
+    .IsDependentOn("TestDriver")
 	.IsDependentOn("TestAddins")
 	.IsDependentOn("TestV2Driver")
 	.IsDependentOn("TestConsole");
@@ -683,6 +700,7 @@ Task("Test")
 	.IsDependentOn("TestFramework")
 	.IsDependentOn("TestNUnitLite")
 	.IsDependentOn("TestEngine")
+    .IsDependentOn("TestDriver")
 	.IsDependentOn("TestAddins")
 	.IsDependentOn("TestV2Driver")
 	.IsDependentOn("TestConsole");

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,35 +22,26 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Engine
 {
-    public abstract class SyntaxTest
+    /// <summary>
+    /// NUnitDriverException is thrown when the driver has been
+    /// called with improper values or when a particular facility
+    /// is not available.
+    /// </summary>
+    public class NUnitPortableDriverException : Exception
     {
-        protected string parseTree;
-        protected IResolveConstraint staticSyntax;
-        protected IResolveConstraint builderSyntax;
+        /// <summary>
+        /// Construct with a message
+        /// </summary>
+        public NUnitPortableDriverException(string message) : base(message) { }
 
-        protected ConstraintExpression Builder()
-        {
-            return new ConstraintExpression();
-        }
-
-        [Test]
-        public void SupportedByStaticSyntax()
-        {
-            Assert.That(
-                staticSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
-        }
-
-        [Test]
-        public void SupportedByConstraintBuilder()
-        {
-            Assert.That(
-                builderSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
-        }
+        /// <summary>
+        /// Construct with a message and inner exception
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
+        public NUnitPortableDriverException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

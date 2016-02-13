@@ -68,6 +68,7 @@
     <Compile Include="Assertions\AssertFailTests.cs" />
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
+    <Compile Include="Assertions\AssertionHelperTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsAsyncTests.cs" />

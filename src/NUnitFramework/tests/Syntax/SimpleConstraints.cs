@@ -32,7 +32,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<null>";
             staticSyntax = Is.Null;
-            inheritedSyntax = Helper().Null;
             builderSyntax = Builder().Null;
         }
     }
@@ -44,7 +43,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<true>";
             staticSyntax = Is.True;
-            inheritedSyntax = Helper().True;
             builderSyntax = Builder().True;
         }
     }
@@ -56,7 +54,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<false>";
             staticSyntax = Is.False;
-            inheritedSyntax = Helper().False;
             builderSyntax = Builder().False;
         }
     }
@@ -68,7 +65,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<greaterthan 0>";
             staticSyntax = Is.Positive;
-            inheritedSyntax = Helper().Positive;
             builderSyntax = Builder().Positive;
         }
     }
@@ -80,8 +76,18 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<lessthan 0>";
             staticSyntax = Is.Negative;
-            inheritedSyntax = Helper().Negative;
             builderSyntax = Builder().Negative;
+        }
+    }
+
+    public class ZeroTest : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<equal 0>";
+            staticSyntax = Is.Zero;
+            builderSyntax = Builder().Zero;
         }
     }
 
@@ -92,7 +98,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<nan>";
             staticSyntax = Is.NaN;
-            inheritedSyntax = Helper().NaN;
             builderSyntax = Builder().NaN;
         }
     }

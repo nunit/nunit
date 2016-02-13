@@ -33,7 +33,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<not <null>>";
             staticSyntax = !Is.Null;
-            inheritedSyntax = !Helper().Null;
             builderSyntax = !Builder().Null;
         }
     }
@@ -45,7 +44,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<and <greaterthan 5> <lessthan 10>>";
             staticSyntax = Is.GreaterThan(5) & Is.LessThan(10);
-            inheritedSyntax = Helper().GreaterThan(5) & Is.LessThan(10);
             builderSyntax = Builder().GreaterThan(5) & Builder().LessThan(10);
         }
     }
@@ -57,7 +55,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<or <lessthan 5> <greaterthan 10>>";
             staticSyntax = Is.LessThan(5) | Is.GreaterThan(10);
-            inheritedSyntax = Helper().LessThan(5) | Is.GreaterThan(10);
             builderSyntax = Builder().LessThan(5) | Is.GreaterThan(10);
         }
     }

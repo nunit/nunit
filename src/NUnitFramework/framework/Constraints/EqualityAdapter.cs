@@ -24,11 +24,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Compatibility;
+using System.Reflection;
 
 namespace NUnit.Framework.Constraints
 {
+
     /// <summary>
     /// EqualityAdapter class handles all equality comparisons
     /// that use an <see cref="IEqualityComparer"/>, <see cref="IEqualityComparer{T}"/>
@@ -108,6 +109,45 @@ namespace NUnit.Framework.Constraints
             public override bool AreEqual(object x, object y)
             {
                 return comparer.Equals(x, y);
+            }
+        }
+
+        /// <summary>
+        /// Returns an EqualityAdapter that uses a predicate function for items comparison.
+        /// </summary>
+        /// <typeparam name="TExpected"></typeparam>
+        /// <typeparam name="TActual"></typeparam>
+        /// <param name="comparison"></param>
+        /// <returns></returns>
+        public static EqualityAdapter For<TExpected, TActual>(Func<TExpected, TActual, bool> comparison)
+        {
+            return new PredicateEqualityAdapter<TExpected, TActual>(comparison);
+        }
+
+        internal class PredicateEqualityAdapter<TActual, TExpected> : EqualityAdapter
+        {
+            private readonly Func<TActual, TExpected, bool> _comparison;
+
+            /// <summary>
+            /// Returns true if the two objects can be compared by this adapter.
+            /// The base adapter cannot handle IEnumerables except for strings.
+            /// </summary>
+            public override bool CanCompare(object x, object y)
+            {
+                return true;
+            }
+
+            /// <summary>
+            /// Compares two objects, returning true if they are equal
+            /// </summary>
+            public override bool AreEqual(object x, object y)
+            {
+                return _comparison.Invoke((TActual)y, (TExpected)x);
+            }
+
+            public PredicateEqualityAdapter(Func<TActual, TExpected, bool> comparison)
+            {
+                _comparison = comparison;
             }
         }
 
@@ -224,6 +264,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
     }
 }
