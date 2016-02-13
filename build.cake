@@ -5,7 +5,6 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var framework = Argument("framework", "net-4.5");
-var legacyOutputXml = Argument("LegacyOutputXml", "false");
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -164,12 +163,17 @@ Task("BuildCppTestFiles")
 //////////////////////////////////////////////////////////////////////
 // TEST
 //////////////////////////////////////////////////////////////////////
+
+Task("CheckForError")
+    .Does(CheckForError);
+
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
     .OnError(exception =>
-{
-    ErrorDetail.Add(exception.Message);
-}).Does(() =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
+    .Does(() =>
 	{
 		foreach(string runtime in AllFrameworks)
 		{
@@ -188,9 +192,9 @@ Task("TestAllFrameworks")
 Task("TestFramework")
   .IsDependentOn("Build")
     .OnError(exception =>
-            {
-                ErrorDetail.Add(exception.Message);
-            })
+    {
+        ErrorDetail.Add(exception.Message);
+    })
 	.Does(() => 
 	{ 
 		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS);
@@ -199,10 +203,10 @@ Task("TestFramework")
 Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
     .OnError(exception =>
-            {
-                ErrorDetail.Add(exception.Message);
-            })
-	.Does(() => 
+        {
+            ErrorDetail.Add(exception.Message);
+        })
+  .Does(() => 
 	{ 
 			if (framework == "sl-5.0")
 				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll");
@@ -213,9 +217,9 @@ Task("TestNUnitLite")
 Task("TestEngine")
   .IsDependentOn("Build")
     .OnError(exception =>
-            {
-                ErrorDetail.Add(exception.Message);
-            })
+        {
+            ErrorDetail.Add(exception.Message);
+        })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS);
@@ -223,9 +227,9 @@ Task("TestEngine")
 
 Task("TestAddins")
     .OnError(exception =>
-            {
-                ErrorDetail.Add(exception.Message);
-            })
+        {
+            ErrorDetail.Add(exception.Message);
+        })
   .IsDependentOn("Build")
   .Does(() => 
 	{
@@ -235,9 +239,9 @@ Task("TestAddins")
 Task("TestV2Driver")
   .IsDependentOn("Build")
     .OnError(exception =>
-            {
-                ErrorDetail.Add(exception.Message);
-            })
+        {
+            ErrorDetail.Add(exception.Message);
+        })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS);
@@ -246,9 +250,9 @@ Task("TestV2Driver")
 Task("TestConsole")
   .IsDependentOn("Build")
     .OnError(exception =>
-            {
-                ErrorDetail.Add(exception.Message);
-            })
+        {
+            ErrorDetail.Add(exception.Message);
+        })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS);
@@ -507,13 +511,18 @@ Setup(() =>
 Teardown(() =>
 {
     // Executed AFTER the last task.
-    if(ErrorDetail.Count != 0) 
-        throw new Exception("One or more unit test failed, breaking the build.\n" 
-                              + ErrorDetail.Aggregate((x,y) => x + "\n" + y));
+    CheckForError();
 });
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS
 //////////////////////////////////////////////////////////////////////
+
+void CheckForError()
+{
+    if(ErrorDetail.Count != 0) 
+        throw new Exception("One or more unit test failed, breaking the build.\n" 
+                              + ErrorDetail.Aggregate((x,y) => x + "\n" + y));
+}
 
 void BuildFramework(string configuration, string framework)
 {
@@ -678,6 +687,7 @@ Task("Test")
 	.IsDependentOn("TestConsole");
 
 Task("Package")
+    .IsDependentOn("CheckForError")
 	.IsDependentOn("PackageSource")
 	.IsDependentOn("PackageZip")
 	.IsDependentOn("PackageNuGet")
