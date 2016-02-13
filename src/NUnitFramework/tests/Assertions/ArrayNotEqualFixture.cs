@@ -29,7 +29,7 @@ namespace NUnit.Framework.Assertions
     /// Summary description for ArrayNotEqualFixture.
     /// </summary>
     [TestFixture]
-    public class ArrayNotEqualFixture : AssertionHelper
+    public class ArrayNotEqualFixture
     {
         [Test]
         public void DifferentLengthArrays()
@@ -39,8 +39,6 @@ namespace NUnit.Framework.Assertions
 
             Assert.AreNotEqual(array1, array2);
             Assert.AreNotEqual(array2, array1);
-            Expect(array1, Not.EqualTo(array2));
-            Expect(array2, Not.EqualTo(array1));
         }
 
         [Test]
@@ -50,8 +48,6 @@ namespace NUnit.Framework.Assertions
             string[] array2 = { "one", "two", "ten" };
             Assert.AreNotEqual(array1, array2);
             Assert.AreNotEqual(array2, array1);
-            Expect(array1, Not.EqualTo(array2));
-            Expect(array2, Not.EqualTo(array1));
         }
 
         [Test]
@@ -60,8 +56,6 @@ namespace NUnit.Framework.Assertions
             string[] array1 = { "one", "two", "three" };
             object[] array2 = { "one", "three", "two" };
             Assert.AreNotEqual(array1, array2);
-            Expect(array1, Not.EqualTo(array2));
-            Expect(array2, Not.EqualTo(array1));
         }
 
     }

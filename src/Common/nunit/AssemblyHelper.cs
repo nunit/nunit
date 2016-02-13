@@ -112,9 +112,10 @@ namespace NUnit.Common
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Load
+        #region Load
+
 #if PORTABLE
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
@@ -123,8 +124,11 @@ namespace NUnit.Common
         /// <returns></returns>
         public static Assembly Load(string name)
         {
-            var asmName = new AssemblyName { Name = Path.GetFileNameWithoutExtension(name) };
-            return Assembly.Load(asmName);
+            var ext = Path.GetExtension(name);
+            if (ext == ".dll" || ext == ".exe")
+                name = Path.GetFileNameWithoutExtension(name);
+
+            return Assembly.Load(new AssemblyName { Name = name });
         }
 #else
 
@@ -154,7 +158,8 @@ namespace NUnit.Common
             return Assembly.Load(nameOrPath);
         }
 #endif
-#endregion
+
+        #endregion
 
 #region Helper Methods
 

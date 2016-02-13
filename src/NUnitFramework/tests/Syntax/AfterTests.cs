@@ -35,7 +35,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<after 1000 <equal 10>>";
             staticSyntax = Is.EqualTo(10).After(1000);
-            inheritedSyntax = Helper().EqualTo(10).After(1000);
             builderSyntax = Builder().EqualTo(10).After(1000);
         }
     }
@@ -47,7 +46,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<after 1000 <property X <equal 10>>>";
             staticSyntax = Has.Property("X").EqualTo(10).After(1000);
-            inheritedSyntax = Helper().Property("X").EqualTo(10).After(1000);
             builderSyntax = Builder().Property("X").EqualTo(10).After(1000);
         }
     }
@@ -59,7 +57,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<after 1000 <and <greaterthan 0> <lessthan 10>>>";
             staticSyntax = Is.GreaterThan(0).And.LessThan(10).After(1000);
-            inheritedSyntax = Helper().GreaterThan(0).And.LessThan(10).After(1000);
             builderSyntax = Builder().GreaterThan(0).And.LessThan(10).After(1000);
         }
     }
