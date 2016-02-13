@@ -23,6 +23,7 @@
 
 #if !PORTABLE
 using System;
+using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
@@ -63,7 +64,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TargetFrameworkIsSetCorrectly()
         {
-            Assert.That(AppDomain.CurrentDomain.SetupInformation.TargetFrameworkName, Is.EqualTo(".NETFramework,Version=v4.5"));
+            // We use reflection so it will compile and pass on Mono,
+            // including older versions that do not have the property.
+            var prop = typeof(AppDomainSetup).GetProperty("FrameworkName");
+            Assume.That(prop, Is.Not.Null);
+            Assert.That(
+                prop.GetValue(AppDomain.CurrentDomain.SetupInformation),
+                Is.EqualTo(".NETFramework,Version=v4.5"));
         }
 
         [Test]
