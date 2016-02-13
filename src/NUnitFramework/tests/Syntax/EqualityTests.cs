@@ -33,7 +33,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<equal 999>";
             staticSyntax = Is.EqualTo(999);
-            inheritedSyntax = Helper().EqualTo(999);
             builderSyntax = Builder().EqualTo(999);
         }
     }
@@ -45,7 +44,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = @"<equal ""X"">";
             staticSyntax = Is.EqualTo("X").IgnoreCase;
-            inheritedSyntax = Helper().EqualTo("X").IgnoreCase;
             builderSyntax = Builder().EqualTo("X").IgnoreCase;
         }
     }
@@ -57,7 +55,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<equal 0.7>";
             staticSyntax = Is.EqualTo(0.7).Within(.005);
-            inheritedSyntax = Helper().EqualTo(0.7).Within(.005);
             builderSyntax = Builder().EqualTo(0.7).Within(.005);
         }
     }

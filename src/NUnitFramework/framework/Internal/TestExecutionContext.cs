@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
@@ -117,8 +118,8 @@ namespace NUnit.Framework.Internal
         public TestExecutionContext()
         {
             _priorContext = null;
-            this.TestCaseTimeout = 0;
-            this.UpstreamActions = new List<ITestAction>();
+            TestCaseTimeout = 0;
+            UpstreamActions = new List<ITestAction>();
 
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
@@ -126,6 +127,8 @@ namespace NUnit.Framework.Internal
 #if !NETCF && !SILVERLIGHT && !PORTABLE
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
+
+            CurrentValueFormatter = (val) => MsgUtils.DefaultValueFormatter(val);
         }
 
         /// <summary>
@@ -136,14 +139,14 @@ namespace NUnit.Framework.Internal
         {
             _priorContext = other;
 
-            this.CurrentTest = other.CurrentTest;
-            this.CurrentResult = other.CurrentResult;
-            this.TestObject = other.TestObject;
-            this.WorkDirectory = other.WorkDirectory;
+            CurrentTest = other.CurrentTest;
+            CurrentResult = other.CurrentResult;
+            TestObject = other.TestObject;
+            WorkDirectory = other.WorkDirectory;
             _listener = other._listener;
-            this.StopOnError = other.StopOnError;
-            this.TestCaseTimeout = other.TestCaseTimeout;
-            this.UpstreamActions = new List<ITestAction>(other.UpstreamActions);
+            StopOnError = other.StopOnError;
+            TestCaseTimeout = other.TestCaseTimeout;
+            UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
             _currentCulture = other.CurrentCulture;
             _currentUICulture = other.CurrentUICulture;
@@ -152,8 +155,10 @@ namespace NUnit.Framework.Internal
             _currentPrincipal = other.CurrentPrincipal;
 #endif
 
-            this.Dispatcher = other.Dispatcher;
-            this.ParallelScope = other.ParallelScope;
+            CurrentValueFormatter = other.CurrentValueFormatter;
+
+            Dispatcher = other.Dispatcher;
+            ParallelScope = other.ParallelScope;
         }
 
         #endregion
@@ -435,6 +440,11 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        /// <summary>
+        /// The current head of the ValueFormatter chain, copied from MsgUtils.ValueFormatter
+        /// </summary>
+        public ValueFormatter CurrentValueFormatter { get; private set; }
+
         #endregion
 
         #region Instance Methods
@@ -489,6 +499,15 @@ namespace NUnit.Framework.Internal
             // TODO: Temporary implementation
             while (count-- > 0)
                 Interlocked.Increment(ref _assertCount);
+        }
+
+        /// <summary>
+        /// Adds a new ValueFormatterFactory to the chain of formatters
+        /// </summary>
+        /// <param name="formatterFactory">The new factory</param>
+        public void AddFormatter(ValueFormatterFactory formatterFactory)
+        {
+            CurrentValueFormatter = formatterFactory(CurrentValueFormatter);
         }
 
         #endregion

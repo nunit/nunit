@@ -255,7 +255,19 @@ namespace NUnit.Framework.Constraints
         {
             get { return new LessThanConstraint(0); }
         }
- 
+
+        #endregion
+
+        #region Zero
+
+        /// <summary>
+        /// Returns a constraint that tests for equality with zero
+        /// </summary>
+        public EqualConstraint Zero
+        {
+            get { return new EqualConstraint(0); }
+        }
+
         #endregion
 
         #region NaN

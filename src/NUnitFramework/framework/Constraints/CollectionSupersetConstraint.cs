@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 
 namespace NUnit.Framework.Constraints
@@ -62,6 +63,19 @@ namespace NUnit.Framework.Constraints
         protected override bool Matches(IEnumerable actual)
         {
             return Tally(actual).TryRemove(expected);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied predicate function
+        /// </summary>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public CollectionSupersetConstraint Using<TSupersetType, TSubsetType>(Func<TSupersetType, TSubsetType, bool> comparison)
+        {
+            // internal code reverses the expected order of the arguments.
+            Func<TSubsetType, TSupersetType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
+            base.Using(EqualityAdapter.For(invertedComparison));
+            return this;
         }
     }
 }

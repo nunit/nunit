@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 
 namespace NUnit.Framework.Constraints
@@ -68,6 +69,21 @@ namespace NUnit.Framework.Constraints
                     return true;
 
             return false;
+        }
+
+
+        /// <summary>
+        /// Flag the constraint to use the supplied predicate function
+        /// </summary>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public CollectionContainsConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        {
+            // reverse the order of the arguments to match expectations of PredicateEqualityComparer
+            Func<TMemberType, TCollectionType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
+
+            base.Using(EqualityAdapter.For(invertedComparison));
+            return this;
         }
     }
 }
