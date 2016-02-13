@@ -33,10 +33,11 @@ namespace NUnit.TestData
         {
             Assert.Pass("D_NoOrderTest");
         }
-        [Test]
+
+        [Test(Order = 0)]
         public void A_NoOrderTestLowLetter()
         {
-            Assert.Pass("D_NoOrderTest");
+            Assert.Pass("A_NoOrderTestLowLetter");
         }
     }
 }
