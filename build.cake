@@ -179,12 +179,12 @@ Task("TestAllFrameworks")
 		{
 			if (runtime != "netcf-3.5")
 			{
-				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS);
+				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS, runtime);
 
 				if (runtime == "sl-5.0")
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll");
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll", runtime);
 				else
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR);
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime);
 			}
 		}
 	});
@@ -197,7 +197,7 @@ Task("TestFramework")
     })
 	.Does(() => 
 	{ 
-		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS);
+		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework);
 	});
 
 Task("TestNUnitLite")
@@ -209,9 +209,9 @@ Task("TestNUnitLite")
   .Does(() => 
 	{ 
 			if (framework == "sl-5.0")
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll");
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll", framework);
 			else
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR);
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR, framework);
 	});
 
 Task("TestEngine")
@@ -222,7 +222,7 @@ Task("TestEngine")
         })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine");
 	});
 
 Task("TestAddins")
@@ -233,7 +233,7 @@ Task("TestAddins")
   .IsDependentOn("Build")
   .Does(() => 
 	{
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS); 
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS,"TestAddins"); 
 	});
 
 Task("TestV2Driver")
@@ -244,7 +244,7 @@ Task("TestV2Driver")
         })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS, "TestV2Driver");
 	});
 
 Task("TestConsole")
@@ -255,7 +255,7 @@ Task("TestConsole")
         })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole");
 	});
 
 //////////////////////////////////////////////////////////////////////
@@ -522,6 +522,7 @@ void CheckForError()
     if(ErrorDetail.Count != 0) 
         throw new Exception("One or more unit test failed, breaking the build.\n" 
                               + ErrorDetail.Aggregate((x,y) => x + "\n" + y));
+    ErrorDetail.Clear();
 }
 
 void BuildFramework(string configuration, string framework)
@@ -619,7 +620,7 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
     }
 }
 
-void RunTest(FilePath exePath, DirectoryPath workingDir)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string framework)
 {
     int rc = StartProcess(
       MakeAbsolute(exePath),
@@ -627,14 +628,14 @@ void RunTest(FilePath exePath, DirectoryPath workingDir)
       {
           WorkingDirectory = workingDir
       });
-
+        
     if (rc > 0)
-        throw new Exception(string.Format("{0} tests failed", rc));
+        ErrorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
     else if (rc < 0)
-        throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
+        ErrorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
-void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework)
 {
     int rc = StartProcess(
       MakeAbsolute(exePath),
@@ -645,9 +646,9 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments)
       });
 
     if (rc > 0)
-        throw new Exception(string.Format("{0} tests failed", rc));
+        ErrorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
     else if (rc < 0)
-        throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
+        ErrorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
 void RunGitCommand(string arguments)
