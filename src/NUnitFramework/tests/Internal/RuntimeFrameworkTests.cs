@@ -61,6 +61,12 @@ namespace NUnit.Framework.Internal
 
 #if NET_4_5
         [Test]
+        public void TargetFrameworkIsSetCorrectly()
+        {
+            Assert.That(AppDomain.CurrentDomain.SetupInformation.TargetFrameworkName, Is.EqualTo(".NETFramework,Version=v4.5"));
+        }
+
+        [Test]
         public void DoesNotRunIn40CompatibilityModeWhenCompiled45()
         {
             var uri = new Uri( "http://host.com/path./" );

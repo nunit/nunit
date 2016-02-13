@@ -135,6 +135,7 @@ namespace NUnit.Engine.Services
             string packageName = package.FullName;
 
             Version targetVersion = new Version(0, 0);
+            string frameworkName = null;
             bool requiresX86 = false;
 
             // We are doing two jobs here: (1) in the else clause (below)
@@ -153,6 +154,15 @@ namespace NUnit.Engine.Services
                     Version v = subPackage.GetSetting(PackageSettings.ImageRuntimeVersion, new Version(0, 0));
                     if (v > targetVersion) targetVersion = v;
 
+                    // Collect highest framework name 
+                    // TODO: This assumes lexical ordering is valid - check it
+                    string fn = subPackage.GetSetting(PackageSettings.ImageTargetFrameworkName, "");
+                    if (fn != "")
+                    {
+                        if (frameworkName == null || fn.CompareTo(frameworkName) < 0)
+                            frameworkName = fn;
+                    }
+
                     // If any assembly requires X86, then the aggregate package requires it
                     if (subPackage.GetSetting(PackageSettings.ImageRequiresX86, false))
                         requiresX86 = true;
@@ -160,7 +170,9 @@ namespace NUnit.Engine.Services
             }
             else if (File.Exists(packageName) && PathUtils.IsAssemblyFileType(packageName))
             {
-                var module = AssemblyDefinition.ReadAssembly(packageName).MainModule;
+                var assemblyDef = AssemblyDefinition.ReadAssembly(packageName);
+                var module = assemblyDef.MainModule;
+
                 var NativeEntryPoint = (ModuleAttributes)16;
                 var mask = ModuleAttributes.Required32Bit | NativeEntryPoint;
 
@@ -174,10 +186,22 @@ namespace NUnit.Engine.Services
 
                 targetVersion = new Version(module.RuntimeVersion.Substring(1));
                 log.Debug("Assembly {0} uses version {1}", packageName, targetVersion);
+
+                foreach (var attr in assemblyDef.CustomAttributes)
+                {
+                    if (attr.AttributeType.FullName == "System.Runtime.Versioning.TargetFrameworkAttribute")
+                    {
+                        frameworkName = attr.ConstructorArguments[0].Value as string;
+                        break;
+                    }
+                }
             }
 
             if (targetVersion.Major > 0)
                 package.Settings[PackageSettings.ImageRuntimeVersion] = targetVersion;
+
+            if (!string.IsNullOrEmpty(frameworkName))
+                package.Settings[PackageSettings.ImageTargetFrameworkName] = frameworkName;
 
             package.Settings[PackageSettings.ImageRequiresX86] = requiresX86;
             if (requiresX86)

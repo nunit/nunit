@@ -210,6 +210,11 @@ namespace NUnit.Common
         /// </summary>
         public const string ImageRequiresX86 = "ImageRequiresX86";
 
+        /// <summary>
+        /// The FrameworkName specified on a TargetFrameworkAttribute for the assembly
+        /// </summary>
+        public const string ImageTargetFrameworkName = "ImageTargetFrameworkName";
+
         #endregion
     }
 }
