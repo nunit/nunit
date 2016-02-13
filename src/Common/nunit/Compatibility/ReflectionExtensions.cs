@@ -27,18 +27,15 @@ using System.Reflection;
 
 #if PORTABLE
 using System.Linq;
-#elif NET_2_0
-namespace System.Runtime.CompilerServices
-{
-    /// <summary>
-    /// Enables compiling extension methods in .NET 2.0
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-    sealed class ExtensionAttribute : Attribute { }
-}
 #endif
 
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Compatibility
+#elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Compatibility
+#else
+namespace NUnit.Common.Compatibility
+#endif
 {
 #if !NET_4_5 && !PORTABLE
     /// <summary>

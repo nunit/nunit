@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2010-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,35 +22,49 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Constraints;
+using System.Globalization;
+using System.Linq;
+using System.Xml.Linq;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Engine.Tests
 {
-    public abstract class SyntaxTest
+    /// <summary>
+    /// XmlHelper provides static methods for basic XML operations.
+    /// </summary>
+    public static class XmlHelper
     {
-        protected string parseTree;
-        protected IResolveConstraint staticSyntax;
-        protected IResolveConstraint builderSyntax;
-
-        protected ConstraintExpression Builder()
+        /// <summary>
+        /// Loads the given XML string into an XDocument and returns the top level element
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        public static XElement CreateXElement(string xml)
         {
-            return new ConstraintExpression();
+            XDocument doc = XDocument.Parse(xml);
+            return doc.Elements().FirstOrDefault();
         }
 
-        [Test]
-        public void SupportedByStaticSyntax()
+        #region Safe Attribute Access
+
+        /// <summary>
+        /// Gets the value of the given attribute.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public static string GetAttribute(this XNode result, string name)
         {
-            Assert.That(
-                staticSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
+            XAttribute attr = null;
+
+            var element = result as XElement;
+            if (element != null)
+            {
+                attr = element.Attribute(name);
+            }
+
+            return attr == null ? null : attr.Value;
         }
 
-        [Test]
-        public void SupportedByConstraintBuilder()
-        {
-            Assert.That(
-                builderSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
-        }
+        #endregion
     }
 }
