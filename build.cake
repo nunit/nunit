@@ -166,7 +166,10 @@ Task("BuildCppTestFiles")
 //////////////////////////////////////////////////////////////////////
 
 Task("CheckForError")
-    .Does(CheckForError);
+    .Does(() => 
+    {
+    ErrorDetail=CheckForError(ErrorDetail);
+    });
 
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
@@ -520,18 +523,19 @@ Setup(() =>
 Teardown(() =>
 {
     // Executed AFTER the last task.
-    CheckForError();
+    ErrorDetail=CheckForError(ErrorDetail);
 });
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS
 //////////////////////////////////////////////////////////////////////
 
-void CheckForError()
+List<string> CheckForError(List<string> errorDetail)
 {
-    if(ErrorDetail.Count != 0) 
+    if(errorDetail.Count != 0) 
         throw new Exception("One or more unit test failed, breaking the build.\n" 
-                              + ErrorDetail.Aggregate((x,y) => x + "\n" + y));
-    ErrorDetail.Clear();
+                              + errorDetail.Aggregate((x,y) => x + "\n" + y));
+    errorDetail.Clear();
+    return errorDetail;
 }
 
 void BuildFramework(string configuration, string framework)
