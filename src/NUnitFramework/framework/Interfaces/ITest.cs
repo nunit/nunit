@@ -118,7 +118,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// optional order in which to run the test.
         /// </summary>
-        double TestCaseOrder { get; }
+        double TestOrder { get; }
     }
 }
 

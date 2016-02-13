@@ -249,7 +249,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// optional order in which to run the test.
         /// </summary>
-        public double TestCaseOrder { get; set; }
+        public double TestOrder { get; set; }
 
         #endregion
 

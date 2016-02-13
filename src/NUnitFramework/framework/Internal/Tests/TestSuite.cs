@@ -100,8 +100,8 @@ namespace NUnit.Framework.Internal
         {
             if (!MaintainTestOrder)
             {
-                this.tests.Sort((x, y) => x.TestCaseOrder.CompareTo(y.TestCaseOrder) !=0 
-                ? x.TestCaseOrder.CompareTo(y.TestCaseOrder) : string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+                this.tests.Sort((x, y) => x.TestOrder.CompareTo(y.TestOrder) !=0 
+                ? x.TestOrder.CompareTo(y.TestOrder) : string.Compare(x.Name, y.Name, StringComparison.Ordinal));
                 
                 foreach (Test test in Tests)
                 {

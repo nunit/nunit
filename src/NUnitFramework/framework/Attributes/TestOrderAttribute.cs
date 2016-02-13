@@ -11,7 +11,7 @@ namespace NUnit.Framework.Attributes
     /// <summary>
     /// Attribute used to define to order that test will run in.
     /// </summary>
-    public class TestCaseOrderAttribute : NUnitAttribute, IImplyFixture, IApplyToTest
+    public class TestOrderAttribute : NUnitAttribute, IImplyFixture, IApplyToTest
     {
         /// <summary>
         /// Defines the order that the test will run in
@@ -22,7 +22,7 @@ namespace NUnit.Framework.Attributes
         /// Defines the order that the test will run in
         /// </summary>
         /// <param name="order"></param>
-        public TestCaseOrderAttribute(double order)
+        public TestOrderAttribute(double order)
         {
             Order = order;
         }
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Attributes
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            test.TestCaseOrder = Order;
+            test.TestOrder = Order;
         }
     }
 }

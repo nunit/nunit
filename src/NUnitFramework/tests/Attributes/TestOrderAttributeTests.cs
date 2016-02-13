@@ -10,15 +10,15 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     class TestOrderAttributeTests
     {
-        [TestCase]
-        [TestCaseOrder(1)]
+        [Test]
+        [TestOrder(1)]
         public void BFirstTestCase()
         {
             Console.WriteLine("BFirstTestCase");
         }
 
-        [TestCase]
-        [TestCaseOrder(2)]
+        [Test]
+        [TestOrder(2)]
         public void ASecondTestCase()
         {
             Console.WriteLine("ASecondTestCase");
