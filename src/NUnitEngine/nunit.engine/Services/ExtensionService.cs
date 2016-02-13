@@ -296,7 +296,19 @@ namespace NUnit.Engine.Services
             resolver.AddSearchDirectory(Path.GetDirectoryName(assemblyName));
             resolver.AddSearchDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             var parameters = new ReaderParameters() { AssemblyResolver = resolver };
-            var module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
+
+            ModuleDefinition module;
+
+            try
+            {
+                module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
+            }
+            catch (BadImageFormatException)
+            {
+                //Thrown if assembly is unmanaged
+                return;
+            }
+
             foreach (var type in module.GetTypes())
             {
                 CustomAttribute extensionAttr = type.GetAttribute("NUnit.Engine.Extensibility.ExtensionAttribute");
