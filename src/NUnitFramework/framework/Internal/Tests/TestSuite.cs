@@ -100,9 +100,16 @@ namespace NUnit.Framework.Internal
         {
             if (!MaintainTestOrder)
             {
-                this.tests.Sort((x, y) => x.TestOrder.CompareTo(y.TestOrder) != 0 
-                ? x.TestOrder.CompareTo(y.TestOrder) : x.Name.CompareTo(y.Name));
-                
+                this.tests.Sort(delegate (ITest x, ITest y)
+                {
+                    var xKey = 0;
+                    var yKey = 0;
+                    if (x.Properties.ContainsKey("order")) int.TryParse(x.Properties["order"][0].ToString(), out xKey);
+                    if (y.Properties.ContainsKey("order")) int.TryParse(y.Properties["order"][0].ToString(), out yKey);
+                    return xKey.CompareTo(yKey) != 0
+                    ? xKey.CompareTo(yKey) : x.Name.CompareTo(y.Name); ;
+                });
+
                 foreach (Test test in Tests)
                 {
                     TestSuite suite = test as TestSuite;

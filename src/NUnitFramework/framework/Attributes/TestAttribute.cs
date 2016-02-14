@@ -72,11 +72,6 @@ namespace NUnit.Framework
         /// </summary>
         public Type TestOf { get; set; }
 
-        /// <summary>
-        /// The optional order in which the test is run.
-        /// </summary>
-        public double Order { get; set; }
-
         #region IApplyToTest Members
 
         /// <summary>
@@ -93,8 +88,7 @@ namespace NUnit.Framework
 
             if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
                 test.Properties.Set(PropertyNames.TestOf, TestOf.FullName);
-
-            test.TestOrder = Order;
+            
         }
 
         #endregion

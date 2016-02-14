@@ -114,11 +114,6 @@ namespace NUnit.Framework.Interfaces
         /// Gets a fixture object for running this test.
         /// </summary>
         object Fixture { get; }
-
-        /// <summary>
-        /// optional order in which to run the test.
-        /// </summary>
-        double TestOrder { get; }
     }
 }
 

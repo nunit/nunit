@@ -117,6 +117,7 @@
     <Compile Include="Attributes\LevelOfParallelismAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
+    <Compile Include="Attributes\OrderAttribute.cs" />
     <Compile Include="Attributes\RetryAttribute.cs" />
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
