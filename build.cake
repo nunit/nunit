@@ -9,8 +9,8 @@ var framework = Argument("framework", "net-4.5");
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
 //////////////////////////////////////////////////////////////////////
-var ErrorState = false;
 var ErrorDetail = new List<string>();
+
 //////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
@@ -168,7 +168,7 @@ Task("BuildCppTestFiles")
 Task("CheckForError")
     .Does(() => 
     {
-    ErrorDetail=CheckForError(ErrorDetail);
+    CheckForError(ref ErrorDetail);
     });
 
 Task("TestAllFrameworks")
@@ -183,12 +183,12 @@ Task("TestAllFrameworks")
 		{
 			if (runtime != "netcf-3.5")
 			{
-				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS, runtime);
+				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
 
 				if (runtime == "sl-5.0")
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll", runtime);
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll", runtime, ref ErrorDetail);
 				else
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime);
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime, ref ErrorDetail);
 			}
 		}
 	});
@@ -201,7 +201,7 @@ Task("TestFramework")
     })
 	.Does(() => 
 	{ 
-		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework);
+		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework, ref ErrorDetail);
 	});
 
 Task("TestNUnitLite")
@@ -213,9 +213,9 @@ Task("TestNUnitLite")
 	.Does(() => 
 	{ 
 			if (framework == "sl-5.0")
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll", framework);
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll", framework, ref ErrorDetail);
 			else
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR, framework);
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR, framework, ref ErrorDetail);
 	});
 
 Task("TestEngine")
@@ -226,7 +226,7 @@ Task("TestEngine")
         })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine");
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine", ref ErrorDetail);
 	});
 
 Task("TestDriver")
@@ -234,7 +234,7 @@ Task("TestDriver")
   .WithCriteria(IsRunningOnWindows)
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS, ref ErrorDetail);
 	});
 
 Task("TestAddins")
@@ -245,7 +245,7 @@ Task("TestAddins")
   .IsDependentOn("Build")
   .Does(() => 
 	{
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS,"TestAddins"); 
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS,"TestAddins", ref ErrorDetail); 
 	});
 
 Task("TestV2Driver")
@@ -256,7 +256,7 @@ Task("TestV2Driver")
         })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver");
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver", ref ErrorDetail);
 	});
 
 Task("TestConsole")
@@ -267,7 +267,7 @@ Task("TestConsole")
         })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole");
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole", ref ErrorDetail);
 	});
 
 //////////////////////////////////////////////////////////////////////
@@ -523,19 +523,18 @@ Setup(() =>
 Teardown(() =>
 {
     // Executed AFTER the last task.
-    ErrorDetail=CheckForError(ErrorDetail);
+    CheckForError(ref ErrorDetail);
 });
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS
 //////////////////////////////////////////////////////////////////////
 
-List<string> CheckForError(List<string> errorDetail)
+void CheckForError(ref List<string> errorDetail)
 {
     if(errorDetail.Count != 0) 
         throw new Exception("One or more unit test failed, breaking the build.\n" 
                               + errorDetail.Aggregate((x,y) => x + "\n" + y));
     errorDetail.Clear();
-    return errorDetail;
 }
 
 void BuildFramework(string configuration, string framework)
@@ -640,7 +639,7 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
     }
 }
  
-void RunTest(FilePath exePath, DirectoryPath workingDir, string framework)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
 	int rc = StartProcess(
 	  MakeAbsolute(exePath), 
@@ -650,12 +649,12 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string framework)
 	  });
 	  	  
 	if (rc > 0)
-        ErrorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
+        errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
 	else if (rc < 0)
-        ErrorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
-void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
 {
 	int rc = StartProcess(
 	  MakeAbsolute(exePath), 
@@ -666,9 +665,9 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
 	  });
 	  
 	if (rc > 0)
-        ErrorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
+        errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
 	else if (rc < 0)
-        ErrorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
 void RunGitCommand(string arguments)
