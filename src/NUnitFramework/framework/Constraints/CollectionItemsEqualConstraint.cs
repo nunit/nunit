@@ -116,6 +116,12 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        internal CollectionItemsEqualConstraint Using(EqualityAdapter adapter)
+        {
+            comparer.ExternalComparers.Add(adapter);
+            return this;
+        }
+
         #endregion
 
         /// <summary>

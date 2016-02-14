@@ -27,18 +27,15 @@ using System.Reflection;
 
 #if PORTABLE
 using System.Linq;
-#elif NET_2_0
-namespace System.Runtime.CompilerServices
-{
-    /// <summary>
-    /// Enables compiling extension methods in .NET 2.0
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-    sealed class ExtensionAttribute : Attribute { }
-}
 #endif
 
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Compatibility
+#elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Compatibility
+#else
+namespace NUnit.Common.Compatibility
+#endif
 {
 #if !NET_4_5 && !PORTABLE
     /// <summary>
@@ -199,35 +196,31 @@ namespace NUnit.Framework.Compatibility
             type = type.GetTypeInfo().BaseType;
             if (type != null)
             {
-                // Skip statics on all base classes
                 var baseMembers = type.GetAllMembers();
-                members.AddRange(DiscardStatic(baseMembers));
+                members.AddRange(baseMembers.Where(NotPrivate));
             }
             return members;
         }
 
-        static IEnumerable<MemberInfo> DiscardStatic(IEnumerable<MemberInfo> members)
+        static bool NotPrivate(MemberInfo info)
         {
-            foreach(var info in members)
-            {
-                var einfo = info as EventInfo;
-                if (einfo != null && einfo.RaiseMethod.IsPublic && !einfo.RaiseMethod.IsStatic)
-                    yield return einfo;
+            var pinfo = info as PropertyInfo;
+            if (pinfo != null)
+                return pinfo.GetMethod.IsPrivate == false;
 
-                var finfo = info as FieldInfo;
-                if (finfo != null && finfo.IsPublic && !finfo.IsStatic)
-                    yield return finfo;
+            var finfo = info as FieldInfo;
+            if (finfo != null)
+                return finfo.IsPrivate == false;
 
-                var minfo = info as MethodBase;
-                if (minfo != null && minfo.IsPublic && !minfo.IsStatic)
-                    yield return minfo;
+            var minfo = info as MethodBase;
+            if (minfo != null)
+                return minfo.IsPrivate == false;
 
-                var pinfo = info as PropertyInfo;
-                if (pinfo != null && 
-                    ((pinfo.GetMethod != null && !pinfo.GetMethod.IsStatic) || (pinfo.SetMethod != null && !pinfo.SetMethod.IsStatic)) &&
-                    ((pinfo.GetMethod == null || !pinfo.GetMethod.IsPrivate) && (pinfo.SetMethod == null || !pinfo.SetMethod.IsPrivate)))
-                    yield return pinfo;
-            }
+            var einfo = info as EventInfo;
+            if (einfo != null)
+                return einfo.RaiseMethod.IsPrivate == false;
+
+            return true;
         }
 
         /// <summary>

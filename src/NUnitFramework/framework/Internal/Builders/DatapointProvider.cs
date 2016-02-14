@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Builders
                 return true;
 
             Type containingType = method.TypeInfo.Type;
-            foreach (MemberInfo member in containingType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
+            foreach (MemberInfo member in containingType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
                     GetTypeFromMemberInfo(member) == parameterType)
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Builders
             Type parameterType = parameter.ParameterType;
             Type fixtureType = parameter.Method.TypeInfo.Type;
 
-            foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
+            foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true))
                 {

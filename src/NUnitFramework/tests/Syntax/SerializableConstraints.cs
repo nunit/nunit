@@ -33,7 +33,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<binaryserializable>";
             staticSyntax = Is.BinarySerializable;
-            inheritedSyntax = Helper().BinarySerializable;
             builderSyntax = Builder().BinarySerializable;
         }
     }
@@ -47,7 +46,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<xmlserializable>";
             staticSyntax = Is.XmlSerializable;
-            inheritedSyntax = Helper().XmlSerializable;
             builderSyntax = Builder().XmlSerializable;
         }
     }

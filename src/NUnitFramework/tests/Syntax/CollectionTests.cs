@@ -34,7 +34,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<uniqueitems>";
             staticSyntax = Is.Unique;
-            inheritedSyntax = Helper().Unique;
             builderSyntax = Builder().Unique;
         }
     }
@@ -46,7 +45,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<ordered>";
             staticSyntax = Is.Ordered;
-            inheritedSyntax = Helper().Ordered;
             builderSyntax = Builder().Ordered;
         }
     }
@@ -58,7 +56,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<ordered descending>";
             staticSyntax = Is.Ordered.Descending;
-            inheritedSyntax = Helper().Ordered.Descending;
             builderSyntax = Builder().Ordered.Descending;
         }
     }
@@ -71,7 +68,6 @@ namespace NUnit.Framework.Syntax
             IComparer comparer = ObjectComparer.Default;
             parseTree = "<ordered NUnit.TestUtilities.Comparers.ObjectComparer>";
             staticSyntax = Is.Ordered.Using(comparer);
-            inheritedSyntax = Helper().Ordered.Using(comparer);
             builderSyntax = Builder().Ordered.Using(comparer);
         }
     }
@@ -84,7 +80,6 @@ namespace NUnit.Framework.Syntax
             IComparer comparer = ObjectComparer.Default;
             parseTree = "<ordered descending NUnit.TestUtilities.Comparers.ObjectComparer>";
             staticSyntax = Is.Ordered.Using(comparer).Descending;
-            inheritedSyntax = Helper().Ordered.Using(comparer).Descending;
             builderSyntax = Builder().Ordered.Using(comparer).Descending;
         }
     }
@@ -96,7 +91,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<orderedby SomePropertyName>";
             staticSyntax = Is.Ordered.By("SomePropertyName");
-            inheritedSyntax = Helper().Ordered.By("SomePropertyName");
             builderSyntax = Builder().Ordered.By("SomePropertyName");
         }
     }
@@ -108,7 +102,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<orderedby SomePropertyName descending>";
             staticSyntax = Is.Ordered.By("SomePropertyName").Descending;
-            inheritedSyntax = Helper().Ordered.By("SomePropertyName").Descending;
             builderSyntax = Builder().Ordered.By("SomePropertyName").Descending;
         }
     }
@@ -120,7 +113,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<orderedby SomePropertyName NUnit.TestUtilities.Comparers.ObjectComparer>";
             staticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
-            inheritedSyntax = Helper().Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
             builderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
         }
     }
@@ -132,7 +124,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<orderedby SomePropertyName descending NUnit.TestUtilities.Comparers.ObjectComparer>";
             staticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
-            inheritedSyntax = Helper().Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
             builderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
         }
     }
@@ -144,7 +135,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<contains 42>";
             staticSyntax = Has.Member(42);
-            inheritedSyntax = Helper().Contains(42);
             builderSyntax = Builder().Contains(42);
         }
     }
@@ -157,7 +147,6 @@ namespace NUnit.Framework.Syntax
             int[] ints = new int[] { 1, 2, 3 };
             parseTree = "<subsetof System.Int32[]>";
             staticSyntax = Is.SubsetOf(ints);
-            inheritedSyntax = Helper().SubsetOf(ints);
             builderSyntax = Builder().SubsetOf(ints);
         }
     }
@@ -170,7 +159,6 @@ namespace NUnit.Framework.Syntax
             int[] ints = new int[] { 1, 2, 3 };
             parseTree = "<equivalent System.Int32[]>";
             staticSyntax = Is.EquivalentTo(ints);
-            inheritedSyntax = Helper().EquivalentTo(ints);
             builderSyntax = Builder().EquivalentTo(ints);
         }
     }

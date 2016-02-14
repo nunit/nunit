@@ -21,43 +21,51 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.Tests
 {
     public class SlowTests
     {
-        const int DELAY = 100;
+        const int DELAY = 1000;
         
         public class AAA
         {
             [Test]
-            public void Test1() { Thread.Sleep(DELAY); }
+            public void Test1() { SlowTests.Delay(); }
             [Test]
-            public void Test2() { Thread.Sleep(DELAY); }
+            public void Test2() { SlowTests.Delay(); }
             [Test]
-            public void Test3() { Thread.Sleep(DELAY); }
+            public void Test3() { SlowTests.Delay(); }
         }
 
         public class BBB
         {
             [Test]
-            public void Test1() { Thread.Sleep(DELAY); }
+            public void Test1() { SlowTests.Delay(); }
             [Test]
-            public void Test2() { Thread.Sleep(DELAY); }
+            public void Test2() { SlowTests.Delay(); }
             [Test]
-            public void Test3() { Thread.Sleep(DELAY); }
+            public void Test3() { SlowTests.Delay(); }
         }
 
         public class CCC
         {
             [Test]
-            public void Test1() { Thread.Sleep(DELAY); }
+            public void Test1() { SlowTests.Delay(); }
             [Test]
-            public void Test2() { Thread.Sleep(DELAY); }
+            public void Test2() { SlowTests.Delay(); }
             [Test]
-            public void Test3() { Thread.Sleep(DELAY); }
+            public void Test3() { SlowTests.Delay(); }
+        }
+
+        private static void Delay()
+        {
+#if PORTABLE
+            System.Threading.Tasks.Task.Delay(DELAY);
+#else
+            System.Threading.Thread.Sleep(DELAY);
+#endif
         }
     }
 }

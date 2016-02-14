@@ -197,6 +197,9 @@ namespace NUnit.Engine.Services
             Guid agentId = Guid.NewGuid();
             string arglist = agentId.ToString() + " " + ServerUrl + " " + agentArgs;
 
+            if (targetRuntime.ClrVersion.Build < 0)
+                targetRuntime = RuntimeFramework.GetBestAvailableFramework(targetRuntime);
+
             switch( targetRuntime.Runtime )
             {
                 case RuntimeType.Mono:
@@ -205,17 +208,14 @@ namespace NUnit.Engine.Services
                     if (debugTests || debugAgent) monoOptions += " --debug";
                     p.StartInfo.Arguments = string.Format("{0} \"{1}\" {2}", monoOptions, agentExePath, arglist);
                     break;
+
                 case RuntimeType.Net:
                     p.StartInfo.FileName = agentExePath;
-
-                    if (targetRuntime.ClrVersion.Build < 0)
-                        targetRuntime = RuntimeFramework.GetBestAvailableFramework(targetRuntime);
-
                     string envVar = "v" + targetRuntime.ClrVersion.ToString(3);
                     p.StartInfo.EnvironmentVariables["COMPLUS_Version"] = envVar;
-
                     p.StartInfo.Arguments = arglist;
                     break;
+
                 default:
                     p.StartInfo.FileName = agentExePath;
                     p.StartInfo.Arguments = arglist;
