@@ -246,11 +246,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public virtual object Fixture { get; set; }
 
-        /// <summary>
-        /// optional order in which to run the test.
-        /// </summary>
-        public double TestOrder { get; set; }
-
         #endregion
 
         #region Other Public Properties
