@@ -6,7 +6,7 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-    public class OrderAttribute : NUnitAttribute, IImplyFixture, IApplyToTest
+    public class OrderAttribute : NUnitAttribute, IApplyToTest
     {
           /// <summary>
          /// Defines the order that the test will run in
