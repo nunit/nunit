@@ -104,8 +104,8 @@ namespace NUnit.Framework.Internal
                 {
                     var xKey = 0;
                     var yKey = 0;
-                    if (x.Properties.ContainsKey("order")) int.TryParse(x.Properties["order"][0].ToString(), out xKey);
-                    if (y.Properties.ContainsKey("order")) int.TryParse(y.Properties["order"][0].ToString(), out yKey);
+                    if (x.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(x.Properties[PropertyNames.Order][0].ToString(), out xKey);
+                    if (y.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(y.Properties[PropertyNames.Order][0].ToString(), out yKey);
                     return xKey.CompareTo(yKey) != 0
                     ? xKey.CompareTo(yKey) : x.Name.CompareTo(y.Name); ;
                 });
