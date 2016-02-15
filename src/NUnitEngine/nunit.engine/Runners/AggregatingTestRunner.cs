@@ -72,9 +72,6 @@ namespace NUnit.Engine.Runners
 
             foreach (var subPackage in TestPackage.SubPackages)
             {
-                if (ProjectService.CanLoadFrom(subPackage.FullName))
-                    ProjectService.ExpandProjectPackage(subPackage);
-
                 var runner = CreateRunner(subPackage);
                 _runners.Add(runner);
                 results.Add(runner.Load());
