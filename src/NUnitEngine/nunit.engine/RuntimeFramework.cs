@@ -645,7 +645,7 @@ namespace NUnit.Engine
                         framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 5));
                         frameworks.Add(framework);
                     }
-                    return;
+                    return;     //If full profile found, return and don't check for client profile
                 }
             }
         }
