@@ -94,50 +94,6 @@ namespace NUnit.Framework.Internal
         #region Public Methods
 
         /// <summary>
-        /// Sorts tests under this suite.
-        /// </summary>
-        public void Sort()
-        {
-            if (!MaintainTestOrder)
-            {
-                this.tests.Sort(delegate (ITest x, ITest y)
-                {
-                    var xKey = 0;
-                    var yKey = 0;
-                    if (x.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(x.Properties[PropertyNames.Order][0].ToString(), out xKey);
-                    if (y.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(y.Properties[PropertyNames.Order][0].ToString(), out yKey);
-                    return xKey.CompareTo(yKey) != 0
-                    ? xKey.CompareTo(yKey) : x.Name.CompareTo(y.Name); ;
-                });
-
-                foreach (Test test in Tests)
-                {
-                    TestSuite suite = test as TestSuite;
-                    if (suite != null)
-                        suite.Sort();
-                }
-            }
-        }
-
-#if false
-        /// <summary>
-        /// Sorts tests under this suite using the specified comparer.
-        /// </summary>
-        /// <param name="comparer">The comparer.</param>
-        public void Sort(IComparer comparer)
-        {
-            this.tests.Sort(comparer);
-
-            foreach( Test test in Tests )
-            {
-                TestSuite suite = test as TestSuite;
-                if ( suite != null )
-                    suite.Sort(comparer);
-            }
-        }
-#endif
-
-        /// <summary>
         /// Adds a test to the suite.
         /// </summary>
         /// <param name="test">The test.</param>

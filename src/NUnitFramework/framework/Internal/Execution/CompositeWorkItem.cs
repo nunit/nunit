@@ -232,12 +232,29 @@ namespace NUnit.Framework.Internal.Execution
         private void CreateChildWorkItems()
         {
             _children = new List<WorkItem>();
-
+            
             foreach (ITest test in _suite.Tests)
                 if (_childFilter.Pass(test))
                     _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
+            Sort();
         }
 
+        /// <summary>
+        /// Sorts tests under this suite.
+        /// </summary>
+        private void Sort()
+        {
+                this._children.Sort(delegate (WorkItem x, WorkItem y)
+                {
+                    var xKey = 0;
+                    var yKey = 0;
+                    if (x.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(x.Test.Properties[PropertyNames.Order][0].ToString(), out xKey);
+                    if (y.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(y.Test.Properties[PropertyNames.Order][0].ToString(), out yKey);
+                    return xKey.CompareTo(yKey) != 0
+                    ? xKey.CompareTo(yKey) : x.Test.Name.CompareTo(y.Test.Name); ;
+                });
+            
+        }
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.Filter(stackTrace));

@@ -16,14 +16,15 @@ namespace NUnit.Framework.Tests.Attributes
         public void CheckOrderIsCorrect()
         {
             var testFixt = TestBuilder.MakeFixture(typeof (TestCaseOrderAttributeFixture));
-            testFixt.Sort();// need to manually call this method to mimic real world conditions
-            Assert.AreEqual(testFixt.Tests.Count, 5);
-            Assert.AreEqual(testFixt.Tests[0].Name, "A_NoOrderTestLowLetter");
-            Assert.AreEqual(testFixt.Tests[1].Name, "D_NoOrderTest");
-            Assert.AreEqual(testFixt.Tests[2].Name, "Y_FirstTest");
-            Assert.AreEqual(testFixt.Tests[3].Name, "Y_SecondTest");
-            Assert.AreEqual(testFixt.Tests[4].Name, "Z_ThirdTestWithSameOrderAsSecond");
+            var res = TestBuilder.RunTestSuite(testFixt,null);
             
+            Assert.AreEqual(res.Children.Count, 5);
+            Assert.AreEqual(res.Children[0].Name, "A_NoOrderTestLowLetter");
+            Assert.AreEqual(res.Children[1].Name, "D_NoOrderTest");
+            Assert.AreEqual(res.Children[2].Name, "Y_FirstTest");
+            Assert.AreEqual(res.Children[3].Name, "Y_SecondTest");
+            Assert.AreEqual(res.Children[4].Name, "Z_ThirdTestWithSameOrderAsSecond");
         }
+        
     }
 }
