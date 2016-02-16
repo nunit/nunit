@@ -114,7 +114,7 @@ namespace NUnit.Framework.Api
                 var assembly = AssemblyHelper.Load(assemblyName);
                 testAssembly = Build(assembly, assemblyName, options);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 testAssembly = new TestAssembly(assemblyName);
                 testAssembly.RunState = RunState.NotRunnable;
@@ -242,6 +242,10 @@ namespace NUnit.Framework.Api
 #endif
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 #endif
+
+            // TODO: Make this an option? Add Option to sort assemblies as well?
+            testAssembly.Sort();
+
             return testAssembly;
         }
         #endregion

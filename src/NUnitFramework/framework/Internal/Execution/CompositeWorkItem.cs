@@ -236,22 +236,21 @@ namespace NUnit.Framework.Internal.Execution
             foreach (ITest test in _suite.Tests)
                 if (_childFilter.Pass(test))
                     _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
-            Sort();
+            SortChildren();
         }
 
         /// <summary>
         /// Sorts tests under this suite.
         /// </summary>
-        private void Sort()
+        private void SortChildren()
         {
-                this._children.Sort(delegate (WorkItem x, WorkItem y)
+                _children.Sort(delegate (WorkItem x, WorkItem y)
                 {
-                    var xKey = 0;
-                    var yKey = 0;
+                    var xKey = int.MaxValue;
+                    var yKey = int.MaxValue;
                     if (x.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(x.Test.Properties[PropertyNames.Order][0].ToString(), out xKey);
                     if (y.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(y.Test.Properties[PropertyNames.Order][0].ToString(), out yKey);
-                    return xKey.CompareTo(yKey) != 0
-                    ? xKey.CompareTo(yKey) : x.Test.Name.CompareTo(y.Test.Name); ;
+                    return xKey.CompareTo(yKey);
                 });
             
         }

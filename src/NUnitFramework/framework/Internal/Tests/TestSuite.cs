@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite( string name ) : base( name ) 
+        public TestSuite(string name) : base(name)
         {
             Arguments = new object[0];
         }
@@ -63,9 +63,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="parentSuiteName">Name of the parent suite.</param>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite( string parentSuiteName, string name ) 
-            : base( parentSuiteName, name ) 
-        { 
+        public TestSuite(string parentSuiteName, string name)
+            : base(parentSuiteName, name)
+        {
             Arguments = new object[0];
         }
 
@@ -94,10 +94,46 @@ namespace NUnit.Framework.Internal
         #region Public Methods
 
         /// <summary>
+        /// Sorts tests under this suite.
+        /// </summary>
+        public void Sort()
+        {
+            if (!MaintainTestOrder)
+            {
+                this.tests.Sort();
+
+                foreach (Test test in Tests)
+                {
+                    TestSuite suite = test as TestSuite;
+                    if (suite != null)
+                        suite.Sort();
+                }
+            }
+        }
+
+#if false
+        /// <summary>
+        /// Sorts tests under this suite using the specified comparer.
+        /// </summary>
+        /// <param name="comparer">The comparer.</param>
+        public void Sort(IComparer comparer)
+        {
+            this.tests.Sort(comparer);
+
+            foreach( Test test in Tests )
+            {
+                TestSuite suite = test as TestSuite;
+                if ( suite != null )
+                    suite.Sort(comparer);
+            }
+        }
+#endif
+
+        /// <summary>
         /// Adds a test to the suite.
         /// </summary>
         /// <param name="test">The test.</param>
-        public void Add( Test test ) 
+        public void Add(Test test)
         {
             test.Parent = this;
             tests.Add(test);
@@ -111,7 +147,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>The list of child tests</value>
-        public override IList<ITest> Tests 
+        public override IList<ITest> Tests
         {
             get { return tests; }
         }
@@ -127,7 +163,7 @@ namespace NUnit.Framework.Internal
             {
                 int count = 0;
 
-                foreach(Test test in Tests)
+                foreach (Test test in Tests)
                 {
                     count += test.TestCaseCount;
                 }

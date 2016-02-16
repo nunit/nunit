@@ -37,7 +37,6 @@ namespace NUnit.TestData
         }
 
         [Test]
-        [Order(0)]
         public void A_NoOrderTestLowLetter()
         {
             Assert.Pass("A_NoOrderTestLowLetter");
