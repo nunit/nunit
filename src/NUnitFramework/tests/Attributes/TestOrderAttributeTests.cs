@@ -17,14 +17,12 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var testFixt = TestBuilder.MakeFixture(typeof (TestCaseOrderAttributeFixture));
             
-            var res = TestBuilder.RunTestSuite(testFixt,null,ParallelScope.Fixtures);
+            var res = TestBuilder.GenerateWorkItem(testFixt,null,ParallelScope.Fixtures);
             
             Assert.AreEqual(res.Children.Count, 5);
-            Assert.AreEqual(res.Children[0].Name, "Y_FirstTest");
-            Assert.AreEqual(res.Children[1].Name, "Y_SecondTest");
-            Assert.AreEqual(res.Children[2].Name, "Z_ThirdTestWithSameOrderAsSecond");
-            Assert.AreEqual(res.Children[4].Name, "A_NoOrderTestLowLetter");
-            Assert.AreEqual(res.Children[3].Name, "D_NoOrderTest");
+            Assert.AreEqual(res.Children[0].Test.Name, "Y_FirstTest");
+            Assert.AreEqual(res.Children[1].Test.Name, "Y_SecondTest");
+            Assert.AreEqual(res.Children[2].Test.Name, "Z_ThirdTestWithSameOrderAsSecond");
         }
         
     }

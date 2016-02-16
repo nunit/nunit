@@ -159,11 +159,13 @@ namespace NUnit.Tests
             [Test]
             [Ignore("ignoring this test method for now")]
             [Category("Foo")]
+            [Order(10)]
             public void MockTest4()
             {}
 
             [Test, Explicit]
             [Category( "Special" )]
+            [Order(11)]
             public void ExplicitlyRunTest()
             {}
 

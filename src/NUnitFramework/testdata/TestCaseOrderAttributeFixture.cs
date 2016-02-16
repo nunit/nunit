@@ -8,7 +8,13 @@ namespace NUnit.TestData
     [TestFixture]
     public class TestCaseOrderAttributeFixture
     {
-        
+        [Test]
+        [Order(3)]
+        public void Z_ThirdTestWithSameOrderAsSecond()
+        {
+            Assert.Pass("Z_ThirdTestWithSameOrderAsSecond");
+        }
+
         [Test]
         [Order(1)]
         public void Y_FirstTest()
@@ -23,12 +29,6 @@ namespace NUnit.TestData
             Assert.Pass("Y_SecondTest");
         }
 
-        [Test]
-        [Order(2)]
-        public void Z_ThirdTestWithSameOrderAsSecond()
-        {
-            Assert.Pass("Z_ThirdTestWithSameOrderAsSecond");
-        }
 
         [Test]
         public void D_NoOrderTest()

@@ -115,13 +115,8 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTestSuite(TestSuite suite, object testObject)
         {
-            return RunTestSuite(suite, testObject, null);
-        }
-        public static ITestResult RunTestSuite(TestSuite suite, object testObject, ParallelScope? parallelScope)
-        {
             TestExecutionContext context = new TestExecutionContext();
             context.TestObject = testObject;
-            if(parallelScope != null) context.ParallelScope = (ParallelScope)parallelScope;
 
             WorkItem work = WorkItem.CreateWorkItem(suite, TestFilter.Empty);
             work.InitializeContext(context);
@@ -138,6 +133,29 @@ namespace NUnit.TestUtilities
             }
 
             return work.Result;
+        }
+
+        public static CompositeWorkItem GenerateWorkItem(TestSuite suite, object testObject, ParallelScope? parallelScope)
+        {
+            TestExecutionContext context = new TestExecutionContext();
+            context.TestObject = testObject;
+            if(parallelScope != null) context.ParallelScope = (ParallelScope)parallelScope;
+
+            CompositeWorkItem work = (CompositeWorkItem)WorkItem.CreateWorkItem(suite, TestFilter.Empty);
+            work.InitializeContext(context);
+            work.Execute();
+
+            // TODO: Replace with an event - but not while method is static
+            while (work.State != WorkItemState.Complete)
+            {
+#if PORTABLE
+                System.Threading.Tasks.Task.Delay(1);
+#else
+                Thread.Sleep(1);
+#endif
+            }
+
+            return work;
         }
 
         public static ITestResult RunTestCase(Type type, string methodName)

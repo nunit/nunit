@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Execution
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
 
-        private List<WorkItem> _children;
+        public List<WorkItem> Children;
 
         private CountdownEvent _childTestCountdown;
 
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
 
                             CreateChildWorkItems();
 
-                            if (_children.Count > 0)
+                            if (Children.Count > 0)
                             {
                                 PerformOneTimeSetUp();
 
@@ -204,13 +204,13 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunChildren()
         {
-            int childCount = _children.Count;
+            int childCount = Children.Count;
             if (childCount == 0)
                 throw new InvalidOperationException("RunChildren called but item has no children");
 
             _childTestCountdown = new CountdownEvent(childCount);
 
-            foreach (WorkItem child in _children)
+            foreach (WorkItem child in Children)
             {
                 if (CheckForCancellation())
                     break;
@@ -231,11 +231,11 @@ namespace NUnit.Framework.Internal.Execution
 
         private void CreateChildWorkItems()
         {
-            _children = new List<WorkItem>();
+            Children = new List<WorkItem>();
             
             foreach (ITest test in _suite.Tests)
                 if (_childFilter.Pass(test))
-                    _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
+                    Children.Add(WorkItem.CreateWorkItem(test, _childFilter));
             SortChildren();
         }
 
@@ -244,15 +244,14 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void SortChildren()
         {
-                _children.Sort(delegate (WorkItem x, WorkItem y)
-                {
-                    var xKey = int.MaxValue;
-                    var yKey = int.MaxValue;
-                    if (x.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(x.Test.Properties[PropertyNames.Order][0].ToString(), out xKey);
-                    if (y.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(y.Test.Properties[PropertyNames.Order][0].ToString(), out yKey);
-                    return xKey.CompareTo(yKey);
-                });
-            
+            Children.Sort(delegate (WorkItem x, WorkItem y)
+            {
+                var xKey = int.MaxValue;
+                var yKey = int.MaxValue;
+                if (x.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(x.Test.Properties[PropertyNames.Order][0].ToString(), out xKey);
+                if (y.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(y.Test.Properties[PropertyNames.Order][0].ToString(), out yKey);
+                return xKey.CompareTo(yKey);
+            });
         }
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
@@ -356,10 +355,10 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (cancelLock)
             {
-                if (_children == null)
+                if (Children == null)
                     return;
 
-                foreach (var child in _children)
+                foreach (var child in Children)
                 {
                     var ctx = child.Context;
                     if (ctx != null)
