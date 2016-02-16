@@ -115,8 +115,13 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTestSuite(TestSuite suite, object testObject)
         {
+            return RunTestSuite(suite, testObject, null);
+        }
+        public static ITestResult RunTestSuite(TestSuite suite, object testObject, ParallelScope? parallelScope)
+        {
             TestExecutionContext context = new TestExecutionContext();
             context.TestObject = testObject;
+            if(parallelScope != null) context.ParallelScope = (ParallelScope)parallelScope;
 
             WorkItem work = WorkItem.CreateWorkItem(suite, TestFilter.Empty);
             work.InitializeContext(context);

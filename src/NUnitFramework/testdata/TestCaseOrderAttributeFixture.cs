@@ -6,13 +6,11 @@ using NUnit.Framework;
 namespace NUnit.TestData
 {
     [TestFixture]
-    [Parallelizable(ParallelScope.None)]
     public class TestCaseOrderAttributeFixture
     {
         
         [Test]
         [Order(1)]
-        [Parallelizable(ParallelScope.None)]
         public void Y_FirstTest()
         {
             Assert.Pass("Y_FirstTest");
@@ -20,7 +18,6 @@ namespace NUnit.TestData
 
         [Test]
         [Order(2)]
-        [Parallelizable(ParallelScope.None)]
         public void Y_SecondTest()
         {
             Assert.Pass("Y_SecondTest");
@@ -28,14 +25,12 @@ namespace NUnit.TestData
 
         [Test]
         [Order(2)]
-        [Parallelizable(ParallelScope.None)]
         public void Z_ThirdTestWithSameOrderAsSecond()
         {
             Assert.Pass("Z_ThirdTestWithSameOrderAsSecond");
         }
 
         [Test]
-        [Parallelizable(ParallelScope.None)]
         public void D_NoOrderTest()
         {
             Assert.Pass("D_NoOrderTest");
@@ -43,7 +38,6 @@ namespace NUnit.TestData
 
         [Test]
         [Order(0)]
-        [Parallelizable(ParallelScope.None)]
         public void A_NoOrderTestLowLetter()
         {
             Assert.Pass("A_NoOrderTestLowLetter");

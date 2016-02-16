@@ -16,7 +16,8 @@ namespace NUnit.Framework.Tests.Attributes
         public void CheckOrderIsCorrect()
         {
             var testFixt = TestBuilder.MakeFixture(typeof (TestCaseOrderAttributeFixture));
-            var res = TestBuilder.RunTestSuite(testFixt,null);
+            
+            var res = TestBuilder.RunTestSuite(testFixt,null,ParallelScope.Fixtures);
             
             Assert.AreEqual(res.Children.Count, 5);
             Assert.AreEqual(res.Children[0].Name, "A_NoOrderTestLowLetter");
