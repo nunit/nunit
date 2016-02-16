@@ -190,10 +190,10 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Tests Not Run",
                 "",
-                "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
-                "ignoring this test method for now",
+                "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitlyRunTest",
                 "",
-                "2) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitlyRunTest",
+                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
+                "ignoring this test method for now",
                 ""
             };
 

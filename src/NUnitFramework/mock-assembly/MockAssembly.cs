@@ -141,10 +141,12 @@ namespace NUnit.Tests
             { Assert.Pass("Succeeded!"); }
 
             [Test]
+            [Order(1)]
             protected static void MockTest5()
             {}
 
             [Test]
+            [Order(2)]
             public void FailingTest()
             {
                 Assert.Fail("Intentional failure");
@@ -166,6 +168,7 @@ namespace NUnit.Tests
             {}
 
             [Test]
+            [Order(3)]
             public void NotRunnableTest( int a, int b)
             {
             }
@@ -177,6 +180,7 @@ namespace NUnit.Tests
             }
 
             [Test]
+            [Order(4)]
             public void TestWithException()
             {
                 MethodThrowsException();
