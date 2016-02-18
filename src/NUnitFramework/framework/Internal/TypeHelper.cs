@@ -70,19 +70,39 @@ namespace NUnit.Framework.Internal
                 index = name.LastIndexOf('.');
                 if (index >= 0) name = name.Substring(index+1);
 
-                index = name.IndexOf('`');
-                if (index >= 0) name = name.Substring(0, index);
+                var genericArguments = type.GetGenericArguments();
+                var currentArgument = 0;
 
-                StringBuilder sb = new StringBuilder(name);
+                StringBuilder sb = new StringBuilder();
 
-                sb.Append("<");
-                int cnt = 0;
-                foreach (Type t in type.GetGenericArguments())
+                bool firstClassSeen = false;
+                foreach (string nestedClass in name.Split('+'))
                 {
-                    if (cnt++ > 0) sb.Append(",");
-                    sb.Append(GetDisplayName(t));
+                    if (firstClassSeen)
+                        sb.Append("+");
+
+                    firstClassSeen = true;
+
+                    index = nestedClass.IndexOf('`');
+                    if (index >= 0)
+                    {
+                        var nestedClassName = nestedClass.Substring(0, index);
+                        sb.Append(nestedClassName);
+                        sb.Append("<");
+
+                        var argumentCount = Int32.Parse(nestedClass.Substring(index + 1));
+                        for (int i = 0; i < argumentCount; i++)
+                        {
+                            if (i > 0)
+                                sb.Append(",");
+
+                            sb.Append(GetDisplayName(genericArguments[currentArgument++]));
+                        }
+                        sb.Append(">");
+                    }
+                    else
+                        sb.Append(nestedClass);
                 }
-                sb.Append(">");
 
                 return sb.ToString();
             }

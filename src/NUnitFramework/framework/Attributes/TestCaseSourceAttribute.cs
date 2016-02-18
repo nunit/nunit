@@ -39,6 +39,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
     {
+
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         #region Constructors
@@ -52,6 +53,19 @@ namespace NUnit.Framework
             this.SourceName = sourceName;
         }
 
+        /// <summary>
+        /// Construct with a Type and name
+        /// </summary>
+        /// <param name="sourceType">The Type that will provide data</param>
+        /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
+        /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method. 
+        ///                     If the source name is a field or property has no effect.</param>
+        public TestCaseSourceAttribute(Type sourceType, string sourceName, object[] methodParams)
+        {
+            this.MethodParams = methodParams;
+            this.SourceType = sourceType;
+            this.SourceName = sourceName;
+        }
         /// <summary>
         /// Construct with a Type and name
         /// </summary>
@@ -75,7 +89,11 @@ namespace NUnit.Framework
         #endregion
 
         #region Properties
-
+        /// <summary>
+        /// A set of parameters passed to the method, works only if the Source Name is a method. 
+        /// If the source name is a field or property has no effect.
+        /// </summary>
+        public object[] MethodParams { get; private set; }
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
@@ -213,7 +231,7 @@ namespace NUnit.Framework
 
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)
-                return Reflect.Construct(sourceType) as IEnumerable;
+                return Reflect.Construct(sourceType, null) as IEnumerable;
 
             MemberInfo[] members = sourceType.GetMember(SourceName,
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
@@ -225,32 +243,49 @@ namespace NUnit.Framework
                 var field = member as FieldInfo;
                 if (field != null)
                     return field.IsStatic
-                        ? (IEnumerable)field.GetValue(null)
-                        : SourceMustBeStaticError();
+                        ? (MethodParams == null ? (IEnumerable)field.GetValue(null) 
+                                                : ReturnErrorAsParameter(ParamGivenToField))
+                        : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var property = member as PropertyInfo;
                 if (property != null)
                     return property.GetGetMethod(true).IsStatic
-                        ? (IEnumerable)property.GetValue(null, null)
-                        : SourceMustBeStaticError();
+                        ? (MethodParams == null ? (IEnumerable)property.GetValue(null, null) 
+                                                : ReturnErrorAsParameter(ParamGivenToProperty))
+                        : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var m = member as MethodInfo;
-                if (m != null)
+                
+
+                    if (m != null)
                     return m.IsStatic
-                        ? (IEnumerable)m.Invoke(null, null)
-                        : SourceMustBeStaticError();
+                        ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length ? (IEnumerable)m.Invoke(null, MethodParams) 
+                                                              : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
+                        : ReturnErrorAsParameter(SourceMustBeStatic);
             }
 
             return null;
         }
-
-        private static IEnumerable SourceMustBeStaticError()
+        
+        private static IEnumerable ReturnErrorAsParameter(string errorMessage)
         {
             var parms = new TestCaseParameters();
             parms.RunState = RunState.NotRunnable;
-            parms.Properties.Set(PropertyNames.SkipReason, "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.");
+            parms.Properties.Set(PropertyNames.SkipReason, errorMessage);
             return new TestCaseParameters[] { parms };
         }
+
+        private const string SourceMustBeStatic =
+            "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.";
+        private const string ParamGivenToField = "You have specified a data source field but also given a set of parameters. Fields cannot take parameters, " +
+                                                 "please revise the 3rd parameter passed to the TestCaseSourceAttribute and either remove " +
+                                                 "it or specify a method.";
+        private const string ParamGivenToProperty = "You have specified a data source property but also given a set of parameters. " +
+                                                    "Properties cannot take parameters, please revise the 3rd parameter passed to the " +
+                                                    "TestCaseSource attribute and either remove it or specify a method.";
+        private const string NumberOfArgsDoesNotMatch = "You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
+                                                        ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
+                                                        "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.";
 
         #endregion
     }
