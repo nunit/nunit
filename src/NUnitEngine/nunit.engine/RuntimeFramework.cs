@@ -53,6 +53,19 @@ namespace NUnit.Engine
     }
 
     /// <summary>
+    /// Enumeration identifying profile of .NET Framework
+    /// </summary>
+    public enum Profile
+    {
+        /// <summary>Profile Unspecified</summary>
+        Unspecified,
+        /// <summary>Client Profile</summary>
+        Client,
+        /// <summary>Full Profile</summary>
+        Full
+    }
+
+    /// <summary>
     /// RuntimeFramework represents a particular version
     /// of a common language runtime implementation.
     /// </summary>
@@ -92,6 +105,7 @@ namespace NUnit.Engine
                 InitFromClrVersion(version);
 
             DisplayName = GetDefaultDisplayName(runtime, version);
+            Profile = Profile.Unspecified;
         }
 
         private void InitFromFrameworkVersion(Version version)
@@ -295,6 +309,11 @@ namespace NUnit.Engine
         /// The CLR version for this runtime framework
         /// </summary>
         public Version ClrVersion { get; private set; }
+
+        /// <summary>
+        /// The .NET Framework Profile for this framwork, where relevant
+        /// </summary>
+        public Profile Profile { get; private set; }
 
         /// <summary>
         /// Return true if any CLR version may be used in
@@ -608,24 +627,25 @@ namespace NUnit.Engine
         // microsoft will do in the future
         private static void AppendDotNetFourFrameworkVersions(List<RuntimeFramework> frameworks, RegistryKey versionKey)
         {
-            foreach (string profile in new string[] { "Full", "Client" })
+            foreach (Profile profile in new Profile[] { Profile.Full, Profile.Client })
             {
-                var profileKey = versionKey.OpenSubKey(profile);
+                var profileKey = versionKey.OpenSubKey(profile.ToString());
                 if (profileKey == null) continue;
                 
                 if (CheckInstallDword(profileKey))
                 {
                     var framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 0));
-                    framework.DisplayName += " - " + profile;
+                    framework.DisplayName += " - " + profile.ToString();
+                    framework.Profile = profile;
                     frameworks.Add(framework);
 
                     var release = (int)profileKey.GetValue("Release", 0);
                     if (release > 0)
                     {
                         framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 5));
-                        framework.DisplayName += " - " + profile;
                         frameworks.Add(framework);
                     }
+                    return;     //If full profile found, return and don't check for client profile
                 }
             }
         }

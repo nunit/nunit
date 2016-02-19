@@ -246,7 +246,7 @@ namespace NUnit.Engine.Services
                     ProcessAddinsFile(startDir, file.FullName);
             else
                 foreach (var file in startDir.GetFiles("*.dll"))
-                    FindExtensionsInAssembly(file.FullName);
+                    FindExtensionsInAssembly(file.FullName, false);
         }
 
         /// <summary>
@@ -272,14 +272,14 @@ namespace NUnit.Engine.Services
 
                     if (line.Contains("*"))
                         foreach (var file in baseDir.GetFiles(line))
-                            FindExtensionsInAssembly(file.FullName);
+                            FindExtensionsInAssembly(file.FullName, true);
                     else
                     {
                         var path = Path.Combine(baseDir.FullName, line);
                         if (Directory.Exists(path))
                             FindExtensionsInDirectory(new DirectoryInfo(path));
                         else if (File.Exists(path))
-                            FindExtensionsInAssembly(path);
+                            FindExtensionsInAssembly(path, true);
                     }
                 }
             }
@@ -290,13 +290,27 @@ namespace NUnit.Engine.Services
         /// For each extension, create an ExtensionNode and link it to the
         /// correct ExtensionPoint.
         /// </summary>
-        private void FindExtensionsInAssembly(string assemblyName)
+        private void FindExtensionsInAssembly(string assemblyName, bool specifiedInConfig)
         {
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(Path.GetDirectoryName(assemblyName));
             resolver.AddSearchDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             var parameters = new ReaderParameters() { AssemblyResolver = resolver };
-            var module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
+
+            ModuleDefinition module;
+
+            try
+            {
+                module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
+            }
+            //Thrown if assembly is unmanaged
+            catch (BadImageFormatException e)
+            {
+                if (specifiedInConfig)
+                    throw new NUnitEngineException(String.Format("Specified extension {0} could not be read", assemblyName), e);
+                else return;
+            }
+
             foreach (var type in module.GetTypes())
             {
                 CustomAttribute extensionAttr = type.GetAttribute("NUnit.Engine.Extensibility.ExtensionAttribute");
