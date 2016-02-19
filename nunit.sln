@@ -66,16 +66,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{A972031D
 	ProjectSection(SolutionItems) = preProject
 		nuget\install.ps1 = nuget\install.ps1
 		nuget\nunit-project-loader.nuspec = nuget\nunit-project-loader.nuspec
+		nuget\nunit-v2-result-writer.nuspec = nuget\nunit-v2-result-writer.nuspec
 		nuget\nunit.console.nuspec = nuget\nunit.console.nuspec
 		nuget\nunit.engine.nuspec = nuget\nunit.engine.nuspec
 		nuget\nunit.nuget.addins = nuget\nunit.nuget.addins
 		nuget\nunit.nuspec = nuget\nunit.nuspec
 		nuget\nunit.runners.nuspec = nuget\nunit.runners.nuspec
+		nunit.v2.driver.addins = nunit.v2.driver.addins
+		nuget\nunit.v2.driver.nuspec = nuget\nunit.v2.driver.nuspec
 		nuget\nunitlite.nuspec = nuget\nunitlite.nuspec
 		nuget\nunitliteSL.nuspec = nuget\nunitliteSL.nuspec
 		nuget\nunitSL.nuspec = nuget\nunitSL.nuspec
 		nuget\Program.cs = nuget\Program.cs
 		nuget\Program.vb = nuget\Program.vb
+		nuget\vs-project-loader.nuspec = nuget\vs-project-loader.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitEngine", "NUnitEngine", "{31B45C4C-206F-4F31-9CC6-33BF11DFEE39}"
