@@ -166,10 +166,7 @@ Task("BuildCppTestFiles")
 //////////////////////////////////////////////////////////////////////
 
 Task("CheckForError")
-    .Does(() => 
-    {
-    CheckForError(ref ErrorDetail);
-    });
+    .Does(() => CheckForError(ref ErrorDetail));
 
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
