@@ -425,6 +425,13 @@ Task("PackageNuGet")
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
+		NuGetPack("nuget/nunit-project-loader.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
 	});
 
 Task("PackageMsi")
