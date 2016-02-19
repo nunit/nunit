@@ -270,17 +270,15 @@ namespace NUnit.Engine.Services
                     if (line == string.Empty)
                         continue;
 
-                    if (line.Contains("*"))
-                        foreach (var file in baseDir.GetFiles(line))
-                            FindExtensionsInAssembly(file.FullName, true);
+                    if (Path.DirectorySeparatorChar == '\\')
+                        line = line.Replace(Path.DirectorySeparatorChar, '/');
+
+                    if (line.EndsWith("/"))
+                        foreach (var dir in DirectoryFinder.GetDirectories(baseDir, line))
+                            FindExtensionsInDirectory(dir);
                     else
-                    {
-                        var path = Path.Combine(baseDir.FullName, line);
-                        if (Directory.Exists(path))
-                            FindExtensionsInDirectory(new DirectoryInfo(path));
-                        else if (File.Exists(path))
-                            FindExtensionsInAssembly(path, true);
-                    }
+                        foreach (var file in DirectoryFinder.GetFiles(baseDir, line))
+                            FindExtensionsInAssembly(file.FullName, true);
                 }
             }
         }
