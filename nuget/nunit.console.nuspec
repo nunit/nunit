@@ -32,7 +32,6 @@
     <file src="bin/nunit.engine.api.dll" target="tools" />
     <file src="bin/nunit.engine.api.xml" target="tools" />
     <file src="bin/nunit.engine.dll" target="tools" />
-    <file src="bin/nunit.engine.addin.xml" target="tools" />
     <file src="bin/Mono.Cecil.dll" target="tools" />
     <file src="..\..\nuget\nunit.nuget.addins" target="tools"/>
   </files>

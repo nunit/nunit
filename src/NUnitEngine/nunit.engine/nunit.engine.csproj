@@ -164,11 +164,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="nunit.engine.addin.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="nunit.engine.addins">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
