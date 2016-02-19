@@ -207,9 +207,9 @@ Task("TestFramework")
 Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
     .OnError(exception =>
-        {
-            ErrorDetail.Add(exception.Message);
-        })
+    {
+        ErrorDetail.Add(exception.Message);
+    })
 	.Does(() => 
 	{ 
 			if (framework == "sl-5.0")
@@ -221,9 +221,9 @@ Task("TestNUnitLite")
 Task("TestEngine")
   .IsDependentOn("Build")
     .OnError(exception =>
-        {
-            ErrorDetail.Add(exception.Message);
-        })
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine", ref ErrorDetail);
@@ -239,9 +239,9 @@ Task("TestDriver")
 
 Task("TestAddins")
     .OnError(exception =>
-        {
-            ErrorDetail.Add(exception.Message);
-        })
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .IsDependentOn("Build")
   .Does(() => 
 	{
@@ -251,9 +251,9 @@ Task("TestAddins")
 Task("TestV2Driver")
   .IsDependentOn("Build")
     .OnError(exception =>
-        {
-            ErrorDetail.Add(exception.Message);
-        })
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver", ref ErrorDetail);
@@ -262,9 +262,9 @@ Task("TestV2Driver")
 Task("TestConsole")
   .IsDependentOn("Build")
     .OnError(exception =>
-        {
-            ErrorDetail.Add(exception.Message);
-        })
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .Does(() => 
 	{ 
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole", ref ErrorDetail);
