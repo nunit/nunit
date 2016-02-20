@@ -45,5 +45,9 @@ namespace NUnit.TestData
         [TestCase(5, Description = "case description")]
         public void TestCaseWithDescription(int x)
         { }
+
+        [Test, Description("This is a really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really long description")]
+        public void TestWithLongDescription()
+        { }
     }
 }

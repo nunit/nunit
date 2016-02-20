@@ -72,11 +72,11 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
             _fixtureNode = _topNode.SelectSingleNode("descendant::test-suite[@name='MockTestFixture']");
             Assert.NotNull(_fixtureNode, "MockTestFixture element not found");
 
-            _testCaseNode = _fixtureNode.SelectSingleNode("descendant::test-case[@name='NUnit.Tests.Assemblies.MockTestFixture.MockTest2']");
-            Assert.NotNull(_testCaseNode, "MockTest2 element not found");
+            _testCaseNode = _fixtureNode.SelectSingleNode("descendant::test-case[@name='NUnit.Tests.Assemblies.MockTestFixture.TestWithDescription']");
+            Assert.NotNull(_testCaseNode, "TestWithDescription element not found");
 
-            _invalidTestCaseNode = _fixtureNode.SelectSingleNode("descendant::test-case[@name='NUnit.Tests.Assemblies.MockTestFixture.MockTest5']");
-            Assert.NotNull(_invalidTestCaseNode, "MockTest5 element not found");
+            _invalidTestCaseNode = _fixtureNode.SelectSingleNode("descendant::test-case[@name='NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest']");
+            Assert.NotNull(_invalidTestCaseNode, "NonPublicTest element not found");
         }
 
         #region Document Level Tests
