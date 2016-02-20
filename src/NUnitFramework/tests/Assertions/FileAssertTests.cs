@@ -466,7 +466,21 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
-#endregion
+        [Test]
+        public void EqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => FileAssert.Equals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("FileAssert.Equals should not be used for Assertions"));
+        }
+
+        [Test]
+        public void ReferenceEqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => FileAssert.ReferenceEquals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("FileAssert.ReferenceEquals should not be used for Assertions"));
+        }
+
+        #endregion
     }
 }
 #endif
