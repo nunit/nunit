@@ -193,6 +193,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCase("a")]
+        [TestCase("a", "b")]
         public void HandlesOptionalArguments(string s1, string s2 = "b")
         {
             Assert.AreEqual("a", s1);
@@ -200,6 +201,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCase]
+        [TestCase("a", "b")]
         public void HandlesAllOptionalArguments(string s1 = "a", string s2 = "b")
         {
             Assert.AreEqual("a", s1);
