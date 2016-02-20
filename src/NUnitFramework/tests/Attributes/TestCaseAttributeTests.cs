@@ -192,6 +192,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("c", array[0]);
         }
 
+#if !NETCF
         [TestCase("a")]
         [TestCase("a", "b")]
         public void HandlesOptionalArguments(string s1, string s2 = "b")
@@ -207,6 +208,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("a", s1);
             Assert.AreEqual("b", s2);
         }
+#endif
 
         [TestCase("a", "b", Explicit = true)]
         public void ShouldNotRunAndShouldNotFailInConsoleRunner()

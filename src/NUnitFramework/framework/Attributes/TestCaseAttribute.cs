@@ -311,6 +311,7 @@ namespace NUnit.Framework
                     }
                 }
 
+#if !NETCF
                 //Special handling for optional parameters
                 if (parms.Arguments.Length < argsNeeded)
                 {
@@ -331,7 +332,7 @@ namespace NUnit.Framework
                     }
                     parms.Arguments = newArgList;
                 }
-
+#endif
 
                 //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 //    parms.Arguments = new object[]{parms.Arguments};
