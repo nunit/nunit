@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 #if !SILVERLIGHT && !PORTABLE
@@ -87,8 +86,6 @@ namespace NUnit.Tests
             public const int Inconclusive = MockTestFixture.Inconclusive;
             public const int Success = TestsRun - Errors - Failures - Inconclusive;
 
-            public const int Categories = MockTestFixture.Categories;
-
 #if !SILVERLIGHT && !PORTABLE
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 
@@ -103,7 +100,7 @@ namespace NUnit.Tests
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
-            public const int Tests = 11;
+            public const int Tests = 8;
             public const int Suites = 1;
 
             public const int Ignored = 1;
@@ -120,29 +117,13 @@ namespace NUnit.Tests
 
             public const int Inconclusive = 1;
 
-            public const int Categories = 5;
-            public const int MockCategoryTests = 2;
-
             [Test(Description="Mock Test #1")]
-            public void MockTest1()
-            {}
-
-            [Test]
             [Category("MockCategory")]
-            [Property("Severity","Critical")]
-            [Description("This is a really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really long description")]
-            public void MockTest2()
-            {}
+            [Property("Severity", "Critical")]
+            public void TestWithDescription() { }
 
             [Test]
-            [Category("MockCategory")]
-            [Category("AnotherCategory")]
-            public void MockTest3()
-            { Assert.Pass("Succeeded!"); }
-
-            [Test]
-            protected static void MockTest5()
-            {}
+            protected static void NonPublicTest() { }
 
             [Test]
             public void FailingTest()
@@ -150,25 +131,14 @@ namespace NUnit.Tests
                 Assert.Fail("Intentional failure");
             }
 
-            [Test, Property("TargetMethod", "SomeClassName"), Property("Size", 5), /*Property("TargetType", typeof( System.Threading.Thread ))*/]
-            public void TestWithManyProperties()
-            {}
-
-            [Test]
-            [Ignore("ignoring this test method for now")]
-            [Category("Foo")]
-            public void MockTest4()
-            {}
+            [Test, Ignore("Ignore Message")]
+            public void IgnoreTest() { }
 
             [Test, Explicit]
-            [Category( "Special" )]
-            public void ExplicitlyRunTest()
-            {}
+            public void ExplicitTest() { }
 
             [Test]
-            public void NotRunnableTest( int a, int b)
-            {
-            }
+            public void NotRunnableTest( int a, int b) { }
 
             [Test]
             public void InconclusiveTest()

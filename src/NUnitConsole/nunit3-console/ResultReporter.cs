@@ -73,9 +73,9 @@ namespace NUnit.ConsoleRunner
             WriteSummaryReport();
         }
 
-        #region
+        #region Summary Report
 
-        private void WriteRunSettingsReport()
+        public void WriteRunSettingsReport()
         {
             var firstSuite = _result.SelectSingleNode("test-suite");
             if (firstSuite != null)
@@ -98,10 +98,6 @@ namespace NUnit.ConsoleRunner
                 }
             }
         }
-
-        #endregion
-
-        #region Summary Report
 
         public void WriteSummaryReport()
         {

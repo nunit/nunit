@@ -47,18 +47,16 @@ namespace NUnit.Engine.Services.Tests
 
         [TestCase("<filter/>", MockAssembly.Tests)]
         [TestCase("<filter><test>NUnit.Tests.Assemblies.MockTestFixture</test></filter>", MockTestFixture.Tests)]
-        [TestCase("<filter><test>NUnit.Tests.Assemblies.MockTestFixture.MockTest4</test></filter>", 1)]
+        [TestCase("<filter><test>NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest</test></filter>", 1)]
         [TestCase("<filter><test>NUnit.Tests.TestNameEscaping.MustBeEscaped(&quot;&lt; left bracket&quot;)</test></filter>", 1)]
         [TestCase("<filter><test>NUnit.Tests.TestNameEscaping.MustBeEscaped(&quot;&gt; right bracket&quot;)</test></filter>", 1)]
         [TestCase("<filter><test>NUnit.Tests.TestNameEscaping.MustBeEscaped(&quot;'single quote'&quot;)</test></filter>", 1)]
         [TestCase("<filter><test>NUnit.Tests.TestNameEscaping.MustBeEscaped(&quot;\\&quot;double quote\\&quot;&quot;)</test></filter>", 1)]
         [TestCase("<filter><test>NUnit.Tests.TestNameEscaping.MustBeEscaped(&quot;&amp;amp&quot;)</test></filter>", 1)]
-
         [TestCase("<filter><class>NUnit.Tests.Assemblies.MockTestFixture</class></filter>", MockTestFixture.Tests)]
-
-        [TestCase("<filter><name>MockTest4</name></filter>", 1)]
+        [TestCase("<filter><name>IgnoreTest</name></filter>", 1)]
         [TestCase("<filter><name>MockTestFixture</name></filter>", MockTestFixture.Tests + NUnit.Tests.TestAssembly.MockTestFixture.Tests)]
-        [TestCase("<filter><method>MockTest4</method></filter>", 1)]
+        [TestCase("<filter><method>IgnoreTest</method></filter>", 1)]
         [TestCase("<filter><cat>FixtureCategory</cat></filter>", MockTestFixture.Tests)]
         public void UsingXml(string filter, int count)
         {
@@ -66,7 +64,7 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [TestCase("NUnit.Tests.Assemblies.MockTestFixture", MockTestFixture.Tests, TestName = "{m}_MockTestFixture")]
-        [TestCase("NUnit.Tests.Assemblies.MockTestFixture.MockTest4", 1, TestName = "{m}_MockTest4")]
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest", 1, TestName = "{m}_MockTest4")]
         [TestCase("NUnit.Tests.TestNameEscaping.MustBeEscaped(\"< left bracket\")", 1, TestName = "{m}_left_bracket")]
         [TestCase("NUnit.Tests.TestNameEscaping.MustBeEscaped(\"> right bracket\")", 1, TestName = "{m}_right_bracket")]
         [TestCase("NUnit.Tests.TestNameEscaping.MustBeEscaped(\"'single quote'\")", 1, TestName = "{m}_single_quote")]
@@ -82,16 +80,16 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [TestCase("test==NUnit.Tests.Assemblies.MockTestFixture", MockTestFixture.Tests, TestName = "{m}_MockTestFixture")]
-        [TestCase("test==NUnit.Tests.Assemblies.MockTestFixture.MockTest4", 1, TestName = "{m}_MockTest4")]
+        [TestCase("test==NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest", 1, TestName = "{m}_MockTest4")]
         [TestCase("test=='NUnit.Tests.TestNameEscaping.MustBeEscaped(\"< left bracket\")'", 1, TestName = "{m}_left_bracket")]
         [TestCase("test=='NUnit.Tests.TestNameEscaping.MustBeEscaped(\"> right bracket\")'", 1, TestName = "{m}_right_bracket")]
         [TestCase("test==/NUnit.Tests.TestNameEscaping.MustBeEscaped(\"'single quote'\")/", 1, TestName = "{m}_single_quote")]
         [TestCase("test==/NUnit.Tests.TestNameEscaping.MustBeEscaped(\"\\\\\"double quote\\\\\"\")/", 1, TestName = "{m}_double_quote")]
         [TestCase("test==/NUnit.Tests.TestNameEscaping.MustBeEscaped(\"&amp\")/", 1, TestName = "{m}_ampersand")]
         [TestCase("class==NUnit.Tests.Assemblies.MockTestFixture", MockTestFixture.Tests)]
-        [TestCase("name==MockTest4", 1)]
+        [TestCase("name==IgnoreTest", 1)]
         [TestCase("name==MockTestFixture", MockTestFixture.Tests + NUnit.Tests.TestAssembly.MockTestFixture.Tests)]
-        [TestCase("method==MockTest4", 1)]
+        [TestCase("method==IgnoreTest", 1)]
         [TestCase("cat==FixtureCategory", MockTestFixture.Tests)]
         public void UsingTestFilterBuilderSelectWhere(string expression, int count)
         {
