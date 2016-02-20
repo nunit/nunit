@@ -192,6 +192,13 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("c", array[0]);
         }
 
+        [TestCase("a")]
+        public void HandlesOptionalArguments(string s1, string s2 = "b")
+        {
+            Assert.AreEqual("a", s1);
+            Assert.AreEqual("b", s2);
+        }
+
         [TestCase("a", "b", Explicit = true)]
         public void ShouldNotRunAndShouldNotFailInConsoleRunner()
         {
