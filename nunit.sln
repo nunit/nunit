@@ -65,21 +65,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{A972031D-2F61-4183-AF75-99EE1A9F6B32}"
 	ProjectSection(SolutionItems) = preProject
 		nuget\install.ps1 = nuget\install.ps1
-		nuget\nunit-project-loader.nuspec = nuget\nunit-project-loader.nuspec
-		nuget\nunit-v2-result-writer.nuspec = nuget\nunit-v2-result-writer.nuspec
 		nuget\nunit.console.nuspec = nuget\nunit.console.nuspec
 		nuget\nunit.engine.nuspec = nuget\nunit.engine.nuspec
 		nuget\nunit.nuget.addins = nuget\nunit.nuget.addins
 		nuget\nunit.nuspec = nuget\nunit.nuspec
 		nuget\nunit.runners.nuspec = nuget\nunit.runners.nuspec
-		nunit.v2.driver.addins = nunit.v2.driver.addins
-		nuget\nunit.v2.driver.nuspec = nuget\nunit.v2.driver.nuspec
 		nuget\nunitlite.nuspec = nuget\nunitlite.nuspec
 		nuget\nunitliteSL.nuspec = nuget\nunitliteSL.nuspec
 		nuget\nunitSL.nuspec = nuget\nunitSL.nuspec
 		nuget\Program.cs = nuget\Program.cs
 		nuget\Program.vb = nuget\Program.vb
-		nuget\vs-project-loader.nuspec = nuget\vs-project-loader.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitEngine", "NUnitEngine", "{31B45C4C-206F-4F31-9CC6-33BF11DFEE39}"
@@ -179,6 +174,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.portable.agent", "src\NUnitEngine\Portable\nunit.portable.agent\nunit.portable.agent.csproj", "{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.portable.agent.tests", "src\NUnitEngine\Portable\nunit.portable.agent.tests\nunit.portable.agent.tests.csproj", "{8CDC481D-DB17-4145-9963-9E895C29CBC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", "{B538DFF5-4309-497A-8E5D-415BE2FA3F8F}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\extensions\nunit-project-loader.nuspec = nuget\extensions\nunit-project-loader.nuspec
+		nuget\extensions\nunit-v2-result-writer.nuspec = nuget\extensions\nunit-v2-result-writer.nuspec
+		nuget\extensions\nunit.v2.driver.addins = nuget\extensions\nunit.v2.driver.addins
+		nuget\extensions\nunit.v2.driver.nuspec = nuget\extensions\nunit.v2.driver.nuspec
+		nuget\extensions\vs-project-loader.nuspec = nuget\extensions\vs-project-loader.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -475,6 +479,7 @@ Global
 		{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
 		{8CDC481D-DB17-4145-9963-9E895C29CBC5} = {32405F86-07E7-41A7-94EB-2AD6B290ED07}
+		{B538DFF5-4309-497A-8E5D-415BE2FA3F8F} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj
