@@ -141,12 +141,10 @@ namespace NUnit.Tests
             { Assert.Pass("Succeeded!"); }
 
             [Test]
-            [Order(1)]
             protected static void MockTest5()
             {}
 
             [Test]
-            [Order(2)]
             public void FailingTest()
             {
                 Assert.Fail("Intentional failure");
@@ -159,18 +157,15 @@ namespace NUnit.Tests
             [Test]
             [Ignore("ignoring this test method for now")]
             [Category("Foo")]
-            [Order(10)]
             public void MockTest4()
             {}
 
             [Test, Explicit]
             [Category( "Special" )]
-            [Order(11)]
             public void ExplicitlyRunTest()
             {}
 
             [Test]
-            [Order(3)]
             public void NotRunnableTest( int a, int b)
             {
             }
@@ -182,7 +177,6 @@ namespace NUnit.Tests
             }
 
             [Test]
-            [Order(4)]
             public void TestWithException()
             {
                 MethodThrowsException();

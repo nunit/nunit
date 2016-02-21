@@ -46,6 +46,10 @@ namespace NUnit.Framework.Internal.Execution
         private TestCommand _teardownCommand;
 
         public List<WorkItem> Children;
+        /// <summary>
+        /// A count of how many tests in the work item have a value for the Order Property
+        /// </summary>
+        public int CountOrder;
 
         private CountdownEvent _childTestCountdown;
 
@@ -60,6 +64,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             _suite = suite;
             _childFilter = childFilter;
+            CountOrder = 0;
         }
 
         /// <summary>
@@ -232,11 +237,15 @@ namespace NUnit.Framework.Internal.Execution
         private void CreateChildWorkItems()
         {
             Children = new List<WorkItem>();
-            
+
             foreach (ITest test in _suite.Tests)
                 if (_childFilter.Pass(test))
+                {
                     Children.Add(WorkItem.CreateWorkItem(test, _childFilter));
-            SortChildren();
+                    if (test.Properties.ContainsKey(PropertyNames.Order)) CountOrder++;
+                }
+
+            if (CountOrder !=0) SortChildren();
         }
 
         /// <summary>
