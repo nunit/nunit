@@ -23,6 +23,6 @@
     <file src="bin\addins\nunit.v2.driver.dll" target="tools"/>
     <file src="bin\addins\nunit.core.dll" target="tools"/>
     <file src="bin\addins\nunit.core.interfaces.dll" target="tools"/>
-    <file src="..\..\nuget\nunit.v2.driver.addins" target="tools"/>
+    <file src="..\..\nuget\extensions\nunit.v2.driver.addins" target="tools"/>
   </files>
 </package>
