@@ -243,17 +243,19 @@ namespace NUnit.Framework.Internal.Execution
             Children = new List<WorkItem>();
 
             foreach (ITest test in _suite.Tests)
-                if (_childFilter.Pass(test) && test.Properties.ContainsKey(PropertyNames.Order))
+                if (_childFilter.Pass(test))
                 {
-                        Children.Add(WorkItem.CreateWorkItem(test, _childFilter));
+                    if (test.Properties.ContainsKey(PropertyNames.Order))
+                    {
+                        Children.Insert(0, WorkItem.CreateWorkItem(test, _childFilter));
                         _countOrder++;
+                    }
+                    else
+                    {
+                        Children.Insert(Children.Count, WorkItem.CreateWorkItem(test, _childFilter));
+                    }
                 }
 
-            foreach (ITest test in _suite.Tests)
-                if (_childFilter.Pass(test) && !test.Properties.ContainsKey(PropertyNames.Order))
-                {
-                    Children.Add(WorkItem.CreateWorkItem(test, _childFilter));
-                }
 
             if (_countOrder !=0) SortChildren();
         }
