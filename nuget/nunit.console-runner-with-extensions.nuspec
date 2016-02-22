@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>NUnit.Runners</id>
-    <title>NUnit Console Version 3</title>
+    <id>NUnit.Console</id>
+    <title>NUnit Console Runner Version 3 With Extensions</title>
     <version>$version$</version>
     <authors>Charlie Poole</authors>
     <owners>Charlie Poole</owners>
@@ -10,13 +10,19 @@
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>Console runner for version 3.0 of the NUnit unit-testing framework.</summary>
-    <description>This package is now a reference to the NUnit.Console package, which provides the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
+    <summary>Console runner for version 3.0 of the NUnit unit-testing framework with common extensions.</summary>
+    <description>
+      This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
 
-The runner will run 2.6 tests using the included plugin.
+      The following extensions are included with this package:
+      * NUnitProjectLoader     - loads tests from NUnit projects
+      * VSProjectLoader        - loads tests from Visual Studio projects
+      * NUnitV2ResultWriter    - saves results in NUnit V2 format.
+      * NUnitV2FrameworkDriver - runs NUnit V2 tests.
 
-Users may update their projects to use the NUnit.Console package directly if desired.</description>
-    <releaseNotes>This package no longer contains the gui and pnunit runners, which were in earlier releases. Those runners do not exist for NUnit 3.0 at this time.</releaseNotes>
+      Other extensions, if needed, must be installed separately.
+    </description>
+    <releaseNotes></releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd runner</tags>
     <copyright>Copyright (c) 2015 Charlie Poole</copyright>
@@ -30,5 +36,4 @@ Users may update their projects to use the NUnit.Console package directly if des
       </group>
     </dependencies>
   </metadata>
-  <files></files>
 </package>

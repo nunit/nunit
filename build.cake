@@ -404,7 +404,14 @@ Task("PackageNuGet")
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunit.console.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/nunit.console-runner.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
