@@ -135,11 +135,10 @@ namespace NUnit.TestUtilities
             return work.Result;
         }
 
-        public static CompositeWorkItem GenerateWorkItem(TestSuite suite, object testObject, ParallelScope? parallelScope)
+        public static CompositeWorkItem GenerateWorkItem(TestSuite suite, object testObject)
         {
             TestExecutionContext context = new TestExecutionContext();
             context.TestObject = testObject;
-            if(parallelScope != null) context.ParallelScope = (ParallelScope)parallelScope;
 
             CompositeWorkItem work = (CompositeWorkItem)WorkItem.CreateWorkItem(suite, TestFilter.Empty);
             work.InitializeContext(context);

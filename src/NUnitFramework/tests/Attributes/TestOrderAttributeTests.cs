@@ -17,7 +17,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var testFixt = TestBuilder.MakeFixture(typeof (TestCaseOrderAttributeFixture));
             
-            var res = TestBuilder.GenerateWorkItem(testFixt,null,ParallelScope.Fixtures);
+            var res = TestBuilder.GenerateWorkItem(testFixt,null);
             
             Assert.AreEqual(res.Children.Count, 5);
             Assert.AreEqual(res.Children[0].Test.Name, "Y_FirstTest");
