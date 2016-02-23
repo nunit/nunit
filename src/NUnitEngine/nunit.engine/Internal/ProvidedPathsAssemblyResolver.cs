@@ -31,6 +31,8 @@ namespace NUnit.Engine.Internal
 {
     public class ProvidedPathsAssemblyResolver
     {
+        static ILogger log = InternalTrace.GetLogger(typeof(ProvidedPathsAssemblyResolver));
+
         public ProvidedPathsAssemblyResolver()
         {
             _resolutionPaths = new List<string>();
@@ -47,6 +49,7 @@ namespace NUnit.Engine.Internal
             if (!_resolutionPaths.Contains(dirPath))
             {
                 _resolutionPaths.Add(dirPath);
+                log.Debug("Added path " + dirPath);
             }
         }
 

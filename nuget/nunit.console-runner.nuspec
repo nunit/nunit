@@ -10,22 +10,16 @@
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>Console runner for version 3.0 of the NUnit unit-testing framework with common extensions.</summary>
+    <summary>Console runner for version 3.0 of the NUnit unit-testing framework, without any extensions.</summary>
     <description>
       This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
 
-      The following extensions are included with this package:
-      * NUnitProjectLoader     - loads tests from NUnit projects
-      * VSProjectLoader        - loads tests from Visual Studio projects
-      * NUnitV2ResultWriter    - saves results in NUnit V2 format.
-      * NUnitV2FrameworkDriver - runs NUnit V2 tests.
-
-      Other extensions, if needed, must be installed separately.
+      Any extensions, if needed, must be installed as separate packages.
     </description>
     <releaseNotes></releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd runner</tags>
-    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
   </metadata>
   <files>
     <file src="LICENSE.txt" />

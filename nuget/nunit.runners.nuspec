@@ -19,7 +19,7 @@ Users may update their projects to use the NUnit.Console package directly if des
     <releaseNotes>This package no longer contains the gui and pnunit runners, which were in earlier releases. Those runners do not exist for NUnit 3.0 at this time.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd runner</tags>
-    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
     <dependencies>
       <group>
         <dependency id="NUnit.ConsoleRunner" version="[$version$]" />
