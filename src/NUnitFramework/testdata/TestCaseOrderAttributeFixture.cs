@@ -10,7 +10,7 @@ namespace NUnit.TestData
     {
         [Test]
         [Order(3)]
-        public void Z_ThirdTestWithSameOrderAsSecond()
+        public void Z_ThirdTest()
         {
             Assert.Pass("Z_ThirdTestWithSameOrderAsSecond");
         }
@@ -28,7 +28,6 @@ namespace NUnit.TestData
         {
             Assert.Pass("Y_SecondTest");
         }
-
 
         [Test]
         public void D_NoOrderTest()

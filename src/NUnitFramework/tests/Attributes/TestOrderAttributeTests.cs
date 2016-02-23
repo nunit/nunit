@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.AreEqual(res.Children.Count, 5);
             Assert.AreEqual(res.Children[0].Test.Name, "Y_FirstTest");
             Assert.AreEqual(res.Children[1].Test.Name, "Y_SecondTest");
-            Assert.AreEqual(res.Children[2].Test.Name, "Z_ThirdTestWithSameOrderAsSecond");
+            Assert.AreEqual(res.Children[2].Test.Name, "Z_ThirdTest");
         }
         
     }

@@ -44,11 +44,16 @@ namespace NUnit.Framework.Internal.Execution
         private ITestFilter _childFilter;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
+        private List<WorkItem> _children;
 
         /// <summary>
         /// List of Child WorkItems
         /// </summary>
-        public List<WorkItem> Children;
+        public List<WorkItem> Children
+        {
+            get { return _children; }
+            private set { _children = value; }
+        }
 
         /// <summary>
         /// A count of how many tests in the work item have a value for the Order Property
@@ -99,7 +104,7 @@ namespace NUnit.Framework.Internal.Execution
 
                             CreateChildWorkItems();
 
-                            if (Children.Count > 0)
+                            if (_children.Count > 0)
                             {
                                 PerformOneTimeSetUp();
 
@@ -213,13 +218,13 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunChildren()
         {
-            int childCount = Children.Count;
+            int childCount = _children.Count;
             if (childCount == 0)
                 throw new InvalidOperationException("RunChildren called but item has no children");
 
             _childTestCountdown = new CountdownEvent(childCount);
 
-            foreach (WorkItem child in Children)
+            foreach (WorkItem child in _children)
             {
                 if (CheckForCancellation())
                     break;
@@ -240,22 +245,23 @@ namespace NUnit.Framework.Internal.Execution
 
         private void CreateChildWorkItems()
         {
-            Children = new List<WorkItem>();
+            _children = new List<WorkItem>();
 
             foreach (ITest test in _suite.Tests)
+            {
                 if (_childFilter.Pass(test))
                 {
                     if (test.Properties.ContainsKey(PropertyNames.Order))
                     {
-                        Children.Insert(0, WorkItem.CreateWorkItem(test, _childFilter));
+                        _children.Insert(0, WorkItem.CreateWorkItem(test, _childFilter));
                         _countOrder++;
                     }
                     else
                     {
-                        Children.Insert(Children.Count, WorkItem.CreateWorkItem(test, _childFilter));
+                        _children.Insert(_children.Count, WorkItem.CreateWorkItem(test, _childFilter));
                     }
                 }
-
+            }
 
             if (_countOrder !=0) SortChildren();
         }
@@ -284,8 +290,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void SortChildren()
         {
-            Children.Sort(0, _countOrder, new WorkItemOrderComparer());
+            _children.Sort(0, _countOrder, new WorkItemOrderComparer());
         }
+
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.Filter(stackTrace));
@@ -388,10 +395,10 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (cancelLock)
             {
-                if (Children == null)
+                if (_children == null)
                     return;
 
-                foreach (var child in Children)
+                foreach (var child in _children)
                 {
                     var ctx = child.Context;
                     if (ctx != null)
