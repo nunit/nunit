@@ -28,6 +28,7 @@ using System.Reflection;
 using Mono.Cecil;
 using NUnit.Engine.Drivers;
 using NUnit.Engine.Extensibility;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
@@ -51,6 +52,9 @@ namespace NUnit.Engine.Services
         {
             if (!File.Exists(assemblyPath))
                 return new NotRunnableFrameworkDriver(assemblyPath, "File not found: " + assemblyPath);
+
+            if (!PathUtils.IsAssemblyFileType(assemblyPath))
+                return new NotRunnableFrameworkDriver(assemblyPath, "File type is not supported");
 
             try
             {

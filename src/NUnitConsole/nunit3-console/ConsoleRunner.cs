@@ -92,6 +92,9 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public int Execute()
         {
+            if (!VerifyEngineSupport(_options))
+                return INVALID_ARG;
+
             DisplayRuntimeEnvironment(_outWriter);
 
             DisplayTestFiles();
@@ -367,6 +370,31 @@ namespace NUnit.ConsoleRunner
                 builder.SelectWhere(options.WhereClause);
 
             return builder.GetFilter();
+        }
+
+        private bool VerifyEngineSupport(ConsoleOptions options)
+        {
+            foreach (var spec in options.ResultOutputSpecifications)
+            {
+                bool available = false;
+
+                foreach (var format in _resultService.Formats)
+                {
+                    if (spec.Format == format)
+                    {
+                        available = true;
+                        break;
+                    }
+                }
+
+                if (!available)
+                {
+                    Console.WriteLine("Unknown result format: {0}", spec.Format);
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #endregion
