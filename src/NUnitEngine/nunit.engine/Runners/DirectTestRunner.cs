@@ -36,7 +36,6 @@ namespace NUnit.Engine.Runners
     public abstract class DirectTestRunner : AbstractTestRunner
     {
         private readonly List<IFrameworkDriver> _drivers = new List<IFrameworkDriver>();
-        private Dictionary<IFrameworkDriver, TestPackage> _packageIndex = new Dictionary<IFrameworkDriver, TestPackage>();
         private ProvidedPathsAssemblyResolver _assemblyResolver;
 
         public DirectTestRunner(IServiceLocator services, TestPackage package) : base(services, package)
@@ -109,8 +108,6 @@ namespace NUnit.Engine.Runners
                 driver.ID = TestPackage.ID;
                 result.Add(driver.Load(testFile, subPackage.Settings));
                 _drivers.Add(driver);
-
-                _packageIndex.Add(driver, subPackage);
             }
 
             if (IsProjectPackage(TestPackage))
@@ -151,16 +148,18 @@ namespace NUnit.Engine.Runners
             foreach (IFrameworkDriver driver in _drivers)
             {
                 result.Add(driver.Run(listener, filter.Text));
-
-                if (_assemblyResolver != null)
-                {
-                    TestPackage package = _packageIndex[driver];
-                    _assemblyResolver.RemovePathFromFile(package.FullName);
-                }
             }
 
             if (IsProjectPackage(TestPackage))
                 result = result.MakePackageResult(TestPackage.Name, TestPackage.FullName);
+
+            var packages = TestPackage.SubPackages;
+            if (packages.Count == 0)
+                packages.Add(TestPackage);
+            foreach (var package in packages)
+            {
+                _assemblyResolver.RemovePathFromFile(package.FullName);
+            }
 
             return result;
         }
