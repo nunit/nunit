@@ -7,6 +7,11 @@ var configuration = Argument("configuration", "Debug");
 var framework = Argument("framework", "net-4.5");
 
 //////////////////////////////////////////////////////////////////////
+// SET ERROR LEVELS
+//////////////////////////////////////////////////////////////////////
+var ErrorDetail = new List<string>();
+
+//////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
@@ -159,46 +164,66 @@ Task("BuildCppTestFiles")
 //////////////////////////////////////////////////////////////////////
 // TEST
 //////////////////////////////////////////////////////////////////////
+
+Task("CheckForError")
+    .Does(() => CheckForError(ref ErrorDetail));
+
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
 	.Does(() =>
 	{
 		foreach(string runtime in AllFrameworks)
 		{
 			if (runtime != "netcf-3.5")
 			{
-				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS);
+				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
 
 				if (runtime == "sl-5.0")
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll");
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll", runtime, ref ErrorDetail);
 				else
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR);
+					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime, ref ErrorDetail);
 			}
 		}
 	});
 
 Task("TestFramework")
   .IsDependentOn("Build")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
 	.Does(() => 
 	{ 
-		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS);
+		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework, ref ErrorDetail);
 	});
 
 Task("TestNUnitLite")
   .IsDependentOn("BuildFramework")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
 	.Does(() => 
 	{ 
 			if (framework == "sl-5.0")
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll");
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll", framework, ref ErrorDetail);
 			else
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR);
+				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR, framework, ref ErrorDetail);
 	});
 
 Task("TestEngine")
   .IsDependentOn("Build")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine", ref ErrorDetail);
 	});
 
 Task("TestDriver")
@@ -206,28 +231,40 @@ Task("TestDriver")
   .WithCriteria(IsRunningOnWindows)
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS, ref ErrorDetail);
 	});
 
 Task("TestAddins")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .IsDependentOn("Build")
   .Does(() => 
 	{
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS); 
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS,"TestAddins", ref ErrorDetail); 
 	});
 
 Task("TestV2Driver")
   .IsDependentOn("Build")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver", ref ErrorDetail);
 	});
 
 Task("TestConsole")
   .IsDependentOn("Build")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
   .Does(() => 
 	{ 
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole", ref ErrorDetail);
 	});
 
 //////////////////////////////////////////////////////////////////////
@@ -404,7 +441,14 @@ Task("PackageNuGet")
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunit.console.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/nunit.console-runner.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
@@ -419,6 +463,36 @@ Task("PackageNuGet")
 			NoPackageAnalysis = true
 		});
 		NuGetPack("nuget/nunit.engine.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+
+		// Package Extensions
+		NuGetPack("nuget/extensions/nunit-project-loader.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/extensions/vs-project-loader.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/extensions/nunit-v2-result-writer.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/extensions/nunit.v2.driver.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
@@ -473,8 +547,33 @@ Task("PackageCF")
 	});
 
 //////////////////////////////////////////////////////////////////////
+// SETUP AND TEARDOWN TASKS
+//////////////////////////////////////////////////////////////////////
+Setup(() =>
+{
+    // Executed BEFORE the first task.
+	});
+
+Teardown(() =>
+{
+    // Executed AFTER the last task.
+    CheckForError(ref ErrorDetail);
+});
+//////////////////////////////////////////////////////////////////////
 // HELPER METHODS
 //////////////////////////////////////////////////////////////////////
+
+void CheckForError(ref List<string> errorDetail)
+{
+    if(errorDetail.Count != 0) 
+    {
+        var copyError = new List<string>();
+        copyError = errorDetail.Select(s => s).ToList();
+        errorDetail.Clear();
+        throw new Exception("One or more unit test failed, breaking the build.\n" 
+                              + copyError.Aggregate((x,y) => x + "\n" + y));
+    }
+}
 
 void BuildFramework(string configuration, string framework)
 {
@@ -524,7 +623,7 @@ void BuildEngine(string configuration)
     BuildProject("./src/NUnitEngine/nunit-agent/nunit-agent-x86.csproj", configuration);
     
     // Engine tests
-    BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration); 
+    BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration);  
 
     // Driver and tests
     if(IsRunningOnWindows())
@@ -578,7 +677,7 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
     }
 }
  
-void RunTest(FilePath exePath, DirectoryPath workingDir)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
 	int rc = StartProcess(
 	  MakeAbsolute(exePath), 
@@ -588,12 +687,12 @@ void RunTest(FilePath exePath, DirectoryPath workingDir)
 	  });
 	  	  
 	if (rc > 0)
-	  throw new Exception(string.Format("{0} tests failed", rc));
+        errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
 	else if (rc < 0)
-	  throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
+        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
-void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
 {
 	int rc = StartProcess(
 	  MakeAbsolute(exePath), 
@@ -604,9 +703,9 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments)
 	  });
 	  
 	if (rc > 0)
-	  throw new Exception(string.Format("{0} tests failed", rc));
+        errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
 	else if (rc < 0)
-	  throw new Exception(string.Format("{0} returned rc = {1}", exePath, rc));
+        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
 void RunGitCommand(string arguments)
@@ -648,6 +747,7 @@ Task("Test")
 	.IsDependentOn("TestConsole");
 
 Task("Package")
+    .IsDependentOn("CheckForError")
 	.IsDependentOn("PackageSource")
 	.IsDependentOn("PackageZip")
 	.IsDependentOn("PackageNuGet")

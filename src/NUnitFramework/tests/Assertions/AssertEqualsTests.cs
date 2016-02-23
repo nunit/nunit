@@ -614,6 +614,20 @@ namespace NUnit.Framework.Assertions
             Assert.That(a, Is.EqualTo(1));
             Assert.That(1, Is.EqualTo(a));
         }
+
+        [Test]
+        public void EqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => Assert.Equals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("Assert.Equals should not be used for Assertions"));
+        }
+
+        [Test]
+        public void ReferenceEqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => Assert.ReferenceEquals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("Assert.ReferenceEquals should not be used for Assertions"));
+        }
     }
 
     public class IntEquatable : IEquatable<int>

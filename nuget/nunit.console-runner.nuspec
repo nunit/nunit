@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>NUnit.Console</id>
-    <title>NUnit Console Version 3</title>
+    <id>NUnit.ConsoleRunner</id>
+    <title>NUnit Console Runner Version 3 (No Extensions)</title>
     <version>$version$</version>
     <authors>Charlie Poole</authors>
     <owners>Charlie Poole</owners>
@@ -10,14 +10,16 @@
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>Console runner for version 3.0 of the NUnit unit-testing framework.</summary>
-    <description>This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
-    
-    The runner will run 2.6 tests using the included plugin.</description>
+    <summary>Console runner for version 3.0 of the NUnit unit-testing framework, without any extensions.</summary>
+    <description>
+      This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
+
+      Any extensions, if needed, must be installed as separate packages.
+    </description>
     <releaseNotes></releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd runner</tags>
-    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
   </metadata>
   <files>
     <file src="LICENSE.txt" />
@@ -32,14 +34,7 @@
     <file src="bin/nunit.engine.api.dll" target="tools" />
     <file src="bin/nunit.engine.api.xml" target="tools" />
     <file src="bin/nunit.engine.dll" target="tools" />
-    <file src="bin/nunit.engine.addins" target="tools" />
-    <file src="bin/nunit.engine.addin.xml" target="tools" />
     <file src="bin/Mono.Cecil.dll" target="tools" />
-    <file src="bin/addins/nunit.v2.driver.dll" target="tools/addins" />
-    <file src="bin/addins/nunit.core.dll" target="tools/addins" />
-    <file src="bin/addins/nunit.core.interfaces.dll" target="tools/addins" />
-    <file src="bin/addins/nunit-v2-result-writer.dll" target="tools/addins" />
-    <file src="bin/addins/nunit-project-loader.dll" target="tools/addins" />
-    <file src="bin/addins/vs-project-loader.dll" target="tools/addins" />
+    <file src="..\..\nuget\nunit.nuget.addins" target="tools"/>
   </files>
 </package>
