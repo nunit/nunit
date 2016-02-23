@@ -44,8 +44,21 @@ namespace NUnit.Framework.Internal.Execution
         private ITestFilter _childFilter;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
-
         private List<WorkItem> _children;
+
+        /// <summary>
+        /// List of Child WorkItems
+        /// </summary>
+        public List<WorkItem> Children
+        {
+            get { return _children; }
+            private set { _children = value; }
+        }
+
+        /// <summary>
+        /// A count of how many tests in the work item have a value for the Order Property
+        /// </summary>
+        private int _countOrder;
 
         private CountdownEvent _childTestCountdown;
 
@@ -60,6 +73,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             _suite = suite;
             _childFilter = childFilter;
+            _countOrder = 0;
         }
 
         /// <summary>
@@ -234,8 +248,49 @@ namespace NUnit.Framework.Internal.Execution
             _children = new List<WorkItem>();
 
             foreach (ITest test in _suite.Tests)
+            {
                 if (_childFilter.Pass(test))
-                    _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
+                {
+                    if (test.Properties.ContainsKey(PropertyNames.Order))
+                    {
+                        _children.Insert(0, WorkItem.CreateWorkItem(test, _childFilter));
+                        _countOrder++;
+                    }
+                    else
+                    {
+                        _children.Insert(_children.Count, WorkItem.CreateWorkItem(test, _childFilter));
+                    }
+                }
+            }
+
+            if (_countOrder !=0) SortChildren();
+        }
+
+        private class WorkItemOrderComparer : IComparer<WorkItem>
+        {
+            /// <summary>
+            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            /// </summary>
+            /// <returns>
+            /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>, as shown in the following table.Value Meaning Less than zero<paramref name="x"/> is less than <paramref name="y"/>.Zero<paramref name="x"/> equals <paramref name="y"/>.Greater than zero<paramref name="x"/> is greater than <paramref name="y"/>.
+            /// </returns>
+            /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param>
+            public int Compare(WorkItem x, WorkItem y)
+            {
+                var xKey = int.MaxValue;
+                var yKey = int.MaxValue;
+                if (x.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(x.Test.Properties[PropertyNames.Order][0].ToString(), out xKey);
+                if (y.Test.Properties.ContainsKey(PropertyNames.Order)) int.TryParse(y.Test.Properties[PropertyNames.Order][0].ToString(), out yKey);
+                return xKey.CompareTo(yKey);
+            }
+        }
+
+        /// <summary>
+        /// Sorts tests under this suite.
+        /// </summary>
+        private void SortChildren()
+        {
+            _children.Sort(0, _countOrder, new WorkItemOrderComparer());
         }
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
