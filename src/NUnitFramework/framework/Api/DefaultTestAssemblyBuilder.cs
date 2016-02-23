@@ -114,7 +114,7 @@ namespace NUnit.Framework.Api
                 var assembly = AssemblyHelper.Load(assemblyName);
                 testAssembly = Build(assembly, assemblyName, options);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 testAssembly = new TestAssembly(assemblyName);
                 testAssembly.RunState = RunState.NotRunnable;

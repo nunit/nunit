@@ -76,6 +76,7 @@
     <Compile Include="RepeatedTestFixture.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
+    <Compile Include="TestCaseOrderAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
     <Compile Include="TestContextData.cs" />
     <Compile Include="TestFixtureData.cs" />
