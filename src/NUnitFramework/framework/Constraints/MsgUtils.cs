@@ -64,7 +64,8 @@ namespace NUnit.Framework.Constraints
         private static readonly string Fmt_String = "\"{0}\"";
         private static readonly string Fmt_Char = "'{0}'";
         private static readonly string Fmt_DateTime = "yyyy-MM-dd HH:mm:ss.fff";
-        private static readonly string Fmt_ValueType = "{0}";
+        private static readonly string Fmt_DateTimeOffset = "yyyy-MM-dd HH:mm:ss.fffzzz";
+		private static readonly string Fmt_ValueType = "{0}";
         private static readonly string Fmt_Default = "<{0}>";
 
         /// <summary>
@@ -81,7 +82,9 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
 
-            AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
+            AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset ((DateTimeOffset)val) : next (val));
+
+			AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
 
             AddFormatter(next => val => val is float ? FormatFloat((float)val) : next(val));
 
@@ -256,14 +259,19 @@ namespace NUnit.Framework.Constraints
             return dt.ToString(Fmt_DateTime, CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        /// Returns the representation of a type as used in NUnitLite.
-        /// This is the same as Type.ToString() except for arrays,
-        /// which are displayed with their declared sizes.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static string GetTypeRepresentation(object obj)
+        private static string FormatDateTimeOffset(DateTimeOffset dto)
+        {
+            return dto.ToString(Fmt_DateTimeOffset, CultureInfo.InvariantCulture);
+        }
+
+		/// <summary>
+		/// Returns the representation of a type as used in NUnitLite.
+		/// This is the same as Type.ToString() except for arrays,
+		/// which are displayed with their declared sizes.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public static string GetTypeRepresentation(object obj)
         {
             Array array = obj as Array;
             if (array == null)

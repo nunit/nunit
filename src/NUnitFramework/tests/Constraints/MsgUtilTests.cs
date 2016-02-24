@@ -126,11 +126,17 @@ namespace NUnit.Framework.Constraints
             Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123)), Is.EqualTo("2007-07-04 09:15:30.123"));
         }
 
-        #endregion
+        [Test]
+        public static void FormatValue_DateTimeOffsetTest()
+        {
+            Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
+        }
 
-        #region EscapeControlChars
+		#endregion
 
-        [TestCase("\n", "\\n")]
+		#region EscapeControlChars
+
+		[TestCase ("\n", "\\n")]
         [TestCase("\n\n", "\\n\\n")]
         [TestCase("\n\n\n", "\\n\\n\\n")]
         [TestCase("\r", "\\r")]
