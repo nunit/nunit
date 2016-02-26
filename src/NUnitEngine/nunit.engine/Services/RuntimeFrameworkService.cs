@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Mono.Cecil;
 using NUnit.Common;
@@ -29,9 +30,17 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-    public class RuntimeFrameworkService : Service, IRuntimeFrameworkService
+    public class RuntimeFrameworkService : Service, IRuntimeFrameworkService, IAvailableRuntimes
     {
         static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
+
+        /// <summary>
+        /// Gets a list of available runtimes.
+        /// </summary>
+        public IList<IRuntimeFramework> AvailableRuntimes
+        {
+            get { return RuntimeFramework.AvailableFrameworks; }
+        }
 
         /// <summary>
         /// Returns true if the runtime framework represented by

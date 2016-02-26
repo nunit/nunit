@@ -31,28 +31,6 @@ using Microsoft.Win32;
 namespace NUnit.Engine
 {
     /// <summary>
-    /// Enumeration identifying a common language
-    /// runtime implementation.
-    /// </summary>
-    public enum RuntimeType
-    {
-        /// <summary>Any supported runtime framework</summary>
-        Any,
-        /// <summary>Microsoft .NET Framework</summary>
-        Net,
-        /// <summary>Microsoft .NET Compact Framework</summary>
-        NetCF,
-        /// <summary>Microsoft Shared Source CLI</summary>
-        SSCLI,
-        /// <summary>Mono</summary>
-        Mono,
-        /// <summary>Silverlight</summary>
-        Silverlight,
-        /// <summary>MonoTouch</summary>
-        MonoTouch
-    }
-
-    /// <summary>
     /// Enumeration identifying profile of .NET Framework
     /// </summary>
     public enum Profile
@@ -70,7 +48,7 @@ namespace NUnit.Engine
     /// of a common language runtime implementation.
     /// </summary>
     [Serializable]
-    public sealed class RuntimeFramework
+    public sealed class RuntimeFramework : IRuntimeFramework
     {
         #region Static and Instance Fields
 
@@ -96,6 +74,19 @@ namespace NUnit.Engine
         /// <param name="runtime">The runtime type of the framework</param>
         /// <param name="version">The version of the framework</param>
         public RuntimeFramework(RuntimeType runtime, Version version)
+            : this(runtime, version, Profile.Unspecified)
+        {
+        }
+
+        /// <summary>
+        /// Construct from a runtime type, version and profile. If the version has
+        /// two parts, it is taken as a framework version. If it has three
+        /// or more, it is taken as a CLR version. In either case, the other
+        /// version is deduced based on the runtime type and provided version.
+        /// </summary>
+        /// <param name="runtime">The runtime type of the framework</param>
+        /// <param name="version">The version of the framework</param>
+        public RuntimeFramework(RuntimeType runtime, Version version, Profile profile)
         {
             Runtime = runtime;
 
@@ -104,8 +95,9 @@ namespace NUnit.Engine
             else
                 InitFromClrVersion(version);
 
-            DisplayName = GetDefaultDisplayName(runtime, version);
-            Profile = Profile.Unspecified;
+            Profile = profile;
+
+            DisplayName = GetDefaultDisplayName(runtime, FrameworkVersion, profile);
         }
 
         private void InitFromFrameworkVersion(Version version)
@@ -300,6 +292,8 @@ namespace NUnit.Engine
         /// </summary>
         public RuntimeType Runtime { get; private set; }
 
+        string IRuntimeFramework.Profile { get { return Profile.ToString(); } }
+
         /// <summary>
         /// The framework version for this runtime framework
         /// </summary>
@@ -453,14 +447,21 @@ namespace NUnit.Engine
             return false;
         }
 
-        private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
+        private static string GetDefaultDisplayName(RuntimeType runtime, Version version, Profile profile)
         {
+            string displayName;
+
             if (version == DefaultVersion)
-                return runtime.ToString();
+                displayName = runtime.ToString();
             else if (runtime == RuntimeType.Any)
-                return "v" + version.ToString();
+                displayName = "v" + version.ToString();
             else
-                return runtime.ToString() + " " + version.ToString();
+                displayName = runtime.ToString() + " " + version.ToString();
+
+            if (profile != Profile.Unspecified && profile != Profile.Full)
+                displayName += " - " + profile.ToString();
+
+            return displayName;
         }
 
         private static bool VersionsMatch(Version v1, Version v2)
@@ -634,8 +635,7 @@ namespace NUnit.Engine
                 
                 if (CheckInstallDword(profileKey))
                 {
-                    var framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 0));
-                    framework.DisplayName += " - " + profile.ToString();
+                    var framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 0), profile);
                     framework.Profile = profile;
                     frameworks.Add(framework);
 
@@ -654,7 +654,7 @@ namespace NUnit.Engine
         {
             return ((int)key.GetValue("Install", 0) == 1);
         }
-        
+
         #endregion
     }
 }
