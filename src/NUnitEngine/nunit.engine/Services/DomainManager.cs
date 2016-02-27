@@ -50,7 +50,7 @@ namespace NUnit.Engine.Services
         private ISettings _settingsService;
 
         // Default settings used if SettingsService is unavailable
-        private string _shadowCopyPath = Path.Combine(NUnitConfiguration.NUnitBinDirectory, "ShadowCopyCache");
+        private string _shadowCopyPath = Path.Combine(NUnitConfiguration.EngineDirectory, "ShadowCopyCache");
 
         #region Create and Unload Domains
         /// <summary>
