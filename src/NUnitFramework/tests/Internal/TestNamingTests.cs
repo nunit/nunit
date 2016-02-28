@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Reflection;
+using System.Text;
 
 namespace NUnit.Framework.Internal.Tests
 {
@@ -59,6 +60,25 @@ namespace NUnit.Framework.Internal.Tests
         public void GenericTest<T>(T arg)
         {
             CheckNames("GenericTest<Int32>(42)", "GenericTest");
+        }
+
+        [TestCase()]
+        [TestCase(1)]
+        [TestCase(1, 2)]
+        [TestCase(1, 2, 3)]
+        public void TestWithParamsArgument(params int[] array)
+        {
+            var sb = new StringBuilder("TestWithParamsArgument(");
+
+            foreach (int n in array)
+            {
+                if (n > 1) sb.Append(",");
+                sb.Append(n.ToString());
+            }
+
+            sb.Append(")");
+
+            CheckNames(sb.ToString(), "TestWithParamsArgument");
         }
 
         private void CheckNames(string expectedTestName, string expectedMethodName)
