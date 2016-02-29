@@ -167,11 +167,15 @@ namespace NUnit.Engine.Services
             bool useX86Agent = package.GetSetting(PackageSettings.RunAsX86, false);
             bool debugTests = package.GetSetting(PackageSettings.DebugTests, false);
             bool debugAgent = package.GetSetting(PackageSettings.DebugAgent, false);
-            bool verbose = package.GetSetting("Verbose", false);
+            string traceLevel = package.GetSetting(PackageSettings.InternalTraceLevel, "Off");
 
+            // Set options that need to be in effect before the package
+            // is loaded by using the command line.
             string agentArgs = string.Empty;
-            if (debugAgent) agentArgs += " --debug-agent";
-            if (verbose) agentArgs += " --verbose";
+            if (debugAgent)
+                agentArgs += " --debug-agent";
+            if (traceLevel != "Off")
+                agentArgs += " --trace:" + traceLevel;
 
             log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", targetRuntime);
 
