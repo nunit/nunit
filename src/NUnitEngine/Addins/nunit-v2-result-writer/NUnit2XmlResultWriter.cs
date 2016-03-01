@@ -243,7 +243,7 @@ namespace NUnit.Engine.Addins
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("time", duration.ToString("0.000"));
+                xmlWriter.WriteAttributeString("time", duration.ToString("#####0.000", NumberFormatInfo.InvariantInfo));
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }

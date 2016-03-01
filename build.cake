@@ -453,7 +453,14 @@ Task("PackageNuGet")
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunit.console.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/nunit.console-runner.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
@@ -468,6 +475,36 @@ Task("PackageNuGet")
 			NoPackageAnalysis = true
 		});
 		NuGetPack("nuget/nunit.engine.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+
+		// Package Extensions
+		NuGetPack("nuget/extensions/nunit-project-loader.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/extensions/vs-project-loader.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/extensions/nunit-v2-result-writer.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/extensions/nunit.v2.driver.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,

@@ -64,6 +64,9 @@ namespace NUnit.Engine.Services
             Guard.ArgumentValid(package.SubPackages.Count == 0, "Package is already expanded", "package");
 
             string path = package.FullName;
+            if (!File.Exists(path))
+                return;
+
             IProject project = LoadFrom(path);
             Guard.ArgumentValid(project != null, "Unable to load project " + path, "package");
 
@@ -109,7 +112,12 @@ namespace NUnit.Engine.Services
                             foreach (string ext in node.GetProperties("FileExtension"))
                             {
                                 if (ext != null)
+                                {
+                                    if (_extensionIndex.ContainsKey(ext))
+                                        throw new NUnitEngineException(string.Format("ProjectLoader extension {0} is already handled by another extension.", ext));
+
                                     _extensionIndex.Add(ext, node);
+                                }
                             }
                         }
 
@@ -120,7 +128,7 @@ namespace NUnit.Engine.Services
                 }
                 catch
                 {
-                    // TODO: We should really just ignore any addin that doesn't load
+                    // TODO: Should we just ignore any addin that doesn't load?
                     Status = ServiceStatus.Error;
                     throw;
                 }
@@ -133,12 +141,15 @@ namespace NUnit.Engine.Services
 
         private IProject LoadFrom(string path)
         {
-            ExtensionNode node = GetNodeForPath(path);
-            if (node != null)
+            if (File.Exists(path))
             {
-                var loader = node.ExtensionObject as IProjectLoader;
-                if (loader.CanLoadFrom(path))
-                    return loader.LoadFrom(path);
+                ExtensionNode node = GetNodeForPath(path);
+                if (node != null)
+                {
+                    var loader = node.ExtensionObject as IProjectLoader;
+                    if (loader.CanLoadFrom(path))
+                        return loader.LoadFrom(path);
+                }
             }
 
             return null;

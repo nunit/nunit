@@ -81,27 +81,5 @@ namespace NUnit.Engine.Services.Tests
             service.StartService();
             Assert.That(service.Status, Is.EqualTo(ServiceStatus.Error));
         }
-
-        [Test]
-        public void TestAgency_RuntimeFrameworkServiceError()
-        {
-            var fake = new FakeRuntimeService();
-            fake.FailToStart = true;
-            _services.Add(fake);
-            var service = new TestAgency();
-            _services.Add(service);
-            ((IService)fake).StartService();
-            service.StartService();
-            Assert.That(service.Status, Is.EqualTo(ServiceStatus.Error));
-        }
-
-        [Test]
-        public void TestAgency_RuntimeFrameworkServiceMissing()
-        {
-            var service = new TestAgency();
-            _services.Add(service);
-            service.StartService();
-            Assert.That(service.Status, Is.EqualTo(ServiceStatus.Error));
-        }
     }
 }

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Engine.Extensibility;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Drivers
 {
@@ -34,9 +35,14 @@ namespace NUnit.Engine.Drivers
         private const string NUNITLITE_FRAMEWORK = "nunitlite";
         private ExtensionNode _driverNode;
 
+        // TODO: This should be a central service but for now it's local
+        private ProvidedPathsAssemblyResolver _resolver;
+        bool _resolverInstalled;
+
         public NUnit2DriverFactory(ExtensionNode driverNode)
         {
             _driverNode = driverNode;
+            _resolver = new ProvidedPathsAssemblyResolver();
         }
 
         /// <summary>
@@ -62,6 +68,13 @@ namespace NUnit.Engine.Drivers
         {
             if (!IsSupportedTestFramework(reference))
                 throw new ArgumentException("Invalid framework", "reference");
+
+            if (!_resolverInstalled)
+            {
+                _resolver.Install();
+                _resolverInstalled = true;
+                _resolver.AddPathFromFile(_driverNode.AssemblyPath);
+            }
 
             return _driverNode.CreateExtensionObject(domain) as IFrameworkDriver;
         }

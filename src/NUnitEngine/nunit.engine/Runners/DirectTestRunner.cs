@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Common;
 using NUnit.Engine.Extensibility;
 using NUnit.Engine.Internal;
 
@@ -35,8 +36,18 @@ namespace NUnit.Engine.Runners
     public abstract class DirectTestRunner : AbstractTestRunner
     {
         private readonly List<IFrameworkDriver> _drivers = new List<IFrameworkDriver>();
+        private ProvidedPathsAssemblyResolver _assemblyResolver;
 
-        public DirectTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
+        public DirectTestRunner(IServiceLocator services, TestPackage package) : base(services, package)
+        {
+            // Bypass the resolver if not in the default AppDomain. This prevents trying to use the resolver within
+            // NUnit's own automated tests (in a test AppDomain) which does not make sense anyway.
+            if (AppDomain.CurrentDomain.IsDefaultAppDomain())
+            {
+                _assemblyResolver = new ProvidedPathsAssemblyResolver();
+                _assemblyResolver.Install();
+            }
+        }
 
         #region Properties
 
@@ -86,6 +97,13 @@ namespace NUnit.Engine.Runners
             foreach (var subPackage in packages)
             {
                 var testFile = subPackage.FullName;
+
+                if (_assemblyResolver != null && !TestDomain.IsDefaultAppDomain()
+                    && subPackage.GetSetting(PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
+                {
+                    _assemblyResolver.AddPathFromFile(testFile);
+                }
+
                 IFrameworkDriver driver = driverService.GetDriver(TestDomain, testFile);
                 driver.ID = TestPackage.ID;
                 result.Add(driver.Load(testFile, subPackage.Settings));
@@ -128,10 +146,20 @@ namespace NUnit.Engine.Runners
             var result = new TestEngineResult();
 
             foreach (IFrameworkDriver driver in _drivers)
+            {
                 result.Add(driver.Run(listener, filter.Text));
+            }
 
             if (IsProjectPackage(TestPackage))
                 result = result.MakePackageResult(TestPackage.Name, TestPackage.FullName);
+
+            var packages = TestPackage.SubPackages;
+            if (packages.Count == 0)
+                packages.Add(TestPackage);
+            foreach (var package in packages)
+            {
+                _assemblyResolver.RemovePathFromFile(package.FullName);
+            }
 
             return result;
         }

@@ -28,5 +28,6 @@
     <file src="bin\nunit-agent.exe.config" target="lib" />
     <file src="bin\nunit-agent-x86.exe" target="lib" />
     <file src="bin\nunit-agent-x86.exe.config" target="lib" />
+    <file src="..\..\nuget\nunit.nuget.addins" target="lib"/>
   </files>
 </package>

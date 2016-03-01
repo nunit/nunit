@@ -65,6 +65,7 @@
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsAsyncTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
+    <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
     <Compile Include="Attributes\TestMethodBuilderTests.cs" />
     <Compile Include="Attributes\TestOfTests.cs" />
+    <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Attributes\TheoryTests.cs" />
     <Compile Include="Attributes\ThreadingTests.cs" />
     <Compile Include="Attributes\TimeoutTests.cs" />
@@ -288,7 +290,7 @@
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\slow-tests\slow-nunit-tests-portable.csproj">
-      <Project>{74cb429e-69d7-4525-bbdf-bbc47dbc7070}</Project>
+      <Project>{74CB429E-69D7-4525-BBDF-BBC47DBC7070}</Project>
       <Name>slow-nunit-tests-portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">

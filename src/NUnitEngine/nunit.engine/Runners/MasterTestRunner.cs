@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Xml;
 using NUnit.Common;
@@ -36,9 +37,19 @@ namespace NUnit.Engine.Runners
     {
         private ITestEngineRunner _realRunner;
 
-        public MasterTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
+        public MasterTestRunner(IServiceLocator services, TestPackage package)
+            : base(services, package)
+        {
+            RuntimeService = Services.GetService<IRuntimeFrameworkService>();
+        }
+
+        #region Properties
 
         public bool IsTestRunning { get; private set; }
+
+        private IRuntimeFrameworkService RuntimeService { get; set; }
+
+        #endregion
 
         #region AbstractTestRunner Overrides
 
@@ -63,9 +74,31 @@ namespace NUnit.Engine.Runners
             // in case the client runner missed them.
             ValidatePackageSettings();
 
+            // Some files in the top level package may be projects.
+            // Expand them so that they contain subprojects for
+            // each contained assembly.
+            ExpandProjects();
+
+            // Use SelectRuntimeFramework for its side effects.
+            // Info will be left behind in the package about
+            // each contained assembly, which will subsequently
+            // be used to determine how to run the assembly.
+            RuntimeService.SelectRuntimeFramework(TestPackage);
+
             _realRunner = TestRunnerFactory.MakeTestRunner(TestPackage);
 
             return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
+        }
+
+        private void ExpandProjects()
+        {
+            foreach (var package in TestPackage.SubPackages)
+            {
+                string packageName = package.FullName;
+
+                if (File.Exists(packageName) && ProjectService.CanLoadFrom(packageName))
+                        ProjectService.ExpandProjectPackage(package);
+            }
         }
 
         /// <summary>
@@ -227,10 +260,12 @@ namespace NUnit.Engine.Runners
             var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
             if (frameworkSetting.Length > 0)
             {
+                // Check requested framework is actually available
                 var runtimeService = Services.GetService<IRuntimeFrameworkService>();
                 if (!runtimeService.IsAvailable(frameworkSetting))
                     throw new NUnitEngineException(string.Format("The requested framework {0} is unknown or not available.", frameworkSetting));
 
+                // If running in process, check requested framework is compatible
                 var processModel = TestPackage.GetSetting(PackageSettings.ProcessModel, "Default");
                 if (processModel.ToLower() == "single")
                 {
