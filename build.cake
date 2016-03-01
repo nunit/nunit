@@ -209,8 +209,11 @@ Task("TestCompactFramework")
     })
 	.Does(() => 
 	{ 
-        string runtime = "netcf-3.5";
-		RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
+        if(IsRunningOnWindows())
+        {
+            string runtime = "netcf-3.5";
+            RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
+        }
 	});
 
 Task("TestNUnitLite")
