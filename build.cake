@@ -47,6 +47,7 @@ var IMAGE_DIR = PROJECT_DIR + "images/";
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
+var COMPACT_RUNNER = "nunit.framework.tests.exe";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
@@ -198,6 +199,18 @@ Task("TestFramework")
 	.Does(() => 
 	{ 
 		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework, ref ErrorDetail);
+	});
+
+Task("TestCompactFramework")
+  .IsDependentOn("Build")
+    .OnError(exception =>
+    {
+        ErrorDetail.Add(exception.Message);
+    })
+	.Does(() => 
+	{ 
+        string runtime = "netcf-3.5";
+		RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
 	});
 
 Task("TestNUnitLite")
@@ -574,7 +587,7 @@ void BuildFramework(string configuration, string framework)
 			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			break;
-            case "netcf-3.5":
+        case "netcf-3.5":
 			BuildProjectCF("src/NUnitFramework/framework/nunit.framework-netcf-3.5.csproj", configuration);
             BuildProjectCF("src/NUnitFramework/testdata/nunit.testdata-netcf-3.5.csproj", configuration);
             BuildProjectCF("src/NUnitFramework/tests/nunit.framework.tests-netcf-3.5.csproj", configuration);
@@ -722,8 +735,9 @@ Task("TestAll")
     .IsDependentOn("TestDriver")
 	.IsDependentOn("TestAddins")
 	.IsDependentOn("TestV2Driver")
-	.IsDependentOn("TestConsole");
-
+	.IsDependentOn("TestConsole")
+    .IsDependentOn("TestCompactFramework");
+    
 Task("Test")
 	.IsDependentOn("TestFramework")
 	.IsDependentOn("TestNUnitLite")
