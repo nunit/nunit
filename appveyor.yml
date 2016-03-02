@@ -2,12 +2,17 @@ branches:
   except:
     - /travis-.*/
 
+install:
+  ps: |
+        Import-Module '.\appveyor-tool.ps1'
+        Bootstrap
+        
 before_build:
   - nuget restore nunit.sln
 
 build_script: 
   - ps: .\build.ps1 -Target "Appveyor"
-  
+
 artifacts:
 - path: package\*.nupkg
 #  - path: package\*.msi
