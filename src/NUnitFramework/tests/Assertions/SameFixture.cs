@@ -59,5 +59,13 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.AreSame(index, index));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
+
+        [Test]
+        public void ShouldNotCallToStringOnClassForPassingTests()
+        {
+            var actual = new ThrowsIfToStringIsCalled(1);
+
+            Assert.AreSame(actual, actual);
+        }
     }
 }
