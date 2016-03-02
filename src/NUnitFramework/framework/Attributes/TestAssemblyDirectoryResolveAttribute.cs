@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,38 +22,20 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework
 {
-    [TestFixture]
-    public class NotSameFixture
+    /// <summary>
+    /// TestAssemblyDirectoryResolveAttribute is used to mark a test assembly as needing a
+    /// special assembly resolution hook that will explicitly search the test assembly's
+    /// directory for dependent assemblies. This works around a conflict between mixed-mode
+    /// assembly initialization and tests running in their own AppDomain in some cases.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    public class TestAssemblyDirectoryResolveAttribute : NUnitAttribute
     {
-        private readonly string s1 = "S1";
-        private readonly string s2 = "S2";
-
-        [Test]
-        public void NotSame()
-        {
-            Assert.AreNotSame(s1, s2);
-        }
-
-        [Test]
-        public void NotSameFails()
-        {
-            var expectedMessage =
-                "  Expected: not same as \"S1\"" + Env.NewLine +
-                "  But was:  \"S1\"" + Env.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( s1, s1 ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-        }
-
-        [Test]
-        public void ShouldNotCallToStringOnClassForPassingTests()
-        {
-            var actual = new ThrowsIfToStringIsCalled(1);
-            var expected = new ThrowsIfToStringIsCalled(1);
-
-            Assert.AreNotSame(expected, actual);
-        }
     }
+
 }
