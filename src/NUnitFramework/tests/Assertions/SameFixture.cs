@@ -65,7 +65,7 @@ namespace NUnit.Framework.Assertions
         {
             var actual = new ThrowsIfToStringIsCalled(1);
 
-            Assert.AreNotSame(actual, actual);
+            Assert.AreSame(actual, actual);
         }
     }
 }
