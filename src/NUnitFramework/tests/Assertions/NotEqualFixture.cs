@@ -133,5 +133,14 @@ namespace NUnit.Framework.Assertions
             Assert.AreNotEqual(23, i21);
             Assert.AreNotEqual(23, i22);
         }
-   }
+
+        [Test]
+        public void ShouldNotCallToStringOnClassForPassingTests()
+        {
+            var actual = new ThrowsIfToStringIsCalled(1);
+            var expected = new ThrowsIfToStringIsCalled(2);
+
+            Assert.AreNotEqual(expected, actual);
+        }
+    }
 }
