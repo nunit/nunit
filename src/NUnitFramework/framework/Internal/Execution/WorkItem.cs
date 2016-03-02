@@ -239,7 +239,7 @@ namespace NUnit.Framework.Internal.Execution
 #else
             currentApartment = Thread.CurrentThread.GetApartmentState();
 
-            if (Test is TestMethod)
+            if (Test is TestMethod || (currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown))
                 RunTestOnOwnThread(timeout, TargetApartment);
             else
                 RunTest();
@@ -333,7 +333,6 @@ namespace NUnit.Framework.Internal.Execution
                     WorkItemComplete();
                 }
             }
-
         }
 #endif
 
