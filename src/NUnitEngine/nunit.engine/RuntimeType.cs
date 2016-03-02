@@ -12,13 +12,9 @@
         Net,
         /// <summary>Microsoft .NET Compact Framework</summary>
         NetCF,
-        /// <summary>Microsoft Shared Source CLI</summary>
-        SSCLI,
         /// <summary>Mono</summary>
         Mono,
         /// <summary>Silverlight</summary>
-        Silverlight,
-        /// <summary>MonoTouch</summary>
-        MonoTouch
+        Silverlight
     }
 }

@@ -88,7 +88,6 @@
     <Compile Include="ITestRunner.cs" />
     <Compile Include="NUnitEngineException.cs" />
     <Compile Include="IRecentFiles.cs" />
-    <Compile Include="RuntimeType.cs" />
     <Compile Include="TestEngineActivator.cs" />
     <Compile Include="TestFilter.cs" />
     <Compile Include="TestPackage.cs" />

@@ -292,6 +292,8 @@ namespace NUnit.Engine
         /// </summary>
         public RuntimeType Runtime { get; private set; }
 
+        string IRuntimeFramework.Runtime {  get { return Runtime.ToString();  } }
+
         string IRuntimeFramework.Profile { get { return Profile.ToString(); } }
 
         /// <summary>

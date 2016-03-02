@@ -31,9 +31,11 @@ namespace NUnit.Engine
     public interface IRuntimeFramework
     {
         /// <summary>
-        /// Gets a RuntimeType enum value for this framework implementation.
+        /// Gets a string representing this framework implementation.
+        /// Strings used are well known values used by clients as an
+        /// abbrreviation for the runtime in question.
         /// </summary>
-        RuntimeType Runtime { get; }
+        string Runtime { get; }
 
         /// <summary>
         /// Gets the display name of the framework
