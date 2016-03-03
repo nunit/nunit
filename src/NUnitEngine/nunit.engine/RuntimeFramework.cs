@@ -166,6 +166,53 @@ namespace NUnit.Engine
 
         #endregion
 
+        #region IRuntimeFramework Explicit Implementation
+
+        /// <summary>
+        /// Gets the inique Id for this runtime, such as "net-4.5"
+        /// </summary>
+        string IRuntimeFramework.Id
+        {
+            get { return this.ToString(); }
+        }
+
+        /// <summary>
+        /// Gets the display name of the framework, such as ".NET 4.5"
+        /// </summary>
+        string IRuntimeFramework.DisplayName
+        {
+            get { return this.DisplayName; }
+        }
+
+        /// <summary>
+        /// Gets the framework version: usually contains two components, Major
+        /// and Minor, which match the corresponding CLR components, but not always.
+        /// </summary>
+        Version IRuntimeFramework.FrameworkVersion
+        {
+            get { return this.FrameworkVersion; }
+        }
+
+        /// <summary>
+        /// Gets the Version of the CLR for this framework
+        /// </summary>
+        Version IRuntimeFramework.ClrVersion
+        {
+            get { return this.ClrVersion; }
+        }
+
+        /// <summary>
+        /// Gets a string representing the particular profile installed,
+        /// or null if there is no profile. Currently. the only defined 
+        /// values are Full and Client.
+        /// </summary>
+        string IRuntimeFramework.Profile
+        {
+            get { return Profile.ToString(); }
+        }
+
+        #endregion
+
         #region Properties
         /// <summary>
         /// Static method to return a RuntimeFramework object
@@ -291,10 +338,6 @@ namespace NUnit.Engine
         /// The type of this runtime framework
         /// </summary>
         public RuntimeType Runtime { get; private set; }
-
-        string IRuntimeFramework.Runtime {  get { return Runtime.ToString();  } }
-
-        string IRuntimeFramework.Profile { get { return Profile.ToString(); } }
 
         /// <summary>
         /// The framework version for this runtime framework

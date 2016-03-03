@@ -31,14 +31,12 @@ namespace NUnit.Engine
     public interface IRuntimeFramework
     {
         /// <summary>
-        /// Gets a string representing this framework implementation.
-        /// Strings used are well known values used by clients as an
-        /// abbrreviation for the runtime in question.
+        /// Gets the inique Id for this runtime, such as "net-4.5"
         /// </summary>
-        string Runtime { get; }
+        string Id { get;  }
 
         /// <summary>
-        /// Gets the display name of the framework
+        /// Gets the display name of the framework, such as ".NET 4.5"
         /// </summary>
         string DisplayName { get; }
 
@@ -55,9 +53,8 @@ namespace NUnit.Engine
 
         /// <summary>
         /// Gets a string representing the particular profile installed,
-        /// or null if there is no provile. Currently defined values are
-        /// Full and Client.
-        /// 
+        /// or null if there is no profile. Currently. the only defined 
+        /// values are Full and Client.
         /// </summary>
         string Profile { get; }
     }
