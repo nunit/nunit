@@ -287,7 +287,7 @@ namespace NUnit.Engine.Services
         private static string GetNUnitBinDirectory(Version v)
         {
             // Get current bin directory
-            string dir = NUnitConfiguration.NUnitBinDirectory;
+            string dir = NUnitConfiguration.EngineDirectory;
 
             // Return current directory if current and requested
             // versions are both >= 2 or both 1
@@ -335,14 +335,14 @@ namespace NUnit.Engine.Services
 
         private static string GetTestAgentExePath(Version v, bool requires32Bit)
         {
-            string binDir = NUnitConfiguration.NUnitBinDirectory;
-            if (binDir == null) return null;
+            string engineDir = NUnitConfiguration.EngineDirectory;
+            if (engineDir == null) return null;
 
             string agentName = v.Major > 1 && requires32Bit
                 ? "nunit-agent-x86.exe"
                 : "nunit-agent.exe";
 
-            string agentExePath = Path.Combine(binDir, agentName);
+            string agentExePath = Path.Combine(engineDir, agentName);
             return File.Exists(agentExePath) ? agentExePath : null;
         }
 

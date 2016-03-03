@@ -80,5 +80,14 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(package.GetSetting("RunAsX86", false), Is.EqualTo(runAsX86));
             Assert.That(framework.ClrVersion.ToString(), Is.EqualTo(expectedVersion));
         }
+
+        [Test]
+        public void AvailableFrameworks()
+        {
+            var available = _runtimeService.AvailableRuntimes;
+            Assert.That(available.Count, Is.GreaterThan(0));
+            foreach (var framework in available)
+                Console.WriteLine("Available: {0}", framework.DisplayName);
+        }
     }
 }
