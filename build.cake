@@ -551,13 +551,27 @@ Task("PackageCF")
 //////////////////////////////////////////////////////////////////////
 Setup(() =>
 {
-    // Executed BEFORE the first task.
-	});
+	// Executed BEFORE the first task.
+	var datetimeNow = DateTime.Now;
+	var daysPart = (datetimeNow - new DateTime(2000, 1, 1)).Days;
+	var secondsPart = (long)datetimeNow.TimeOfDay.TotalSeconds/2;
+	var assemblyInfo = new AssemblyInfoSettings
+	{
+		Version = "3.0.0.0",
+		FileVersion = string.Format("3.0.{0}.{1}", daysPart, secondsPart)
+	};
+	CreateAssemblyInfo("src/NUnitConsole/ConsoleVersion.cs", assemblyInfo);
+	CreateAssemblyInfo("src/NUnitEngine/EngineVersion.cs", assemblyInfo);
+	CreateAssemblyInfo("src/NUnitFramework/FrameworkVersion.cs", assemblyInfo);
+
+	assemblyInfo.FileVersion = "3.0.1";
+	CreateAssemblyInfo("src/NUnitEngine/EngineApiVersion.cs", assemblyInfo);
+});
 
 Teardown(() =>
 {
-    // Executed AFTER the last task.
-    CheckForError(ref ErrorDetail);
+	// Executed AFTER the last task.
+	CheckForError(ref ErrorDetail);
 });
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS
