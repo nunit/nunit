@@ -333,9 +333,6 @@ namespace NUnit.ConsoleRunner
             if (options.RandomSeedSpecified)
                 package.AddSetting(PackageSettings.RandomSeed, options.RandomSeed);
 
-            if (options.Verbose)
-                package.AddSetting("Verbose", true);
-
             if (options.DebugTests)
             {
                 package.AddSetting(PackageSettings.DebugTests, true);
