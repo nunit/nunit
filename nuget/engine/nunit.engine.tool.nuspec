@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>NUnit.Engine</id>
-    <title>NUnit Test Engine</title>
+    <id>NUnit.Engine.Tool</id>
+    <title>NUnit Test Engine (Tool)</title>
     <version>$version$</version>
     <authors>Charlie Poole</authors>
     <owners>Charlie Poole</owners>
