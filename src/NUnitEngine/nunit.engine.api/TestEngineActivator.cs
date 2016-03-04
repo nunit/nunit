@@ -116,6 +116,37 @@ namespace NUnit.Engine
                 }
             }
 
+            // Check for an engine that has been installed as part of a 
+            // development project using NuGet. 
+            //
+            // NOTE: This code assumes that we are working in
+            // bin/Debug or bin/Release and includes a lot of
+            // knowledge of how we handle nuget packages. It
+            // is only intended for use while a new runner is
+            // under development. 
+            if (newestAssemblyFound == null)
+            {
+                var packages = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../packages");
+     
+                if (Directory.Exists(packages))
+                {
+                    var packagesDir = new DirectoryInfo(packages);
+                    foreach (var subDir in packagesDir.GetDirectories("NUnit.Engine.*"))
+                    {
+                        // In future, we will use tools directory but currently we use lib
+                        path = Path.Combine(Path.Combine(subDir.FullName, "tools"), DefaultAssemblyName);
+                        newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, null);
+                        if (newestAssemblyFound != null)
+                            break;
+
+                        path = Path.Combine(Path.Combine(subDir.FullName, "lib"), DefaultAssemblyName);
+                        newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, null);
+                        if (newestAssemblyFound != null)
+                            break;
+                    }
+                }
+            }
+
             if (!privateCopy)
             {
                 // Check the install for the current user, 32 bit process
@@ -134,6 +165,7 @@ namespace NUnit.Engine
                 path = FindEngineInRegistry(Registry.LocalMachine, NunitInstallRegKeyWow64);
                 newestAssemblyFound = CheckPathForEngine(path, minVersion, ref newestVersionFound, newestAssemblyFound);
             }
+
             return newestAssemblyFound;
         }
 

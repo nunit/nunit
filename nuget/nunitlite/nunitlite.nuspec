@@ -45,8 +45,8 @@ How to use this package:
     <file src="bin/net-4.0/nunitlite-runner.exe" target="tools/net40" />
     <file src="bin/net-4.5/nunitlite-runner.exe" target="tools/net45" />
     <file src="bin/portable/nunitlite-runner.exe" target="tools/portable" />
-    <file src="..\..\nuget\Program.cs" target="content" />
-    <file src="..\..\nuget\Program.vb" target="content" />
-    <file src="..\..\nuget\install.ps1" target="tools" />
+    <file src="..\..\nuget\nunitlite\Program.cs" target="content" />
+    <file src="..\..\nuget\nunitlite\Program.vb" target="content" />
+    <file src="..\..\nuget\nunitlite\install.ps1" target="tools" />
   </files>
 </package>
