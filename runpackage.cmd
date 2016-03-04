@@ -1,1 +1,0 @@
-runbuild /t:Package %*
