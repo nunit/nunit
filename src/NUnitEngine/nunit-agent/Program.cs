@@ -37,7 +37,7 @@ namespace NUnit.Agent
     /// </summary>
     public class NUnitTestAgent
     {
-        //static Logger log = InternalTrace.GetLogger(typeof(NUnitTestAgent));
+        static Logger log = InternalTrace.GetLogger(typeof(NUnitTestAgent));
 
         static Guid AgentId;
         static string AgencyUrl;
@@ -49,6 +49,8 @@ namespace NUnit.Agent
         /// </summary>
         static TcpChannel Channel;
 
+        private const string LOG_FILE_FORMAT = "nunit-agent_{0}.log";
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -57,45 +59,47 @@ namespace NUnit.Agent
         {
             AgentId = new Guid(args[0]);
             AgencyUrl = args[1];
-            
-            bool verbose = false;
+
+            InternalTraceLevel traceLevel = InternalTraceLevel.Off;
+
             for (int i = 2; i < args.Length; i++)
-                switch (args[i])
-                {
-                    case "--debug-agent":
-                        if (!System.Diagnostics.Debugger.IsAttached)
-                            System.Diagnostics.Debugger.Launch();
-                        break;
-                    case "--verbose":
-                        verbose = true;
-                        break;
-                }
-
-            // Create SettingsService early so we know the trace level right at the start
-            SettingsService settingsService = new SettingsService(false);
-            //InternalTrace.Initialize("nunit-agent_%p.log", (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Default));
-
-            //log.Info("Agent process {0} starting", Process.GetCurrentProcess().Id);
-            //log.Info("Running under version {0}, {1}", 
-            //    Environment.Version, 
-            //    RuntimeFramework.CurrentFramework.DisplayName);
-
-            if (verbose)
             {
-                Console.WriteLine("Agent process {0} starting", Process.GetCurrentProcess().Id);
-                Console.WriteLine("Running under version {0}, {1}",
-                    Environment.Version,
-                    RuntimeFramework.CurrentFramework.DisplayName);
+                string arg = args[i];
+                
+                // NOTE: we can test these strings exactly since
+                // they originate from the engine itself.
+                if (arg == "--debug-agent")
+                {
+                    if (!Debugger.IsAttached)
+                        Debugger.Launch();
+                }
+                else if (arg.StartsWith("--trace:"))
+                {
+                    traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), arg.Substring(8));
+                }
             }
+
+            // Initialize trace so we can see what's happening
+            int pid = Process.GetCurrentProcess().Id;
+            string logname = string.Format(LOG_FILE_FORMAT, pid);
+            InternalTrace.Initialize(logname, traceLevel);
+
+            log.Info("Agent process {0} starting", pid);
+            log.Info("Running under version {0}, {1}",
+                Environment.Version,
+                RuntimeFramework.CurrentFramework.DisplayName);
 
             // Create TestEngine - this program is
             // conceptually part of  the engine and
             // can access it's internals as needed.
             TestEngine engine = new TestEngine();
+
+            // TODO: We need to get this from somewhere. Argument?
+            engine.InternalTraceLevel = InternalTraceLevel.Debug;
             
             // Custom Service Initialization
             //log.Info("Adding Services");
-            engine.Services.Add(settingsService);
+            engine.Services.Add(new SettingsService(false));
             engine.Services.Add(new ExtensionService());
             engine.Services.Add(new ProjectService());
             engine.Services.Add(new DomainManager());
@@ -104,43 +108,40 @@ namespace NUnit.Agent
             //engine.Services.Add( new TestLoader() );
 
             // Initialize Services
-            //log.Info("Initializing Services");
+            log.Info("Initializing Services");
             engine.Initialize();
 
             Channel = ServerUtilities.GetTcpChannel();
 
-            //log.Info("Connecting to TestAgency at {0}", AgencyUrl);
+            log.Info("Connecting to TestAgency at {0}", AgencyUrl);
             try
             {
                 Agency = Activator.GetObject(typeof(ITestAgency), AgencyUrl) as ITestAgency;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to connect\r\n{0}", ex);
-                //log.Error("Unable to connect", ex);
+                log.Error("Unable to connect", ex);
             }
 
             if (Channel != null)
             {
-                //log.Info("Starting RemoteTestAgent");
+                log.Info("Starting RemoteTestAgent");
                 RemoteTestAgent agent = new RemoteTestAgent(AgentId, Agency, engine.Services);
 
                 try
                 {
                     if (agent.Start())
                     {
-                        //log.Debug("Waiting for stopSignal");
+                        log.Debug("Waiting for stopSignal");
                         agent.WaitForStop();
-                        //log.Debug("Stop signal received");
+                        log.Debug("Stop signal received");
                     }
                     else
-                        Console.WriteLine("Failed to start RemoteTestAgent");
-                        //log.Error("Failed to start RemoteTestAgent");
+                        log.Error("Failed to start RemoteTestAgent");
                 }
                 catch (Exception ex)
                 {
-                    //log.Error("Exception in RemoteTestAgent", ex);
-                    Console.WriteLine("Exception in RemoteTestAgent\r\n{0}", ex);
+                    log.Error("Exception in RemoteTestAgent", ex);
                 }
 
                 //log.Info("Unregistering Channel");
@@ -150,15 +151,11 @@ namespace NUnit.Agent
                 }
                 catch (Exception ex)
                 {
-                    //log.Error("ChannelServices.UnregisterChannel threw an exception", ex);
-                    Console.WriteLine("ChannelServices.UnregisterChannel threw an exception\r\n{0}", ex);
+                    log.Error("ChannelServices.UnregisterChannel threw an exception", ex);
                 }
             }
 
-            if (verbose)
-                Console.WriteLine("Agent process {0} exiting", Process.GetCurrentProcess().Id);
-            //log.Info("Agent process {0} exiting", Process.GetCurrentProcess().Id);
-            //InternalTrace.Close();
+            log.Info("Agent process {0} exiting", Process.GetCurrentProcess().Id);
 
             return 0;
         }
