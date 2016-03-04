@@ -17,7 +17,6 @@ var ErrorDetail = new List<string>();
 
 var version = "3.1.0";
 var modifier = "";
-var displayVersion = "3.1";
 
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
