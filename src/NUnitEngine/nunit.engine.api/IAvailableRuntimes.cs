@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,39 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Collections.Generic;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Engine
 {
-    [TestFixture]
-    public class NotSameFixture
+    /// <summary>
+    /// Interface that returns a list of available runtime frameworks.
+    /// </summary>
+    public interface IAvailableRuntimes
     {
-        private readonly string s1 = "S1";
-        private readonly string s2 = "S2";
-
-        [Test]
-        public void NotSame()
-        {
-            Assert.AreNotSame(s1, s2);
-        }
-
-        [Test]
-        public void NotSameFails()
-        {
-            var expectedMessage =
-                "  Expected: not same as \"S1\"" + Env.NewLine +
-                "  But was:  \"S1\"" + Env.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( s1, s1 ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-        }
-
-        [Test]
-        public void ShouldNotCallToStringOnClassForPassingTests()
-        {
-            var actual = new ThrowsIfToStringIsCalled(1);
-            var expected = new ThrowsIfToStringIsCalled(1);
-
-            Assert.AreNotSame(expected, actual);
-        }
+        /// <summary>
+        /// Gets a list of available runtime frameworks.
+        /// </summary>
+        IList<IRuntimeFramework> AvailableRuntimes { get; }
     }
 }

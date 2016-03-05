@@ -17,7 +17,6 @@ var ErrorDetail = new List<string>();
 
 var version = "3.1.0";
 var modifier = "";
-var displayVersion = "3.1";
 
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
@@ -425,52 +424,67 @@ Task("PackageNuGet")
 		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
 
 		CreateDirectory(PACKAGE_DIR);
-		NuGetPack("nuget/nunit.nuspec", new NuGetPackSettings()
+
+		// Package framework
+		NuGetPack("nuget/framework/nunit.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunitSL.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/framework/nunitSL.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunitlite.nuspec", new NuGetPackSettings()
+
+		// Package NUnitLite
+		NuGetPack("nuget/nunitlite/nunitlite.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunitliteSL.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/nunitlite/nunitliteSL.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunit.console-runner.nuspec", new NuGetPackSettings()
+
+		// Package Runners
+		NuGetPack("nuget/runners/nunit.console-runner.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
-		NuGetPack("nuget/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/runners/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
-		NuGetPack("nuget/nunit.runners.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/runners/nunit.runners.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR,
 			NoPackageAnalysis = true
 		});
-		NuGetPack("nuget/nunit.engine.nuspec", new NuGetPackSettings()
+
+		// Package engine
+		NuGetPack("nuget/engine/nunit.engine.nuspec", new NuGetPackSettings()
+		{
+			Version = packageVersion,
+			BasePath = currentImageDir,
+			OutputDirectory = PACKAGE_DIR,
+			NoPackageAnalysis = true
+		});
+		NuGetPack("nuget/engine/nunit.engine.tool.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
@@ -540,13 +554,13 @@ Task("PackageCF")
 
 		Zip(currentImageDir, File(ZIP_PACKAGE_CF), zipFiles);
 
-		NuGetPack("nuget/nunitCF.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/framework/nunitCF.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,
 			OutputDirectory = PACKAGE_DIR
 		});
-		NuGetPack("nuget/nunitLiteCF.nuspec", new NuGetPackSettings()
+		NuGetPack("nuget/nunitlite/nunitLiteCF.nuspec", new NuGetPackSettings()
 		{
 			Version = packageVersion,
 			BasePath = currentImageDir,

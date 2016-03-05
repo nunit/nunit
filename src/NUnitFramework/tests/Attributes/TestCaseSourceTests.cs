@@ -317,8 +317,10 @@ namespace NUnit.Framework.Attributes
 
         private class DivideDataProvider
         {
+#pragma warning disable 0169    // x is never assigned
             private static object[] myObject;
-         
+#pragma warning restore 0169
+
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
             {
                 yield return new object[] { inject1, inject2, inject3 };

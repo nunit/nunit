@@ -167,11 +167,15 @@ namespace NUnit.Engine.Services
             bool useX86Agent = package.GetSetting(PackageSettings.RunAsX86, false);
             bool debugTests = package.GetSetting(PackageSettings.DebugTests, false);
             bool debugAgent = package.GetSetting(PackageSettings.DebugAgent, false);
-            bool verbose = package.GetSetting("Verbose", false);
+            string traceLevel = package.GetSetting(PackageSettings.InternalTraceLevel, "Off");
 
+            // Set options that need to be in effect before the package
+            // is loaded by using the command line.
             string agentArgs = string.Empty;
-            if (debugAgent) agentArgs += " --debug-agent";
-            if (verbose) agentArgs += " --verbose";
+            if (debugAgent)
+                agentArgs += " --debug-agent";
+            if (traceLevel != "Off")
+                agentArgs += " --trace:" + traceLevel;
 
             log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", targetRuntime);
 
@@ -283,7 +287,7 @@ namespace NUnit.Engine.Services
         private static string GetNUnitBinDirectory(Version v)
         {
             // Get current bin directory
-            string dir = NUnitConfiguration.NUnitBinDirectory;
+            string dir = NUnitConfiguration.EngineDirectory;
 
             // Return current directory if current and requested
             // versions are both >= 2 or both 1
@@ -331,14 +335,14 @@ namespace NUnit.Engine.Services
 
         private static string GetTestAgentExePath(Version v, bool requires32Bit)
         {
-            string binDir = NUnitConfiguration.NUnitBinDirectory;
-            if (binDir == null) return null;
+            string engineDir = NUnitConfiguration.EngineDirectory;
+            if (engineDir == null) return null;
 
             string agentName = v.Major > 1 && requires32Bit
                 ? "nunit-agent-x86.exe"
                 : "nunit-agent.exe";
 
-            string agentExePath = Path.Combine(binDir, agentName);
+            string agentExePath = Path.Combine(engineDir, agentName);
             return File.Exists(agentExePath) ? agentExePath : null;
         }
 

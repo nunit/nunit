@@ -22,39 +22,40 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework
+namespace NUnit.Engine
 {
     /// <summary>
-    /// Defines the order that the test will run in
+    /// Interface implemented by objects representing a runtime framework.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class OrderAttribute : NUnitAttribute, IApplyToTest
+    public interface IRuntimeFramework
     {
-          /// <summary>
-         /// Defines the order that the test will run in
-         /// </summary>
-         public readonly int Order;
- 
-         /// <summary>
-         /// Defines the order that the test will run in
-         /// </summary>
-         /// <param name="order"></param>
-         public OrderAttribute(int order)
-         {
-             Order = order;
-         }
- 
-         /// <summary>
-         /// Modifies a test as defined for the specific attribute.
-         /// </summary>
-         /// <param name="test">The test to modify</param>
-         public void ApplyToTest(Test test)
-        {
-            if (!test.Properties.ContainsKey(PropertyNames.Order))
-                test.Properties.Set(PropertyNames.Order, Order);
-        }
-     }
- }
+        /// <summary>
+        /// Gets the inique Id for this runtime, such as "net-4.5"
+        /// </summary>
+        string Id { get;  }
+
+        /// <summary>
+        /// Gets the display name of the framework, such as ".NET 4.5"
+        /// </summary>
+        string DisplayName { get; }
+
+        /// <summary>
+        /// Gets the framework version: usually contains two components, Major
+        /// and Minor, which match the corresponding CLR components, but not always.
+        /// </summary>
+        Version FrameworkVersion { get; }
+
+        /// <summary>
+        /// Gets the Version of the CLR for this framework
+        /// </summary>
+        Version ClrVersion { get; }
+
+        /// <summary>
+        /// Gets a string representing the particular profile installed,
+        /// or null if there is no profile. Currently. the only defined 
+        /// values are Full and Client.
+        /// </summary>
+        string Profile { get; }
+    }
+}
