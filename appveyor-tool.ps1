@@ -113,7 +113,7 @@ function RegistryWorkAround
         }
         else
         {
-            Progress("Regsitrty update ok to value " + (Get-ItemProperty -Path $registryPath -Name $Name).ProductDir)
+            Progress("Registry update ok to value " + (Get-ItemProperty -Path $registryPath -Name $Name).ProductDir)
         }                           
     }
 }
