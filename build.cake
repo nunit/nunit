@@ -99,8 +99,10 @@ Task("InitializeBuild")
 			packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
 			if (AppVeyor.Environment.PullRequest.IsPullRequest)
 				packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
-			else
-				packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
+			else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+                packageVersion += "-PRE-" + buildNumber;
+            else
+                packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
 		}
 
 		AppVeyor.UpdateBuildVersion(packageVersion);
