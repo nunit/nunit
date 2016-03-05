@@ -1,5 +1,3 @@
-## Pilferd from https://github.com/krlmlr/r-appveyor/blob/master/scripts/appveyor-tool.ps1
-## Thanks to Kirill Müller
 Function Exec
 {
     [CmdletBinding()]

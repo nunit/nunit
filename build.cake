@@ -187,6 +187,15 @@ Task("TestAllFrameworks")
 				else
 					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime, ref ErrorDetail);
 			}
+            else
+            {
+                // Commenting out will work on it in another Issue/PR
+                //if(IsRunningOnWindows())
+                //{
+                //    string runtime = "netcf-3.5";
+                //    RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
+                //}
+            }
 		}
 	});
 
@@ -199,21 +208,6 @@ Task("TestFramework")
 	.Does(() => 
 	{ 
 		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework, ref ErrorDetail);
-	});
-
-Task("TestCompactFramework")
-  .IsDependentOn("Build")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
-	.Does(() => 
-	{ 
-        if(IsRunningOnWindows())
-        {
-            string runtime = "netcf-3.5";
-            RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
-        }
 	});
 
 Task("TestNUnitLite")
@@ -775,8 +769,7 @@ Task("TestAll")
     .IsDependentOn("TestDriver")
 	.IsDependentOn("TestAddins")
 	.IsDependentOn("TestV2Driver")
-	.IsDependentOn("TestConsole")
-    .IsDependentOn("TestCompactFramework");
+	.IsDependentOn("TestConsole");
     
 Task("Test")
 	.IsDependentOn("TestFramework")
