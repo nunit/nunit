@@ -192,7 +192,6 @@ Task("TestAllFrameworks")
                 // Commenting out will work on it in another Issue/PR
                 //if(IsRunningOnWindows())
                 //{
-                //    string runtime = "netcf-3.5";
                 //    RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
                 //}
             }
