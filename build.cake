@@ -15,7 +15,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.1.0";
+var version = "3.3.0";
 var modifier = "";
 
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
@@ -33,7 +33,7 @@ var LinuxFrameworks = new string[] {
 	"net-4.5", "net-4.0", "net-2.0" };
 
 var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
-	
+
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
@@ -100,8 +100,10 @@ Task("InitializeBuild")
 			packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
 			if (AppVeyor.Environment.PullRequest.IsPullRequest)
 				packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
-			else
-				packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
+			else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+                packageVersion += "-PRE-" + buildNumber;
+            else
+                packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
 		}
 
 		AppVeyor.UpdateBuildVersion(packageVersion);
@@ -159,7 +161,7 @@ Task("BuildCppTestFiles")
             .SetNodeReuse(false)
         );
 	});
-    
+
 //////////////////////////////////////////////////////////////////////
 // TEST
 //////////////////////////////////////////////////////////////////////
@@ -203,8 +205,8 @@ Task("TestFramework")
     {
         ErrorDetail.Add(exception.Message);
     })
-	.Does(() => 
-	{ 
+	.Does(() =>
+	{
 		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework, ref ErrorDetail);
 	});
 
@@ -214,8 +216,8 @@ Task("TestNUnitLite")
     {
         ErrorDetail.Add(exception.Message);
     })
-	.Does(() => 
-	{ 
+	.Does(() =>
+	{
 			if (framework == "sl-5.0")
 				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll", framework, ref ErrorDetail);
 			else
@@ -228,16 +230,16 @@ Task("TestEngine")
     {
         ErrorDetail.Add(exception.Message);
     })
-  .Does(() => 
-	{ 
+  .Does(() =>
+	{
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine", ref ErrorDetail);
 	});
 
 Task("TestDriver")
   .IsDependentOn("Build")
   .WithCriteria(IsRunningOnWindows)
-  .Does(() => 
-	{ 
+  .Does(() =>
+	{
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS, ref ErrorDetail);
 	});
 
@@ -247,9 +249,9 @@ Task("TestAddins")
         ErrorDetail.Add(exception.Message);
     })
   .IsDependentOn("Build")
-  .Does(() => 
+  .Does(() =>
 	{
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS,"TestAddins", ref ErrorDetail); 
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS,"TestAddins", ref ErrorDetail);
 	});
 
 Task("TestV2Driver")
@@ -258,8 +260,8 @@ Task("TestV2Driver")
     {
         ErrorDetail.Add(exception.Message);
     })
-  .Does(() => 
-	{ 
+  .Does(() =>
+	{
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver", ref ErrorDetail);
 	});
 
@@ -269,8 +271,8 @@ Task("TestConsole")
     {
         ErrorDetail.Add(exception.Message);
     })
-  .Does(() => 
-	{ 
+  .Does(() =>
+	{
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole", ref ErrorDetail);
 	});
 
@@ -282,7 +284,7 @@ var RootFiles = new FilePath[]
 {
 	"LICENSE.txt",
 	"NOTICES.txt",
-	"CHANGES.txt", 
+	"CHANGES.txt",
 	"nunit.ico"
 };
 
@@ -290,7 +292,7 @@ var BinFiles = new FilePath[]
 {
 	"ConsoleTests.nunit",
 	"EngineTests.nunit",
-	"mock-nunit-assembly.exe",
+	"mock-assembly.exe",
 	"Mono.Cecil.dll",
 	"nunit-agent-x86.exe",
 	"nunit-agent-x86.exe.config",
@@ -375,7 +377,7 @@ Task("CreateImage")
 			  CreateDirectory(imageBinDir + file.GetDirectory());
 			  CopyFile(BIN_DIR + file, imageBinDir + file);
 			}
-		}			
+		}
 
 		foreach (var runtime in AllFrameworks)
 		{
@@ -399,7 +401,7 @@ Task("PackageZip")
 
 		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
 
-		var zipFiles = 
+		var zipFiles =
 			GetFiles(currentImageDir + "*.*") +
 			GetFiles(currentImageDir + "bin/*.*") +
 			GetFiles(currentImageDir + "bin/addins/*.*") +
@@ -548,7 +550,7 @@ Task("PackageCF")
 
 		var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
 
-		var zipFiles = 
+		var zipFiles =
 			GetFiles(currentImageDir + "*.*") +
 			GetFiles(currentImageDir + "bin/netcf-3.5/*.*");
 
@@ -587,12 +589,12 @@ Teardown(() =>
 
 void CheckForError(ref List<string> errorDetail)
 {
-    if(errorDetail.Count != 0) 
+    if(errorDetail.Count != 0)
     {
         var copyError = new List<string>();
         copyError = errorDetail.Select(s => s).ToList();
         errorDetail.Clear();
-        throw new Exception("One or more unit test failed, breaking the build.\n" 
+        throw new Exception("One or more unit test failed, breaking the build.\n"
                               + copyError.Aggregate((x,y) => x + "\n" + y));
     }
 }
@@ -653,9 +655,9 @@ void BuildEngine(string configuration)
     BuildProject("./src/NUnitEngine/nunit.engine/nunit.engine.csproj", configuration);
     BuildProject("./src/NUnitEngine/nunit-agent/nunit-agent.csproj", configuration);
     BuildProject("./src/NUnitEngine/nunit-agent/nunit-agent-x86.csproj", configuration);
-    
+
     // Engine tests
-    BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration);  
+    BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration);
 
     // Driver and tests
     if(IsRunningOnWindows())
@@ -665,8 +667,8 @@ void BuildEngine(string configuration)
     }
 
     // Addins
-    BuildProject("./src/NUnitEngine/Addins/nunit-project-loader/nunit-project-loader.csproj", configuration);  
-    BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);  
+    BuildProject("./src/NUnitEngine/Addins/nunit-project-loader/nunit-project-loader.csproj", configuration);
+    BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);
     BuildProject("./src/NUnitEngine/Addins/nunit-v2-result-writer/nunit-v2-result-writer.csproj", configuration);
     BuildProject("./src/NUnitEngine/Addins/nunit.v2.driver/nunit.v2.driver.csproj", configuration);
 
@@ -723,16 +725,16 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
         );
     }
 }
- 
+
 void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
 	int rc = StartProcess(
-	  MakeAbsolute(exePath), 
+	  MakeAbsolute(exePath),
 	  new ProcessSettings()
 	  {
 		  WorkingDirectory = workingDir
 	  });
-	  	  
+
 	if (rc > 0)
         errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
 	else if (rc < 0)
@@ -742,13 +744,13 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref L
 void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
 {
 	int rc = StartProcess(
-	  MakeAbsolute(exePath), 
+	  MakeAbsolute(exePath),
 	  new ProcessSettings()
 	  {
 		  Arguments = arguments,
 		  WorkingDirectory = workingDir
 	  });
-	  
+
 	if (rc > 0)
         errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
 	else if (rc < 0)
@@ -771,7 +773,7 @@ Task("Build")
   .IsDependentOn("BuildAllFrameworks")
   .IsDependentOn("BuildEngine")
   .IsDependentOn("BuildConsole");
-  
+
 Task("Rebuild")
   .IsDependentOn("Clean")
 	.IsDependentOn("Build");
