@@ -171,33 +171,29 @@ Task("CheckForError")
 
 Task("TestAllFrameworks")
   .IsDependentOn("Build")
-    .OnError(exception =>
+  .OnError(exception =>
+  {
+    ErrorDetail.Add(exception.Message);
+  })
+  .Does(() =>
+  {
+    foreach(string runtime in AllFrameworks)
     {
-        ErrorDetail.Add(exception.Message);
-    })
-	.Does(() =>
-	{
-		foreach(string runtime in AllFrameworks)
-		{
-			if (runtime != "netcf-3.5")
-			{
-				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+      if (runtime != "netcf-3.5")
+      {
+        RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
 
-				if (runtime == "sl-5.0")
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll", runtime, ref ErrorDetail);
-				else
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime, ref ErrorDetail);
-			}
-            else
-            {
-                // Commenting out will work on it in another Issue/PR
-                //if(IsRunningOnWindows())
-                //{
-                //    RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
-                //}
-            }
-		}
-	});
+        if (runtime == "sl-5.0")
+          RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll", runtime, ref ErrorDetail);
+        else
+          RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime, ref ErrorDetail);
+      }
+      else if(IsRunningOnWindows())
+      {
+        RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
+      }
+    }
+  });
 
 Task("TestFramework")
   .IsDependentOn("Build")
