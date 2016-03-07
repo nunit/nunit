@@ -111,11 +111,12 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void NotEmptyDirectory()
         {
-            var testPath = new DirectoryInfo(NUnit.Env.DefaultWorkDirectory);
-            Assume.That(testPath, Does.Exist);
-#if !PORTABLE
-            Assert.That(testPath, Is.Not.Empty, "{0} should not be empty", testPath.FullName);
-#endif
+            using (var testDir = new TestDirectory())
+            {
+                var stream = File.Create(Path.Combine(testDir.Directory.FullName, "DUMMY.FILE"));
+                stream.Close();
+                Assert.That(testDir.Directory, Is.Not.Empty);
+            }
         }
     }
 #endif
