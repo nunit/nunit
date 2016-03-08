@@ -62,12 +62,14 @@
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="Assertions\AssertionHelperTests.cs" />
+    <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Attributes\CommandWrapperTests.cs" />
     <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
+    <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />

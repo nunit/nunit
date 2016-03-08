@@ -27,4 +27,5 @@ using System.Reflection;
 // Versioning for the NUnit Engine assemblies, with the exception
 // of nunit.engine.api, which uses a separate version file.
 //
-[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyVersion("3.3.0.0")]
+[assembly: AssemblyFileVersion("3.3.0.0")]

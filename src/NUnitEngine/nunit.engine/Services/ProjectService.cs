@@ -112,7 +112,12 @@ namespace NUnit.Engine.Services
                             foreach (string ext in node.GetProperties("FileExtension"))
                             {
                                 if (ext != null)
+                                {
+                                    if (_extensionIndex.ContainsKey(ext))
+                                        throw new NUnitEngineException(string.Format("ProjectLoader extension {0} is already handled by another extension.", ext));
+
                                     _extensionIndex.Add(ext, node);
+                                }
                             }
                         }
 
@@ -123,7 +128,7 @@ namespace NUnit.Engine.Services
                 }
                 catch
                 {
-                    // TODO: We should really just ignore any addin that doesn't load
+                    // TODO: Should we just ignore any addin that doesn't load?
                     Status = ServiceStatus.Error;
                     throw;
                 }

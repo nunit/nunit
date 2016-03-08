@@ -31,28 +31,6 @@ using Microsoft.Win32;
 namespace NUnit.Engine
 {
     /// <summary>
-    /// Enumeration identifying a common language
-    /// runtime implementation.
-    /// </summary>
-    public enum RuntimeType
-    {
-        /// <summary>Any supported runtime framework</summary>
-        Any,
-        /// <summary>Microsoft .NET Framework</summary>
-        Net,
-        /// <summary>Microsoft .NET Compact Framework</summary>
-        NetCF,
-        /// <summary>Microsoft Shared Source CLI</summary>
-        SSCLI,
-        /// <summary>Mono</summary>
-        Mono,
-        /// <summary>Silverlight</summary>
-        Silverlight,
-        /// <summary>MonoTouch</summary>
-        MonoTouch
-    }
-
-    /// <summary>
     /// Enumeration identifying profile of .NET Framework
     /// </summary>
     public enum Profile
@@ -70,7 +48,7 @@ namespace NUnit.Engine
     /// of a common language runtime implementation.
     /// </summary>
     [Serializable]
-    public sealed class RuntimeFramework
+    public sealed class RuntimeFramework : IRuntimeFramework
     {
         #region Static and Instance Fields
 
@@ -96,6 +74,19 @@ namespace NUnit.Engine
         /// <param name="runtime">The runtime type of the framework</param>
         /// <param name="version">The version of the framework</param>
         public RuntimeFramework(RuntimeType runtime, Version version)
+            : this(runtime, version, Profile.Unspecified)
+        {
+        }
+
+        /// <summary>
+        /// Construct from a runtime type, version and profile. If the version has
+        /// two parts, it is taken as a framework version. If it has three
+        /// or more, it is taken as a CLR version. In either case, the other
+        /// version is deduced based on the runtime type and provided version.
+        /// </summary>
+        /// <param name="runtime">The runtime type of the framework</param>
+        /// <param name="version">The version of the framework</param>
+        public RuntimeFramework(RuntimeType runtime, Version version, Profile profile)
         {
             Runtime = runtime;
 
@@ -104,8 +95,9 @@ namespace NUnit.Engine
             else
                 InitFromClrVersion(version);
 
-            DisplayName = GetDefaultDisplayName(runtime, version);
-            Profile = Profile.Unspecified;
+            Profile = profile;
+
+            DisplayName = GetDefaultDisplayName(runtime, FrameworkVersion, profile);
         }
 
         private void InitFromFrameworkVersion(Version version)
@@ -170,6 +162,53 @@ namespace NUnit.Engine
             this.ClrVersion = version;
             if (Runtime == RuntimeType.Mono && version.Major == 1)
                 this.FrameworkVersion = new Version(1, 0);
+        }
+
+        #endregion
+
+        #region IRuntimeFramework Explicit Implementation
+
+        /// <summary>
+        /// Gets the inique Id for this runtime, such as "net-4.5"
+        /// </summary>
+        string IRuntimeFramework.Id
+        {
+            get { return this.ToString(); }
+        }
+
+        /// <summary>
+        /// Gets the display name of the framework, such as ".NET 4.5"
+        /// </summary>
+        string IRuntimeFramework.DisplayName
+        {
+            get { return this.DisplayName; }
+        }
+
+        /// <summary>
+        /// Gets the framework version: usually contains two components, Major
+        /// and Minor, which match the corresponding CLR components, but not always.
+        /// </summary>
+        Version IRuntimeFramework.FrameworkVersion
+        {
+            get { return this.FrameworkVersion; }
+        }
+
+        /// <summary>
+        /// Gets the Version of the CLR for this framework
+        /// </summary>
+        Version IRuntimeFramework.ClrVersion
+        {
+            get { return this.ClrVersion; }
+        }
+
+        /// <summary>
+        /// Gets a string representing the particular profile installed,
+        /// or null if there is no profile. Currently. the only defined 
+        /// values are Full and Client.
+        /// </summary>
+        string IRuntimeFramework.Profile
+        {
+            get { return Profile.ToString(); }
         }
 
         #endregion
@@ -453,14 +492,21 @@ namespace NUnit.Engine
             return false;
         }
 
-        private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
+        private static string GetDefaultDisplayName(RuntimeType runtime, Version version, Profile profile)
         {
+            string displayName;
+
             if (version == DefaultVersion)
-                return runtime.ToString();
+                displayName = runtime.ToString();
             else if (runtime == RuntimeType.Any)
-                return "v" + version.ToString();
+                displayName = "v" + version.ToString();
             else
-                return runtime.ToString() + " " + version.ToString();
+                displayName = runtime.ToString() + " " + version.ToString();
+
+            if (profile != Profile.Unspecified && profile != Profile.Full)
+                displayName += " - " + profile.ToString();
+
+            return displayName;
         }
 
         private static bool VersionsMatch(Version v1, Version v2)
@@ -634,8 +680,7 @@ namespace NUnit.Engine
                 
                 if (CheckInstallDword(profileKey))
                 {
-                    var framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 0));
-                    framework.DisplayName += " - " + profile.ToString();
+                    var framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 0), profile);
                     framework.Profile = profile;
                     frameworks.Add(framework);
 
@@ -654,7 +699,7 @@ namespace NUnit.Engine
         {
             return ((int)key.GetValue("Install", 0) == 1);
         }
-        
+
         #endregion
     }
 }

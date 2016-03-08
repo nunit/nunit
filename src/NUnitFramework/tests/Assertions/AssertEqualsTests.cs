@@ -614,20 +614,81 @@ namespace NUnit.Framework.Assertions
             Assert.That(a, Is.EqualTo(1));
             Assert.That(1, Is.EqualTo(a));
         }
-    }
 
-    public class IntEquatable : IEquatable<int>
-    {
-        private int i;
-
-        public IntEquatable(int i)
+        [Test]
+        public void EqualsFailsWhenUsed()
         {
-            this.i = i;
+            var ex = Assert.Throws<InvalidOperationException>(() => Assert.Equals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("Assert.Equals should not be used for Assertions"));
         }
 
-        public bool Equals(int other)
+        [Test]
+        public void ReferenceEqualsFailsWhenUsed()
         {
-            return i.Equals(other);
+            var ex = Assert.Throws<InvalidOperationException>(() => Assert.ReferenceEquals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("Assert.ReferenceEquals should not be used for Assertions"));
+        }
+
+        [Test]
+        public void ShouldNotCallToStringOnClassForPassingTests()
+        {
+            var actual = new ThrowsIfToStringIsCalled(1);
+            var expected = new ThrowsIfToStringIsCalled(1);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        class IntEquatable : IEquatable<int>
+        {
+            int i;
+
+            public IntEquatable(int i)
+            {
+                this.i = i;
+            }
+
+            public bool Equals(int other)
+            {
+                return i.Equals(other);
+            }
+        }
+    }
+
+    /// <summary>
+    /// This class is for testing issue #1301 where ToString() is called on
+    /// a class to create the description of the constraint even where that
+    /// description is not used because the test passes.
+    /// </summary>
+    internal class ThrowsIfToStringIsCalled
+    {
+        int _x;
+
+        public ThrowsIfToStringIsCalled(int x)
+        {
+            _x = x;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            var other = obj as ThrowsIfToStringIsCalled;
+            if (other == null)
+                return false;
+
+            return _x == other._x;
+        }
+
+        public override int GetHashCode()
+        {
+            return _x;
+        }
+
+        public override string ToString()
+        {
+            Assert.Fail("Should not call ToString() if Assert does not fail");
+            return base.ToString();
         }
     }
 }

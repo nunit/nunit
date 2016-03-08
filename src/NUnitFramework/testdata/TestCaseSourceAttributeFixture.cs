@@ -124,7 +124,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        private static IEnumerable exception_source
+        static IEnumerable exception_source
         {
             get
             {
@@ -135,10 +135,12 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        private class DivideDataProvider
+        class DivideDataProvider
         {
-            private static object[] myObject;
+#pragma warning disable 0169, 0649    // x is never assigned
+            static object[] myObject;
             public static string MyField;
+#pragma warning restore 0169, 0649
             public static int MyProperty { get; set; }
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
             {

@@ -25,6 +25,14 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public async Task AsyncRegionThrowsDoesNotDisposeAsyncRegion()
+        {
+            await AsyncTestDelegates.Delay(100);
+            Assert.ThrowsAsync<ArgumentException>(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync());
+            Assert.That(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync(), Throws.ArgumentException);
+        }
+
+        [Test]
         public void CorrectExceptionThrownAsync()
         {
             Assert.ThrowsAsync(typeof(ArgumentException), AsyncTestDelegates.ThrowsArgumentExceptionAsync);

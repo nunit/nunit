@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Mono.Cecil;
 using NUnit.Common;
@@ -29,9 +30,17 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-    public class RuntimeFrameworkService : Service, IRuntimeFrameworkService
+    public class RuntimeFrameworkService : Service, IRuntimeFrameworkService, IAvailableRuntimes
     {
         static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
+
+        /// <summary>
+        /// Gets a list of available runtimes.
+        /// </summary>
+        public IList<IRuntimeFramework> AvailableRuntimes
+        {
+            get { return RuntimeFramework.AvailableFrameworks; }
+        }
 
         /// <summary>
         /// Returns true if the runtime framework represented by
@@ -137,6 +146,7 @@ namespace NUnit.Engine.Services
             Version targetVersion = new Version(0, 0);
             string frameworkName = null;
             bool requiresX86 = false;
+            bool requiresAssemblyResolver = false;
 
             // We are doing two jobs here: (1) in the else clause (below)
             // we get information about a single assembly and record it,
@@ -166,6 +176,9 @@ namespace NUnit.Engine.Services
                     // If any assembly requires X86, then the aggregate package requires it
                     if (subPackage.GetSetting(PackageSettings.ImageRequiresX86, false))
                         requiresX86 = true;
+
+                    if (subPackage.GetSetting(PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
+                        requiresAssemblyResolver = true;
                 }
             }
             else if (File.Exists(packageName) && PathUtils.IsAssemblyFileType(packageName))
@@ -192,7 +205,10 @@ namespace NUnit.Engine.Services
                     if (attr.AttributeType.FullName == "System.Runtime.Versioning.TargetFrameworkAttribute")
                     {
                         frameworkName = attr.ConstructorArguments[0].Value as string;
-                        break;
+                    }
+                    else if (attr.AttributeType.FullName == "NUnit.Framework.TestAssemblyDirectoryResolveAttribute")
+                    {
+                        requiresAssemblyResolver = true;
                     }
                 }
             }
@@ -206,6 +222,8 @@ namespace NUnit.Engine.Services
             package.Settings[PackageSettings.ImageRequiresX86] = requiresX86;
             if (requiresX86)
                 package.Settings[PackageSettings.RunAsX86] = true;
+
+            package.Settings[PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver] = requiresAssemblyResolver;
         }
 
         #endregion

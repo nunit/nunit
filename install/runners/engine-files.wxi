@@ -11,10 +11,6 @@
                 <File Id="nunit.engine.addins"
                       Source="$(var.Binaries)\nunit.engine.addins" />
             </Component>
-            <Component Id="NUNIT.ENGINE.ADDIN.XML" Location="local" Guid="2D4A6C11-9AD7-433C-9E7C-FBD72211701A">
-                <File Id="nunit.engine.addin.xml"
-                      Source="$(var.Binaries)\nunit.engine.addin.xml" />
-            </Component>
             <Component Id="NUNIT.ENGINE.API" Location="local" Guid="6986F077-DF9F-4B4B-A3F5-5915A118AFC4">
                 <File Id="nunit.engine.api.dll"
                       ProcessorArchitecture="msil"

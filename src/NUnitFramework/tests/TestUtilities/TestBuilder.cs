@@ -135,6 +135,28 @@ namespace NUnit.TestUtilities
             return work.Result;
         }
 
+        public static CompositeWorkItem GenerateWorkItem(TestSuite suite, object testObject)
+        {
+            TestExecutionContext context = new TestExecutionContext();
+            context.TestObject = testObject;
+
+            CompositeWorkItem work = (CompositeWorkItem)WorkItem.CreateWorkItem(suite, TestFilter.Empty);
+            work.InitializeContext(context);
+            work.Execute();
+
+            // TODO: Replace with an event - but not while method is static
+            while (work.State != WorkItemState.Complete)
+            {
+#if PORTABLE
+                System.Threading.Tasks.Task.Delay(1);
+#else
+                Thread.Sleep(1);
+#endif
+            }
+
+            return work;
+        }
+
         public static ITestResult RunTestCase(Type type, string methodName)
         {
             var testMethod = MakeTestCase(type, methodName);

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NUnit.Console</id>
+    <title>NUnit Console Runner Version 3 With Extensions</title>
+    <version>$version$</version>
+    <authors>Charlie Poole</authors>
+    <owners>Charlie Poole</owners>
+    <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
+    <projectUrl>http://nunit.org</projectUrl>
+    <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Console runner for version 3.0 of the NUnit unit-testing framework with common extensions.</summary>
+    <description>
+      This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
+
+      The following extensions are included with this package:
+      * NUnitProjectLoader     - loads tests from NUnit projects
+      * VSProjectLoader        - loads tests from Visual Studio projects
+      * NUnitV2ResultWriter    - saves results in NUnit V2 format.
+      * NUnitV2FrameworkDriver - runs NUnit V2 tests.
+
+      Other extensions, if needed, must be installed separately.
+    </description>
+    <releaseNotes></releaseNotes>
+    <language>en-US</language>
+    <tags>nunit test testing tdd runner</tags>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
+    <dependencies>
+      <group>
+        <dependency id="NUnit.ConsoleRunner" version="[$version$]" />
+        <dependency id="NUnit.Extension.NUnitProjectLoader" version="[$version$]" />
+        <dependency id="NUnit.Extension.VSProjectLoader" version="[$version$]" />
+        <dependency id="NUnit.Extension.NUnitV2ResultWriter" version="[$version$]" />
+        <dependency id="NUnit.Extension.NUnitV2Driver" version="[$version$]" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files></files>
+</package>

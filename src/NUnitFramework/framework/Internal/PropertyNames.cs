@@ -133,6 +133,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public const string IgnoreUntilDate = "IgnoreUntilDate";
 
+        /// <summary>
+        /// The optional Order the test will run in
+        /// </summary>
+        public const string Order = "Order";
         #endregion
     }
 }

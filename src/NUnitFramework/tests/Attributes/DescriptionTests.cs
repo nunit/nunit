@@ -58,6 +58,13 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void LongDescription()
+        {
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, "TestWithLongDescription");
+            Assert.AreEqual("This is a really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really long description", testCase.Properties.Get(PropertyNames.Description));
+        }
+
+        [Test]
         public void FixtureDescription()
         {
             TestSuite suite = new TestSuite("suite");
