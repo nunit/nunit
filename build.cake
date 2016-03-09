@@ -46,11 +46,12 @@ var IMAGE_DIR = PROJECT_DIR + "images/";
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
-var COMPACT_RUNNER = "nunit.framework.tests.exe";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var NUNITLITE_TESTS = "nunitlite.tests.exe";
+var EXECUTABLE_FRAMEWORK_TESTS = "nunit.framework.tests.exe";
+var NUNITLITE_TESTS = "nunitlite.tests.dll";
+var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 var ENGINE_TESTS = "nunit.engine.tests.dll";
 var PORTABLE_AGENT_TESTS = "agents/nunit.portable.agent.tests.dll";
 var ADDIN_TESTS = "addins/tests/addin-tests.dll";
@@ -69,9 +70,9 @@ var ZIP_PACKAGE_CF = PACKAGE_DIR + "NUnitCF-" + packageVersion + ".zip";
 
 Task("Clean")
     .Does(() =>
-{
-    CleanDirectory(BIN_DIR);
-});
+    {
+        CleanDirectory(BIN_DIR);
+    });
 
 
 //////////////////////////////////////////////////////////////////////
@@ -80,7 +81,7 @@ Task("Clean")
 
 Task("InitializeBuild")
     .Does(() =>
-{
+    {
     if (IsRunningOnWindows())
         NuGetRestore("./nunit.sln");
     else
@@ -169,67 +170,72 @@ Task("BuildCppTestFiles")
 Task("CheckForError")
     .Does(() => CheckForError(ref ErrorDetail));
 
-Task("TestAllFrameworks")
-  .IsDependentOn("Build")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
+Task("Test45")
+	.OnError(exception => {ErrorDetail.Add(exception.Message); })
 	.Does(() =>
 	{
-		foreach(string runtime in AllFrameworks)
-		{
-			if (runtime != "netcf-3.5")
-			{
-				RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-
-				if (runtime == "sl-5.0")
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + runtime, "nunitlite.tests.dll", runtime, ref ErrorDetail);
-				else
-					RunTest(BIN_DIR + File(runtime + "/" + NUNITLITE_TESTS), BIN_DIR, runtime, ref ErrorDetail);
-			}
-            else
-            {
-                // Commenting out will work on it in another Issue/PR
-                //if(IsRunningOnWindows())
-                //{
-                //    RunTest(BIN_DIR + File(runtime + "/" + COMPACT_RUNNER), BIN_DIR + "/" + runtime, runtime, ref ErrorDetail);
-                //}
-            }
-		}
+	    var runtime = "net-4.5";
+	    var dir = BIN_DIR + runtime + "/";
+		RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+		RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
 	});
 
-Task("TestFramework")
-  .IsDependentOn("Build")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
+Task("Test40")
+	.OnError(exception => {ErrorDetail.Add(exception.Message); })
 	.Does(() =>
 	{
-		RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, FRAMEWORK_TESTS, framework, ref ErrorDetail);
+	    var runtime = "net-4.0";
+	    var dir = BIN_DIR + runtime + "/";
+		RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+		RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
 	});
 
-Task("TestNUnitLite")
-  .IsDependentOn("BuildFramework")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
+Task("Test20")
+	.OnError(exception => {ErrorDetail.Add(exception.Message); })
 	.Does(() =>
 	{
-			if (framework == "sl-5.0")
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_RUNNER), BIN_DIR + "/" + framework, "nunitlite.tests.dll", framework, ref ErrorDetail);
-			else
-				RunTest(BIN_DIR + File(framework + "/" + NUNITLITE_TESTS), BIN_DIR, framework, ref ErrorDetail);
+	    var runtime = "net-2.0";
+	    var dir = BIN_DIR + runtime + "/";
+		RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+		RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+	});
+
+Task("TestPortable")
+	.WithCriteria(IsRunningOnWindows())
+	.OnError(exception => {ErrorDetail.Add(exception.Message); })
+	.Does(() =>
+	{
+	    var runtime = "portable";
+	    var dir = BIN_DIR + runtime + "/";
+		RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+		RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+	});
+
+Task("TestSL")
+	.WithCriteria(IsRunningOnWindows())
+	.OnError(exception => {ErrorDetail.Add(exception.Message); })
+	.Does(() =>
+	{
+	    var runtime = "sl-5.0";
+	    var dir = BIN_DIR + runtime + "/";
+		RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+		RunTest(dir + NUNITLITE_RUNNER, dir, NUNITLITE_TESTS, runtime, ref ErrorDetail);
+	});
+
+Task("TestCF")
+	.WithCriteria(IsRunningOnWindows())
+	.OnError(exception => {ErrorDetail.Add(exception.Message); })
+	.Does(() =>
+	{
+	    var runtime = "netcf-3.5";
+	    var dir = BIN_DIR + runtime + "/";
+        RunTest(dir + EXECUTABLE_FRAMEWORK_TESTS, dir, runtime, ref ErrorDetail);
+		RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
 	});
 
 Task("TestEngine")
   .IsDependentOn("Build")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
   .Does(() =>
 	{
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine", ref ErrorDetail);
@@ -244,10 +250,7 @@ Task("TestDriver")
 	});
 
 Task("TestAddins")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
   .IsDependentOn("Build")
   .Does(() =>
 	{
@@ -256,10 +259,7 @@ Task("TestAddins")
 
 Task("TestV2Driver")
   .IsDependentOn("Build")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
   .Does(() =>
 	{
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver", ref ErrorDetail);
@@ -267,10 +267,7 @@ Task("TestV2Driver")
 
 Task("TestConsole")
   .IsDependentOn("Build")
-    .OnError(exception =>
-    {
-        ErrorDetail.Add(exception.Message);
-    })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
   .Does(() =>
 	{
 		RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole", ref ErrorDetail);
@@ -583,9 +580,18 @@ Teardown(() =>
     // Executed AFTER the last task.
     CheckForError(ref ErrorDetail);
 });
+
 //////////////////////////////////////////////////////////////////////
-// HELPER METHODS
+// HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
+
+void RunGitCommand(string arguments)
+{
+	StartProcess("git", new ProcessSettings()
+	{
+		Arguments = arguments
+	});
+}
 
 void CheckForError(ref List<string> errorDetail)
 {
@@ -598,6 +604,10 @@ void CheckForError(ref List<string> errorDetail)
                               + copyError.Aggregate((x,y) => x + "\n" + y));
     }
 }
+
+//////////////////////////////////////////////////////////////////////
+// HELPER METHODS - BUILD
+//////////////////////////////////////////////////////////////////////
 
 void BuildFramework(string configuration, string framework)
 {
@@ -726,6 +736,10 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
     }
 }
 
+//////////////////////////////////////////////////////////////////////
+// HELPER METHODS - TEST
+//////////////////////////////////////////////////////////////////////
+
 void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
 	int rc = StartProcess(
@@ -757,14 +771,6 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
-void RunGitCommand(string arguments)
-{
-	StartProcess("git", new ProcessSettings()
-	{
-		Arguments = arguments
-	});
-}
-
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
@@ -775,7 +781,7 @@ Task("Build")
   .IsDependentOn("BuildConsole");
 
 Task("Rebuild")
-  .IsDependentOn("Clean")
+    .IsDependentOn("Clean")
 	.IsDependentOn("Build");
 
 Task("TestAll")
@@ -785,15 +791,25 @@ Task("TestAll")
 	.IsDependentOn("TestAddins")
 	.IsDependentOn("TestV2Driver")
 	.IsDependentOn("TestConsole");
-    
+
+// NOTE: Test has been changed to now be a synonym of TestAll    
 Task("Test")
-	.IsDependentOn("TestFramework")
-	.IsDependentOn("TestNUnitLite")
+	.IsDependentOn("TestAllFrameworks")
 	.IsDependentOn("TestEngine")
     .IsDependentOn("TestDriver")
 	.IsDependentOn("TestAddins")
 	.IsDependentOn("TestV2Driver")
 	.IsDependentOn("TestConsole");
+
+Task("TestAllFrameworks")
+    .IsDependentOn("Build")
+	.IsDependentOn("Test45")
+	.IsDependentOn("Test40")
+	.IsDependentOn("Test20")
+// NOTE: The following tasks use Criteria and will be skipped on Linux
+	.IsDependentOn("TestPortable")
+	.IsDependentOn("TestSL")
+	.IsDependentOn("TestCF");
 
 Task("Package")
     .IsDependentOn("CheckForError")
