@@ -31,10 +31,18 @@ namespace NUnit.Engine.Services.Tests
     {
         private ExtensionService _extensionService;
 
+
+        // NOTE: Some of these tests depend on certain extensions being built
+        // at the same time as NUnit and therefore being present in the addins
+        // directory. As extensions are moved out to separate builds, we will
+        // need to modify those tests.
+
         private static readonly string[] KNOWN_EXTENSION_POINT_PATHS = new string[] {
             "/NUnit/Engine/TypeExtensions/IDriverFactory",
             "/NUnit/Engine/TypeExtensions/IProjectLoader", 
             "/NUnit/Engine/TypeExtensions/IResultWriter",
+            "/NUnit/Engine/TypeExtensions/ITestEventListener",
+            "/NUnit/Engine/TypeExtensions/IService",
             "/NUnit/Engine/NUnitV2Driver"
         };
 
@@ -42,6 +50,8 @@ namespace NUnit.Engine.Services.Tests
             typeof(IDriverFactory),
             typeof(IProjectLoader),
             typeof(IResultWriter),
+            typeof(ITestEventListener),
+            typeof(IService),
             typeof(IFrameworkDriver)
         };
 
@@ -60,6 +70,23 @@ namespace NUnit.Engine.Services.Tests
                     return;
 
             Assert.Fail("Couldn't find known ExtensionPoint {0}", path);
+        }
+
+        [Test]
+        public void AllExtensionPointsAreKnown()
+        {
+            foreach (var ep in _extensionService.ExtensionPoints)
+            {
+                var known = false;
+                foreach (var path in KNOWN_EXTENSION_POINT_PATHS)
+                    if (path == ep.Path)
+                    {
+                        known = true;
+                        break;
+                    }
+                if (!known)
+                    Assert.Fail("Unknown ExtensionPoint {0}", ep.Path);
+            }
         }
 
         [Test, Sequential]
@@ -104,7 +131,7 @@ namespace NUnit.Engine.Services.Tests
         [Test, Sequential]
         public void ExtensionsAreAddedToExtensionPoint(
             [ValueSource("KNOWN_EXTENSION_POINT_PATHS")] string path,
-            [Values(0, 2, 1, 1)] int expectedExtensionCount)
+            [Values(0, 2, 1, 0, 0, 1)] int expectedExtensionCount)
         {
             var ep = _extensionService.GetExtensionPoint(path);
             Assume.That(ep, Is.Not.Null);
