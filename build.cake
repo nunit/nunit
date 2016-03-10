@@ -18,6 +18,7 @@ var ErrorDetail = new List<string>();
 var version = "3.3.0";
 var modifier = "";
 
+var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
@@ -120,14 +121,14 @@ Task("BuildAllFrameworks")
     .Does(() =>
     {
         foreach (var runtime in AllFrameworks)
-				BuildFramework(configuration, runtime);
+				BuildFramework(configuration, runtime, isCompactFrameworkInstalled);
     });
 
 Task("BuildFramework")
     .IsDependentOn("InitializeBuild")
     .Does(() =>
     {
-        BuildFramework(configuration, framework);
+        BuildFramework(configuration, framework, isCompactFrameworkInstalled);
     });
 
 Task("BuildEngine")
@@ -609,7 +610,7 @@ void CheckForError(ref List<string> errorDetail)
 // HELPER METHODS - BUILD
 //////////////////////////////////////////////////////////////////////
 
-void BuildFramework(string configuration, string framework)
+void BuildFramework(string configuration, string framework, bool isCompactFrameworkInstalled)
 {
 	switch(framework)
 	{
@@ -647,14 +648,23 @@ void BuildFramework(string configuration, string framework)
 			BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
 			break;
         case "netcf-3.5":
-			BuildProjectCF("src/NUnitFramework/framework/nunit.framework-netcf-3.5.csproj", configuration);
-            BuildProjectCF("src/NUnitFramework/mock-assembly/mock-assembly-netcf-3.5.csproj", configuration);
-            BuildProjectCF("src/NUnitFramework/testdata/nunit.testdata-netcf-3.5.csproj", configuration);
-            BuildProjectCF("src/NUnitFramework/tests/nunit.framework.tests-netcf-3.5.csproj", configuration);
-            BuildProjectCF("src/NUnitFramework/slow-tests/slow-nunit-tests-netcf-3.5.csproj", configuration);
-            BuildProjectCF("src/NUnitFramework/nunitlite/nunitlite-netcf-3.5.csproj", configuration);
-            BuildProjectCF("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netcf-3.5.csproj", configuration);
-            BuildProjectCF("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netcf-3.5.csproj", configuration);
+            if(isCompactFrameworkInstalled)
+            {
+                BuildProjectCF("src/NUnitFramework/framework/nunit.framework-netcf-3.5.csproj", configuration);
+                BuildProjectCF("src/NUnitFramework/mock-assembly/mock-assembly-netcf-3.5.csproj", configuration);
+                BuildProjectCF("src/NUnitFramework/testdata/nunit.testdata-netcf-3.5.csproj", configuration);
+                BuildProjectCF("src/NUnitFramework/tests/nunit.framework.tests-netcf-3.5.csproj", configuration);
+                BuildProjectCF("src/NUnitFramework/slow-tests/slow-nunit-tests-netcf-3.5.csproj", configuration);
+                BuildProjectCF("src/NUnitFramework/nunitlite/nunitlite-netcf-3.5.csproj", configuration);
+                BuildProjectCF("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netcf-3.5.csproj", configuration);
+                BuildProjectCF("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netcf-3.5.csproj", configuration);
+            }
+            else
+            {
+                Information("Compact framework build skipped because files were not present.");
+                if(isAppveyor) 
+                    throw new Exception("Running Build on Appveyor, but CF not installed, please check that the appveyor-tools.ps1 script ran correctly.");
+            }
             break;
 	}
 }
