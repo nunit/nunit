@@ -51,6 +51,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected MethodInfo[] tearDownMethods;
 
+        private string _workerId;
+
         #endregion
 
         #region Construction
@@ -234,6 +236,20 @@ namespace NUnit.Framework.Internal
         /// Used by the core to set the parent.
         /// </summary>
         public ITest Parent { get; set; }
+
+        /// <summary>
+        /// Gets the name of the TestWorker that
+        /// is executing this test.
+        /// </summary>
+        public string WorkerId
+        {
+            get {
+                if (_workerId != null) return _workerId;
+                if (Parent != null) return Parent.WorkerId;
+                return null;
+            }
+            internal set { _workerId = value; }
+        }
 
         /// <summary>
         /// Gets this test's child tests

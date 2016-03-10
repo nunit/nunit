@@ -326,6 +326,15 @@ namespace NUnit.Framework
             }
 
             /// <summary>
+            /// Gets the name of the TestWorker that
+            /// is executing this test.
+            /// </summary>
+            public string WorkerId
+            {
+                get { return _test.WorkerId; }
+            }
+
+            /// <summary>
             /// The properties of the test.
             /// </summary>
             public IPropertyBag Properties
