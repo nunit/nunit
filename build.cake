@@ -121,14 +121,14 @@ Task("BuildAllFrameworks")
     .Does(() =>
     {
         foreach (var runtime in AllFrameworks)
-				BuildFramework(configuration, runtime, isCompactFrameworkInstalled);
+				BuildFramework(configuration, runtime, isCompactFrameworkInstalled, isAppveyor);
     });
 
 Task("BuildFramework")
     .IsDependentOn("InitializeBuild")
     .Does(() =>
     {
-        BuildFramework(configuration, framework, isCompactFrameworkInstalled);
+        BuildFramework(configuration, framework, isCompactFrameworkInstalled, isAppveyor);
     });
 
 Task("BuildEngine")
@@ -610,7 +610,7 @@ void CheckForError(ref List<string> errorDetail)
 // HELPER METHODS - BUILD
 //////////////////////////////////////////////////////////////////////
 
-void BuildFramework(string configuration, string framework, bool isCompactFrameworkInstalled)
+void BuildFramework(string configuration, string framework, bool isCompactFrameworkInstalled, bool isAppveyor)
 {
 	switch(framework)
 	{
