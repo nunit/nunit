@@ -601,7 +601,7 @@ void CheckForError(ref List<string> errorDetail)
         var copyError = new List<string>();
         copyError = errorDetail.Select(s => s).ToList();
         errorDetail.Clear();
-        throw new Exception("One or more unit test failed, breaking the build.\n"
+        throw new Exception("One or more unit tests failed, breaking the build.\n"
                               + copyError.Aggregate((x,y) => x + "\n" + y));
     }
 }
