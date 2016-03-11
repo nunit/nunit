@@ -1,4 +1,4 @@
-Building NUnit 3.0
+# Building NUnit 3.0
 
 NUnit 3.0 consists of three separate layers: the Framework, the Engine and the Console Runner. 
 The source code is kept in a single GitHub repository at http://github.com/nunit/nunit.git.
@@ -10,7 +10,7 @@ Developers should make sure not to introduce any other references.
 
 There are two ways to build NUnit: using the solution file in an IDE or through the build script.
 
-SOLUTION BUILD
+## Solution Build
 
 All three layers are built together using a single Visual Studio solution (nunit.sln on Windows 
 and nunit.linux.sln on Linux), which may be built with Visual Studio 2012+, SharpDevelop.
@@ -24,9 +24,9 @@ components are placed directly in the bin directory while framework components e
 subdirectories net-2.0, net4.0, sl-5.0, portable and netcf-3.5. Future platform
 builds will cause new subdirectories to be created.
 
-BUILD SCRIPT
+## Build Script
 
-We use Cake (http://cake-build.net) to build NUnit for distribution. The primary script that controls
+We use **Cake** (http://cake-build.net) to build NUnit for distribution. The primary script that controls
 building, running tests and packaging is build.cake. We modify build.cake when we need to add new 
 targets or change the way the build is done. Normally build.cake is not invoked directly but through
 a build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project
@@ -44,9 +44,9 @@ to the build. Use set CAKE_ARGS=-Experimental to ensure this is always done and 
 it out each time.
 
 Key arguments to build.cmd / build:
- * -Target, -t <task>              The task to run - see below.
- * -Configuration|-c [Release|Debug] The configuration to use (default is Release)
- * -Experimental|-e                  Use the experimental build of Roslyn
+ * -Target, -t <task>                 The task to run - see below.
+ * -Configuration, -c [Release|Debug] The configuration to use (default is Release)
+ * -Experimental, -e                  Use the experimental build of Roslyn
 
 The build.cake script contains a large number of interdependent tasks. The most 
 important top-level tasks to use are listed here:
@@ -65,7 +65,7 @@ important top-level tasks to use are listed here:
  * TestConsole         Runs the console tests. Dependent on Build.
  * Package             Creates all packages without building first. See Note below.
 
-NOTES:
+### Notes:
  1. By design, the Package target does not depend on Build. This is to allow re-packaging
     when necessary without changing the binaries themselves. Of course, this means that
     you have to be very careful that the build is up to date before packaging.
