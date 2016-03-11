@@ -30,24 +30,28 @@ using System.Reflection;
 using System.Xml;
 using NUnit.Common;
 using NUnit.Engine.Internal;
+using NUnit.Engine.Services;
 
 namespace NUnit.Engine.Runners
 {
     public class MasterTestRunner : AbstractTestRunner, ITestRunner
     {
         private ITestEngineRunner _realRunner;
+        private IRuntimeFrameworkService _runtimeService;
+        private ExtensionService _extensionService;
+
+        private TestEventDispatcher _eventDispatcher;
 
         public MasterTestRunner(IServiceLocator services, TestPackage package)
             : base(services, package)
         {
-            RuntimeService = Services.GetService<IRuntimeFrameworkService>();
+            _runtimeService = Services.GetService<IRuntimeFrameworkService>();
+            _extensionService = Services.GetService<ExtensionService>();
         }
 
         #region Properties
 
         public bool IsTestRunning { get; private set; }
-
-        private IRuntimeFrameworkService RuntimeService { get; set; }
 
         #endregion
 
@@ -83,7 +87,7 @@ namespace NUnit.Engine.Runners
             // Info will be left behind in the package about
             // each contained assembly, which will subsequently
             // be used to determine how to run the assembly.
-            RuntimeService.SelectRuntimeFramework(TestPackage);
+            _runtimeService.SelectRuntimeFramework(TestPackage);
 
             _realRunner = TestRunnerFactory.MakeTestRunner(TestPackage);
 
@@ -130,15 +134,20 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
+            var eventDispatcher = new TestEventDispatcher();
+            if (listener != null)
+                eventDispatcher.Listeners.Add(listener);
+            foreach (var extension in _extensionService.GetExtensions<ITestEventListener>())
+                eventDispatcher.Listeners.Add(extension);
+
             IsTestRunning = true;
 
-            if (listener != null)
-                listener.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
+            eventDispatcher.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
 
             DateTime startTime = DateTime.UtcNow;
             long startTicks = Stopwatch.GetTimestamp();
 
-            TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
+            TestEngineResult result = _realRunner.Run(eventDispatcher, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             // These are inserted in reverse order, since each is added as the first child.
             InsertFilterElement(result.Xml, filter);
@@ -154,8 +163,7 @@ namespace NUnit.Engine.Runners
 
             IsTestRunning = false;
 
-            if (listener != null)
-                listener.OnTestEvent(result.Xml.OuterXml);
+            eventDispatcher.OnTestEvent(result.Xml.OuterXml);
 
             return result;
         }

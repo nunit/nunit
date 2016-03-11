@@ -71,6 +71,7 @@
     <Compile Include="Api\TestPackageTests.cs" />
     <Compile Include="AsyncTestEngineResultTests.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriverTests.cs" />
+    <Compile Include="DummyExtensions.cs" />
     <Compile Include="Internal\DirectoryFinderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drivers\NotRunnableFrameworkDriverTests.cs" />
