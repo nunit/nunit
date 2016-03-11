@@ -157,9 +157,10 @@ namespace NUnit.Engine.Services
         #region Helper Methods - Extension Points
 
         /// <summary>
-        /// Find the extension points in a loaded assembly
+        /// Find the extension points in a loaded assembly.
+        /// Public for testing.
         /// </summary>
-        private void FindExtensionPoints(Assembly assembly)
+        public void FindExtensionPoints(Assembly assembly)
         {
             log.Info("Scanning {0} assembly for extension points", assembly.GetName().Name);
 
@@ -298,9 +299,9 @@ namespace NUnit.Engine.Services
         /// <summary>
         /// Scan a single assembly for extensions marked by ExtensionAttribute.
         /// For each extension, create an ExtensionNode and link it to the
-        /// correct ExtensionPoint.
+        /// correct ExtensionPoint. Public for testing.
         /// </summary>
-        private void FindExtensionsInAssembly(string assemblyName, bool specifiedInConfig)
+        public void FindExtensionsInAssembly(string assemblyName, bool specifiedInConfig)
         {
             log.Info("Scanning {0} assembly for Extensions", assemblyName);
 

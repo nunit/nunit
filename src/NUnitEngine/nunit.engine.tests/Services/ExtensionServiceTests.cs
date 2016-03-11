@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using NUnit.Framework;
 using NUnit.Engine.Extensibility;
 
@@ -59,7 +60,14 @@ namespace NUnit.Engine.Services.Tests
         public void CreateService()
         {
             _extensionService = new ExtensionService();
-            _extensionService.StartService();
+
+            // Rather than actually starting the service, which would result
+            // in finding the extensions actually in use on the current system,
+            // we simulate the start using this assemblies dummy extensions.
+            _extensionService.FindExtensionPoints(typeof(TestEngine).Assembly);
+            _extensionService.FindExtensionPoints(typeof(ITestEngine).Assembly);
+
+            _extensionService.FindExtensionsInAssembly(GetType().Assembly.Location, true);
         }
 
         [TestCaseSource("KNOWN_EXTENSION_POINT_PATHS")]
@@ -112,10 +120,12 @@ namespace NUnit.Engine.Services.Tests
         }
 
         private static readonly string[] KNOWN_EXTENSIONS = new string[] {
-            "NUnit.Engine.Services.ProjectLoaders.NUnitProjectLoader",
-            "NUnit.Engine.Services.ProjectLoaders.VisualStudioProjectLoader",
-            "NUnit.Engine.Addins.NUnit2XmlResultWriter",
-            "NUnit.Engine.Drivers.NUnit2FrameworkDriver"
+            "NUnit.Engine.Tests.DummyFrameworkDriverExtension",
+            "NUnit.Engine.Tests.DummyProjectLoaderExtension",
+            "NUnit.Engine.Tests.DummyResultWriterExtension",
+            "NUnit.Engine.Tests.DummyEventListenerExtension",
+            "NUnit.Engine.Tests.DummyServiceExtension",
+            "NUnit.Engine.Tests.V2DriverExtension"
         };
 
         [TestCaseSource("KNOWN_EXTENSIONS")]
@@ -128,15 +138,13 @@ namespace NUnit.Engine.Services.Tests
             Assert.Fail("Couldn't find known Extension {0}", typeName);
         }
 
-        [Test, Sequential]
-        public void ExtensionsAreAddedToExtensionPoint(
-            [ValueSource("KNOWN_EXTENSION_POINT_PATHS")] string path,
-            [Values(0, 2, 1, 0, 0, 1)] int expectedExtensionCount)
+        [TestCaseSource("KNOWN_EXTENSION_POINT_PATHS")]
+        public void ExtensionsAreAddedToExtensionPoint(string path)
         {
             var ep = _extensionService.GetExtensionPoint(path);
             Assume.That(ep, Is.Not.Null);
 
-            Assert.That(ep.Extensions.Count, Is.EqualTo(expectedExtensionCount));
+            Assert.That(ep.Extensions.Count, Is.EqualTo(1));
         }
     }
 }
