@@ -29,7 +29,7 @@ builds will cause new subdirectories to be created.
 We use **Cake** (http://cake-build.net) to build NUnit for distribution. The primary script that controls
 building, running tests and packaging is build.cake. We modify build.cake when we need to add new 
 targets or change the way the build is done. Normally build.cake is not invoked directly but through
-a build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project
+build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project
 and ensure that Cake is properly installed before trying to run the cake script. This helps the
 build to work on CI servers using newly created agents to run the build and we generally run it
 the same way on our own machines.
@@ -52,8 +52,8 @@ The build.cake script contains a large number of interdependent tasks. The most
 important top-level tasks to use are listed here:
  * Build               Builds everything. This is the default if no target is given.
  * Rebuild             Cleans the output directory and builds everything
- * Test                Runs all tests. Dependent on Build. (These tasks currently do the
- * TestAll             Runs all tests. Dependent on Build.  same thing. This may change.
+ * Test                Runs all tests. Dependent on Build.
+ * TestAll             Runs all tests. Dependent on Build.
  * TestAllFrameworks   Runs all framework tests. Dependent on Build.
  * Test45              Tests the 4.5 framework without building first.
  * Test40              Tests the 4.0 framework without building first.
@@ -76,4 +76,7 @@ important top-level tasks to use are listed here:
  3. Currently, Silverlight must be installed or an error occurs when trying to build or
     test it. We will be changing this soon to match the strategy for CF.
 
- 4. For additional targets, refer to the build.cake script itself.
+ 4. The Test and TestAll targets currently due the same thing. Both are retained for backward
+    backward compatibility and the semantics of at least one of them may change in the future.
+
+ 5. For additional targets, refer to the build.cake script itself.
