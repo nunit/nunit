@@ -50,6 +50,8 @@ Key arguments to build.cmd / build:
 
 The build.cake script contains a large number of interdependent tasks. The most 
 important top-level tasks to use are listed here:
+
+```
  * Build               Builds everything. This is the default if no target is given.
  * Rebuild             Cleans the output directory and builds everything
  * Test                Runs all tests. Dependent on Build.
@@ -64,6 +66,7 @@ important top-level tasks to use are listed here:
  * TestEngine          Runs all engine tests. Dependent on Build.
  * TestConsole         Runs the console tests. Dependent on Build.
  * Package             Creates all packages without building first. See Note below.
+```
 
 ### Notes:
  1. By design, the Package target does not depend on Build. This is to allow re-packaging
