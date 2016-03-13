@@ -251,14 +251,20 @@ namespace NUnit.Framework.Internal.Execution
             {
                 if (_childFilter.Pass(test))
                 {
+                    var child = WorkItem.CreateWorkItem(test, _childFilter);
+#if !PORTABLE && !SILVERLIGHT && !NETCF
+                    if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)
+                        child.TargetApartment = TargetApartment;
+#endif
+
                     if (test.Properties.ContainsKey(PropertyNames.Order))
                     {
-                        _children.Insert(0, WorkItem.CreateWorkItem(test, _childFilter));
+                        _children.Insert(0, child);
                         _countOrder++;
                     }
                     else
                     {
-                        _children.Insert(_children.Count, WorkItem.CreateWorkItem(test, _childFilter));
+                        _children.Add(child);
                     }
                 }
             }
