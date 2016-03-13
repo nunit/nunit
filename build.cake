@@ -228,10 +228,17 @@ Task("TestCF")
 	.OnError(exception => {ErrorDetail.Add(exception.Message); })
 	.Does(() =>
 	{
-	    var runtime = "netcf-3.5";
-	    var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + EXECUTABLE_FRAMEWORK_TESTS, dir, runtime, ref ErrorDetail);
-		RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        if(isCompactFrameworkInstalled)
+        {
+            var runtime = "netcf-3.5";
+            var dir = BIN_DIR + runtime + "/";
+            RunTest(dir + EXECUTABLE_FRAMEWORK_TESTS, dir, runtime, ref ErrorDetail);
+            RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        }
+        else
+        {
+            Warning("Compact framework tests skipped because files were not present.");
+        }
 	});
 
 Task("TestEngine")
@@ -661,7 +668,7 @@ void BuildFramework(string configuration, string framework, bool isCompactFramew
             }
             else
             {
-                Information("Compact framework build skipped because files were not present.");
+                Warning("Compact framework build skipped because files were not present.");
                 if(isAppveyor) 
                     throw new Exception("Running Build on Appveyor, but CF not installed, please check that the appveyor-tools.ps1 script ran correctly.");
             }
