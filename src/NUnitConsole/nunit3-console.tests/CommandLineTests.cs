@@ -237,6 +237,14 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
+        public void X86AndInProcessAreNotCompatible()
+        {
+            ConsoleOptions options = new ConsoleOptions("nunit.tests.dll", "--x86", "--inprocess");
+            Assert.False(options.Validate(), "Should be invalid");
+            Assert.AreEqual("The --x86 and --inprocess options are incompatible.", options.ErrorMessages[0]);
+        }
+
+        [Test]
         public void InvalidOption()
         {
             ConsoleOptions options = new ConsoleOptions("-assembly:nunit.tests.dll");

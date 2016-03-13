@@ -77,6 +77,18 @@ namespace NUnit.Common
 
         #endregion
 
+        #region Overrides
+
+        protected override void CheckOptionCombinations()
+        {
+            base.CheckOptionCombinations();
+
+            if (RunAsX86 && ProcessModel == "InProcess")
+                ErrorMessages.Add("The --x86 and --inprocess options are incompatible.");
+        }
+
+        #endregion
+
         #region Configure Additional Options for Console
 
         protected override void ConfigureOptions()
