@@ -85,6 +85,11 @@ namespace NUnit.Framework.Internal.Execution
             _test = test;
             Result = test.MakeTestResult();
             _state = WorkItemState.Ready;
+#if !PORTABLE && !SILVERLIGHT && !NETCF
+            TargetApartment = _test.Properties.ContainsKey(PropertyNames.ApartmentState)
+                ? (ApartmentState)_test.Properties.Get(PropertyNames.ApartmentState)
+                : ApartmentState.Unknown;
+#endif
         }
 
         /// <summary>
@@ -201,15 +206,7 @@ namespace NUnit.Framework.Internal.Execution
         public TestResult Result { get; protected set; }
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
-        internal ApartmentState TargetApartment
-        {
-            get
-            {
-                return Test.Properties.ContainsKey(PropertyNames.ApartmentState)
-                    ? (ApartmentState)_test.Properties.Get(PropertyNames.ApartmentState)
-                    : ApartmentState.Unknown;
-            }
-        }
+        internal ApartmentState TargetApartment { get; set; }
 #endif
 
         #endregion
