@@ -63,7 +63,6 @@ namespace NUnit.Framework.Internal.Execution
                 var testAssembly = suite as TestAssembly;
                 if (testAssembly != null)
 #if PORTABLE
-                    // TODO: Fix this code! It's really quite ugly!
                     changes = new List<IApplyToContext>(testAssembly.Assembly.GetAttributes<IApplyToContext>());
 #else
                     changes = (IApplyToContext[])testAssembly.Assembly.GetCustomAttributes(typeof(IApplyToContext), true);
