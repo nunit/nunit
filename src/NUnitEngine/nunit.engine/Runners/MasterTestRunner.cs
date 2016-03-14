@@ -89,6 +89,12 @@ namespace NUnit.Engine.Runners
             // be used to determine how to run the assembly.
             _runtimeService.SelectRuntimeFramework(TestPackage);
 
+            if (TestPackage.GetSetting(PackageSettings.ProcessModel, "") == "InProcess" &&
+                TestPackage.GetSetting(PackageSettings.RunAsX86, false))
+            {
+                throw new NUnitEngineException("Cannot run tests in process - a 32 bit process is required.");
+            }
+
             _realRunner = TestRunnerFactory.MakeTestRunner(TestPackage);
 
             return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
