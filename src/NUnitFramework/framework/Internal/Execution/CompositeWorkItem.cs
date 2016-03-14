@@ -252,6 +252,8 @@ namespace NUnit.Framework.Internal.Execution
                 if (_childFilter.Pass(test))
                 {
                     var child = WorkItem.CreateWorkItem(test, _childFilter);
+                    child.WorkerId = this.WorkerId;
+
 #if !PORTABLE && !SILVERLIGHT && !NETCF
                     if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)
                         child.TargetApartment = TargetApartment;
