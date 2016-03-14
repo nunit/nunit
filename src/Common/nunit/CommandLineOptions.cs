@@ -170,7 +170,7 @@ namespace NUnit.Common
         {
             if (!validated)
             {
-                // Additional Checks here
+                CheckOptionCombinations();
 
                 validated = true;
             }
@@ -178,9 +178,14 @@ namespace NUnit.Common
             return ErrorMessages.Count == 0;
         }
 
-#endregion
-        
-#region Helper Methods
+        #endregion
+
+        #region Helper Methods
+
+        protected virtual void CheckOptionCombinations()
+        {
+
+        }
 
         /// <summary>
         /// Case is ignored when val is compared to validValues. When a match is found, the

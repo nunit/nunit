@@ -312,6 +312,7 @@ namespace NUnit.Framework.Api
         {
             Context = new TestExecutionContext();
 
+            // Apply package settings to the context
             if (Settings.Contains(PackageSettings.DefaultTimeout))
                 Context.TestCaseTimeout = (int)Settings[PackageSettings.DefaultTimeout];
             if (Settings.Contains(PackageSettings.StopOnError))
@@ -322,22 +323,16 @@ namespace NUnit.Framework.Api
             else
                 Context.WorkDirectory = Env.DefaultWorkDirectory;
 
-            // Overriding runners may replace this
+            // Apply attributes to the context
+
+            // Set the listener - overriding runners may replace this
             Context.Listener = listener;
 
 #if PARALLEL
             int levelOfParallelism = GetLevelOfParallelism();
 
             if (levelOfParallelism > 0)
-            {
                 Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
-                // Assembly does not have IApplyToContext attributes applied
-                // when the test is built, so  we do it here.
-                // TODO: Generalize this
-                if (LoadedTest.Properties.ContainsKey(PropertyNames.ParallelScope))
-                    Context.ParallelScope =
-                        (ParallelScope)LoadedTest.Properties.Get(PropertyNames.ParallelScope) & ~ParallelScope.Self;
-            }
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
 #else
