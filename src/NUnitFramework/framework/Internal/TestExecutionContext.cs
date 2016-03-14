@@ -101,6 +101,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult _currentResult;
 
+        /// <summary>
+        /// The current TestWorker name
+        /// </summary>
+        private string _workerId;
+
 #if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// The current Principal.
@@ -358,6 +363,19 @@ namespace NUnit.Framework.Internal
         /// For builds with out the parallel feature, it has no effect.
         /// </summary>
         public ParallelScope ParallelScope { get; set; }
+
+        /// <summary>
+        /// The unique name of the worker that spawned the context.
+        /// For builds with out the parallel feature, it is null.
+        /// </summary>
+        public string WorkerId {
+            get {
+                if (_workerId != null) return _workerId;
+                if (_priorContext != null) return _priorContext.WorkerId;
+                return null;
+            }
+            internal set {_workerId = value;}
+        }
 
         /// <summary>
         /// Gets the RandomGenerator specific to this Test
