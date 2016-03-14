@@ -94,6 +94,12 @@ namespace NUnit.Framework.Interfaces
         ITest Parent { get; }
 
         /// <summary>
+        /// Gets the name of the TestWorker that
+        /// is executing this test.
+        /// </summary>
+        string WorkerId {get;}
+
+        /// <summary>
         /// Returns true if this is a test suite
         /// </summary>
         bool IsSuite { get; }
