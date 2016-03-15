@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 
@@ -35,9 +36,9 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     class ApplyChangesToContextCommand : DelegatingTestCommand
     {
-        private IApplyToContext[] _changes;
+        private IEnumerable<IApplyToContext> _changes;
 
-        public ApplyChangesToContextCommand(TestCommand innerCommand, IApplyToContext[] changes)
+        public ApplyChangesToContextCommand(TestCommand innerCommand, IEnumerable<IApplyToContext> changes)
             : base(innerCommand)
         {
             _changes = changes;
