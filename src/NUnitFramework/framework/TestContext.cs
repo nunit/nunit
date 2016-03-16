@@ -90,6 +90,14 @@ namespace NUnit.Framework
             get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
         }
 
+        /// <summary>
+        /// Gets the unique name of the  Worker that is executing this test.
+        /// </summary>
+        public string WorkerId
+        {
+            get { return _testExecutionContext.WorkerId; }
+        }
+
 #if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the directory containing the current test assembly.

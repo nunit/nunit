@@ -151,6 +151,11 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
+        /// The unique id of the worker executing this item.
+        /// </summary>
+        public string WorkerId {get; internal set;}
+
+        /// <summary>
         /// The test actions to be performed before and after this test
         /// </summary>
         public List<ITestAction> Actions
@@ -340,6 +345,7 @@ namespace NUnit.Framework.Internal.Execution
             _context.Listener.TestStarted(this.Test);
             _context.StartTime = DateTime.UtcNow;
             _context.StartTicks = Stopwatch.GetTimestamp();
+            _context.WorkerId = this.WorkerId;
             _context.EstablishExecutionEnvironment();
 
             _state = WorkItemState.Running;
