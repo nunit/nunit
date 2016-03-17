@@ -42,13 +42,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
-        [Test]
-        public void TestWithoutRequresTHreadRunsEverythingOnSameThread()
-        {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
-            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
-        }
-
 #if !NETCF
         [Test, RequiresThread( ApartmentState.STA )]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
