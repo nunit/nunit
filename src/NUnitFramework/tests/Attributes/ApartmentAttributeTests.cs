@@ -92,10 +92,9 @@ namespace NUnit.Framework.Attributes
         public void TestWithRequiresMTARunsInMTA()
         {
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
-			//
-			// Currently this will not work since we are always running on a different thread then the ParentThread.
-            //if (ParentThreadApartment == ApartmentState.MTA)
-            //    Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+
+            if (ParentThreadApartment == ApartmentState.MTA)
+                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
         [TestFixture, Apartment(ApartmentState.MTA)]

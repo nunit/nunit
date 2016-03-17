@@ -56,6 +56,13 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
         }
 
+        [Test]
+        public void TestWithNoTimeoutRunsEverythingOnSameThread()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(parentThread));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(setupThread));
+        }
+
         [Test, Timeout(50)]
         public void TestWithTimeoutRunsSetUpAndTestOnSameThread()
         {

@@ -29,6 +29,7 @@ namespace NUnit.Framework.Attributes
     public class ThreadingTests
     {
         protected Thread ParentThread { get; private set; }
+        protected Thread SetupThread { get; private set; }
 #if !NETCF
         protected ApartmentState ParentThreadApartment { get; private set; }
 #endif
@@ -40,6 +41,19 @@ namespace NUnit.Framework.Attributes
 #if !NETCF
             ParentThreadApartment = GetApartmentState(ParentThread);
 #endif
+        }
+
+        [SetUp]
+        public void GetSetUpThreadInfo()
+        {
+            SetupThread = Thread.CurrentThread;
+        }
+
+        [Test]
+        public void TestDefaultsToRunningEverythingOnSameThread()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
 #if !NETCF

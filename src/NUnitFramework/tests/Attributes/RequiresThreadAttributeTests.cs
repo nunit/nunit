@@ -30,14 +30,6 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class RequiresThreadAttributeTests : ThreadingTests
     {
-        private Thread SetupThread { get; set; }
-
-        [SetUp]
-        public void GetSetUpThreadInfo()
-        {
-            SetupThread = Thread.CurrentThread;
-        }
-
         [Test, RequiresThread]
         public void TestWithRequiresThreadRunsInSeparateThread()
         {
@@ -47,6 +39,13 @@ namespace NUnit.Framework.Attributes
         [Test, RequiresThread]
         public void TestWithRequiresThreadRunsSetUpAndTestOnSameThread()
         {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
+        }
+
+        [Test]
+        public void TestWithoutRequresTHreadRunsEverythingOnSameThread()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
