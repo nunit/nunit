@@ -77,7 +77,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-portable",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{49D441DF-39FD-4F4D-AECA-86CF8EFE23AF}"
 	ProjectSection(SolutionItems) = preProject
-		BUILDING.txt = BUILDING.txt
+		BUILDING.md = BUILDING.md
 		LICENSE.txt = LICENSE.txt
 		NOTICES.txt = NOTICES.txt
 		NUnit.proj = NUnit.proj
