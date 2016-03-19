@@ -127,6 +127,7 @@
     <Compile Include="Attributes\TestOfTests.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Attributes\TheoryTests.cs" />
+    <Compile Include="Attributes\SingleThreadedFixtureTests.cs" />
     <Compile Include="Attributes\ThreadingTests.cs" />
     <Compile Include="Attributes\TimeoutTests.cs" />
     <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />

@@ -183,6 +183,7 @@
     <Compile Include="Attributes\SetUICultureAttribute.cs" />
     <Compile Include="Attributes\SetUpAttribute.cs" />
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
+    <Compile Include="Attributes\SingleThreadedAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />

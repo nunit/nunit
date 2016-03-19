@@ -45,6 +45,14 @@ namespace NUnit.Framework.Attributes
             Assert.That(_context.ParallelScope, Is.EqualTo(ParallelScope.Fixtures));
         }
 
+        [Test]
+        public void SingleThreadedAttribute()
+        {
+            var attr = new SingleThreadedAttribute();
+            attr.ApplyToContext(_context);
+            Assert.True(_context.IsSingleThreaded);
+        }
+
 #if !NETCF && !PORTABLE
         [Test]
         public void SetCultureAttribute()

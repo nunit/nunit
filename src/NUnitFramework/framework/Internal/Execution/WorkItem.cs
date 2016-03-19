@@ -232,7 +232,9 @@ namespace NUnit.Framework.Internal.Execution
                 timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
 
 #if SILVERLIGHT || NETCF
-            if (Test.RequiresThread || Test is TestMethod && timeout > 0)
+            if (Context.IsSingleThreaded)
+                RunTest();
+            else if (Test.RequiresThread || Test is TestMethod && timeout > 0)
                 RunTestOnOwnThread(timeout);
             else
                 RunTest();
@@ -241,7 +243,9 @@ namespace NUnit.Framework.Internal.Execution
 #else
             currentApartment = Thread.CurrentThread.GetApartmentState();
 
-            if ( Test.RequiresThread || Test is TestMethod && timeout > 0 || (currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown))
+            if (Context.IsSingleThreaded)
+                RunTest();
+            else if ( Test.RequiresThread || Test is TestMethod && timeout > 0 || (currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown))
                 RunTestOnOwnThread(timeout, TargetApartment);
             else
                 RunTest();
