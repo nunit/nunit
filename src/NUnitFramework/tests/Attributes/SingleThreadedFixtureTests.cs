@@ -41,6 +41,7 @@ namespace NUnit.Framework.Attributes
             Thread.Sleep(100);
         }
 
+#if !SILVERLIGHT
         [Test, RequiresThread]
         public void TestWithRequiresThread_RunsOnSameThread()
         {
@@ -60,6 +61,20 @@ namespace NUnit.Framework.Attributes
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ParentThreadApartment));
         }
 #endif
+#endif
     }
+
+#if !SILVERLIGHT && !NETCF
+    [SingleThreaded, Apartment(ApartmentState.STA)]
+    public class SingleThreadedFixtureRunInSTA : ThreadingTests
+    {
+        [Test]
+        public void CanRunSingleThreadedFixtureInSTA()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+        }
+    }
+#endif
 }
 #endif
