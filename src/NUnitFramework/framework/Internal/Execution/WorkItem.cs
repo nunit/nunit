@@ -236,14 +236,22 @@ namespace NUnit.Framework.Internal.Execution
             // 1. If the test used the RequiresThreadAttribute.
             // 2. If a test method has a timeout.
             // 3. If the test needs to run in a different apartment.
-            // NOTE: We want to eliminate cases 2 and 3 in the future.
+            //
+            // NOTE: We want to eliminate or significantly reduce 
+            //       cases 2 and 3 in the future.
+            //
             // Case 2 requires the ability to stop and start test workers
             // dynamically. We would cancel the worker thread, dispose of
             // the worker and start a new worker on a new thread.
-            // Case 3 should not occur when using the parallel dispatcher
-            // but will still be needed if we continue to support the
-            // workers=0 option. Otherwise, the code can be made conditional,
-            // applying only to platforms that do not support parallel.
+            //
+            // Case 3 occurs when using either dispatcher whenever a
+            // child test calls for a different apartment from the one
+            // used by it's parent. It routinely occurs under the simple
+            // dispatcher (--workers=0 option). Under the parallel dispatcher
+            // it is needed when test cases are not enabled for parallel
+            // execution. Currently, test cases are always run sequentially,
+            // so this continues to apply fairly generally.
+
 #if SILVERLIGHT || NETCF
             if (Context.IsSingleThreaded)
                 RunTest();
