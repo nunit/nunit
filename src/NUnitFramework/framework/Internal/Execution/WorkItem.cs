@@ -44,17 +44,6 @@ namespace NUnit.Framework.Internal.Execution
     {
         static Logger log = InternalTrace.GetLogger("WorkItem");
 
-        // The current state of the WorkItem
-        private WorkItemState _state;
-
-        // The test this WorkItem represents
-        private Test _test;
-
-        // The execution context used by this work item
-        private TestExecutionContext _context;
-
-        private List<ITestAction> _actions = new List<ITestAction>();
-
         #region Static Factory Method
 
         /// <summary>
@@ -82,12 +71,13 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="test">The test that the WorkItem will run</param>
         public WorkItem(Test test)
         {
-            _test = test;
+            Test = test;
             Result = test.MakeTestResult();
-            _state = WorkItemState.Ready;
+            State = WorkItemState.Ready;
+            Actions = new List<ITestAction>();
 #if !PORTABLE && !SILVERLIGHT && !NETCF
-            TargetApartment = _test.Properties.ContainsKey(PropertyNames.ApartmentState)
-                ? (ApartmentState)_test.Properties.Get(PropertyNames.ApartmentState)
+            TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
+                ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
                 : ApartmentState.Unknown;
 #endif
         }
@@ -105,16 +95,16 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="context">The TestExecutionContext to use</param>
         public void InitializeContext(TestExecutionContext context)
         {
-            Guard.OperationValid(_context == null, "The context has already been initialized");
+            Guard.OperationValid(Context == null, "The context has already been initialized");
 
-            _context = context;
+            Context = context;
 
             if (Test is TestAssembly)
-                _actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((TestAssembly)Test).Assembly));
+                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((TestAssembly)Test).Assembly));
             else if (Test is ParameterizedMethodSuite)
-                _actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(Test.Method.MethodInfo));
+                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(Test.Method.MethodInfo));
             else if (Test.TypeInfo != null)
-                _actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.TypeInfo.Type));
+                Actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.TypeInfo.Type));
         }
 
         #endregion
@@ -129,26 +119,17 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the current state of the WorkItem
         /// </summary>
-        public WorkItemState State
-        {
-            get { return _state; }
-        }
+        public WorkItemState State { get; private set; }
 
         /// <summary>
         /// The test being executed by the work item
         /// </summary>
-        public Test Test
-        {
-            get { return _test; }
-        }
+        public Test Test { get; private set; }
 
         /// <summary>
         /// The execution context
         /// </summary>
-        public TestExecutionContext Context
-        {
-            get { return _context; }
-        }
+        public TestExecutionContext Context { get; private set; }
 
         /// <summary>
         /// The unique id of the worker executing this item.
@@ -158,10 +139,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The test actions to be performed before and after this test
         /// </summary>
-        public List<ITestAction> Actions
-        {
-            get { return _actions; }
-        }
+        public List<ITestAction> Actions { get; private set; }
 
 #if PARALLEL
         /// <summary>
@@ -212,6 +190,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
         internal ApartmentState TargetApartment { get; set; }
+        private ApartmentState CurrentApartment { get; set; }
 #endif
 
         #endregion
@@ -225,7 +204,7 @@ namespace NUnit.Framework.Internal.Execution
         public virtual void Execute()
         {
             // Timeout set at a higher level
-            int timeout = _context.TestCaseTimeout;
+            int timeout = Context.TestCaseTimeout;
 
             // Timeout set on this test
             if (Test.Properties.ContainsKey(PropertyNames.Timeout))
@@ -252,22 +231,24 @@ namespace NUnit.Framework.Internal.Execution
             // execution. Currently, test cases are always run sequentially,
             // so this continues to apply fairly generally.
 
-#if SILVERLIGHT || NETCF
+#if PORTABLE
+            RunTest();
+#elif SILVERLIGHT || NETCF
             if (Context.IsSingleThreaded)
                 RunTest();
             else if (Test.RequiresThread || Test is TestMethod && timeout > 0)
                 RunTestOnOwnThread(timeout);
             else
                 RunTest();
-#elif PORTABLE
-            RunTest();
 #else
-            currentApartment = Thread.CurrentThread.GetApartmentState();
+            CurrentApartment = Thread.CurrentThread.GetApartmentState();
 
             if (Context.IsSingleThreaded)
                 RunTest();
-            else if ( Test.RequiresThread || Test is TestMethod && timeout > 0 || (currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown))
+            else if (CurrentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
                 RunTestOnOwnThread(timeout, TargetApartment);
+            else if (Test.RequiresThread || Test is TestMethod && timeout > 0)
+                RunTestOnOwnThread(timeout, CurrentApartment);
             else
                 RunTest();
 #endif
@@ -278,8 +259,16 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunTestOnOwnThread(int timeout)
         {
-            string reason = Test.RequiresThread ? "has RequiresThreadAttribute." : timeout > 0 ? "has Timeout value set." : "is TestMethod";
-            log.Debug("Running test on own thread because it " + reason);
+            string reason = Test.RequiresThread
+                ? "Has RequiresThreadAttribute."
+                : timeout > 0
+                ? "Has Timeout value set."
+                : null;
+
+            if (reason != null)
+                log.Debug("Running test on own thread. " + reason);
+            else
+                log.Error("Running test on own thread. Reason UNKNOWN.");
 
             thread = new Thread(RunTest);
 
@@ -289,22 +278,25 @@ namespace NUnit.Framework.Internal.Execution
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
         private Thread thread;
-        private ApartmentState currentApartment;
 
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
         {
             string reason = Test.RequiresThread
-                ? "has RequiresThreadAttribute."
+                ? "Has RequiresThreadAttribute."
                 : timeout > 0
-                ? "has Timeout value set."
-                : currentApartment != apartment && apartment != ApartmentState.Unknown
-                ? "requires a different apartment."
-                : "is TestMethod";
-            log.Debug("Running test on own thread because it " + reason);
+                ? "Has Timeout value set."
+                : CurrentApartment != apartment
+                ? "Requires a different apartment."
+                : null;
+
+            if (reason != null)
+                log.Debug("Running test on own thread. " + reason);
+            else
+                log.Error("Running test on own thread. Reason UNKNOWN.");
 
             thread = new Thread(new ThreadStart(RunTest));
 
-            thread.SetApartmentState(apartment == ApartmentState.Unknown ? currentApartment : apartment);
+            thread.SetApartmentState(apartment);
 
             RunThread(timeout);
         }
@@ -365,15 +357,15 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunTest()
         {
-            _context.CurrentTest = this.Test;
-            _context.CurrentResult = this.Result;
-            _context.Listener.TestStarted(this.Test);
-            _context.StartTime = DateTime.UtcNow;
-            _context.StartTicks = Stopwatch.GetTimestamp();
-            _context.WorkerId = this.WorkerId;
-            _context.EstablishExecutionEnvironment();
+            Context.CurrentTest = this.Test;
+            Context.CurrentResult = this.Result;
+            Context.Listener.TestStarted(this.Test);
+            Context.StartTime = DateTime.UtcNow;
+            Context.StartTicks = Stopwatch.GetTimestamp();
+            Context.WorkerId = this.WorkerId;
+            Context.EstablishExecutionEnvironment();
 
-            _state = WorkItemState.Running;
+            State = WorkItemState.Running;
 
             PerformWork();
 
@@ -387,8 +379,8 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the WorkItem should be aborted, false if it should run to completion</param>
         public virtual void Cancel(bool force)
         {
-            if (_context != null)
-                _context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
+            if (Context != null)
+                Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
             if (!force)
                 return;
@@ -421,9 +413,9 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region Protected Methods
+#region Protected Methods
 
         /// <summary>
         /// Method that performs actually performs the work. It should
@@ -436,7 +428,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         protected void WorkItemComplete()
         {
-            _state = WorkItemState.Complete;
+            State = WorkItemState.Complete;
 
             Result.StartTime = Context.StartTime;
             Result.EndTime = DateTime.UtcNow;
@@ -455,12 +447,12 @@ namespace NUnit.Framework.Internal.Execution
             // results along with it's own asserts.
             Result.AssertCount += Context.AssertCount;
 
-            _context.Listener.TestFinished(Result);
+            Context.Listener.TestFinished(Result);
 
             if (Completed != null)
                 Completed(this, EventArgs.Empty);
         }
 
-        #endregion
+#endregion
     }
 }
