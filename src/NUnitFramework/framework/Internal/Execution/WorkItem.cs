@@ -231,8 +231,23 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.Properties.ContainsKey(PropertyNames.Timeout))
                 timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
 
+            // Unless the context is single threaded, a supplementary thread 
+            // is created on the various platforms...
+            // 1. If the test used the RequiresThreadAttribute.
+            // 2. If a test method has a timeout.
+            // 3. If the test needs to run in a different apartment.
+            // NOTE: We want to eliminate cases 2 and 3 in the future.
+            // Case 2 requires the ability to stop and start test workers
+            // dynamically. We would cancel the worker thread, dispose of
+            // the worker and start a new worker on a new thread.
+            // Case 3 should not occur when using the parallel dispatcher
+            // but will still be needed if we continue to support the
+            // workers=0 option. Otherwise, the code can be made conditional,
+            // applying only to platforms that do not support parallel.
 #if SILVERLIGHT || NETCF
-            if (Test is TestMethod)
+            if (Context.IsSingleThreaded)
+                RunTest();
+            else if (Test.RequiresThread || Test is TestMethod && timeout > 0)
                 RunTestOnOwnThread(timeout);
             else
                 RunTest();
@@ -241,7 +256,9 @@ namespace NUnit.Framework.Internal.Execution
 #else
             currentApartment = Thread.CurrentThread.GetApartmentState();
 
-            if (Test is TestMethod || (currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown))
+            if (Context.IsSingleThreaded)
+                RunTest();
+            else if ( Test.RequiresThread || Test is TestMethod && timeout > 0 || (currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown))
                 RunTestOnOwnThread(timeout, TargetApartment);
             else
                 RunTest();

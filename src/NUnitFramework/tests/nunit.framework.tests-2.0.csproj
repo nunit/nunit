@@ -68,6 +68,7 @@
     <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />
     <Compile Include="Attributes\RangeAttributeTests.cs" />
+    <Compile Include="Attributes\SingleThreadedFixtureTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />

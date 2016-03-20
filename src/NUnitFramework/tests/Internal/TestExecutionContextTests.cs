@@ -366,6 +366,24 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region SingleThreaded
+
+        [Test]
+        public void SingleThreadedDefaultsToFalse()
+        {
+            Assert.False(new TestExecutionContext().IsSingleThreaded);
+        }
+
+        [Test]
+        public void SingleThreadedIsInherited()
+        {
+            var parent = new TestExecutionContext();
+            parent.IsSingleThreaded = true;
+            Assert.True(new TestExecutionContext(parent).IsSingleThreaded);
+        }
+
+        #endregion
+
         #region ExecutionStatus
 
         [Test]
