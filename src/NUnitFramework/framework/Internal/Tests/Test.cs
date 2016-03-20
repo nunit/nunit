@@ -51,6 +51,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected MethodInfo[] tearDownMethods;
 
+        /// <summary>
+        /// Used to cache the declaring type for this MethodInfo
+        /// </summary>
+        protected ITypeInfo DeclaringTypeInfo;
+
+        /// <summary>
+        /// Method property backing field
+        /// </summary>
+        private IMethodInfo _method;
+
         #endregion
 
         #region Construction
@@ -143,19 +153,29 @@ namespace NUnit.Framework.Internal
         public string FullName { get; set; }
 
         /// <summary>
-        /// Gets the name of the class containing this test. Returns
-        /// null if the test is not associated with a class.
+        /// Gets the name of the class where this test was declared.
+        /// Returns null if the test is not associated with a class.
         /// </summary>
         public string ClassName
-        { 
+        {
             get
             {
-                if (TypeInfo == null)
+                ITypeInfo typeInfo = TypeInfo;
+
+                if (Method != null)
+                {
+                    if (DeclaringTypeInfo == null)
+                        DeclaringTypeInfo = new TypeWrapper(Method.MethodInfo.DeclaringType);
+
+                    typeInfo = DeclaringTypeInfo;
+                }
+
+                if (typeInfo == null)
                     return null;
 
-                return TypeInfo.IsGenericType
-                    ? TypeInfo.GetGenericTypeDefinition().FullName
-                    : TypeInfo.FullName;
+                return typeInfo.IsGenericType
+                    ? typeInfo.GetGenericTypeDefinition().FullName
+                    : typeInfo.FullName;
             }
         }
 
@@ -178,7 +198,15 @@ namespace NUnit.Framework.Internal
         /// Gets a MethodInfo for the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public IMethodInfo Method { get; set; } // public setter needed by NUnitTestCaseBuilder
+        public IMethodInfo Method
+        {
+            get { return _method; }
+            set
+            {
+                DeclaringTypeInfo = null;
+                _method = value;
+            }
+        } // public setter needed by NUnitTestCaseBuilder
 
         /// <summary>
         /// Whether or not the test should be run
