@@ -324,6 +324,14 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        /// <summary>
+        /// Clear reference to TestFixture
+        /// </summary>
+        internal void ClearTestFixture()
+        {
+            Fixture = null;
+        }
+
         #endregion
 
         #region Protected Methods

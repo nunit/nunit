@@ -432,6 +432,10 @@ namespace NUnit.Framework.Internal.Execution
 
             _context.Listener.TestFinished(Result);
 
+            //Clear references to test objects to reduce memory usage
+            _context.ClearTestObject();
+            _test.ClearTestFixture();
+
             if (Completed != null)
                 Completed(this, EventArgs.Empty);
         }
