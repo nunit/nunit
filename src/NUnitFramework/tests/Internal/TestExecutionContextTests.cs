@@ -28,6 +28,7 @@ using System.Globalization;
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 
@@ -181,6 +182,15 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
+#if !PORTABLE && !SILVERLIGHT
+        [Test]
+        public void TestHasWorkerIdWhenParallel()
+        {
+            var workerId = TestExecutionContext.CurrentContext.WorkerId;
+            var isRunningUnderTestWorker = TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher;
+            Assert.That(workerId != null || !isRunningUnderTestWorker);
+        }
+#endif
         [Test]
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()

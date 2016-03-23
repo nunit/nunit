@@ -26,7 +26,7 @@ builds will cause new subdirectories to be created.
 
 ## Build Script
 
-We use **Cake** (http://cake-build.net) to build NUnit for distribution. The primary script that controls
+We use **Cake** (http://cakebuild.net) to build NUnit for distribution. The primary script that controls
 building, running tests and packaging is build.cake. We modify build.cake when we need to add new 
 targets or change the way the build is done. Normally build.cake is not invoked directly but through
 build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project

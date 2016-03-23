@@ -74,7 +74,7 @@ namespace NUnit.Engine.Tests
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("Runnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.Elements("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            Assert.That(result.Elements("test-suite").Count(), Is.EqualTo(0), "Load result should not have child tests");
         }
         #endregion
 
@@ -89,7 +89,7 @@ namespace NUnit.Engine.Tests
             Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
             Assert.That(result.GetAttribute("runstate"), Is.EqualTo("Runnable"));
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.Elements("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+            Assert.That(result.Elements("test-suite").Count(), Is.GreaterThan(0), "Explore result should have child tests");
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace NUnit.Engine.Tests
             Assert.That(result.GetAttribute("failed"), Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
             Assert.That(result.GetAttribute("skipped"), Is.EqualTo(MockAssembly.Skipped.ToString()));
             Assert.That(result.GetAttribute("inconclusive"), Is.EqualTo(MockAssembly.Inconclusive.ToString()));
-            Assert.That(result.Elements("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+            Assert.That(result.Elements("test-suite").Count(), Is.GreaterThan(0), "Explore result should have child tests");
         }
 
         [Test]
