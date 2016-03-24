@@ -129,6 +129,7 @@ namespace NUnit.Framework.Internal
 #endif
 
             CurrentValueFormatter = (val) => MsgUtils.DefaultValueFormatter(val);
+            IsSingleThreaded = false;
         }
 
         /// <summary>
@@ -159,6 +160,7 @@ namespace NUnit.Framework.Internal
 
             Dispatcher = other.Dispatcher;
             ParallelScope = other.ParallelScope;
+            IsSingleThreaded = other.IsSingleThreaded;
         }
 
         #endregion
@@ -450,6 +452,11 @@ namespace NUnit.Framework.Internal
         /// The current head of the ValueFormatter chain, copied from MsgUtils.ValueFormatter
         /// </summary>
         public ValueFormatter CurrentValueFormatter { get; private set; }
+
+        /// <summary>
+        /// If true, all tests must run on the same thread. No new thread may be spawned.
+        /// </summary>
+        public bool IsSingleThreaded { get; set; }
 
         #endregion
 

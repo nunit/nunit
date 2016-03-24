@@ -26,49 +26,55 @@ using System.Threading;
 
 namespace NUnit.Framework.Attributes
 {
-    public class ThreadingTests
+    [SingleThreaded]
+    public class SingleThreadedFixtureTests : ThreadingTests
     {
-        protected Thread ParentThread { get; private set; }
-        protected Thread SetupThread { get; private set; }
-#if !NETCF && !SILVERLIGHT
-        protected ApartmentState ParentThreadApartment { get; private set; }
-#endif
-
-        [OneTimeSetUp]
-        public void GetParentThreadInfo()
-        {
-            ParentThread = Thread.CurrentThread;
-#if !NETCF && !SILVERLIGHT
-            ParentThreadApartment = GetApartmentState(ParentThread);
-#endif
-        }
-
-        [SetUp]
-        public void GetSetUpThreadInfo()
-        {
-            SetupThread = Thread.CurrentThread;
-        }
-
-        [Test]
-        public void TestDefaultsToRunningEverythingOnSameThread()
+        [Test, Timeout(1)]
+        public void TestWithTimeout_RunsOnSameThread()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
-            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
-        [TestCase(5)]
-        public void TestCaseDefaultsToRunningEverythingOnSameThread(int x)
+        [Test, Timeout(1)]
+        public void TestWithTimeout_TimeoutIsIgnored()
+        {
+            Thread.Sleep(100);
+        }
+
+#if !SILVERLIGHT
+        [Test, RequiresThread]
+        public void TestWithRequiresThread_RunsOnSameThread()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
-            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
-#if !NETCF && !SILVERLIGHT
-        protected static ApartmentState GetApartmentState(Thread thread)
+#if !NETCF
+        [Test, Apartment(ApartmentState.STA)]
+        public void TestRequiringSTA_RunsOnSameThread()
         {
-            return thread.GetApartmentState();
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
+
+        [Test, Apartment(ApartmentState.STA)]
+        public void TestRequiringSTA_RunsInParentApartment()
+        {
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ParentThreadApartment));
+        }
+#endif
 #endif
     }
+
+#if !SILVERLIGHT && !NETCF
+    [SingleThreaded, Apartment(ApartmentState.STA)]
+    public class SingleThreadedFixtureRunInSTA : ThreadingTests
+    {
+        [Test]
+        public void CanRunSingleThreadedFixtureInSTA()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+        }
+    }
+#endif
 }
 #endif
