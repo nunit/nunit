@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.core.interfaces">
-      <HintPath>..\nunit.v2.driver\lib\nunit.core.interfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -47,19 +44,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleGenericFixture.cs" />
     <Compile Include="SimpleGenericMethods.cs" />
-    <Compile Include="XmlExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\nunit.v2.driver\nunit.v2.driver.csproj">
-      <Project>{379058e2-e834-4cc7-b5cd-ac8dfcf82aea}</Project>
-      <Name>nunit.v2.driver</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
