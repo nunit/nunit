@@ -352,7 +352,7 @@ Task("TestDriver")
   .WithCriteria(IsRunningOnWindows)
   .Does(() =>
 	{
-		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS, ref ErrorDetail);
+		RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS, "TestDriver", ref ErrorDetail);
 	});
 
 Task("TestAddins")
