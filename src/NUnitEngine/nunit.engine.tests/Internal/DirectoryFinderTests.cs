@@ -56,10 +56,10 @@ namespace NUnit.Engine.Internal.Tests
         [TestCase("net-4.0/nunit.framework.dll", 1)]
         [TestCase("net-*/nunit.framework.dll", 3)]
         [TestCase("net-*/*.framework.dll", 3)]
-        [TestCase("*/v2-tests/*.dll", 2)]
-        [TestCase("add*/v?-*/*.dll", 2)]
-        [TestCase("**/v2-tests/*.dll", 2)]
-        [TestCase("addins/**/*.dll", 7)]
+        [TestCase("*/v2-tests/*.dll", 5)]
+        [TestCase("add*/v?-*/*.dll", 5)]
+        [TestCase("**/v2-tests/*.dll", 5)]
+        [TestCase("addins/**/*.dll", 10)]
         [TestCase("addins/../net-*/nunit.framework.dll", 3)]
         public void GetFiles(string pattern, int count)
         {
