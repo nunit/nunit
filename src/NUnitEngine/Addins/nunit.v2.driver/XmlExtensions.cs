@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -255,8 +256,31 @@ namespace NUnit.Engine.Drivers
         private static XmlNode AddElementWithCDataSection(this XmlNode node, string name, string data)
         {
             XmlNode childNode = node.AddElement(name);
-            childNode.AppendChild(node.OwnerDocument.CreateCDataSection(data));
+            foreach (var section in EscapeCDataString(data))
+                childNode.AppendChild(node.OwnerDocument.CreateCDataSection(section));
             return childNode;
+        }
+
+        private static List<string> EscapeCDataString(string data)
+        {
+            var sections = new List<string>();
+            int start = 0;
+            while (true)
+            {
+                int illegal = data.IndexOf("]]>", start, StringComparison.Ordinal);
+                if (illegal < 0)
+                    break;
+                sections.Add(data.Substring(start, illegal - start + 2));
+                start = illegal + 2;
+                if (start >= data.Length)
+                    return sections;
+            }
+
+            if (start > 0)
+                sections.Add(data.Substring(start));
+            else
+                sections.Add(data);
+            return sections;
         }
 
         #endregion
