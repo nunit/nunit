@@ -516,14 +516,6 @@ namespace NUnit.Framework.Internal
             CurrentValueFormatter = formatterFactory(CurrentValueFormatter);
         }
 
-        /// <summary>
-        /// Clear reference to test object
-        /// </summary>
-        internal void ClearTestObject()
-        {
-            TestObject = null;
-        }
-
         #endregion
 
         #region InitializeLifetimeService

@@ -71,6 +71,10 @@ namespace NUnit.Framework.Internal.Commands
                 IDisposable disposable = context.TestObject as IDisposable;
                 if (disposable != null && Test is IDisposableFixture)
                     disposable.Dispose();
+
+                //Clear references to test objects to reduce memory usage
+                context.TestObject = null;
+                Test.Fixture = null;
             }
             catch (Exception ex)
             {
