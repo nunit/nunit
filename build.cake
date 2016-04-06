@@ -19,6 +19,7 @@ var version = "3.3.0";
 var modifier = "";
 
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
+var isSilverlightSDKInstalled = FileExists(Environment.GetEnvironmentVariable("ProgramFiles(x86)")  + "\\MSBuild\\Microsoft\\Silverlight\\v5.0\\Microsoft.Silverlight.CSharp.targets");
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
@@ -172,13 +173,22 @@ Task("BuildSL")
 	.WithCriteria(IsRunningOnWindows())
 	.Does(() =>
 	{
-		BuildProject("src/NUnitFramework/framework/nunit.framework-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-		BuildProject("src/NUnitFramework/nunitlite/nunitlite-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-		BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-		BuildProject("src/NUnitFramework/testdata/nunit.testdata-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-		BuildProject("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-		BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-		BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+		if(isSilverlightSDKInstalled)
+        {
+			BuildProject("src/NUnitFramework/framework/nunit.framework-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/nunitlite/nunitlite-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/testdata/nunit.testdata-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+			BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+		}
+        else
+        {
+            Warning("Silverlight build skipped because files were not present.");
+            if(isAppveyor) 
+                throw new Exception("Running Build on Appveyor, but Silverlight not found.");
+        }
 	});
 
 Task("BuildCF")
@@ -315,10 +325,17 @@ Task("TestSL")
 	.OnError(exception => {ErrorDetail.Add(exception.Message); })
 	.Does(() =>
 	{
-	    var runtime = "sl-5.0";
-	    var dir = BIN_DIR + runtime + "/";
-		RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-		RunTest(dir + NUNITLITE_RUNNER, dir, NUNITLITE_TESTS, runtime, ref ErrorDetail);
+		if(isSilverlightSDKInstalled)
+        {
+		    var runtime = "sl-5.0";
+		    var dir = BIN_DIR + runtime + "/";
+			RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+			RunTest(dir + NUNITLITE_RUNNER, dir, NUNITLITE_TESTS, runtime, ref ErrorDetail);
+		}
+        else
+        {
+            Warning("Silverlight tests skipped because files were not present.");
+        }
 	});
 
 Task("TestCF")

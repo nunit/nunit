@@ -73,13 +73,10 @@ important top-level tasks to use are listed here:
     when necessary without changing the binaries themselves. Of course, this means that
     you have to be very careful that the build is up to date before packaging.
 
- 2. If the compact framework is not installed on a machine, building and testing tasks
-    for CF are skipped and a warning is issued.
+ 2. If the compact framework or Silverlight SDK are not installed on a machine, the relevant 
+    building and testing tasks are skipped and a warning is issued.
 
- 3. Currently, Silverlight must be installed or an error occurs when trying to build or
-    test it. We will be changing this soon to match the strategy for CF.
-
- 4. The Test and TestAll targets currently due the same thing. Both are retained for backward
+ 3. The Test and TestAll targets currently due the same thing. Both are retained for backward
     backward compatibility and the semantics of at least one of them may change in the future.
 
- 5. For additional targets, refer to the build.cake script itself.
+ 4. For additional targets, refer to the build.cake script itself.
