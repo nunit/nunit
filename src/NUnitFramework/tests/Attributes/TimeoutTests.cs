@@ -33,33 +33,18 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Attributes
 {
     [Parallelizable(ParallelScope.None)]
-    public class TimeoutTests
+    public class TimeoutTests : ThreadingTests
     {
-        Thread parentThread;
-        Thread setupThread;
-
-        [OneTimeSetUp]
-        public void GetParentThreadInfo()
-        {
-            this.parentThread = Thread.CurrentThread;
-        }
-
-        [SetUp]
-        public void GetSetUpThreadInfo()
-        {
-            this.setupThread = Thread.CurrentThread;
-        }
-
         [Test, Timeout(50)]
         public void TestWithTimeoutRunsOnSeparateThread()
         {
-            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
+            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
         }
 
         [Test, Timeout(50)]
         public void TestWithTimeoutRunsSetUpAndTestOnSameThread()
         {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(setupThread));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
         [Test]

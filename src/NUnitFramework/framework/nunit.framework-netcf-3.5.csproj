@@ -166,6 +166,7 @@
     <Compile Include="Attributes\NUnitAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
+    <Compile Include="Attributes\OrderAttribute.cs" />
     <Compile Include="Attributes\PairwiseAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
     <Compile Include="Attributes\ParallelScope.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Attributes\SetUICultureAttribute.cs" />
     <Compile Include="Attributes\SetUpAttribute.cs" />
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
+    <Compile Include="Attributes\SingleThreadedAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />

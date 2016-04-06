@@ -150,6 +150,24 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void IEquatableSuccess_WhenExplicitInterfaceImplementation()
+        {
+            IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
+            IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(1);
+
+            Assert.IsTrue(comparer.AreEqual(x, y, ref tolerance));
+        }
+
+        [Test]
+        public void IEquatableFailure_WhenExplicitInterfaceImplementationWithDifferentValues()
+        {
+            IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
+            IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(2);
+
+            Assert.IsFalse(comparer.AreEqual(x, y, ref tolerance));
+        }
+
+        [Test]
         public void ReferenceEqualityHasPrecedenceOverIEquatable()
         {
             NeverEqualIEquatable z = new NeverEqualIEquatable();
@@ -366,7 +384,22 @@ namespace NUnit.Framework.Constraints
             return value.Equals(other.value);
         }
     }
-    
+
+    public class IEquatableWithExplicitImplementation : IEquatable<IEquatableWithExplicitImplementation>
+    {
+        private readonly int value;
+
+        public IEquatableWithExplicitImplementation(int value)
+        {
+            this.value = value;
+        }
+
+        bool IEquatable<IEquatableWithExplicitImplementation>.Equals(IEquatableWithExplicitImplementation other)
+        {
+            return value.Equals(other.value);
+        }
+    }
+
     public class EquatableObject : IEquatable<EquatableObject>
     {
         public int SomeProperty { get; set; }

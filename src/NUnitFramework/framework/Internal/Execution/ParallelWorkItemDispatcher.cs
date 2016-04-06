@@ -97,12 +97,15 @@ namespace NUnit.Framework.Internal.Execution
                 Enqueue(work);
                 StartNextShift();
             }
-            // We run child items on the same thread as the parent...
-            // 1. If there is no fixture, and so nothing to do but dispatch grandchildren.
-            // 2. For now, if this represents a test case. This avoids issues of
+            // We run child items directly, rather than enqueuing them...
+            // 1. If the context is single threaded.
+            // 2. If there is no fixture, and so nothing to do but dispatch grandchildren.
+            // 3. For now, if this represents a test case. This avoids issues of
             // tests that access the fixture state and allows handling ApartmentState
             // preferences set on the fixture.
-            else if (work is SimpleWorkItem || work.Test.TypeInfo == null)
+            else if (work.Context.IsSingleThreaded
+                  || work.Test.TypeInfo == null
+                  || work is SimpleWorkItem)
                 Execute(work);
             else
                 Enqueue(work);

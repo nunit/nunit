@@ -115,6 +115,7 @@
     <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
     <Compile Include="Attributes\SetUpFixtureAttributeTests.cs" />
+    <Compile Include="Attributes\SingleThreadedFixtureTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />

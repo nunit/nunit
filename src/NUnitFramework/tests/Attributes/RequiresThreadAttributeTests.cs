@@ -30,14 +30,6 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class RequiresThreadAttributeTests : ThreadingTests
     {
-        private Thread SetupThread { get; set; }
-
-        [SetUp]
-        public void GetSetUpThreadInfo()
-        {
-            SetupThread = Thread.CurrentThread;
-        }
-
         [Test, RequiresThread]
         public void TestWithRequiresThreadRunsInSeparateThread()
         {
