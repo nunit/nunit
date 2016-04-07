@@ -176,5 +176,19 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
                 Assert.AreEqual(1, project.GetTestPackage("Debug").SubPackages.Count, "Debug should have 1 assembly");
             }
         }
+
+        [Test]
+        public void FromSolutionWithNonNunitTestProject()
+        {
+            using (new TestResource("csharp-sample.csproj", @"csharp-sample\csharp-sample.csproj"))
+            using (new TestResource("csharp-debug-only-no-nunit.csproj", @"csharp-debug-only-no-nunit\csharp-debug-only-no-nunit.csproj"))
+            using (TestResource file = new TestResource("solution-with-non-nunit-project.sln"))
+            {
+                IProject project = _loader.LoadFrom(file.Path);
+                Assert.AreEqual(2, project.ConfigNames.Count);
+                Assert.AreEqual(1, project.GetTestPackage("Release").SubPackages.Count, "Release should have 2 assemblies");
+                Assert.AreEqual(1, project.GetTestPackage("Debug").SubPackages.Count, "Debug should have 1 assembly");
+            }
+        }
     }
 }
