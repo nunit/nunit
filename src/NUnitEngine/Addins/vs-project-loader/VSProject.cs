@@ -82,6 +82,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// The path to the project
         /// </summary>
         public string ProjectPath { get; private set; }
+        public XmlDocument MsBuildDocument { get; private set; }
 
         /// <summary>
         /// Gets the active configuration, as defined
@@ -269,6 +270,8 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
             XmlNodeList nodes = _doc.SelectNodes("/msbuild:Project/msbuild:PropertyGroup", namespaceManager);
             if (nodes == null) return;
+
+            MsBuildDocument = _doc;
 
             XmlElement assemblyNameElement = (XmlElement)_doc.SelectSingleNode("/msbuild:Project/msbuild:PropertyGroup/msbuild:AssemblyName", namespaceManager);
             string assemblyName = assemblyNameElement.InnerText;
