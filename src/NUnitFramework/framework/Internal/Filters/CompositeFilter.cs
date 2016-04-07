@@ -64,6 +64,24 @@ namespace NUnit.Framework.Internal.Filters
         public IList<ITestFilter> Filters { get; private set; }
 
         /// <summary>
+        /// Checks whether the CompositeFilter is matched by a test.
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        public abstract override bool Pass(ITest test);
+
+        /// <summary>
+        /// Checks whether the CompositeFilter is matched by a test.
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        public abstract override bool Match(ITest test);
+
+        /// <summary>
+        /// Checks whether the CompositeFilter is explicit matched by a test.
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        public abstract override bool IsExplicitMatch(ITest test);
+
+        /// <summary>
         /// Adds an XML node
         /// </summary>
         /// <param name="parentNode">Parent node</param>
