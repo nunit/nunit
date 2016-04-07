@@ -153,12 +153,15 @@ namespace NUnit.Engine.Runners
             if (IsProjectPackage(TestPackage))
                 result = result.MakePackageResult(TestPackage.Name, TestPackage.FullName);
 
-            var packages = TestPackage.SubPackages;
-            if (packages.Count == 0)
-                packages.Add(TestPackage);
-            foreach (var package in packages)
+            if (_assemblyResolver != null)
             {
-                _assemblyResolver.RemovePathFromFile(package.FullName);
+                var packages = TestPackage.SubPackages;
+
+                if (packages.Count == 0)
+                    packages.Add(TestPackage);
+
+                foreach (var package in packages)
+                    _assemblyResolver.RemovePathFromFile(package.FullName);
             }
 
             return result;
