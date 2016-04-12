@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitFramework", "NUnitFramework", "{5D8A9D62-C11C-45B2-8965-43DE8160B558}"
 EndProject
@@ -201,6 +201,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "runners", "runners", "{F3E8
 		nuget\runners\nunit.console-runner.nuspec = nuget\runners\nunit.console-runner.nuspec
 		nuget\runners\nunit.runners.nuspec = nuget\runners\nunit.runners.nuspec
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET-3.5", "NET-3.5", "{49BF96D3-3F1B-4553-BE55-296FA7C3F659}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework-3.5", "src\NUnitFramework\framework\nunit.framework-3.5.csproj", "{7FA125B4-E377-4D4C-AECB-17B934E3A4B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-3.5", "src\NUnitFramework\nunitlite\nunitlite-3.5.csproj", "{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly-3.5", "src\NUnitFramework\mock-assembly\mock-assembly-3.5.csproj", "{8FCE12F2-FE7B-43D0-94E9-3B71FECAFE64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-3.5", "src\NUnitFramework\nunitlite.tests\nunitlite.tests-3.5.csproj", "{FD6D4774-71B7-4D7A-BE91-753B12C0BB4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-runner-3.5", "src\NUnitFramework\nunitlite-runner\nunitlite-runner-3.5.csproj", "{A7E48768-23B5-4A11-B10A-048FB21A0955}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-3.5", "src\NUnitFramework\slow-tests\slow-nunit-tests-3.5.csproj", "{C6156B98-923A-474B-B257-29107476E93C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-3.5", "src\NUnitFramework\testdata\nunit.testdata-3.5.csproj", "{520F4C89-51B6-49D6-9ED7-4523048C0154}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-3.5", "src\NUnitFramework\tests\nunit.framework.tests-3.5.csproj", "{B93FC354-D59D-4650-84E4-7FCA7D51689A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -428,6 +446,38 @@ Global
 		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CDC481D-DB17-4145-9963-9E895C29CBC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA125B4-E377-4D4C-AECB-17B934E3A4B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA125B4-E377-4D4C-AECB-17B934E3A4B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA125B4-E377-4D4C-AECB-17B934E3A4B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA125B4-E377-4D4C-AECB-17B934E3A4B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FCE12F2-FE7B-43D0-94E9-3B71FECAFE64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FCE12F2-FE7B-43D0-94E9-3B71FECAFE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FCE12F2-FE7B-43D0-94E9-3B71FECAFE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FCE12F2-FE7B-43D0-94E9-3B71FECAFE64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD6D4774-71B7-4D7A-BE91-753B12C0BB4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD6D4774-71B7-4D7A-BE91-753B12C0BB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD6D4774-71B7-4D7A-BE91-753B12C0BB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD6D4774-71B7-4D7A-BE91-753B12C0BB4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7E48768-23B5-4A11-B10A-048FB21A0955}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7E48768-23B5-4A11-B10A-048FB21A0955}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7E48768-23B5-4A11-B10A-048FB21A0955}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7E48768-23B5-4A11-B10A-048FB21A0955}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6156B98-923A-474B-B257-29107476E93C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6156B98-923A-474B-B257-29107476E93C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6156B98-923A-474B-B257-29107476E93C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6156B98-923A-474B-B257-29107476E93C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{520F4C89-51B6-49D6-9ED7-4523048C0154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{520F4C89-51B6-49D6-9ED7-4523048C0154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{520F4C89-51B6-49D6-9ED7-4523048C0154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{520F4C89-51B6-49D6-9ED7-4523048C0154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B93FC354-D59D-4650-84E4-7FCA7D51689A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B93FC354-D59D-4650-84E4-7FCA7D51689A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B93FC354-D59D-4650-84E4-7FCA7D51689A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B93FC354-D59D-4650-84E4-7FCA7D51689A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -502,6 +552,15 @@ Global
 		{BC87F477-1A7A-45D0-9AC1-9F7315264732} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
 		{140CDAD6-6E11-4A97-94F3-B23A14391117} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
 		{F3E87D0F-6F06-4C0B-AE06-42C0834C3C6E} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
+		{49BF96D3-3F1B-4553-BE55-296FA7C3F659} = {5D8A9D62-C11C-45B2-8965-43DE8160B558}
+		{7FA125B4-E377-4D4C-AECB-17B934E3A4B3} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{8FCE12F2-FE7B-43D0-94E9-3B71FECAFE64} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{FD6D4774-71B7-4D7A-BE91-753B12C0BB4E} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{A7E48768-23B5-4A11-B10A-048FB21A0955} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{C6156B98-923A-474B-B257-29107476E93C} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{520F4C89-51B6-49D6-9ED7-4523048C0154} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{B93FC354-D59D-4650-84E4-7FCA7D51689A} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj
