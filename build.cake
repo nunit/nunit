@@ -30,10 +30,10 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var WindowsFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-2.0", "portable", "sl-5.0", "netcf-3.5" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "portable", "sl-5.0", "netcf-3.5" };
 
 var LinuxFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-2.0" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0" };
 
 var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
 
@@ -142,6 +142,19 @@ Task("Build40")
         BuildProject("src/NUnitFramework/tests/nunit.framework.tests-4.0.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-4.0.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-4.0.csproj", configuration);
+    });
+
+Task("Build35")
+    .Does(() =>
+    {
+        BuildProject("src/NUnitFramework/framework/nunit.framework-3.5.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite/nunitlite-3.5.csproj", configuration);
+        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-3.5.csproj", configuration);
+        BuildProject("src/NUnitFramework/testdata/nunit.testdata-3.5.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-3.5.csproj", configuration);
+        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-3.5.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-3.5.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-3.5.csproj", configuration);
     });
 
 Task("Build20")
@@ -295,6 +308,16 @@ Task("Test40")
     .Does(() =>
     {
         var runtime = "net-4.0";
+        var dir = BIN_DIR + runtime + "/";
+        RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+    });
+
+Task("Test35")
+    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .Does(() =>
+    {
+        var runtime = "net-3.5";
         var dir = BIN_DIR + runtime + "/";
         RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -529,6 +552,7 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/addins/tests/*.*") +
             GetFiles(currentImageDir + "bin/addins/v2-tests/*.*") +
             GetFiles(currentImageDir + "bin/net-2.0/*.*") +
+            GetFiles(currentImageDir + "bin/net-3.5/*.*") +
             GetFiles(currentImageDir + "bin/net-4.0/*.*") +
             GetFiles(currentImageDir + "bin/net-4.5/*.*") +
             GetFiles(currentImageDir + "bin/portable/*.*");
@@ -828,6 +852,7 @@ Task("BuildAllFrameworks")
     .IsDependentOn("InitializeBuild")
     .IsDependentOn("Build45")
     .IsDependentOn("Build40")
+    .IsDependentOn("Build35")
     .IsDependentOn("Build20")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
     .IsDependentOn("BuildPortable")
@@ -855,6 +880,7 @@ Task("TestAllFrameworks")
     .IsDependentOn("Build")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
+    .IsDependentOn("Test35")
     .IsDependentOn("Test20")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
     .IsDependentOn("TestPortable")

@@ -114,14 +114,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly-sl-5.0", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-portable", "src\NUnitFramework\tests\nunit.framework.tests-portable.csproj", "{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{2821D6DA-4F95-4002-BC35-00E8B7F9961A}"
-	ProjectSection(SolutionItems) = preProject
-		targets\Build.Targets = targets\Build.Targets
-		targets\Common.Properties = targets\Common.Properties
-		targets\Packaging.Targets = targets\Packaging.Targets
-		targets\Testing.Targets = targets\Testing.Targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-2.0", "src\NUnitFramework\nunitlite.tests\nunitlite.tests-2.0.csproj", "{42BC31BF-0A03-43EC-925B-1419DD7F2C7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-4.0", "src\NUnitFramework\nunitlite.tests\nunitlite.tests-4.0.csproj", "{F0BA2671-5160-4164-B1FC-2883728C42D9}"
@@ -526,7 +518,6 @@ Global
 		{8C53C716-3E54-4DFE-8CD9-F4099042FCFA} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 		{C4D16DF1-B6FA-42F5-834E-B01DA1BAA1FF} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{3AFA44B9-9DF0-494E-B633-6E6B9F2BB808} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
-		{2821D6DA-4F95-4002-BC35-00E8B7F9961A} = {49D441DF-39FD-4F4D-AECA-86CF8EFE23AF}
 		{42BC31BF-0A03-43EC-925B-1419DD7F2C7C} = {64FE69B2-CE0B-4A47-83A3-9DE803851447}
 		{F0BA2671-5160-4164-B1FC-2883728C42D9} = {83154E24-B0DD-48E7-8BB5-55CF3D7B0FE3}
 		{8472DB53-5950-4A70-864C-567A55A6C4A1} = {7B573D52-181D-482F-A61C-82E543B3E958}

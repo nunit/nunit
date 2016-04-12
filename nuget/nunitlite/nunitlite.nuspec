@@ -25,7 +25,7 @@ How to use this package:
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
-    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
     <dependencies>
       <group>
         <dependency id="NUnit" version="[$version$]" />
@@ -37,11 +37,13 @@ How to use this package:
     <file src="NOTICES.txt" />
     <file src="CHANGES.txt" />
     <file src="bin/net-2.0/nunitlite.dll" target="lib/net20" />
+    <file src="bin/net-3.5/nunitlite.dll" target="lib/net35" />
     <file src="bin/net-4.0/nunitlite.dll" target="lib/net40" />
     <file src="bin/net-4.5/nunitlite.dll" target="lib/net45" />
     <file src="bin/portable/nunitlite.dll" target="lib/dotnet" />
     <file src="bin/portable/nunitlite.dll" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac" />
     <file src="bin/net-2.0/nunitlite-runner.exe" target="tools/net20" />
+    <file src="bin/net-3.5/nunitlite-runner.exe" target="tools/net35" />
     <file src="bin/net-4.0/nunitlite-runner.exe" target="tools/net40" />
     <file src="bin/net-4.5/nunitlite-runner.exe" target="tools/net45" />
     <file src="bin/portable/nunitlite-runner.exe" target="tools/portable" />
