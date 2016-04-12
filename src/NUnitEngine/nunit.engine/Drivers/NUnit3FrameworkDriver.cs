@@ -126,7 +126,7 @@ namespace NUnit.Engine.Drivers
         /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
         public void StopRun(bool force)
         {
-            CreateObject(STOP_RUN_ACTION, _frameworkController, force);
+            CreateObject(STOP_RUN_ACTION, _frameworkController, force, new CallbackHandler());
         }
 
         /// <summary>
