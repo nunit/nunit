@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if NET_2_0
 namespace System
 {
     /// <summary>
@@ -43,3 +44,4 @@ namespace System.Runtime.CompilerServices
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
     sealed class ExtensionAttribute : Attribute { }
 }
+#endif

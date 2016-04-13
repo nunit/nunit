@@ -14,7 +14,7 @@
     <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. This package contains a build of the NUnitLite runner for SilverLight 5.0.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert</tags>
-    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
     <dependencies>
       <group>
         <dependency id="NUnit.SL50" version="[$version$]" />

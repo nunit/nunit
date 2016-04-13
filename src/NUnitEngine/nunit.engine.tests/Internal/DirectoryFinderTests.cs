@@ -38,12 +38,12 @@ namespace NUnit.Engine.Internal.Tests
         }
 
         [TestCase("net-4.0", 1)]
-        [TestCase("net-*", 3)]
+        [TestCase("net-*", 4)]
         [TestCase("*/v2-tests", 1)]
         [TestCase("add*/v?-*", 1)]
         [TestCase("**/v2-tests", 1)]
         [TestCase("addins/**", 2)]
-        [TestCase("addins/../net-*", 3)]
+        [TestCase("addins/../net-*", 4)]
         [TestCase("addins/v2-tests/", 1)]
         [TestCase("addins//v2-tests/", 1)]
         [TestCase("addins/./v2-tests/", 1)]
@@ -54,13 +54,13 @@ namespace NUnit.Engine.Internal.Tests
         }
 
         [TestCase("net-4.0/nunit.framework.dll", 1)]
-        [TestCase("net-*/nunit.framework.dll", 3)]
-        [TestCase("net-*/*.framework.dll", 3)]
+        [TestCase("net-*/nunit.framework.dll", 4)]
+        [TestCase("net-*/*.framework.dll", 4)]
         [TestCase("*/v2-tests/*.dll", 2)]
         [TestCase("add*/v?-*/*.dll", 2)]
         [TestCase("**/v2-tests/*.dll", 2)]
         [TestCase("addins/**/*.dll", 7)]
-        [TestCase("addins/../net-*/nunit.framework.dll", 3)]
+        [TestCase("addins/../net-*/nunit.framework.dll", 4)]
         public void GetFiles(string pattern, int count)
         {
             var files = DirectoryFinder.GetFiles(_baseDir, pattern);

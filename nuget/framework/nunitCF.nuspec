@@ -14,7 +14,7 @@
     <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.&#10;&#13;This package includes the NUnit 3.0 framework assembly for .NET Compact Framework 3.5, which is referenced by your tests. You will need to install the NUnitLiteCF package in order to run the tests. Two separate packages are used because future versions will be supported by additional runners.</description>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin cf compact framework</tags>
-    <copyright>Copyright (c) 2015 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
   </metadata>
   <files>
     <file src="LICENSE.txt" />
