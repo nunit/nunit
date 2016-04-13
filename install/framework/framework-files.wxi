@@ -27,6 +27,31 @@
             </Component>
         </ComponentGroup>
 
+        <!-- .NET Framework 3.5 -->
+        <ComponentGroup Id="NET35" Directory="NET35">
+            <Component Id="NET35" Location="local" Guid="1E1668ED-1A60-41AF-BC64-F6E49CB23054">
+                <File Id="nunit.framework.35.dll"
+                      Name="nunit.framework.dll"
+                      ProcessorArchitecture="msil"
+                      Source="$(var.Binaries)\net-3.5\nunit.framework.dll" />
+                <File Id="nunit.framework.35.xml"
+                      Name="nunit.framework.xml"
+                      Source="$(var.Binaries)\net-3.5\nunit.framework.xml"
+                      CompanionFile="nunit.framework.35.dll" />
+            </Component>
+            <Component Id="NET35_RUNNER" Location="local" Guid="54FD2286-C778-453F-B628-ECC784004623">
+                <File Id="nunitlite.35.dll"
+                      Name="nunitlite.dll"
+                      ProcessorArchitecture="msil"
+                      Source="$(var.Binaries)\net-3.5\nunitlite.dll" />
+            </Component>
+            <Component Id="AssemblyReferenceFolder35" Guid="A451EB13-8A92-4F9E-A60E-B4175B181A4A">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v2.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET35]" />
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
+
         <!-- .NET Framework 4.0 -->
         <ComponentGroup Id="NET40" Directory="NET40">
             <Component Id="NET40" Location="local" Guid="20075750-2D60-4798-A348-5FB0930E9034">
