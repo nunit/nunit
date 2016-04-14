@@ -47,6 +47,7 @@ namespace NUnit.Framework.Api
 
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private readonly bool _captureOutput;
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
         // Saved Console.Out and Console.Error
@@ -65,9 +66,19 @@ namespace NUnit.Framework.Api
         /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
         /// </summary>
         /// <param name="builder">The builder.</param>
-        public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder)
+        public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder) : this(builder, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="captureOutput">If true, capture test's stdout and stderr (if supported on given platform).</param>
+        public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder, bool captureOutput)
         {
             _builder = builder;
+            _captureOutput = captureOutput;
         }
 
         #endregion
@@ -251,8 +262,11 @@ namespace NUnit.Framework.Api
             _savedOut = Console.Out;
             _savedErr = Console.Error;
 
-            Console.SetOut(new TextCapture(Console.Out));
-            Console.SetError(new TextCapture(Console.Error));
+            if (_captureOutput)
+            {
+                Console.SetOut(new TextCapture(Console.Out));
+                Console.SetError(new TextCapture(Console.Error));
+            }
 #endif
 
 #if PARALLEL
@@ -351,8 +365,11 @@ namespace NUnit.Framework.Api
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
-            Console.SetOut(_savedOut);
-            Console.SetError(_savedErr);
+            if (_captureOutput)
+            {
+                Console.SetOut(_savedOut);
+                Console.SetError(_savedErr);
+            }
 #endif
 
             _runComplete.Set();

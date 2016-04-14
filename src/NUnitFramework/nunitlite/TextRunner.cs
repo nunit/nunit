@@ -72,6 +72,7 @@ namespace NUnitLite
         private Assembly _testAssembly;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private ITestAssemblyRunner _runner;
+        private readonly bool _captureOutput;
 
         private NUnitLiteOptions _options;
         private ITestListener _teamCity = null;
@@ -87,7 +88,17 @@ namespace NUnitLite
         //// <summary>
         //// Initializes a new instance of the <see cref="TextRunner"/> class.
         //// </summary>
-        public TextRunner() { }
+        public TextRunner() : this(null, true)
+        {
+        }
+
+        //// <summary>
+        //// Initializes a new instance of the <see cref="TextRunner"/> class.
+        //// </summary>
+        //// <param name = "captureOutput" > If true, capture test's stdout and stderr (if supported on given platform).</param>
+        public TextRunner(bool captureOutput) : this(null, captureOutput)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRunner"/> class
@@ -95,9 +106,20 @@ namespace NUnitLite
         /// </summary>
         /// <param name="testAssembly"></param>
         /// </summary>
-        public TextRunner(Assembly testAssembly)
+        public TextRunner(Assembly testAssembly) : this(testAssembly, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextRunner"/> class
+        /// specifying a test assembly whose tests are to be run.
+        /// </summary>
+        /// <param name="testAssembly"></param>
+        /// <param name="captureOutput">If true, capture test's stdout and stderr (if supported on given platform).</param>
+        public TextRunner(Assembly testAssembly, bool captureOutput)
         {
             _testAssembly = testAssembly;
+            _captureOutput = captureOutput;
         }
 
         #endregion
@@ -171,7 +193,7 @@ namespace NUnitLite
         {
             _textUI = textUI;
             _options = options;
-            _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder(), _captureOutput);
 
             try
             {
