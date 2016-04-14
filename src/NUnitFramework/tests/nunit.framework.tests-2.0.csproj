@@ -87,6 +87,7 @@
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\Filters\PropertyFilterTests.cs" />
+    <Compile Include="Internal\Filters\MockTestFilter.cs" />
     <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
