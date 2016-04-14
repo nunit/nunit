@@ -108,7 +108,7 @@ namespace NUnit.ConsoleRunner
                     return ConsoleRunner.OK;
                 }
 
-                using (ITestEngine engine = TestEngineActivator.CreateInstance())
+                using (ITestEngine engine = TestEngineActivator.CreateInstance(false))
                 {
                     if (Options.WorkDirectory != null)
                         engine.WorkDirectory = Options.WorkDirectory;
