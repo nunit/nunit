@@ -24,7 +24,7 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -58,7 +58,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private System.Collections.Generic.List<ITestResult> _children;
 
-        private StringWriter _outWriter;
+        private StringBuilder _output = new StringBuilder();
+        private TextWriter _outWriter;
         private double _duration;
 
         #endregion
@@ -194,12 +195,16 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.
         /// </summary>
-        public StringWriter OutWriter
+        public TextWriter OutWriter
         {
             get
             {
                 if (_outWriter == null)
-                    _outWriter = new StringWriter();
+#if PORTABLE || SILVERLIGHT
+                    _outWriter = new StringWriter(_output);
+#else
+                    _outWriter = TextWriter.Synchronized(new StringWriter(_output));
+#endif
 
                 return _outWriter;
             }
@@ -210,14 +215,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string Output
         {
-            get { return _outWriter == null
-                ? string.Empty
-                : _outWriter.ToString();  }
+            get { return _output.ToString(); }
         }
 
-        #endregion
+#endregion
 
-        #region IXmlNodeBuilder Members
+#region IXmlNodeBuilder Members
 
         /// <summary>
         /// Returns the Xml representation of the result.
@@ -286,7 +289,7 @@ namespace NUnit.Framework.Internal
             return thisNode;
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Adds a child result to this result, setting this result's
@@ -331,7 +334,7 @@ namespace NUnit.Framework.Internal
                 }
         }
 
-        #region Other Public Methods
+#region Other Public Methods
 
         /// <summary>
         /// Set the result of the test
@@ -475,9 +478,9 @@ namespace NUnit.Framework.Internal
             SetResult(resultState, message, stackTrace);
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         /// <summary>
         /// Adds a reason element to a node and returns it.
@@ -513,6 +516,6 @@ namespace NUnit.Framework.Internal
             return targetNode.AddElementWithCDATA("output", Output);
         }
 
-        #endregion
+#endregion
     }
 }
