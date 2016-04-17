@@ -35,6 +35,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Common\nunit\ColorConsole.cs">
+      <Link>ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\ColorStyle.cs">
+      <Link>ColorStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>ExtendedTextWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\ExtendedTextWriter.cs">
+      <Link>ExtendedTextWriter.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStudioProjectLoader.cs" />
     <Compile Include="VSProject.cs" />
