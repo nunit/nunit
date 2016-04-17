@@ -24,9 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
+using NUnit.Common;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.ProjectLoaders
@@ -37,16 +36,26 @@ namespace NUnit.Engine.Services.ProjectLoaders
         static readonly char[] TRIM_CHARS = { ' ', '"' };
         const string BUILD_MARKER = ".Build.0 =";
 
-        IDictionary<string, VSProject> _projectLookup = new Dictionary<string, VSProject>();
-        IDictionary<string, SolutionConfig> _configs = new Dictionary<string, SolutionConfig>();
+        readonly IDictionary<string, VSProject> _projectLookup = new Dictionary<string, VSProject>();
+        readonly IDictionary<string, SolutionConfig> _configs = new Dictionary<string, SolutionConfig>();
+        private readonly ColorConsoleWriter _writer;
 
         #region Constructor
 
         public VSSolution(string projectPath)
         {
+            _writer = new ColorConsoleWriter();
             ProjectPath = Path.GetFullPath(projectPath);
 
+            _writer.WriteLine(ColorStyle.SectionHeader, "Visual Studio solution detected.");
+            _writer.WriteLine(ColorStyle.SectionHeader, "    Loading projects that reference nunit.framework...");
+
             Load();
+
+            if (_projectLookup.Count == 0)
+                _writer.WriteLine(ColorStyle.Error, "    No valid projects found");
+            else
+                Console.WriteLine();
         }
 
         #endregion
@@ -87,11 +96,10 @@ namespace NUnit.Engine.Services.ProjectLoaders
         {
             var package = new TestPackage(ProjectPath);
 
-            foreach (var name in _configs.Keys)
+            foreach (var config in _configs.Values)
             {
-                if (configName == null || configName == name)
+                if (configName == null || configName == config.Name)
                 {
-                    var config = _configs[name];
                     foreach (string assembly in config.Assemblies)
                     {
                         package.AddSubPackage(new TestPackage(assembly));
@@ -110,6 +118,10 @@ namespace NUnit.Engine.Services.ProjectLoaders
         private void Load()
         {
             string solutionDirectory = Path.GetDirectoryName(ProjectPath);
+
+            if (solutionDirectory == null)
+                return;
+
             using (StreamReader reader = new StreamReader(ProjectPath))
             {
                 string line = reader.ReadLine();
@@ -126,7 +138,11 @@ namespace NUnit.Engine.Services.ProjectLoaders
                             var vsProject = new VSProject(Path.Combine(solutionDirectory, vsProjectPath));
 
                             if (CheckProjectReferencesNunit(vsProject))
+                            {
                                 _projectLookup[vsProjectGuid] = vsProject;
+
+                                _writer.WriteLine(ColorStyle.Default, "    " + vsProject.Name);
+                            }
                         }
                     }
                     else if (line.IndexOf(BUILD_MARKER) >= 0)
@@ -154,7 +170,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
                                     projectConfig = projectConfig.Substring(0, bar);
                             }
 
-                            SolutionConfig config = null;
+                            SolutionConfig config;
 
                             if (_configs.ContainsKey(solutionConfig))
                                 config = _configs[solutionConfig];
@@ -187,8 +203,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
             var namespaceManager = new XmlNamespaceManager(doc.NameTable);
             namespaceManager.AddNamespace("msbuild", "http://schemas.microsoft.com/developer/msbuild/2003");
 
-            var hasNunitReference =
-                doc.SelectNodes("/msbuild:Project/msbuild:ItemGroup/msbuild:Reference[@Include]", namespaceManager);
+            var hasNunitReference = doc.SelectNodes("/msbuild:Project/msbuild:ItemGroup/msbuild:Reference[@Include]", namespaceManager);
 
             if (hasNunitReference == null)
                 return false;
