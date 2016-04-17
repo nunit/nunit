@@ -70,6 +70,9 @@
     <Compile Include="TeamCityServiceMessagePublisherTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestListWithEmptyLine.tst">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TextSummary.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
