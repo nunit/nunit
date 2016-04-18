@@ -278,7 +278,7 @@ namespace NUnit.Common
                                 {
                                     var line = rdr.ReadLine().Trim();
 
-                                    if (line[0] != '#')
+                                    if (!string.IsNullOrEmpty(line) && line[0] != '#')
                                         ((List<string>)TestList).Add(line);
                                 }
                             }
