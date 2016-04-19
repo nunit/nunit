@@ -200,7 +200,7 @@ Task("BuildSL")
         else
         {
             Warning("Silverlight build skipped because files were not present.");
-            if(isAppveyor) 
+            if(isAppveyor)
                 throw new Exception("Running Build on Appveyor, but Silverlight not found.");
         }
     });
@@ -223,7 +223,7 @@ Task("BuildCF")
         else
         {
             Warning("Compact framework build skipped because files were not present.");
-            if(isAppveyor) 
+            if(isAppveyor)
                 throw new Exception("Running Build on Appveyor, but CF not installed, please check that the appveyor-tools.ps1 script ran correctly.");
         }
     });
@@ -476,6 +476,8 @@ var BinFiles = new FilePath[]
 };
 
 // Not all of these are present in every framework
+// The Microsoft and System assemblies are part of the BCL
+// used by the .NET 4.0 framework. 4.0 tests will not run without them
 var FrameworkFiles = new FilePath[]
 {
     "AppManifest.xaml",
@@ -491,7 +493,13 @@ var FrameworkFiles = new FilePath[]
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
-    "nunitlite-runner.exe"
+    "nunitlite-runner.exe",
+    "Microsoft.Threading.Tasks.dll",
+    "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
+    "Microsoft.Threading.Tasks.Extensions.dll",
+    "System.IO.dll",
+    "System.Runtime.dll",
+    "System.Threading.Tasks.dll"
 };
 
 Task("PackageSource")
@@ -867,7 +875,7 @@ Task("TestAll")
     .IsDependentOn("TestV2Driver")
     .IsDependentOn("TestConsole");
 
-// NOTE: Test has been changed to now be a synonym of TestAll    
+// NOTE: Test has been changed to now be a synonym of TestAll
 Task("Test")
     .IsDependentOn("TestAllFrameworks")
     .IsDependentOn("TestEngine")
