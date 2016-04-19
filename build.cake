@@ -16,7 +16,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.3";
+var version = "3.3.0";
 var modifier = "";
 
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
@@ -200,7 +200,7 @@ Task("BuildSL")
         else
         {
             Warning("Silverlight build skipped because files were not present.");
-            if(isAppveyor) 
+            if(isAppveyor)
                 throw new Exception("Running Build on Appveyor, but Silverlight not found.");
         }
     });
@@ -223,7 +223,7 @@ Task("BuildCF")
         else
         {
             Warning("Compact framework build skipped because files were not present.");
-            if(isAppveyor) 
+            if(isAppveyor)
                 throw new Exception("Running Build on Appveyor, but CF not installed, please check that the appveyor-tools.ps1 script ran correctly.");
         }
     });
@@ -875,7 +875,7 @@ Task("TestAll")
     .IsDependentOn("TestV2Driver")
     .IsDependentOn("TestConsole");
 
-// NOTE: Test has been changed to now be a synonym of TestAll    
+// NOTE: Test has been changed to now be a synonym of TestAll
 Task("Test")
     .IsDependentOn("TestAllFrameworks")
     .IsDependentOn("TestEngine")
