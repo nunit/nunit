@@ -16,7 +16,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.2.1";
+var version = "3.3";
 var modifier = "";
 
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
