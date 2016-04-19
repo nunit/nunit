@@ -16,7 +16,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.3.0";
+var version = "3.2.1";
 var modifier = "";
 
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
@@ -476,6 +476,8 @@ var BinFiles = new FilePath[]
 };
 
 // Not all of these are present in every framework
+// The Microsoft and System assemblies are part of the BCL
+// used by the .NET 4.0 framework. 4.0 tests will not run without them
 var FrameworkFiles = new FilePath[]
 {
     "AppManifest.xaml",
@@ -491,7 +493,13 @@ var FrameworkFiles = new FilePath[]
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
-    "nunitlite-runner.exe"
+    "nunitlite-runner.exe",
+    "Microsoft.Threading.Tasks.dll",
+    "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
+    "Microsoft.Threading.Tasks.Extensions.dll",
+    "System.IO.dll",
+    "System.Runtime.dll",
+    "System.Threading.Tasks.dll"
 };
 
 Task("PackageSource")

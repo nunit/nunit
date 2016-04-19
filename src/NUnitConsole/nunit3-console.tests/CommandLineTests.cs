@@ -529,6 +529,8 @@ namespace NUnit.ConsoleRunner.Tests
         public void ShouldNotFailOnEmptyLine()
         {
             var testListPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestListWithEmptyLine.tst");
+            // Not copying this test file into releases
+            Assume.That(testListPath, Does.Exist);
             var options = new ConsoleOptions("--testlist=" + testListPath);
             Assert.That(options.errorMessages, Is.Empty);
             Assert.That(options.TestList, Is.EqualTo(new[] {"AmazingTest"}));
