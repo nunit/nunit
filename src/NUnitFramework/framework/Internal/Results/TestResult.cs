@@ -59,7 +59,6 @@ namespace NUnit.Framework.Internal
         private System.Collections.Generic.List<ITestResult> _children;
 
         private StringBuilder _output = new StringBuilder();
-        private TextWriter _outWriter;
         private double _duration;
 
         #endregion
@@ -74,6 +73,12 @@ namespace NUnit.Framework.Internal
         {
             Test = test;
             ResultState = ResultState.Inconclusive;
+
+#if PORTABLE || SILVERLIGHT
+            OutWriter = new StringWriter(_output);
+#else
+            OutWriter = TextWriter.Synchronized(new StringWriter(_output));
+#endif
         }
 
         #endregion
@@ -195,20 +200,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.
         /// </summary>
-        public TextWriter OutWriter
-        {
-            get
-            {
-                if (_outWriter == null)
-#if PORTABLE || SILVERLIGHT
-                    _outWriter = new StringWriter(_output);
-#else
-                    _outWriter = TextWriter.Synchronized(new StringWriter(_output));
-#endif
-
-                return _outWriter;
-            }
-        }
+        public TextWriter OutWriter { get; private set; }
 
         /// <summary>
         /// Gets any text output written to this result.
