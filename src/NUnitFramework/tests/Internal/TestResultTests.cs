@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     public abstract class TestResultTests
     {
         protected TestResult testResult;
-        protected TestResult suiteResult;
+        protected TestSuiteResult suiteResult;
         protected TestMethod test;
 
         protected double expectedDuration;
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal
             suite.Properties.Set(PropertyNames.Description, "Suite description");
             suite.Properties.Add(PropertyNames.Category, "Fast");
             suite.Properties.Add("Value", 3);
-            suiteResult = suite.MakeTestResult();
+            suiteResult = (TestSuiteResult)suite.MakeTestResult();
 
             SimulateTestRun();
         }

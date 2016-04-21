@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -31,16 +32,22 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestSuiteResult : TestResult
     {
-        private int passCount = 0;
-        private int failCount = 0;
-        private int skipCount = 0;
-        private int inconclusiveCount = 0;
+        private int _passCount = 0;
+        private int _failCount = 0;
+        private int _skipCount = 0;
+        private int _inconclusiveCount = 0;
+        private List<ITestResult> _children;
 
         /// <summary>
         /// Construct a TestSuiteResult base on a TestSuite
         /// </summary>
         /// <param name="suite">The TestSuite to which the result applies</param>
-        public TestSuiteResult(TestSuite suite) : base(suite) { }
+        public TestSuiteResult(TestSuite suite) : base(suite)
+        {
+            _children = new List<ITestResult>();
+        }
+
+        #region Overrides
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -48,7 +55,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int FailCount
         {
-            get { return this.failCount; }
+            get { return _failCount; }
         }
 
         /// <summary>
@@ -57,7 +64,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int PassCount
         {
-            get { return this.passCount; }
+            get { return _passCount; }
         }
 
         /// <summary>
@@ -66,7 +73,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int SkipCount
         {
-            get { return this.skipCount; }
+            get { return _skipCount; }
         }
 
         /// <summary>
@@ -75,22 +82,78 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int InconclusiveCount
         {
-            get { return this.inconclusiveCount; }
+            get { return _inconclusiveCount; }
         }
 
         /// <summary>
-        /// Add a child result
+        /// Indicates whether this result has any child results.
         /// </summary>
-        /// <param name="result">The child result to be added</param>
-        public override void AddResult(ITestResult result)
+        public override bool HasChildren
         {
-            base.AddResult(result);
-
-            this.AssertCount += result.AssertCount;
-            this.passCount += result.PassCount;
-            this.failCount += result.FailCount;
-            this.skipCount += result.SkipCount;
-            this.inconclusiveCount += result.InconclusiveCount;
+            get { return _children.Count > 0; }
         }
+
+        /// <summary>
+        /// Gets the collection of child results.
+        /// </summary>
+        public override IList<ITestResult> Children
+        {
+            get { return _children; }
+        }
+
+        #endregion
+
+        #region AddResult Method
+
+        /// <summary>
+        /// Adds a child result to this result, setting this result's
+        /// ResultState to Failure if the child result failed.
+        /// </summary>
+        /// <param name="result">The result to be added</param>
+        public virtual void AddResult(ITestResult result)
+        {
+            Children.Add(result);
+
+            //AssertCount += result.AssertCount;
+
+            // If this result is marked cancelled, don't change it
+            if (ResultState != ResultState.Cancelled)
+                switch (result.ResultState.Status)
+                {
+                    case TestStatus.Passed:
+
+                        if (ResultState.Status == TestStatus.Inconclusive)
+                            SetResult(ResultState.Success);
+
+                        break;
+
+                    case TestStatus.Failed:
+
+
+                        if (ResultState.Status != TestStatus.Failed)
+                            SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
+
+                        break;
+
+                    case TestStatus.Skipped:
+
+                        if (result.ResultState.Label == "Ignored")
+                            if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                                SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+            AssertCount += result.AssertCount;
+            _passCount += result.PassCount;
+            _failCount += result.FailCount;
+            _skipCount += result.SkipCount;
+            _inconclusiveCount += result.InconclusiveCount;
+        }
+
+        #endregion
     }
 }
