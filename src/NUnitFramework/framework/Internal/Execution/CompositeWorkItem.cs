@@ -41,6 +41,7 @@ namespace NUnit.Framework.Internal.Execution
         //        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
 
         private TestSuite _suite;
+        private TestSuiteResult _suiteResult;
         private ITestFilter _childFilter;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
@@ -72,6 +73,7 @@ namespace NUnit.Framework.Internal.Execution
             : base(suite)
         {
             _suite = suite;
+            _suiteResult = Result as TestSuiteResult;
             _childFilter = childFilter;
             _countOrder = 0;
         }
@@ -320,7 +322,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     TestResult childResult = child.MakeTestResult();
                     childResult.SetResult(resultState, message);
-                    Result.AddResult(childResult);
+                    _suiteResult.AddResult(childResult);
 
                     // Some runners may depend on getting the TestFinished event
                     // even for tests that have been skipped at a higher level.
@@ -363,7 +365,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (childTask != null)
                 {
                     childTask.Completed -= new EventHandler(OnChildCompleted);
-                    Result.AddResult(childTask.Result);
+                    _suiteResult.AddResult(childTask.Result);
 
                     if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
                         Context.ExecutionStatus = TestExecutionStatus.StopRequested;
@@ -382,7 +384,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
                     PerformOneTimeTearDown();
 
-                foreach (var childResult in this.Result.Children)
+                foreach (var childResult in _suiteResult.Children)
                     if (childResult.ResultState == ResultState.Cancelled)
                     {
                         this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");

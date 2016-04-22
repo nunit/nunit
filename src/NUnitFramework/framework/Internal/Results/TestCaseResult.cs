@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -36,6 +37,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test">A TestMethod to which the result applies.</param>
         public TestCaseResult(TestMethod test) : base(test) { }
+
+        #region Overrides
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -72,5 +75,23 @@ namespace NUnit.Framework.Internal
         {
             get { return ResultState.Status == TestStatus.Inconclusive ? 1 : 0; }
         }
+
+        /// <summary>
+        /// Indicates whether this result has any child results.
+        /// </summary>
+        public override bool HasChildren
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets the collection of child results.
+        /// </summary>
+        public override IList<ITestResult> Children
+        {
+            get { return new ITestResult[0]; }
+        }
+
+        #endregion
     }
 }

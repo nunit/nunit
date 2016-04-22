@@ -154,7 +154,8 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            Randomizer.InitialSeed = GetInitialSeed(settings);
+            if (settings.Contains(PackageSettings.RandomSeed))
+                Randomizer.InitialSeed = (int)settings[PackageSettings.RandomSeed];
 
             return LoadedTest = _builder.Build(assemblyName, settings);
         }
@@ -169,7 +170,8 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            Randomizer.InitialSeed = GetInitialSeed(settings);
+            if (settings.Contains(PackageSettings.RandomSeed))
+                Randomizer.InitialSeed = (int)settings[PackageSettings.RandomSeed];
 
             return LoadedTest = _builder.Build(assembly, settings);
         }
@@ -369,13 +371,6 @@ namespace NUnit.Framework.Api
                     count += CountTestCases(child, filter);
 
             return count;
-        }
-
-        private static int GetInitialSeed(IDictionary settings)
-        {
-            return settings.Contains(PackageSettings.RandomSeed)
-                ? (int)settings[PackageSettings.RandomSeed]
-                : new Random().Next();
         }
 
 #if PARALLEL
