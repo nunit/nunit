@@ -122,7 +122,6 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
-    <Compile Include="Compatibility\Net20Compatibility.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
