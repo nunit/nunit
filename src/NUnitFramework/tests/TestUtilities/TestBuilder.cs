@@ -37,7 +37,7 @@ namespace NUnit.TestUtilities
     /// <summary>
     /// Utility Class used to build and run NUnit tests used as test data
     /// </summary>
-    public class TestBuilder
+    public static class TestBuilder
     {
         #region Build Tests
 
@@ -94,12 +94,12 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTestFixture(Type type)
         {
-            return RunTestSuite(MakeFixture(type), null);
+            return RunTest(MakeFixture(type), null);
         }
 
         public static ITestResult RunTestFixture(object fixture)
         {
-            return RunTestSuite(MakeFixture(fixture), fixture);
+            return RunTest(MakeFixture(fixture), fixture);
         }
 
         public static ITestResult RunParameterizedMethodSuite(Type type, string methodName)
@@ -110,51 +110,7 @@ namespace NUnit.TestUtilities
             if (!IsStaticClass(type))
                 testObject = Reflect.Construct(type);
 
-            return RunTestSuite(suite, testObject);
-        }
-
-        public static ITestResult RunTestSuite(TestSuite suite, object testObject)
-        {
-            TestExecutionContext context = new TestExecutionContext();
-            context.TestObject = testObject;
-
-            WorkItem work = WorkItem.CreateWorkItem(suite, TestFilter.Empty);
-            work.InitializeContext(context);
-            work.Execute();
-
-            // TODO: Replace with an event - but not while method is static
-            while (work.State != WorkItemState.Complete)
-            {
-#if PORTABLE
-                System.Threading.Tasks.Task.Delay(1);
-#else
-                Thread.Sleep(1);
-#endif
-            }
-
-            return work.Result;
-        }
-
-        public static CompositeWorkItem GenerateWorkItem(TestSuite suite, object testObject)
-        {
-            TestExecutionContext context = new TestExecutionContext();
-            context.TestObject = testObject;
-
-            CompositeWorkItem work = (CompositeWorkItem)WorkItem.CreateWorkItem(suite, TestFilter.Empty);
-            work.InitializeContext(context);
-            work.Execute();
-
-            // TODO: Replace with an event - but not while method is static
-            while (work.State != WorkItemState.Complete)
-            {
-#if PORTABLE
-                System.Threading.Tasks.Task.Delay(1);
-#else
-                Thread.Sleep(1);
-#endif
-            }
-
-            return work;
+            return RunTest(suite, testObject);
         }
 
         public static ITestResult RunTestCase(Type type, string methodName)
@@ -175,39 +131,33 @@ namespace NUnit.TestUtilities
             return RunTest(testMethod, fixture);
         }
 
-        // This method can't currently be used. It would be more efficient
-        // to run test cases using the command directly, but that would
-        // cause errors in tests that have a timeout or that require a
-        // separate thread or a specific apartment. Those features are
-        // handled at the level of the WorkItem in the current build.
-        // Therefore, we run all tests, both test cases and fixtures,
-        // by creating a WorkItem and executing it. See the RunTest
-        // method below.
-
-        //public static ITestResult RunTestMethod(TestMethod testMethod, object fixture)
-        //{
-        //    TestExecutionContext context = new TestExecutionContext();
-        //    context.CurrentTest = testMethod;
-        //    context.CurrentResult = testMethod.MakeTestResult();
-        //    context.TestObject = fixture;
-
-        //    TestCommand command = testMethod.MakeTestCommand();
-
-        //    return command.Execute(context);
-        //}
-
-        //public static ITestResult RunTest(Test test)
-        //{
-        //    return RunTest(test, null);
-        //}
+        public static ITestResult RunTest(Test test)
+        {
+            return RunTest(test, null);
+        }
 
         public static ITestResult RunTest(Test test, object testObject)
         {
-            TestExecutionContext context = new TestExecutionContext();
-            context.TestObject = testObject;
+            return ExecuteWorkItem(PrepareWorkItem(test, testObject));
+        }
 
-            WorkItem work = WorkItem.CreateWorkItem(test, TestFilter.Empty);
+        // NOTE: The following two methods are separate in order to support
+        // tests that need to access the WorkItem before or after execution.
+
+        public static WorkItem PrepareWorkItem(Test test, object testObject)
+        {
+            var context = new TestExecutionContext();
+            context.TestObject = testObject;
+            context.Dispatcher = new SuperSimpleDispatcher();
+
+            var work = WorkItem.CreateWorkItem(test, TestFilter.Empty);
             work.InitializeContext(context);
+
+            return work;
+        }
+
+        public static ITestResult ExecuteWorkItem(WorkItem work)
+        {
             work.Execute();
 
             // TODO: Replace with an event - but not while method is static
@@ -223,13 +173,36 @@ namespace NUnit.TestUtilities
             return work.Result;
         }
 
-#endregion
+        #endregion
+
+        #region Helper Methods
 
         private static bool IsStaticClass(Type type)
         {
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
         }
 
-        private TestBuilder() { }
+        #endregion
+
+        #region Nested TestDispatcher Class
+
+        /// <summary>
+        /// SuperSimpleDispatcher merely executes the work item.
+        /// It is needed particularly when running suites, since
+        /// the child items require a dispatcher in the context.
+        /// </summary>
+        class SuperSimpleDispatcher : IWorkItemDispatcher
+        {
+            public void Dispatch(WorkItem work)
+            {
+                work.Execute();
+            }
+
+            public void CancelRun(bool force)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
     }
 }

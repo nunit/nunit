@@ -22,46 +22,52 @@
 // ***********************************************************************
 
 #if !PORTABLE
+using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
+using NUnit.TestData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
     [SingleThreaded]
     public class SingleThreadedFixtureTests : ThreadingTests
     {
-        [Test, Timeout(1)]
-        public void TestWithTimeout_RunsOnSameThread()
+        [Test]
+        public void TestRunsOnSameThreadAsParent()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
-        [Test, Timeout(1)]
-        public void TestWithTimeout_TimeoutIsIgnored()
+        [Test]
+        public void TestWithTimeoutIsInvalid()
         {
-            Thread.Sleep(100);
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeout>("Timeout");
         }
 
 #if !SILVERLIGHT
-        [Test, RequiresThread]
-        public void TestWithRequiresThread_RunsOnSameThread()
+        [Test]
+        public void TestWithRequiresThreadIsInvalid()
         {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThread");
         }
 
 #if !NETCF
-        [Test, Apartment(ApartmentState.STA)]
-        public void TestRequiringSTA_RunsOnSameThread()
+        [Test]
+        public void TestRequiringSTAIsInvalid()
         {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("DifferentApartment");
         }
+#endif
+#endif
 
-        [Test, Apartment(ApartmentState.STA)]
-        public void TestRequiringSTA_RunsInParentApartment()
+        private void CheckTestIsInvalid<TFixture>(string reason)
         {
-            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ParentThreadApartment));
+            var result = TestBuilder.RunTestFixture(typeof(TFixture));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure.WithSite(FailureSite.Child)));
+            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Children[0].Message, Does.Contain(reason));
         }
-#endif
-#endif
     }
 
 #if !SILVERLIGHT && !NETCF

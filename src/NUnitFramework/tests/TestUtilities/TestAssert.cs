@@ -41,7 +41,7 @@ namespace NUnit.TestUtilities
             TestSuite suite = TestBuilder.MakeFixture(type);
             Assert.NotNull(suite, "Unable to construct fixture");
             Assert.AreEqual(RunState.Runnable, suite.RunState);
-            ITestResult result = TestBuilder.RunTestSuite(suite, null);
+            ITestResult result = TestBuilder.RunTest(suite, null);
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 

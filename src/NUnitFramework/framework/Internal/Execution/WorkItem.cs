@@ -195,6 +195,19 @@ namespace NUnit.Framework.Internal.Execution
 
         #endregion
 
+        #region OwnThreadReason Enumeration
+
+        [Flags]
+        private enum OwnThreadReason
+        {
+            NotNeeded = 0,
+            RequiresThread = 1,
+            Timeout = 2,
+            DifferentApartment = 4
+        }
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -231,27 +244,41 @@ namespace NUnit.Framework.Internal.Execution
             // execution. Currently, test cases are always run sequentially,
             // so this continues to apply fairly generally.
 
-#if PORTABLE
-            RunTest();
-#elif SILVERLIGHT || NETCF
-            if (Context.IsSingleThreaded)
-                RunTest();
-            else if (Test.RequiresThread || Test is TestMethod && timeout > 0)
-                RunTestOnOwnThread(timeout);
-            else
-                RunTest();
-#else
-            CurrentApartment = Thread.CurrentThread.GetApartmentState();
+            var ownThreadReason = OwnThreadReason.NotNeeded;
 
-            if (Context.IsSingleThreaded)
-                RunTest();
-            else if (CurrentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
-                RunTestOnOwnThread(timeout, TargetApartment);
-            else if (Test.RequiresThread || Test is TestMethod && timeout > 0)
-                RunTestOnOwnThread(timeout, CurrentApartment);
-            else
-                RunTest();
+#if !PORTABLE
+            if (Test.RequiresThread)
+                ownThreadReason |= OwnThreadReason.RequiresThread;
+            if (timeout > 0 && Test is TestMethod)
+                ownThreadReason |= OwnThreadReason.Timeout;
+#if !SILVERLIGHT && !NETCF
+            CurrentApartment = Thread.CurrentThread.GetApartmentState();
+            if (CurrentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
+                ownThreadReason |= OwnThreadReason.DifferentApartment;
 #endif
+#endif
+
+            if (ownThreadReason == OwnThreadReason.NotNeeded)
+                RunTest();
+            else if (Context.IsSingleThreaded)
+            {
+                var msg = "Test is not runnable in single-threaded context. " + ownThreadReason;
+                log.Error(msg);
+                Result.SetResult(ResultState.NotRunnable, msg);
+                WorkItemComplete();
+            }
+            else
+            {
+                log.Debug("Running test on own thread. " + ownThreadReason);
+#if SILVERLIGHT || NETCF
+                RunTestOnOwnThread(timeout);
+#elif !PORTABLE
+                var apartment = (ownThreadReason | OwnThreadReason.DifferentApartment) != 0
+                    ? TargetApartment
+                    : CurrentApartment;
+                RunTestOnOwnThread(timeout, apartment);
+#endif
+            }
         }
 
 #if SILVERLIGHT || NETCF
@@ -259,19 +286,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunTestOnOwnThread(int timeout)
         {
-            string reason = Test.RequiresThread
-                ? "Has RequiresThreadAttribute."
-                : timeout > 0
-                ? "Has Timeout value set."
-                : null;
-
-            if (reason != null)
-                log.Debug("Running test on own thread. " + reason);
-            else
-                log.Error("Running test on own thread. Reason UNKNOWN.");
-
             thread = new Thread(RunTest);
-
             RunThread(timeout);
         }
 #endif
@@ -281,23 +296,8 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
         {
-            string reason = Test.RequiresThread
-                ? "Has RequiresThreadAttribute."
-                : timeout > 0
-                ? "Has Timeout value set."
-                : CurrentApartment != apartment
-                ? "Requires a different apartment."
-                : null;
-
-            if (reason != null)
-                log.Debug("Running test on own thread. " + reason);
-            else
-                log.Error("Running test on own thread. Reason UNKNOWN.");
-
             thread = new Thread(new ThreadStart(RunTest));
-
             thread.SetApartmentState(apartment);
-
             RunThread(timeout);
         }
 #endif
@@ -368,7 +368,6 @@ namespace NUnit.Framework.Internal.Execution
             State = WorkItemState.Running;
 
             PerformWork();
-
         }
 
         private object threadLock = new object();
