@@ -8,7 +8,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
-    class TestOrderAttributeTests
+    public class TestOrderAttributeTests
     {
         [Test]
         public void CheckOrderIsCorrect()
