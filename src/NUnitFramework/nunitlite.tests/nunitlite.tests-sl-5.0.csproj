@@ -87,6 +87,15 @@
     <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
       <Link>ExtendedTextWrapperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\Fakes.cs">
+      <Link>TestUtilities\Fakes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\TestBuilder.cs">
+      <Link>TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\TestFile.cs">
+      <Link>TestUtilities\TestFile.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
@@ -99,9 +108,6 @@
     <Compile Include="NUnit2XmlOutputWriterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCityEventListenerTests.cs" />
-    <Compile Include="TestUtilities\Fakes.cs" />
-    <Compile Include="TestUtilities\TestBuilder.cs" />
-    <Compile Include="TestUtilities\TestFile.cs" />
     <Compile Include="TextUITests.cs">
       <SubType>Code</SubType>
     </Compile>

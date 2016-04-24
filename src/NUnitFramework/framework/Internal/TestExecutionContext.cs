@@ -341,14 +341,15 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// The current WorkItemDispatcher
+        /// The current WorkItemDispatcher. Made public for 
+        /// use by nunitlite.tests
         /// </summary>
-        internal IWorkItemDispatcher Dispatcher
+        public IWorkItemDispatcher Dispatcher
         {
             get
             {
-                if (_dispatcher == null)
-                    _dispatcher = new SimpleWorkItemDispatcher();
+                //if (_dispatcher == null)
+                //    _dispatcher = new SimpleWorkItemDispatcher();
 
                 return _dispatcher;
             }

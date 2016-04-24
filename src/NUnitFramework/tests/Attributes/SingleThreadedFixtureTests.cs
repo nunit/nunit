@@ -22,46 +22,83 @@
 // ***********************************************************************
 
 #if !PORTABLE
+using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
+using NUnit.TestData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
     [SingleThreaded]
     public class SingleThreadedFixtureTests : ThreadingTests
     {
-        [Test, Timeout(1)]
-        public void TestWithTimeout_RunsOnSameThread()
+        [Test]
+        public void TestRunsOnSameThreadAsParent()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
-        [Test, Timeout(1)]
-        public void TestWithTimeout_TimeoutIsIgnored()
+        [Test]
+        public void TestWithTimeoutIsInvalid()
         {
-            Thread.Sleep(100);
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeout>("Timeout");
         }
 
 #if !SILVERLIGHT
-        [Test, RequiresThread]
-        public void TestWithRequiresThread_RunsOnSameThread()
+        [Test]
+        public void TestWithRequiresThreadIsInvalid()
         {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThread");
+        }
+
+        [Test]
+        public void TestWithTimeoutAndRequiresThreadIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutAndRequiresThread>("RequiresThread", "Timeout");
         }
 
 #if !NETCF
-        [Test, Apartment(ApartmentState.STA)]
-        public void TestRequiringSTA_RunsOnSameThread()
+        [Test]
+        public void TestWithDifferentApartmentIsInvalid()
         {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("DifferentApartment");
         }
 
-        [Test, Apartment(ApartmentState.STA)]
-        public void TestRequiringSTA_RunsInParentApartment()
+        [Test, Apartment(ApartmentState.MTA)]
+        public void TestWithSameApartmentIsValid()
         {
-            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ParentThreadApartment));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+        }
+
+        [Test]
+        public void TestWithTimeoutAndDifferentApartmentIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutAndDifferentApartment>("Timeout", "DifferentApartment");
+        }
+        [Test]
+        public void TestWithRequiresTheadAndDifferentApartmentSTAIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThreadAndDifferentApartment>("RequiresThread", "DifferentApartment");
+        }
+        [Test]
+        public void TestWithTimeoutRequiresThreadAndDifferentApartmentSTAIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutRequiresThreadAndDifferentApartment>("Timeout", "RequiresThread", "DifferentApartment");
         }
 #endif
 #endif
+
+        private void CheckTestIsInvalid<TFixture>(params string[] reasons)
+        {
+            var result = TestBuilder.RunTestFixture(typeof(TFixture));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure.WithSite(FailureSite.Child)));
+            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+
+            foreach (string reason in reasons)
+                Assert.That(result.Children[0].Message, Does.Contain(reason));
+        }
     }
 
 #if !SILVERLIGHT && !NETCF
@@ -70,6 +107,13 @@ namespace NUnit.Framework.Attributes
     {
         [Test]
         public void CanRunSingleThreadedFixtureInSTA()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+        }
+
+        [Test, Apartment(ApartmentState.STA)]
+        public void TestWithSameApartmentStateIsValid()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
