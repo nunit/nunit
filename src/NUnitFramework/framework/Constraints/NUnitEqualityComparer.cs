@@ -182,9 +182,6 @@ namespace NUnit.Framework.Constraints
             if (x is string && y is string)
                 return StringsEqual((string)x, (string)y);
 
-            if (x is IEnumerable && y is IEnumerable)
-                return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);
-
             if (x is Stream && y is Stream)
                 return StreamsEqual((Stream)x, (Stream)y);
 
@@ -242,7 +239,10 @@ namespace NUnit.Framework.Constraints
                 return InvokeFirstIEquatableEqualsSecond(x, y, equals);
             if (xType != yType && (equals = FirstImplementsIEquatableOfSecond(yType, xType)) != null)
                 return InvokeFirstIEquatableEqualsSecond(y, x, equals);
-            
+
+            if (x is IEnumerable && y is IEnumerable)
+                return EnumerablesEqual((IEnumerable) x, (IEnumerable) y, ref tolerance);
+
             return x.Equals(y);
         }
 
