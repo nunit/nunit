@@ -42,7 +42,7 @@ namespace System.Collections.Generic {
 
 	[Serializable]
 	[DebuggerDisplay ("Count={Count}")]
-	//[DebuggerTypeProxy (typeof (CollectionDebuggerView<,>))]
+	[DebuggerTypeProxy (typeof (CollectionDebuggerView<,>))]
 	public class HashSet<T> : ICollection<T>, ISerializable, IDeserializationCallback
 #if NET_4_0
 							, ISet<T>
