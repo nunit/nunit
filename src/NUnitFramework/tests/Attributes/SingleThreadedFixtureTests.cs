@@ -52,21 +52,52 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThread");
         }
 
+        [Test]
+        public void TestWithTimeoutAndRequiresThreadIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutAndRequiresThread>("RequiresThread", "Timeout");
+        }
+
 #if !NETCF
         [Test]
-        public void TestRequiringSTAIsInvalid()
+        public void TestWithDifferentApartmentIsInvalid()
         {
             CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("DifferentApartment");
+        }
+
+        [Test, Apartment(ApartmentState.MTA)]
+        public void TestWithSameApartmentIsValid()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+        }
+
+        [Test]
+        public void TestWithTimeoutAndDifferentApartmentIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutAndDifferentApartment>("Timeout", "DifferentApartment");
+        }
+        [Test]
+        public void TestWithRequiresTheadAndDifferentApartmentSTAIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThreadAndDifferentApartment>("RequiresThread", "DifferentApartment");
+        }
+        [Test]
+        public void TestWithTimeoutRequiresThreadAndDifferentApartmentSTAIsInvalid()
+        {
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutRequiresThreadAndDifferentApartment>("Timeout", "RequiresThread", "DifferentApartment");
         }
 #endif
 #endif
 
-        private void CheckTestIsInvalid<TFixture>(string reason)
+        private void CheckTestIsInvalid<TFixture>(params string[] reasons)
         {
             var result = TestBuilder.RunTestFixture(typeof(TFixture));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure.WithSite(FailureSite.Child)));
             Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Children[0].Message, Does.Contain(reason));
+
+            foreach (string reason in reasons)
+                Assert.That(result.Children[0].Message, Does.Contain(reason));
         }
     }
 
@@ -76,6 +107,13 @@ namespace NUnit.Framework.Attributes
     {
         [Test]
         public void CanRunSingleThreadedFixtureInSTA()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+        }
+
+        [Test, Apartment(ApartmentState.STA)]
+        public void TestWithSameApartmentStateIsValid()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
