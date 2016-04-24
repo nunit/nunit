@@ -195,7 +195,7 @@ namespace NUnitLite
             {
                 xmlWriter.WriteStartElement("test-suite");
                 xmlWriter.WriteAttributeString("type", suite.TestType);
-                xmlWriter.WriteAttributeString("name", suite.TestType == "Assembly"
+                xmlWriter.WriteAttributeString("name", suite.TestType == "Assembly" || suite.TestType == "Project"
                     ? result.Test.FullName
                     : result.Test.Name);
             }
