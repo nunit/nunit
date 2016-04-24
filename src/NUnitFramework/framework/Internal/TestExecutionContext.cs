@@ -84,8 +84,6 @@ namespace NUnit.Framework.Internal
 
         private Randomizer _randomGenerator;
 
-        private IWorkItemDispatcher _dispatcher;
-
         /// <summary>
         /// The current culture
         /// </summary>
@@ -344,17 +342,7 @@ namespace NUnit.Framework.Internal
         /// The current WorkItemDispatcher. Made public for 
         /// use by nunitlite.tests
         /// </summary>
-        public IWorkItemDispatcher Dispatcher
-        {
-            get
-            {
-                //if (_dispatcher == null)
-                //    _dispatcher = new SimpleWorkItemDispatcher();
-
-                return _dispatcher;
-            }
-            set { _dispatcher = value; }
-        }
+        public IWorkItemDispatcher Dispatcher { get; set; }
 
         /// <summary>
         /// The ParallelScope to be used by tests running in this context.
