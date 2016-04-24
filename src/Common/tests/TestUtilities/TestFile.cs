@@ -48,7 +48,10 @@ namespace NUnit.TestUtilities
                 _fileInfo = new FileInfo(Path.Combine(tempPath, fileName));
             }
 
-            _resourceName = "NUnitLite.Tests." + resourceName;
+            // HACK! Only way I can figure out to avoid having two copies of TestFile
+            _resourceName = GetType().Assembly.GetName().Name.Contains("nunitlite")
+                ? "NUnitLite.Tests." + resourceName
+                : "NUnit.Framework.Tests." + resourceName;
             _fileLength = 0L;
 
             Assembly a = typeof(TestFile).GetTypeInfo().Assembly;
@@ -123,7 +126,7 @@ namespace NUnit.TestUtilities
             _disposedValue = true;
         }
 
-        #region IDisposable Members
+#region IDisposable Members
 
         public void Dispose()
         {
@@ -132,7 +135,7 @@ namespace NUnit.TestUtilities
             GC.SuppressFinalize(this);
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

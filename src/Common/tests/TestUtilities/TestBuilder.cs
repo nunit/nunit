@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -30,7 +31,10 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
-using System.Threading;
+
+#if PORTABLE
+using BindingFlags = NUnit.Framework.Compatibility.BindingFlags;
+#endif
 
 namespace NUnit.TestUtilities
 {
@@ -83,14 +87,15 @@ namespace NUnit.TestUtilities
         internal static Test MakeTestFromMethod(Type type, string methodName)
         {
             var method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
             if (method == null)
                 Assert.Fail("Method not found: " + methodName);
             return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
         }
 
-        #endregion
+#endregion
 
-        #region Run Tests
+#region Run Tests
 
         public static ITestResult RunTestFixture(Type type)
         {
@@ -173,18 +178,18 @@ namespace NUnit.TestUtilities
             return work.Result;
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private static bool IsStaticClass(Type type)
         {
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
         }
 
-        #endregion
+#endregion
 
-        #region Nested TestDispatcher Class
+#region Nested TestDispatcher Class
 
         /// <summary>
         /// SuperSimpleDispatcher merely executes the work item.
@@ -203,6 +208,6 @@ namespace NUnit.TestUtilities
                 throw new NotImplementedException();
             }
         }
-        #endregion
+#endregion
     }
 }

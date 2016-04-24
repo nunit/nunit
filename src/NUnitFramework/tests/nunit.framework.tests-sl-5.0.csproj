@@ -80,6 +80,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\Fakes.cs">
+      <Link>TestUtilities\Fakes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\TestBuilder.cs">
+      <Link>TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\TestFile.cs">
+      <Link>TestUtilities\TestFile.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
@@ -232,7 +241,7 @@
     <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
-	<Compile Include="Internal\Filters\MockTestFilter.cs" />
+    <Compile Include="Internal\Filters\MockTestFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
@@ -292,14 +301,11 @@
     <Compile Include="TestUtilities\Comparers\GenericEqualityComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectEqualityComparer.cs" />
-    <Compile Include="TestUtilities\Fakes.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
-    <Compile Include="TestUtilities\TestBuilder.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestDirectory.cs" />
-    <Compile Include="TestUtilities\TestFile.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>
