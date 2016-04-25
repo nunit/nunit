@@ -133,12 +133,19 @@ namespace NUnit.Framework.Internal
         public virtual void AddResult(ITestResult result)
         {
 #if PARALLEL
-            _children.Enqueue(result);
-#else
-            _children.Add(result);
+            var childrenAsConcurrentQueue = Children as ConcurrentQueue<ITestResult>;
+            if (childrenAsConcurrentQueue != null)
+                childrenAsConcurrentQueue.Enqueue(result);
+            else
 #endif
+                {
+                var childrenAsIList = Children as IList<ITestResult>;
+                if (childrenAsIList != null)
+                    childrenAsIList.Add(result);
+                else
+                    throw new NotSupportedException("cannot add results to Children");
 
-            //AssertCount += result.AssertCount;
+                }
 
             bool stateSet;
             do
