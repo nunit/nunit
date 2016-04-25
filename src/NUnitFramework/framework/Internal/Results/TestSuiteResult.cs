@@ -41,7 +41,11 @@ namespace NUnit.Framework.Internal
         private int _failCount = 0;
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
+#if PARALLEL
         private ConcurrentQueue<ITestResult> _children;
+#else
+        private List<ITestResult> _children;
+#endif
 
         /// <summary>
         /// Construct a TestSuiteResult base on a TestSuite
@@ -49,10 +53,14 @@ namespace NUnit.Framework.Internal
         /// <param name="suite">The TestSuite to which the result applies</param>
         public TestSuiteResult(TestSuite suite) : base(suite)
         {
+#if PARALLEL
             _children = new ConcurrentQueue<ITestResult>();
+#else
+            _children = new List<ITestResult>();
+#endif
         }
 
-        #region Overrides
+#region Overrides
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -95,20 +103,27 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override bool HasChildren
         {
-            get { return !_children.IsEmpty; }
+            get
+            {
+#if PARALLEL
+                return !_children.IsEmpty;
+#else
+                return _children.Count != 0;
+#endif
+            }
         }
 
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public override ConcurrentQueue<ITestResult> Children
+        public override IEnumerable<ITestResult> Children
         {
             get { return _children; }
         }
 
-        #endregion
+#endregion
 
-        #region AddResult Method
+#region AddResult Method
 
         /// <summary>
         /// Adds a child result to this result, setting this result's
@@ -117,7 +132,11 @@ namespace NUnit.Framework.Internal
         /// <param name="result">The result to be added</param>
         public virtual void AddResult(ITestResult result)
         {
-            Children.Enqueue(result);
+#if PARALLEL
+            _children.Enqueue(result);
+#else
+            _children.Add(result);
+#endif
 
             //AssertCount += result.AssertCount;
 
@@ -166,6 +185,6 @@ namespace NUnit.Framework.Internal
             Interlocked.Add (ref _inconclusiveCount, result.InconclusiveCount);
         }
 
-        #endregion
+#endregion
     }
 }

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -157,7 +158,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the the collection of child results.
         /// </summary>
-        System.Collections.Concurrent.ConcurrentQueue<ITestResult> Children
+        IEnumerable<ITestResult> Children
         {
             get;
         }

@@ -23,6 +23,7 @@
 
 #if !PORTABLE
 using System;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;

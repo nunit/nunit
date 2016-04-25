@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.TestUtilities;
 using NUnit.TestData.SetUpData;

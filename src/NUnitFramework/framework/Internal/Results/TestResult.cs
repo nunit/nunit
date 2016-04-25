@@ -54,11 +54,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal const double MIN_DURATION = 0.000001d;
 
-        /// <summary>
-        /// Empty child queue
-        /// </summary>
-        protected static readonly ConcurrentQueue<ITestResult> EmptyChildQueue = new ConcurrentQueue<ITestResult> ();
-
         //        static Logger log = InternalTrace.GetLogger("TestResult");
 
         private StringBuilder _output = new StringBuilder();
@@ -199,7 +194,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public abstract ConcurrentQueue<ITestResult> Children { get; }
+        public abstract IEnumerable<ITestResult> Children { get; }
 
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.

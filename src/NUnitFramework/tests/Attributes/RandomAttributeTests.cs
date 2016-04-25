@@ -24,6 +24,7 @@
 using System.Collections;
 using System.Reflection;
 using System.Text;
+using System.Linq;
 using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.RandomAttributeTests;
@@ -38,7 +39,7 @@ namespace NUnit.Framework.Attributes
         public void CheckRandomResult(string methodName)
         {
             var result = TestBuilder.RunParameterizedMethodSuite(typeof(RandomAttributeFixture), methodName);
-            Assert.That(result.Children.Count, Is.EqualTo(RandomAttributeFixture.COUNT));
+            Assert.That(result.Children.Count(), Is.EqualTo(RandomAttributeFixture.COUNT));
 
             if (result.ResultState != ResultState.Success)
             {

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 #if !NETCF
 using System.Security.Principal;
 #endif
@@ -182,7 +183,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("System.Exception : This was thrown from fixture setup", result.Message, "TestSuite Message");
             Assert.IsNotNull(result.StackTrace, "TestSuite StackTrace should not be null");
 
-            Assert.AreEqual(1, result.Children.Count, "Child result count");
+            Assert.AreEqual(1, result.Children.Count(), "Child result count");
             Assert.AreEqual(1, result.FailCount, "Failure count");
         }
 
@@ -216,7 +217,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("TestFixtureSetUp called Ignore", result.Message);
             Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
 
-            Assert.AreEqual(1, result.Children.Count, "Child result count");
+            Assert.AreEqual(1, result.Children.Count(), "Child result count");
             Assert.AreEqual(1, result.SkipCount, "SkipCount");
         }
 
@@ -226,7 +227,7 @@ namespace NUnit.Framework.Attributes
             MisbehavingFixture fixture = new MisbehavingFixture();
             fixture.blowUpInTearDown = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-            Assert.AreEqual(1, result.Children.Count);
+            Assert.AreEqual(1, result.Children.Count());
             Assert.AreEqual(ResultState.TearDownError, result.ResultState);
 
             Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
@@ -243,7 +244,7 @@ namespace NUnit.Framework.Attributes
             fixture.blowUpInTest = true;
             fixture.blowUpInTearDown = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-            Assert.AreEqual(1, result.Children.Count);
+            Assert.AreEqual(1, result.Children.Count());
             Assert.AreEqual(ResultState.TearDownError, result.ResultState);
 
             Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
@@ -261,7 +262,7 @@ namespace NUnit.Framework.Attributes
             fixture.blowUpInSetUp = true;
             fixture.blowUpInTearDown = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-            Assert.AreEqual(1, result.Children.Count);
+            Assert.AreEqual(1, result.Children.Count());
             Assert.AreEqual(ResultState.TearDownError, result.ResultState);
 
             Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
@@ -281,7 +282,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("System.Exception : This was thrown in constructor", result.Message, "TestSuite Message");
             Assert.IsNotNull(result.StackTrace, "TestSuite StackTrace should not be null");
 
-            Assert.AreEqual(1, result.Children.Count, "Child result count");
+            Assert.AreEqual(1, result.Children.Count(), "Child result count");
             Assert.AreEqual(1, result.FailCount, "Failure count");
         }
 
@@ -291,7 +292,7 @@ namespace NUnit.Framework.Attributes
             MisbehavingFixture fixture = new MisbehavingFixture();
             fixture.blowUpInTearDown = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-            Assert.AreEqual(1, result.Children.Count);
+            Assert.AreEqual(1, result.Children.Count());
 
             fixture.Reinitialize();
             result = TestBuilder.RunTestFixture(fixture);

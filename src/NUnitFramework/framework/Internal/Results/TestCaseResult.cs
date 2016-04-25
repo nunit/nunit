@@ -88,9 +88,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public override ConcurrentQueue<ITestResult> Children
+        public override IEnumerable<ITestResult> Children
         {
-            get { return EmptyChildQueue; }
+            get { return new TestResult[0]; }
         }
 
         #endregion
