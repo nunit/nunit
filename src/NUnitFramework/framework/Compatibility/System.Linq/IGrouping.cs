@@ -33,9 +33,17 @@ namespace System.Linq {
 #if NET_4_0
 	public interface IGrouping<out TKey, out TElement> : IEnumerable<TElement>
 #else
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TElement"></typeparam>
 	public interface IGrouping<TKey, TElement> : IEnumerable<TElement>
 #endif
 	{
+        /// <summary>
+        /// 
+        /// </summary>
 		TKey Key { get; }
 	}
 }

@@ -29,6 +29,9 @@
 
 namespace System.Runtime.CompilerServices
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly)]
 	public sealed class ExtensionAttribute : Attribute
 	{
