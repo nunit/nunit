@@ -36,15 +36,28 @@ using System.Collections.Generic;
 
 namespace System.Linq {
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TElement"></typeparam>
 	public class Lookup<TKey, TElement> : IEnumerable<IGrouping<TKey, TElement>>, ILookup<TKey, TElement> {
 
 		IGrouping<TKey, TElement> nullGrouping;
 		Dictionary<TKey, IGrouping<TKey, TElement>> groups;
 
+        /// <summary>
+        /// 
+        /// </summary>
 		public int Count {
 			get { return (nullGrouping == null) ? groups.Count : groups.Count + 1; }
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public IEnumerable<TElement> this [TKey key] {
 			get {
 				if (key == null && nullGrouping != null)
@@ -69,6 +82,12 @@ namespace System.Linq {
 				nullGrouping = new Grouping<TKey, TElement> (default (TKey), nullKeyElements);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="resultSelector"></param>
+        /// <returns></returns>
 		public IEnumerable<TResult> ApplyResultSelector<TResult> (Func<TKey, IEnumerable<TElement>, TResult> resultSelector)
 		{
 			if (nullGrouping != null)
@@ -78,11 +97,20 @@ namespace System.Linq {
 				yield return resultSelector (group.Key, group);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public bool Contains (TKey key)
 		{	
 			return (key != null) ? groups.ContainsKey (key) : nullGrouping != null; 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator ()
 		{
 			if (nullGrouping != null)

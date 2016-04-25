@@ -40,6 +40,42 @@ using System.Diagnostics;
 
 namespace System.Collections.Generic {
 
+    /// <summary>
+    /// Implementation notes:
+    /// This uses an array-based implementation similar to Dictionary&lt;T&gt;, using a buckets array
+    /// to map hash values to the Slots array. Items in the Slots array that hash to the same value
+    /// are chained together through the "next" indices. 
+    /// 
+    /// The capacity is always prime; so during resizing, the capacity is chosen as the next prime
+    /// greater than double the last capacity. 
+    /// 
+    /// The underlying data structures are lazily initialized. Because of the observation that, 
+    /// in practice, hashtables tend to contain only a few elements, the initial capacity is
+    /// set very small (3 elements) unless the ctor with a collection is used.
+    /// 
+    /// The +/- 1 modifications in methods that add, check for containment, etc allow us to 
+    /// distinguish a hash code of 0 from an uninitialized bucket. This saves us from having to 
+    /// reset each bucket to -1 when resizing. See Contains, for example.
+    /// 
+    /// Set methods such as UnionWith, IntersectWith, ExceptWith, and SymmetricExceptWith modify
+    /// this set.
+    /// 
+    /// Some operations can perform faster if we can assume "other" contains unique elements
+    /// according to this equality comparer. The only times this is efficient to check is if
+    /// other is a hashset. Note that checking that it's a hashset alone doesn't suffice; we
+    /// also have to check that the hashset is using the same equality comparer. If other 
+    /// has a different equality comparer, it will have unique elements according to its own
+    /// equality comparer, but not necessarily according to ours. Therefore, to go these 
+    /// optimized routes we check that other is a hashset using the same equality comparer.
+    /// 
+    /// A HashSet with no elements has the properties of the empty set. (See IsSubset, etc. for 
+    /// special empty set checks.)
+    /// 
+    /// A couple of methods have a special case if other is this (e.g. SymmetricExceptWith). 
+    /// If we didn't have these checks, we could be iterating over the set and modifying at
+    /// the same time. 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
 	[Serializable]
 	[DebuggerDisplay ("Count={Count}")]
 	[DebuggerTypeProxy (typeof (CollectionDebuggerView<,>))]
@@ -89,24 +125,45 @@ namespace System.Collections.Generic {
 		// to detect changes and invalidate themselves.
 		int generation;
 
+        /// <summary>
+        /// Number of elements in this hashset
+        /// </summary>
 		public int Count {
 			get { return count; }
 		}
 
+        /// <summary>
+        /// </summary>
 		public HashSet ()
 		{
 			Init (INITIAL_SIZE, null);
 		}
 
+        /// <summary>
+        /// </summary>
+        /// <param name="comparer"></param>
 		public HashSet (IEqualityComparer<T> comparer)
 		{
 			Init (INITIAL_SIZE, comparer);
 		}
 
+        /// <summary>
+        /// Implementation Notes:
+        /// Since resizes are relatively expensive (require rehashing), this attempts to minimize 
+        /// the need to resize by setting the initial capacity based on size of collection. 
+        /// </summary>
+        /// <param name="collection"></param>
 		public HashSet (IEnumerable<T> collection) : this (collection, null)
 		{
 		}
 
+        /// <summary>
+        /// Implementation Notes:
+        /// Since resizes are relatively expensive (require rehashing), this attempts to minimize 
+        /// the need to resize by setting the initial capacity based on size of collection. 
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="comparer"></param>
 		public HashSet (IEnumerable<T> collection, IEqualityComparer<T> comparer)
 		{
 			if (collection == null)
@@ -122,6 +179,11 @@ namespace System.Collections.Generic {
 				Add (item);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
 		protected HashSet (SerializationInfo info, StreamingContext context)
 		{
 			si = info;
@@ -172,16 +234,31 @@ namespace System.Collections.Generic {
 			return false;
 		}
 
+        /// <summary>
+        /// Copy items in this hashset to array
+        /// </summary>
+        /// <param name="array">array to add items to</param>
 		public void CopyTo (T [] array)
 		{
 			CopyTo (array, 0, count);
 		}
-		
-		public void CopyTo (T [] array, int arrayIndex)
+
+        /// <summary>
+        /// Copy items in this hashset to array, starting at arrayIndex
+        /// </summary>
+        /// <param name="array">array to add items to</param>
+        /// <param name="arrayIndex">index to start at</param>
+        public void CopyTo (T [] array, int arrayIndex)
 		{
 			CopyTo (array, arrayIndex, count);
 		}
 
+        /// <summary>
+        /// Copy items in this hashset to array, starting at arrayIndex
+        /// </summary>
+        /// <param name="array">array to add items to</param>
+        /// <param name="arrayIndex">index to start at</param>
+        /// <param name="count">number of items to coppy</param>
 		public void CopyTo (T [] array, int arrayIndex, int count)
 		{
 			if (array == null)
@@ -241,6 +318,12 @@ namespace System.Collections.Generic {
 			return comparer.GetHashCode (item) | HASH_FLAG;
 		}
 
+        /// <summary>
+        /// Add item to this HashSet. Returns bool indicating whether item was added (won't be 
+        /// added if already present)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>true if added, false if already present</returns>
 		public bool Add (T item)
 		{
 			int hashCode = GetItemHashCode (item);
@@ -276,10 +359,18 @@ namespace System.Collections.Generic {
 			return true;
 		}
 
+        /// <summary>
+        /// Gets the IEqualityComparer that is used to determine equality of keys for 
+        /// the HashSet.
+        /// </summary>
 		public IEqualityComparer<T> Comparer {
 			get { return comparer; }
 		}
 
+        /// <summary>
+        /// Remove all items from this set. This clears the elements but not the underlying 
+        /// buckets and slots array. Follow this call by TrimExcess to release these.
+        /// </summary>
 		public void Clear ()
 		{
 			count = 0;
@@ -295,6 +386,11 @@ namespace System.Collections.Generic {
 			generation++;
 		}
 
+        /// <summary>
+        /// Checks if this hashset contains the item
+        /// </summary>
+        /// <param name="item">item to check for containment</param>
+        /// <returns>true if item contained; false if not</returns>
 		public bool Contains (T item)
 		{
 			int hashCode = GetItemHashCode (item);
@@ -303,6 +399,11 @@ namespace System.Collections.Generic {
 			return SlotsContainsAt (index, hashCode, item);
 		}
 
+        /// <summary>
+        /// Remove item from this hashset
+        /// </summary>
+        /// <param name="item">item to remove</param>
+        /// <returns>true if removed; false if not (i.e. if the item wasn't in the HashSet)</returns>
 		public bool Remove (T item)
 		{
 			// get first item of linked list corresponding to given key
@@ -352,6 +453,11 @@ namespace System.Collections.Generic {
 			return true;
 		}
 
+        /// <summary>
+        /// Remove elements that match specified predicate. Returns the number of elements removed
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
 		public int RemoveWhere (Predicate<T> match)
 		{
 			if (match == null)
@@ -369,14 +475,39 @@ namespace System.Collections.Generic {
 			return candidates.Count;
 		}
 
+        /// <summary>
+        /// Sets the capacity of this list to the size of the list (rounded up to nearest prime),
+        /// unless count is 0, in which case we release references.
+        /// 
+        /// This method can be used to minimize a list's memory overhead once it is known that no
+        /// new elements will be added to the list. To completely clear a list and release all 
+        /// memory referenced by the list, execute the following statements:
+        /// 
+        /// list.Clear();
+        /// list.TrimExcess(); 
+        /// </summary>
 		public void TrimExcess ()
 		{
 			Resize (count);
 		}
 
-		// set operations
+        // set operations
 
-		public void IntersectWith (IEnumerable<T> other)
+        /// <summary>
+        /// Takes the intersection of this set with other. Modifies this set.
+        /// 
+        /// Implementation Notes: 
+        /// We get better perf if other is a hashset using same equality comparer, because we 
+        /// get constant contains check in other. Resulting cost is O(n1) to iterate over this.
+        /// 
+        /// If we can't go above route, iterate over the other and mark intersection by checking
+        /// contains in this. Then loop over and delete any unmarked elements. Total cost is n2+n1. 
+        /// 
+        /// Attempts to return early based on counts alone, using the property that the 
+        /// intersection of anything with the empty set is the empty set.
+        /// </summary>
+        /// <param name="other">enumerable with items to add </param>
+        public void IntersectWith (IEnumerable<T> other)
 		{
 			if (other == null)
 				throw new ArgumentNullException ("other");
@@ -386,6 +517,10 @@ namespace System.Collections.Generic {
 			RemoveWhere (item => !other_set.Contains (item));
 		}
 
+        /// <summary>
+        /// Remove items in other from this set. Modifies this set.
+        /// </summary>
+        /// <param name="other">enumerable with items to remove</param>
 		public void ExceptWith (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -395,6 +530,11 @@ namespace System.Collections.Generic {
 				Remove (item);
 		}
 
+        /// <summary>
+        /// Checks if this set overlaps other (i.e. they share at least one item)
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>true if these have at least one common element; false if disjoint</returns>
 		public bool Overlaps (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -407,6 +547,12 @@ namespace System.Collections.Generic {
 			return false;
 		}
 
+        /// <summary>
+        /// Checks if this and other contain the same elements. This is set equality: 
+        /// duplicates and order are ignored
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
 		public bool SetEquals (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -424,6 +570,10 @@ namespace System.Collections.Generic {
 			return true;
 		}
 
+        /// <summary>
+        /// Takes symmetric difference (XOR) with other and this set. Modifies this set.
+        /// </summary>
+        /// <param name="other">enumerable with items to XOR</param>
 		public void SymmetricExceptWith (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -443,6 +593,14 @@ namespace System.Collections.Generic {
 			return set;
 		}
 
+        /// <summary>
+        /// Take the union of this HashSet with other. Modifies this set.
+        /// 
+        /// Implementation note: GetSuggestedCapacity (to increase capacity in advance avoiding 
+        /// multiple resizes ended up not being useful in practice; quickly gets to the 
+        /// point where it's a wasteful check.
+        /// </summary>
+        /// <param name="other">enumerable with items to add</param>
 		public void UnionWith (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -464,6 +622,20 @@ namespace System.Collections.Generic {
 			return true;
 		}
 
+        /// <summary>
+        /// Checks if this is a subset of other.
+        /// 
+        /// Implementation Notes:
+        /// The following properties are used up-front to avoid element-wise checks:
+        /// 1. If this is the empty set, then it's a subset of anything, including the empty set
+        /// 2. If other has unique elements according to this equality comparer, and this has more
+        /// elements than other, then it can't be a subset.
+        /// 
+        /// Furthermore, if other is a hashset using the same equality comparer, we can use a 
+        /// faster element-wise check.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>true if this is a subset of other; false if not</returns>
 		public bool IsSubsetOf (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -480,6 +652,21 @@ namespace System.Collections.Generic {
 			return CheckIsSubsetOf (other_set);
 		}
 
+        /// <summary>
+        /// Checks if this is a proper subset of other (i.e. strictly contained in)
+        /// 
+        /// Implementation Notes:
+        /// The following properties are used up-front to avoid element-wise checks:
+        /// 1. If this is the empty set, then it's a proper subset of a set that contains at least
+        /// one element, but it's not a proper subset of the empty set.
+        /// 2. If other has unique elements according to this equality comparer, and this has >=
+        /// the number of elements in other, then this can't be a proper subset.
+        /// 
+        /// Furthermore, if other is a hashset using the same equality comparer, we can use a 
+        /// faster element-wise check.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>true if this is a proper subset of other; false if not</returns>
 		public bool IsProperSubsetOf (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -508,6 +695,19 @@ namespace System.Collections.Generic {
 			return true;
 		}
 
+        /// <summary>
+        /// Checks if this is a superset of other
+        /// 
+        /// Implementation Notes:
+        /// The following properties are used up-front to avoid element-wise checks:
+        /// 1. If other has no elements (it's the empty set), then this is a superset, even if this
+        /// is also the empty set.
+        /// 2. If other has unique elements according to this equality comparer, and this has less 
+        /// than the number of elements in other, then this can't be a superset
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>true if this is a superset of other; false if not</returns>
 		public bool IsSupersetOf (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -521,6 +721,26 @@ namespace System.Collections.Generic {
 			return CheckIsSupersetOf (other_set);
 		}
 
+        /// <summary>
+        /// Checks if this is a proper superset of other (i.e. other strictly contained in this)
+        /// 
+        /// Implementation Notes: 
+        /// This is slightly more complicated than above because we have to keep track if there
+        /// was at least one element not contained in other.
+        /// 
+        /// The following properties are used up-front to avoid element-wise checks:
+        /// 1. If this is the empty set, then it can't be a proper superset of any set, even if 
+        /// other is the empty set.
+        /// 2. If other is an empty set and this contains at least 1 element, then this is a proper
+        /// superset.
+        /// 3. If other has unique elements according to this equality comparer, and other's count
+        /// is greater than or equal to this count, then this can't be a proper superset
+        /// 
+        /// Furthermore, if other has unique elements according to this equality comparer, we can
+        /// use a faster element-wise check.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>true if this is a proper superset of other; false if not</returns>
 		public bool IsProperSupersetOf (IEnumerable<T> other)
 		{
 			if (other == null)
@@ -534,11 +754,20 @@ namespace System.Collections.Generic {
 			return CheckIsSupersetOf (other_set);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public static IEqualityComparer<HashSet<T>> CreateSetComparer ()
 		{
 			return HashSetEqualityComparer<T>.Instance;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
 		[SecurityPermission (SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
 		public virtual void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
@@ -555,6 +784,10 @@ namespace System.Collections.Generic {
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
 		public virtual void OnDeserialization (object sender)
 		{
 			if (si != null)
@@ -588,25 +821,44 @@ namespace System.Collections.Generic {
 			return new Enumerator (this);
 		}
 
+        /// <summary>
+        /// Whether this is readonly
+        /// </summary>
 		bool ICollection<T>.IsReadOnly {
 			get { return false; }
 		}
 
+        /// <summary>
+        /// Add item to this hashset. This is the explicit implementation of the ICollection&lt;T&gt;
+        /// interface. The other Add method returns bool indicating whether item was added.
+        /// </summary>
+        /// <param name="item">item to add</param>
 		void ICollection<T>.Add (T item)
 		{
 			Add (item);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return new Enumerator (this);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public Enumerator GetEnumerator ()
 		{
 			return new Enumerator (this);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
 		[Serializable]
 		public struct Enumerator : IEnumerator<T>, IDisposable {
 
@@ -623,6 +875,10 @@ namespace System.Collections.Generic {
 				this.stamp = hashset.generation;
 			}
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
 			public bool MoveNext ()
 			{
 				CheckState ();
@@ -642,10 +898,16 @@ namespace System.Collections.Generic {
 				return false;
 			}
 
+            /// <summary>
+            /// 
+            /// </summary>
 			public T Current {
 				get { return current; }
 			}
 
+            /// <summary>
+            /// 
+            /// </summary>
 			object IEnumerator.Current {
 				get {
 					CheckState ();
@@ -655,12 +917,18 @@ namespace System.Collections.Generic {
 				}
 			}
 
+            /// <summary>
+            /// 
+            /// </summary>
 			void IEnumerator.Reset ()
 			{
 				CheckState ();
 				next = 0;
 			}
 
+            /// <summary>
+            /// 
+            /// </summary>
 			public void Dispose ()
 			{
 				hashset = null;

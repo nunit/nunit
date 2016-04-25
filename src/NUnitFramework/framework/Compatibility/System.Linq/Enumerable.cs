@@ -38,7 +38,10 @@ using System.Collections.ObjectModel;
 
 namespace System.Linq
 {
-	public static class Enumerable
+    ///  <summary>
+    ///  Provides a set of static (Shared in Visual Basic) methods for querying objects that implement<see cref="T:System.Collections.Generic.IEnumerable`1" />
+    ///  </summary>
+    public static class Enumerable
 	{
 		enum Fallback {
 			Default,
@@ -61,11 +64,20 @@ namespace System.Linq
 		
 		static class ReadOnlyCollectionOf<T> {
 			public static readonly ReadOnlyCollection<T> Empty = new ReadOnlyCollection<T> (EmptyOf<T>.Instance);
-		}
+        }
 
-		#region Aggregate
+        #region Aggregate
 
-		public static TSource Aggregate<TSource> (this IEnumerable<TSource> source, Func<TSource, TSource, TSource> func)
+        /// <summary>
+        /// Applies an accumulator function over a sequence
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" /></typeparam>
+        /// <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> to aggregate over</param>
+        /// <param name="func">An accumulator function to be invoked on each element</param>
+        /// <returns>The final accumulator value</returns>
+        /// <exception cref="T:System.ArgumentNullException"> <paramref name = "source" /> or <paramref name="func" /> is null</exception>
+        /// <exception cref="T:System.InvalidOperationException"><paramref name = "source" /> contains no elements</exception>
+        public static TSource Aggregate<TSource> (this IEnumerable<TSource> source, Func<TSource, TSource, TSource> func)
 		{
 			Check.SourceAndFunc (source, func);
 
@@ -80,8 +92,18 @@ namespace System.Linq
 					folded = func (folded, enumerator.Current);
 				return folded;
 			}
-		}
+        }
 
+        /// <summary>
+        /// Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" /></typeparam>
+        /// <typeparam name="TAccumulate">The type of the accumulator value</typeparam>
+        /// <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> to aggregate over</param>
+        /// <param name="seed">The initial accumulator value</param>
+        /// <param name="func">An accumulator function to be invoked on each element</param>
+        /// <returns>The transformed final accumulator value</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name = "source" /> or <paramref name="func" /> is null</exception>
 		public static TAccumulate Aggregate<TSource, TAccumulate> (this IEnumerable<TSource> source,
 			TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func)
 		{
@@ -92,8 +114,20 @@ namespace System.Linq
 				folded = func (folded, element);
 
 			return folded;
-		}
+        }
 
+        /// <summary>
+        /// Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value, and the specified function is used to select the result value
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" /></typeparam>
+        /// <typeparam name="TAccumulate">The type of the accumulator value</typeparam>
+        /// <typeparam name="TResult">The type of the resulting value</typeparam>
+        /// <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> to aggregate over</param>
+        /// <param name="seed">The initial accumulator value</param>
+        /// <param name="func">An accumulator function to be invoked on each element</param>
+        /// <param name="resultSelector">A function to transform the final accumulator value into the result value</param>
+        /// <returns>The transformed final accumulator value</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name = "source" /> or <paramref name="func" /> or<paramref name="resultSelector" /> is null</exception>
 		public static TResult Aggregate<TSource, TAccumulate, TResult> (this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func, Func<TAccumulate, TResult> resultSelector)
 		{
 			Check.SourceAndFunc (source, func);
@@ -105,13 +139,21 @@ namespace System.Linq
 				result = func (result, e);
 
 			return resultSelector (result);
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#region All
+        #region All
 
-		public static bool All<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        /// <summary>
+        /// Determines whether all elements of a sequence satisfy a condition
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" /></typeparam>
+        /// <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the elements to apply the predicate to</param>
+        /// <param name="predicate">A function to test each element for a condition</param>
+        /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name = "source" /> or <paramref name="predicate" /> is null</exception>
+        public static bool All<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
 
@@ -120,13 +162,20 @@ namespace System.Linq
 					return false;
 
 			return true;
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#region Any
+        #region Any
 
-		public static bool Any<TSource> (this IEnumerable<TSource> source)
+        /// <summary>
+        /// Determines whether a sequence contains any elements
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" /></typeparam>
+        /// <param name="source">The <see cref="T:System.Collections.Generic.IEnumerable`1" /> to check for emptiness</param>
+        /// <returns>true if the source sequence contains any elements; otherwise, false</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name = "source" /> is null</exception>
+        public static bool Any<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
 
@@ -136,8 +185,16 @@ namespace System.Linq
 
 			using (var enumerator = source.GetEnumerator ())
 				return enumerator.MoveNext ();
-		}
+        }
 
+        /// <summary>
+        /// Determines whether any element of a sequence satisfies a condition
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" /></typeparam>
+        /// <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> whose elements to apply the predicate to</param>
+        /// <param name="predicate">A function to test each element for a condition</param>
+        /// <returns>true if any elements in the source sequence pass the test in the specified predicate; otherwise, false</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name = "source" /> or <paramref name="predicate" /> is null</exception>
 		public static bool Any<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -149,11 +206,17 @@ namespace System.Linq
 			return false;
 		}
 
-		#endregion
+        #endregion
 
-		#region AsEnumerable
+        #region AsEnumerable
 
-		public static IEnumerable<TSource> AsEnumerable<TSource> (this IEnumerable<TSource> source)
+        /// <summary>
+        /// Returns the input typed as <see cref="T:System.Collections.Generic.IEnumerable`1" />
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" /></typeparam>
+        /// <param name="source">The sequence to type as <see cref="T:System.Collections.Generic.IEnumerable`1" /></param>
+        /// <returns>The input sequence typed as <see cref="T:System.Collections.Generic.IEnumerable`1" /></returns>
+        public static IEnumerable<TSource> AsEnumerable<TSource> (this IEnumerable<TSource> source)
 		{
 			return source;
 		}
@@ -162,6 +225,11 @@ namespace System.Linq
 
 		#region Average
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double Average (this IEnumerable<int> source)
 		{
 			Check.Source (source);
@@ -177,6 +245,11 @@ namespace System.Linq
 			return total / (double) count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double Average (this IEnumerable<long> source)
 		{
 			Check.Source (source);
@@ -192,6 +265,11 @@ namespace System.Linq
 			return total / (double) count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double Average (this IEnumerable<double> source)
 		{
 			Check.Source (source);
@@ -207,6 +285,11 @@ namespace System.Linq
 			return total / count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float Average (this IEnumerable<float> source)
 		{
 			Check.Source (source);
@@ -222,6 +305,11 @@ namespace System.Linq
 			return total / count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal Average (this IEnumerable<decimal> source)
 		{
 			Check.Source (source);
@@ -237,6 +325,16 @@ namespace System.Linq
 			return total / count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        /// <typeparam name="TAggregate"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="func"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
 		static TResult? AverageNullable<TElement, TAggregate, TResult> (this IEnumerable<TElement?> source,
 			Func<TAggregate, TElement, TAggregate> func, Func<TAggregate, long, TResult> result)
 			where TElement : struct
@@ -261,6 +359,11 @@ namespace System.Linq
 			return new TResult? (result (total, counter));
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double? Average (this IEnumerable<int?> source)
 		{
 			Check.Source (source);
@@ -282,6 +385,11 @@ namespace System.Linq
 			return new double? (total / (double) counter);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double? Average (this IEnumerable<long?> source)
 		{
 			Check.Source (source);
@@ -304,6 +412,11 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double? Average (this IEnumerable<double?> source)
 		{
 			Check.Source (source);
@@ -326,6 +439,11 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal? Average (this IEnumerable<decimal?> source)
 		{
 			Check.Source (source);
@@ -348,6 +466,11 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float? Average (this IEnumerable<float?> source)
 		{
 			Check.Source (source);
@@ -370,6 +493,13 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double Average<TSource> (this IEnumerable<TSource> source, Func<TSource, int> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -385,6 +515,13 @@ namespace System.Linq
 			return total / (double) count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double? Average<TSource> (this IEnumerable<TSource> source, Func<TSource, int?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -407,6 +544,13 @@ namespace System.Linq
 			return new double? (total / (double) counter);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double Average<TSource> (this IEnumerable<TSource> source, Func<TSource, long> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -423,6 +567,13 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double? Average<TSource> (this IEnumerable<TSource> source, Func<TSource, long?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -445,6 +596,13 @@ namespace System.Linq
 			return new double? (total / (double) counter);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double Average<TSource> (this IEnumerable<TSource> source, Func<TSource, double> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -461,6 +619,13 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double? Average<TSource> (this IEnumerable<TSource> source, Func<TSource, double?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -484,6 +649,13 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float Average<TSource> (this IEnumerable<TSource> source, Func<TSource, float> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -499,6 +671,13 @@ namespace System.Linq
 			return total / count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float? Average<TSource> (this IEnumerable<TSource> source, Func<TSource, float?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -521,6 +700,13 @@ namespace System.Linq
 			return new float? (total / counter);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal Average<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -536,6 +722,13 @@ namespace System.Linq
 			return total / count;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal? Average<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -562,6 +755,12 @@ namespace System.Linq
 
 		#region Cast
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="source"></param>
+		/// <typeparam name="TResult"></typeparam>
+		/// <returns></returns>
 		public static IEnumerable<TResult> Cast<TResult> (this IEnumerable source)
 		{
 			Check.Source (source);
@@ -583,6 +782,13 @@ namespace System.Linq
 
 		#region Concat
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Concat<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second)
 		{
 			Check.FirstAndSecond (first, second);
@@ -602,6 +808,13 @@ namespace System.Linq
 
 		#region Contains
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
 		public static bool Contains<TSource> (this IEnumerable<TSource> source, TSource value)
 		{
 			var collection = source as ICollection<TSource>;
@@ -611,6 +824,14 @@ namespace System.Linq
 			return Contains<TSource> (source, value, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="value"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static bool Contains<TSource> (this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource> comparer)
 		{
 			Check.Source (source);
@@ -628,6 +849,12 @@ namespace System.Linq
 
 		#region Count
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static int Count<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -644,6 +871,13 @@ namespace System.Linq
 			return counter;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static int Count<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndSelector (source, predicate);
@@ -660,11 +894,24 @@ namespace System.Linq
 
 		#region DefaultIfEmpty
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> DefaultIfEmpty<TSource> (this IEnumerable<TSource> source)
 		{
 			return DefaultIfEmpty (source, default (TSource));
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> DefaultIfEmpty<TSource> (this IEnumerable<TSource> source, TSource defaultValue)
 		{
 			Check.Source (source);
@@ -688,11 +935,24 @@ namespace System.Linq
 
 		#region Distinct
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Distinct<TSource> (this IEnumerable<TSource> source)
 		{
 			return Distinct<TSource> (source, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Distinct<TSource> (this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
 		{
 			Check.Source (source);
@@ -733,6 +993,13 @@ namespace System.Linq
 			return default (TSource);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
 		public static TSource ElementAt<TSource> (this IEnumerable<TSource> source, int index)
 		{
 			Check.Source (source);
@@ -757,6 +1024,13 @@ namespace System.Linq
 
 		#region ElementAtOrDefault
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
 		public static TSource ElementAtOrDefault<TSource> (this IEnumerable<TSource> source, int index)
 		{
 			Check.Source (source);
@@ -781,6 +1055,11 @@ namespace System.Linq
 
 		#region Empty
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
 		public static IEnumerable<TResult> Empty<TResult> ()
 		{
 			return EmptyOf<TResult>.Instance;
@@ -790,11 +1069,26 @@ namespace System.Linq
 
 		#region Except
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Except<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second)
 		{
 			return Except (first, second, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Except<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
 		{
 			Check.FirstAndSecond (first, second);
@@ -830,6 +1124,12 @@ namespace System.Linq
 			return default (TSource);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource First<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -848,6 +1148,13 @@ namespace System.Linq
 			throw EmptySequence ();
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static TSource First<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -859,6 +1166,12 @@ namespace System.Linq
 
 		#region FirstOrDefault
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource FirstOrDefault<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -874,6 +1187,13 @@ namespace System.Linq
 #endif
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static TSource FirstOrDefault<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -885,12 +1205,29 @@ namespace System.Linq
 
 		#region GroupBy
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector)
 		{
 			return GroupBy<TSource, TKey> (source, keySelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
 		{
@@ -943,12 +1280,33 @@ namespace System.Linq
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
 		{
 			return GroupBy<TSource, TKey, TElement> (source, keySelector, elementSelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
 		{
@@ -1002,6 +1360,18 @@ namespace System.Linq
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
 			Func<TKey, IEnumerable<TElement>, TResult> resultSelector)
@@ -1009,6 +1379,19 @@ namespace System.Linq
 			return GroupBy (source, keySelector, elementSelector, resultSelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
 			Func<TKey, IEnumerable<TElement>, TResult> resultSelector,
@@ -1031,6 +1414,16 @@ namespace System.Linq
 				yield return resultSelector (group.Key, group);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> GroupBy<TSource, TKey, TResult> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector,
 			Func<TKey, IEnumerable<TSource>, TResult> resultSelector)
@@ -1038,6 +1431,17 @@ namespace System.Linq
 			return GroupBy (source, keySelector, resultSelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> GroupBy<TSource, TKey, TResult> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector,
 			Func<TKey, IEnumerable<TSource>, TResult> resultSelector,
@@ -1063,6 +1467,19 @@ namespace System.Linq
 
 		# region GroupJoin
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TOuter"></typeparam>
+        /// <typeparam name="TInner"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="outer"></param>
+        /// <param name="inner"></param>
+        /// <param name="outerKeySelector"></param>
+        /// <param name="innerKeySelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> GroupJoin<TOuter, TInner, TKey, TResult> (this IEnumerable<TOuter> outer,
 			IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector,
 			Func<TInner, TKey> innerKeySelector, Func<TOuter, IEnumerable<TInner>, TResult> resultSelector)
@@ -1070,6 +1487,20 @@ namespace System.Linq
 			return GroupJoin (outer, inner, outerKeySelector, innerKeySelector, resultSelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TOuter"></typeparam>
+        /// <typeparam name="TInner"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="outer"></param>
+        /// <param name="inner"></param>
+        /// <param name="outerKeySelector"></param>
+        /// <param name="innerKeySelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> GroupJoin<TOuter, TInner, TKey, TResult> (this IEnumerable<TOuter> outer,
 			IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector,
 			Func<TInner, TKey> innerKeySelector, Func<TOuter, IEnumerable<TInner>, TResult> resultSelector,
@@ -1111,11 +1542,26 @@ namespace System.Linq
 
 		#region Intersect
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Intersect<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second)
 		{
 			return Intersect (first, second, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Intersect<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
 		{
 			Check.FirstAndSecond (first, second);
@@ -1139,6 +1585,20 @@ namespace System.Linq
 
 		# region Join
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TOuter"></typeparam>
+        /// <typeparam name="TInner"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="outer"></param>
+        /// <param name="inner"></param>
+        /// <param name="outerKeySelector"></param>
+        /// <param name="innerKeySelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult> (this IEnumerable<TOuter> outer,
 			IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector,
 			Func<TInner, TKey> innerKeySelector, Func<TOuter, TInner, TResult> resultSelector, IEqualityComparer<TKey> comparer)
@@ -1174,6 +1634,19 @@ namespace System.Linq
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TOuter"></typeparam>
+        /// <typeparam name="TInner"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="outer"></param>
+        /// <param name="inner"></param>
+        /// <param name="outerKeySelector"></param>
+        /// <param name="innerKeySelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult> (this IEnumerable<TOuter> outer,
 			IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector,
 			Func<TInner, TKey> innerKeySelector, Func<TOuter, TInner, TResult> resultSelector)
@@ -1207,6 +1680,12 @@ namespace System.Linq
 			return item;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource Last<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -1237,6 +1716,13 @@ namespace System.Linq
 #endif
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static TSource Last<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -1248,6 +1734,12 @@ namespace System.Linq
 
 		#region LastOrDefault
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource LastOrDefault<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -1274,6 +1766,13 @@ namespace System.Linq
 #endif
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static TSource LastOrDefault<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -1285,6 +1784,12 @@ namespace System.Linq
 
 		#region LongCount
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static long LongCount<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -1303,6 +1808,13 @@ namespace System.Linq
 			return counter;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static long LongCount<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndSelector (source, predicate);
@@ -1319,6 +1831,11 @@ namespace System.Linq
 
 		#region Max
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static int Max (this IEnumerable<int> source)
 		{
 			Check.Source (source);
@@ -1334,6 +1851,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static long Max (this IEnumerable<long> source)
 		{
 			Check.Source (source);
@@ -1349,6 +1871,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double Max (this IEnumerable<double> source)
 		{
 			Check.Source (source);
@@ -1364,6 +1891,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float Max (this IEnumerable<float> source)
 		{
 			Check.Source (source);
@@ -1379,6 +1911,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal Max (this IEnumerable<decimal> source)
 		{
 			Check.Source (source);
@@ -1394,6 +1931,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static int? Max (this IEnumerable<int?> source)
 		{
 			Check.Source (source);
@@ -1415,6 +1957,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static long? Max (this IEnumerable<long?> source)
 		{
 			Check.Source (source);
@@ -1436,6 +1983,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double? Max (this IEnumerable<double?> source)
 		{
 			Check.Source (source);
@@ -1457,6 +2009,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float? Max (this IEnumerable<float?> source)
 		{
 			Check.Source (source);
@@ -1478,6 +2035,11 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal? Max (this IEnumerable<decimal?> source)
 		{
 			Check.Source (source);
@@ -1499,6 +2061,12 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		// TODO: test nullable and non-nullable
 		public static TSource Max<TSource> (this IEnumerable<TSource> source)
 		{
@@ -1533,6 +2101,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static int Max<TSource> (this IEnumerable<TSource> source, Func<TSource, int> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1548,6 +2123,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static long Max<TSource> (this IEnumerable<TSource> source, Func<TSource, long> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1563,6 +2145,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double Max<TSource> (this IEnumerable<TSource> source, Func<TSource, double> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1578,6 +2167,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float Max<TSource> (this IEnumerable<TSource> source, Func<TSource, float> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1593,6 +2189,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal Max<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1622,6 +2225,13 @@ namespace System.Linq
 			return initValue;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static int? Max<TSource> (this IEnumerable<TSource> source, Func<TSource, int?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1643,6 +2253,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static long? Max<TSource> (this IEnumerable<TSource> source, Func<TSource, long?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1664,6 +2281,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double? Max<TSource> (this IEnumerable<TSource> source, Func<TSource, double?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1685,6 +2309,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float? Max<TSource> (this IEnumerable<TSource> source, Func<TSource, float?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1706,6 +2337,13 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal? Max<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1727,6 +2365,14 @@ namespace System.Linq
 			return max;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static TResult Max<TSource, TResult> (this IEnumerable<TSource> source, Func<TSource, TResult> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1738,7 +2384,12 @@ namespace System.Linq
 		#endregion
 
 		#region Min
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static int Min (this IEnumerable<int> source)
 		{
 			Check.Source (source);
@@ -1754,6 +2405,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static long Min (this IEnumerable<long> source)
 		{
 			Check.Source (source);
@@ -1769,6 +2425,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double Min (this IEnumerable<double> source)
 		{
 			Check.Source (source);
@@ -1784,6 +2445,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float Min (this IEnumerable<float> source)
 		{
 			Check.Source (source);
@@ -1799,6 +2465,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal Min (this IEnumerable<decimal> source)
 		{
 			Check.Source (source);
@@ -1814,6 +2485,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static int? Min (this IEnumerable<int?> source)
 		{
 			Check.Source (source);
@@ -1835,6 +2511,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static long? Min (this IEnumerable<long?> source)
 		{
 			Check.Source (source);
@@ -1856,6 +2537,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double? Min (this IEnumerable<double?> source)
 		{
 			Check.Source (source);
@@ -1877,6 +2563,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float? Min (this IEnumerable<float?> source)
 		{
 			Check.Source (source);
@@ -1898,6 +2589,11 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal? Min (this IEnumerable<decimal?> source)
 		{
 			Check.Source (source);
@@ -1919,6 +2615,12 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource Min<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -1952,6 +2654,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static int Min<TSource> (this IEnumerable<TSource> source, Func<TSource, int> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1967,6 +2676,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static long Min<TSource> (this IEnumerable<TSource> source, Func<TSource, long> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1982,6 +2698,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double Min<TSource> (this IEnumerable<TSource> source, Func<TSource, double> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -1997,6 +2720,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float Min<TSource> (this IEnumerable<TSource> source, Func<TSource, float> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2012,6 +2742,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal Min<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2027,6 +2764,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static int? Min<TSource> (this IEnumerable<TSource> source, Func<TSource, int?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2048,6 +2792,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static long? Min<TSource> (this IEnumerable<TSource> source, Func<TSource, long?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2069,6 +2820,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float? Min<TSource> (this IEnumerable<TSource> source, Func<TSource, float?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2090,6 +2848,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double? Min<TSource> (this IEnumerable<TSource> source, Func<TSource, double?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2111,6 +2876,13 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal? Min<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2132,6 +2904,14 @@ namespace System.Linq
 			return min;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static TResult Min<TSource, TResult> (this IEnumerable<TSource> source, Func<TSource, TResult> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2144,6 +2924,12 @@ namespace System.Linq
 
 		#region OfType
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> OfType<TResult> (this IEnumerable source)
 		{
 			Check.Source (source);
@@ -2162,12 +2948,29 @@ namespace System.Linq
 
 		#region OrderBy
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector)
 		{
 			return OrderBy<TSource, TKey> (source, keySelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector,
 				IComparer<TKey> comparer)
@@ -2181,12 +2984,29 @@ namespace System.Linq
 
 		#region OrderByDescending
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> OrderByDescending<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector)
 		{
 			return OrderByDescending<TSource, TKey> (source, keySelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> OrderByDescending<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
 		{
@@ -2199,6 +3019,12 @@ namespace System.Linq
 
 		#region Range
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
 		public static IEnumerable<int> Range (int start, int count)
 		{
 			if (count < 0)
@@ -2220,6 +3046,13 @@ namespace System.Linq
 
 		#region Repeat
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="element"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> Repeat<TResult> (TResult element, int count)
 		{
 			if (count < 0)
@@ -2238,6 +3071,12 @@ namespace System.Linq
 
 		#region Reverse
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Reverse<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -2257,6 +3096,14 @@ namespace System.Linq
 
 		#region Select
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> Select<TSource, TResult> (this IEnumerable<TSource> source, Func<TSource, TResult> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2270,6 +3117,14 @@ namespace System.Linq
 				yield return selector (element);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> Select<TSource, TResult> (this IEnumerable<TSource> source, Func<TSource, int, TResult> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2290,6 +3145,14 @@ namespace System.Linq
 
 		#region SelectMany
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> SelectMany<TSource, TResult> (this IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2304,6 +3167,14 @@ namespace System.Linq
 					yield return item;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> SelectMany<TSource, TResult> (this IEnumerable<TSource> source, Func<TSource, int, IEnumerable<TResult>> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2321,6 +3192,16 @@ namespace System.Linq
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="collectionSelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult> (this IEnumerable<TSource> source,
 			Func<TSource, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
 		{
@@ -2337,6 +3218,16 @@ namespace System.Linq
 					yield return selector (element, collection);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="collectionSelector"></param>
+        /// <param name="resultSelector"></param>
+        /// <returns></returns>
 		public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult> (this IEnumerable<TSource> source,
 			Func<TSource, int, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
 		{
@@ -2380,6 +3271,12 @@ namespace System.Linq
 			return item;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource Single<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -2405,6 +3302,13 @@ namespace System.Linq
 #endif
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static TSource Single<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -2416,6 +3320,12 @@ namespace System.Linq
 
 		#region SingleOrDefault
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource SingleOrDefault<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -2438,6 +3348,13 @@ namespace System.Linq
 #endif
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static TSource SingleOrDefault<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -2449,6 +3366,13 @@ namespace System.Linq
 
 		#region Skip
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Skip<TSource> (this IEnumerable<TSource> source, int count)
 		{
 			Check.Source (source);
@@ -2476,6 +3400,13 @@ namespace System.Linq
 
 		#region SkipWhile
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> SkipWhile<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -2498,6 +3429,13 @@ namespace System.Linq
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> SkipWhile<TSource> (this IEnumerable<TSource> source, Func<TSource, int, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -2526,6 +3464,11 @@ namespace System.Linq
 
 		#region Sum
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static int Sum (this IEnumerable<int> source)
 		{
 			Check.Source (source);
@@ -2536,6 +3479,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static int? Sum (this IEnumerable<int?> source)
 		{
 			Check.Source (source);
@@ -2548,6 +3496,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static int Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, int> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2559,6 +3514,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static int? Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, int?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2572,6 +3534,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static long Sum (this IEnumerable<long> source)
 		{
 			Check.Source (source);
@@ -2583,6 +3550,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static long? Sum (this IEnumerable<long?> source)
 		{
 			Check.Source (source);
@@ -2595,6 +3567,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static long Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, long> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2605,6 +3584,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static long? Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, long?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2618,6 +3604,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double Sum (this IEnumerable<double> source)
 		{
 			Check.Source (source);
@@ -2629,6 +3620,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static double? Sum (this IEnumerable<double?> source)
 		{
 			Check.Source (source);
@@ -2641,6 +3637,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, double> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2652,6 +3655,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static double? Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, double?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2665,6 +3675,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float Sum (this IEnumerable<float> source)
 		{
 			Check.Source (source);
@@ -2676,6 +3691,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static float? Sum (this IEnumerable<float?> source)
 		{
 			Check.Source (source);
@@ -2689,6 +3709,13 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, float> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2698,6 +3725,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static float? Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, float?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2711,6 +3745,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal Sum (this IEnumerable<decimal> source)
 		{
 			Check.Source (source);
@@ -2721,6 +3760,11 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static decimal? Sum (this IEnumerable<decimal?> source)
 		{
 			Check.Source (source);
@@ -2734,6 +3778,13 @@ namespace System.Linq
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2744,6 +3795,13 @@ namespace System.Linq
 			return total;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
 		public static decimal? Sum<TSource> (this IEnumerable<TSource> source, Func<TSource, decimal?> selector)
 		{
 			Check.SourceAndSelector (source, selector);
@@ -2761,6 +3819,13 @@ namespace System.Linq
 
 		#region Take
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Take<TSource> (this IEnumerable<TSource> source, int count)
 		{
 			Check.Source (source);
@@ -2786,6 +3851,13 @@ namespace System.Linq
 
 		#region TakeWhile
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> TakeWhile<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -2803,6 +3875,13 @@ namespace System.Linq
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> TakeWhile<TSource> (this IEnumerable<TSource> source, Func<TSource, int, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -2826,11 +3905,28 @@ namespace System.Linq
 
 		#region ThenBy
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey> (this IOrderedEnumerable<TSource> source, Func<TSource, TKey> keySelector)
 		{
 			return ThenBy<TSource, TKey> (source, keySelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey> (this IOrderedEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
 		{
@@ -2849,12 +3945,29 @@ namespace System.Linq
 
 		#region ThenByDescending
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> ThenByDescending<TSource, TKey> (this IOrderedEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector)
 		{
 			return ThenByDescending<TSource, TKey> (source, keySelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IOrderedEnumerable<TSource> ThenByDescending<TSource, TKey> (this IOrderedEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
 		{
@@ -2872,6 +3985,12 @@ namespace System.Linq
 
 		#region ToArray
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static TSource [] ToArray<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -2909,12 +4028,34 @@ namespace System.Linq
 		#endregion
 
 		#region ToDictionary
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <returns></returns>
 		public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
 		{
 			return ToDictionary<TSource, TKey, TElement> (source, keySelector, elementSelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
 		{
@@ -2930,12 +4071,29 @@ namespace System.Linq
 			return dict;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
 		public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector)
 		{
 			return ToDictionary (source, keySelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey> (this IEnumerable<TSource> source,
 				Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
 		{
@@ -2945,6 +4103,13 @@ namespace System.Linq
 		#endregion
 
 		#region ToList
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
 		public static List<TSource> ToList<TSource> (this IEnumerable<TSource> source)
 		{
 			Check.Source (source);
@@ -2955,23 +4120,61 @@ namespace System.Linq
 
 		#region ToLookup
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
 		public static ILookup<TKey, TSource> ToLookup<TSource, TKey> (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
 		{
 			return ToLookup<TSource, TKey, TSource> (source, keySelector, Function<TSource>.Identity, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static ILookup<TKey, TSource> ToLookup<TSource, TKey> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
 		{
 			return ToLookup<TSource, TKey, TSource> (source, keySelector, Function<TSource>.Identity, comparer);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <returns></returns>
 		public static ILookup<TKey, TElement> ToLookup<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
 		{
 			return ToLookup<TSource, TKey, TElement> (source, keySelector, elementSelector, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="elementSelector"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static ILookup<TKey, TElement> ToLookup<TSource, TKey, TElement> (this IEnumerable<TSource> source,
 			Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
 		{
@@ -3005,11 +4208,26 @@ namespace System.Linq
 
 		#region SequenceEqual
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
 		public static bool SequenceEqual<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second)
 		{
 			return first.SequenceEqual (second, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static bool SequenceEqual<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
 		{
 			Check.FirstAndSecond (first, second);
@@ -3036,6 +4254,13 @@ namespace System.Linq
 
 		#region Union
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Union<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second)
 		{
 			Check.FirstAndSecond (first, second);
@@ -3043,6 +4268,14 @@ namespace System.Linq
 			return first.Union (second, null);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Union<TSource> (this IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
 		{
 			Check.FirstAndSecond (first, second);
@@ -3102,6 +4335,13 @@ namespace System.Linq
 
 		#region Where
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Where<TSource> (this IEnumerable<TSource> source, Func<TSource, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
@@ -3130,6 +4370,13 @@ namespace System.Linq
 			}
 		}	
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public static IEnumerable<TSource> Where<TSource> (this IEnumerable<TSource> source, Func<TSource, int, bool> predicate)
 		{
 			Check.SourceAndPredicate (source, predicate);
