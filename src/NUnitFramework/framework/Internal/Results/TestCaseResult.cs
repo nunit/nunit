@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override IEnumerable<ITestResult> Children
         {
-            get { return new TestResult[0]; }
+            get { return new ITestResult[0]; }
         }
 
         #endregion
