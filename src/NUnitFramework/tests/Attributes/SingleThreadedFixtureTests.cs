@@ -94,10 +94,10 @@ namespace NUnit.Framework.Attributes
         {
             var result = TestBuilder.RunTestFixture(typeof(TFixture));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure.WithSite(FailureSite.Child)));
-            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
 
             foreach (string reason in reasons)
-                Assert.That(result.Children[0].Message, Does.Contain(reason));
+                Assert.That(result.Children.ToArray()[0].Message, Does.Contain(reason));
         }
     }
 

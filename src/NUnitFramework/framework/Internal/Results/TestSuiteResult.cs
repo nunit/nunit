@@ -23,7 +23,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using NUnit.Framework.Interfaces;
+using System.Threading;
+#if NETCF
+using Interlocked = System.Threading.InterlockedEx;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -36,7 +41,7 @@ namespace NUnit.Framework.Internal
         private int _failCount = 0;
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
-        private List<ITestResult> _children;
+        private ConcurrentQueue<ITestResult> _children;
 
         /// <summary>
         /// Construct a TestSuiteResult base on a TestSuite
@@ -44,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// <param name="suite">The TestSuite to which the result applies</param>
         public TestSuiteResult(TestSuite suite) : base(suite)
         {
-            _children = new List<ITestResult>();
+            _children = new ConcurrentQueue<ITestResult>();
         }
 
         #region Overrides
@@ -96,7 +101,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public override IList<ITestResult> Children
+        public override ConcurrentQueue<ITestResult> Children
         {
             get { return _children; }
         }
@@ -112,34 +117,36 @@ namespace NUnit.Framework.Internal
         /// <param name="result">The result to be added</param>
         public virtual void AddResult(ITestResult result)
         {
-            Children.Add(result);
+            Children.Enqueue(result);
 
             //AssertCount += result.AssertCount;
 
+            var resultState = ResultState;
+
             // If this result is marked cancelled, don't change it
-            if (ResultState != ResultState.Cancelled)
+            if (resultState != ResultState.Cancelled)
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
 
-                        if (ResultState.Status == TestStatus.Inconclusive)
-                            SetResult(ResultState.Success);
+                        if (resultState.Status == TestStatus.Inconclusive)
+                            SetResultIf(resultState, ResultState.Success);
 
                         break;
 
                     case TestStatus.Failed:
 
 
-                        if (ResultState.Status != TestStatus.Failed)
-                            SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
+                        if (resultState.Status != TestStatus.Failed)
+                            SetResultIf(resultState, ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
                         break;
 
                     case TestStatus.Skipped:
 
                         if (result.ResultState.Label == "Ignored")
-                            if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
-                                SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
+                            if (resultState.Status == TestStatus.Inconclusive || resultState.Status == TestStatus.Passed)
+                                SetResultIf(resultState, ResultState.Ignored, CHILD_IGNORE_MESSAGE);
 
                         break;
 
@@ -147,11 +154,11 @@ namespace NUnit.Framework.Internal
                         break;
                 }
 
-            AssertCount += result.AssertCount;
-            _passCount += result.PassCount;
-            _failCount += result.FailCount;
-            _skipCount += result.SkipCount;
-            _inconclusiveCount += result.InconclusiveCount;
+            Interlocked.Add (ref InternalAssertCount, result.AssertCount);
+            Interlocked.Add (ref _passCount, result.PassCount);
+            Interlocked.Add (ref _failCount, result.FailCount);
+            Interlocked.Add (ref _skipCount, result.SkipCount);
+            Interlocked.Add (ref _inconclusiveCount, result.InconclusiveCount);
         }
 
         #endregion

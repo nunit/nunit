@@ -122,9 +122,11 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
+    <Compile Include="Compatibility\System.Collections.Concurrent\ConcurrentQueue.cs" />
+    <Compile Include="Compatibility\System.Collections.Concurrent\IProducerConsumerCollection.cs" />
     <Compile Include="Compatibility\System.Linq\Actions.cs" />
     <Compile Include="Compatibility\System.Linq\Check.cs" />
-    <Compile Include="Compatibility\System.Linq\CollectionDebuggerView.cs" />
+    <Compile Include="Compatibility\System.Collections\CollectionDebuggerView.cs" />
     <Compile Include="Compatibility\System.Linq\Enumerable.cs" />
     <Compile Include="Compatibility\System.Linq\ExtensionAttribute.cs" />
     <Compile Include="Compatibility\System.Linq\Funcs.cs" />

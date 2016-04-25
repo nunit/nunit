@@ -73,7 +73,7 @@ namespace NUnit.Framework.Assertions
         {
             TestSuite suite = new TestSuite("IgnoredTestFixture");
             suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
-            ITestResult fixtureResult = TestBuilder.RunTest(suite).Children[0];
+            ITestResult fixtureResult = TestBuilder.RunTest(suite).Children.ToArray ()[0];
 
             Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), fixtureResult.ResultState);
 

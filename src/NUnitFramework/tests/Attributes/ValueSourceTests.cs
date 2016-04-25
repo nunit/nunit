@@ -62,7 +62,7 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceMayNotBeInstanceProperty()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceProperty");
-            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
         public void MethodWithValueSourceInstanceProperty(
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceMayNotBeInstanceMethod()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceMethod");
-            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
         public void MethodWithValueSourceInstanceMethod(
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceMayNotBeInstanceField()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceField");
-            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Children.ToArray ()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
         public void MethodWithValueSourceInstanceField(

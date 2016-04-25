@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
 
             int invalid = 0;
             // Examine grandchildren - child is parameterized method suite
-            var suiteResult = result.Children[0];
+            var suiteResult = result.Children.ToArray()[0];
             foreach (var childResult in suiteResult.Children)
                 if (childResult.ResultState == ResultState.NotRunnable)
                     invalid++;
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal
 
             int invalid = 0;
             // Examine grandchildren - child is parameterized method suite
-            var suiteResult = result.Children[0];
+            var suiteResult = result.Children.ToArray()[0];
             foreach (var childResult in suiteResult.Children)
                 if (childResult.ResultState == ResultState.NotRunnable)
                     invalid++;
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal
 
             int invalid = 0;
             // Examine grandchildren - child is parameterized method suite
-            var suiteResult = result.Children[0];
+            var suiteResult = result.Children.ToArray()[0];
             foreach (var childResult in suiteResult.Children)
                 if (childResult.ResultState == ResultState.NotRunnable)
                     invalid++;

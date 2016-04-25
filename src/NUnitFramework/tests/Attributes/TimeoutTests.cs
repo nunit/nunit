@@ -130,8 +130,8 @@ namespace NUnit.Framework.Attributes
             ParameterizedMethodSuite testMethod = (ParameterizedMethodSuite)TestFinder.Find("TestTimeOutTestCase", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure), "Suite result");
-            Assert.That(result.Children[0].ResultState, Is.EqualTo(ResultState.Success), "First test");
-            Assert.That(result.Children[1].ResultState, Is.EqualTo(ResultState.Failure), "Second test");
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.Success), "First test");
+            Assert.That(result.Children.ToArray()[1].ResultState, Is.EqualTo(ResultState.Failure), "Second test");
         }
     }
 }

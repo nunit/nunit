@@ -60,7 +60,7 @@ namespace NUnit.Framework.Attributes
         public void SourceUsingInstancePropertyIsNotRunnable()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstancePropertyAsSource");
-            Assert.AreEqual(result.Children[0].ResultState, ResultState.NotRunnable);
+            Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
         }
 
         [Test, TestCaseSource("StaticMethod")]
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Attributes
         public void SourceUsingInstanceMethodIsNotRunnable()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstanceMethodAsSource");
-            Assert.AreEqual(result.Children[0].ResultState, ResultState.NotRunnable);
+            Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
         }
 
         IEnumerable InstanceMethod()
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Attributes
         public void SourceUsingInstanceFieldIsNotRunnable()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstanceFieldAsSource");
-            Assert.AreEqual(result.Children[0].ResultState, ResultState.NotRunnable);
+            Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
         }
 
         #endregion
@@ -232,8 +232,8 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void IgnoreTakesPrecedenceOverExpectedException()
         {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodCallsIgnore").Children[0];
+            var result = TestBuilder.RunParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), "MethodCallsIgnore").Children.ToArray()[0];
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore this", result.Message);
         }

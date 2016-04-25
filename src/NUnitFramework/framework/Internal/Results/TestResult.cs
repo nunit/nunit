@@ -23,10 +23,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using NUnit.Framework.Interfaces;
+using System.Threading;
 
 namespace NUnit.Framework.Internal
 {
@@ -52,10 +54,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal const double MIN_DURATION = 0.000001d;
 
-//        static Logger log = InternalTrace.GetLogger("TestResult");
+        /// <summary>
+        /// Empty child queue
+        /// </summary>
+        protected static readonly ConcurrentQueue<ITestResult> EmptyChildQueue = new ConcurrentQueue<ITestResult> ();
+
+        //        static Logger log = InternalTrace.GetLogger("TestResult");
 
         private StringBuilder _output = new StringBuilder();
         private double _duration;
+
+        /// <summary>
+        /// Aggregate assertion count
+        /// </summary>
+        protected int InternalAssertCount;
+
+        private ResultState _resultState;
 
         #endregion
 
@@ -90,7 +104,11 @@ namespace NUnit.Framework.Internal
         /// Gets the ResultState of the test result, which 
         /// indicates the success or failure of the test.
         /// </summary>
-        public ResultState ResultState { get; private set; }
+        public ResultState ResultState
+        {
+            get { return _resultState; }
+            private set { _resultState = value; }
+        }
 
         /// <summary>
         /// Gets the name of the test result
@@ -143,7 +161,11 @@ namespace NUnit.Framework.Internal
         /// Gets or sets the count of asserts executed
         /// when running the test.
         /// </summary>
-        public int AssertCount { get; set; }
+        public int AssertCount
+        {
+            get { return InternalAssertCount; }
+            set { InternalAssertCount = value; }
+        }
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -177,7 +199,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public abstract IList<ITestResult> Children { get; }
+        public abstract ConcurrentQueue<ITestResult> Children { get; }
 
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.
@@ -192,7 +214,7 @@ namespace NUnit.Framework.Internal
             get { return _output.ToString(); }
         }
 
-#endregion
+        #endregion
 
         #region IXmlNodeBuilder Members
 
@@ -447,6 +469,42 @@ namespace NUnit.Framework.Internal
             return targetNode.AddElementWithCDATA("output", Output);
         }
 
+        /// <summary>
+        /// Set the result of the test only if the current ResultState has not changed
+        /// </summary>
+        /// <param name="currentResultState">The current ResultState</param>
+        /// <param name="resultState">The ResultState to use in the result</param>
+        protected void SetResultIf(ResultState currentResultState, ResultState resultState)
+        {
+            SetResultIf(currentResultState, resultState, null, null);
+        }
+
+        /// <summary>
+        /// Set the result of the test only if the current ResultState has not changed
+        /// </summary>
+        /// <param name="currentResultState">The current ResultState</param>
+        /// <param name="resultState">The ResultState to use in the result</param>
+        /// <param name="message">A message associated with the result state</param>
+        protected void SetResultIf(ResultState currentResultState, ResultState resultState, string message)
+        {
+            SetResultIf(currentResultState, resultState, message, null);
+        }
+
+        /// <summary>
+        /// Set the result of the test only if the current ResultState has not changed
+        /// </summary>
+        /// <param name="currentResultState">The current ResultState</param>
+        /// <param name="resultState">The ResultState to use in the result</param>
+        /// <param name="message">A message associated with the result state</param>
+        /// <param name="stackTrace">Stack trace giving the location of the command</param>
+        protected void SetResultIf(ResultState currentResultState, ResultState resultState, string message, string stackTrace)
+        {
+            if (Interlocked.CompareExchange(ref _resultState, resultState, currentResultState) != currentResultState)
+                return;
+
+            Message = message;
+            StackTrace = stackTrace;
+        }
         #endregion
     }
 }
