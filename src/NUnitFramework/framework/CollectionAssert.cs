@@ -36,7 +36,7 @@ namespace NUnit.Framework
         #region Equals and ReferenceEquals
 
         /// <summary>
-        /// The Equals method throws an AssertionException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done 
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -44,11 +44,11 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            throw new AssertionException("Assert.Equals should not be used for Assertions");
+            throw new InvalidOperationException("CollectionAssert.Equals should not be used for Assertions");
         }
 
         /// <summary>
-        /// override the default ReferenceEquals to throw an AssertionException. This 
+        /// override the default ReferenceEquals to throw an InvalidOperationException. This 
         /// implementation makes sure there is no mistake in calling this function 
         /// as part of Assert. 
         /// </summary>
@@ -56,7 +56,7 @@ namespace NUnit.Framework
         /// <param name="b"></param>
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");
+            throw new InvalidOperationException("CollectionAssert.ReferenceEquals should not be used for Assertions");
         }
 
         #endregion

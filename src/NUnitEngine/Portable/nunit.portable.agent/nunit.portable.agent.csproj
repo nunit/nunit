@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0F18F7A5-87CA-41E0-ACB2-A13C68D6CC5B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.Engine</RootNamespace>
+    <AssemblyName>nunit.portable.agent</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\bin\Debug\agents\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE;PORTABLE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\..\..\bin\Debug\agents\nunit.portable.agent.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\bin\Release\agents\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_ENGINE;PORTABLE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\..\..\bin\Release\agents\nunit.portable.agent.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Compatibility\AttributeHelper.cs">
+      <Link>Compatibility\AttributeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Compatibility\BindingFlags.cs">
+      <Link>Compatibility\BindingFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Compatibility\Path.cs">
+      <Link>Compatibility\Path.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Compatibility\ReflectionExtensions.cs">
+      <Link>Compatibility\ReflectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Guard.cs">
+      <Link>Guard.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Logging\ILogger.cs">
+      <Link>Internal\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Logging\InternalTrace.cs">
+      <Link>Internal\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Logging\InternalTraceLevel.cs">
+      <Link>Internal\InternalTraceLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Logging\InternalTraceWriter.cs">
+      <Link>Internal\InternalTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Logging\Logger.cs">
+      <Link>Internal\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\EngineVersion.cs">
+      <Link>Properties\EngineVersion.cs</Link>
+    </Compile>
+    <Compile Include="NUnitPortableDriver.cs" />
+    <Compile Include="NUnitPortableDriverException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

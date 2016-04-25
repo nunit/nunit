@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Mono.Cecil;
 using NUnit.Common;
@@ -29,9 +30,17 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-    public class RuntimeFrameworkService : Service, IRuntimeFrameworkService
+    public class RuntimeFrameworkService : Service, IRuntimeFrameworkService, IAvailableRuntimes
     {
         static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
+
+        /// <summary>
+        /// Gets a list of available runtimes.
+        /// </summary>
+        public IList<IRuntimeFramework> AvailableRuntimes
+        {
+            get { return RuntimeFramework.AvailableFrameworks; }
+        }
 
         /// <summary>
         /// Returns true if the runtime framework represented by
@@ -83,6 +92,7 @@ namespace NUnit.Engine.Services
         /// <returns>A string representing the selected RuntimeFramework</returns>
         public string SelectRuntimeFramework(TestPackage package)
         {
+            // Start by examining the provided settings
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
             string frameworkSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
             RuntimeFramework requestedFramework = frameworkSetting.Length > 0
@@ -101,49 +111,17 @@ namespace NUnit.Engine.Services
             if (targetRuntime == RuntimeType.Any)
                 targetRuntime = currentFramework.Runtime;
 
-            if (targetVersion == RuntimeFramework.DefaultVersion)
+            // Examine the package 
+            ApplyImageData(package);
+
+            // Modify settings if necessary
+            targetVersion = package.GetSetting(PackageSettings.ImageRuntimeVersion, targetVersion);
+            RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
+            if (!checkFramework.IsAvailable)
             {
-                var packages = package.SubPackages;
-                if (packages.Count == 0)
-                    packages.Add(package);
-
-                foreach (var subPackage in packages)
-                {
-                    var assembly = subPackage.FullName;
-
-                    // If the file is not an assembly or doesn't exist, then it can't
-                    // contribute any information to the decision, so we skip it.
-                    if (PathUtils.IsAssemblyFileType(assembly) && File.Exists(assembly))
-                    {
-                        var module = AssemblyDefinition.ReadAssembly(assembly).MainModule;
-                        var NativeEntryPoint = (ModuleAttributes)16;
-                        var mask = ModuleAttributes.Required32Bit | NativeEntryPoint;
-                        if (module.Architecture != TargetArchitecture.AMD64 && 
-                            module.Architecture != TargetArchitecture.IA64 &&
-                           (module.Attributes & mask) != 0)
-                        {
-                            package.Settings[PackageSettings.RunAsX86] = true;
-                            log.Debug("Assembly {0} will be run x86", assembly);
-                        }
-
-                        var v = new Version(module.RuntimeVersion.Substring(1));
-                        log.Debug("Assembly {0} uses version {1}", assembly, v);
-
-                        // TODO: We are doing two jobs here: (1) getting the
-                        // target version and (2) applying a policy that says
-                        // we run under the highest version of all assemblies.
-                        // We should implement the policy at a higher level.
-                        if (v > targetVersion) targetVersion = v;
-                    }
-                }
-                
-                RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
-                if (!checkFramework.IsAvailable)
-                {
-                    log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
-                    if (targetVersion < currentFramework.FrameworkVersion)
-                        targetVersion = currentFramework.FrameworkVersion;
-                }
+                log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
+                if (targetVersion < currentFramework.FrameworkVersion)
+                    targetVersion = currentFramework.FrameworkVersion;
             }
 
             RuntimeFramework targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
@@ -153,5 +131,101 @@ namespace NUnit.Engine.Services
 
             return targetFramework.ToString();
         }
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Use Mono.Cecil to get information about all assemblies and
+        /// apply it to the package using special internal keywords.
+        /// </summary>
+        /// <param name="package"></param>
+        private static void ApplyImageData(TestPackage package)
+        {
+            string packageName = package.FullName;
+
+            Version targetVersion = new Version(0, 0);
+            string frameworkName = null;
+            bool requiresX86 = false;
+            bool requiresAssemblyResolver = false;
+
+            // We are doing two jobs here: (1) in the else clause (below)
+            // we get information about a single assembly and record it,
+            // (2) in the if clause, we recursively examine all subpackages
+            // and then apply policies for promulgating each setting to 
+            // a containing package. We could implement the policy part at
+            // a higher level, but it seems simplest to do it right here.
+            if (package.SubPackages.Count > 0)
+            {
+                foreach (var subPackage in package.SubPackages)
+                {
+                    ApplyImageData(subPackage);
+
+                    // Collect the highest version required
+                    Version v = subPackage.GetSetting(PackageSettings.ImageRuntimeVersion, new Version(0, 0));
+                    if (v > targetVersion) targetVersion = v;
+
+                    // Collect highest framework name 
+                    // TODO: This assumes lexical ordering is valid - check it
+                    string fn = subPackage.GetSetting(PackageSettings.ImageTargetFrameworkName, "");
+                    if (fn != "")
+                    {
+                        if (frameworkName == null || fn.CompareTo(frameworkName) < 0)
+                            frameworkName = fn;
+                    }
+
+                    // If any assembly requires X86, then the aggregate package requires it
+                    if (subPackage.GetSetting(PackageSettings.ImageRequiresX86, false))
+                        requiresX86 = true;
+
+                    if (subPackage.GetSetting(PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
+                        requiresAssemblyResolver = true;
+                }
+            }
+            else if (File.Exists(packageName) && PathUtils.IsAssemblyFileType(packageName))
+            {
+                var assemblyDef = AssemblyDefinition.ReadAssembly(packageName);
+                var module = assemblyDef.MainModule;
+
+                var NativeEntryPoint = (ModuleAttributes)16;
+                var mask = ModuleAttributes.Required32Bit | NativeEntryPoint;
+
+                if (module.Architecture != TargetArchitecture.AMD64 &&
+                    module.Architecture != TargetArchitecture.IA64 &&
+                    (module.Attributes & mask) != 0)
+                {
+                    requiresX86 = true;
+                    log.Debug("Assembly {0} will be run x86", packageName);
+                }
+
+                targetVersion = new Version(module.RuntimeVersion.Substring(1));
+                log.Debug("Assembly {0} uses version {1}", packageName, targetVersion);
+
+                foreach (var attr in assemblyDef.CustomAttributes)
+                {
+                    if (attr.AttributeType.FullName == "System.Runtime.Versioning.TargetFrameworkAttribute")
+                    {
+                        frameworkName = attr.ConstructorArguments[0].Value as string;
+                    }
+                    else if (attr.AttributeType.FullName == "NUnit.Framework.TestAssemblyDirectoryResolveAttribute")
+                    {
+                        requiresAssemblyResolver = true;
+                    }
+                }
+            }
+
+            if (targetVersion.Major > 0)
+                package.Settings[PackageSettings.ImageRuntimeVersion] = targetVersion;
+
+            if (!string.IsNullOrEmpty(frameworkName))
+                package.Settings[PackageSettings.ImageTargetFrameworkName] = frameworkName;
+
+            package.Settings[PackageSettings.ImageRequiresX86] = requiresX86;
+            if (requiresX86)
+                package.Settings[PackageSettings.RunAsX86] = true;
+
+            package.Settings[PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver] = requiresAssemblyResolver;
+        }
+
+        #endregion
     }
 }

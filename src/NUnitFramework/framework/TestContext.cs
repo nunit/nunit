@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -87,6 +88,14 @@ namespace NUnit.Framework
         public ResultAdapter Result
         {
             get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
+        }
+
+        /// <summary>
+        /// Gets the unique name of the  Worker that is executing this test.
+        /// </summary>
+        public string WorkerId
+        {
+            get { return _testExecutionContext.WorkerId; }
         }
 
 #if !SILVERLIGHT && !PORTABLE
@@ -225,6 +234,31 @@ namespace NUnit.Framework
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
         public static void WriteLine(string format, params object[] args) { Out.WriteLine(format, args); }
+
+        /// <summary>
+        /// This method adds the a new ValueFormatterFactory to the
+        /// chain of responsibility used for fomatting values in messages.
+        /// The scope of the change is the current TestContext.
+        /// </summary>
+        /// <param name="formatterFactory">The factory delegate</param>
+        public static void AddFormatter(ValueFormatterFactory formatterFactory)
+        {
+            TestExecutionContext.CurrentContext.AddFormatter(formatterFactory);
+        }
+
+        /// <summary>
+        /// This method provides a simplified way to add a ValueFormatter
+        /// delegate to the chain of responsibility, creating the factory
+        /// delegate internally. It is useful when the Type of the object
+        /// is the only criterion for selection of the formatter, since
+        /// it can be used without getting involved with a compould function.
+        /// </summary>
+        /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
+        /// <param name="formatter">The ValueFormatter delegate</param>
+        public static void AddFormatter<TSUPPORTED>(ValueFormatter formatter)
+        {
+            AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
+        }
 
         #endregion
 

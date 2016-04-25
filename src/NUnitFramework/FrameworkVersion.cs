@@ -26,4 +26,7 @@ using System.Reflection;
 //
 // Current version for the NUnit Framework
 //
-[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyVersion("3.3.0.0")]
+#if !NETCF
+[assembly: AssemblyFileVersion("3.3.0.0")]
+#endif

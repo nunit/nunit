@@ -333,11 +333,11 @@ namespace NUnit.Framework.Attributes
             TestMethod testMethod = (TestMethod)fixtureSuite.Tests[0];
             suite.Add( fixtureSuite );
 
-            TestBuilder.RunTestSuite(fixtureSuite, fixture);
+            TestBuilder.RunTest(fixtureSuite, fixture);
             Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running fixture" );
             Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running fixture" );
 
-            TestBuilder.RunTestSuite(suite, fixture);
+            TestBuilder.RunTest(suite, fixture);
             Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running enclosing suite" );
             Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running enclosing suite" );
 

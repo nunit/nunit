@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.IO;
 using System.Reflection;
 using NUnit.Common;
 using NUnit.Options;
@@ -234,6 +235,14 @@ namespace NUnit.ConsoleRunner.Tests
             ConsoleOptions options = new ConsoleOptions("nunit.tests.dll");
             Assert.True(options.Validate());
             Assert.AreEqual(0, options.ErrorMessages.Count, "command line should be valid");
+        }
+
+        [Test]
+        public void X86AndInProcessAreNotCompatible()
+        {
+            ConsoleOptions options = new ConsoleOptions("nunit.tests.dll", "--x86", "--inprocess");
+            Assert.False(options.Validate(), "Should be invalid");
+            Assert.AreEqual("The --x86 and --inprocess options are incompatible.", options.ErrorMessages[0]);
         }
 
         [Test]
@@ -510,6 +519,21 @@ namespace NUnit.ConsoleRunner.Tests
 
             // Then
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
+        }
+
+        #endregion
+
+        #region Testlist Option
+
+        [Test]
+        public void ShouldNotFailOnEmptyLine()
+        {
+            var testListPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestListWithEmptyLine.tst");
+            // Not copying this test file into releases
+            Assume.That(testListPath, Does.Exist);
+            var options = new ConsoleOptions("--testlist=" + testListPath);
+            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.TestList, Is.EqualTo(new[] {"AmazingTest"}));
         }
 
         #endregion

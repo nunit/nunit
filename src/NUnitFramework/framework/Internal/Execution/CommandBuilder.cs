@@ -52,18 +52,25 @@ namespace NUnit.Framework.Internal.Execution
             TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown, actions);
 
             // Prefix with any IApplyToContext items from attributes
+            IList<IApplyToContext> changes = null;
+
             if (suite.TypeInfo != null)
+                changes = suite.TypeInfo.GetCustomAttributes<IApplyToContext>(true);
+            else if (suite.Method != null)
+                changes = suite.Method.GetCustomAttributes<IApplyToContext>(true);
+            else
             {
-                IApplyToContext[] changes = suite.TypeInfo.GetCustomAttributes<IApplyToContext>(true);
-                if (changes.Length > 0)
-                    command = new ApplyChangesToContextCommand(command, changes);
+                var testAssembly = suite as TestAssembly;
+                if (testAssembly != null)
+#if PORTABLE
+                    changes = new List<IApplyToContext>(testAssembly.Assembly.GetAttributes<IApplyToContext>());
+#else
+                    changes = (IApplyToContext[])testAssembly.Assembly.GetCustomAttributes(typeof(IApplyToContext), true);
+#endif
             }
-            if (suite.Method!=null)
-            {
-                IApplyToContext[] changes = suite.Method.GetCustomAttributes<IApplyToContext>(true);
-                if (changes.Length > 0)
-                    command = new ApplyChangesToContextCommand(command, changes);
-            }
+
+            if (changes != null && changes.Count > 0)
+                command = new ApplyChangesToContextCommand(command, changes);
 
             return command;
         }

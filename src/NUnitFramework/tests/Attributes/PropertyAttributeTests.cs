@@ -74,5 +74,18 @@ namespace NUnit.Framework.Attributes
             Test test4 = (Test)fixture.Tests[3];
             Assert.IsNotNull(test4.Properties.Get("CustomProperty"));
         }
+
+        [Test]
+        public void ManyProperties()
+        {
+            Test test5 = (Test)fixture.Tests[4];
+            Assert.AreEqual(6, test5.Properties.Keys.Count);
+            Assert.AreEqual("A", test5.Properties.Get("A"));
+            Assert.AreEqual("B", test5.Properties.Get("B"));
+            Assert.AreEqual("C", test5.Properties.Get("C"));
+            Assert.AreEqual("D", test5.Properties.Get("D"));
+            Assert.AreEqual("E", test5.Properties.Get("E"));
+            Assert.AreEqual("F", test5.Properties.Get("F"));
+        }
     }
 }

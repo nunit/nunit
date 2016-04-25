@@ -35,10 +35,14 @@ namespace NUnit.Framework.Tests.Compatibility
     [TestFixture]
     public class ReflectionExtensionsTests
     {
+        private static bool REALLY_RUNNING_ON_CF = false;
+
 #if NETCF
-        private const bool ONLY_ON_CF = true;
-#else
-        private const bool ONLY_ON_CF = false;
+        static ReflectionExtensionsTests()
+        {
+            // We may be running on the desktop using assembly unification
+            REALLY_RUNNING_ON_CF = Type.GetType("System.ConsoleColor") == null;
+        }
 #endif
 
         [Test]
@@ -142,23 +146,21 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(result.Length, Is.GreaterThan(0));
         }
 
-#if NETCF
         [Test]
-        public void GetsPrivateMemberOnBaseClass()
+        public void CanGetPrivatePropertiesOnBaseClassOnlyOnCF()
         {
-            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Length, Is.EqualTo(1));
+            Assert.That(result.Length, Is.EqualTo(REALLY_RUNNING_ON_CF ? 1 : 0));
         }
-#else
+
         [Test]
-        public void DoesNotGetPrivateMemberOnBaseClass()
+        public void CanGetPrivateMethodsOnBaseClassOnlyOnCF()
         {
-            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            var result = typeof(DerivedTestClass).GetMember("Goodbye", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Length, Is.EqualTo(0));
+            Assert.That(result.Length, Is.EqualTo(REALLY_RUNNING_ON_CF ? 1 : 0));
         }
-#endif
 
         [Test]
         public void CanGetPublicField()
@@ -193,7 +195,6 @@ namespace NUnit.Framework.Tests.Compatibility
         [TestCase(typeof(BaseTestClass), "Name", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, true)]
         [TestCase(typeof(DerivedTestClass), "Name", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, true)]
         [TestCase(typeof(BaseTestClass), "Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, true)]
-        [TestCase(typeof(DerivedTestClass), "Private", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, ONLY_ON_CF)]
         [TestCase(typeof(BaseTestClass), "StaticString", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, false)]
         [TestCase(typeof(DerivedTestClass), "StaticString", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, false)]
         [TestCase(typeof(BaseTestClass), "Name", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static, false)]
@@ -211,7 +212,6 @@ namespace NUnit.Framework.Tests.Compatibility
         [TestCase(typeof(BaseTestClass), "Name", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, false)]
         [TestCase(typeof(DerivedTestClass), "Name", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, false)]
         [TestCase(typeof(BaseTestClass), "Private", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, true)]
-        [TestCase(typeof(DerivedTestClass), "Private", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, ONLY_ON_CF)]
         [TestCase(typeof(BaseTestClass), "StaticString", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, false)]
         [TestCase(typeof(DerivedTestClass), "StaticString", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, false)]
         [TestCase(typeof(BaseTestClass), "PubPriv", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, true)]
@@ -253,7 +253,6 @@ namespace NUnit.Framework.Tests.Compatibility
         [TestCase(typeof(BaseTestClass), "StaticMethod", BindingFlags.Public | BindingFlags.Static, true)]
         [TestCase(typeof(DerivedTestClass), "StaticMethod", BindingFlags.Public | BindingFlags.Static, false)]
         [TestCase(typeof(BaseTestClass), "Goodbye", BindingFlags.NonPublic | BindingFlags.Instance, true)]
-        [TestCase(typeof(DerivedTestClass), "Goodbye", BindingFlags.NonPublic | BindingFlags.Instance, ONLY_ON_CF)]
         public void CanGetMethodByNameAndBindingFlags(Type type, string name, BindingFlags flags, bool shouldFind)
         {
             var result = type.GetMethod(name, flags);

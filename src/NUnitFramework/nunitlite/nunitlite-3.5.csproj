@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnitLite</RootNamespace>
+    <AssemblyName>nunitlite</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_3_5;NUNITLITE;PARALLEL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
+    <DefineConstants>TRACE;NET_3_5;NUNITLITE;PARALLEL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
+      <Link>ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
+      <Link>ColorConsoleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorStyle.cs">
+      <Link>ColorStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\CommandLineOptions.cs">
+      <Link>CommandLineOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
+      <Link>DefaultOptionsProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
+      <Link>ExtendedTextWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
+      <Link>ExtendedTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
+      <Link>IDefaultOptionsProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Options.cs">
+      <Link>Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
+      <Link>OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\StringExtensions.cs">
+      <Link>StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\StringSplitOptions.cs">
+      <Link>StringSplitOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
+      <Link>TestNameParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
+      <Link>TestSelectionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
+      <Link>TestSelectionParserException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Tokenizer.cs">
+      <Link>Tokenizer.cs</Link>
+    </Compile>
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>Properties\FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AutoRun.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DebugWriter.cs" />
+    <Compile Include="NUnitLiteOptions.cs" />
+    <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\OutputWriter.cs" />
+    <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
+    <Compile Include="ResultSummary.cs" />
+    <Compile Include="TcpWriter.cs" />
+    <Compile Include="TeamCityEventListener.cs" />
+    <Compile Include="TextRunner.cs" />
+    <Compile Include="TextUI.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-3.5.csproj">
+      <Project>{7FA125B4-E377-4D4C-AECB-17B934E3A4B3}</Project>
+      <Name>nunit.framework-3.5</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

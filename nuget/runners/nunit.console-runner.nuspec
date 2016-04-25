@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NUnit.ConsoleRunner</id>
+    <title>NUnit Console Runner Version 3 (No Extensions)</title>
+    <version>$version$</version>
+    <authors>Charlie Poole</authors>
+    <owners>Charlie Poole</owners>
+    <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
+    <projectUrl>http://nunit.org</projectUrl>
+    <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Console runner for version 3.0 of the NUnit unit-testing framework, without any extensions.</summary>
+    <description>
+      This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
+
+      Any extensions, if needed, must be installed as separate packages.
+    </description>
+    <releaseNotes></releaseNotes>
+    <language>en-US</language>
+    <tags>nunit test testing tdd runner</tags>
+    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
+  </metadata>
+  <files>
+    <file src="LICENSE.txt" />
+    <file src="NOTICES.txt" />
+    <file src="CHANGES.txt" />
+    <file src="bin/nunit-agent.exe" target="tools" />
+    <file src="bin/nunit-agent.exe.config" target="tools" />
+    <file src="bin/nunit-agent-x86.exe" target="tools" />
+    <file src="bin/nunit-agent-x86.exe.config" target="tools" />
+    <file src="bin/nunit3-console.exe" target="tools" />
+    <file src="bin/nunit3-console.exe.config" target="tools" />
+    <file src="bin/nunit.engine.api.dll" target="tools" />
+    <file src="bin/nunit.engine.api.xml" target="tools" />
+    <file src="bin/nunit.engine.dll" target="tools" />
+    <file src="bin/Mono.Cecil.dll" target="tools" />
+    <file src="..\..\nuget\engine\nunit.nuget.addins" target="tools"/>
+  </files>
+</package>

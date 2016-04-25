@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+
 namespace NUnit.Framework
 {
     using System;
@@ -87,7 +88,7 @@ namespace NUnit.Framework
 
             if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
                 test.Properties.Set(PropertyNames.TestOf, TestOf.FullName);
-
+            
         }
 
         #endregion

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using System.Threading;
 
 namespace NUnit.Framework.Attributes
@@ -29,7 +29,8 @@ namespace NUnit.Framework.Attributes
     public class ThreadingTests
     {
         protected Thread ParentThread { get; private set; }
-#if !NETCF
+        protected Thread SetupThread { get; private set; }
+#if !NETCF && !SILVERLIGHT
         protected ApartmentState ParentThreadApartment { get; private set; }
 #endif
 
@@ -37,12 +38,32 @@ namespace NUnit.Framework.Attributes
         public void GetParentThreadInfo()
         {
             ParentThread = Thread.CurrentThread;
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
             ParentThreadApartment = GetApartmentState(ParentThread);
 #endif
         }
 
-#if !NETCF
+        [SetUp]
+        public void GetSetUpThreadInfo()
+        {
+            SetupThread = Thread.CurrentThread;
+        }
+
+        [Test]
+        public void TestDefaultsToRunningEverythingOnSameThread()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
+        }
+
+        [TestCase(5)]
+        public void TestCaseDefaultsToRunningEverythingOnSameThread(int x)
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
+        }
+
+#if !NETCF && !SILVERLIGHT
         protected static ApartmentState GetApartmentState(Thread thread)
         {
             return thread.GetApartmentState();

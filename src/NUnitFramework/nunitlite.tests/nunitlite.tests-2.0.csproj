@@ -67,6 +67,15 @@
     <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
       <Link>TestSelectionParserTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\Fakes.cs">
+      <Link>TestUtilities\Fakes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\TestBuilder.cs">
+      <Link>TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestUtilities\TestFile.cs">
+      <Link>TestUtilities\TestFile.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\tests\TokenizerTests.cs">
       <Link>TokenizerTests.cs</Link>
     </Compile>
@@ -83,9 +92,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TeamCityEventListenerTests.cs" />
-    <Compile Include="TestUtilities\Fakes.cs" />
-    <Compile Include="TestUtilities\TestBuilder.cs" />
-    <Compile Include="TestUtilities\TestFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

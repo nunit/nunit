@@ -82,6 +82,7 @@ namespace NUnit.Common.Tests
             Assert.That(sb.ToString(), Is.EqualTo(LABEL + OPTION));
         }
 
+        [Test]
         public void WriteLabel_ColorStyle()
         {
             writer.WriteLabel(LABEL, OPTION, ColorStyle.Pass);

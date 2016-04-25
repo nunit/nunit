@@ -22,9 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -53,12 +54,7 @@ namespace NUnit.Framework.Internal
 
 //        static Logger log = InternalTrace.GetLogger("TestResult");
 
-        /// <summary>
-        /// List of child results
-        /// </summary>
-        private System.Collections.Generic.List<ITestResult> _children;
-
-        private StringWriter _outWriter;
+        private StringBuilder _output = new StringBuilder();
         private double _duration;
 
         #endregion
@@ -73,6 +69,12 @@ namespace NUnit.Framework.Internal
         {
             Test = test;
             ResultState = ResultState.Inconclusive;
+
+#if PORTABLE || SILVERLIGHT
+            OutWriter = new StringWriter(_output);
+#else
+            OutWriter = TextWriter.Synchronized(new StringWriter(_output));
+#endif
         }
 
         #endregion
@@ -169,53 +171,28 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Indicates whether this result has any child results.
-        /// Test HasChildren before accessing Children to avoid
-        /// the creation of an empty collection.
         /// </summary>
-        public bool HasChildren
-        {
-            get { return _children != null && _children.Count > 0; }
-        }
+        public abstract bool HasChildren { get; }
 
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public System.Collections.Generic.IList<ITestResult> Children
-        {
-            get
-            {
-                if (_children == null)
-                    _children = new System.Collections.Generic.List<ITestResult>();
-
-                return _children;
-            }
-        }
+        public abstract IList<ITestResult> Children { get; }
 
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.
         /// </summary>
-        public StringWriter OutWriter
-        {
-            get
-            {
-                if (_outWriter == null)
-                    _outWriter = new StringWriter();
-
-                return _outWriter;
-            }
-        }
+        public TextWriter OutWriter { get; private set; }
 
         /// <summary>
         /// Gets any text output written to this result.
         /// </summary>
         public string Output
         {
-            get { return _outWriter == null
-                ? string.Empty
-                : _outWriter.ToString();  }
+            get { return _output.ToString(); }
         }
 
-        #endregion
+#endregion
 
         #region IXmlNodeBuilder Members
 
@@ -287,49 +264,6 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
-
-        /// <summary>
-        /// Adds a child result to this result, setting this result's
-        /// ResultState to Failure if the child result failed.
-        /// </summary>
-        /// <param name="result">The result to be added</param>
-        public virtual void AddResult(ITestResult result)
-        {
-            Children.Add(result);
-
-            //AssertCount += result.AssertCount;
-
-            // If this result is marked cancelled, don't change it
-            if (ResultState != ResultState.Cancelled)
-                switch (result.ResultState.Status)
-                {
-                    case TestStatus.Passed:
-
-                        if (ResultState.Status == TestStatus.Inconclusive)
-                            SetResult(ResultState.Success);
-
-                        break;
-
-                    case TestStatus.Failed:
-
-
-                        if (ResultState.Status != TestStatus.Failed)
-                            SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
-
-                        break;
-
-                    case TestStatus.Skipped:
-
-                        if (result.ResultState.Label == "Ignored")
-                            if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
-                                SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
-
-                        break;
-
-                    default:
-                        break;
-                }
-        }
 
         #region Other Public Methods
 

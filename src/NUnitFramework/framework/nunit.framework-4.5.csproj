@@ -56,6 +56,30 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\AttributeHelper.cs">
+      <Link>Compatibility\AttributeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
+      <Link>Compatibility\BindingFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\ICallbackEventHandler.cs">
+      <Link>Compatibility\ICallbackEventHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
+      <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\Path.cs">
+      <Link>Compatibility\Path.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\ReflectionExtensions.cs">
+      <Link>Compatibility\ReflectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\SerializableAttribute.cs">
+      <Link>Compatibility\SerializableAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\Stopwatch.cs">
+      <Link>Compatibility\Stopwatch.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
@@ -127,11 +151,14 @@
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />
+    <Compile Include="Attributes\SingleThreadedAttribute.cs" />
+    <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelismAttribute.cs" />
     <Compile Include="Attributes\MaxTimeAttribute.cs" />
     <Compile Include="Attributes\NUnitAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
+    <Compile Include="Attributes\OrderAttribute.cs" />
     <Compile Include="Attributes\PairwiseAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
     <Compile Include="Attributes\ParallelScope.cs" />
@@ -164,14 +191,6 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
-    <Compile Include="Compatibility\AttributeHelper.cs" />
-    <Compile Include="Compatibility\BindingFlags.cs" />
-    <Compile Include="Compatibility\ICallbackEventHandler.cs" />
-    <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
-    <Compile Include="Compatibility\Path.cs" />
-    <Compile Include="Compatibility\ReflectionExtensions.cs" />
-    <Compile Include="Compatibility\SerializableAttribute.cs" />
-    <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />

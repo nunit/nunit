@@ -41,11 +41,25 @@ namespace NUnit.Framework.Internal.Execution
         //        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
 
         private TestSuite _suite;
+        private TestSuiteResult _suiteResult;
         private ITestFilter _childFilter;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
-
         private List<WorkItem> _children;
+
+        /// <summary>
+        /// List of Child WorkItems
+        /// </summary>
+        public List<WorkItem> Children
+        {
+            get { return _children; }
+            private set { _children = value; }
+        }
+
+        /// <summary>
+        /// A count of how many tests in the work item have a value for the Order Property
+        /// </summary>
+        private int _countOrder;
 
         private CountdownEvent _childTestCountdown;
 
@@ -59,7 +73,9 @@ namespace NUnit.Framework.Internal.Execution
             : base(suite)
         {
             _suite = suite;
+            _suiteResult = Result as TestSuiteResult;
             _childFilter = childFilter;
+            _countOrder = 0;
         }
 
         /// <summary>
@@ -234,8 +250,62 @@ namespace NUnit.Framework.Internal.Execution
             _children = new List<WorkItem>();
 
             foreach (ITest test in _suite.Tests)
+            {
                 if (_childFilter.Pass(test))
-                    _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
+                {
+                    var child = WorkItem.CreateWorkItem(test, _childFilter);
+                    child.WorkerId = this.WorkerId;
+
+#if !PORTABLE && !SILVERLIGHT && !NETCF
+                    if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)
+                        child.TargetApartment = TargetApartment;
+#endif
+
+                    if (test.Properties.ContainsKey(PropertyNames.Order))
+                    {
+                        _children.Insert(0, child);
+                        _countOrder++;
+                    }
+                    else
+                    {
+                        _children.Add(child);
+                    }
+                }
+            }
+
+            if (_countOrder !=0) SortChildren();
+        }
+
+        private class WorkItemOrderComparer : IComparer<WorkItem>
+        {
+            /// <summary>
+            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            /// </summary>
+            /// <returns>
+            /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>, as shown in the following table.Value Meaning Less than zero<paramref name="x"/> is less than <paramref name="y"/>.Zero<paramref name="x"/> equals <paramref name="y"/>.Greater than zero<paramref name="x"/> is greater than <paramref name="y"/>.
+            /// </returns>
+            /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param>
+            public int Compare(WorkItem x, WorkItem y)
+            {
+                var xKey = int.MaxValue;
+                var yKey = int.MaxValue;
+
+                if (x.Test.Properties.ContainsKey(PropertyNames.Order))
+                    xKey =(int)x.Test.Properties[PropertyNames.Order][0];
+
+                if (y.Test.Properties.ContainsKey(PropertyNames.Order))
+                    yKey =(int)y.Test.Properties[PropertyNames.Order][0];
+
+                return xKey.CompareTo(yKey);
+            }
+        }
+
+        /// <summary>
+        /// Sorts tests under this suite.
+        /// </summary>
+        private void SortChildren()
+        {
+            _children.Sort(0, _countOrder, new WorkItemOrderComparer());
         }
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
@@ -252,7 +322,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     TestResult childResult = child.MakeTestResult();
                     childResult.SetResult(resultState, message);
-                    Result.AddResult(childResult);
+                    _suiteResult.AddResult(childResult);
 
                     // Some runners may depend on getting the TestFinished event
                     // even for tests that have been skipped at a higher level.
@@ -295,7 +365,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (childTask != null)
                 {
                     childTask.Completed -= new EventHandler(OnChildCompleted);
-                    Result.AddResult(childTask.Result);
+                    _suiteResult.AddResult(childTask.Result);
 
                     if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
                         Context.ExecutionStatus = TestExecutionStatus.StopRequested;
@@ -314,7 +384,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
                     PerformOneTimeTearDown();
 
-                foreach (var childResult in this.Result.Children)
+                foreach (var childResult in _suiteResult.Children)
                     if (childResult.ResultState == ResultState.Cancelled)
                     {
                         this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");

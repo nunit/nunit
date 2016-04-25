@@ -99,6 +99,8 @@
     </Compile>
     <Compile Include="IDriverService.cs" />
     <Compile Include="Internal\CecilExtensions.cs" />
+    <Compile Include="Internal\DirectoryFinder.cs" />
+    <Compile Include="Internal\ProvidedPathsAssemblyResolver.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="Agents\RemoteTestAgent.cs" />
@@ -130,7 +132,9 @@
     <Compile Include="Runners\TestDomainRunner.cs" />
     <Compile Include="IProjectService.cs" />
     <Compile Include="Runners\ParallelTaskWorkerPool.cs" />
+    <Compile Include="Runners\TestEventDispatcher.cs" />
     <Compile Include="Runners\TestExecutionTask.cs" />
+    <Compile Include="RuntimeType.cs" />
     <Compile Include="Services\ExtensionService.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
@@ -161,11 +165,6 @@
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="nunit.engine.addin.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="nunit.engine.addins">

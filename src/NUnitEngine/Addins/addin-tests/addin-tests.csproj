@@ -153,6 +153,12 @@
   <ItemGroup>
     <EmbeddedResource Include="resources\NUnitProject_XmlDecl.nunit" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="resources\csharp-debug-only-no-nunit.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="resources\solution-with-non-nunit-project.sln" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

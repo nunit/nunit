@@ -39,6 +39,8 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class ExtensionService : Service
     {
+        static Logger log = InternalTrace.GetLogger(typeof(ExtensionService));
+
         private List<ExtensionPoint> _extensionPoints = new List<ExtensionPoint>();
         private Dictionary<string, ExtensionPoint> _pathIndex = new Dictionary<string, ExtensionPoint>();
 
@@ -155,10 +157,13 @@ namespace NUnit.Engine.Services
         #region Helper Methods - Extension Points
 
         /// <summary>
-        /// Find the extension points in a loaded assembly
+        /// Find the extension points in a loaded assembly.
+        /// Public for testing.
         /// </summary>
-        private void FindExtensionPoints(Assembly assembly)
+        public void FindExtensionPoints(Assembly assembly)
         {
+            log.Info("Scanning {0} assembly for extension points", assembly.GetName().Name);
+
             foreach (ExtensionPointAttribute attr in assembly.GetCustomAttributes(typeof(ExtensionPointAttribute), false))
             {
                 if (_pathIndex.ContainsKey(attr.Path))
@@ -176,6 +181,8 @@ namespace NUnit.Engine.Services
 
                 _extensionPoints.Add(ep);
                 _pathIndex.Add(ep.Path, ep);
+
+                log.Info("  Found Path={0}, Type={1}", ep.Path, ep.Type.Name);
             }
 
             foreach (Type type in assembly.GetExportedTypes())
@@ -199,6 +206,8 @@ namespace NUnit.Engine.Services
 
                     _extensionPoints.Add(ep);
                     _pathIndex.Add(path, ep);
+
+                    log.Info("  Found Path={0}, Type={1}", ep.Path, ep.Type.Name);
                 }
             }
         }
@@ -240,13 +249,15 @@ namespace NUnit.Engine.Services
         /// </summary>
         private void FindExtensionsInDirectory(DirectoryInfo startDir)
         {
+            log.Info("Scanning directory {0} for extensions", startDir.FullName);
+
             var addinsFiles = startDir.GetFiles("*.addins");
             if (addinsFiles.Length > 0)
                 foreach (var file in addinsFiles)
                     ProcessAddinsFile(startDir, file.FullName);
             else
                 foreach (var file in startDir.GetFiles("*.dll"))
-                    FindExtensionsInAssembly(file.FullName);
+                    FindExtensionsInAssembly(file.FullName, false);
         }
 
         /// <summary>
@@ -257,6 +268,8 @@ namespace NUnit.Engine.Services
         /// </summary>
         private void ProcessAddinsFile(DirectoryInfo baseDir, string fileName)
         {
+            log.Info("Processing file " + fileName);
+
             using (var rdr = new StreamReader(fileName))
             {
                 while (!rdr.EndOfStream)
@@ -270,17 +283,15 @@ namespace NUnit.Engine.Services
                     if (line == string.Empty)
                         continue;
 
-                    if (line.Contains("*"))
-                        foreach (var file in baseDir.GetFiles(line))
-                            FindExtensionsInAssembly(file.FullName);
+                    if (Path.DirectorySeparatorChar == '\\')
+                        line = line.Replace(Path.DirectorySeparatorChar, '/');
+
+                    if (line.EndsWith("/"))
+                        foreach (var dir in DirectoryFinder.GetDirectories(baseDir, line))
+                            FindExtensionsInDirectory(dir);
                     else
-                    {
-                        var path = Path.Combine(baseDir.FullName, line);
-                        if (Directory.Exists(path))
-                            FindExtensionsInDirectory(new DirectoryInfo(path));
-                        else if (File.Exists(path))
-                            FindExtensionsInAssembly(path);
-                    }
+                        foreach (var file in DirectoryFinder.GetFiles(baseDir, line))
+                            FindExtensionsInAssembly(file.FullName, true);
                 }
             }
         }
@@ -288,15 +299,31 @@ namespace NUnit.Engine.Services
         /// <summary>
         /// Scan a single assembly for extensions marked by ExtensionAttribute.
         /// For each extension, create an ExtensionNode and link it to the
-        /// correct ExtensionPoint.
+        /// correct ExtensionPoint. Public for testing.
         /// </summary>
-        private void FindExtensionsInAssembly(string assemblyName)
+        public void FindExtensionsInAssembly(string assemblyName, bool specifiedInConfig)
         {
+            log.Info("Scanning {0} assembly for Extensions", assemblyName);
+
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(Path.GetDirectoryName(assemblyName));
             resolver.AddSearchDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             var parameters = new ReaderParameters() { AssemblyResolver = resolver };
-            var module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
+
+            ModuleDefinition module;
+
+            try
+            {
+                module = AssemblyDefinition.ReadAssembly(assemblyName, parameters).MainModule;
+            }
+            //Thrown if assembly is unmanaged
+            catch (BadImageFormatException e)
+            {
+                if (specifiedInConfig)
+                    throw new NUnitEngineException(String.Format("Specified extension {0} could not be read", assemblyName), e);
+                else return;
+            }
+
             foreach (var type in module.GetTypes())
             {
                 CustomAttribute extensionAttr = type.GetAttribute("NUnit.Engine.Extensibility.ExtensionAttribute");
@@ -307,13 +334,18 @@ namespace NUnit.Engine.Services
                     node.Path = extensionAttr.GetNamedArgument("Path") as string;
                     node.Description = extensionAttr.GetNamedArgument("Description") as string;
 
+                    log.Info("  Found ExtensionAttribute on Type " + type.Name);
+
                     foreach (var attr in type.GetAttributes("NUnit.Engine.Extensibility.ExtensionPropertyAttribute"))
                     {
                         string name = attr.ConstructorArguments[0].Value as string;
                         string value = attr.ConstructorArguments[1].Value as string;
 
                         if (name != null && value != null)
+                        {
                             node.AddProperty(name, value);
+                            log.Info("        ExtensionProperty {0} = {1}", name, value);
+                        }
                     }
 
                     _extensions.Add(node);

@@ -74,6 +74,20 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         /// <summary>
+        /// Checks whether the AndFilter is explicit matched by a test.
+        /// </summary>
+        /// <param name="test">The test to be matched</param>
+        /// <returns>True if all the component filters explicit match, otherwise false</returns>
+        public override bool IsExplicitMatch( ITest test )
+        {
+            foreach( TestFilter filter in Filters )
+                if ( !filter.IsExplicitMatch( test ) )
+                    return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>

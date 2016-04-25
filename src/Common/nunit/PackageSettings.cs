@@ -194,5 +194,33 @@ namespace NUnit.Common
         public const string SynchronousEvents = "SynchronousEvents";
 
         #endregion
+
+        #region Internal Settings - Used only within the engine
+
+        /// <summary>
+        /// If the package represents an assembly, then this is the CLR version
+        /// stored in the assembly image. If it represents a project or other
+        /// group of assemblies, it is the maximum version for all the assemblies.
+        /// </summary>
+        public const string ImageRuntimeVersion = "ImageRuntimeVersion";
+
+        /// <summary>
+        /// True if any assembly in the package requires running as a 32-bit
+        /// process when on a 64-bit system.
+        /// </summary>
+        public const string ImageRequiresX86 = "ImageRequiresX86";
+
+        /// <summary>
+        /// True if any assembly in the package requires a special assembly resolution hook
+        /// in the default AppDomain in order to find dependent assemblies.
+        /// </summary>
+        public const string ImageRequiresDefaultAppDomainAssemblyResolver = "ImageRequiresDefaultAppDomainAssemblyResolver";
+
+        /// <summary>
+        /// The FrameworkName specified on a TargetFrameworkAttribute for the assembly
+        /// </summary>
+        public const string ImageTargetFrameworkName = "ImageTargetFrameworkName";
+
+        #endregion
     }
 }

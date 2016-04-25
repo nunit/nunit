@@ -40,6 +40,10 @@ namespace NUnit.TestData.PropertyAttributeTests
         
         [Test, CustomProperty]	
         public void Test4() { }
+
+        [Test, Property("A", "A"), Property("B", "B"), Property("C", "C"), Property("D", "D"), Property("E", "E"), Property("F", "F")]
+        public void Test5WithManyProperties()
+        { }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]

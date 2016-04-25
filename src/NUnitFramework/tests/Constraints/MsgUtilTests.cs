@@ -32,6 +32,32 @@ namespace NUnit.Framework.Constraints
     public static class MsgUtilTests
     {
         #region FormatValue
+        class CustomFormattableType { }
+
+        [Test]
+        public static void FormatValue_ContextualCustomFormatterInvoked_FactoryArg()
+        {
+            TestContext.AddFormatter(next => val => (val is CustomFormattableType) ? "custom_formatted" : next(val));
+
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted"));
+        }
+
+        [Test]
+        public static void FormatValue_ContextualCustomFormatterNotInvokedForNull()
+        {
+            // If this factory is actually called with null, it will throw
+            TestContext.AddFormatter(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val));
+
+            Assert.That(MsgUtils.FormatValue(null), Is.EqualTo("null"));
+        }
+
+        [Test]
+        public static void FormatValue_ContextualCustomFormatterInvoked_FormatterArg()
+        {
+            TestContext.AddFormatter<CustomFormattableType>(val => "custom_formatted_using_type");
+
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted_using_type"));
+        }
 
         [Test]
         public static void FormatValue_IntegerIsWrittenAsIs()
@@ -100,11 +126,19 @@ namespace NUnit.Framework.Constraints
             Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123)), Is.EqualTo("2007-07-04 09:15:30.123"));
         }
 
-        #endregion
+#if !NETCF
+		[Test]
+        public static void FormatValue_DateTimeOffsetTest()
+        {
+            Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
+        }
+#endif
 
-        #region EscapeControlChars
+#endregion
 
-        [TestCase("\n", "\\n")]
+		#region EscapeControlChars
+
+		[TestCase ("\n", "\\n")]
         [TestCase("\n\n", "\\n\\n")]
         [TestCase("\n\n\n", "\\n\\n\\n")]
         [TestCase("\r", "\\r")]

@@ -81,5 +81,14 @@ namespace NUnit.Framework.Constraints
                 }
             }
         }
+
+        [Test]
+        public void IsSubsetHonorsUsingWhenCollectionsAreOfDifferentTypes()
+        {
+            ICollection set = new SimpleObjectCollection("1", "2", "3", "4", "5");
+            ICollection subset = new SimpleObjectCollection(2, 3);
+
+            Assert.That(subset, Is.SubsetOf(set).Using<int, string>((i, s) => i.ToString() == s));
+        }
     }
 }

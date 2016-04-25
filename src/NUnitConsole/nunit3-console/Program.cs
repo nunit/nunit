@@ -108,7 +108,7 @@ namespace NUnit.ConsoleRunner
                     return ConsoleRunner.OK;
                 }
 
-                using (ITestEngine engine = TestEngineActivator.CreateInstance())
+                using (ITestEngine engine = TestEngineActivator.CreateInstance(false))
                 {
                     if (Options.WorkDirectory != null)
                         engine.WorkDirectory = Options.WorkDirectory;
@@ -172,7 +172,7 @@ namespace NUnit.ConsoleRunner
             string versionText = executingAssembly.GetName().Version.ToString(3);
 
             string programName = "NUnit Console Runner";
-            string copyrightText = "Copyright (C) 2015 Charlie Poole.\r\nAll Rights Reserved.";
+            string copyrightText = "Copyright (C) 2016 Charlie Poole.\r\nAll Rights Reserved.";
             string configText = String.Empty;
 
             object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);

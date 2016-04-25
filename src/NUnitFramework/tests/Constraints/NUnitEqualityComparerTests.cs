@@ -150,6 +150,24 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void IEquatableSuccess_WhenExplicitInterfaceImplementation()
+        {
+            IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
+            IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(1);
+
+            Assert.IsTrue(comparer.AreEqual(x, y, ref tolerance));
+        }
+
+        [Test]
+        public void IEquatableFailure_WhenExplicitInterfaceImplementationWithDifferentValues()
+        {
+            IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
+            IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(2);
+
+            Assert.IsFalse(comparer.AreEqual(x, y, ref tolerance));
+        }
+
+        [Test]
         public void ReferenceEqualityHasPrecedenceOverIEquatable()
         {
             NeverEqualIEquatable z = new NeverEqualIEquatable();
@@ -164,6 +182,24 @@ namespace NUnit.Framework.Constraints
             NeverEqualIEquatableWithOverriddenAlwaysTrueEquals y = new NeverEqualIEquatableWithOverriddenAlwaysTrueEquals();
 
             Assert.IsFalse(comparer.AreEqual(x, y, ref tolerance));
+        }
+
+        [Test]
+        public void IEquatableHasPrecedenceOverEnumerableEquals()
+        {
+            var x = new EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
+            var z = new EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
+
+            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
+            Assert.That(comparer.AreEqual(y, x, ref tolerance), Is.True);
+            Assert.That(comparer.AreEqual(x, z, ref tolerance), Is.False);
+            Assert.That(comparer.AreEqual(z, x, ref tolerance), Is.False);
+
+            Assert.That(y, Is.EqualTo(x));
+            Assert.That(x, Is.EqualTo(y));
+            Assert.That(z, Is.Not.EqualTo(x));
+            Assert.That(x, Is.Not.EqualTo(z));
         }
 
         [Test]
@@ -366,7 +402,22 @@ namespace NUnit.Framework.Constraints
             return value.Equals(other.value);
         }
     }
-    
+
+    public class IEquatableWithExplicitImplementation : IEquatable<IEquatableWithExplicitImplementation>
+    {
+        private readonly int value;
+
+        public IEquatableWithExplicitImplementation(int value)
+        {
+            this.value = value;
+        }
+
+        bool IEquatable<IEquatableWithExplicitImplementation>.Equals(IEquatableWithExplicitImplementation other)
+        {
+            return value.Equals(other.value);
+        }
+    }
+
     public class EquatableObject : IEquatable<EquatableObject>
     {
         public int SomeProperty { get; set; }
@@ -405,6 +456,71 @@ namespace NUnit.Framework.Constraints
                 return false;
 
             return SomeProperty == other.SomeProperty;
+        }
+    }
+
+    public class EnumerableObject<T> : IEnumerable<T>
+    {
+        private readonly IEnumerable<T> enumerable;
+
+        public EnumerableObject(IEnumerable<T> enumerable, int someProperty)
+        {
+            this.enumerable = enumerable;
+            SomeProperty = someProperty;
+        }
+
+        public int SomeProperty { get; private set; }
+
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return enumerable.GetEnumerator();
+        }
+
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
+        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    public class EquatableWithEnumerableObject<T> : IEnumerable<T>, IEquatable<EnumerableObject<T>>
+    {
+        private readonly IEnumerable<T> enumerable;
+
+        public EquatableWithEnumerableObject(IEnumerable<T> enumerable, int otherProperty)
+        {
+            this.enumerable = enumerable;
+            OtherProperty = otherProperty;
+        }
+
+        public int OtherProperty { get; private set; }
+
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return enumerable.GetEnumerator();
+        }
+
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
+        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(EnumerableObject<T> other)
+        {
+            if (other == null)
+                return false;
+
+            return OtherProperty == other.SomeProperty;
         }
     }
 }

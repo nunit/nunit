@@ -1,4 +1,114 @@
-﻿NUnit 3.0.1 - December 1, 2015
+﻿NUnit 3.2.1 - April 19, 2016
+
+Framework
+
+ * The output and error files are now thread safe when running tests in parallel
+ * Added a .NET 3.5 build of the framework preventing conflicts with the compatiblity classes in the 2.0 framework
+ * Added a SingleThreadedAttribute to be added to a TestFixture to indicate all child tests should run on the same thread
+
+Engine
+
+ * Unless required, run all tests within a fixture on the same thread
+ * Added an EventListener extension point
+ * Reduced memory usage
+
+Console Runner
+
+ * No longer probes for newer versions of the engine, instead uses the engine that is included with the console
+
+Issues Resolved
+
+ *  332 Add CF to the Appveyor CI build
+ *  640 Keep CF Build (and other future builds) in Sync
+ *  773 Upgrade Travis CI from Legacy Infrastructure
+ * 1141 Explicit Tests get run when using --where with some filters
+ * 1161 NUnit3-Console should disallow the combination of --inprocess and --x86, giving an error message
+ * 1208 Apartment on assembly level broken
+ * 1231 Build may silently fail some tests
+ * 1247 Potential memory issue
+ * 1266 SetCultureAttribute does not work if set on assembly level
+ * 1302 Create EventListener ExtensionPoint for the Engine
+ * 1317 Getting CF framework unit tests running on CI build
+ * 1318 NUnit console runner fails with error code -100
+ * 1327 TestCaseSource in NUnit 3 converts an argument declared as String[] to String
+ * 1329 Unable to build without Compact Framework
+ * 1333 Single Thread per Worker
+ * 1338 BUILDING.txt is outdated
+ * 1349 Collision on System.Func from nunit.framework with System.Core in .Net 3.5 (CS0433)
+ * 1352 Tests losing data setup on thread
+ * 1359 Compilation error in NUnitPortableDriverTests.cs
+ * 1383 Skip Silverlight build if SDK not installed
+ * 1386 Bug when using Assert.Equals() with types that explicitly implement IEquatable<T>
+ * 1390 --testlist with file with blank first line causes IndexOutOfRangeException
+ * 1399 Fixed NullReference issue introduced by the fix for #681
+ * 1405 ITestRunner.StopRun throws exception of type 'System.MissingMethodException'
+ * 1406 TextCapture is not threadsafe but is used to intercept calls that are expected to be threadsafe
+ * 1410 Make OutFile and ErrFile streamwriters synchronized
+ * 1413 Switch console to use a local engine
+
+NUnit 3.2 - March 5, 2016
+
+Framework
+
+ * Added an Order attribute that defines the order in which tests are run
+ * Added Assert.ThrowsAsync for testing if async methods throw an exception
+ * You can now compare unlike collections using Is.EquivalentTo().Using(...)
+ * Added the ability to add custom message formatters to MsgUtils
+ * TestCaseSourceAttribute now optionally takes an array of parameters that can be passed to the source method
+ * Added Is.Zero and Is.Not.Zero to the fluent syntax as a shorter option for Is.EqualTo(0) and Is.Not.EqualTo(0)
+
+Engine
+
+ * Engine extensions can be installed via NuGet packages
+
+Issues Resolved
+
+ * 170 Test Order Attribute
+ * 300 Create an NUnit Visual Studio Template
+ * 464 Async delegate assertions
+ * 532 Batch runner for Silverlight tests
+ * 533 Separate NUnitLite runner and autorunner
+ * 681 NUnit agent cannot resolve test dependency assemblies when mixed mode initialization runs in the default AppDomain
+ * 793 Replace CoreEngine by use of Extensions
+ * 907 Console report tests are too fragile
+ * 922 Wrap Console in NUnitLite
+ * 930 Switch from MSBuild based build system to Cake
+ * 981 Define NUnit Versioning for post-3.0 Development
+ * 1004 Poor formatting of results for Assert.AreEqual(DateTimeOffset, DateTimeOffset)
+ * 1018 ArgumentException when 2.x version of NUnit Framework is in the bin directory
+ * 1022 Support Comparing Unlike Collections using Is.EquivalentTo().Using(...)
+ * 1044 Re-order Test Summary Errors/Failures
+ * 1066 ApartmentAttribute and TestCaseAttribute(s) do not work together
+ * 1103 Can't use TestCaseData from base class
+ * 1109 NullReferenceException when using inherited property for ValueSource
+ * 1113 Console runner and xml output consistency 
+ * 1117 Fix misbehaviour of Throws.Exception with non-void returning functions
+ * 1120 NUnitProject should parse .nunit project files containing Xml Declarations
+ * 1121 Usage of field set to null as value source leads to somewhat cryptic error
+ * 1122 Region may be disposed before test delegate is executed
+ * 1133 Provide a way to install extensions as nuget packages
+ * 1136 Don't allow V2 framework to update in V2 driver tests
+ * 1171 A bug when using Assert.That() with Is.Not.Empty
+ * 1185 Engine finds .NET 4.0 Client Profile twice
+ * 1187 ITestAssemblyRunner.StopRun as implemented by NUnitTestAssemblyRunner
+ * 1195 name attribute in test-suite and test-results element of output xml is different to nunit 2.6.4 using nunit2-format
+ * 1196 Custom value formatter for v3 via MsgUtils
+ * 1210 Available runtimes issues
+ * 1230 Add ability for testcasedatasource to have parameters passed to methods
+ * 1233 Add TestAssemblyRunner tests to both portable and silverlight builds
+ * 1234 Have default NUnitLite Runner Program.cs return exit code
+ * 1236 Make Appveyor NuGet feed more useable
+ * 1246 Introduce Is.Zero syntax to test for zero
+ * 1252 Exception thrown when any assembly is not found
+ * 1261 TypeHelper.GetDisplayName generates the wrong name for generic types with nested classes
+ * 1278 Fix optional parameters in TestCaseAttribute
+ * 1282 TestCase using Params Behaves Oddly
+ * 1283 Engine should expose available frameworks.
+ * 1286 value of the time attribute in nunit2 outputs depends on the machine culture
+ * 1297 NUnit.Engine nuget package improvements
+ * 1301 Assert.AreNotSame evaluates ToString unnecessarily
+
+NUnit 3.0.1 - December 1, 2015
 
 Console Runner
 

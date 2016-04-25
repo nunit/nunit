@@ -27,11 +27,14 @@ using System.Threading;
 using System.Globalization;
 using NUnit.Common;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal.Execution;
+using NUnit.TestData.TestContextData;
+using NUnit.TestUtilities;
+
 #if !NETCF
 using System.Security.Principal;
 #endif
-using NUnit.TestData.TestContextData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
@@ -179,6 +182,15 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
+#if !PORTABLE && !SILVERLIGHT
+        [Test]
+        public void TestHasWorkerIdWhenParallel()
+        {
+            var workerId = TestExecutionContext.CurrentContext.WorkerId;
+            var isRunningUnderTestWorker = TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher;
+            Assert.That(workerId != null || !isRunningUnderTestWorker);
+        }
+#endif
         [Test]
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()
@@ -195,7 +207,7 @@ namespace NUnit.Framework.Internal
         CultureInfo originalUICulture;
 
         [Test]
-        public void FixtureSetUpontextReflectsCurrentCulture()
+        public void FixtureSetUpContextReflectsCurrentCulture()
         {
             Assert.That(fixtureContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
         }
@@ -323,6 +335,52 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(setupContext.CurrentPrincipal, originalPrincipal, "Principal not in final context");
         }
 #endif
+
+        #endregion
+
+        #region ValueFormatter
+
+        [Test]
+        public void SetAndRestoreValueFormatter()
+        {
+            var context = new TestExecutionContext(setupContext);
+            var originalFormatter = context.CurrentValueFormatter;
+
+            try
+            {
+                ValueFormatter f = val => "dummy";
+                context.AddFormatter(next => f);
+                Assert.That(context.CurrentValueFormatter, Is.EqualTo(f));
+
+                context.EstablishExecutionEnvironment();
+                Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("dummy"));
+            }
+            finally
+            {
+                setupContext.EstablishExecutionEnvironment();
+            }
+
+            Assert.That(TestExecutionContext.CurrentContext.CurrentValueFormatter, Is.EqualTo(originalFormatter));
+            Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
+        }
+
+        #endregion
+
+        #region SingleThreaded
+
+        [Test]
+        public void SingleThreadedDefaultsToFalse()
+        {
+            Assert.False(new TestExecutionContext().IsSingleThreaded);
+        }
+
+        [Test]
+        public void SingleThreadedIsInherited()
+        {
+            var parent = new TestExecutionContext();
+            parent.IsSingleThreaded = true;
+            Assert.True(new TestExecutionContext(parent).IsSingleThreaded);
+        }
 
         #endregion
 

@@ -50,8 +50,8 @@ namespace NUnit.Framework.Internal
         public TestParameters(object[] args)
         {
             RunState = RunState.Runnable;
+            InitializeAguments(args);
             Properties = new PropertyBag();
-            OriginalArguments = Arguments = args;
         }
 
         /// <summary>
@@ -77,10 +77,21 @@ namespace NUnit.Framework.Internal
             Properties = new PropertyBag();
 
             TestName = data.TestName;
-            OriginalArguments = Arguments = data.Arguments;
+
+            InitializeAguments(data.Arguments);
 
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
+        }
+
+        private void InitializeAguments(object[] args)
+        {
+            OriginalArguments = args;
+
+            // We need to copy args, since we may change them
+            var numArgs = args.Length;
+            Arguments = new object[numArgs];
+            Array.Copy(args, Arguments, numArgs);
         }
 
         #endregion

@@ -53,6 +53,30 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\AttributeHelper.cs">
+      <Link>Compatibility\AttributeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
+      <Link>Compatibility\BindingFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\ICallbackEventHandler.cs">
+      <Link>Compatibility\ICallbackEventHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
+      <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\Path.cs">
+      <Link>Compatibility\Path.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\ReflectionExtensions.cs">
+      <Link>Compatibility\ReflectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\SerializableAttribute.cs">
+      <Link>Compatibility\SerializableAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Compatibility\Stopwatch.cs">
+      <Link>Compatibility\Stopwatch.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
@@ -86,6 +110,9 @@
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\SingleThreadedAttribute.cs" />
+    <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
+    <Compile Include="Attributes\OrderAttribute.cs" />
     <Compile Include="Attributes\RetryAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
@@ -95,14 +122,25 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
-    <Compile Include="Compatibility\AttributeHelper.cs" />
-    <Compile Include="Compatibility\BindingFlags.cs" />
-    <Compile Include="Compatibility\ICallbackEventHandler.cs" />
-    <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
-    <Compile Include="Compatibility\Path.cs" />
-    <Compile Include="Compatibility\ReflectionExtensions.cs" />
-    <Compile Include="Compatibility\SerializableAttribute.cs" />
-    <Compile Include="Compatibility\Stopwatch.cs" />
+    <Compile Include="Compatibility\System.Linq\Actions.cs" />
+    <Compile Include="Compatibility\System.Linq\Check.cs" />
+    <Compile Include="Compatibility\System.Linq\CollectionDebuggerView.cs" />
+    <Compile Include="Compatibility\System.Linq\Enumerable.cs" />
+    <Compile Include="Compatibility\System.Linq\ExtensionAttribute.cs" />
+    <Compile Include="Compatibility\System.Linq\Funcs.cs" />
+    <Compile Include="Compatibility\System.Linq\Grouping.cs" />
+    <Compile Include="Compatibility\System.Linq\HashPrimeNumbers.cs" />
+    <Compile Include="Compatibility\System.Linq\HashSet.cs" />
+    <Compile Include="Compatibility\System.Linq\IGrouping.cs" />
+    <Compile Include="Compatibility\System.Linq\ILookup_T.cs" />
+    <Compile Include="Compatibility\System.Linq\IOrderedEnumerable_T.cs" />
+    <Compile Include="Compatibility\System.Linq\Lookup.cs" />
+    <Compile Include="Compatibility\System.Linq\OrderedEnumerable.cs" />
+    <Compile Include="Compatibility\System.Linq\OrderedSequence.cs" />
+    <Compile Include="Compatibility\System.Linq\QuickSort.cs" />
+    <Compile Include="Compatibility\System.Linq\SortContext.cs" />
+    <Compile Include="Compatibility\System.Linq\SortDirection.cs" />
+    <Compile Include="Compatibility\System.Linq\SortSequenceContext.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />

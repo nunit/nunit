@@ -30,6 +30,8 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
     [TestFixture]
     public class TestCaseSourceAttributeFixture
     {
+        #region Test Calling Assert.Ignore
+
         [TestCaseSource("source")]
         public void MethodCallsIgnore(int x, int y, int z)
         {
@@ -41,15 +43,50 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             new TestCaseData( 2, 3, 4 ) };
 #pragma warning restore 414
 
+        #endregion
+
+        #region Test With Ignored TestCaseData
+
         [TestCaseSource("ignored_source")]
         public void MethodWithIgnoredTestCases(int num)
         {
         }
 
+        private static IEnumerable ignored_source
+        {
+            get
+            {
+                return new object[] {
+                    new TestCaseData(1),
+                    new TestCaseData(2).Ignore("Don't Run Me!")
+                };
+            }
+        }
+
+        #endregion
+
+        #region Test With Explicit TestCaseData
+
         [TestCaseSource("explicit_source")]
         public void MethodWithExplicitTestCases(int num)
         {
         }
+
+        private static IEnumerable explicit_source
+        {
+            get
+            {
+                return new object[] {
+                    new TestCaseData(1),
+                    new TestCaseData(2).Explicit(),
+                    new TestCaseData(3).Explicit("Connection failing")
+                };
+            }
+        }
+
+        #endregion
+
+        #region Tests Using Instance Members as Source
 
         [Test, TestCaseSource("InstanceProperty")]
         public void MethodWithInstancePropertyAsSource(string source)
@@ -81,27 +118,21 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         object[] InstanceField = { new object[] { "InstanceField" } };
 
-        private static IEnumerable ignored_source
+        #endregion
+
+        [Test, TestCaseSource(typeof(DivideDataProvider), "MyField", new object[] { 100, 4, 25 })]
+        public void SourceInAnotherClassPassingParamsToField(int n, int d, int q)
         {
-            get
-            {
-                return new object[] {
-                    new TestCaseData(1),
-                    new TestCaseData(2).Ignore("Don't Run Me!")
-                };
-            }
         }
 
-        private static IEnumerable explicit_source
+        [Test, TestCaseSource(typeof(DivideDataProvider), "MyProperty", new object[] { 100, 4, 25 })]
+        public void SourceInAnotherClassPassingParamsToProperty(int n, int d, int q)
         {
-            get
-            {
-                return new object[] {
-                    new TestCaseData(1),
-                    new TestCaseData(2).Explicit(),
-                    new TestCaseData(3).Explicit("Connection failing")
-                };
-            }
+        }
+
+        [Test, TestCaseSource(typeof(DivideDataProvider), "HereIsTheDataWithParameters", new object[] { 100, 4 })]
+        public void SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam(int n, int d, int q)
+        {
         }
 
         [TestCaseSource("exception_source")]
@@ -109,7 +140,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        private static IEnumerable exception_source
+        static IEnumerable exception_source
         {
             get
             {
@@ -117,6 +148,27 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 yield return new TestCaseData("b", "b");
 
                 throw new System.Exception("my message");
+            }
+        }
+
+        class DivideDataProvider
+        {
+#pragma warning disable 0169, 0649    // x is never assigned
+            static object[] myObject;
+            public static string MyField;
+#pragma warning restore 0169, 0649
+            public static int MyProperty { get; set; }
+            public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
+            {
+                yield return new object[] { inject1, inject2, inject3 };
+            }
+            public static IEnumerable HereIsTheData
+            {
+                get
+                {
+                    yield return new object[] { 100, 20, 5 };
+                    yield return new object[] { 100, 4, 25 };
+                }
             }
         }
     }

@@ -24,26 +24,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using NUnit.Common;
+using NUnit.Engine;
 using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
+using NUnit.Tests.Assemblies;
+using NUnit.Engine.Internal;
 
 namespace NUnit.ConsoleRunner.Tests
 {
-    using Utilities;
 
     public class ResultReporterTests
     {
-        private const string MOCK_TEST_RESULT = "NUnit.ConsoleRunner.Tests.MockTestResult.xml";
-        private static readonly string[] REPORT_SEQUENCE = new string[] {
-            "Tests Not Run",
-            "Errors and Failures",
-            //"Run Settings",
-            "Test Run Summary"
-        };
-
         private XmlNode _result;
         private ResultReporter _reporter;
         private StringBuilder _report;
@@ -51,42 +46,41 @@ namespace NUnit.ConsoleRunner.Tests
         [OneTimeSetUp]
         public void CreateResult()
         {
-            string xmlText;
+            var mockAssembly = typeof (MockAssembly).Assembly;
+            var emptySettings = new Dictionary<string, object>();
 
-            using (StreamReader rdr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(MOCK_TEST_RESULT)))
-            {
-                xmlText = rdr.ReadToEnd();
-            }
+            var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            runner.Load(mockAssembly, emptySettings);
+            var xmlText = runner.Run(TestListener.NULL, Framework.Internal.TestFilter.Empty).ToXml(true).OuterXml;
+            var engineResult = AddMetadata(new TestEngineResult(xmlText));
+            _result = engineResult.Xml;
 
-            Assert.That(xmlText.Length > 0, "Unable to read MockTestResult.xml resource");
-
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xmlText);
-            _result = doc.SelectSingleNode("test-run");
-            Assert.NotNull(_result, "Unable to create test result XmlNode");
+            Assert.NotNull(_result, "Unable to create report result.");
         }
 
         [SetUp]
         public void CreateReporter()
         {
             _report = new StringBuilder();
-
             var writer = new ExtendedTextWrapper(new StringWriter(_report));
-            var options = new ConsoleOptions();
-            options.Parse(new string[] { "MockTestResult.xml" });
-
-            _reporter = new ResultReporter(_result, writer, options);
+            _reporter = new ResultReporter(_result, writer, new ConsoleOptions());
         }
 
         [Test]
         public void ReportSequenceTest()
         {
             var report = GetReport(_reporter.ReportResults);
-            //Console.WriteLine(report);
+
+            var reportSequence = new[]
+            {
+                "Tests Not Run",
+                "Errors and Failures",
+                "Test Run Summary"
+            };
 
             int last = -1;
 
-            foreach (string title in REPORT_SEQUENCE)
+            foreach (string title in reportSequence)
             {
                 var index = report.IndexOf(title);
                 Assert.That(index > 0, "Report not found: " + title);
@@ -98,10 +92,10 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void SummaryReportTest()
         {
-            var expected = new string[] {
+            var expected = new [] {
                 "Test Run Summary",
                 "  Overall result: Failed",
-                "  Test Count: 45, Passed: 30, Failed: 7, Inconclusive: 1, Skipped: 7",
+                "  Test Count: 42, Passed: 27, Failed: 7, Inconclusive: 1, Skipped: 7",
                 "    Failed Tests - Failures: 3, Errors: 1, Invalid: 3",
                 "    Skipped Tests - Ignored: 4, Explicit: 3, Other: 0",
                 "  Start time: 2015-10-19 02:12:28Z",
@@ -110,59 +104,51 @@ namespace NUnit.ConsoleRunner.Tests
                 ""
             };
 
-            var report = GetReportLines(_reporter.WriteSummaryReport);
-            Assert.That(report, Is.EqualTo(expected));
+            var actualSummary = GetReportLines(_reporter.WriteSummaryReport);
+            Assert.That(expected, Is.EqualTo(actualSummary));
         }
 
         [Test]
         public void ErrorsAndFailuresReportTest()
         {
-            var expected = new string[] {
+            var nl = Environment.NewLine;
+
+            var expected = new [] {
                 "Errors and Failures",
-                "",
-                "1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest",
+                "1) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest" + nl +
                 "Intentional failure",
-                "at NUnit.Tests.Assemblies.MockTestFixture.FailingTest() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 148",
-                "",
-                "2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.MockTest5",
+                "2) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest" + nl +
                 "Method is not public",
-                "",
-                "3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest",
+                "3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest" + nl +
                 "No arguments were provided",
-                "",
-                "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException",
+                "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException" + nl +
                 "System.Exception : Intentional Exception",
-                "   at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 185",
-                "   at NUnit.Tests.Assemblies.MockTestFixture.TestWithException() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 180",
-                "",
-                "5) Invalid : NUnit.Tests.BadFixture",
+                "5) Invalid : NUnit.Tests.BadFixture" + nl +
                 "No suitable constructor was found",
-                "",
-                "6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage",
+                "6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage" + nl +
                 "The CDATA was: <![CDATA[ My <xml> ]]>",
-                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 344",
-                "",
-                "7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage",
-                "Deliberate failure to illustrate ]]> in message ",
-                "at NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage() in d:\\Dev\\NUnit\\nunit-3.0\\src\\NUnitFramework\\mock-assembly\\MockAssembly.cs:line 338",
-                ""
+                "7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage" + nl +
+                "Deliberate failure to illustrate ]]> in message",
             };
 
-            var report = GetReportLines(_reporter.WriteErrorsAndFailuresReport);
-            Assert.That(report, Is.EqualTo(expected));
+            var actualErrorFailuresReport = GetReport(_reporter.WriteErrorsAndFailuresReport);
+
+            foreach (var ex in expected)
+            {
+                Assert.That(actualErrorFailuresReport, Does.Contain(ex));
+            }
         }
 
         [Test]
         public void TestsNotRunTest()
         {
-            var expected = new string[] {
+            var expected = new [] {
                 "Tests Not Run",
                 "",
-                "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitlyRunTest",
+                "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest",
                 "",
-                "",
-                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.MockTest4",
-                "ignoring this test method for now",
+                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest",
+                "Ignore Message",
                 "",
                 "3) Explicit : NUnit.Tests.ExplicitFixture.Test1",
                 "OneTimeSetUp: ",
@@ -182,10 +168,16 @@ namespace NUnit.ConsoleRunner.Tests
             };
 
             var report = GetReportLines(_reporter.WriteNotRunReport);
-            Assert.That(report, Is.EqualTo(expected));
+            Assert.That(expected, Is.EqualTo(report));
         }
 
         #region Helper Methods
+
+        private TestEngineResult AddMetadata(TestEngineResult input)
+        {
+            input.Add("<settings><setting name=\"Setting1Name\" value=\"Setting1Value\"></setting><setting name=\"Setting2Name\" value=\"Setting2Value\"></setting></settings>");
+            return input.Aggregate("test-run start-time=\"2015-10-19 02:12:28Z\" end-time=\"2015-10-19 02:12:29Z\" duration=\"0.348616\"", string.Empty, string.Empty);
+        }
 
         private string GetReport(TestDelegate del)
         {

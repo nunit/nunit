@@ -311,6 +311,29 @@ namespace NUnit.Framework
                     }
                 }
 
+#if !NETCF
+                //Special handling for optional parameters
+                if (parms.Arguments.Length < argsNeeded)
+                {
+                    object[] newArgList = new object[parameters.Length];
+                    Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
+
+                    for (var i = 0; i < parameters.Length; i++)
+                    {
+                        if (parameters[i].IsOptional)
+                            newArgList[i] = Type.Missing;
+                        else
+                        {
+                            if (i < parms.Arguments.Length)
+                                newArgList[i] = parms.Arguments[i];
+                            else
+                                throw new TargetParameterCountException("Incorrect number of parameters specified for TestCase");
+                        }
+                    }
+                    parms.Arguments = newArgList;
+                }
+#endif
+
                 //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 //    parms.Arguments = new object[]{parms.Arguments};
 

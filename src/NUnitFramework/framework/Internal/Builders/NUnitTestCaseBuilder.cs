@@ -138,9 +138,10 @@ namespace NUnit.Framework.Internal.Builders
             {
                 if (parms != null && parms.Arguments != null)
                 {
-                    testMethod.Method = testMethod.Method.MakeGenericMethodEx(parms.Arguments);
-                    if (testMethod.Method == null)
+                    var mi = testMethod.Method.MakeGenericMethodEx(parms.Arguments);
+                    if (mi == null)
                         return MarkAsNotRunnable(testMethod, "Cannot determine generic types by probing");
+                    testMethod.Method = mi;
                     parameters = testMethod.Method.GetParameters();
                 }
                 else

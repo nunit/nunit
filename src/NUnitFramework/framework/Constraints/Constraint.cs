@@ -109,7 +109,7 @@ namespace NUnit.Framework.Constraints
 #if NET_4_0 || NET_4_5 || PORTABLE
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (var region = AsyncInvocationRegion.Create(del))
-                    return ApplyTo(GetTestObject(() => region.WaitForPendingOperationsToComplete(del())));
+                    return ApplyTo(region.WaitForPendingOperationsToComplete(del()));
 #endif
             return ApplyTo(GetTestObject(del));
         }

@@ -70,6 +70,8 @@
     <Compile Include="Extensibility\IProject.cs" />
     <Compile Include="Extensibility\IProjectLoader.cs" />
     <Compile Include="Extensibility\IResultWriter.cs" />
+    <Compile Include="IRuntimeFramework.cs" />
+    <Compile Include="IAvailableRuntimes.cs" />
     <Compile Include="IResultService.cs" />
     <Compile Include="IRuntimeFrameworkService.cs" />
     <Compile Include="IService.cs" />

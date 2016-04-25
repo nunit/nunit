@@ -120,7 +120,7 @@ namespace NUnitLite
             ExtendedTextWriter outWriter = null;
             if (options.OutFile != null)
             {
-                outWriter = new ExtendedTextWrapper(new StreamWriter(Path.Combine(options.WorkDirectory, options.OutFile)));
+                outWriter = new ExtendedTextWrapper(TextWriter.Synchronized(new StreamWriter(Path.Combine(options.WorkDirectory, options.OutFile))));
                 Console.SetOut(outWriter);
             }
             else
@@ -131,7 +131,7 @@ namespace NUnitLite
             TextWriter errWriter = null;
             if (options.ErrFile != null)
             {
-                errWriter = new StreamWriter(Path.Combine(options.WorkDirectory, options.ErrFile));
+                errWriter = TextWriter.Synchronized(new StreamWriter(Path.Combine(options.WorkDirectory, options.ErrFile)));
                 Console.SetError(errWriter);
             }
 

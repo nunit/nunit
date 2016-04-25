@@ -25,6 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services.ProjectLoaders
@@ -120,7 +122,12 @@ namespace NUnit.Engine.Services.ProjectLoaders
                         string vsProjectGuid = parts[3].Trim(TRIM_CHARS);
 
                         if (VSProject.IsProjectFile(vsProjectPath))
-                            _projectLookup[vsProjectGuid] = new VSProject(Path.Combine(solutionDirectory, vsProjectPath));
+                        {
+                            var vsProject = new VSProject(Path.Combine(solutionDirectory, vsProjectPath));
+
+                            if (CheckProjectReferencesNunit(vsProject))
+                                _projectLookup[vsProjectGuid] = vsProject;
+                        }
                     }
                     else if (line.IndexOf(BUILD_MARKER) >= 0)
                     {
@@ -169,6 +176,35 @@ namespace NUnit.Engine.Services.ProjectLoaders
                     line = reader.ReadLine();
                 }
             }
+        }
+
+        private bool CheckProjectReferencesNunit(VSProject vsProject)
+        {
+            if (vsProject.MsBuildDocument == null)
+                return true;
+
+            var doc = vsProject.MsBuildDocument;
+            var namespaceManager = new XmlNamespaceManager(doc.NameTable);
+            namespaceManager.AddNamespace("msbuild", "http://schemas.microsoft.com/developer/msbuild/2003");
+
+            var hasNunitReference =
+                doc.SelectNodes("/msbuild:Project/msbuild:ItemGroup/msbuild:Reference[@Include]", namespaceManager);
+
+            if (hasNunitReference == null)
+                return false;
+
+            foreach (XmlNode reference in hasNunitReference)
+            {
+                if (reference.Attributes != null)
+                {
+                    var value = reference.Attributes["Include"].Value.ToUpper();
+
+                    if (value.StartsWith("NUNIT.FRAMEWORK"))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion

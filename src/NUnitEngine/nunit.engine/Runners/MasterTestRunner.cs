@@ -25,20 +25,35 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Xml;
 using NUnit.Common;
 using NUnit.Engine.Internal;
+using NUnit.Engine.Services;
 
 namespace NUnit.Engine.Runners
 {
     public class MasterTestRunner : AbstractTestRunner, ITestRunner
     {
         private ITestEngineRunner _realRunner;
+        private IRuntimeFrameworkService _runtimeService;
+        private ExtensionService _extensionService;
 
-        public MasterTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
+        private TestEventDispatcher _eventDispatcher;
+
+        public MasterTestRunner(IServiceLocator services, TestPackage package)
+            : base(services, package)
+        {
+            _runtimeService = Services.GetService<IRuntimeFrameworkService>();
+            _extensionService = Services.GetService<ExtensionService>();
+        }
+
+        #region Properties
 
         public bool IsTestRunning { get; private set; }
+
+        #endregion
 
         #region AbstractTestRunner Overrides
 
@@ -63,9 +78,37 @@ namespace NUnit.Engine.Runners
             // in case the client runner missed them.
             ValidatePackageSettings();
 
+            // Some files in the top level package may be projects.
+            // Expand them so that they contain subprojects for
+            // each contained assembly.
+            ExpandProjects();
+
+            // Use SelectRuntimeFramework for its side effects.
+            // Info will be left behind in the package about
+            // each contained assembly, which will subsequently
+            // be used to determine how to run the assembly.
+            _runtimeService.SelectRuntimeFramework(TestPackage);
+
+            if (TestPackage.GetSetting(PackageSettings.ProcessModel, "") == "InProcess" &&
+                TestPackage.GetSetting(PackageSettings.RunAsX86, false))
+            {
+                throw new NUnitEngineException("Cannot run tests in process - a 32 bit process is required.");
+            }
+
             _realRunner = TestRunnerFactory.MakeTestRunner(TestPackage);
 
             return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
+        }
+
+        private void ExpandProjects()
+        {
+            foreach (var package in TestPackage.SubPackages)
+            {
+                string packageName = package.FullName;
+
+                if (File.Exists(packageName) && ProjectService.CanLoadFrom(packageName))
+                        ProjectService.ExpandProjectPackage(package);
+            }
         }
 
         /// <summary>
@@ -97,15 +140,20 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
+            var eventDispatcher = new TestEventDispatcher();
+            if (listener != null)
+                eventDispatcher.Listeners.Add(listener);
+            foreach (var extension in _extensionService.GetExtensions<ITestEventListener>())
+                eventDispatcher.Listeners.Add(extension);
+
             IsTestRunning = true;
 
-            if (listener != null)
-                listener.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
+            eventDispatcher.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
 
             DateTime startTime = DateTime.UtcNow;
             long startTicks = Stopwatch.GetTimestamp();
 
-            TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
+            TestEngineResult result = _realRunner.Run(eventDispatcher, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             // These are inserted in reverse order, since each is added as the first child.
             InsertFilterElement(result.Xml, filter);
@@ -121,8 +169,7 @@ namespace NUnit.Engine.Runners
 
             IsTestRunning = false;
 
-            if (listener != null)
-                listener.OnTestEvent(result.Xml.OuterXml);
+            eventDispatcher.OnTestEvent(result.Xml.OuterXml);
 
             return result;
         }
@@ -227,10 +274,12 @@ namespace NUnit.Engine.Runners
             var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
             if (frameworkSetting.Length > 0)
             {
+                // Check requested framework is actually available
                 var runtimeService = Services.GetService<IRuntimeFrameworkService>();
                 if (!runtimeService.IsAvailable(frameworkSetting))
                     throw new NUnitEngineException(string.Format("The requested framework {0} is unknown or not available.", frameworkSetting));
 
+                // If running in process, check requested framework is compatible
                 var processModel = TestPackage.GetSetting(PackageSettings.ProcessModel, "Default");
                 if (processModel.ToLower() == "single")
                 {

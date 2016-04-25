@@ -182,9 +182,6 @@ namespace NUnit.Framework.Constraints
             if (x is string && y is string)
                 return StringsEqual((string)x, (string)y);
 
-            if (x is IEnumerable && y is IEnumerable)
-                return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);
-
             if (x is Stream && y is Stream)
                 return StreamsEqual((Stream)x, (Stream)y);
 
@@ -237,64 +234,48 @@ namespace NUnit.Framework.Constraints
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
             }
 
-            if (FirstImplementsIEquatableOfSecond(xType, yType))
-                return InvokeFirstIEquatableEqualsSecond(x, y);
-            else if (xType != yType && FirstImplementsIEquatableOfSecond(yType, xType))
-                return InvokeFirstIEquatableEqualsSecond(y, x);
-            
+            MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
+            if (equals != null)
+                return InvokeFirstIEquatableEqualsSecond(x, y, equals);
+            if (xType != yType && (equals = FirstImplementsIEquatableOfSecond(yType, xType)) != null)
+                return InvokeFirstIEquatableEqualsSecond(y, x, equals);
+
+            if (x is IEnumerable && y is IEnumerable)
+                return EnumerablesEqual((IEnumerable) x, (IEnumerable) y, ref tolerance);
+
             return x.Equals(y);
         }
 
-        private static bool FirstImplementsIEquatableOfSecond(Type first, Type second)
+        private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
             foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
-                if (xEquatableArgument.IsAssignableFrom(second))
-                    return true;
+                if (xEquatableArgument.Key.IsAssignableFrom(second))
+                    return xEquatableArgument.Value;
 
-            return false;
+            return null;
         }
 
-        private static IList<Type> GetEquatableGenericArguments(Type type)
+        private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
         {
             // NOTE: Original implementation used Array.ConvertAll and
             // Array.FindAll, which don't exist in the compact framework.
-            var genericArgs = new List<Type>();
+            var genericArgs = new List<KeyValuePair<Type, MethodInfo>>();
 
             foreach (Type @interface in type.GetInterfaces())
             {
                 if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
                 {
-                    genericArgs.Add(@interface.GetGenericArguments()[0]);
+                    genericArgs.Add(new KeyValuePair<Type, MethodInfo>(
+                        @interface.GetGenericArguments()[0], @interface.GetMethod("Equals")));
                 }
             }
 
             return genericArgs;
         }
 
-        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second)
+        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
         {
-            MethodInfo equals = GetCorrectGenericEqualsMethod(first.GetType(), second.GetType());
-
             return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
-        }
-
-        private static MethodInfo GetCorrectGenericEqualsMethod(Type first, Type second)
-        {
-            MethodInfo[] methods = first.GetMethods();
-            foreach(var method in methods)
-            {
-                if(method.Name == "Equals")
-                {
-                    ParameterInfo[] prms = method.GetParameters();
-                    if (prms.Length == 1 &&
-                        prms[0].ParameterType != typeof(Object) &&
-                        prms[0].ParameterType.IsAssignableFrom(second))
-                    {
-                        return method;
-                    }
-                }
-            }
-            return null;
         }
         
         #endregion
