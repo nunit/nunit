@@ -95,7 +95,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override bool HasChildren
         {
-            get { return _children.Count > 0; }
+            get { return !_children.IsEmpty; }
         }
 
         /// <summary>
