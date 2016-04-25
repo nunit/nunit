@@ -474,9 +474,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="currentResultState">The current ResultState</param>
         /// <param name="resultState">The ResultState to use in the result</param>
-        protected void SetResultIf(ResultState currentResultState, ResultState resultState)
+        protected bool SetResultIf(ResultState currentResultState, ResultState resultState)
         {
-            SetResultIf(currentResultState, resultState, null, null);
+            return SetResultIf(currentResultState, resultState, null, null);
         }
 
         /// <summary>
@@ -485,9 +485,9 @@ namespace NUnit.Framework.Internal
         /// <param name="currentResultState">The current ResultState</param>
         /// <param name="resultState">The ResultState to use in the result</param>
         /// <param name="message">A message associated with the result state</param>
-        protected void SetResultIf(ResultState currentResultState, ResultState resultState, string message)
+        protected bool SetResultIf(ResultState currentResultState, ResultState resultState, string message)
         {
-            SetResultIf(currentResultState, resultState, message, null);
+            return SetResultIf(currentResultState, resultState, message, null);
         }
 
         /// <summary>
@@ -497,13 +497,15 @@ namespace NUnit.Framework.Internal
         /// <param name="resultState">The ResultState to use in the result</param>
         /// <param name="message">A message associated with the result state</param>
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
-        protected void SetResultIf(ResultState currentResultState, ResultState resultState, string message, string stackTrace)
+        protected bool SetResultIf(ResultState currentResultState, ResultState resultState, string message, string stackTrace)
         {
             if (Interlocked.CompareExchange(ref _resultState, resultState, currentResultState) != currentResultState)
-                return;
+                return false;
 
             Message = message;
             StackTrace = stackTrace;
+
+            return true;
         }
         #endregion
     }

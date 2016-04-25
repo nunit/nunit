@@ -121,16 +121,23 @@ namespace NUnit.Framework.Internal
 
             //AssertCount += result.AssertCount;
 
-            var resultState = ResultState;
+            bool stateSet;
+            do
+            {
+                stateSet = true;
 
-            // If this result is marked cancelled, don't change it
-            if (resultState != ResultState.Cancelled)
+                var resultState = ResultState;
+
+                // If this result is marked cancelled, don't change it
+                if (resultState == ResultState.Cancelled)
+                    break;
+
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
 
                         if (resultState.Status == TestStatus.Inconclusive)
-                            SetResultIf(resultState, ResultState.Success);
+                            stateSet = SetResultIf(resultState, ResultState.Success);
 
                         break;
 
@@ -138,7 +145,7 @@ namespace NUnit.Framework.Internal
 
 
                         if (resultState.Status != TestStatus.Failed)
-                            SetResultIf(resultState, ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
+                            stateSet = SetResultIf(resultState, ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
                         break;
 
@@ -146,13 +153,11 @@ namespace NUnit.Framework.Internal
 
                         if (result.ResultState.Label == "Ignored")
                             if (resultState.Status == TestStatus.Inconclusive || resultState.Status == TestStatus.Passed)
-                                SetResultIf(resultState, ResultState.Ignored, CHILD_IGNORE_MESSAGE);
+                                stateSet = SetResultIf(resultState, ResultState.Ignored, CHILD_IGNORE_MESSAGE);
 
-                        break;
-
-                    default:
                         break;
                 }
+            } while (!stateSet);
 
             Interlocked.Add (ref InternalAssertCount, result.AssertCount);
             Interlocked.Add (ref _passCount, result.PassCount);
