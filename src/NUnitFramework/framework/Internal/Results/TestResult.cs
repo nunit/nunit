@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Aggregate assertion count
         /// </summary>
-        private int _assertCount;
+        protected int InternalAssertCount;
 
         private ResultState _resultState;
         private string _message;
@@ -224,6 +224,7 @@ namespace NUnit.Framework.Internal
 #endif
                 }
             }
+
             private set
             {
                 _stackTrace = value;
@@ -243,7 +244,7 @@ namespace NUnit.Framework.Internal
 #endif
                 try
                 {
-                    return _assertCount;
+                    return InternalAssertCount;
                 }
                 finally
                 {
@@ -255,19 +256,7 @@ namespace NUnit.Framework.Internal
 
             set
             {
-#if PARALLEL
-                RwLock.EnterWriteLock();
-#endif
-                try
-                {
-                    _assertCount = value;
-                }
-                finally
-                {
-#if PARALLEL
-                    RwLock.ExitWriteLock ();
-#endif
-                }
+                InternalAssertCount = value;
             }
         }
 
@@ -394,27 +383,6 @@ namespace NUnit.Framework.Internal
 #region Other Public Methods
 
         /// <summary>
-        /// Adds additional assertions to current AssertCount
-        /// </summary>
-        /// <param name="value"></param>
-        public void UpdateAssertCount (int value)
-            {
-#if PARALLEL
-            RwLock.EnterWriteLock();
-#endif
-            try
-                {
-                _assertCount += value;
-                }
-            finally
-            {
-#if PARALLEL
-                RwLock.ExitWriteLock();
-#endif
-            }
-        }
-
-        /// <summary>
         /// Set the result of the test
         /// </summary>
         /// <param name="resultState">The ResultState to use in the result</param>
@@ -453,7 +421,7 @@ namespace NUnit.Framework.Internal
             finally
             {
 #if PARALLEL
-                RwLock.EnterWriteLock();
+                RwLock.ExitWriteLock();
 #endif
             }
 

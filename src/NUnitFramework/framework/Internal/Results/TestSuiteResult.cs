@@ -240,7 +240,7 @@ namespace NUnit.Framework.Internal
                             break;
                     }
 
-                AssertCount += result.AssertCount;
+                InternalAssertCount += result.AssertCount;
                 _passCount += result.PassCount;
                 _failCount += result.FailCount;
                 _skipCount += result.SkipCount;

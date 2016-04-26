@@ -444,7 +444,7 @@ namespace NUnit.Framework.Internal.Execution
             // counts the asserts taking place in that context.
             // Each result accumulates the count from child
             // results along with it's own asserts.
-            Result.UpdateAssertCount(Context.AssertCount);
+            Result.AssertCount += Context.AssertCount;
 
             Context.Listener.TestFinished(Result);
 
