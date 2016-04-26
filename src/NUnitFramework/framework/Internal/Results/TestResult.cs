@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestResult : ITestResult
     {
-#region Fields
+        #region Fields
 
         /// <summary>
         /// Error message for when child tests have errors
@@ -104,9 +104,9 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-#endregion
+        #endregion
 
-#region ITestResult Members
+        #region ITestResult Members
 
         /// <summary>
         /// Gets the test with which this result is associated.
@@ -125,11 +125,11 @@ namespace NUnit.Framework.Internal
                 RwLock.EnterReadLock();
 #endif
                 try
-                    {
+                {
                     return _resultState;
-                    }
+                }
                 finally
-                    {
+                {
 #if PARALLEL
                     RwLock.ExitReadLock();
 #endif
@@ -307,9 +307,9 @@ namespace NUnit.Framework.Internal
             get { return _output.ToString(); }
         }
 
-#endregion
+        #endregion
 
-#region IXmlNodeBuilder Members
+        #region IXmlNodeBuilder Members
 
         /// <summary>
         /// Returns the Xml representation of the result.
@@ -378,9 +378,9 @@ namespace NUnit.Framework.Internal
             return thisNode;
         }
 
-#endregion
+        #endregion
 
-#region Other Public Methods
+        #region Other Public Methods
 
         /// <summary>
         /// Set the result of the test
@@ -536,9 +536,9 @@ namespace NUnit.Framework.Internal
             SetResult(resultState, message, stackTrace);
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         /// <summary>
         /// Adds a reason element to a node and returns it.
@@ -574,6 +574,6 @@ namespace NUnit.Framework.Internal
             return targetNode.AddElementWithCDATA("output", Output);
         }
 
-#endregion
+        #endregion
     }
 }
