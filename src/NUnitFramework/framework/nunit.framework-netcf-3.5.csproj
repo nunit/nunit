@@ -200,7 +200,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
-    <Compile Include="Compatibility\InterlockedExtensions.cs" />
+    <Compile Include="Compatibility\ReaderWriterLockSlim.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\ConcurrentQueue.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\IProducerConsumerCollection.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />

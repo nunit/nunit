@@ -26,8 +26,8 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using NUnit.Framework.Interfaces;
 using System.Threading;
-#if NETCF
-using Interlocked = System.Threading.InterlockedEx;
+#if NETCF || NET_2_0
+using NUnit.Framework.Compatibility;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -68,7 +68,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int FailCount
         {
-            get { return _failCount; }
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                    {
+                    return _failCount;
+                    }
+                finally
+                    {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
         }
 
         /// <summary>
@@ -77,7 +92,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int PassCount
         {
-            get { return _passCount; }
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                    {
+                    return _passCount;
+                    }
+                finally
+                    {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
         }
 
         /// <summary>
@@ -86,7 +116,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int SkipCount
         {
-            get { return _skipCount; }
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                    {
+                    return _skipCount;
+                    }
+                finally
+                    {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+           }
         }
 
         /// <summary>
@@ -95,7 +140,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int InconclusiveCount
         {
-            get { return _inconclusiveCount; }
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _inconclusiveCount;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
         }
 
         /// <summary>
@@ -121,9 +181,9 @@ namespace NUnit.Framework.Internal
             get { return _children; }
         }
 
-#endregion
+        #endregion
 
-#region AddResult Method
+        #region AddResult Method
 
         /// <summary>
         /// Adds a child result to this result, setting this result's
@@ -138,60 +198,62 @@ namespace NUnit.Framework.Internal
                 childrenAsConcurrentQueue.Enqueue(result);
             else
 #endif
-                {
+            {
                 var childrenAsIList = Children as IList<ITestResult>;
                 if (childrenAsIList != null)
                     childrenAsIList.Add(result);
                 else
                     throw new NotSupportedException("cannot add results to Children");
 
-                }
+            }
 
-            bool stateSet;
-            do
+#if PARALLEL
+            RwLock.EnterWriteLock();
+#endif
+            try
             {
-                stateSet = true;
-
-                var resultState = ResultState;
-
                 // If this result is marked cancelled, don't change it
-                if (resultState == ResultState.Cancelled)
-                    break;
+                if (ResultState != ResultState.Cancelled)
+                    switch (result.ResultState.Status)
+                    {
+                        case TestStatus.Passed:
 
-                switch (result.ResultState.Status)
-                {
-                    case TestStatus.Passed:
+                            if (ResultState.Status == TestStatus.Inconclusive)
+                                SetResult(ResultState.Success);
 
-                        if (resultState.Status == TestStatus.Inconclusive)
-                            stateSet = SetResultIf(resultState, ResultState.Success);
+                            break;
 
-                        break;
-
-                    case TestStatus.Failed:
+                        case TestStatus.Failed:
 
 
-                        if (resultState.Status != TestStatus.Failed)
-                            stateSet = SetResultIf(resultState, ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
+                            if (ResultState.Status != TestStatus.Failed)
+                                SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
-                        break;
+                            break;
 
-                    case TestStatus.Skipped:
+                        case TestStatus.Skipped:
 
-                        if (result.ResultState.Label == "Ignored")
-                            if (resultState.Status == TestStatus.Inconclusive || resultState.Status == TestStatus.Passed)
-                                stateSet = SetResultIf(resultState, ResultState.Ignored, CHILD_IGNORE_MESSAGE);
+                            if (result.ResultState.Label == "Ignored")
+                                if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                                    SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
 
-                        break;
-                }
-            } while (!stateSet);
+                            break;
+                    }
 
-            Interlocked.Add (ref InternalAssertCount, result.AssertCount);
-            Interlocked.Add (ref _passCount, result.PassCount);
-            Interlocked.Add (ref _failCount, result.FailCount);
-            Interlocked.Add (ref _skipCount, result.SkipCount);
-            Interlocked.Add (ref _inconclusiveCount, result.InconclusiveCount);
+                AssertCount += result.AssertCount;
+                _passCount += result.PassCount;
+                _failCount += result.FailCount;
+                _skipCount += result.SkipCount;
+                _inconclusiveCount += result.InconclusiveCount;
+            }
+            finally
+            {
+#if PARALLEL
+                RwLock.ExitWriteLock();
+#endif
+            }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -27,8 +27,11 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using NUnit.Framework.Interfaces;
+#if NETCF || NET_2_0
+using NUnit.Framework.Compatibility;
+#endif
 using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -37,7 +40,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestResult : ITestResult
     {
-        #region Fields
+#region Fields
 
         /// <summary>
         /// Error message for when child tests have errors
@@ -62,9 +65,24 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Aggregate assertion count
         /// </summary>
-        protected int InternalAssertCount;
+        private int _assertCount;
 
         private ResultState _resultState;
+        private string _message;
+        private string _stackTrace;
+
+#if PARALLEL
+        /// <summary>
+        /// ReaderWriterLock
+        /// </summary>
+#if NET_2_0
+        protected ReaderWriterLock RwLock = new ReaderWriterLock();
+#elif NETCF
+        protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim();
+#else
+        protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+#endif
+#endif
 
         #endregion
 
@@ -86,9 +104,9 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region ITestResult Members
+#region ITestResult Members
 
         /// <summary>
         /// Gets the test with which this result is associated.
@@ -101,7 +119,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ResultState ResultState
         {
-            get { return _resultState; }
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                    {
+                    return _resultState;
+                    }
+                finally
+                    {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
             private set { _resultState = value; }
         }
 
@@ -144,13 +177,58 @@ namespace NUnit.Framework.Internal
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
-        public string Message { get; private set; }
+        public string Message
+        {
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _message;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+
+            }
+            private set
+            {
+                _message = value;
+            }
+        }
 
         /// <summary>
         /// Gets any stacktrace associated with an
         /// error or failure.
         /// </summary>
-        public virtual string StackTrace { get; private set; }
+        public virtual string StackTrace
+        {
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _stackTrace;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
+            private set
+            {
+                _stackTrace = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the count of asserts executed
@@ -158,8 +236,39 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public int AssertCount
         {
-            get { return InternalAssertCount; }
-            set { InternalAssertCount = value; }
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _assertCount;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock ();
+#endif
+                }
+            }
+
+            set
+            {
+#if PARALLEL
+                RwLock.EnterWriteLock();
+#endif
+                try
+                {
+                    _assertCount = value;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitWriteLock ();
+#endif
+                }
+            }
         }
 
         /// <summary>
@@ -209,9 +318,9 @@ namespace NUnit.Framework.Internal
             get { return _output.ToString(); }
         }
 
-        #endregion
+#endregion
 
-        #region IXmlNodeBuilder Members
+#region IXmlNodeBuilder Members
 
         /// <summary>
         /// Returns the Xml representation of the result.
@@ -280,9 +389,30 @@ namespace NUnit.Framework.Internal
             return thisNode;
         }
 
-        #endregion
+#endregion
 
-        #region Other Public Methods
+#region Other Public Methods
+
+        /// <summary>
+        /// Adds additional assertions to current AssertCount
+        /// </summary>
+        /// <param name="value"></param>
+        public void UpdateAssertCount (int value)
+            {
+#if PARALLEL
+            RwLock.EnterWriteLock();
+#endif
+            try
+                {
+                _assertCount += value;
+                }
+            finally
+            {
+#if PARALLEL
+                RwLock.ExitWriteLock();
+#endif
+            }
+        }
 
         /// <summary>
         /// Set the result of the test
@@ -311,9 +441,21 @@ namespace NUnit.Framework.Internal
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
         public void SetResult(ResultState resultState, string message, string stackTrace)
         {
-            ResultState = resultState;
-            Message = message;
-            StackTrace = stackTrace;
+#if PARALLEL
+            RwLock.EnterWriteLock();
+#endif
+            try
+            {
+                ResultState = resultState;
+                Message = message;
+                StackTrace = stackTrace;
+            }
+            finally
+            {
+#if PARALLEL
+                RwLock.EnterWriteLock();
+#endif
+            }
 
             // Set pseudo-counts for a test case
             //if (IsTestCase(test))
@@ -426,9 +568,9 @@ namespace NUnit.Framework.Internal
             SetResult(resultState, message, stackTrace);
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         /// <summary>
         /// Adds a reason element to a node and returns it.
@@ -464,44 +606,6 @@ namespace NUnit.Framework.Internal
             return targetNode.AddElementWithCDATA("output", Output);
         }
 
-        /// <summary>
-        /// Set the result of the test only if the current ResultState has not changed
-        /// </summary>
-        /// <param name="currentResultState">The current ResultState</param>
-        /// <param name="resultState">The ResultState to use in the result</param>
-        protected bool SetResultIf(ResultState currentResultState, ResultState resultState)
-        {
-            return SetResultIf(currentResultState, resultState, null, null);
-        }
-
-        /// <summary>
-        /// Set the result of the test only if the current ResultState has not changed
-        /// </summary>
-        /// <param name="currentResultState">The current ResultState</param>
-        /// <param name="resultState">The ResultState to use in the result</param>
-        /// <param name="message">A message associated with the result state</param>
-        protected bool SetResultIf(ResultState currentResultState, ResultState resultState, string message)
-        {
-            return SetResultIf(currentResultState, resultState, message, null);
-        }
-
-        /// <summary>
-        /// Set the result of the test only if the current ResultState has not changed
-        /// </summary>
-        /// <param name="currentResultState">The current ResultState</param>
-        /// <param name="resultState">The ResultState to use in the result</param>
-        /// <param name="message">A message associated with the result state</param>
-        /// <param name="stackTrace">Stack trace giving the location of the command</param>
-        protected bool SetResultIf(ResultState currentResultState, ResultState resultState, string message, string stackTrace)
-        {
-            if (Interlocked.CompareExchange(ref _resultState, resultState, currentResultState) != currentResultState)
-                return false;
-
-            Message = message;
-            StackTrace = stackTrace;
-
-            return true;
-        }
-        #endregion
+#endregion
     }
 }
