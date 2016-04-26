@@ -23,7 +23,9 @@
 
 using System;
 using System.Collections.Generic;
+#if PARALLEL
 using System.Collections.Concurrent;
+#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal

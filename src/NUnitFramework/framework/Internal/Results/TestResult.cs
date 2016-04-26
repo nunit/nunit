@@ -23,7 +23,9 @@
 
 using System;
 using System.Collections.Generic;
+#if PARALLEL
 using System.Collections.Concurrent;
+#endif
 using System.Globalization;
 using System.IO;
 using System.Text;
