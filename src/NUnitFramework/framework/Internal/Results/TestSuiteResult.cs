@@ -76,11 +76,11 @@ namespace NUnit.Framework.Internal
                 RwLock.EnterReadLock();
 #endif
                 try
-                    {
+                {
                     return _failCount;
-                    }
+                }
                 finally
-                    {
+                {
 #if PARALLEL
                     RwLock.ExitReadLock();
 #endif
@@ -100,11 +100,11 @@ namespace NUnit.Framework.Internal
                 RwLock.EnterReadLock();
 #endif
                 try
-                    {
+                {
                     return _passCount;
-                    }
+                }
                 finally
-                    {
+                {
 #if PARALLEL
                     RwLock.ExitReadLock();
 #endif
@@ -124,11 +124,11 @@ namespace NUnit.Framework.Internal
                 RwLock.EnterReadLock();
 #endif
                 try
-                    {
+                {
                     return _skipCount;
-                    }
+                }
                 finally
-                    {
+                {
 #if PARALLEL
                     RwLock.ExitReadLock();
 #endif
@@ -216,6 +216,7 @@ namespace NUnit.Framework.Internal
             {
                 // If this result is marked cancelled, don't change it
                 if (ResultState != ResultState.Cancelled)
+                {
                     switch (result.ResultState.Status)
                     {
                         case TestStatus.Passed:
@@ -241,6 +242,7 @@ namespace NUnit.Framework.Internal
 
                             break;
                     }
+                }
 
                 InternalAssertCount += result.AssertCount;
                 _passCount += result.PassCount;
