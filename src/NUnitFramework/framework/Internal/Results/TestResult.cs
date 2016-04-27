@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            set
+            internal set
             {
                 InternalAssertCount = value;
             }
