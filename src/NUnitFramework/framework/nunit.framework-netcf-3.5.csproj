@@ -200,6 +200,9 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
+    <Compile Include="Compatibility\ReaderWriterLockSlim.cs" />
+    <Compile Include="Compatibility\System.Collections.Concurrent\ConcurrentQueue.cs" />
+    <Compile Include="Compatibility\System.Collections.Concurrent\IProducerConsumerCollection.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
@@ -461,6 +464,9 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Compatibility\System.Collections\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

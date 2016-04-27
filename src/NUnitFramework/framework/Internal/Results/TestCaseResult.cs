@@ -23,6 +23,9 @@
 
 using System;
 using System.Collections.Generic;
+#if PARALLEL
+using System.Collections.Concurrent;
+#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -87,7 +90,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public override IList<ITestResult> Children
+        public override IEnumerable<ITestResult> Children
         {
             get { return new ITestResult[0]; }
         }

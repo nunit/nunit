@@ -23,9 +23,16 @@
 
 using System;
 using System.Collections.Generic;
+#if PARALLEL
+using System.Collections.Concurrent;
+#endif
 using System.Globalization;
 using System.IO;
 using System.Text;
+#if NETCF || NET_2_0
+using NUnit.Framework.Compatibility;
+#endif
+using System.Threading;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -52,10 +59,32 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal const double MIN_DURATION = 0.000001d;
 
-//        static Logger log = InternalTrace.GetLogger("TestResult");
+        //        static Logger log = InternalTrace.GetLogger("TestResult");
 
         private StringBuilder _output = new StringBuilder();
         private double _duration;
+
+        /// <summary>
+        /// Aggregate assertion count
+        /// </summary>
+        protected int InternalAssertCount;
+
+        private ResultState _resultState;
+        private string _message;
+        private string _stackTrace;
+
+#if PARALLEL
+        /// <summary>
+        /// ReaderWriterLock
+        /// </summary>
+#if NET_2_0
+        protected ReaderWriterLock RwLock = new ReaderWriterLock();
+#elif NETCF
+        protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim();
+#else
+        protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+#endif
+#endif
 
         #endregion
 
@@ -90,7 +119,26 @@ namespace NUnit.Framework.Internal
         /// Gets the ResultState of the test result, which 
         /// indicates the success or failure of the test.
         /// </summary>
-        public ResultState ResultState { get; private set; }
+        public ResultState ResultState
+        {
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _resultState;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
+            private set { _resultState = value; }
+        }
 
         /// <summary>
         /// Gets the name of the test result
@@ -131,19 +179,88 @@ namespace NUnit.Framework.Internal
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
-        public string Message { get; private set; }
+        public string Message
+        {
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _message;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+
+            }
+            private set
+            {
+                _message = value;
+            }
+        }
 
         /// <summary>
         /// Gets any stacktrace associated with an
         /// error or failure.
         /// </summary>
-        public virtual string StackTrace { get; private set; }
+        public virtual string StackTrace
+        {
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _stackTrace;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
+
+            private set
+            {
+                _stackTrace = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the count of asserts executed
         /// when running the test.
         /// </summary>
-        public int AssertCount { get; set; }
+        public int AssertCount
+        {
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return InternalAssertCount;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock ();
+#endif
+                }
+            }
+
+            set
+            {
+                InternalAssertCount = value;
+            }
+        }
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -177,7 +294,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public abstract IList<ITestResult> Children { get; }
+        public abstract IEnumerable<ITestResult> Children { get; }
 
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.
@@ -192,7 +309,7 @@ namespace NUnit.Framework.Internal
             get { return _output.ToString(); }
         }
 
-#endregion
+        #endregion
 
         #region IXmlNodeBuilder Members
 
@@ -294,9 +411,21 @@ namespace NUnit.Framework.Internal
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
         public void SetResult(ResultState resultState, string message, string stackTrace)
         {
-            ResultState = resultState;
-            Message = message;
-            StackTrace = stackTrace;
+#if PARALLEL
+            RwLock.EnterWriteLock();
+#endif
+            try
+            {
+                ResultState = resultState;
+                Message = message;
+                StackTrace = stackTrace;
+            }
+            finally
+            {
+#if PARALLEL
+                RwLock.ExitWriteLock();
+#endif
+            }
 
             // Set pseudo-counts for a test case
             //if (IsTestCase(test))

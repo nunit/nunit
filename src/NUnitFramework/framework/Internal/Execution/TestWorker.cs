@@ -52,17 +52,22 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public event EventHandler Idle;
 
+#if NETCF
+        /// <summary>
+        /// Construct a new TestWorker.
+        /// </summary>
+        /// <param name="queue">The queue from which to pull work items</param>
+        /// <param name="name">The name of this worker</param>
+        public TestWorker(WorkItemQueue queue, string name)
+#else
         /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
         /// <param name="queue">The queue from which to pull work items</param>
         /// <param name="name">The name of this worker</param>
         /// <param name="apartmentState">The apartment state to use for running tests</param>
-        public TestWorker(WorkItemQueue queue, string name
-#if !NETCF
-                          , ApartmentState apartmentState
+        public TestWorker(WorkItemQueue queue, string name, ApartmentState apartmentState)
 #endif
-                          )
         {
             _readyQueue = queue;
 
