@@ -23,8 +23,12 @@
 
 #if PARALLEL
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+#if NET_2_0 || NET_3_5 || NETCF
+using ManualResetEventSlim = System.Threading.ManualResetEvent;
+#endif
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -56,14 +60,15 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class WorkItemQueue
     {
+        private const int spinCount = 5;
+
         private Logger log = InternalTrace.GetLogger("WorkItemQueue");
 
-        private Queue<WorkItem> _innerQueue = new Queue<WorkItem>();
-        private object _syncRoot = new object();
-#if NETCF
-        private ManualResetEvent _syncEvent = new ManualResetEvent(false);
-        private int _waitCount = 0;
-#endif
+        private readonly ConcurrentQueue<WorkItem> _innerQueue = new ConcurrentQueue<WorkItem>();
+        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim(false);
+
+        private int _addId = int.MinValue;
+        private int _removeId = int.MinValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
@@ -84,27 +89,43 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public string Name { get; private set; }
 
+        private int _itemsProcessed;
         /// <summary>
         /// Gets the total number of items processed so far
         /// </summary>
-        public int ItemsProcessed { get; private set; }
+        public int ItemsProcessed
+        {
+            get { return _itemsProcessed; }
+            private set { _itemsProcessed = value; }
+        }
+
+        private int _maxCount;
 
         /// <summary>
         /// Gets the maximum number of work items.
         /// </summary>
-        public int MaxCount { get; private set; }
+        public int MaxCount
+        {
+            get { return _maxCount; }
+            private set { _maxCount = value; }
+        }
 
+        private int _state;
         /// <summary>
         /// Gets the current state of the queue
         /// </summary>
-        public WorkItemQueueState State { get; private set; }
+        public WorkItemQueueState State
+        {
+            get { return (WorkItemQueueState)_state; }
+            private set { _state = (int)value; }
+        }
 
         /// <summary>
         /// Get a bool indicating whether the queue is empty.
         /// </summary>
         public bool IsEmpty
         {
-            get { return _innerQueue.Count == 0; }
+            get { return _innerQueue.IsEmpty; }
         }
 
         #endregion
@@ -117,22 +138,29 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The WorkItem to process</param>
         public void Enqueue(WorkItem work)
         {
-            lock (_syncRoot)
+            do
             {
+                int cachedAddId = _addId;
+
+                if (Interlocked.CompareExchange(ref _addId, cachedAddId + 1, cachedAddId) != cachedAddId)
+                    continue;
+
                 _innerQueue.Enqueue(work);
-                if (_innerQueue.Count > MaxCount)
-                    MaxCount = _innerQueue.Count;
-#if NETCF
-                _syncEvent.Set();
 
-                while (_waitCount != 0)
-                    Thread.Sleep(0);
+                int i, j = _maxCount;
+                do
+                {
+                    i = j;
+                    j = Interlocked.CompareExchange(ref _maxCount, Math.Max(i, _innerQueue.Count), i);
+                }
+                while (i != j);
 
-                _syncEvent.Reset();
-#else
-                Monitor.PulseAll(_syncRoot);
-#endif
-            }
+                _mreAdd.Set();
+
+                return;
+
+            } while (true);
+            
         }
 
         /// <summary>
@@ -141,30 +169,49 @@ namespace NUnit.Framework.Internal.Execution
         /// <returns>A WorkItem or null if the queue has stopped</returns>
         public WorkItem Dequeue()
         {
-            lock (_syncRoot)
+            SpinWait sw = new SpinWait();
+
+            do
             {
-                while (this.IsEmpty || this.State != WorkItemQueueState.Running)
+                WorkItemQueueState cachedState = State;
+
+                if (cachedState == WorkItemQueueState.Stopped)
+                    return null; // Tell worker to terminate
+
+                int cachedRemoveId = _removeId;
+                int cachedAddId = _addId;
+
+                if (cachedRemoveId == cachedAddId || cachedState == WorkItemQueueState.Paused)
                 {
-                    if (State == WorkItemQueueState.Stopped)
-                        return null; // Tell worker to terminate
-                    else // We are either paused or empty, so wait for something to change
-#if NETCF
+                    if (sw.Count <= spinCount)
                     {
-                        Monitor.Exit(_syncRoot);
-                        Interlocked.Increment(ref _waitCount);
-                        _syncEvent.WaitOne();
-                        Interlocked.Decrement(ref _waitCount);
-                        Monitor.Enter(_syncRoot);
+                        sw.SpinOnce();
                     }
-#else
-                        Monitor.Wait(_syncRoot);
-#endif
+                    else
+                    {
+                        _mreAdd.Reset();
+                        if ((cachedRemoveId != _removeId || cachedAddId != _addId) && cachedState != WorkItemQueueState.Paused)
+                        {
+                            _mreAdd.Set();
+                            continue;
+                        }
+
+                        _mreAdd.Wait(500);
+                    }
+
+                    continue;
                 }
 
-                // Queue is running and non-empty
-                ItemsProcessed++;
-                return _innerQueue.Dequeue();
-            }
+                if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
+                    continue;
+
+                WorkItem work;
+                while (!_innerQueue.TryDequeue(out work)) { };
+
+                Interlocked.Increment(ref _itemsProcessed);
+
+                return work;
+            } while (true);
         }
 
         /// <summary>
@@ -172,21 +219,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            lock (_syncRoot)
-            {
-                log.Info("{0} starting", Name);
-                State = WorkItemQueueState.Running;
-#if NETCF
-                _syncEvent.Set();
+            log.Info("{0} starting", Name);
 
-                while (_waitCount != 0)
-                    Thread.Sleep(0);
-
-                _syncEvent.Reset();
-#else
-                Monitor.PulseAll(_syncRoot);
-#endif
-            }
+            if (Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Running, (int)WorkItemQueueState.Paused) == (int)WorkItemQueueState.Paused)
+                _mreAdd.Set();
         }
 
         /// <summary>
@@ -194,22 +230,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            lock (_syncRoot)
-            {
-                log.Info("{0} stopping - {1} WorkItems processed, max size {2}", Name, ItemsProcessed, MaxCount);
+            log.Info("{0} stopping - {1} WorkItems processed, max size {2}", Name, ItemsProcessed, MaxCount);
 
-                State = WorkItemQueueState.Stopped;
-#if NETCF
-                _syncEvent.Set();
-
-                while (_waitCount != 0)
-                    Thread.Sleep(0);
-
-                _syncEvent.Reset();
-#else
-                Monitor.PulseAll(_syncRoot);
-#endif
-            }
+            if (Interlocked.Exchange(ref _state, (int)WorkItemQueueState.Stopped) != (int)WorkItemQueueState.Stopped)
+                _mreAdd.Set();
+            
         }
 
         /// <summary>
@@ -217,14 +242,23 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Pause()
         {
-            lock (_syncRoot)
-            {
-                State = WorkItemQueueState.Paused;
-            }
+            log.Info("{0} pausing", Name);
+
+            Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Paused, (int)WorkItemQueueState.Running);
         }
 
         #endregion
     }
-}
 
+#if NET_2_0 || NET_3_5 || NETCF
+    internal static class ManualResetEventExtensions
+    {
+        public static bool Wait (this ManualResetEvent mre, int millisecondsTimeout)
+        {
+            return mre.WaitOne(millisecondsTimeout, false);
+        }
+    }
+#endif
+
+}
 #endif

@@ -37,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
+    <NoWarn>1699,1591</NoWarn>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -144,6 +145,9 @@
     <Compile Include="Compatibility\System.Linq\SortContext.cs" />
     <Compile Include="Compatibility\System.Linq\SortDirection.cs" />
     <Compile Include="Compatibility\System.Linq\SortSequenceContext.cs" />
+    <Compile Include="Compatibility\System.Threading\LazyThreadSafetyMode.cs" />
+    <Compile Include="Compatibility\System.Threading\SpinWait.cs" />
+    <Compile Include="Compatibility\System\Lazy.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />

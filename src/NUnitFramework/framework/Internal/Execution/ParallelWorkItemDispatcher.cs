@@ -42,14 +42,14 @@ namespace NUnit.Framework.Internal.Execution
         // Non-STA
         private WorkShift _parallelShift = new WorkShift("Parallel");
         private WorkShift _nonParallelShift = new WorkShift("NonParallel");
-        private WorkItemQueue _parallelQueue;
-        private WorkItemQueue _nonParallelQueue;
+        private Lazy<WorkItemQueue> _parallelQueue;
+        private Lazy<WorkItemQueue> _nonParallelQueue;
 
         // STA
 #if !NETCF
         private WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
-        private WorkItemQueue _parallelSTAQueue;
-        private WorkItemQueue _nonParallelSTAQueue;
+        private Lazy<WorkItemQueue> _parallelSTAQueue;
+        private Lazy<WorkItemQueue> _nonParallelSTAQueue;
 #endif
 
         // The first WorkItem to be dispatched, assumed to be top-level item
@@ -73,6 +73,59 @@ namespace NUnit.Framework.Internal.Execution
             };
             foreach (var shift in Shifts)
                 shift.EndOfShift += OnEndOfShift;
+
+            _parallelQueue = new Lazy<WorkItemQueue>(() =>
+            {
+                var parallelQueue = new WorkItemQueue("ParallelQueue");
+                _parallelShift.AddQueue(parallelQueue);
+
+                for (int i = 1; i <= _levelOfParallelism; i++)
+                {
+                    string name = string.Format("Worker#" + i.ToString());
+#if NETCF
+                    _parallelShift.Assign(new TestWorker(parallelQueue, name));
+#else
+                    _parallelShift.Assign(new TestWorker(parallelQueue, name, ApartmentState.MTA));
+#endif
+                }
+
+                return parallelQueue;
+            });
+
+#if !NETCF
+            _parallelSTAQueue = new Lazy<WorkItemQueue>(() =>
+            {
+                var parallelSTAQueue = new WorkItemQueue("ParallelSTAQueue");
+                _parallelShift.AddQueue(parallelSTAQueue);
+                _parallelShift.Assign(new TestWorker(parallelSTAQueue, "Worker#STA", ApartmentState.STA));
+
+                return parallelSTAQueue;
+            });
+#endif
+
+            _nonParallelQueue = new Lazy<WorkItemQueue>(() =>
+            {
+                var nonParallelQueue = new WorkItemQueue("NonParallelQueue");
+                _nonParallelShift.AddQueue(nonParallelQueue);
+#if NETCF
+                _nonParallelShift.Assign(new TestWorker(nonParallelQueue, "Worker#NP"));
+#else
+                _nonParallelShift.Assign(new TestWorker(nonParallelQueue, "Worker#STA_NP", ApartmentState.MTA));
+#endif
+
+                return nonParallelQueue;
+            });
+
+#if !NETCF
+            _nonParallelSTAQueue = new Lazy<WorkItemQueue>(() =>
+            {
+                var nonParallelSTAQueue = new WorkItemQueue("NonParallelSTAQueue");
+                _nonParallelSTAShift.AddQueue(nonParallelSTAQueue);
+                _nonParallelSTAShift.Assign(new TestWorker(nonParallelSTAQueue, "Worker#NP_STA", ApartmentState.STA));
+
+                return nonParallelSTAQueue;
+            });
+#endif
         }
 
         /// <summary>
@@ -91,9 +144,8 @@ namespace NUnit.Framework.Internal.Execution
         public void Dispatch(WorkItem work)
         {
             // Special handling of the top-level item
-            if (_topLevelWorkItem == null)
+            if (Interlocked.CompareExchange (ref _topLevelWorkItem, work, null) == null)
             {
-                _topLevelWorkItem = work;
                 Enqueue(work);
                 StartNextShift();
             }
@@ -110,7 +162,7 @@ namespace NUnit.Framework.Internal.Execution
             else
                 Enqueue(work);
 
-            ++_itemsDispatched;
+            Interlocked.Increment(ref _itemsDispatched);
         }
 
         private void Execute(WorkItem work)
@@ -161,23 +213,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             get
             {
-                if (_parallelQueue == null)
-                {
-                    _parallelQueue = new WorkItemQueue("ParallelQueue");
-                    _parallelShift.AddQueue(_parallelQueue);
-
-                    for (int i = 1; i <= _levelOfParallelism; i++)
-                    {
-                        string name = string.Format("Worker#" + i.ToString());
-#if NETCF
-                        _parallelShift.Assign(new TestWorker(_parallelQueue, name));
-#else
-                        _parallelShift.Assign(new TestWorker(_parallelQueue, name, ApartmentState.MTA));
-#endif
-                    }
-                }
-
-                return _parallelQueue;
+                return _parallelQueue.Value;
             }
         }
 
@@ -186,14 +222,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             get
             {
-                if (_parallelSTAQueue == null)
-                {
-                    _parallelSTAQueue = new WorkItemQueue("ParallelSTAQueue");
-                    _parallelShift.AddQueue(_parallelSTAQueue);
-                    _parallelShift.Assign(new TestWorker(_parallelSTAQueue, "Worker#STA", ApartmentState.STA));
-                }
-
-                return _parallelSTAQueue;
+                return _parallelSTAQueue.Value;
             }
         }
 #endif
@@ -202,18 +231,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             get
             {
-                if (_nonParallelQueue == null)
-                {
-                    _nonParallelQueue = new WorkItemQueue("NonParallelQueue");
-                    _nonParallelShift.AddQueue(_nonParallelQueue);
-#if NETCF
-                    _nonParallelShift.Assign(new TestWorker(_nonParallelQueue, "Worker#NP"));
-#else
-                    _nonParallelShift.Assign(new TestWorker(_nonParallelQueue, "Worker#STA_NP", ApartmentState.MTA));
-#endif
-                }
-
-                return _nonParallelQueue;
+                return _nonParallelQueue.Value;
             }
         }
 
@@ -222,14 +240,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             get
             {
-                if (_nonParallelSTAQueue == null)
-                {
-                    _nonParallelSTAQueue = new WorkItemQueue("NonParallelSTAQueue");
-                    _nonParallelSTAShift.AddQueue(_nonParallelSTAQueue);
-                    _nonParallelSTAShift.Assign(new TestWorker(_nonParallelSTAQueue, "Worker#NP_STA", ApartmentState.STA));
-                }
-
-                return _nonParallelSTAQueue;
+                return _nonParallelSTAQueue.Value;
             }
         }
 #endif

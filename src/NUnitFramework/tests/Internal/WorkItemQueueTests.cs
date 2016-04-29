@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal.Execution
 
             while (iters-- > 0 && alive > 0)
             {
-                Thread.Sleep(20);  // Allow time for workers to stop
+                Thread.Sleep(60);  // Allow time for workers to stop
 
                 alive = 0;
                 foreach (var worker in workers)
