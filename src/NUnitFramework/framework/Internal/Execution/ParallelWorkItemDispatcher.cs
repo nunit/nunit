@@ -34,22 +34,22 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class ParallelWorkItemDispatcher : IWorkItemDispatcher
     {
-        private static Logger log = InternalTrace.GetLogger("WorkItemDispatcher");
+        private static readonly Logger log = InternalTrace.GetLogger("WorkItemDispatcher");
 
-        private int _levelOfParallelism;
+        private readonly int _levelOfParallelism;
         private int _itemsDispatched;
 
         // Non-STA
-        private WorkShift _parallelShift = new WorkShift("Parallel");
-        private WorkShift _nonParallelShift = new WorkShift("NonParallel");
-        private Lazy<WorkItemQueue> _parallelQueue;
-        private Lazy<WorkItemQueue> _nonParallelQueue;
+        private readonly WorkShift _parallelShift = new WorkShift("Parallel");
+        private readonly WorkShift _nonParallelShift = new WorkShift("NonParallel");
+        private readonly Lazy<WorkItemQueue> _parallelQueue;
+        private readonly Lazy<WorkItemQueue> _nonParallelQueue;
 
         // STA
 #if !NETCF
-        private WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
-        private Lazy<WorkItemQueue> _parallelSTAQueue;
-        private Lazy<WorkItemQueue> _nonParallelSTAQueue;
+        private readonly WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
+        private readonly Lazy<WorkItemQueue> _parallelSTAQueue;
+        private readonly Lazy<WorkItemQueue> _nonParallelSTAQueue;
 #endif
 
         // The first WorkItem to be dispatched, assumed to be top-level item
