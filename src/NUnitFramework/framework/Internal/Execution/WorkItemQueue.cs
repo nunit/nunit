@@ -153,11 +153,14 @@ namespace NUnit.Framework.Internal.Execution
             {
                 int cachedAddId = _addId;
 
+                // Validate that we have are the current enqueuer
                 if (Interlocked.CompareExchange(ref _addId, cachedAddId + 1, cachedAddId) != cachedAddId)
                     continue;
 
+                // Add to the collection
                 _innerQueue.Enqueue(work);
 
+                // Set MaxCount using CAS
                 int i, j = _maxCount;
                 do
                 {
@@ -166,6 +169,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
                 while (i != j);
 
+                // Wake up threads that may have been sleeping
                 _mreAdd.Set();
 
                 return;
@@ -193,31 +197,41 @@ namespace NUnit.Framework.Internal.Execution
                 // Empty case (or paused)
                 if (cachedRemoveId == cachedAddId || cachedState == WorkItemQueueState.Paused)
                 {
+                    // Spin a few times to see if something changes
                     if (sw.Count <= spinCount)
                     {
                         sw.SpinOnce();
                     }
                     else
                     {
+                        // Reset to wait for an enqueue
                         _mreAdd.Reset();
+
+                        // Recheck for an enqueue to avoid a Wait
                         if ((cachedRemoveId != _removeId || cachedAddId != _addId) && cachedState != WorkItemQueueState.Paused)
                         {
+                            // Queue is not empty, set the event
                             _mreAdd.Set();
                             continue;
                         }
 
+                        // Wait for something to happen
                         _mreAdd.Wait(500);
                     }
 
                     continue;
                 }
 
+                // Validate that we are the current dequeuer
                 if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
                     continue;
 
+
+                // Dequeue our work item
                 WorkItem work;
                 while (!_innerQueue.TryDequeue(out work)) { };
 
+                // Add to items processed using CAS
                 Interlocked.Increment(ref _itemsProcessed);
 
                 return work;
