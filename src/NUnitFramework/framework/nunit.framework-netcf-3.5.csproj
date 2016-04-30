@@ -203,6 +203,9 @@
     <Compile Include="Compatibility\ReaderWriterLockSlim.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\ConcurrentQueue.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\IProducerConsumerCollection.cs" />
+    <Compile Include="Compatibility\System.Threading\LazyThreadSafetyMode.cs" />
+    <Compile Include="Compatibility\System.Threading\SpinWait.cs" />
+    <Compile Include="Compatibility\System\Lazy.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />

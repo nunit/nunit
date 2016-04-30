@@ -25,6 +25,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <Externalconsole>true</Externalconsole>
     <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
+    <NoWarn>1699,1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>1699,1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
