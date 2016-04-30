@@ -67,17 +67,17 @@ namespace NUnit.Framework.Internal.Execution
         private readonly ConcurrentQueue<WorkItem> _innerQueue = new ConcurrentQueue<WorkItem>();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
-		 * we have to wait on an external event (Add or Remove for instance)
-		 */
+	     * we have to wait on an external event (Add or Remove for instance)
+	     */
         private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim(false);
 
         /* The whole idea is to use these two values in a transactional
-		 * way to track and manage the actual data inside the underlying lock-free collection
-		 * instead of directly working with it or using external locking.
-		 *
-		 * They are manipulated with CAS and are guaranteed to increase over time and use
-		 * of the instance thus preventing ABA problems.
-		 */
+         * way to track and manage the actual data inside the underlying lock-free collection
+         * instead of directly working with it or using external locking.
+         *
+         * They are manipulated with CAS and are guaranteed to increase over time and use
+         * of the instance thus preventing ABA problems.
+         */
         private int _addId = int.MinValue;
         private int _removeId = int.MinValue;
 
