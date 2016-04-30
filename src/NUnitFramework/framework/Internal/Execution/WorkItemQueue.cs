@@ -87,10 +87,10 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="name">The name of the queue.</param>
         public WorkItemQueue(string name)
         {
-            this.Name = name;
-            this.State = WorkItemQueueState.Paused;
-            this.MaxCount = 0;
-            this.ItemsProcessed = 0;
+            Name = name;
+            State = WorkItemQueueState.Paused;
+            MaxCount = 0;
+            ItemsProcessed = 0;
         }
 
         #region Properties
@@ -169,9 +169,7 @@ namespace NUnit.Framework.Internal.Execution
                 _mreAdd.Set();
 
                 return;
-
             } while (true);
-            
         }
 
         /// <summary>
@@ -246,7 +244,6 @@ namespace NUnit.Framework.Internal.Execution
 
             if (Interlocked.Exchange(ref _state, (int)WorkItemQueueState.Stopped) != (int)WorkItemQueueState.Stopped)
                 _mreAdd.Set();
-            
         }
 
         /// <summary>
