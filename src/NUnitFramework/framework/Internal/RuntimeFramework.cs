@@ -394,9 +394,9 @@ namespace NUnit.Framework.Internal
         #region Helper Methods
 
         private static bool IsRuntimeTypeName(string name)
-            {
-            return TypeHelper.GetEnumNames (typeof(RuntimeType)).Any (item => item.ToLower () == name.ToLower ());
-            }
+        {
+            return TypeHelper.GetEnumNames( typeof(RuntimeType)).Any( item => item.ToLower() == name.ToLower() );
+        }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
         {
