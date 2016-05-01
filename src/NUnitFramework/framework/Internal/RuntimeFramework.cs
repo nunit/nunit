@@ -138,18 +138,18 @@ namespace NUnit.Framework.Internal
                 minor = 5;
             }
 
-            var currentFramework = new RuntimeFramework (runtime, new Version (major, minor))
-                {
+            var currentFramework = new RuntimeFramework( runtime, new Version (major, minor) )
+            {
                 ClrVersion = Environment.Version
-                };
+            };
 
             if (isMono)
-                {
-                    MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
-                        "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
-                    if (getDisplayNameMethod != null)
-                        currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
-                }
+            {
+                MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
+                    "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
+                if (getDisplayNameMethod != null)
+                    currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
+            }
 #endif
             return currentFramework;
         });
