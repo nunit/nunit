@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,15 +24,19 @@
 #if PARALLEL
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Threading;
+#if NET_2_0 || NET_3_5 || NETCF
+using ManualResetEventSlim = System.Threading.ManualResetEvent;
+#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
 
-    #region Individual Event Classes
+#region Individual Event Classes
 
     /// <summary>
     /// NUnit.Core.Event is the abstract base for all stored events.
@@ -78,7 +82,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestStartedEvent : Event
     {
-        private ITest test;
+        private readonly ITest _test;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestStartedEvent"/> class.
@@ -86,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="test">The test.</param>
         public TestStartedEvent(ITest test)
         {
-            this.test = test;
+            _test = test;
         }
 
         ///// <summary>
@@ -112,7 +116,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
-            listener.TestStarted(test);
+            listener.TestStarted(_test);
         }
     }
 
@@ -121,7 +125,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestFinishedEvent : Event
     {
-        private ITestResult result;
+        private readonly ITestResult result;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestFinishedEvent"/> class.
@@ -142,7 +146,7 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
-    #endregion
+#endregion
 
     /// <summary>
     /// Implements a queue of work items each of which
@@ -150,23 +154,28 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
+        private const int spinCount = 5;
+
 //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
-        private readonly Queue queue = new Queue();
-        private readonly object syncRoot;
-        private bool stopped;
-#if NETCF
-        private ManualResetEvent syncEvent = new ManualResetEvent(false);
-        private int waitCount = 0;
-#endif
+        private readonly ConcurrentQueue<Event> _queue = new ConcurrentQueue<Event>();
 
-        /// <summary>
-        /// Construct a new EventQueue
-        /// </summary>
-        public EventQueue()
-        {
-            syncRoot = queue.SyncRoot;
-        }
+        /* This event is used solely for the purpose of having an optimized sleep cycle when
+         * we have to wait on an external event (Add or Remove for instance)
+         */
+        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim(false);
+
+        /* The whole idea is to use these two values in a transactional
+         * way to track and manage the actual data inside the underlying lock-free collection
+         * instead of directly working with it or using external locking.
+         *
+         * They are manipulated with CAS and are guaranteed to increase over time and use
+         * of the instance thus preventing ABA problems.
+         */
+        private int _addId = int.MinValue;
+        private int _removeId = int.MinValue;
+
+        private int _stopped;
 
         /// <summary>
         /// WaitHandle for synchronous event delivery in <see cref="Enqueue"/>.
@@ -186,10 +195,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             get
             {
-                lock (syncRoot)
-                {
-                    return queue.Count;
-                }
+                return _queue.Count;
             }
         }
 
@@ -213,21 +219,22 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="e">The event to enqueue.</param>
         public void Enqueue(Event e)
         {
-            lock (syncRoot)
+            do
             {
-                queue.Enqueue(e);
+                int cachedAddId = _addId;
 
-#if NETCF
-                syncEvent.Set();
+                // Validate that we have are the current enqueuer
+                if (Interlocked.CompareExchange(ref _addId, cachedAddId + 1, cachedAddId) != cachedAddId)
+                    continue;
 
-                while (waitCount != 0)
-                    Thread.Sleep(0);
+                // Add to the collection
+                _queue.Enqueue(e);
 
-                syncEvent.Reset();
-#else
-                Monitor.Pulse(syncRoot);
-#endif
-            }
+                // Wake up threads that may have been sleeping
+                _mreAdd.Set();
+
+                break;
+            } while (true);
 
             if (synchronousEventSent != null && e.IsSynchronous)
                 synchronousEventSent.WaitOne();
@@ -257,28 +264,59 @@ namespace NUnit.Framework.Internal.Execution
         /// </returns>
         public Event Dequeue(bool blockWhenEmpty)
         {
-            lock (syncRoot)
+            SpinWait sw = new SpinWait();
+
+            do
             {
-                while (queue.Count == 0)
+                int cachedRemoveId = _removeId;
+                int cachedAddId = _addId;
+
+                // Empty case
+                if (cachedRemoveId == cachedAddId)
                 {
-                    if (blockWhenEmpty && !stopped)
-#if NETCF
+                    if (!blockWhenEmpty || _stopped != 0)
+                        return null;
+
+                    // Spin a few times to see if something changes
+                    if (sw.Count <= spinCount)
                     {
-                        Monitor.Exit(syncRoot);
-                        Interlocked.Increment(ref waitCount);
-                        syncEvent.WaitOne();
-                        Interlocked.Decrement(ref waitCount);
-                        Monitor.Enter(syncRoot);
+                        sw.SpinOnce();
                     }
-#else
-                        Monitor.Wait(syncRoot);
-#endif
                     else
+                    {
+                        // Reset to wait for an enqueue
+                        _mreAdd.Reset();
+
+                        // Recheck for an enqueue to avoid a Wait
+                        if (cachedRemoveId != _removeId || cachedAddId != _addId)
+                        {
+                            // Queue is not empty, set the event
+                            _mreAdd.Set();
+                            continue;
+                        }
+
+                        // Wait for something to happen
+                        _mreAdd.Wait(500);
+                    }
+
+                    continue;
+                }
+
+                // Validate that we are the current dequeuer
+                if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
+                    continue;
+
+
+                // Dequeue our work item
+                Event e;
+                while (!_queue.TryDequeue (out e))
+                {
+                    if (!blockWhenEmpty || _stopped != 0)
                         return null;
                 }
 
-                return (Event)queue.Dequeue();
-            }
+                return e;
+            } while (true);
         }
 
         /// <summary>
@@ -286,23 +324,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            lock (syncRoot)
-            {
-                if (!stopped)
-                {
-                    stopped = true;
-#if NETCF
-                    syncEvent.Set();
-
-                    while (waitCount != 0)
-                        Thread.Sleep(0);
-
-                    syncEvent.Reset();
-#else
-                    Monitor.PulseAll(syncRoot);
-#endif
-                }
-            }
+            if (Interlocked.CompareExchange(ref _stopped, 1, 0) == 0)
+                _mreAdd.Set();
         }
     }
 }
