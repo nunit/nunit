@@ -88,9 +88,9 @@ namespace NUnit.Framework.Internal
         /// <param name="platforms"></param>
         /// <returns></returns>
         public bool IsPlatformSupported( string[] platforms )
-            {
-            return platforms.Any (IsPlatformSupported);
-            }
+        {
+            return platforms.Any( IsPlatformSupported );
+        }
 
         /// <summary>
         /// Tests to determine if the current platform is supported
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
             string include = platformAttribute.Include;
             string exclude = platformAttribute.Exclude;
 
-            return IsPlatformSupported(include, exclude);
+            return IsPlatformSupported( include, exclude );
         }
 
         /// <summary>
