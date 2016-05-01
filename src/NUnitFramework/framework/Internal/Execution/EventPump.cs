@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2006 Charlie Poole
+// Copyright (c) 2006-2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventPump : IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("EventPump");
+        static readonly Logger log = InternalTrace.GetLogger("EventPump");
 
         #region Instance Variables
 
@@ -66,29 +66,27 @@ namespace NUnit.Framework.Internal.Execution
         /// The handle on which a thread enqueuing an event with <see cref="Event.IsSynchronous"/> == <c>true</c>
         /// waits, until the EventPump has sent the event to its listeners.
         /// </summary>
-        private readonly AutoResetEvent synchronousEventSent = new AutoResetEvent(false);
+        private readonly AutoResetEvent _synchronousEventSent = new AutoResetEvent(false);
 
         /// <summary>
         /// The downstream listener to which we send events
         /// </summary>
-        private ITestListener eventListener;
-        
+        private readonly ITestListener _eventListener;
+
         /// <summary>
         /// The queue that holds our events
         /// </summary>
-        EventQueue events;
-        
+        private readonly EventQueue _events;
+
         /// <summary>
         /// Thread to do the pumping
         /// </summary>
-        Thread pumpThread;
+        private Thread _pumpThread;
 
         /// <summary>
         /// The current state of the eventpump
         /// </summary>
-        private volatile EventPumpState pumpState = EventPumpState.Stopped;
-
-        private string name;
+        private int _pumpState = (int)EventPumpState.Stopped;
 
         #endregion
 
@@ -100,9 +98,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="events">The event queue to pull events from</param>
         public EventPump( ITestListener eventListener, EventQueue events)
         {
-            this.eventListener = eventListener;
-            this.events = events;
-            this.events.SetWaitHandleForSynchronizedEvents(this.synchronousEventSent);
+            _eventListener = eventListener;
+            _events = events;
+            _events.SetWaitHandleForSynchronizedEvents(_synchronousEventSent);
         }
 
         #endregion
@@ -112,22 +110,11 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets or sets the current state of the pump
         /// </summary>
-        /// <remarks>
-        /// On <c>volatile</c> and <see cref="Thread.MemoryBarrier"/>, see
-        /// "http://www.albahari.com/threading/part4.aspx".
-        /// </remarks>
         public EventPumpState PumpState
         {
-            get 
+            get
             {
-                Thread.MemoryBarrier();
-                return pumpState; 
-            }
-
-            set
-            {
-                this.pumpState = value;
-                Thread.MemoryBarrier();
+                return (EventPumpState)_pumpState;
             }
         }
 
@@ -135,17 +122,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets or sets the name of this EventPump
         /// (used only internally and for testing).
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-            set
-            {
-                this.name = value;
-            }
-        }
+        public string Name { get; set; }
 
         #endregion
 
@@ -158,7 +135,7 @@ namespace NUnit.Framework.Internal.Execution
         public void Dispose()
         {
             Stop();
-            ((IDisposable)this.synchronousEventSent).Dispose();
+            ((IDisposable)_synchronousEventSent).Dispose();
         }
 
         /// <summary>
@@ -166,13 +143,15 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            if ( this.PumpState == EventPumpState.Stopped )  // Ignore if already started
+            if ( Interlocked.CompareExchange (ref _pumpState, (int)EventPumpState.Pumping, (int)EventPumpState.Stopped) == (int)EventPumpState.Stopped)  // Ignore if already started
             {
-                this.pumpThread = new Thread( new ThreadStart( PumpThreadProc ) );
-                this.pumpThread.Name = "EventPumpThread" + this.Name;
-                this.pumpThread.Priority = ThreadPriority.Highest;
-                pumpState = EventPumpState.Pumping;
-                this.pumpThread.Start();
+                _pumpThread = new Thread (PumpThreadProc)
+                    {
+                    Name = "EventPumpThread" + Name,
+                    Priority = ThreadPriority.Highest
+                    };
+
+                _pumpThread.Start();
             }
         }
 
@@ -181,11 +160,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            if ( pumpState == EventPumpState.Pumping ) // Ignore extra calls
+            if (Interlocked.CompareExchange (ref _pumpState, (int)EventPumpState.Stopping, (int)EventPumpState.Pumping) == (int)EventPumpState.Pumping)
             {
-                this.PumpState = EventPumpState.Stopping;
-                this.events.Stop();
-                this.pumpThread.Join();
+                _events.Stop();
+                _pumpThread.Join();
             }
         }
         #endregion
@@ -205,12 +183,12 @@ namespace NUnit.Framework.Internal.Execution
             {
                 while (true)
                 {
-                    Event e = this.events.Dequeue( this.PumpState == EventPumpState.Pumping );
+                    Event e = _events.Dequeue( PumpState == EventPumpState.Pumping );
                     if ( e == null )
                         break;
                     try 
                     {
-                        e.Send(this.eventListener);
+                        e.Send(_eventListener);
                         //e.Send(hostListeners);
                     }
                     catch (Exception ex)
@@ -220,7 +198,7 @@ namespace NUnit.Framework.Internal.Execution
                     finally
                     {
                         if ( e.IsSynchronous )
-                            this.synchronousEventSent.Set();
+                            _synchronousEventSent.Set();
                     }
                 }
             }
@@ -230,9 +208,9 @@ namespace NUnit.Framework.Internal.Execution
             }
             finally
             {
-                this.PumpState = EventPumpState.Stopped;
+                _pumpState = (int)EventPumpState.Stopped;
                 //pumpThread = null;
-                if (this.events.Count > 0)
+                if (_events.Count > 0)
                     log.Error("Event pump thread exiting with {0} events remaining");
             }
         }
