@@ -43,5 +43,10 @@ namespace NUnit.Engine.Runners
             foreach (var listener in Listeners)
                 listener.OnTestEvent(report);
         }
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
     }
 }
