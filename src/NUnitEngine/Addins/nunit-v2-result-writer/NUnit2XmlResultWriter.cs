@@ -216,7 +216,7 @@ namespace NUnit.Engine.Addins
             {
                 var suiteType = result.GetAttribute("type");
                 xmlWriter.WriteStartElement("test-suite");
-                xmlWriter.WriteAttributeString("type", suiteType);
+                xmlWriter.WriteAttributeString("type", suiteType == "ParameterizedMethod" ? "ParameterizedTest" : suiteType);
                 string nameAttr = suiteType == "Assembly" || suiteType == "Project" ? "fullname" : "name";
                 xmlWriter.WriteAttributeString("name", result.GetAttribute(nameAttr));
             }
