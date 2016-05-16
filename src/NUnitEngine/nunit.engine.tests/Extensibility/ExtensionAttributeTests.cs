@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,40 +22,31 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework;
 
 namespace NUnit.Engine.Extensibility
 {
-    /// <summary>
-    /// The ExtensionAttribute is used to identify a class that is intended
-    /// to serve as an extension.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=false)]
-    public class ExtensionAttribute : Attribute
+    public class ExtensionAttributeTests
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NUnit.Engine.Extensibility.ExtensionAttribute"/> class.
-        /// </summary>
-        public ExtensionAttribute()
+        [Test]
+        public void IsEnabledByDefault()
         {
-            Enabled = true;
+            Assert.True(new ExtensionAttribute().Enabled);
         }
 
-        /// <summary>
-        /// A unique string identifying the ExtensionPoint for which this Extension is 
-        /// intended. This is an optional field provided NUnit is able to deduce the
-        /// ExtensionPoint from the Type of the extension class.
-        /// </summary>
-        public string Path { get; set; }
+        [Test]
+        public void MayBeExplicitlyDisabled()
+        {
+            var attr = new ExtensionAttribute() { Enabled = false };
+            Assert.False(attr.Enabled);
+        }
 
-        /// <summary>
-        /// An optional description of what the extension does.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Flag indicating whether the extension is enabled.
-        /// </summary>
-        /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-        public bool Enabled { get; set; }
+        [Test]
+        public void MayBeExplicitlyEnabled()
+        {
+            var attr = new ExtensionAttribute() { Enabled = true };
+            Assert.True(attr.Enabled);
+        }
     }
 }
+

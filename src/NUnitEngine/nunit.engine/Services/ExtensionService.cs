@@ -113,18 +113,26 @@ namespace NUnit.Engine.Services
             return ep != null && ep.Extensions.Count > 0 ? ep.Extensions[0] : null;
         }
 
-        public IEnumerable<ExtensionNode> GetExtensionNodes<T>()
+        public IEnumerable<ExtensionNode> GetExtensionNodes<T>(bool includeDisabled = false)
         {
             var ep = GetExtensionPoint(typeof(T));
             if (ep != null)
                 foreach (var node in ep.Extensions)
-                    yield return node;
+                    if (includeDisabled || node.Enabled)
+                        yield return node;
         }
 
         public IEnumerable<T> GetExtensions<T>()
         {
             foreach (var node in GetExtensionNodes<T>())
-                yield return (T)node.ExtensionObject;
+              	 yield return (T)node.ExtensionObject;
+        }
+
+        public void EnableExtension(string typeName)
+        {
+            foreach (var node in Extensions)
+                if (node.TypeName == typeName)
+                    node.Enabled = true;
         }
 
         #endregion
@@ -333,6 +341,9 @@ namespace NUnit.Engine.Services
                     var node = new ExtensionNode(assemblyName, type.FullName);
                     node.Path = extensionAttr.GetNamedArgument("Path") as string;
                     node.Description = extensionAttr.GetNamedArgument("Description") as string;
+                    object enabledArg = extensionAttr.GetNamedArgument("Enabled");
+                    node.Enabled = enabledArg != null
+                       ? (bool)enabledArg : true;
 
                     log.Info("  Found ExtensionAttribute on Type " + type.Name);
 

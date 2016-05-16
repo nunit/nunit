@@ -34,8 +34,6 @@ namespace NUnit.Engine.Extensibility
     public class ExtensionNode
     {
         private object _extensionObject;
-        private string _assemblyPath;
-        private string _typeName;
         private Dictionary<string, List<string>> _properties = new Dictionary<string, List<string>>();
 
 
@@ -46,8 +44,9 @@ namespace NUnit.Engine.Extensibility
         /// <param name="typeName">The full name of the Type of the extension object.</param>
         public ExtensionNode(string assemblyPath, string typeName)
         {
-            _assemblyPath = assemblyPath;
-            _typeName = typeName;
+            AssemblyPath = assemblyPath;
+            TypeName = typeName;
+			Enabled = true; // By default
         }
 
         #region Properties
@@ -55,18 +54,18 @@ namespace NUnit.Engine.Extensibility
         /// <summary>
         /// Gets the path to the assembly where the extension is defined.
         /// </summary>
-        public string AssemblyPath
-        {
-            get { return _assemblyPath;  }
-        }
+        public string AssemblyPath { get; private set; }
 
         /// <summary>
         /// Gets the full name of the Type of the assembly object.
         /// </summary>
-        public string TypeName
-        {
-            get { return _typeName;  }
-        }
+        public string TypeName { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="NUnit.Engine.Extensibility.ExtensionNode"/> is enabled.
+        /// </summary>
+        /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+        public bool Enabled	{ get; set; }
 
         /// <summary>
         /// Gets an object of the specified extension type, loading the Assembly
@@ -106,7 +105,7 @@ namespace NUnit.Engine.Extensibility
         /// </summary>
         public object CreateExtensionObject(params object[] args)
         {
-            return AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(_assemblyPath, _typeName, false, 0, null, args, null, null, null);
+            return AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(AssemblyPath, TypeName, false, 0, null, args, null, null, null);
         }
 
         public void AddProperty(string name, string val)

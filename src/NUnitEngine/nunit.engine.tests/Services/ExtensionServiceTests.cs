@@ -133,7 +133,10 @@ namespace NUnit.Engine.Services.Tests
         {
             foreach (ExtensionNode node in _extensionService.Extensions)
                 if (node.TypeName == typeName)
+                {
+                    Assert.True(node.Enabled);
                     return;
+                }
             
             Assert.Fail("Couldn't find known Extension {0}", typeName);
         }
@@ -144,7 +147,34 @@ namespace NUnit.Engine.Services.Tests
             var ep = _extensionService.GetExtensionPoint(path);
             Assume.That(ep, Is.Not.Null);
 
-            Assert.That(ep.Extensions.Count, Is.EqualTo(1));
+            Assert.That(ep.Extensions.Count, Is.GreaterThan(0));
+        }
+
+        [Test]
+        public void ExtensionMayBeDisabledByDefault()
+        {
+            foreach (ExtensionNode node in _extensionService.Extensions)
+                if (node.TypeName == "NUnit.Engine.Tests.DummyDisabledExtension")
+                {
+                    Assert.False(node.Enabled);
+                    return;
+                }
+
+            Assert.Fail("Could not find DummyDisabledExtension");
+        }
+
+        [Test]
+        public void DisabledExtensionMayBeEnabled()
+        {
+            _extensionService.EnableExtension("NUnit.Engine.Tests.DummyDisabledExtension");
+            foreach (ExtensionNode node in _extensionService.Extensions)
+                if (node.TypeName == "NUnit.Engine.Tests.DummyDisabledExtension")
+                {
+                    Assert.True(node.Enabled);
+                    return;
+                }
+
+            Assert.Fail("Could not find DummyDisabledExtension");
         }
     }
 }
