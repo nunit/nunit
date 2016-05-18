@@ -92,6 +92,8 @@
     <Compile Include="TestFilter.cs" />
     <Compile Include="TestPackage.cs" />
     <Compile Include="ITestRun.cs" />
+    <Compile Include="Extensibility\IExtensionPoint.cs" />
+    <Compile Include="Extensibility\IExtensionNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\nunit.snk">

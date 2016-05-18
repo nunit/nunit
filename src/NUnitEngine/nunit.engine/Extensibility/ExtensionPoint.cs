@@ -27,10 +27,10 @@ using System.Collections.Generic;
 namespace NUnit.Engine.Extensibility
 {
     /// <summary>
-    /// ExtensionPoint represents a single point in the TestEngine
+    /// An ExtensionPoint represents a single point in the TestEngine
     /// that may be extended by user addins and extensions.
     /// </summary>
-    public class ExtensionPoint
+    public class ExtensionPoint : IExtensionPoint
     {
         /// <summary>
         /// Construct an ExtensionPoint

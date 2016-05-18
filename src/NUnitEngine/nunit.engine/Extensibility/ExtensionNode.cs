@@ -31,7 +31,7 @@ namespace NUnit.Engine.Extensibility
     /// on a particular extension point. It stores information needed to
     /// activate the extension object on a just-in-time basis.
     /// </summary>
-    public class ExtensionNode
+    public class ExtensionNode : IExtensionNode
     {
         private object _extensionObject;
         private Dictionary<string, List<string>> _properties = new Dictionary<string, List<string>>();
@@ -57,12 +57,12 @@ namespace NUnit.Engine.Extensibility
         public string AssemblyPath { get; private set; }
 
         /// <summary>
-        /// Gets the full name of the Type of the assembly object.
+        /// Gets the full name of the Type of the extension object.
         /// </summary>
         public string TypeName { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="NUnit.Engine.Extensibility.ExtensionNode"/> is enabled.
+        /// Gets or sets a value indicating whether this <see cref="NUnit.Engine.Extensibility.ExtensionNode"/> is enabled.
         /// </summary>
         /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
         public bool Enabled	{ get; set; }
