@@ -34,6 +34,7 @@ namespace NUnit.Framework.Attributes
     [TestFixture("zip", "zip")]
     [TestFixture(42, 42, 99)]
     [TestFixture(null, null, "null test")]
+    [TestFixture((string)null, (string)null, "typed null test")]
     public class ParameterizedTestFixture
     {
         private string eq1;
