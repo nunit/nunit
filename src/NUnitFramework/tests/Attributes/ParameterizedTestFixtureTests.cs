@@ -30,6 +30,36 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
+    [TestFixture(45, 45, 90)]
+    [TestFixture(null, null, null)]
+    public class NullableParameterizedTestFixture
+    {
+        int? _one;
+        int? _two;
+        int? _expected;
+
+        public NullableParameterizedTestFixture(int? one, int? two, int? expected)
+        {
+            _one = one;
+            _two = two;
+            _expected = expected;
+        }
+
+        [Test]
+        public void TestAddition()
+        {
+            if(_one.HasValue && _two.HasValue && _expected.HasValue)
+            {
+                Assert.That(_one.Value + _two.Value, Is.EqualTo(_expected.Value));
+            }
+            else
+            {
+                Assert.That(_one, Is.Null);
+                Assert.That(_two, Is.Null);
+            }
+        }
+    }
+
     [TestFixture("hello", "hello", "goodbye")]
     [TestFixture("zip", "zip")]
     [TestFixture(42, 42, 99)]
