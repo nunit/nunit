@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Compatibility;
+using NUnit.Framework.Interfaces;
 
 #if PORTABLE
 using System.Linq;
@@ -167,7 +168,8 @@ namespace NUnit.Framework.Internal
             if (arguments == null) return Construct(type);
 
             Type[] argTypes = GetTypeArray(arguments);
-            ConstructorInfo ctor = type.GetConstructor(argTypes);
+            ITypeInfo typeInfo = new TypeWrapper(type);
+            ConstructorInfo ctor = typeInfo.GetConstructor(argTypes);
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
 
@@ -181,12 +183,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="objects">An array of objects</param>
         /// <returns>An array of Types</returns>
-        private static Type[] GetTypeArray(object[] objects)
+        internal static Type[] GetTypeArray(object[] objects)
         {
             Type[] types = new Type[objects.Length];
             int index = 0;
             foreach (object o in objects)
-                types[index++] = o.GetType();
+            {
+                // NUnitNullType is a marker to indicate null since we can't do typeof(null) or null.GetType()
+                types[index++] = o == null ? typeof(NUnitNullType) : o.GetType();
+            }
             return types;
         }
 

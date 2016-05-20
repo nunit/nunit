@@ -23,13 +23,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
-
-#if PORTABLE
-using System.Linq;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -242,11 +239,21 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the public constructor taking the specified argument Types
+        /// </summary>
+        public ConstructorInfo GetConstructor(Type[] argTypes)
+        {
+            return Type.GetConstructors()
+                .Where(c => c.GetParameters().ParametersMatch(argTypes))
+                .FirstOrDefault();
+        }
+
+        /// <summary>
         /// Returns a value indicating whether this Type has a public constructor taking the specified argument Types.
         /// </summary>
         public bool HasConstructor(Type[] argTypes)
         {
-            return Type.GetConstructor(argTypes) != null;
+            return GetConstructor(argTypes) != null;
         }
 
         /// <summary>
