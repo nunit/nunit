@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.IO;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
@@ -54,6 +55,17 @@ namespace NUnit.Framework.Tests
         public void ConstructorCanAccessTestDirectory()
         {
             Assert.That(_testDirectory, Is.Not.Null);
+        }
+
+        [TestCaseSource("MySource")]
+        public void TestCaseSourceCanAccessTestDirectory(string testDirectory)
+        {
+            Assert.That(testDirectory, Is.EqualTo(_testDirectory));
+        }
+
+        static IEnumerable<string> MySource()
+        {
+            yield return TestContext.CurrentContext.TestDirectory;
         }
 #endif
 
