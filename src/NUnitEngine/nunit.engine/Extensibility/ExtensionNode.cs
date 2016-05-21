@@ -46,15 +46,10 @@ namespace NUnit.Engine.Extensibility
         {
             AssemblyPath = assemblyPath;
             TypeName = typeName;
-			Enabled = true; // By default
+            Enabled = true; // By default
         }
 
-        #region Properties
-
-        /// <summary>
-        /// Gets the path to the assembly where the extension is defined.
-        /// </summary>
-        public string AssemblyPath { get; private set; }
+        #region IExtensionNode Members
 
         /// <summary>
         /// Gets the full name of the Type of the extension object.
@@ -66,6 +61,49 @@ namespace NUnit.Engine.Extensibility
         /// </summary>
         /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
         public bool Enabled	{ get; set; }
+
+        /// <summary>
+        /// Gets and sets the unique string identifying the ExtensionPoint for which 
+        /// this Extension is intended. This identifier may be supplied by the attribute
+        /// marking the extension or deduced by NUnit from the Type of the extension class.
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// An optional description of what the extension does.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets a collection of the names of all this extension's properties
+        /// </summary>
+        public IEnumerable<string> PropertyNames
+        {
+            get { return _properties.Keys; }
+        }
+
+        /// <summary>
+        /// Gets a collection of the values of a particular named property.
+        /// If none are present, returns an empty enumerator.
+        /// </summary>
+        /// <param name="name">The property name</param>
+        /// <returns>A collection of values</returns>
+        public IEnumerable<string> GetValues(string name)
+        {
+            if (_properties.ContainsKey(name))
+                return _properties[name];
+            else
+                return new string[0];
+        }
+
+        #endregion
+
+        #region Other Properties
+
+        /// <summary>
+        /// Gets the path to the assembly where the extension is defined.
+        /// </summary>
+        public string AssemblyPath { get; private set; }
 
         /// <summary>
         /// Gets an object of the specified extension type, loading the Assembly
@@ -83,18 +121,6 @@ namespace NUnit.Engine.Extensibility
                 return _extensionObject;
             }
         }
-
-        /// <summary>
-        /// Gets and sets the unique string identifying the ExtensionPoint for which 
-        /// this Extension is intended. This identifier may be supplied by the attribute
-        /// marking the extension or deduced by NUnit from the Type of the extension class.
-        /// </summary>
-        public string Path { get; set; }
-
-        /// <summary>
-        /// An optional description of what the extension does.
-        /// </summary>
-        public string Description { get; set; }
 
         #endregion
 
@@ -118,16 +144,6 @@ namespace NUnit.Engine.Extensibility
                 list.Add(val);
                 _properties.Add(name, list);
             }
-        }
-
-        public IEnumerable<string> GetProperties(string name)
-        {
-            return _properties.ContainsKey(name) ? _properties[name] : new List<string>();
-        }
-
-        public string GetProperty(string name)
-        {
-            return _properties.ContainsKey(name) ? _properties[name][0] : null;
         }
 
         #endregion

@@ -37,7 +37,7 @@ namespace NUnit.Engine.Services
     /// maintains them in a database. It can return extension nodes or 
     /// actual extension objects on request.
     /// </summary>
-    public class ExtensionService : Service
+    public class ExtensionService : Service, IExtensionService
     {
         static Logger log = InternalTrace.GetLogger(typeof(ExtensionService));
 
@@ -46,16 +46,49 @@ namespace NUnit.Engine.Services
 
         private List<ExtensionNode> _extensions = new List<ExtensionNode>();
 
-        #region Public Properties
+        #region IExtensionService Members
 
-        public IEnumerable<ExtensionPoint> ExtensionPoints
+        /// <summary>
+        /// Gets an enumeration of all ExtensionPoints in the engine.
+        /// </summary>
+        public IEnumerable<IExtensionPoint> ExtensionPoints
         {
-            get { return _extensionPoints; }
+            get { return _extensionPoints.ToArray(); }
         }
 
-        public IEnumerable<ExtensionNode> Extensions
+        /// <summary>
+        /// Gets an enumeration of all installed Extensions.
+        /// </summary>
+        public IEnumerable<IExtensionNode> Extensions
         {
-            get { return _extensions;  }
+            get { return _extensions.ToArray();  }
+        }
+
+        /// <summary>
+        /// Get an ExtensionPoint based on it's unique identifying path.
+        /// </summary>
+        IExtensionPoint IExtensionService.GetExtensionPoint(string path)
+        {
+            return this.GetExtensionPoint(path);
+        }
+
+        /// <summary>
+        /// Get an enumeration of ExtensionNodes based on their identifying path.
+        /// </summary>
+        IEnumerable<IExtensionNode> IExtensionService.GetExtensionNodes(string path)
+        {
+            foreach (var node in this.GetExtensionNodes(path))
+                yield return node;
+        }
+
+        /// <summary>
+        /// Enable or disable an extension
+        /// </summary>
+        public void EnableExtension(string typeName, bool enabled)
+        {
+            foreach (var node in _extensions)
+                if (node.TypeName == typeName)
+                    node.Enabled = enabled;
         }
 
         #endregion
@@ -76,7 +109,7 @@ namespace NUnit.Engine.Services
         public ExtensionPoint GetExtensionPoint(Type type)
         {
             foreach (var ep in _extensionPoints)
-                if (ep.Type == type)
+                if (ep.TypeName == type.FullName)
                     return ep;
 
             return null;
@@ -88,7 +121,7 @@ namespace NUnit.Engine.Services
         public ExtensionPoint GetExtensionPoint(TypeReference type)
         {
             foreach (var ep in _extensionPoints)
-                if (ep.Type.FullName == type.FullName)
+                if (ep.TypeName == type.FullName)
                     return ep;
 
             return null;
@@ -126,13 +159,6 @@ namespace NUnit.Engine.Services
         {
             foreach (var node in GetExtensionNodes<T>())
               	 yield return (T)node.ExtensionObject;
-        }
-
-        public void EnableExtension(string typeName)
-        {
-            foreach (var node in Extensions)
-                if (node.TypeName == typeName)
-                    node.Enabled = true;
         }
 
         #endregion
@@ -190,7 +216,7 @@ namespace NUnit.Engine.Services
                 _extensionPoints.Add(ep);
                 _pathIndex.Add(ep.Path, ep);
 
-                log.Info("  Found Path={0}, Type={1}", ep.Path, ep.Type.Name);
+                log.Info("  Found Path={0}, Type={1}", ep.Path, ep.TypeName);
             }
 
             foreach (Type type in assembly.GetExportedTypes())
@@ -215,7 +241,7 @@ namespace NUnit.Engine.Services
                     _extensionPoints.Add(ep);
                     _pathIndex.Add(path, ep);
 
-                    log.Info("  Found Path={0}, Type={1}", ep.Path, ep.Type.Name);
+                    log.Info("  Found Path={0}, Type={1}", ep.Path, ep.TypeName);
                 }
             }
         }

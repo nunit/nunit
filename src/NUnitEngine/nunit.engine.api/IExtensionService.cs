@@ -23,49 +23,45 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Extensibility
+namespace NUnit.Engine
 {
     /// <summary>
-    /// The IExtensionNode interface is implemented by a class that represents a 
-    /// single extension being installed on a particular extension point.
+    /// The IExtensionService interface allows a runner to manage extensions.
     /// </summary>
-    public interface IExtensionNode
+    public interface IExtensionService
     {
-        /// <summary>
-        /// Gets the full name of the Type of the extension object.
-        /// </summary>
-        string TypeName { get; }
+        #region Public Properties
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="NUnit.Engine.Extensibility.IExtensionNode"/> is enabled.
+        /// Gets an enumeration of all ExtensionPoints in the engine.
         /// </summary>
-        /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-        bool Enabled { get; }
-    
-        /// <summary>
-        /// Gets the unique string identifying the ExtensionPoint for which 
-        /// this Extension is intended. This identifier may be supplied by the attribute
-        /// marking the extension or deduced by NUnit from the Type of the extension class.
-        /// </summary>
-        string Path { get; }
+        IEnumerable<IExtensionPoint> ExtensionPoints { get; }
 
         /// <summary>
-        /// Gets an optional description of what the extension does.
+        /// Gets an enumeration of all installed Extensions.
         /// </summary>
-        string Description { get; }
+        IEnumerable<IExtensionNode> Extensions { get; }
 
         /// <summary>
-        /// Gets a collection of the names of all this extension's properties
+        /// Get an ExtensionPoint based on it's unique identifying path.
         /// </summary>
-        IEnumerable<string> PropertyNames { get; }
+        IExtensionPoint GetExtensionPoint(string path);
 
         /// <summary>
-        /// Gets a collection of the values of a particular named property
-        /// If none are present, returns an empty enumerator.
+        /// Get an enumeration of ExtensionNodes based on their identifying path.
         /// </summary>
-        /// <param name="name">The property name</param>
-        /// <returns>A collection of values</returns>
-        IEnumerable<string> GetValues(string name);
+        IEnumerable<IExtensionNode> GetExtensionNodes(string path);
+
+        /// <summary>
+        /// Enable or disable an extension
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <param name="enabled"></param>
+        void EnableExtension(string typeName, bool enabled);
+
+        #endregion
     }
 }
+

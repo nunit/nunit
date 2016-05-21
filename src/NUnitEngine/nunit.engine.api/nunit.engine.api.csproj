@@ -94,6 +94,7 @@
     <Compile Include="ITestRun.cs" />
     <Compile Include="Extensibility\IExtensionPoint.cs" />
     <Compile Include="Extensibility\IExtensionNode.cs" />
+    <Compile Include="IExtensionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\nunit.snk">

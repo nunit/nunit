@@ -30,7 +30,8 @@ namespace NUnit.Engine.Services.Tests
 {
     public class ExtensionServiceTests
     {
-        private ExtensionService _extensionService;
+        private ExtensionService _serviceClass;
+        private IExtensionService _serviceInterface;
 
 
         // NOTE: Some of these tests depend on certain extensions being built
@@ -56,24 +57,26 @@ namespace NUnit.Engine.Services.Tests
             typeof(IFrameworkDriver)
         };
 
+        private static readonly int[] KNOWN_EXTENSION_POINT_COUNTS = new int[] { 1, 1, 1, 2, 1, 1 };
+
         [SetUp]
         public void CreateService()
         {
-            _extensionService = new ExtensionService();
+            _serviceInterface = _serviceClass = new ExtensionService();
 
             // Rather than actually starting the service, which would result
             // in finding the extensions actually in use on the current system,
             // we simulate the start using this assemblies dummy extensions.
-            _extensionService.FindExtensionPoints(typeof(TestEngine).Assembly);
-            _extensionService.FindExtensionPoints(typeof(ITestEngine).Assembly);
+            _serviceClass.FindExtensionPoints(typeof(TestEngine).Assembly);
+            _serviceClass.FindExtensionPoints(typeof(ITestEngine).Assembly);
 
-            _extensionService.FindExtensionsInAssembly(GetType().Assembly.Location, true);
+            _serviceClass.FindExtensionsInAssembly(GetType().Assembly.Location, true);
         }
 
         [TestCaseSource("KNOWN_EXTENSION_POINT_PATHS")]
         public void CanListExtensionPoints(string path)
         {
-            foreach (var ep in _extensionService.ExtensionPoints)
+            foreach (var ep in _serviceInterface.ExtensionPoints)
                 if (ep.Path == path)
                     return;
 
@@ -83,7 +86,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void AllExtensionPointsAreKnown()
         {
-            foreach (var ep in _extensionService.ExtensionPoints)
+            foreach (var ep in _serviceInterface.ExtensionPoints)
             {
                 var known = false;
                 foreach (var path in KNOWN_EXTENSION_POINT_PATHS)
@@ -102,10 +105,10 @@ namespace NUnit.Engine.Services.Tests
             [ValueSource("KNOWN_EXTENSION_POINT_PATHS")] string path,
             [ValueSource("KNOWN_EXTENSION_POINT_TYPES")] Type type)
         {
-            var ep = _extensionService.GetExtensionPoint(path);
+            var ep = _serviceInterface.GetExtensionPoint(path);
             Assert.NotNull(ep);
             Assert.That(ep.Path, Is.EqualTo(path));
-            Assert.That(ep.Type, Is.EqualTo(type));
+            Assert.That(ep.TypeName, Is.EqualTo(type.FullName));
         }
 
         [Test, Sequential]
@@ -113,10 +116,10 @@ namespace NUnit.Engine.Services.Tests
             [ValueSource("KNOWN_EXTENSION_POINT_PATHS")] string path,
             [ValueSource("KNOWN_EXTENSION_POINT_TYPES")] Type type)
         {
-            var ep = _extensionService.GetExtensionPoint(type);
+            var ep = _serviceClass.GetExtensionPoint(type);
             Assert.NotNull(ep);
             Assert.That(ep.Path, Is.EqualTo(path));
-            Assert.That(ep.Type, Is.EqualTo(type));
+            Assert.That(ep.TypeName, Is.EqualTo(type.FullName));
         }
 
         private static readonly string[] KNOWN_EXTENSIONS = new string[] {
@@ -131,7 +134,7 @@ namespace NUnit.Engine.Services.Tests
         [TestCaseSource("KNOWN_EXTENSIONS")]
         public void CanListExtensions(string typeName)
         {
-            foreach (ExtensionNode node in _extensionService.Extensions)
+            foreach (ExtensionNode node in _serviceClass.Extensions)
                 if (node.TypeName == typeName)
                 {
                     Assert.True(node.Enabled);
@@ -141,22 +144,24 @@ namespace NUnit.Engine.Services.Tests
             Assert.Fail("Couldn't find known Extension {0}", typeName);
         }
 
-        [TestCaseSource("KNOWN_EXTENSION_POINT_PATHS")]
-        public void ExtensionsAreAddedToExtensionPoint(string path)
+        [Test, Sequential]
+        public void ExtensionsAreAddedToExtensionPoint(
+            [ValueSource("KNOWN_EXTENSION_POINT_PATHS")] string path,
+            [ValueSource("KNOWN_EXTENSION_POINT_COUNTS")] int extensionCount)
         {
-            var ep = _extensionService.GetExtensionPoint(path);
+            var ep = _serviceClass.GetExtensionPoint(path);
             Assume.That(ep, Is.Not.Null);
 
-            Assert.That(ep.Extensions.Count, Is.GreaterThan(0));
+            Assert.That(ep.Extensions.Count, Is.EqualTo(extensionCount));
         }
 
         [Test]
         public void ExtensionMayBeDisabledByDefault()
         {
-            foreach (ExtensionNode node in _extensionService.Extensions)
+            foreach (ExtensionNode node in _serviceInterface.Extensions)
                 if (node.TypeName == "NUnit.Engine.Tests.DummyDisabledExtension")
                 {
-                    Assert.False(node.Enabled);
+                    Assert.False(node.Enabled, "Should be disabled by default");
                     return;
                 }
 
@@ -166,11 +171,11 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void DisabledExtensionMayBeEnabled()
         {
-            _extensionService.EnableExtension("NUnit.Engine.Tests.DummyDisabledExtension");
-            foreach (ExtensionNode node in _extensionService.Extensions)
+            _serviceInterface.EnableExtension("NUnit.Engine.Tests.DummyDisabledExtension", true);
+            foreach (var node in _serviceInterface.Extensions)
                 if (node.TypeName == "NUnit.Engine.Tests.DummyDisabledExtension")
                 {
-                    Assert.True(node.Enabled);
+                    Assert.True(node.Enabled, "Failed to enable extension");
                     return;
                 }
 

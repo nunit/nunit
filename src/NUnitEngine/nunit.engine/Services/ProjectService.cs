@@ -109,7 +109,7 @@ namespace NUnit.Engine.Services
                     {
                         foreach (var node in extensionService.GetExtensionNodes<IProjectLoader>())
                         {
-                            foreach (string ext in node.GetProperties("FileExtension"))
+                            foreach (string ext in node.GetValues("FileExtension"))
                             {
                                 if (ext != null)
                                 {
