@@ -25,15 +25,14 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using NUnit.Framework;
-using NUnit.ConsoleRunner.Utilities;
 
-namespace NUnit.ConsoleRunner.Tests
+namespace NUnit.Engine.Listeners
 {
     using System;
 
     [TestFixture]
     
-    public class TeamCityServiceMessagePublisherTests
+    public class TeamCityEventListenerTests
     {
         private StringBuilder _output;
         private StringWriter _outputWriter;
@@ -378,9 +377,9 @@ namespace NUnit.ConsoleRunner.Tests
             return CreateMessage(string.Format("<test-case id=\"{0}\" {1} name=\"{2}\" fullname=\"{2}\" runstate=\"Runnable\" result=\"Failed\" duration=\"{3}\" asserts=\"0\"><properties><property name=\"_CATEGORIES\" value=\"F\" /></properties><failure><message><![CDATA[{4}]]></message><stack-trace><![CDATA[{5}]]></stack-trace></failure></test-case>", id, GetNamedAttr("parentId", parentId), name, duration, message, stackTrace));
         }
 
-        private TeamCityServiceMessagePublisher CreateInstance()
+        private TeamCityEventListener CreateInstance()
         {
-            return new TeamCityServiceMessagePublisher(_outputWriter);
+            return new TeamCityEventListener(_outputWriter);
         }
 
         private static string GetNamedAttr(string attrName, string attrValue)

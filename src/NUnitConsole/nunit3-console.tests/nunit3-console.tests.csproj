@@ -67,7 +67,6 @@
     <Compile Include="MakeTestPackageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultReporterTests.cs" />
-    <Compile Include="TeamCityServiceMessagePublisherTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestListWithEmptyLine.tst">

@@ -48,7 +48,7 @@ namespace NUnit.Common
 
         internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, params string[] args)
         {
-            // Apply default oprions
+            // Apply default options
             if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
 #if !PORTABLE
             TeamCity = defaultOptionsProvider.TeamCity;
