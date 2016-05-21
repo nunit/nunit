@@ -524,7 +524,7 @@ namespace NUnit.Common.Compatibility
                 return true;
             
             // Look for the marker that indicates from was null
-            if (from == typeof(NUnitNullType) && to.GetTypeInfo().IsClass)
+            if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
                 return true;
 
             if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
