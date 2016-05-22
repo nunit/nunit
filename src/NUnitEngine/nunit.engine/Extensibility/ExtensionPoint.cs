@@ -27,10 +27,10 @@ using System.Collections.Generic;
 namespace NUnit.Engine.Extensibility
 {
     /// <summary>
-    /// ExtensionPoint represents a single point in the TestEngine
+    /// An ExtensionPoint represents a single point in the TestEngine
     /// that may be extended by user addins and extensions.
     /// </summary>
-    public class ExtensionPoint
+    public class ExtensionPoint : IExtensionPoint
     {
         /// <summary>
         /// Construct an ExtensionPoint
@@ -40,9 +40,11 @@ namespace NUnit.Engine.Extensibility
         public ExtensionPoint(string path, Type type)
         {
             Path = path;
-            Type = type;
+            TypeName = type.FullName;
             Extensions = new List<ExtensionNode>();
         }
+
+        #region IExtensionPoint Members
 
         /// <summary>
         /// Gets the unique path identifying this extension point.
@@ -50,19 +52,35 @@ namespace NUnit.Engine.Extensibility
         public string Path { get; private set; }
 
         /// <summary>
-        /// Gets the Type of any extension object to be installed at this extension point.
-        /// </summary>
-        public Type Type { get; private set; }
-
-        /// <summary>
         /// Gets and sets the optional description of this extension point.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets the FullName of the Type required for any extension to be installed at this extension point.
+        /// </summary>
+        public string TypeName { get; private set; }
+
+        /// <summary>
+        /// Gets an enumeration of IExtensionNodes for extensions installed on this extension point.
+        /// </summary>
+        IEnumerable<IExtensionNode> IExtensionPoint.Extensions
+        {
+            get { return this.Extensions.ToArray(); }
+        }
+
+        #endregion
+
+        #region Other Properties
+
+        /// <summary>
         /// Gets a list of ExtensionNodes for extensions installed on this extension point.
         /// </summary>
         public List<ExtensionNode> Extensions { get; private set; }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Install an extension at this extension point. If the
@@ -94,5 +112,7 @@ namespace NUnit.Engine.Extensibility
         {
             Extensions.Remove(extension);
         }
+
+        #endregion
     }
 }

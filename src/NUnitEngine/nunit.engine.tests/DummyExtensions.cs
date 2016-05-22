@@ -162,4 +162,13 @@ namespace NUnit.Engine.Tests
             throw new NotImplementedException();
         }
     }
+
+    [Extension(Enabled=false)]
+    public class DummyDisabledExtension : ITestEventListener
+    {
+        public void OnTestEvent(string report)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

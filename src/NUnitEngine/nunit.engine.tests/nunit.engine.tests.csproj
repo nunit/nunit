@@ -108,6 +108,7 @@
     <Compile Include="Services\TestFilteringTests.cs" />
     <Compile Include="TempResourceFile.cs" />
     <Compile Include="TestEngineResultTests.cs" />
+    <Compile Include="Extensibility\ExtensionAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-2.0.csproj">
@@ -152,4 +153,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Extensibility\" />
+  </ItemGroup>
 </Project>

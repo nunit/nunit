@@ -43,12 +43,9 @@ namespace NUnit.Engine.Services
                     var formatList = new List<string>(BUILT_IN_FORMATS);
 
                     foreach (var node in _extensionNodes)
-                    {
-                        var format = node.GetProperty("Format");
-                        if (format != null)
+                        foreach (var format in node.GetValues("Format"))
                             formatList.Add(format);
-                    }
-
+ 
                     _formats = formatList.ToArray();
                 }
 
@@ -74,8 +71,9 @@ namespace NUnit.Engine.Services
                     return new XmlTransformResultWriter(args);
                 default:
                     foreach (var node in _extensionNodes)
-                        if (node.GetProperty("Format") == format)
-                            return node.ExtensionObject as IResultWriter;
+                        foreach (var supported in node.GetValues("Format"))
+                            if (supported == format)
+                                return node.ExtensionObject as IResultWriter;
 
                     return null;
             }

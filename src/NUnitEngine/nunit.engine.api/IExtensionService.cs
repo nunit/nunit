@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,40 +22,46 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using NUnit.Engine.Extensibility;
 
-namespace NUnit.Engine.Extensibility
+namespace NUnit.Engine
 {
     /// <summary>
-    /// The ExtensionAttribute is used to identify a class that is intended
-    /// to serve as an extension.
+    /// The IExtensionService interface allows a runner to manage extensions.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=false)]
-    public class ExtensionAttribute : Attribute
+    public interface IExtensionService
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NUnit.Engine.Extensibility.ExtensionAttribute"/> class.
-        /// </summary>
-        public ExtensionAttribute()
-        {
-            Enabled = true;
-        }
+        #region Public Properties
 
         /// <summary>
-        /// A unique string identifying the ExtensionPoint for which this Extension is 
-        /// intended. This is an optional field provided NUnit is able to deduce the
-        /// ExtensionPoint from the Type of the extension class.
+        /// Gets an enumeration of all ExtensionPoints in the engine.
         /// </summary>
-        public string Path { get; set; }
+        IEnumerable<IExtensionPoint> ExtensionPoints { get; }
 
         /// <summary>
-        /// An optional description of what the extension does.
+        /// Gets an enumeration of all installed Extensions.
         /// </summary>
-        public string Description { get; set; }
+        IEnumerable<IExtensionNode> Extensions { get; }
 
         /// <summary>
-        /// Flag indicating whether the extension is enabled.
+        /// Get an ExtensionPoint based on it's unique identifying path.
         /// </summary>
-        /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-        public bool Enabled { get; set; }
+        IExtensionPoint GetExtensionPoint(string path);
+
+        /// <summary>
+        /// Get an enumeration of ExtensionNodes based on their identifying path.
+        /// </summary>
+        IEnumerable<IExtensionNode> GetExtensionNodes(string path);
+
+        /// <summary>
+        /// Enable or disable an extension
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <param name="enabled"></param>
+        void EnableExtension(string typeName, bool enabled);
+
+        #endregion
     }
 }
+
