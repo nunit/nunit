@@ -165,46 +165,76 @@ namespace NUnit.Framework.Internal
 
         #region Static Singleton Instance
 
-        /// <summary>
-        /// The current context, head of the list of saved contexts.
-        /// </summary>
+        // NOTE: We use different implementations for various platforms
+
+        // If a user creates a thread then the current context
+        // will be null. This also happens when the compiler
+        // automatically creates threads for async methods.
+        // We create a new context, which is automatically
+        // populated with values taken from the current thread.
+
 #if SILVERLIGHT || PORTABLE
+        // In the Silverlight and portable builds, we use a ThreadStatic
+        // field to hold the current TestExecutionContext.
+
         [ThreadStatic]
-        private static TestExecutionContext current;
-#elif NETCF
-        private static LocalDataStoreSlot slotContext = Thread.AllocateDataSlot();
-#else
-        private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
-#endif
+        private static TestExecutionContext _currentContext;
 
         /// <summary>
-        /// Gets the current context.
+        /// Gets and sets the current context.
         /// </summary>
-        /// <value>The current context.</value>
         public static TestExecutionContext CurrentContext
         {
             get
             {
-                // If a user creates a thread then the current context
-                // will be null. This also happens when the compiler
-                // automatically creates threads for async methods.
-                // We create a new context, which is automatically
-                // populated with _values taken from the current thread.
-#if SILVERLIGHT || PORTABLE
-                if (current == null)
-                    current = new TestExecutionContext();
+               if (_currentContext == null)
+                    _currentContext = new TestExecutionContext();
 
-                return current;
+                return _currentContext;
+            }
+            private set
+            {
+                _currentContext = value;
+            }
+        }
 #elif NETCF
-                var current = (TestExecutionContext)Thread.GetData(slotContext);
+        // In the compact framework build, we use a LocalStoreDataSlot
+
+        private static LocalDataStoreSlot contextSlot = Thread.AllocateDataSlot();
+        
+        /// <summary>
+        /// Gets and sets the current context.
+        /// </summary>
+        public static TestExecutionContext CurrentContext
+        {
+            get
+            {
+                var current = (TestExecutionContext)Thread.GetData(contextSlot);
                 if (current == null)
                 {
                     current = new TestExecutionContext();
-                    Thread.SetData(slotContext, current);
+                    Thread.SetData(contextSlot, current);
                 }
 
                 return current;
+            }
+            private set
+            {
+                Thread.SetData(contextSlot, value);
+            }
+        }
 #else
+        // In all other builds, we use the CallContext
+
+        private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
+
+        /// <summary>
+        /// Gets and sets the current context.
+        /// </summary>
+        public static TestExecutionContext CurrentContext
+        {
+            get
+            {
                 var context = GetTestExecutionContext();
                 if (context == null) // This can happen on Mono
                 {
@@ -213,25 +243,16 @@ namespace NUnit.Framework.Internal
                 }
 
                 return context;
-#endif
             }
-
             private set
             {
-#if SILVERLIGHT || PORTABLE
-                current = value;
-#elif NETCF
-                Thread.SetData(slotContext, value);
-#else
                 if (value == null)
                     CallContext.FreeNamedDataSlot(CONTEXT_KEY);
                 else
                     CallContext.SetData(CONTEXT_KEY, value);
-#endif
             }
         }
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
         /// <summary>
         /// Get the current context or return null if none is found.
         /// </summary>

@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -104,7 +105,16 @@ namespace NUnit.Framework
         /// </summary>
         public string TestDirectory
         {
-            get { return AssemblyHelper.GetDirectoryName(_testExecutionContext.CurrentTest.TypeInfo.Assembly); }
+            get
+            {
+                Test test = _testExecutionContext.CurrentTest;
+                if (test != null)
+                    return AssemblyHelper.GetDirectoryName(test.TypeInfo.Assembly);
+
+                // Test is null, we may be loading tests rather than executing.
+                // Assume that calling assembly is the test assembly.
+                return AssemblyHelper.GetDirectoryName(Assembly.GetCallingAssembly());
+            }
         }
 #endif
 

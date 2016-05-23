@@ -158,6 +158,7 @@ namespace NUnit.Framework.Api
                 Randomizer.InitialSeed = (int)settings[PackageSettings.RandomSeed];
 
             return LoadedTest = _builder.Build(assemblyName, settings);
+
         }
 
         /// <summary>
