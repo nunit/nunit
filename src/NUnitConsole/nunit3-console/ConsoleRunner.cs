@@ -55,6 +55,7 @@ namespace NUnit.ConsoleRunner
         private ConsoleOptions _options;
         private IResultService _resultService;
         private ITestFilterService _filterService;
+        private IExtensionService _extensionService;
 
         private ExtendedTextWriter _outWriter;
         private TextWriter _errorWriter = Console.Error;
@@ -80,6 +81,10 @@ namespace NUnit.ConsoleRunner
 
             _resultService = _engine.Services.GetService<IResultService>();
             _filterService = _engine.Services.GetService<ITestFilterService>();
+            _extensionService = _engine.Services.GetService<IExtensionService>();
+
+            // Enable TeamCityEventListener immediately, before the console is redirected
+            _extensionService.EnableExtension("NUnit.Engine.Listeners.TeamCityEventListener", _options.TeamCity);
         }
 
         #endregion
@@ -172,7 +177,7 @@ namespace NUnit.ConsoleRunner
                 using (ITestRunner runner = _engine.GetRunner(package))
                 using (var output = CreateOutputWriter())
                 {
-                    var eventHandler = new TestEventHandler(output, labels, _options.TeamCity); 
+                    var eventHandler = new TestEventHandler(output, labels); 
 
                     result = runner.Run(eventHandler, filter);
                 }

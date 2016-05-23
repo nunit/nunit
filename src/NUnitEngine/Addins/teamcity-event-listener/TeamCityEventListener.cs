@@ -21,23 +21,26 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.IO;
 using System.Xml;
 using System.Collections.Generic;
 using System.Globalization;
+using NUnit.Engine.Extensibility;
 
-namespace NUnit.ConsoleRunner.Utilities
+namespace NUnit.Engine.Listeners
 {
-    using System;
-
-    internal class TeamCityServiceMessagePublisher
+    [Extension(Enabled = false)]
+    public class TeamCityEventListener : ITestEventListener
     {
         private readonly TextWriter _outWriter;
         private readonly Dictionary<string, string> _refs = new Dictionary<string, string>();
         private int _blockCounter;
         private string _rootFlowId;
 
-        public TeamCityServiceMessagePublisher(TextWriter outWriter)
+        public TeamCityEventListener() : this(Console.Out) { }
+
+        public TeamCityEventListener(TextWriter outWriter)
         {
             if (outWriter == null)
             {
@@ -47,14 +50,27 @@ namespace NUnit.ConsoleRunner.Utilities
             _outWriter = outWriter;
         }
 
-        public void RegisterMessage(XmlNode message)
+        #region ITestEventListener Implementation
+
+        public void OnTestEvent(string report)
         {
-            if (message == null)
+            var doc = new XmlDocument();
+            doc.LoadXml(report);
+
+            var testEvent = doc.FirstChild;
+            RegisterMessage(testEvent);
+        }
+
+        #endregion
+
+        public void RegisterMessage(XmlNode testEvent)
+        {
+            if (testEvent == null)
             {
                 throw new ArgumentNullException("message");
             }
 
-            var messageName = message.Name;
+            var messageName = testEvent.Name;
             if (string.IsNullOrEmpty(messageName))
             {
                 return;
@@ -67,14 +83,14 @@ namespace NUnit.ConsoleRunner.Utilities
                 return;
             }           
 
-            var fullName = message.GetAttribute("fullname");
+            var fullName = testEvent.GetAttribute("fullname");
             if (string.IsNullOrEmpty(fullName))
             {
                 return;
             }
 
-            var id = message.GetAttribute("id");
-            var parentId = message.GetAttribute("parentId");
+            var id = testEvent.GetAttribute("id");
+            var parentId = testEvent.GetAttribute("parentId");
             string flowId;
             if (parentId != null)
             {
@@ -158,7 +174,7 @@ namespace NUnit.ConsoleRunner.Utilities
                     try
                     {
                         _refs.Remove(id);
-                        var result = message.GetAttribute("result");
+                        var result = testEvent.GetAttribute("result");
                         if (string.IsNullOrEmpty(result))
                         {
                             break;
@@ -167,19 +183,19 @@ namespace NUnit.ConsoleRunner.Utilities
                         switch (result.ToLowerInvariant())
                         {
                             case "passed":
-                                OnTestFinished(testFlowId, message, fullName);
+                                OnTestFinished(testFlowId, testEvent, fullName);
                                 break;
 
                             case "inconclusive":
-                                OnTestInconclusive(testFlowId, message, fullName);
+                                OnTestInconclusive(testFlowId, testEvent, fullName);
                                 break;
 
                             case "skipped":
-                                OnTestSkipped(testFlowId, message, fullName);
+                                OnTestSkipped(testFlowId, testEvent, fullName);
                                 break;
 
                             case "failed":
-                                OnTestFailed(testFlowId, message, fullName);
+                                OnTestFailed(testFlowId, testEvent, fullName);
                                 break;
                         }
                     }

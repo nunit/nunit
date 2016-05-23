@@ -38,6 +38,7 @@
     <Compile Include="NUnitProjectLoaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="resources\TestResource.cs" />
+    <Compile Include="TeamCityEventListenerTests.cs" />
     <Compile Include="TempResourceFile.cs" />
     <Compile Include="VisualStudioProjectLoaderTests.cs" />
     <Compile Include="VSProjectTests.cs" />
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\nunit-project-loader\nunit-project-loader.csproj">
       <Project>{E71A76CA-0089-4E1A-A7FB-210429DBED6E}</Project>
       <Name>nunit-project-loader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\teamcity-event-listener\teamcity-event-listener.csproj">
+      <Project>{a867079b-a172-4dae-9549-63b331092a23}</Project>
+      <Name>teamcity-event-listener</Name>
     </ProjectReference>
     <ProjectReference Include="..\vs-project-loader\vs-project-loader.csproj">
       <Project>{96181317-7B6F-49F0-B283-6E804D41C8AF}</Project>
