@@ -215,18 +215,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             else if (!fixture.TypeInfo.IsStaticClass)
             {
-                object[] args = fixture.Arguments;
-
-                Type[] argTypes;
-
-                // Note: This could be done more simply using
-                // Type.EmptyTypes and Type.GetTypeArray() but
-                // they don't exist in all runtimes we support.
-                argTypes = new Type[args.Length];
-
-                int index = 0;
-                foreach (object arg in args)
-                    argTypes[index++] = arg.GetType();
+                Type[] argTypes = Reflect.GetTypeArray(fixture.Arguments);
 
                 if (!fixture.TypeInfo.HasConstructor(argTypes))
                 {
