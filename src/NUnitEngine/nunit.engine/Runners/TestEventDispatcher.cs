@@ -31,6 +31,8 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class TestEventDispatcher : MarshalByRefObject, ITestEventListener
     {
+        private object _eventLock = new object();
+
         public TestEventDispatcher()
         {
             Listeners = new List<ITestEventListener>();
@@ -40,8 +42,11 @@ namespace NUnit.Engine.Runners
 
         public void OnTestEvent(string report)
         {
-            foreach (var listener in Listeners)
-                listener.OnTestEvent(report);
+            lock (_eventLock)
+            {
+                foreach (var listener in Listeners)
+                    listener.OnTestEvent(report);
+            }
         }
 
         public override object InitializeLifetimeService()
