@@ -37,7 +37,8 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="domain">The AppDomain in which to run the tests</param>
         /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="targetFramework">The value of any TargetFrameworkAttribute on the assembly, or null</param>
         /// <returns></returns>
-        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath);
+        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, string targetFramework);
     }
 }

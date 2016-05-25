@@ -59,7 +59,8 @@ namespace NUnit.Engine.Services.Tests
         {
             var driver = _driverService.GetDriver(
                 AppDomain.CurrentDomain,
-                Path.Combine(TestContext.CurrentContext.TestDirectory, fileName));
+                Path.Combine(TestContext.CurrentContext.TestDirectory, fileName),
+                null);
 
             Assert.That(driver, Is.InstanceOf(expectedType));
         }

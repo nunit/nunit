@@ -80,7 +80,7 @@ namespace NUnit.Engine.Drivers
             }
             catch (SerializationException ex)
             {
-                throw new NUnitEngineException("The NUnit 3.0 driver does not support the portable version of NUnit. Use a platform specific runner.", ex);
+                throw new NUnitEngineException("The NUnit 3.0 driver cannot support this test assembly. Use a platform specific runner.", ex);
             }
 
             CallbackHandler handler = new CallbackHandler();

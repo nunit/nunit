@@ -47,14 +47,22 @@ namespace NUnit.Engine.Services
         /// </summary>
         /// <param name="domain">The AppDomain to use for the tests</param>
         /// <param name="assemblyPath">The full path to the test assembly</param>
+        /// <param name="targetFramework">The value of any TargetFrameworkAttribute on the assembly, or null</param>
         /// <returns></returns>
-        public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath)
+        public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, string targetFramework)
         {
             if (!File.Exists(assemblyPath))
                 return new NotRunnableFrameworkDriver(assemblyPath, "File not found: " + assemblyPath);
 
             if (!PathUtils.IsAssemblyFileType(assemblyPath))
                 return new NotRunnableFrameworkDriver(assemblyPath, "File type is not supported");
+
+            if (targetFramework != null)
+            {
+                var platform = targetFramework.Split(new char[] { ',' })[0];
+                if (platform == "Silverlight" || platform == ".NETPortable" || platform == ".NETCompactFramework")
+                    return new NotRunnableFrameworkDriver(assemblyPath, platform + " test assemblies are not yet supported by the engine");
+            }
 
             try
             {
