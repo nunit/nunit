@@ -121,8 +121,10 @@
     <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />
+    <Compile Include="Runners\Action.cs" />
     <Compile Include="Runners\AggregatingTestRunner.cs" />
     <Compile Include="Runners\DirectTestRunner.cs" />
+    <Compile Include="Runners\IScheduler.cs" />
     <Compile Include="Runners\ITestExecutionTask.cs" />
     <Compile Include="Runners\LocalTestRunner.cs" />
     <Compile Include="Runners\MasterTestRunner.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Runners\ParallelTaskWorkerPool.cs" />
     <Compile Include="Runners\TestEventDispatcher.cs" />
     <Compile Include="Runners\TestExecutionTask.cs" />
+    <Compile Include="Runners\ThreadScheduler.cs" />
     <Compile Include="RuntimeType.cs" />
     <Compile Include="Services\ExtensionService.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,39 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
+using NUnit.Framework;
+using NUnit.Engine.Runners;
 
-namespace NUnit.Engine.Runners
-{
-    /// <summary>
-    /// TestEventDispatcher is used to send test events to a number of listeners
-    /// </summary>
-    public class TestEventDispatcher : MarshalByRefObject, ITestEventListener
-    {
-        private readonly IScheduler _scheduler;
-
-        public TestEventDispatcher(IScheduler scheduler)
+namespace NUnit.Engine.Tests.Runners
+{    
+    public class ThreadSchedulerTests
+    {                
+        [Test]
+        public void ShouldScheduleActionOnSomeThread()
         {
-            if (scheduler == null) throw new ArgumentNullException("scheduler");
+            // Given
+            var scheduler = CreateInstance();
+            var managedThreadId = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
-            _scheduler = scheduler;
-            Listeners = new List<ITestEventListener>();
+            // When      
+            scheduler.Schedule(() => managedThreadId = System.Threading.Thread.CurrentThread.ManagedThreadId);
+            scheduler.Dispose();
+
+            // Then           
+            Assert.AreNotEqual(System.Threading.Thread.CurrentThread.ManagedThreadId, managedThreadId);
         }
 
-        public IList<ITestEventListener>Listeners { get; private set; }
-
-        public void OnTestEvent(string report)
+        private ThreadScheduler CreateInstance()
         {
-            _scheduler.Schedule(() =>
-                {
-                    foreach (var listener in Listeners) listener.OnTestEvent(report);
-                });
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return null;
+            return new ThreadScheduler(2);
         }
     }
 }

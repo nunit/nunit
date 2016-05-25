@@ -36,11 +36,9 @@ namespace NUnit.Engine.Runners
 {
     public class MasterTestRunner : AbstractTestRunner, ITestRunner
     {
-        private ITestEngineRunner _realRunner;
-        private IRuntimeFrameworkService _runtimeService;
-        private ExtensionService _extensionService;
-
-        private TestEventDispatcher _eventDispatcher;
+        private readonly IRuntimeFrameworkService _runtimeService;
+        private readonly ExtensionService _extensionService;
+        private ITestEngineRunner _realRunner;        
 
         public MasterTestRunner(IServiceLocator services, TestPackage package)
             : base(services, package)
@@ -140,38 +138,40 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
-            var eventDispatcher = new TestEventDispatcher();
-            if (listener != null)
-                eventDispatcher.Listeners.Add(listener);
-            foreach (var extension in _extensionService.GetExtensions<ITestEventListener>())
-                eventDispatcher.Listeners.Add(extension);
+            using (var singleThreadScheduler = new ThreadScheduler(1))
+            {
+                var eventDispatcher = new TestEventDispatcher(singleThreadScheduler);
+                if (listener != null) eventDispatcher.Listeners.Add(listener);
+                foreach (var extension in _extensionService.GetExtensions<ITestEventListener>()) eventDispatcher.Listeners.Add(extension);
 
-            IsTestRunning = true;
+                IsTestRunning = true;
 
-            eventDispatcher.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
+                eventDispatcher.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
 
-            DateTime startTime = DateTime.UtcNow;
-            long startTicks = Stopwatch.GetTimestamp();
+                DateTime startTime = DateTime.UtcNow;
+                long startTicks = Stopwatch.GetTimestamp();
 
-            TestEngineResult result = _realRunner.Run(eventDispatcher, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
+                TestEngineResult result = _realRunner.Run(eventDispatcher, filter)
+                                                     .Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
-            // These are inserted in reverse order, since each is added as the first child.
-            InsertFilterElement(result.Xml, filter);
-            InsertCommandLineElement(result.Xml);
+                // These are inserted in reverse order, since each is added as the first child.
+                InsertFilterElement(result.Xml, filter);
+                InsertCommandLineElement(result.Xml);
 
-            result.Xml.AddAttribute("engine-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
-            result.Xml.AddAttribute("clr-version", Environment.Version.ToString());
+                result.Xml.AddAttribute("engine-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                result.Xml.AddAttribute("clr-version", Environment.Version.ToString());
 
-            double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
-            result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
-            result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
-            result.Xml.AddAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
+                double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
+                result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
+                result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
+                result.Xml.AddAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
-            IsTestRunning = false;
+                IsTestRunning = false;
 
-            eventDispatcher.OnTestEvent(result.Xml.OuterXml);
+                eventDispatcher.OnTestEvent(result.Xml.OuterXml);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
