@@ -211,6 +211,20 @@ namespace NUnit.Engine.Services
                         requiresAssemblyResolver = true;
                     }
                 }
+
+                if (frameworkName == null)
+                {
+                    foreach (var reference in module.AssemblyReferences)
+                        if (reference.Name == "mscorlib" && BitConverter.ToUInt64(reference.PublicKeyToken, 0) == 0xac22333d05b89d96)
+                        {
+                            // We assume 3.5, since that's all we are supporting
+                            // Could be extended to other versions if necessary
+                            // Format for FrameworkName is invented - it is not
+                            // known if any compilers supporting CF use the attribute
+                            frameworkName = ".NETCompactFramework,Version=3.5";
+                            break;
+                        }
+                }
             }
 
             if (targetVersion.Major > 0)
