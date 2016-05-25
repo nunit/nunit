@@ -26,7 +26,6 @@ using System.Linq;
 using System.Collections.Generic;
 using NUnit.Engine.Compatibility;
 using NUnit.Engine.Internal;
-using System.Runtime.Serialization;
 using System.Reflection;
 
 namespace NUnit.Engine

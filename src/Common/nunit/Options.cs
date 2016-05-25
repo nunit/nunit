@@ -141,7 +141,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-#if PORTABLE
+#if NUNIT_ENGINE
+using NUnit.Engine.Compatibility;
+#elif PORTABLE
 using NUnit.Framework.Compatibility;
 #else
 using System.Security.Permissions;
