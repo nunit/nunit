@@ -157,7 +157,7 @@ using System.Linq;
 using NDesk.Options;
 #endif
 
-#if NUNIT_CONSOLE || NUNITLITE
+#if NUNIT_CONSOLE || NUNITLITE || NUNIT_ENGINE
 namespace NUnit.Options
 #elif NDESK_OPTIONS
 namespace NDesk.Options
