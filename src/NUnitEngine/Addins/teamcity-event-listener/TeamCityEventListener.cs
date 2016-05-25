@@ -122,58 +122,28 @@ namespace NUnit.Engine.Listeners
             {
                 case "start-suite":
                     _refs[id] = parentId;
-                    // NUnit 3 case
-                    if (parentId == string.Empty)
-                    {
-                        OnRootSuiteStart(flowId, fullName);
-                    }
-
-                    // NUnit 2 case
-                    if (parentId == null)
-                    {
-                        if (_blockCounter++ == 0)
-                        {
-                            _rootFlowId = id;
-                            OnRootSuiteStart(id, fullName);
-                        }
-                    }
-
+                    StartSuiteCase(id, parentId, flowId, fullName);
                     break;
 
                 case "test-suite":
                     _refs.Remove(id);
-                    // NUnit 3 case
-                    if (parentId == string.Empty)
-                    {
-                        OnRootSuiteFinish(flowId, fullName);
-                    }
-
-                    // NUnit 2 case
-                    if (parentId == null)
-                    {
-                        if (--_blockCounter == 0)
-                        {
-                            _rootFlowId = null;
-                            OnRootSuiteFinish(id, fullName);
-                        }
-                    }
-
+                    TestSuiteCase(id, parentId, flowId, fullName);
                     break;
 
                 case "start-test":
                     _refs[id] = parentId;
-                    if (id != flowId && parentId != null)
-                    {
-                        OnFlowStarted(id, flowId);
-                    }
-                    
-                    OnTestStart(testFlowId, fullName);
+                    CaseStartTest(id, flowId, parentId, testFlowId, fullName);
                     break;
 
                 case "test-case":
                     try
                     {
-                        _refs.Remove(id);
+                        if (!_refs.Remove(id))
+                        {
+                            // When test without starting
+                            CaseStartTest(id, flowId, parentId, testFlowId, fullName);
+                        }
+
                         var result = testEvent.GetAttribute("result");
                         if (string.IsNullOrEmpty(result))
                         {
@@ -209,6 +179,54 @@ namespace NUnit.Engine.Listeners
 
                     break;                
             }            
+        }
+
+        private void CaseStartTest(string id, string flowId, string parentId, string testFlowId, string fullName)
+        {
+            if (id != flowId && parentId != null)
+            {
+                OnFlowStarted(id, flowId);
+            }
+
+            OnTestStart(testFlowId, fullName);
+        }
+
+        private void TestSuiteCase(string id, string parentId, string flowId, string fullName)
+        {            
+            // NUnit 3 case
+            if (parentId == string.Empty)
+            {
+                OnRootSuiteFinish(flowId, fullName);
+            }
+
+            // NUnit 2 case
+            if (parentId == null)
+            {
+                if (--_blockCounter == 0)
+                {
+                    _rootFlowId = null;
+                    OnRootSuiteFinish(id, fullName);
+                }
+            }
+        }
+
+        private void StartSuiteCase(string id, string parentId, string flowId, string fullName)
+        {            
+            // NUnit 3 case
+            if (parentId == string.Empty)
+            {
+                OnRootSuiteStart(flowId, fullName);
+            }
+
+            // NUnit 2 case
+            if (parentId == null)
+            {
+                if (_blockCounter++ == 0)
+                {
+                    _rootFlowId = id;
+                    OnRootSuiteStart(id, fullName);
+                }
+            }
         }
 
         private bool TryFindParentId(string id, out string parentId)
