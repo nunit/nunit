@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole
+// Copyright (c) 2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,39 +21,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
+using NUnit.Engine.Runners;
 
-namespace NUnit.Engine.Runners
-{
-    /// <summary>
-    /// TestEventDispatcher is used to send test events to a number of listeners
-    /// </summary>
-    public class TestEventDispatcher : MarshalByRefObject, ITestEventListener
+namespace NUnit.Engine.Tests.Runners
+{    
+
+    internal class TestScheduler: IScheduler
     {
-        private readonly IScheduler _scheduler;
+        private readonly Queue<Action> _actions = new Queue<Action>();
 
-        public TestEventDispatcher(IScheduler scheduler)
+        public int QueueSize
         {
-            if (scheduler == null) throw new ArgumentNullException("scheduler");
-
-            _scheduler = scheduler;
-            Listeners = new List<ITestEventListener>();
+            get
+            {
+                return _actions.Count;
+            }
         }
 
-        public IList<ITestEventListener>Listeners { get; private set; }
 
-        public void OnTestEvent(string report)
+        public void Schedule(Action action)
         {
-            _scheduler.Schedule(() =>
-                {
-                    foreach (var listener in Listeners) listener.OnTestEvent(report);
-                });
+            _actions.Enqueue(action);
         }
 
-        public override object InitializeLifetimeService()
+        public void Dispose()
+        {            
+        }
+
+        public void Run()
         {
-            return null;
+            while (_actions.Count > 0)
+            {
+                _actions.Dequeue()();
+            }          
         }
     }
 }

@@ -80,6 +80,9 @@
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="ResultHelperTests.cs" />
     <Compile Include="Runners\ParallelTaskWorkerPoolTests.cs" />
+    <Compile Include="Runners\TestEventDispatcherTests.cs" />
+    <Compile Include="Runners\TestScheduler.cs" />
+    <Compile Include="Runners\ThreadSchedulerTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\ExtensionServiceTests.cs" />
     <Compile Include="Services\Fakes\FakeRuntimeService.cs" />
@@ -153,7 +156,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Extensibility\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
