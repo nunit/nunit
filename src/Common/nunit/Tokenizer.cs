@@ -24,6 +24,9 @@
 using System;
 using System.Text;
 
+// Missing XML Docs
+#pragma warning disable 1591
+
 #if NUNIT_ENGINE
 namespace NUnit.Engine
 #else

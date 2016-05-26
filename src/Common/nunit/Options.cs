@@ -141,6 +141,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
+// Missing XML Docs
+#pragma warning disable 1591
+
 #if NUNIT_ENGINE
 using NUnit.Engine.Compatibility;
 #elif PORTABLE

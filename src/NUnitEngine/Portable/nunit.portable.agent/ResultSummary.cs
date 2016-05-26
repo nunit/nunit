@@ -97,7 +97,7 @@ namespace NUnit.Engine
             Duration = EndTime.Subtract(StartTime).TotalSeconds;
 
             test.Add(new XAttribute("start-time", StartTime.ToString("u")));
-            test.Add(new XAttribute("start-time", EndTime.ToString("u")));
+            test.Add(new XAttribute("end-time", EndTime.ToString("u")));
             test.Add(new XAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo)));
             
             return new XDocument(test);
