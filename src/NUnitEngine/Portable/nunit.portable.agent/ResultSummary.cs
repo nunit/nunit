@@ -83,12 +83,12 @@ namespace NUnit.Engine
             var test = new XElement("test-run");
             test.Add(new XAttribute("id", "0"));
             test.Add(new XAttribute("testcasecount", TestCount));
-            test.Add(new XAttribute("Result", Result));
+            test.Add(new XAttribute("result", Result));
             test.Add(new XAttribute("total", TestCount));
             test.Add(new XAttribute("passed", PassCount));
             test.Add(new XAttribute("failed", FailedCount));
             test.Add(new XAttribute("inconclusive", InconclusiveCount));
-            test.Add(new XAttribute("skipped", SkipCount));
+            test.Add(new XAttribute("skipped", TotalSkipCount));
             test.Add(new XAttribute("asserts", AssertCount));
 
             test.Add(new XAttribute("portable-engine-version", typeof(ResultSummary).GetTypeInfo().Assembly.GetName().Version.ToString()));
@@ -250,8 +250,6 @@ namespace NUnit.Engine
 
         void Summarize(XElement element)
         {
-            InitializeCounters();
-
             string type = element.Attribute("type")?.Value;
             string status = element.Attribute("result")?.Value;
             string label = element.Attribute("label")?.Value;
@@ -290,14 +288,6 @@ namespace NUnit.Engine
                             SkipCount++;
                             break;
                     }
-
-                    var asserts = element.Attribute("asserts")?.Value;
-                    if(!string.IsNullOrWhiteSpace(asserts))
-                    {
-                        int count = 0;
-                        if (int.TryParse(asserts, out count))
-                            AssertCount += count;
-                    }
                     break;
 
                 case "test-suite":
@@ -309,7 +299,18 @@ namespace NUnit.Engine
                         UnexpectedError = true;
                     }
 
-                    if(string.IsNullOrWhiteSpace(Result))
+                    if (type == "Assembly")
+                    {
+                        var asserts = element.Attribute("asserts")?.Value;
+                        if (!string.IsNullOrWhiteSpace(asserts))
+                        {
+                            int count = 0;
+                            if (int.TryParse(asserts, out count))
+                                AssertCount += count;
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(Result))
                     {
                         Result = result;
                     }

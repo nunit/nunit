@@ -70,7 +70,7 @@ namespace NUnit.Engine.Tests
             Assert.That(_summary.PassCount, Is.EqualTo(expectedPassed));
             Assert.That(_summary.FailedCount, Is.EqualTo(expectedFailed));
             Assert.That(_summary.InconclusiveCount, Is.EqualTo(expectedInconclusive));
-            Assert.That(_summary.SkipCount, Is.EqualTo(expectedSkipped));
+            Assert.That(_summary.TotalSkipCount, Is.EqualTo(expectedSkipped));
             Assert.That(_summary.AssertCount, Is.EqualTo(expectedAsserts));
         }
 
