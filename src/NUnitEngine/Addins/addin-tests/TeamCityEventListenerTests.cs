@@ -335,6 +335,70 @@ namespace NUnit.Engine.Listeners
                 _output.ToString());
         }
 
+        [Test]
+        public void ShouldSendMessagesWhenOneTimeSetUpFailedFromNUnit3()
+        {
+            // Given
+            var publisher = CreateInstance();
+
+            // When
+            publisher.RegisterMessage(CreateStartRun(1));
+
+            // Assembly 1
+            publisher.RegisterMessage(CreateStartSuite("1-1", "", "aaa" + Path.DirectorySeparatorChar + "Assembly1"));
+
+            // Test Assembly1.Namespace1.1.Test1
+            publisher.RegisterMessage(CreateTestCaseFailed("1-2", "1-1", "Assembly1.Namespace1.1.Test1", "0.1", "Error output", "Stack trace"));
+
+            publisher.RegisterMessage(CreateFinishSuite("1-1", "", "Assembly1"));
+
+            publisher.RegisterMessage(CreateTestRun());
+
+            // Then
+            Assert.AreEqual(
+                "##teamcity[testSuiteStarted name='Assembly1' flowId='1-1']" + Environment.NewLine
+
+                + "##teamcity[flowStarted flowId='1-2' parent='1-1']" + Environment.NewLine
+                + "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-2']" + Environment.NewLine
+                + "##teamcity[testFailed name='Assembly1.Namespace1.1.Test1' message='Error output' details='Stack trace' flowId='1-2']" + Environment.NewLine
+                + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='100' flowId='1-2']" + Environment.NewLine
+                + "##teamcity[flowFinished flowId='1-2']" + Environment.NewLine
+
+                + "##teamcity[testSuiteFinished name='Assembly1' flowId='1-1']" + Environment.NewLine,
+                _output.ToString());
+        }
+
+        [Test]
+        public void ShouldSendMessagesWhenOneTimeSetUpFailedFromNUnit2()
+        {
+            // Given
+            var publisher = CreateInstance();
+
+            // When
+            publisher.RegisterMessage(CreateStartRun(1));
+
+            // Assembly 1
+            publisher.RegisterMessage(CreateStartSuite("1-1", null, "aaa" + Path.DirectorySeparatorChar + "Assembly1"));
+
+            // Test Assembly1.Namespace1.1.Test1
+            publisher.RegisterMessage(CreateTestCaseFailed("1-2", null, "Assembly1.Namespace1.1.Test1", "0.1", "Error output", "Stack trace"));
+
+            publisher.RegisterMessage(CreateFinishSuite("1-1", null, "Assembly1"));
+
+            publisher.RegisterMessage(CreateTestRun());
+
+            // Then
+            Assert.AreEqual(
+                "##teamcity[testSuiteStarted name='Assembly1' flowId='1-1']" + Environment.NewLine
+
+                + "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-1']" + Environment.NewLine
+                + "##teamcity[testFailed name='Assembly1.Namespace1.1.Test1' message='Error output' details='Stack trace' flowId='1-1']" + Environment.NewLine
+                + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='100' flowId='1-1']" + Environment.NewLine
+                
+                + "##teamcity[testSuiteFinished name='Assembly1' flowId='1-1']" + Environment.NewLine,
+                _output.ToString());
+        }
+
         private static XmlNode CreateMessage(string text)
         {
             var doc = new XmlDocument();
