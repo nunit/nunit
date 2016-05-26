@@ -242,14 +242,10 @@ namespace NUnit.Engine
             AssertCount = 0;
         }
 
-        void Summarize(IEnumerable<XNode> nodes)
+        void Summarize(IEnumerable<XElement> elements)
         {
-            foreach (XNode childResult in nodes)
-            {
-                XElement element = childResult as XElement;
-                if (element != null)
-                    Summarize(element);
-            }
+            foreach (XElement element in elements)
+                Summarize(element);
         }
 
         void Summarize(XElement element)
@@ -331,11 +327,11 @@ namespace NUnit.Engine
                         }
                     }
 
-                    Summarize(element.Nodes());
+                    Summarize(element.Elements());
                     break;
 
                 case "test-run":
-                    Summarize(element.Nodes());
+                    Summarize(element.Elements());
                     break;
             }
         }
