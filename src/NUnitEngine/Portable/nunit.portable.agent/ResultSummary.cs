@@ -37,7 +37,6 @@ namespace NUnit.Engine
         const string TEST_RUN_ELEMENT = "test-run";
 
         IList<XElement> _results = new List<XElement>();
-        DateTime _start = DateTime.UtcNow;
 
         #region Constructor
 
@@ -46,6 +45,7 @@ namespace NUnit.Engine
         /// </summary>
         public ResultSummary()
         {
+            StartTime = DateTime.UtcNow;
             InitializeCounters();
         }
 
@@ -93,12 +93,12 @@ namespace NUnit.Engine
 
             test.Add(new XAttribute("portable-engine-version", typeof(ResultSummary).GetTypeInfo().Assembly.GetName().Version.ToString()));
 
-            var end = DateTime.UtcNow;
-            var duration = end.Subtract(_start).TotalSeconds;
+            EndTime = DateTime.UtcNow;
+            Duration = EndTime.Subtract(StartTime).TotalSeconds;
 
-            test.Add(new XAttribute("start-time", _start.ToString("u")));
-            test.Add(new XAttribute("start-time", end.ToString("u")));
-            test.Add(new XAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo)));
+            test.Add(new XAttribute("start-time", StartTime.ToString("u")));
+            test.Add(new XAttribute("start-time", EndTime.ToString("u")));
+            test.Add(new XAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo)));
             
             return new XDocument(test);
         }
@@ -207,6 +207,21 @@ namespace NUnit.Engine
         /// The overall result of the test run
         /// </summary>
         public string Result { get; private set; }
+
+        /// <summary>
+        /// The start of the test run
+        /// </summary>
+        public DateTime StartTime { get; private set; }
+
+        /// <summary>
+        /// The end of the test run
+        /// </summary>
+        public DateTime EndTime { get; private set; }
+
+        /// <summary>
+        /// The length of the test run in seconds
+        /// </summary>
+        public double Duration { get; private set; }
 
         #endregion
 
