@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace NUnit.Engine
@@ -32,6 +34,11 @@ namespace NUnit.Engine
     /// </summary>
     public class ResultSummary
     {
+        const string TEST_RUN_ELEMENT = "test-run";
+
+        IList<XElement> _results = new List<XElement>();
+        DateTime _start = DateTime.UtcNow;
+
         #region Constructor
 
         /// <summary>
@@ -62,10 +69,38 @@ namespace NUnit.Engine
         /// <param name="element"></param>
         public void AddResult(XElement element)
         {
-            if (element.Name != "test-run" && element.Name != "test-suite")
-                throw new InvalidOperationException("Expected <test-run> or <test-suite> as top-level element but was <" + element.Name + ">");
+            _results.Add(element);
+        }
 
-            Summarize(element);
+        /// <summary>
+        /// Summarizes all of the results and returns the test result xml document
+        /// </summary>
+        /// <returns></returns>
+        public XDocument GetTestResults()
+        {
+            InitializeCounters();
+            Summarize(_results);
+            var test = new XElement("test-run");
+            test.Add(new XAttribute("id", "0"));
+            test.Add(new XAttribute("testcasecount", TestCount));
+            test.Add(new XAttribute("Result", Result));
+            test.Add(new XAttribute("total", TestCount));
+            test.Add(new XAttribute("passed", PassCount));
+            test.Add(new XAttribute("failed", FailedCount));
+            test.Add(new XAttribute("inconclusive", InconclusiveCount));
+            test.Add(new XAttribute("skipped", SkipCount));
+            test.Add(new XAttribute("asserts", AssertCount));
+
+            test.Add(new XAttribute("portable-engine-version", typeof(ResultSummary).GetTypeInfo().Assembly.GetName().Version.ToString()));
+
+            var end = DateTime.UtcNow;
+            var duration = end.Subtract(_start).TotalSeconds;
+
+            test.Add(new XAttribute("start-time", _start.ToString("u")));
+            test.Add(new XAttribute("start-time", end.ToString("u")));
+            test.Add(new XAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo)));
+            
+            return new XDocument(test);
         }
 
         #endregion
@@ -104,7 +139,7 @@ namespace NUnit.Engine
         }
 
         /// <summary>
-        /// Returns the sum of skipped test cases, including ignored and explicit tests
+        /// Returns the sum of SkipCount test cases, including ignored and explicit tests
         /// </summary>
         public int TotalSkipCount
         {
@@ -127,7 +162,7 @@ namespace NUnit.Engine
         public int ErrorCount { get; private set; }
 
         /// <summary>
-        /// Gets the count of inconclusive tests
+        /// Gets the count of InconclusiveCount tests
         /// </summary>
         public int InconclusiveCount { get; private set; }
 
@@ -139,7 +174,7 @@ namespace NUnit.Engine
         public int InvalidCount { get; private set; }
 
         /// <summary>
-        /// Gets the count of skipped tests, excluding ignored and explicit tests
+        /// Gets the count of SkipCount tests, excluding ignored and explicit tests
         /// </summary>
         public int SkipCount { get; private set; }
 
@@ -163,6 +198,16 @@ namespace NUnit.Engine
         /// </summary>
         public bool UnexpectedError { get; private set; }
 
+        /// <summary>
+        /// Gets the number of asserts
+        /// </summary>
+        public int AssertCount { get; private set; }
+
+        /// <summary>
+        /// The overall result of the test run
+        /// </summary>
+        public string Result { get; private set; }
+
         #endregion
 
         #region Helper Methods
@@ -179,15 +224,29 @@ namespace NUnit.Engine
             ExplicitCount = 0;
             InvalidCount = 0;
             InvalidAssemblies = 0;
+            AssertCount = 0;
+        }
+
+        void Summarize(IEnumerable<XNode> nodes)
+        {
+            foreach (XNode childResult in nodes)
+            {
+                XElement element = childResult as XElement;
+                if (element != null)
+                    Summarize(element);
+            }
         }
 
         void Summarize(XElement element)
         {
+            InitializeCounters();
+
             string type = element.Attribute("type")?.Value;
             string status = element.Attribute("result")?.Value;
             string label = element.Attribute("label")?.Value;
+            string result = element.Attribute("result")?.Value;
 
-            switch (element.Name?.LocalName)
+            switch (element.Name.ToString())
             {
                 case "test-case":
                     TestCount++;
@@ -220,6 +279,14 @@ namespace NUnit.Engine
                             SkipCount++;
                             break;
                     }
+
+                    var asserts = element.Attribute("asserts")?.Value;
+                    if(!string.IsNullOrWhiteSpace(asserts))
+                    {
+                        int count = 0;
+                        if (int.TryParse(asserts, out count))
+                            AssertCount += count;
+                    }
                     break;
 
                 case "test-suite":
@@ -231,22 +298,30 @@ namespace NUnit.Engine
                         UnexpectedError = true;
                     }
 
-                    Summarize(element.DescendantNodes());
+                    if(string.IsNullOrWhiteSpace(Result))
+                    {
+                        Result = result;
+                    }
+                    else
+                    {
+                        switch (result)
+                        {
+                            case "Passed":
+                                if (Result != "Failed")
+                                    Result = result;
+                                break;
+                            case "Failed":
+                                Result = result;
+                                break;
+                        }
+                    }
+
+                    Summarize(element.Nodes());
                     break;
 
                 case "test-run":
-                    Summarize(element.DescendantNodes());
+                    Summarize(element.Nodes());
                     break;
-            }
-        }
-
-        void Summarize(IEnumerable<XNode> nodes)
-        {
-            foreach (XNode childResult in nodes)
-            {
-                XElement element = childResult as XElement;
-                if (element != null)
-                    Summarize(element);
             }
         }
 
