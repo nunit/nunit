@@ -35,17 +35,37 @@ namespace NUnit.Engine
         #region Constructor
 
         /// <summary>
-        /// Parses the given XML into test results
+        /// Parses XML into test results
         /// </summary>
-        /// <param name="result"></param>
-        public ResultSummary(XElement result)
+        public ResultSummary()
         {
-            if (result.Name != "test-run")
-                throw new InvalidOperationException("Expected <test-run> as top-level element but was <" + result.Name + ">");
-
             InitializeCounters();
+        }
 
-            Summarize(result);
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Parses the given XML string into test results
+        /// </summary>
+        /// <param name="xml"></param>
+        public void AddResult(string xml)
+        {
+            var element = XElement.Parse(xml);
+            AddResult(element);
+        }
+
+        /// <summary>
+        /// Parses the given <see cref="XElement"></see> into test results
+        /// </summary>
+        /// <param name="element"></param>
+        public void AddResult(XElement element)
+        {
+            if (element.Name != "test-run" && element.Name != "test-suite")
+                throw new InvalidOperationException("Expected <test-run> or <test-suite> as top-level element but was <" + element.Name + ">");
+
+            Summarize(element);
         }
 
         #endregion
@@ -225,7 +245,7 @@ namespace NUnit.Engine
             foreach (XNode childResult in nodes)
             {
                 XElement element = childResult as XElement;
-                if(element != null)
+                if (element != null)
                     Summarize(element);
             }
         }
