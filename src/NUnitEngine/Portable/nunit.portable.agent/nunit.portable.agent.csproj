@@ -99,9 +99,19 @@
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
+    <Compile Include="..\..\nunit.engine.api\ITestFilterBuilder.cs">
+      <Link>Api\ITestFilterBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\nunit.engine.api\TestFilter.cs">
+      <Link>Api\TestFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\nunit.engine\Services\TestFilterBuilder.cs">
+      <Link>Services\TestFilterBuilder.cs</Link>
+    </Compile>
     <Compile Include="NUnitPortableDriver.cs" />
     <Compile Include="NUnitPortableDriverException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultSummary.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
