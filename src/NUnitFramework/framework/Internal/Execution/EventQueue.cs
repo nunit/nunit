@@ -52,29 +52,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="listener">The listener.</param>
         public abstract void Send(ITestListener listener);
-
-        /// <summary>
-        /// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
-        /// <para>
-        /// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to
-        /// set a WaitHandle, <see cref="EventQueue.Enqueue"/> blocks its calling thread until the <see cref="EventPump"/>
-        /// thread has delivered the event and sets the WaitHandle.
-        /// </para>
-        /// </summary>
-        public virtual bool IsSynchronous
-        {
-            get { return false; }
-        }
-
-        // protected static Exception WrapUnserializableException(Exception ex)
-        // {
-        //    string message = string.Format(
-        //        CultureInfo.InvariantCulture,
-        //        "(failed to serialize original Exception - original Exception follows){0}{1}",
-        //        Environment.NewLine,
-        //        ex);
-        //    return new Exception(message);
-        // }
     }
 
     /// <summary>
@@ -92,23 +69,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             _test = test;
         }
-
-        ///// <summary>
-        ///// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
-        ///// <para>
-        ///// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to
-        ///// set a WaitHandle, <see cref="EventQueue.Enqueue"/> blocks its calling thread until the <see cref="EventPump"/>
-        ///// thread has delivered the event and sets the WaitHandle.
-        ///// </para>
-        ///// </summary>
-        // Keeping this as a synchronous until we rewrite using multiple autoresetevents
-        // public override bool IsSynchronous
-        // {
-        //    get
-        //    {
-        //        return true;
-        //    }
-        // }
 
         /// <summary>
         /// Calls TestStarted on the specified listener.
@@ -178,17 +138,6 @@ namespace NUnit.Framework.Internal.Execution
         private int _stopped;
 
         /// <summary>
-        /// WaitHandle for synchronous event delivery in <see cref="Enqueue"/>.
-        /// <para>
-        /// Having just one handle for the whole <see cref="EventQueue"/> implies that
-        /// there may be only one producer (the test thread) for synchronous events.
-        /// If there can be multiple producers for synchronous events, one would have
-        /// to introduce one WaitHandle per event.
-        /// </para>
-        /// </summary>
-        private AutoResetEvent synchronousEventSent;
-
-        /// <summary>
         /// Gets the count of items in the queue.
         /// </summary>
         public int Count
@@ -197,20 +146,6 @@ namespace NUnit.Framework.Internal.Execution
             {
                 return _queue.Count;
             }
-        }
-
-        /// <summary>
-        /// Sets a handle on which to wait, when <see cref="Enqueue"/> is called
-        /// for an <see cref="Event"/> with <see cref="Event.IsSynchronous"/> == true.
-        /// </summary>
-        /// <param name="synchronousEventWaitHandle">
-        /// The wait handle on which to wait, when <see cref="Enqueue"/> is called
-        /// for an <see cref="Event"/> with <see cref="Event.IsSynchronous"/> == true.
-        /// <para>The caller is responsible for disposing this wait handle.</para>
-        /// </param>
-        public void SetWaitHandleForSynchronizedEvents(AutoResetEvent synchronousEventWaitHandle)
-        {
-            synchronousEventSent = synchronousEventWaitHandle;
         }
 
         /// <summary>
@@ -236,10 +171,7 @@ namespace NUnit.Framework.Internal.Execution
                 break;
             } while (true);
 
-            if (synchronousEventSent != null && e.IsSynchronous)
-                synchronousEventSent.WaitOne();
-            else
-                Thread.Sleep(0);  // give EventPump thread a chance to process the event
+            Thread.Sleep(0);  // give EventPump thread a chance to process the event
         }
 
         /// <summary>
