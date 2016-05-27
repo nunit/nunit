@@ -94,7 +94,20 @@ namespace NUnit.ConsoleRunner.Tests
             new TestCaseData(
                 "<test-suite fullname='SomeName'><output>OUTPUT</output></test-suite>",
                 "All",
-                "=> SomeName\r\nOUTPUT\r\n")
+                "=> SomeName\r\nOUTPUT\r\n"),
+            // Output Events
+            new TestCaseData(
+                "<test-output>OUTPUT</test-output>",
+                "Off",
+                "OUTPUT\r\n"),
+            new TestCaseData(
+                "<test-output>OUTPUT</test-output>",
+                "On",
+                "OUTPUT\r\n"),
+            new TestCaseData(
+                "<test-output>OUTPUT</test-output>",
+                "All",
+                "OUTPUT\r\n")
         };
     }
 }

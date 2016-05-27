@@ -62,6 +62,10 @@ namespace NUnit.ConsoleRunner
                 case "test-suite":
                     SuiteFinished(testEvent);
                     break;
+
+                case "test-output":
+                    WriteTestOutput(testEvent);
+                    break;
             }
         }
 
