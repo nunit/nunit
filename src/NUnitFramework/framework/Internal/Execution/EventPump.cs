@@ -100,7 +100,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             _eventListener = eventListener;
             _events = events;
-            _events.SetWaitHandleForSynchronizedEvents(_synchronousEventSent);
         }
 
         #endregion
@@ -194,11 +193,6 @@ namespace NUnit.Framework.Internal.Execution
                     catch (Exception ex)
                     {
                         log.Error( "Exception in event handler\r\n {0}", ex );
-                    }
-                    finally
-                    {
-                        if ( e.IsSynchronous )
-                            _synchronousEventSent.Set();
                     }
                 }
             }

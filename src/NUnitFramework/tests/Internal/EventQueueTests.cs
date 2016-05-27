@@ -166,7 +166,6 @@ namespace NUnit.Framework.Internal.Execution
                 using (AutoResetEvent waitHandle = new AutoResetEvent(false))
                 {
                     this.q = new EventQueue();
-                    this.q.SetWaitHandleForSynchronizedEvents(waitHandle);
                     this.afterEnqueue = false;
                     this.RunProducerConsumer();
                 }
@@ -175,7 +174,6 @@ namespace NUnit.Framework.Internal.Execution
             protected override void Producer()
             {
                 Event asynchronousEvent = new TestStartedEvent(new TestSuite("Dummy"));
-                Assert.IsFalse(asynchronousEvent.IsSynchronous);
                 this.q.Enqueue(asynchronousEvent);
                 this.afterEnqueue = true;
                 Thread.MemoryBarrier();
@@ -255,13 +253,9 @@ namespace NUnit.Framework.Internal.Execution
                     foreach (Event e in events)
                     {
                         q.Enqueue(e);
-                        if (e.IsSynchronous)
-                            Assert.That(q.Count, Is.EqualTo(0));
-                        else
-                        {
-                            sumOfAsynchronousQueueLength += q.Count;
-                            numberOfAsynchronousEvents++;
-                        }
+
+                        sumOfAsynchronousQueueLength += q.Count;
+                        numberOfAsynchronousEvents++;
                     }
                 }
 
@@ -269,47 +263,6 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#if false
-        /// <summary>
-        /// Floods the queue of an EventPump with multiple concurrent event producers.
-        /// Prints the maximum queue length to Console, but does not implement an
-        /// oracle on what the maximum queue length should be.
-        /// </summary>
-        /// <param name="numberOfProducers">The number of concurrent producer threads.</param>
-        /// <param name="producerDelay">
-        /// If <c>true</c>, the producer threads slow down by adding a short delay time.
-        /// </param>
-        [TestCase(1, false)]
-        [TestCase(5, true)]
-        [TestCase(5, false)]
-        [Explicit("Takes several seconds. Just prints the queue length of the EventPump to Console, but has no oracle regarding this.")]
-        public void EventPumpQueueLength(int numberOfProducers, bool producerDelay)
-        {
-            EventQueue q = new EventQueue();
-            EventProducer[] producers = new EventProducer[numberOfProducers];
-            for (int i = 0; i < numberOfProducers; i++)
-                producers[i] = new EventProducer(q, i, producerDelay);
-
-            using (EventPump pump = new EventPump(TestListener.NULL, q))
-            {
-                pump.Name = "EventPumpQueueLength";
-                pump.Start();
-
-                foreach (EventProducer p in producers)
-                    p.ProducerThread.Start();
-                foreach (EventProducer p in producers)
-                    p.ProducerThread.Join();
-                pump.Stop();
-            }
-            Assert.That(q.Count, Is.EqualTo(0));
-
-            foreach (EventProducer p in producers)
-            {
-                Console.WriteLine("#Events: {0}, MaxQueueLength: {1}", p.SentEventsCount, p.MaxQueueLength);
-                Assert.IsNull(p.Exception, "{0}", p.Exception);
-            }
-        }
-#endif
         #endregion
 
         public abstract class ProducerConsumerTest
