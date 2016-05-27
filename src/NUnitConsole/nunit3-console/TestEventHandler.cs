@@ -41,7 +41,7 @@ namespace NUnit.ConsoleRunner
 
         public TestEventHandler(TextWriter outWriter, string displayLabels)
         {
-            _displayLabels = displayLabels;
+            _displayLabels = displayLabels.ToUpperInvariant();
             _outWriter = outWriter;
         }
 
