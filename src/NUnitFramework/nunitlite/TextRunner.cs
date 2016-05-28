@@ -62,8 +62,10 @@ namespace NUnitLite
         public const int INVALID_ARG = -1;
         /// <summary>File not found</summary>
         public const int FILE_NOT_FOUND = -2;
-        /// <summary>Test fixture not found</summary>
-        public const int FIXTURE_NOT_FOUND = -3;
+        /// <summary>Test fixture not found - No longer in use</summary>
+        //public const int FIXTURE_NOT_FOUND = -3;
+        /// <summary>Invalid test suite</summary>
+        public const int INVALID_TEST_FIXTURE = -4;
         /// <summary>Unexpected error occurred</summary>
         public const int UNEXPECTED_ERROR = -100;
 
@@ -285,6 +287,8 @@ namespace NUnitLite
                     outputManager.WriteResultFile(result, spec, runSettings, filter);
             }
 #endif
+            if (Summary.InvalidTestFixtures > 0)
+                return INVALID_TEST_FIXTURE;
 
             return Summary.FailureCount + Summary.ErrorCount + Summary.InvalidCount;
         }

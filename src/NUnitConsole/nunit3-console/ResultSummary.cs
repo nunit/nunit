@@ -141,6 +141,11 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public bool UnexpectedError { get; private set; }
 
+        /// <summary>
+        /// Invalid test fixture(s) were found
+        /// </summary>
+        public int InvalidTestFixtures { get; private set; }
+
         #endregion
 
         #region Helper Methods
@@ -201,8 +206,11 @@ namespace NUnit.ConsoleRunner
                     break;
 
                 case "test-suite":
-                    if (type == "Assembly" && status == "Failed" && label == "Invalid")
-                        InvalidAssemblies++;
+                    if (status == "Failed" && label == "Invalid")
+                    {
+                        if (type == "Assembly") InvalidAssemblies++;
+                        else InvalidTestFixtures++;
+                    }
                     if (type == "Assembly" && status == "Failed" && label == "Error")
                     {
                         InvalidAssemblies++;

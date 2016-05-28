@@ -135,6 +135,11 @@ namespace NUnitLite
         public int ExplicitCount { get; private set; }
 
         /// <summary>
+        /// Invalid Test Fixtures
+        /// </summary>
+        public int InvalidTestFixtures { get; private set; }
+
+        /// <summary>
         /// Gets the ResultState of the test result, which 
         /// indicates the success or failure of the test.
         /// </summary>
@@ -174,16 +179,21 @@ namespace NUnitLite
 
         private void Summarize(ITestResult result)
         {
+            var label = result.ResultState.Label;
+            var status = result.ResultState.Status;
+
             if (result.Test.IsSuite)
             {
+                if (status == TestStatus.Failed && label == "Invalid")
+                    InvalidTestFixtures++;
+
                 foreach (ITestResult r in result.Children)
                     Summarize(r);
             }
             else
             {
                 TestCount++;
-                var label = result.ResultState.Label;
-                switch (result.ResultState.Status)
+                switch (status)
                 {
                     case TestStatus.Passed:
                         PassCount++;

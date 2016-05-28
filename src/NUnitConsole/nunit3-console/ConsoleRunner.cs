@@ -44,7 +44,8 @@ namespace NUnit.ConsoleRunner
         public static readonly int OK = 0;
         public static readonly int INVALID_ARG = -1;
         public static readonly int INVALID_ASSEMBLY = -2;
-        public static readonly int FIXTURE_NOT_FOUND = -3;
+        //public static readonly int FIXTURE_NOT_FOUND = -3;    //No longer in use
+        public static readonly int INVALID_TEST_FIXTURE = -4;
         public static readonly int UNEXPECTED_ERROR = -100;
 
         #endregion
@@ -201,8 +202,11 @@ namespace NUnit.ConsoleRunner
             if (reporter.Summary.UnexpectedError)
                 return ConsoleRunner.UNEXPECTED_ERROR;
 
-            return reporter.Summary.InvalidAssemblies > 0
-                    ? ConsoleRunner.INVALID_ASSEMBLY
+            if (reporter.Summary.InvalidAssemblies > 0)
+                return ConsoleRunner.INVALID_ASSEMBLY;
+
+            return reporter.Summary.InvalidTestFixtures > 0
+                    ? ConsoleRunner.INVALID_TEST_FIXTURE
                     : reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
 
         }
