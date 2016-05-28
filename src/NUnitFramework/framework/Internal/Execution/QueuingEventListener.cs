@@ -62,6 +62,12 @@ namespace NUnit.Framework.Internal.Execution
             events.Enqueue( new TestFinishedEvent( result ) );
         }
 
+        /// <summary>
+        /// Called when a test produces output for immediate display
+        /// </summary>
+        /// <param name="output">A TestOutput object containing the text to display</param>
+        public void TestOutput(TestOutput output) { }
+
         #endregion
     }
 }

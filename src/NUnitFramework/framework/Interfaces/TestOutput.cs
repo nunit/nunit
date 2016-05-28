@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,45 +22,48 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// TestListener provides an implementation of ITestListener that
-    /// does nothing. It is used only through its NULL property.
+    /// The TestOutput class holds a unit of output from 
+    /// a test to a specific output stream
     /// </summary>
-    public class TestListener : ITestListener
-    {
+	public class TestOutput
+	{
         /// <summary>
-        /// Called when a test has just started
+        /// Construct with text and an ouput destination type
         /// </summary>
-        /// <param name="test">The test that is starting</param>
-        public void TestStarted(ITest test){}
+        /// <param name="text">Text to be output</param>
+        /// <param name="stream">Destination of output</param>
+		public TestOutput(string text, string stream)
+		{
+			Text = text;
+			Stream = stream;
+		}
 
         /// <summary>
-        /// Called when a test case has finished
+        /// Return string representation of the object for debugging
         /// </summary>
-        /// <param name="result">The result of the test</param>
-        public void TestFinished(ITestResult result){}
+        /// <returns></returns>
+		public override string ToString()
+		{
+			return Stream + ": " + Text;
+		}
 
         /// <summary>
-        /// Called when a test produces output for immediate display
+        /// Get the text 
         /// </summary>
-        /// <param name="output">A TestOutput object containing the text to display</param>
-        public void TestOutput(TestOutput output) { }
+		public string Text { get; private set; }
 
         /// <summary>
-        /// Construct a new TestListener - private so it may not be used.
+        /// Get the output type
         /// </summary>
-        private TestListener() { }
+		public string Stream { get; private set; }
 
-        /// <summary>
-        /// Get a listener that does nothing
-        /// </summary>
-        public static ITestListener NULL
+        public string ToXml()
         {
-            get { return new TestListener();}
+            return string.Format("<test-output stream={0}>{1}</test-output>", Stream, Text);
         }
-    }
+ 	}
 }

@@ -176,6 +176,12 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Called when a test produces output for immediate display
+        /// </summary>
+        /// <param name="output">A TestOutput object containing the text to display</param>
+        public void TestOutput(TestOutput output) { }
+
         #endregion
 
         #region Helper Methods
