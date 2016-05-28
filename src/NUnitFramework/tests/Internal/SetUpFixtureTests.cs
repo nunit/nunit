@@ -7,6 +7,7 @@
 // TODO: Figure out how to make test work in SILVERLIGHT, since they support SetUpFixture
 #if !SILVERLIGHT && !PORTABLE
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Common;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -39,7 +40,7 @@ namespace NUnit.Framework.Internal
 
         private ITestResult runTests(string nameSpace, TestFilter filter)
         {
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             if (nameSpace != null)
                 options["LOAD"] = new string[] { nameSpace };
             // No need for the overhead of parallel execution here
@@ -61,7 +62,7 @@ namespace NUnit.Framework.Internal
         public void NamespaceSetUpFixtureReplacesNamespaceNodeInTree()
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { nameSpace };
             ITest suite = builder.Build(testAssembly, options);
 
@@ -95,7 +96,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void AssemblySetUpFixtureReplacesAssemblyNodeInTree()
         {
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             ITest suite = builder.Build(testAssembly, options);
 
             Assert.IsNotNull(suite);
@@ -110,7 +111,7 @@ namespace NUnit.Framework.Internal
         public void InvalidAssemblySetUpFixtureIsLoadedCorrectly()
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace6";
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { nameSpace };
             ITest suite = builder.Build(testAssembly, options);
 

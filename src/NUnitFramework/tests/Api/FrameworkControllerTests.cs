@@ -51,7 +51,7 @@ namespace NUnit.Framework.Api
         private static readonly string MOCK_ASSEMBLY_PATH = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE);
 #endif
 
-        private IDictionary _settings = new Dictionary<string, object>();
+        private IDictionary<string, object> _settings = new Dictionary<string, object>();
         private FrameworkController _controller;
         private ICallbackEventHandler _handler;
 

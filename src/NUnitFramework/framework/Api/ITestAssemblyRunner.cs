@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
@@ -74,7 +75,7 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <param name="settings">Dictionary of options to use in loading the test</param>
         /// <returns>An ITest representing the loaded tests</returns>
-        ITest Load(string assemblyName, System.Collections.IDictionary settings);
+        ITest Load(string assemblyName, IDictionary<string, object> settings);
 
         /// <summary>
         /// Loads the tests found in an Assembly, returning an
@@ -83,7 +84,7 @@ namespace NUnit.Framework.Api
         /// <param name="assembly">The assembly to load</param>
         /// <param name="settings">Dictionary of options to use in loading the test</param>
         /// <returns>An ITest representing the loaded tests</returns>
-        ITest Load(Assembly assembly, System.Collections.IDictionary settings);
+        ITest Load(Assembly assembly, IDictionary<string, object> settings);
 
         /// <summary>
         /// Count Test Cases using a filter

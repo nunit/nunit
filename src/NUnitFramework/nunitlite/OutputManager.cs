@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -54,7 +55,9 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result">The test result</param>
         /// <param name="spec">An output specification</param>
-        public void WriteResultFile(ITestResult result, OutputSpecification spec, IDictionary runSettings, TestFilter filter)
+        /// <param name="runSettings">Settings</param>
+        /// <param name="filter">Filter</param>
+        public void WriteResultFile(ITestResult result, OutputSpecification spec, IDictionary<string, object> runSettings, TestFilter filter)
         {
             string outputPath = Path.Combine(_workDirectory, spec.OutputPath);
             OutputWriter outputWriter = null;

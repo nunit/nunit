@@ -72,7 +72,7 @@ namespace NUnit.Framework.Api
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public ITest Build(Assembly assembly, IDictionary options)
+        public ITest Build(Assembly assembly, IDictionary<string, object> options)
         {
 #if PORTABLE
             log.Debug("Loading {0}", assembly.FullName);
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Api
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public ITest Build(string assemblyName, IDictionary options)
+        public ITest Build(string assemblyName, IDictionary<string, object> options)
         {
 #if PORTABLE
             log.Debug("Loading {0}", assemblyName);
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Api
             return testAssembly;
         }
 
-        private TestSuite Build(Assembly assembly, string assemblyPath, IDictionary options)
+        private TestSuite Build(Assembly assembly, string assemblyPath, IDictionary<string, object> options)
         {
             TestSuite testAssembly = null;
 

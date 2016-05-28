@@ -74,7 +74,7 @@ namespace NUnit.Engine
             _frameworkAssembly = frameworkAssembly;
             _testAssembly = testAssembly;
 
-            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssembly, idPrefix, (System.Collections.IDictionary)settings);
+            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssembly, idPrefix, settings);
             if (_frameworkController == null)
                 throw new NUnitPortableDriverException(INVALID_FRAMEWORK_MESSAGE);
 
