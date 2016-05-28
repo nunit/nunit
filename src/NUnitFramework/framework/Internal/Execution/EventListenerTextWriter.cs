@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,55 +23,56 @@
 
 #if PARALLEL
 using System;
+using System.IO;
+using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
-    /// <summary>
-    /// QueuingEventListener uses an EventQueue to store any
-    /// events received on its EventListener interface.
-    /// </summary>
-    public class QueuingEventListener : ITestListener
-    {
-        /// <summary>
-        /// The EventQueue created and filled by this listener
-        /// </summary>
-        public EventQueue Events { get; private set; }
+	public class EventListenerTextWriter : TextWriter
+	{
+        private TextWriter _defaultWriter;
+		private ITestListener _listener;
+		private string _streamName;
 
-        public QueuingEventListener()
+		public EventListenerTextWriter( string streamName, TextWriter defaultWriter )
+		{
+			_streamName = streamName;
+            _defaultWriter = defaultWriter;
+		}
+
+        override public void Write(char aChar)
         {
-            Events = new EventQueue();
+            if (!TrySendToListener(aChar.ToString()))
+                _defaultWriter.Write(aChar);
         }
 
-        #region EventListener Methods
-        /// <summary>
-        /// A test has started
-        /// </summary>
-        /// <param name="test">The test that is starting</param>
-        public void TestStarted(ITest test)
+        override public void Write(string aString)
         {
-            Events.Enqueue( new TestStartedEvent( test ) );
+            if (!TrySendToListener(aString))
+                _defaultWriter.Write(aString);
         }
 
-        /// <summary>
-        /// A test case finished
-        /// </summary>
-        /// <param name="result">Result of the test case</param>
-        public void TestFinished(ITestResult result)
+        override public void WriteLine(string aString)
         {
-            Events.Enqueue( new TestFinishedEvent( result ) );
+            if (!TrySendToListener(aString + Environment.NewLine))
+                _defaultWriter.WriteLine(aString);
         }
 
-        /// <summary>
-        /// Called when a test produces output for immediate display
-        /// </summary>
-        /// <param name="output">A TestOutput object containing the text to display</param>
-        public void TestOutput(TestOutput output)
-        {
-            Events.Enqueue(new TestOutputEvent(output));
-        }
+        override public System.Text.Encoding Encoding
+		{
+			get { return Encoding.Default; }
+		}
 
-        #endregion
-    }
+        private bool TrySendToListener(string text)
+        {
+            var context = TestExecutionContext.GetTestExecutionContext();
+            if (context == null || context.Listener == null)
+                return false;
+
+            context.Listener.TestOutput(new TestOutput(text, _streamName));
+            return true;
+        }
+	}
 }
 #endif

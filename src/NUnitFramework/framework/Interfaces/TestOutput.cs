@@ -61,9 +61,12 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
 		public string Stream { get; private set; }
 
+        /// <summary>
+        /// Convert the TestOutput object to an XML string
+        /// </summary>
         public string ToXml()
         {
-            return string.Format("<test-output stream={0}>{1}</test-output>", Stream, Text);
+            return string.Format("<test-output stream='{0}'>{1}</test-output>", Stream, Text);
         }
  	}
 }

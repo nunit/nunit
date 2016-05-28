@@ -54,6 +54,7 @@
     <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
+    <Compile Include="TextOutputFixture.cs" />
     <Compile Include="RepeatingTestsFixtureBase.cs" />
     <Compile Include="RetryFixture.cs" />
     <Compile Include="GenericTestMethodData.cs" />

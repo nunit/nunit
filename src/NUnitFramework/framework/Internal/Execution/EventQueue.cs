@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestFinishedEvent : Event
     {
-        private readonly ITestResult result;
+        private readonly ITestResult _result;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestFinishedEvent"/> class.
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="result">The result.</param>
         public TestFinishedEvent(ITestResult result)
         {
-            this.result = result;
+            _result = result;
         }
 
         /// <summary>
@@ -102,11 +102,37 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
-            listener.TestFinished(result);
+            listener.TestFinished(_result);
         }
     }
 
-#endregion
+    /// <summary>
+    /// TestOutputEvent holds information needed to call the TestOutput method.
+    /// </summary>
+    public class TestOutputEvent : Event
+    {
+        private readonly TestOutput _output;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestOutputEvent"/> class.
+        /// </summary>
+        /// <param name="output">The output object.</param>
+        public TestOutputEvent(TestOutput output)
+        {
+            _output = output;
+        }
+
+        /// <summary>
+        /// Calls TestOutput on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
+        {
+            listener.TestOutput(_output);
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// Implements a queue of work items each of which

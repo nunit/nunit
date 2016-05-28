@@ -168,6 +168,7 @@
     <Compile Include="Interfaces\ITypeInfo.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
+    <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
     <Compile Include="Internal\Filters\TestNameFilter.cs" />

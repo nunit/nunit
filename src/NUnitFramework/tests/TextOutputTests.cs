@@ -22,14 +22,17 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.TestData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests
 {
-    public class TextOutputTests
+    public class TextOutputTests : ITestListener
     {
         private const string SOME_TEXT = "Should go to the result";
-        private const string ERROR_TEXT = "This should be written directly to console";
+        private const string ERROR_TEXT = "Written directly to console";
         private static readonly string NL = NUnit.Env.NewLine;
 
         private string CapturedOutput
@@ -37,6 +40,7 @@ namespace NUnit.Framework.Tests
             get { return TestExecutionContext.CurrentContext.CurrentResult.Output; }
         }
 
+#if !SILVERLIGHT && !PORTABLE
         [Test]
         public void ConsoleWrite_WritesToResult()
         {
@@ -52,11 +56,44 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void ConsoleError_WritesToResult()
+        public void ConsoleErrorWrite_WritesToListener()
         {
-            Console.Error.WriteLine(SOME_TEXT);
-            Assert.That(CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "WriteToError");
+            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            work.Context.Listener = this;
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.Output, Is.EqualTo(""));
+
+            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT));
+            Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
         }
+
+        [Test]
+        public void ConsoleErrorWriteLine_WritesToListener()
+        {
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "WriteLineToError");
+            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            work.Context.Listener = this;
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.Output, Is.EqualTo(""));
+
+            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
+            Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+        }
+
+        [Test]
+        public void ShowWriteToConsoleError()
+        {
+            // Test purely for display purposes
+            Console.Error.WriteLine("Write to Console.Error displays on console directly");
+        }
+#endif
 
         [Test]
         public void TestContextOut_WritesToResult()
@@ -78,5 +115,24 @@ namespace NUnit.Framework.Tests
             TestContext.WriteLine(SOME_TEXT);
             Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
+
+        #region ITestListener Implementation
+
+        public void TestStarted(ITest test)
+        {
+        }
+
+        public void TestFinished(ITestResult result)
+        {
+        }
+
+        TestOutput _testOutput;
+
+        public void TestOutput(TestOutput output)
+        {
+            _testOutput = output;
+        }
+
+        #endregion
     }
 }

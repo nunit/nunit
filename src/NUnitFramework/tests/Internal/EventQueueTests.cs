@@ -40,9 +40,11 @@ namespace NUnit.Framework.Internal.Execution
         private static readonly Event[] events =
         {
             new TestStartedEvent(null),
+            new TestOutputEvent(null),
             new TestStartedEvent(null),
             new TestFinishedEvent(null),
             new TestStartedEvent(null),
+            new TestOutputEvent(null),
             new TestFinishedEvent(null),
             new TestFinishedEvent(null),
         };

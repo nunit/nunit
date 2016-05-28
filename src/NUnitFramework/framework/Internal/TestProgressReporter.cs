@@ -49,84 +49,6 @@ namespace NUnit.Framework.Internal
 
         #region ITestListener Members
 
-        ///// <summary>
-        ///// Called when a test run has just started
-        ///// </summary>
-        ///// <param name="test">The test that is starting</param>
-        //public void RunStarted(ITest test)
-        //{
-        //    try
-        //    {
-        //        string report = string.Format(
-        //            "<start-run id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-        //            test.Id,
-        //            XmlHelper.FormatAttributeValue(test.Name),
-        //            XmlHelper.FormatAttributeValue(test.FullName));
-
-        //        handler.RaiseCallbackEvent(report);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Called when a test has finished. Sends a result summary to the callback.
-        ///// to 
-        ///// </summary>
-        ///// <param name="result">The result of the test</param>
-        //public void RunFinished(ITestResult result)
-        //{
-        //    try
-        //    {
-        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Called when a test has just started
-        ///// </summary>
-        ///// <param name="test">The test that is starting</param>
-        //public void SuiteStarted(ITest test)
-        //{
-        //    try
-        //    {
-        //        string report = string.Format(
-        //            "<start-suite id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-        //            test.Id,
-        //            XmlHelper.FormatAttributeValue(test.Name),
-        //            XmlHelper.FormatAttributeValue(test.FullName));
-
-        //        handler.RaiseCallbackEvent(report);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Called when a test has finished. Sends a result summary to the callback.
-        ///// to 
-        ///// </summary>
-        ///// <param name="result">The result of the test</param>
-        //public void SuiteFinished(ITestResult result)
-        //{
-        //    try
-        //    {
-        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
         /// <summary>
         /// Called when a test has just started
         /// </summary>
@@ -180,7 +102,17 @@ namespace NUnit.Framework.Internal
         /// Called when a test produces output for immediate display
         /// </summary>
         /// <param name="output">A TestOutput object containing the text to display</param>
-        public void TestOutput(TestOutput output) { }
+        public void TestOutput(TestOutput output)
+        {
+            try
+            {
+                handler.RaiseCallbackEvent(output.ToXml());
+            }
+            catch (Exception ex)
+            {
+                log.Error("Exception processing TestOutput event" + NUnit.Env.NewLine + ex.ToString());
+            }
+        }
 
         #endregion
 
