@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -67,7 +68,7 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyNameOrPath">The AssemblyName or path to the test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
-        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary<string, object> settings)
+        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
         {
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
@@ -82,7 +83,7 @@ namespace NUnit.Framework.Api
         /// <param name="assembly">The test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
-        public FrameworkController(Assembly assembly, string idPrefix, IDictionary<string, object> settings)
+        public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings)
             : this(assembly.FullName, idPrefix, settings)
         {
             _testAssembly = assembly;
@@ -98,7 +99,7 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary<string, object> settings, string runnerType, string builderType)
+        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
             Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
             Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
@@ -117,27 +118,28 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public FrameworkController(Assembly assembly, string idPrefix, IDictionary<string, object> settings, string runnerType, string builderType)
+        public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings, string runnerType, string builderType)
             : this(assembly.FullName, idPrefix, settings, runnerType, builderType)
         {
             _testAssembly = assembly;
         }
 
-        private void Initialize(string assemblyPath, IDictionary<string, object> settings)
+        private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;
-            Settings = settings;
 
-            if (settings.ContainsKey(PackageSettings.InternalTraceLevel))
+            var newSettings = settings as IDictionary<string, object>;
+
+            if (Settings.ContainsKey(PackageSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[PackageSettings.InternalTraceLevel], true);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)Settings[PackageSettings.InternalTraceLevel], true);
 
-                if (settings.ContainsKey(PackageSettings.InternalTraceWriter))
-                    InternalTrace.Initialize((TextWriter)settings[PackageSettings.InternalTraceWriter], traceLevel);
+                if (Settings.ContainsKey(PackageSettings.InternalTraceWriter))
+                    InternalTrace.Initialize((TextWriter)Settings[PackageSettings.InternalTraceWriter], traceLevel);
 #if !PORTABLE && !SILVERLIGHT
                 else
                 {
-                    var workDirectory = settings.ContainsKey(PackageSettings.WorkDirectory) ? (string)settings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
+                    var workDirectory = Settings.ContainsKey(PackageSettings.WorkDirectory) ? (string)Settings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
                     var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
