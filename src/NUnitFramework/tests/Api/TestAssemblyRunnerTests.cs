@@ -192,7 +192,9 @@ namespace NUnit.Framework.Api
 
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
+#if !NETCF && !PORTABLE && !SILVERLIGHT
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
+#endif
 
             Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));

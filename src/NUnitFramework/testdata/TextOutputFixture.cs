@@ -20,7 +20,7 @@
 // 
 // **********************************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !NETCF
 using System;
 using NUnit.Framework;
 
