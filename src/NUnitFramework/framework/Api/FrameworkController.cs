@@ -129,6 +129,7 @@ namespace NUnit.Framework.Api
             AssemblyNameOrPath = assemblyPath;
 
             var newSettings = settings as IDictionary<string, object>;
+            Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
 
             if (Settings.ContainsKey(PackageSettings.InternalTraceLevel))
             {
