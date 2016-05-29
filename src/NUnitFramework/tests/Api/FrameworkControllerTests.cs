@@ -80,6 +80,7 @@ namespace NUnit.Framework.Api
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_PATH));
 #endif
             Assert.That(_controller.Settings, Is.SameAs(_settings));
+            Assert.That(_controller.InternalSettings, Is.SameAs(_settings));
         }
         #endregion
 
