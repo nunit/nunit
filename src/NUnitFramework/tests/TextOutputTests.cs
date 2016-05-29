@@ -88,10 +88,11 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void ShowWriteToConsoleError()
+        public void MultipleWrites()
         {
             // Test purely for display purposes
-            Console.Error.WriteLine("Write to Console.Error displays on console directly");
+            Console.Error.WriteLine("This displays on console directly");
+            Console.WriteLine("This is added to the result");
         }
 #endif
 

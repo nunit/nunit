@@ -64,7 +64,7 @@ namespace NUnit.ConsoleRunner
                     break;
 
                 case "test-output":
-                    WriteTestOutput(testEvent);
+                    TestOutput(testEvent);
                     break;
             }
         }
@@ -79,14 +79,14 @@ namespace NUnit.ConsoleRunner
             var outputNode = testResult.SelectSingleNode("output");
 
             if (_displayLabels == "ALL")
-                WriteTestLabel(testName);
+                WriteLabelLine(testName);
 
             if (outputNode != null)
             {
                 if (_displayLabels == "ON")
-                    WriteTestLabel(testName);
+                    WriteLabelLine(testName);
 
-                WriteTestOutput(outputNode);
+                WriteOutputLine(outputNode.InnerText);
             }
         }
 
@@ -98,25 +98,43 @@ namespace NUnit.ConsoleRunner
             if (outputNode != null)
             {
                 if (_displayLabels == "ON" || _displayLabels == "ALL")
-                    WriteTestLabel(suiteName);
+                    WriteLabelLine(suiteName);
 
-                WriteTestOutput(outputNode);
+                WriteOutputLine(outputNode.InnerText);
             }
         }
 
-        private void WriteTestLabel(string name)
+        private void TestOutput(XmlNode outputNode)
         {
-            using (new ColorConsole(ColorStyle.SectionHeader))
-                _outWriter.WriteLine("=> {0}", name);
+            var testName = outputNode.GetAttribute("testname");
+
+            if (_displayLabels == "ON" && testName != null)
+                WriteLabelLine(testName);
+
+            WriteOutputLine(outputNode.InnerText);
         }
 
-        private void WriteTestOutput(XmlNode outputNode)
+        private string _currentLabel;
+
+        private void WriteLabelLine(string label)
+        {
+            if (label != _currentLabel)
+            {
+                using (new ColorConsole(ColorStyle.SectionHeader))
+                    _outWriter.WriteLine("=> {0}", label);
+
+                _currentLabel = label;
+            }
+        }
+
+        private void WriteOutputLine(string text)
         {
             using (new ColorConsole(ColorStyle.Output))
             {
-                _outWriter.Write(outputNode.InnerText);
+                _outWriter.Write(text);
+
                 // Some labels were being shown on the same line as the previous output
-                if (!outputNode.InnerText.EndsWith("\n"))
+                if (!text.EndsWith("\n"))
                 {
                     _outWriter.WriteLine();
                 }

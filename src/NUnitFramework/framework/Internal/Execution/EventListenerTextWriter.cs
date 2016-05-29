@@ -70,7 +70,10 @@ namespace NUnit.Framework.Internal.Execution
             if (context == null || context.Listener == null)
                 return false;
 
-            context.Listener.TestOutput(new TestOutput(text, _streamName));
+            string testName = context.CurrentTest != null
+                ? context.CurrentTest.FullName
+                : null;
+            context.Listener.TestOutput(new TestOutput(text, _streamName, testName));
             return true;
         }
 	}

@@ -32,15 +32,18 @@ namespace NUnit.Framework.Interfaces
 	public class TestOutput
 	{
         /// <summary>
-        /// Construct with text and an ouput destination type
+        /// Construct with text, ouput destination type and
+        /// the name of the test that produced the output.
         /// </summary>
         /// <param name="text">Text to be output</param>
         /// <param name="stream">Destination of output</param>
-		public TestOutput(string text, string stream)
-		{
-			Text = text;
-			Stream = stream;
-		}
+        /// <param name="testName">Name of teset that produced the output</param>
+		public TestOutput(string text, string stream, string testName)
+        {
+            Text = text;
+            Stream = stream;
+            TestName = testName;
+        }
 
         /// <summary>
         /// Return string representation of the object for debugging
@@ -62,11 +65,18 @@ namespace NUnit.Framework.Interfaces
 		public string Stream { get; private set; }
 
         /// <summary>
+        /// Get the name of the test that created the output
+        /// </summary>
+        public string TestName { get; private set; }
+
+        /// <summary>
         /// Convert the TestOutput object to an XML string
         /// </summary>
         public string ToXml()
         {
-            return string.Format("<test-output stream='{0}'>{1}</test-output>", Stream, Text);
+            return TestName != null
+                ? string.Format("<test-output stream='{0}' testname='{1}'>{2}</test-output>", Stream, TestName, Text)
+                : string.Format("<test-output stream='{0}'>{1}</test-output>", Stream, Text);
         }
- 	}
+    }
 }
