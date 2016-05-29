@@ -271,6 +271,16 @@ namespace NUnitLite
 
         #endregion
 
+        #region TestOutput
+
+        public void TestOutput(TestOutput output)
+        {
+            _writer.Write(ColorStyle.Output, output.Text);
+            _testCreatedOutput = true;
+        }
+
+        #endregion
+
         #region WaitForUser
 
         public void WaitForUser(string message)
