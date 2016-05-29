@@ -130,7 +130,9 @@ namespace NUnit.Framework.Api
 
             try
             {
-                IList fixtureNames = options[PackageSettings.LOAD] as IList;
+                IList fixtureNames = null;
+                if (options.ContainsKey (PackageSettings.LOAD))
+                    fixtureNames = options[PackageSettings.LOAD] as IList;
                 var fixtures = GetFixtures(assembly, fixtureNames);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyPath, fixtures);
