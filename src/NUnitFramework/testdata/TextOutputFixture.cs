@@ -31,15 +31,27 @@ namespace NUnit.TestData
         private const string ERROR_TEXT = "Written directly to console";
 
         [Test]
-        public void WriteToError()
+        public void ConsoleErrorWrite()
         {
             Console.Error.Write(ERROR_TEXT);
         }
 
         [Test]
-        public void WriteLineToError()
+        public void ConsoleErrorWriteLine()
         {
             Console.Error.WriteLine(ERROR_TEXT);
+        }
+
+        [Test]
+        public void TestContextErrorWriteLine()
+        {
+            TestContext.Error.WriteLine(ERROR_TEXT);
+        }
+
+        [Test]
+        public void TestContextProgressWriteLine()
+        {
+            TestContext.Progress.WriteLine(ERROR_TEXT);
         }
     }
 }

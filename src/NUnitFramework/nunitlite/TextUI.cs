@@ -285,7 +285,7 @@ namespace NUnitLite
                 if (output.TestName != null)
                     WriteLabelLine(output.TestName);
 
-            WriteOutputLine(output.Text);
+            WriteOutputLine(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
         }
 
         #endregion
@@ -602,9 +602,16 @@ namespace NUnitLite
 
         private void WriteOutputLine(string text)
         {
-            _writer.Write(ColorStyle.Output, text);
+            WriteOutputLine(ColorStyle.Output, text);
+        }
+
+        private void WriteOutputLine(ColorStyle color, string text)
+        {
+            _writer.Write(color, text);
+
             if (!text.EndsWith(Environment.NewLine))
                 _writer.WriteLine();
+
             _testCreatedOutput = true;
         }
 

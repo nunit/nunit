@@ -58,7 +58,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ConsoleErrorWrite_WritesToListener()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "WriteToError");
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "ConsoleErrorWrite");
             var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ConsoleErrorWriteLine_WritesToListener()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "WriteLineToError");
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "ConsoleErrorWriteLine");
             var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
@@ -91,8 +91,43 @@ namespace NUnit.Framework.Tests
         public void MultipleWrites()
         {
             // Test purely for display purposes
-            Console.Error.WriteLine("This displays on console directly");
-            Console.WriteLine("This is added to the result");
+            TestContext.Progress.WriteLine("TestContext.Progress displays immediately");
+            TestContext.Error.WriteLine("TestContext.Error displays immediately as well");
+            Console.Error.WriteLine("Console.Error also displays immediately");
+            Console.WriteLine("This line is added to the result and displayed when test ends");
+            Console.WriteLine("As is this line");
+        }
+
+        [Test]
+        public void TestContextError_WritesToListener()
+        {
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "TestContextErrorWriteLine");
+            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            work.Context.Listener = this;
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.Output, Is.EqualTo(""));
+
+            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
+            Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+        }
+
+        [Test]
+        public void TestContextProgress_WritesToListener()
+        {
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "TestContextProgressWriteLine");
+            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            work.Context.Listener = this;
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.Output, Is.EqualTo(""));
+
+            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
+            Assert.That(_testOutput.Stream, Is.EqualTo("Progress"));
         }
 #endif
 

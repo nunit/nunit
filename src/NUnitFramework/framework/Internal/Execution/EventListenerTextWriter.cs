@@ -32,7 +32,6 @@ namespace NUnit.Framework.Internal.Execution
 	public class EventListenerTextWriter : TextWriter
 	{
         private TextWriter _defaultWriter;
-		private ITestListener _listener;
 		private string _streamName;
 
 		public EventListenerTextWriter( string streamName, TextWriter defaultWriter )

@@ -107,11 +107,12 @@ namespace NUnit.ConsoleRunner
         private void TestOutput(XmlNode outputNode)
         {
             var testName = outputNode.GetAttribute("testname");
+            var stream = outputNode.GetAttribute("stream");
 
             if (_displayLabels == "ON" && testName != null)
                 WriteLabelLine(testName);
 
-            WriteOutputLine(outputNode.InnerText);
+            WriteOutputLine(outputNode.InnerText, stream == "Error" ? ColorStyle.Error : ColorStyle.Output);
         }
 
         private string _currentLabel;
@@ -129,7 +130,12 @@ namespace NUnit.ConsoleRunner
 
         private void WriteOutputLine(string text)
         {
-            using (new ColorConsole(ColorStyle.Output))
+            WriteOutputLine(text, ColorStyle.Output);
+        }
+
+        private void WriteOutputLine(string text, ColorStyle color)
+        {
+            using (new ColorConsole(color))
             {
                 _outWriter.Write(text);
 
@@ -139,6 +145,11 @@ namespace NUnit.ConsoleRunner
                     _outWriter.WriteLine();
                 }
             }
+        }
+
+        private void WriteErrorLine(string text)
+        {
+
         }
 
         #endregion

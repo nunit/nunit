@@ -27,6 +27,7 @@ using System.Reflection;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework
 {
@@ -74,6 +75,18 @@ namespace NUnit.Framework
         {
             get { return TestExecutionContext.CurrentContext.OutWriter; }
         }
+
+#if !SILVERLIGHT && !PORTABLE
+        /// <summary>
+        /// Gets a TextWriter that will send output directly to Console.Error
+        /// </summary>
+        public static TextWriter Error = new EventListenerTextWriter("Error", Console.Error);
+
+        /// <summary>
+        /// Gets a TextWriter for use in displaying immediate progress messages
+        /// </summary>
+        public static readonly TextWriter Progress = new EventListenerTextWriter("Progress", Console.Error);
+#endif
 
         /// <summary>
         /// Get a representation of the current test.
