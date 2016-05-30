@@ -129,18 +129,18 @@ namespace NUnit.Framework.Api
             AssemblyNameOrPath = assemblyPath;
 
             var newSettings = settings as IDictionary<string, object>;
-            InternalSettings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
+            Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
 
-            if (InternalSettings.ContainsKey(PackageSettings.InternalTraceLevel))
+            if (Settings.ContainsKey(PackageSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)InternalSettings[PackageSettings.InternalTraceLevel], true);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)Settings[PackageSettings.InternalTraceLevel], true);
 
-                if (InternalSettings.ContainsKey(PackageSettings.InternalTraceWriter))
-                    InternalTrace.Initialize((TextWriter)InternalSettings[PackageSettings.InternalTraceWriter], traceLevel);
+                if (Settings.ContainsKey(PackageSettings.InternalTraceWriter))
+                    InternalTrace.Initialize((TextWriter)Settings[PackageSettings.InternalTraceWriter], traceLevel);
 #if !PORTABLE && !SILVERLIGHT
                 else
                 {
-                    var workDirectory = InternalSettings.ContainsKey(PackageSettings.WorkDirectory) ? (string)InternalSettings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
+                    var workDirectory = Settings.ContainsKey(PackageSettings.WorkDirectory) ? (string)Settings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
                     var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
@@ -177,15 +177,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets a dictionary of settings for the FrameworkController
         /// </summary>
-        public IDictionary Settings
-        {
-            get { return (IDictionary)InternalSettings; }
-        }
-
-        /// <summary>
-        /// Gets a dictionary of settings for the FrameworkController
-        /// </summary>
-        internal IDictionary<string, object> InternalSettings { get; private set; }
+        internal IDictionary<string, object> Settings { get; private set; }
 
         #endregion
 
@@ -198,9 +190,9 @@ namespace NUnit.Framework.Api
         public string LoadTests()
         {
             if (_testAssembly != null)
-                Runner.Load(_testAssembly, InternalSettings);
+                Runner.Load(_testAssembly, Settings);
             else
-                Runner.Load(AssemblyNameOrPath, InternalSettings);
+                Runner.Load(AssemblyNameOrPath, Settings);
 
             return Runner.LoadedTest.ToXml(false).OuterXml;
         }
@@ -233,8 +225,8 @@ namespace NUnit.Framework.Api
             TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
-            if (InternalSettings != null) // Some platforms don't have settings
-                InsertSettingsElement(result, InternalSettings);
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
 #if !PORTABLE && !SILVERLIGHT
             InsertEnvironmentElement(result);
 #endif
@@ -285,8 +277,8 @@ namespace NUnit.Framework.Api
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
-            if (InternalSettings != null) // Some platforms don't have settings
-                InsertSettingsElement(result, InternalSettings);
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
 #if !PORTABLE && !SILVERLIGHT
             InsertEnvironmentElement(result);
 #endif
@@ -361,8 +353,8 @@ namespace NUnit.Framework.Api
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
-            if (InternalSettings != null) // Some platforms don't have settings
-                InsertSettingsElement(result, InternalSettings);
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
 #if !PORTABLE && !SILVERLIGHT
             InsertEnvironmentElement(result);
 #endif
