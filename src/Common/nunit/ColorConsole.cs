@@ -30,7 +30,7 @@ namespace NUnit.Common
     /// </summary>
     public class ColorConsole : IDisposable
     {
-#if !NETCF
+#if !SILVERLIGHT && !NETCF
         private ConsoleColor _originalColor;
 #endif
 

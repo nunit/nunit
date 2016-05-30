@@ -382,6 +382,7 @@
     <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
+    <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Execution\EventPump.cs" />
     <Compile Include="Internal\Execution\EventQueue.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />

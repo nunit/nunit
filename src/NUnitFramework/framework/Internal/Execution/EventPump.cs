@@ -63,12 +63,6 @@ namespace NUnit.Framework.Internal.Execution
         #region Instance Variables
 
         /// <summary>
-        /// The handle on which a thread enqueuing an event with <see cref="Event.IsSynchronous"/> == <c>true</c>
-        /// waits, until the EventPump has sent the event to its listeners.
-        /// </summary>
-        private readonly AutoResetEvent _synchronousEventSent = new AutoResetEvent(false);
-
-        /// <summary>
         /// The downstream listener to which we send events
         /// </summary>
         private readonly ITestListener _eventListener;
@@ -134,7 +128,6 @@ namespace NUnit.Framework.Internal.Execution
         public void Dispose()
         {
             Stop();
-            ((IDisposable)_synchronousEventSent).Dispose();
         }
 
         /// <summary>

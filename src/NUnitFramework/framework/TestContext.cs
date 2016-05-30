@@ -76,7 +76,7 @@ namespace NUnit.Framework
             get { return TestExecutionContext.CurrentContext.OutWriter; }
         }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets a TextWriter that will send output directly to Console.Error
         /// </summary>

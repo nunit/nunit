@@ -38,6 +38,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public EventQueue Events { get; private set; }
 
+        /// <summary>
+        /// Construct a QueuingEventListener
+        /// </summary>
         public QueuingEventListener()
         {
             Events = new EventQueue();

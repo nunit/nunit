@@ -209,7 +209,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                var current = (TestExecutionContext)Thread.GetData(contextSlot);
+                var current = GetTestExecutionContext();
                 if (current == null)
                 {
                     current = new TestExecutionContext();
@@ -222,6 +222,14 @@ namespace NUnit.Framework.Internal
             {
                 Thread.SetData(contextSlot, value);
             }
+        }
+
+        /// <summary>
+        /// Get the current context or return null if none is found.
+        /// </summary>
+        public static TestExecutionContext GetTestExecutionContext()
+        {
+            return (TestExecutionContext)Thread.GetData(contextSlot);
         }
 #else
         // In all other builds, we use the CallContext

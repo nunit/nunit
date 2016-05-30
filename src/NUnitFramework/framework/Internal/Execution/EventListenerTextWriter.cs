@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
+#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System;
 using System.IO;
 using System.Text;
@@ -29,35 +29,58 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    /// <summary>
+    /// EventListenerTextWriter sends text output to the currently active
+    /// ITestEventListener in the form of a TestOutput object. If no event 
+    /// listener is active in the contet, or if there is no context,
+    /// the output is forwarded to the supplied default writer.
+    /// </summary>
 	public class EventListenerTextWriter : TextWriter
 	{
         private TextWriter _defaultWriter;
 		private string _streamName;
 
+        /// <summary>
+        /// Construct an EventListenerTextWriter
+        /// </summary>
+        /// <param name="streamName">The name of the stream to use for events</param>
+        /// <param name="defaultWriter">The default writer to use if no listener is available</param>
 		public EventListenerTextWriter( string streamName, TextWriter defaultWriter )
 		{
 			_streamName = streamName;
             _defaultWriter = defaultWriter;
 		}
 
+        /// <summary>
+        /// Write a single char
+        /// </summary>
         override public void Write(char aChar)
         {
             if (!TrySendToListener(aChar.ToString()))
                 _defaultWriter.Write(aChar);
         }
 
+        /// <summary>
+        /// Write a string
+        /// </summary>
         override public void Write(string aString)
         {
             if (!TrySendToListener(aString))
                 _defaultWriter.Write(aString);
         }
 
+        /// <summary>
+        /// Write a string followed by a newline
+        /// </summary>
         override public void WriteLine(string aString)
         {
             if (!TrySendToListener(aString + Environment.NewLine))
                 _defaultWriter.WriteLine(aString);
         }
 
+        /// <summary>
+        /// Get the Encoding for this TextWriter
+        /// </summary>
         override public System.Text.Encoding Encoding
 		{
 			get { return Encoding.Default; }
