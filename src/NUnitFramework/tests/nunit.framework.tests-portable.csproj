@@ -272,6 +272,8 @@
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
+    <Compile Include="TextOutputTests.cs" />
+    <Compile Include="ThrowsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />

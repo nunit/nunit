@@ -42,5 +42,11 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="result">The result of the test</param>
         void TestFinished(ITestResult result);
+
+        /// <summary>
+        /// Called when a test produces output for immediate display
+        /// </summary>
+        /// <param name="output">A TestOutput object containing the text to display</param>
+        void TestOutput(TestOutput output);
     }
 }

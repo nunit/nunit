@@ -87,6 +87,7 @@
     <Compile Include="TestFixtureSourceData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
     <Compile Include="TestOfFixture.cs" />
+    <Compile Include="TextOutputFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
     <Compile Include="TimeoutFixture.cs" />
     <Compile Include="UnexpectedExceptionFixture.cs" />

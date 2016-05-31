@@ -245,9 +245,29 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
+        /// Signal any test run that is in process to stop. Return without error if no test is running.
+        /// </summary>
+        /// <param name="force">If true, kill any tests that are currently running</param>
+        public void StopRun(bool force)
+        {
+            if (IsTestRunning)
+            {
+                Context.ExecutionStatus = force
+                    ? TestExecutionStatus.AbortRequested
+                    : TestExecutionStatus.StopRequested;
+
+                Context.Dispatcher.CancelRun(force);
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
         /// Initiate the test run.
         /// </summary>
-        public void StartRun(ITestListener listener)
+        private void StartRun(ITestListener listener)
         {
 #if !SILVERLIGHT && !NETCF && !PORTABLE
             // Save Console.Out and Error for later restoration
@@ -255,7 +275,7 @@ namespace NUnit.Framework.Api
             _savedErr = Console.Error;
 
             Console.SetOut(new TextCapture(Console.Out));
-            Console.SetError(new TextCapture(Console.Error));
+            Console.SetError(new EventListenerTextWriter("Error", Console.Error));
 #endif
 
 #if PARALLEL
@@ -286,26 +306,6 @@ namespace NUnit.Framework.Api
 
             Context.Dispatcher.Dispatch(TopLevelWorkItem);
         }
-
-        /// <summary>
-        /// Signal any test run that is in process to stop. Return without error if no test is running.
-        /// </summary>
-        /// <param name="force">If true, kill any tests that are currently running</param>
-        public void StopRun(bool force)
-        {
-            if (IsTestRunning)
-            {
-                Context.ExecutionStatus = force
-                    ? TestExecutionStatus.AbortRequested
-                    : TestExecutionStatus.StopRequested;
-
-                Context.Dispatcher.CancelRun(force);
-            }
-        }
-
-        #endregion
-
-        #region Helper Methods
 
         /// <summary>
         /// Create the initial TestExecutionContext used to run tests

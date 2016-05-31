@@ -250,14 +250,13 @@ namespace NUnitLite
 
             if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
             {
-                _writer.WriteLine(ColorStyle.SectionHeader, "=> " + result.Test.FullName);
-                _testCreatedOutput = true;
+                WriteLabelLine(result.Test.FullName);
             }
 
             if (result.Output.Length > 0)
             {
-                _writer.Write(ColorStyle.Output, result.Output);
-                _testCreatedOutput = true;
+                WriteOutputLine(result.Output);
+
                 if (!result.Output.EndsWith("\n"))
                     _writer.WriteLine();
             }
@@ -267,6 +266,26 @@ namespace NUnitLite
                 _writer.WriteLine();
                 _testCreatedOutput = false;
             }
+        }
+
+        #endregion
+
+        #region TestOutput
+
+        public void TestOutput(TestOutput output)
+        {
+            var labels = "ON";
+
+#if !SILVERLIGHT
+            if (_options.DisplayTestLabels != null)
+                labels = _options.DisplayTestLabels.ToUpperInvariant();
+#endif
+
+            if (labels == "ON" || labels == "All")
+                if (output.TestName != null)
+                    WriteLabelLine(output.TestName);
+
+            WriteOutputLine(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
         }
 
         #endregion
@@ -567,6 +586,33 @@ namespace NUnitLite
         private void WriteHelpLine(string text)
         {
             _writer.WriteLine(ColorStyle.Help, text);
+        }
+
+        private string _currentLabel;
+
+        private void WriteLabelLine(string label)
+        {
+            if (label != _currentLabel)
+            {
+                _writer.WriteLine(ColorStyle.SectionHeader, "=> " + label);
+                _testCreatedOutput = true;
+                _currentLabel = label;
+            }
+        }
+
+        private void WriteOutputLine(string text)
+        {
+            WriteOutputLine(ColorStyle.Output, text);
+        }
+
+        private void WriteOutputLine(ColorStyle color, string text)
+        {
+            _writer.Write(color, text);
+
+            if (!text.EndsWith(Environment.NewLine))
+                _writer.WriteLine();
+
+            _testCreatedOutput = true;
         }
 
         #endregion

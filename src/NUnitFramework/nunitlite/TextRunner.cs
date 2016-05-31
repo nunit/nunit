@@ -471,6 +471,15 @@ namespace NUnitLite
 #endif
         }
 
-#endregion
+        /// <summary>
+        /// Called when a test produces output for immediate display
+        /// </summary>
+        /// <param name="output">A TestOutput object containing the text to display</param>
+        public void TestOutput(TestOutput output)
+        {
+            _textUI.TestOutput(output);
+        }
+
+        #endregion
     }
 }

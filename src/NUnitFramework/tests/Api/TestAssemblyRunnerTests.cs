@@ -54,6 +54,7 @@ namespace NUnit.Framework.Api
 
         private int _testStartedCount;
         private int _testFinishedCount;
+        private int _testOutputCount;
         private int _successCount;
         private int _failCount;
         private int _skipCount;
@@ -76,6 +77,7 @@ namespace NUnit.Framework.Api
 
             _testStartedCount = 0;
             _testFinishedCount = 0;
+            _testOutputCount = 0;
             _successCount = 0;
             _failCount = 0;
             _skipCount = 0;
@@ -188,8 +190,11 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
             var result = _runner.Run(this, TestFilter.Empty);
 
-            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests));
-            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests));
+            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
+            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
+#if !NETCF && !PORTABLE && !SILVERLIGHT
+            Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
+#endif
 
             Assert.That(_successCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_failCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
@@ -409,7 +414,16 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        /// <summary>
+        /// Called when a test produces output for immediate display
+        /// </summary>
+        /// <param name="output">A TestOutput object containing the text to display</param>
+        public void TestOutput(TestOutput output)
+        {
+            _testOutputCount++;
+        }
+
+        #endregion
 
 #region Helper Methods
 

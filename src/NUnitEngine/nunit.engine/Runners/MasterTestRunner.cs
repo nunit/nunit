@@ -40,8 +40,6 @@ namespace NUnit.Engine.Runners
         private IRuntimeFrameworkService _runtimeService;
         private ExtensionService _extensionService;
 
-        private TestEventDispatcher _eventDispatcher;
-
         public MasterTestRunner(IServiceLocator services, TestPackage package)
             : base(services, package)
         {

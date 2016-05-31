@@ -66,7 +66,15 @@ namespace NUnit.Tests
                         + CDataTestFixure.Suites
                         + TestNameEscaping.Suites
                         + NamespaceSuites;
-            
+
+            public const int TestStartedEvents = Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests;
+            public const int TestFinishedEvents = Tests;
+#if PORTABLE || SILVERLIGHT
+            public const int TestOutputEvents = 0;
+#else
+            public const int TestOutputEvents = 1;
+#endif
+
             public const int Nodes = Tests + Suites;
             
             public const int ExplicitFixtures = 1;
@@ -128,6 +136,9 @@ namespace NUnit.Tests
             [Test]
             public void FailingTest()
             {
+#if !PORTABLE && !SILVERLIGHT
+                Console.Error.WriteLine("Immediate Error Message");
+#endif
                 Assert.Fail("Intentional failure");
             }
 
