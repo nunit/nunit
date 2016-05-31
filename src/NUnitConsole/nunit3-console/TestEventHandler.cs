@@ -147,11 +147,6 @@ namespace NUnit.ConsoleRunner
             }
         }
 
-        private void WriteErrorLine(string text)
-        {
-
-        }
-
         #endregion
 
         #region InitializeLifetimeService
