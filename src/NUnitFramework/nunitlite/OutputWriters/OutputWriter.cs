@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NUnit.Framework.Interfaces;
@@ -42,7 +43,7 @@ namespace NUnitLite
         /// <param name="result">The result to be written</param>
         /// <param name="outputPath">Path to the file to which the result is written</param>
         /// <param name="runSettings">A dictionary of settings used for this test run</param>
-        public void WriteResultFile(ITestResult result, string outputPath, IDictionary runSettings, TestFilter filter)
+        public void WriteResultFile(ITestResult result, string outputPath, IDictionary<string, object> runSettings, TestFilter filter)
         {
             using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
             {
@@ -69,7 +70,8 @@ namespace NUnitLite
         /// <param name="result">The result to be written</param>
         /// <param name="writer">A TextWriter to which the result is written</param>
         /// <param name="runSettings">A dictionary of settings used for this test run</param>
-        public abstract void WriteResultFile(ITestResult result, TextWriter writer, IDictionary runSettings, TestFilter filter);
+        /// <param name="filter"></param>
+        public abstract void WriteResultFile(ITestResult result, TextWriter writer, IDictionary<string, object> runSettings, TestFilter filter);
 
         /// <summary>
         /// Abstract method that writes test info to a TextWriter

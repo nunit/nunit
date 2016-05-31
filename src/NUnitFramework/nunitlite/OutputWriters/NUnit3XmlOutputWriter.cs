@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -61,7 +62,9 @@ namespace NUnitLite
         /// </summary>
         /// <param name="result">The result to be written to a file</param>
         /// <param name="writer">A TextWriter to which the result is written</param>
-        public override void WriteResultFile(ITestResult result, TextWriter writer, IDictionary runSettings, TestFilter filter)
+        /// <param name="runSettings"></param>
+        /// <param name="filter"></param>
+        public override void WriteResultFile(ITestResult result, TextWriter writer, IDictionary<string, object> runSettings, TestFilter filter)
         {
             XmlWriterSettings xmlSettings = new XmlWriterSettings();
             xmlSettings.Indent = true;
@@ -72,7 +75,7 @@ namespace NUnitLite
             }
         }
 
-        private void WriteXmlResultOutput(ITestResult result, XmlWriter xmlWriter, IDictionary runSettings, TestFilter filter)
+        private void WriteXmlResultOutput(ITestResult result, XmlWriter xmlWriter, IDictionary<string, object> runSettings, TestFilter filter)
         {
             TNode resultNode = result.ToXml(true);
 

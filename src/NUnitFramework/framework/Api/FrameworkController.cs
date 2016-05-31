@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -126,18 +127,20 @@ namespace NUnit.Framework.Api
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;
-            Settings = settings;
 
-            if (settings.Contains(PackageSettings.InternalTraceLevel))
+            var newSettings = settings as IDictionary<string, object>;
+            Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
+
+            if (Settings.ContainsKey(PackageSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[PackageSettings.InternalTraceLevel], true);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)Settings[PackageSettings.InternalTraceLevel], true);
 
-                if (settings.Contains(PackageSettings.InternalTraceWriter))
-                    InternalTrace.Initialize((TextWriter)settings[PackageSettings.InternalTraceWriter], traceLevel);
+                if (Settings.ContainsKey(PackageSettings.InternalTraceWriter))
+                    InternalTrace.Initialize((TextWriter)Settings[PackageSettings.InternalTraceWriter], traceLevel);
 #if !PORTABLE && !SILVERLIGHT
                 else
                 {
-                    var workDirectory = settings.Contains(PackageSettings.WorkDirectory) ? (string)settings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
+                    var workDirectory = Settings.ContainsKey(PackageSettings.WorkDirectory) ? (string)Settings[PackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
                     var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
@@ -174,7 +177,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets a dictionary of settings for the FrameworkController
         /// </summary>
-        public IDictionary Settings { get; private set; }
+        internal IDictionary<string, object> Settings { get; private set; }
 
         #endregion
 
@@ -420,7 +423,7 @@ namespace NUnit.Framework.Api
         /// <param name="targetNode">Target node</param>
         /// <param name="settings">Settings dictionary</param>
         /// <returns>The new node</returns>
-        public static TNode InsertSettingsElement(TNode targetNode, IDictionary settings)
+        public static TNode InsertSettingsElement(TNode targetNode, IDictionary<string, object> settings)
         {
             TNode settingsNode = new TNode("settings");
             targetNode.ChildNodes.Insert(0, settingsNode);
@@ -430,7 +433,7 @@ namespace NUnit.Framework.Api
 
 #if PARALLEL
             // Add default values for display
-            if (!settings.Contains(PackageSettings.NumberOfTestWorkers))
+            if (!settings.ContainsKey(PackageSettings.NumberOfTestWorkers))
                 AddSetting(settingsNode, PackageSettings.NumberOfTestWorkers, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
 #endif
 

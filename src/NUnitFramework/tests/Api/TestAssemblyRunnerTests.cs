@@ -48,7 +48,7 @@ namespace NUnit.Framework.Api
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #endif
 
-        private static readonly IDictionary EMPTY_SETTINGS = new Dictionary<string, object>();
+        private static readonly IDictionary<string, object> EMPTY_SETTINGS = new Dictionary<string, object>();
 
         private ITestAssemblyRunner _runner;
 

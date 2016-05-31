@@ -264,7 +264,7 @@ namespace NUnitLite
 
         #region Helper Methods
 
-        public int RunTests(TestFilter filter, IDictionary runSettings)
+        public int RunTests(TestFilter filter, IDictionary<string, object> runSettings)
         {
             var startTime = DateTime.UtcNow;
 

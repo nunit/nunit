@@ -59,7 +59,7 @@ namespace NUnit.Framework.Tests
 
             ActionAttributeFixture.ClearResults();
 
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { "NUnit.TestData.ActionAttributeTests" };
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;

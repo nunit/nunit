@@ -76,7 +76,7 @@ namespace NUnit.Engine.Drivers
             _testAssemblyPath = testAssemblyPath;
             try
             {
-                _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, idPrefix, (System.Collections.IDictionary)settings);
+                _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, idPrefix, settings);
             }
             catch (SerializationException ex)
             {

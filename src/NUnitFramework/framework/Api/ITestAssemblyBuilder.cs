@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
@@ -41,7 +42,7 @@ namespace NUnit.Framework.Api
         /// <param name="assembly">The assembly from which tests are to be built</param>
         /// <param name="options">A dictionary of options to use in building the suite</param>
         /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        ITest Build(Assembly assembly, IDictionary options);
+        ITest Build(Assembly assembly, IDictionary<string, object> options);
 
         /// <summary>
         /// Build a suite of tests given the filename of an assembly
@@ -49,6 +50,6 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
         /// <param name="options">A dictionary of options to use in building the suite</param>
         /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        ITest Build(string assemblyName, IDictionary options);
+        ITest Build(string assemblyName, IDictionary<string, object> options);
     }
 }

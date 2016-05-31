@@ -30,6 +30,7 @@ using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using System.Collections.Generic;
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Diagnostics;
@@ -128,7 +129,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Our settings, specified when loading the assembly
         /// </summary>
-        private IDictionary Settings { get; set; }
+        private IDictionary<string, object> Settings { get; set; }
 
         /// <summary>
         /// The top level WorkItem created for the assembly as a whole
@@ -150,11 +151,11 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public ITest Load(string assemblyName, IDictionary settings)
+        public ITest Load(string assemblyName, IDictionary<string, object> settings)
         {
             Settings = settings;
 
-            if (settings.Contains(PackageSettings.RandomSeed))
+            if (settings.ContainsKey(PackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[PackageSettings.RandomSeed];
 
             return LoadedTest = _builder.Build(assemblyName, settings);
@@ -167,11 +168,11 @@ namespace NUnit.Framework.Api
         /// <param name="assembly">The assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public ITest Load(Assembly assembly, IDictionary settings)
+        public ITest Load(Assembly assembly, IDictionary<string, object> settings)
         {
             Settings = settings;
 
-            if (settings.Contains(PackageSettings.RandomSeed))
+            if (settings.ContainsKey(PackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[PackageSettings.RandomSeed];
 
             return LoadedTest = _builder.Build(assembly, settings);
@@ -280,7 +281,7 @@ namespace NUnit.Framework.Api
 
 #if PARALLEL
             // Queue and pump events, unless settings have SynchronousEvents == false
-            if (!Settings.Contains(PackageSettings.SynchronousEvents) || !(bool)Settings[PackageSettings.SynchronousEvents])
+            if (!Settings.ContainsKey(PackageSettings.SynchronousEvents) || !(bool)Settings[PackageSettings.SynchronousEvents])
             {
                 QueuingEventListener queue = new QueuingEventListener();
                 Context.Listener = queue;
@@ -292,12 +293,12 @@ namespace NUnit.Framework.Api
 
 #if !NETCF
             if (!System.Diagnostics.Debugger.IsAttached &&
-                Settings.Contains(PackageSettings.DebugTests) &&
+                Settings.ContainsKey(PackageSettings.DebugTests) &&
                 (bool)Settings[PackageSettings.DebugTests])
                 System.Diagnostics.Debugger.Launch();
 
 #if !SILVERLIGHT && !PORTABLE
-            if (Settings.Contains(PackageSettings.PauseBeforeRun) &&
+            if (Settings.ContainsKey(PackageSettings.PauseBeforeRun) &&
                 (bool)Settings[PackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
 
@@ -316,12 +317,12 @@ namespace NUnit.Framework.Api
             Context = new TestExecutionContext();
 
             // Apply package settings to the context
-            if (Settings.Contains(PackageSettings.DefaultTimeout))
+            if (Settings.ContainsKey(PackageSettings.DefaultTimeout))
                 Context.TestCaseTimeout = (int)Settings[PackageSettings.DefaultTimeout];
-            if (Settings.Contains(PackageSettings.StopOnError))
+            if (Settings.ContainsKey(PackageSettings.StopOnError))
                 Context.StopOnError = (bool)Settings[PackageSettings.StopOnError];
 
-            if (Settings.Contains(PackageSettings.WorkDirectory))
+            if (Settings.ContainsKey(PackageSettings.WorkDirectory))
                 Context.WorkDirectory = (string)Settings[PackageSettings.WorkDirectory];
             else
                 Context.WorkDirectory = Env.DefaultWorkDirectory;
@@ -377,7 +378,7 @@ namespace NUnit.Framework.Api
 #if PARALLEL
         private int GetLevelOfParallelism()
         {
-            return Settings.Contains(PackageSettings.NumberOfTestWorkers)
+            return Settings.ContainsKey(PackageSettings.NumberOfTestWorkers)
                 ? (int)Settings[PackageSettings.NumberOfTestWorkers]
                 : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
