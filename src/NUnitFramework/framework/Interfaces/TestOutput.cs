@@ -36,8 +36,8 @@ namespace NUnit.Framework.Interfaces
         /// the name of the test that produced the output.
         /// </summary>
         /// <param name="text">Text to be output</param>
-        /// <param name="stream">Destination of output</param>
-        /// <param name="testName">Name of teset that produced the output</param>
+        /// <param name="stream">Name of the stream or channel to which the text should be written</param>
+        /// <param name="testName">FullName of test that produced the output</param>
 		public TestOutput(string text, string stream, string testName)
         {
             Text = text;
