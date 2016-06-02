@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using NUnit.Framework;
 
@@ -54,6 +55,17 @@ namespace NUnit.Engine.Tests
 
             _summaryResults = _summary.GetTestResults();
             _summaryTestRun = _summaryResults.Element("test-run");
+        }
+
+        [Test]
+        public void TestResultsContainAllResults()
+        {
+            var numAssemblyTestSuites = _summaryTestRun
+                .Elements("test-suite")
+                .Where(e => e.Attribute("type")?.Value == "Assembly")
+                .Count();
+
+            Assert.That(numAssemblyTestSuites, Is.EqualTo(2));
         }
 
         [Test]

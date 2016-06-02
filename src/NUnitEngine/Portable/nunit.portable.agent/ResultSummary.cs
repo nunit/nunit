@@ -34,8 +34,6 @@ namespace NUnit.Engine
     /// </summary>
     public class ResultSummary
     {
-        const string TEST_RUN_ELEMENT = "test-run";
-
         IList<XElement> _results = new List<XElement>();
 
         #region Constructor
@@ -99,6 +97,9 @@ namespace NUnit.Engine
             test.Add(new XAttribute("start-time", StartTime.ToString("u")));
             test.Add(new XAttribute("end-time", EndTime.ToString("u")));
             test.Add(new XAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo)));
+
+            foreach (var result in _results)
+                test.Add(result);
             
             return new XDocument(test);
         }
@@ -222,6 +223,11 @@ namespace NUnit.Engine
         /// The length of the test run in seconds
         /// </summary>
         public double Duration { get; private set; }
+  		  
+        /// <summary>
+        /// Invalid test fixture(s) were found
+        /// </summary>
+        public int InvalidTestFixtures { get; private set; }
 
         #endregion
 
@@ -239,6 +245,7 @@ namespace NUnit.Engine
             ExplicitCount = 0;
             InvalidCount = 0;
             InvalidAssemblies = 0;
+            InvalidTestFixtures = 0;
             AssertCount = 0;
         }
 
@@ -253,7 +260,6 @@ namespace NUnit.Engine
             string type = element.Attribute("type")?.Value;
             string status = element.Attribute("result")?.Value;
             string label = element.Attribute("label")?.Value;
-            string result = element.Attribute("result")?.Value;
 
             switch (element.Name.ToString())
             {
@@ -291,8 +297,14 @@ namespace NUnit.Engine
                     break;
 
                 case "test-suite":
-                    if (type == "Assembly" && status == "Failed" && label == "Invalid")
-                        InvalidAssemblies++;
+                    if (status == "Failed" && label == "Invalid")
+                    {
+                        if (type == "Assembly")
+                            InvalidAssemblies++;
+                        else
+                            InvalidTestFixtures++;
+                    }
+
                     if (type == "Assembly" && status == "Failed" && label == "Error")
                     {
                         InvalidAssemblies++;
@@ -312,18 +324,18 @@ namespace NUnit.Engine
 
                     if (string.IsNullOrWhiteSpace(Result))
                     {
-                        Result = result;
+                        Result = status;
                     }
                     else
                     {
-                        switch (result)
+                        switch (status)
                         {
                             case "Passed":
                                 if (Result != "Failed")
-                                    Result = result;
+                                    Result = status;
                                 break;
                             case "Failed":
-                                Result = result;
+                                Result = status;
                                 break;
                         }
                     }
