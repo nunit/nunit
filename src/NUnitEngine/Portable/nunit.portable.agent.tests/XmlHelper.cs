@@ -65,6 +65,21 @@ namespace NUnit.Engine.Tests
             return attr == null ? null : attr.Value;
         }
 
+        /// <summary>
+        /// Returns the int value of the attribute value
+        /// </summary>
+        /// <param name="attribute"></param>
+        /// <returns>The int value, int.MinValue on failure</returns>
+        public static int ToInt(this XAttribute attribute)
+        {
+            int value = int.MinValue;
+            if(attribute != null)
+            {
+                int.TryParse(attribute.Value, out value);
+            }
+            return value;
+        }
+
         #endregion
     }
 }

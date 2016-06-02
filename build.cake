@@ -476,7 +476,9 @@ var BinFiles = new FilePath[]
     "addins/tests/vs-project-loader.dll",
     "addins/v2-tests/nunit.framework.dll",
     "addins/v2-tests/nunit.framework.xml",
-    "addins/v2-tests/nunit.v2.driver.tests.dll"
+    "addins/v2-tests/nunit.v2.driver.tests.dll",
+    "agents/nunit.portable.agent.dll",
+    "agents/nunit.portable.agent.xml"
 };
 
 // Not all of these are present in every framework
@@ -674,6 +676,15 @@ Task("PackageNuGet")
             NoPackageAnalysis = true
         });
         NuGetPack("nuget/extensions/nunit.v2.driver.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        // Package the portable agent
+        NuGetPack("nuget/engine/nunit.portable.agent.nuspec", new NuGetPackSettings()
         {
             Version = packageVersion,
             BasePath = currentImageDir,

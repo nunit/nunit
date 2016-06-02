@@ -26,6 +26,9 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Common;
 
+// Missing XML Docs
+#pragma warning disable 1591
+
 namespace NUnit.Engine
 {
     public class TestFilterBuilder : ITestFilterBuilder

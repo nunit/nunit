@@ -42,6 +42,9 @@
     <Compile Include="..\..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Common\nunit\AssemblyHelper.cs">
+      <Link>Common\AssemblyHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Common\nunit\Compatibility\AttributeHelper.cs">
       <Link>Compatibility\AttributeHelper.cs</Link>
     </Compile>
@@ -55,7 +58,7 @@
       <Link>Compatibility\ReflectionExtensions.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Common\nunit\Guard.cs">
-      <Link>Guard.cs</Link>
+      <Link>Common\Guard.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Common\nunit\Logging\ILogger.cs">
       <Link>Internal\ILogger.cs</Link>
@@ -72,12 +75,43 @@
     <Compile Include="..\..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Common\nunit\Options.cs">
+      <Link>Common\Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\OutputSpecification.cs">
+      <Link>Common\OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\PackageSettings.cs">
+      <Link>Common\PackageSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\TestNameParser.cs">
+      <Link>Common\TestNameParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\TestSelectionParser.cs">
+      <Link>Common\TestSelectionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\TestSelectionParserException.cs">
+      <Link>Common\TestSelectionParserException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Common\nunit\Tokenizer.cs">
+      <Link>Common\Tokenizer.cs</Link>
+    </Compile>
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\nunit.engine.api\ITestFilterBuilder.cs">
+      <Link>Api\ITestFilterBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\nunit.engine.api\TestFilter.cs">
+      <Link>Api\TestFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\nunit.engine\Services\TestFilterBuilder.cs">
+      <Link>Services\TestFilterBuilder.cs</Link>
     </Compile>
     <Compile Include="NUnitPortableDriver.cs" />
     <Compile Include="NUnitPortableDriverException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultSummary.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

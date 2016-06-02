@@ -141,7 +141,12 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-#if PORTABLE
+// Missing XML Docs
+#pragma warning disable 1591
+
+#if NUNIT_ENGINE
+using NUnit.Engine.Compatibility;
+#elif PORTABLE
 using NUnit.Framework.Compatibility;
 #else
 using System.Security.Permissions;
@@ -155,7 +160,7 @@ using System.Linq;
 using NDesk.Options;
 #endif
 
-#if NUNIT_CONSOLE || NUNITLITE
+#if NUNIT_CONSOLE || NUNITLITE || NUNIT_ENGINE
 namespace NUnit.Options
 #elif NDESK_OPTIONS
 namespace NDesk.Options
