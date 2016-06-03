@@ -203,6 +203,28 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void InheritingAndOverridingIEquatable()
+        {
+            var obj1 = new InheritingEquatableObject { SomeProperty = 1, OtherProperty = 2 };
+            var obj2 = new InheritingEquatableObject { SomeProperty = 1, OtherProperty = 2 };
+            var obj3 = new InheritingEquatableObject { SomeProperty = 1, OtherProperty = 3 };
+            var obj4 = new InheritingEquatableObject { SomeProperty = 4, OtherProperty = 2 };
+
+            Assert.That(obj1, Is.EqualTo(obj2));
+            Assert.That(obj1, Is.Not.EqualTo(obj3));
+            Assert.That(obj1, Is.Not.EqualTo(obj4));
+
+            var n = new NUnitEqualityComparer();
+            var tolerance = Tolerance.Exact;
+            Assert.That(n.AreEqual(obj1, obj2, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj2, obj1, ref tolerance), Is.True);
+            Assert.That(n.AreEqual(obj1, obj3, ref tolerance), Is.False);
+            Assert.That(n.AreEqual(obj3, obj1, ref tolerance), Is.False);
+            Assert.That(n.AreEqual(obj1, obj4, ref tolerance), Is.False);
+            Assert.That(n.AreEqual(obj4, obj1, ref tolerance), Is.False);
+        }
+
+        [Test]
         public void ImplementingIEquatableDirectlyOnTheClass()
         {
             var obj1 = new EquatableObject { SomeProperty = 1 };
@@ -427,6 +449,18 @@ namespace NUnit.Framework.Constraints
                 return false;
 
             return SomeProperty == other.SomeProperty;
+        }
+    }
+
+    public class InheritingEquatableObject : EquatableObject, IEquatable<InheritingEquatableObject>
+    {
+        public int OtherProperty { get; set; }
+        public bool Equals(InheritingEquatableObject other)
+        {
+            if (other == null)
+                return false;
+
+            return OtherProperty == other.OtherProperty && Equals((EquatableObject) other);
         }
     }
 
