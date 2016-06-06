@@ -1,0 +1,19 @@
+{
+  "version": "3.3.0-*",
+  "buildOptions": {
+    "define": [ "PORTABLE" ],
+    "compile": {
+      "includeFiles": "../../NUnitFramework/slow-tests/SlowTests.cs"
+    },
+    "keyFile": "../../nunit.snk"
+  },
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "nunit.framework": {
+          "target": "project"
+        }
+      }
+    }
+  }
+}

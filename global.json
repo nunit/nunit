@@ -1,11 +1,14 @@
 {
   "projects": [
-    "src/NUnitFramework/nunit.dnx.tests",
-    "wrap"
+    "src/NetStandard/mock-assembly",
+    "src/NetStandard/nunit.agent",
+    "src/NetStandard/nunit.framework",
+    "src/NetStandard/nunit.framework.tests",
+    "src/NetStandard/nunitlite",
+    "src/NetStandard/slow-tests",
+    "src/NetStandard/testdata"
   ],
   "sdk": {
-    "version": "1.0.0-beta8",
-    "runtime": "clr",
-    "architecture": "x86"
+    "version": "1.0.0-preview1-002702"
   }
 }

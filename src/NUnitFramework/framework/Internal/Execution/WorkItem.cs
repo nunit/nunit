@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Execution
     {
         static Logger log = InternalTrace.GetLogger("WorkItem");
 
-        #region Static Factory Method
+#region Static Factory Method
 
         /// <summary>
         /// Creates a work item.
@@ -61,9 +61,9 @@ namespace NUnit.Framework.Internal.Execution
                 return new SimpleWorkItem((TestMethod)test, filter);
         }
 
-        #endregion
+#endregion
 
-        #region Construction and Initialization
+#region Construction and Initialization
 
         /// <summary>
         /// Construct a WorkItem for a particular test.
@@ -107,9 +107,9 @@ namespace NUnit.Framework.Internal.Execution
                 Actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.TypeInfo.Type));
         }
 
-        #endregion
+#endregion
 
-        #region Properties and Events
+#region Properties and Events
 
         /// <summary>
         /// Event triggered when the item is complete
@@ -193,9 +193,9 @@ namespace NUnit.Framework.Internal.Execution
         private ApartmentState CurrentApartment { get; set; }
 #endif
 
-        #endregion
+#endregion
 
-        #region OwnThreadReason Enumeration
+#region OwnThreadReason Enumeration
 
         [Flags]
         private enum OwnThreadReason
@@ -206,9 +206,9 @@ namespace NUnit.Framework.Internal.Execution
             DifferentApartment = 4
         }
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Execute the current work item, including any

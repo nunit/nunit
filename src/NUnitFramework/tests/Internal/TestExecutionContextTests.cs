@@ -32,7 +32,7 @@ using NUnit.Framework.Internal.Execution;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
 using System.Security.Principal;
 #endif
 

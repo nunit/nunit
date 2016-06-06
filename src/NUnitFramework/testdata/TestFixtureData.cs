@@ -23,7 +23,7 @@
 
 using System;
 using NUnit.Framework;
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
 using System.Security.Principal;
 #endif
 

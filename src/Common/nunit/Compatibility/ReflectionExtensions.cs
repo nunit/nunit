@@ -90,6 +90,7 @@ namespace NUnit.Common.Compatibility
     /// </remarks>
     public static class TypeExtensions
     {
+#if !NETSTANDARD1_3
         /// <summary>
         /// Returns an array of generic arguments for the give type
         /// </summary>
@@ -186,6 +187,7 @@ namespace NUnit.Common.Compatibility
             // returning all.
             return type.GetAllMembers().ToArray();
         }
+#endif
 
         static IList<MemberInfo> GetAllMembers(this Type type)
         {
@@ -220,6 +222,7 @@ namespace NUnit.Common.Compatibility
             return true;
         }
 
+#if !NETSTANDARD1_3
         /// <summary>
         /// Gets field of the given name on the type
         /// </summary>
@@ -330,6 +333,7 @@ namespace NUnit.Common.Compatibility
 
             return methods.ApplyBindingFlags(flags).ToArray();
         }
+#endif
 
         static IList<MethodInfo> GetAllMethods(this Type type, bool includeBaseStatic = false)
         {
@@ -389,6 +393,7 @@ namespace NUnit.Common.Compatibility
     /// </summary>
     public static class MemberInfoExtensions
     {
+#if !NETSTANDARD1_3
         /// <summary>
         /// Returns the get method for the given property
         /// </summary>
@@ -405,6 +410,7 @@ namespace NUnit.Common.Compatibility
 
             return pinfo.GetMethod;
         }
+#endif
 
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this member
@@ -463,6 +469,7 @@ namespace NUnit.Common.Compatibility
             return asm.GetCustomAttributes(attributeType).ToArray();
         }
 
+#if !NETSTANDARD1_3
         /// <summary>
         /// Gets the types in a given assembly
         /// </summary>
@@ -472,6 +479,7 @@ namespace NUnit.Common.Compatibility
         {
             return asm.DefinedTypes.Select(info => info.AsType()).ToList();
         }
+#endif
     }
 #endif
 
@@ -522,7 +530,7 @@ namespace NUnit.Common.Compatibility
         {
             if (to.IsAssignableFrom(from))
                 return true;
-            
+
             // Look for the marker that indicates from was null
             if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
                 return true;

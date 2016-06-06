@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
         private readonly Lazy<WorkItemQueue> _nonParallelQueue;
 
         // STA
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
         private readonly WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
         private readonly Lazy<WorkItemQueue> _parallelSTAQueue;
         private readonly Lazy<WorkItemQueue> _nonParallelSTAQueue;
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 _parallelShift,
                 _nonParallelShift,
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
                 _nonParallelSTAShift
 #endif
             };
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal.Execution
                 for (int i = 1; i <= _levelOfParallelism; i++)
                 {
                     string name = string.Format("Worker#" + i.ToString());
-#if NETCF
+#if NETCF || NETSTANDARD1_3
                     _parallelShift.Assign(new TestWorker(parallelQueue, name));
 #else
                     _parallelShift.Assign(new TestWorker(parallelQueue, name, ApartmentState.MTA));
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Execution
                 return parallelQueue;
             });
 
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
             _parallelSTAQueue = new Lazy<WorkItemQueue>(() =>
             {
                 var parallelSTAQueue = new WorkItemQueue("ParallelSTAQueue");
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 var nonParallelQueue = new WorkItemQueue("NonParallelQueue");
                 _nonParallelShift.AddQueue(nonParallelQueue);
-#if NETCF
+#if NETCF || NETSTANDARD1_3
                 _nonParallelShift.Assign(new TestWorker(nonParallelQueue, "Worker#NP"));
 #else
                 _nonParallelShift.Assign(new TestWorker(nonParallelQueue, "Worker#STA_NP", ApartmentState.MTA));
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal.Execution
                 return nonParallelQueue;
             });
 
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
             _nonParallelSTAQueue = new Lazy<WorkItemQueue>(() =>
             {
                 var nonParallelSTAQueue = new WorkItemQueue("NonParallelSTAQueue");
@@ -177,14 +177,14 @@ namespace NUnit.Framework.Internal.Execution
 
             if (work.IsParallelizable)
             {
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
                 if (work.TargetApartment == ApartmentState.STA)
                     ParallelSTAQueue.Enqueue(work);
                 else
 #endif
                 ParallelQueue.Enqueue(work);
             }
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
             else if (work.TargetApartment == ApartmentState.STA)
                 NonParallelSTAQueue.Enqueue(work);
 #endif
@@ -217,7 +217,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
         private WorkItemQueue ParallelSTAQueue
         {
             get
@@ -235,7 +235,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
         private WorkItemQueue NonParallelSTAQueue
         {
             get

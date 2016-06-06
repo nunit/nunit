@@ -23,7 +23,7 @@
 
 using System;
 using System.Linq;
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
 using System.Security.Principal;
 #endif
 using System.Threading;

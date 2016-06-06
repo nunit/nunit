@@ -1,0 +1,45 @@
+{
+  "version": "3.3.0-*",
+  "buildOptions": {
+    "define": [
+      "NUNIT_FRAMEWORK",
+      "PORTABLE"
+    ],
+    "compile": {
+      "include": "../../NUnitFramework/tests/**/*.cs",
+      "includeFiles": [
+        "../../Common/tests/AssemblyHelperTests.cs",
+        "../../Common/tests/TestUtilities/Fakes.cs",
+        "../../Common/tests/TestUtilities/TestBuilder.cs",
+        "../../Common/tests/TestUtilities/TestFile.cs"
+      ],
+      "exclude": "../../NUnitFramework/tests/obj/**/*.cs",
+      "excludeFiles": [
+        "../../NUnitFramework/tests/App.xaml",
+        "../../NUnitFramework/tests/App.xaml.cs",
+        "../../NUnitFramework/tests/NUnitLite.cs",
+        "../../NUnitFramework/tests/WorkItemTests.cs",
+        "../../NUnitFramework/tests/Internal/Filters/PropertyFilterTests.cs"
+      ]
+    },
+    "keyFile": "../../nunit.snk"
+  },
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "nunit.framework": {
+          "target": "project"
+        },
+        "mock-assembly": {
+          "target": "project"
+        },
+        "testdata": {
+          "target": "project"
+        },
+        "slow-tests": {
+          "target": "project"
+        }
+      }
+    }
+  }
+}
