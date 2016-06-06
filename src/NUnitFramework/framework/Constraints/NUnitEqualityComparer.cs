@@ -249,11 +249,14 @@ namespace NUnit.Framework.Constraints
 
         private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
+            var pair = new KeyValuePair<Type, MethodInfo>();
+
             foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
                 if (xEquatableArgument.Key.IsAssignableFrom(second))
-                    return xEquatableArgument.Value;
+                    if (pair.Key == null || pair.Key.IsAssignableFrom(xEquatableArgument.Key))
+                        pair = xEquatableArgument;
 
-            return null;
+            return pair.Value;
         }
 
         private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
