@@ -237,8 +237,16 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual(0, options.ErrorMessages.Count, "command line should be valid");
         }
 
-        [Test]
-        public void X86AndInProcessAreNotCompatible()
+        [Test, Platform("32-Bit")]
+        public void X86AndInProcessAreCompatibleIn32BitProcess()
+        {
+            ConsoleOptions options = new ConsoleOptions("nunit.tests.dll", "--x86", "--inprocess");
+            Assert.True(options.Validate());
+            Assert.AreEqual(0, options.ErrorMessages.Count, "command line should be valid");
+        }
+
+        [Test, Platform("64-Bit")]
+        public void X86AndInProcessAreNotCompatibleIn64BitProcess()
         {
             ConsoleOptions options = new ConsoleOptions("nunit.tests.dll", "--x86", "--inprocess");
             Assert.False(options.Validate(), "Should be invalid");
