@@ -81,10 +81,12 @@
     <Compile Include="ActionTargets.cs" />
     <Compile Include="Api\FrameworkController.cs" />
     <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
+    <Compile Include="Api\RuntimeAssemblyBuilder.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
+    <Compile Include="Attributes\TestAssemblyBuilderAttribute.cs" />
     <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
     <Compile Include="Attributes\OrderAttribute.cs" />
     <Compile Include="Attributes\RetryAttribute.cs" />

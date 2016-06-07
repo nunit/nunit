@@ -83,6 +83,7 @@
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
     <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
+    <Compile Include="Api\RuntimeAssemblyBuilder.cs" />
     <Compile Include="Assert.Comparisons.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
@@ -113,6 +114,7 @@
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
+    <Compile Include="Attributes\TestAssemblyBuilderAttribute.cs" />
     <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelismAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />

@@ -70,7 +70,11 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
         {
-            this.Builder = new DefaultTestAssemblyBuilder();
+#if !NETCF
+            this.Builder = new RuntimeAssemblyBuilder();
+#else
+            this.Builder = new DefaultTestAssemblyBuilder(); // TODO: Implement RuntimeAssemblyBuilder for .NET CF
+#endif
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
             Test.IdPrefix = idPrefix;
@@ -453,7 +457,7 @@ namespace NUnit.Framework.Api
 
         #region Nested Action Classes
 
-        #region TestContollerAction
+        #region TestControllerAction
 
         /// <summary>
         /// FrameworkControllerAction is the base class for all actions

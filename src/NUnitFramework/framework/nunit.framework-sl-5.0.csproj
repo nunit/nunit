@@ -101,6 +101,7 @@
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
     <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
+    <Compile Include="Api\RuntimeAssemblyBuilder.cs" />
     <Compile Include="Assert.Comparisons.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
@@ -164,6 +165,7 @@
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
     <Compile Include="Attributes\TestActionAttribute.cs" />
+    <Compile Include="Attributes\TestAssemblyBuilderAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />
     <Compile Include="Attributes\TestCaseAttribute.cs" />
     <Compile Include="Attributes\TestCaseSourceAttribute.cs" />
