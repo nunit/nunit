@@ -83,7 +83,9 @@ namespace NUnit.Common
         {
             base.CheckOptionCombinations();
 
-            if (RunAsX86 && ProcessModel == "InProcess")
+            // Normally, console is run in a 64-bit process on a 64-bit machine
+            // but this might vary if the process is started by some other program.
+            if (IntPtr.Size == 8 && RunAsX86 && ProcessModel == "InProcess")
                 ErrorMessages.Add("The --x86 and --inprocess options are incompatible.");
         }
 
