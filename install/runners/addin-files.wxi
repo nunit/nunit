@@ -36,5 +36,12 @@
                       Source="$(var.Binaries)\addins\nunit.core.interfaces.dll" />
             </Component>
         </ComponentGroup>
+
+      <ComponentGroup Id="TEAMCITY.EVENT.LISTENER" Directory="ADDINS">
+        <Component Id="TEAMCITY.EVENT.LISTENER" Location="local" Guid="">
+          <File Id="teamcity_event_listener.dll"
+                Source="$(var.Binaries)\addins\teamcity-event-listener.dll" />
+        </Component>
+      </ComponentGroup>
     </Fragment>
 </Include>
