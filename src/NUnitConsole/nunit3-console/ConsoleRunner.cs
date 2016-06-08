@@ -362,6 +362,9 @@ namespace NUnit.ConsoleRunner
             //        throw new Exception(string.Format("Package setting {0} is not a valid type", entry.Key));
 #endif
 
+            if (options.DefaultTestNamePattern != null)
+                package.AddSetting(PackageSettings.DefaultTestNamePattern, options.DefaultTestNamePattern);
+
             return package;
         }
 

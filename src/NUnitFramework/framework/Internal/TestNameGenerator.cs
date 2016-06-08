@@ -34,7 +34,28 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestNameGenerator
     {
-        private List<NameFragment> _fragments = new List<NameFragment>();
+        // TODO: Using a static here is not good it's the easiest
+        // way to get a temporary implementation without passing the
+        // pattern all the way down the test builder hierarchy
+
+        /// <summary>
+        /// Default pattern used to generate names
+        /// </summary>
+        public static string DefaultTestNamePattern = "{m}{a}";
+
+        // The name pattern used by this TestNameGenerator
+        private string _pattern;
+
+        // The list of NameFragments used to generate names
+        private List<NameFragment> _fragments;
+
+        /// <summary>
+        /// Construct a TestNameGenerator
+        /// </summary>
+        public TestNameGenerator()
+        {
+            _pattern = DefaultTestNamePattern;
+        }
 
         /// <summary>
         /// Construct a TestNameGenerator
@@ -42,6 +63,44 @@ namespace NUnit.Framework.Internal
         /// <param name="pattern">The pattern used by this generator.</param>
         public TestNameGenerator(string pattern)
         {
+            _pattern = pattern;
+        }
+
+        /// <summary>
+        /// Get the display name for a TestMethod and it's arguments
+        /// </summary>
+        /// <param name="testMethod">A TestMethod</param>
+        /// <returns>The display name</returns>
+        public string GetDisplayName(TestMethod testMethod)
+        {
+            return GetDisplayName(testMethod, null);
+        }
+
+        /// <summary>
+        /// Get the display name for a TestMethod and it's arguments
+        /// </summary>
+        /// <param name="testMethod">A TestMethod</param>
+        /// <param name="args">Arguments to be used</param>
+        /// <returns>The display name</returns>
+        public string GetDisplayName(TestMethod testMethod, object[] args)
+        {
+            if (_fragments == null)
+                _fragments = BuildFragmentList(_pattern);
+
+            var result = new StringBuilder();
+
+            foreach (var fragment in _fragments)
+                result.Append(fragment.GetText(testMethod, args));
+
+            return result.ToString();
+        }
+
+        #region Helper Methods
+
+        private static List<NameFragment> BuildFragmentList(string pattern)
+        {
+            var fragments = new List<NameFragment>();
+
             // Build a list of actions so this generator can be applied to
             // multiple types and methods.
 
@@ -57,32 +116,32 @@ namespace NUnit.Framework.Internal
                     break;
 
                 if (lcurly > start) // Handle fixedixed text before curly brace
-                    _fragments.Add(new FixedTextFragment(pattern.Substring(start, lcurly - start)));
+                    fragments.Add(new FixedTextFragment(pattern.Substring(start, lcurly - start)));
 
                 string token = pattern.Substring(lcurly, rcurly - lcurly + 1);
 
                 switch (token)
                 {
                     case "{m}":
-                        _fragments.Add(new MethodNameFragment());
+                        fragments.Add(new MethodNameFragment());
                         break;
                     case "{i}":
-                        _fragments.Add(new TestIDFragment());
+                        fragments.Add(new TestIDFragment());
                         break;
                     case "{n}":
-                        _fragments.Add(new NamespaceFragment());
+                        fragments.Add(new NamespaceFragment());
                         break;
                     case "{c}":
-                        _fragments.Add(new ClassNameFragment());
+                        fragments.Add(new ClassNameFragment());
                         break;
                     case "{C}":
-                        _fragments.Add(new ClassFullNameFragment());
+                        fragments.Add(new ClassFullNameFragment());
                         break;
                     case "{M}":
-                        _fragments.Add(new MethodFullNameFragment());
+                        fragments.Add(new MethodFullNameFragment());
                         break;
                     case "{a}":
-                        _fragments.Add(new ArgListFragment(0));
+                        fragments.Add(new ArgListFragment(0));
                         break;
                     case "{0}":
                     case "{1}":
@@ -95,7 +154,7 @@ namespace NUnit.Framework.Internal
                     case "{8}":
                     case "{9}":
                         int index = token[1] - '0';
-                        _fragments.Add(new ArgumentFragment(index, 40));
+                        fragments.Add(new ArgumentFragment(index, 40));
                         break;
                     default:
                         char c = token[1];
@@ -116,15 +175,15 @@ namespace NUnit.Framework.Internal
                             if (length > 0)
                             {
                                 if (c == 'a')
-                                    _fragments.Add(new ArgListFragment(length));
+                                    fragments.Add(new ArgListFragment(length));
                                 else // It's a digit
-                                    _fragments.Add(new ArgumentFragment(c - '0', length));
+                                    fragments.Add(new ArgumentFragment(c - '0', length));
                                 break;
                             }
                         }
 
                         // Output the erroneous token to aid user in debugging
-                        _fragments.Add(new FixedTextFragment(token));
+                        fragments.Add(new FixedTextFragment(token));
                         break;
                 }
 
@@ -134,61 +193,12 @@ namespace NUnit.Framework.Internal
 
             // Output any trailing plain text
             if (start < pattern.Length)
-                _fragments.Add(new FixedTextFragment(pattern.Substring(start)));
+                fragments.Add(new FixedTextFragment(pattern.Substring(start)));
+
+            return fragments;
         }
 
-
-        /// <summary>
-        /// Get the display name for a TestMethod and it's arguments
-        /// </summary>
-        /// <param name="testMethod">A TestMethod</param>
-        /// <returns>The display name</returns>
-        public string GetDisplayName(TestMethod testMethod)
-        {
-            return GetDisplayName(testMethod, null);
-        }
-
-        /// <summary>
-        /// Get the display name for a TestMethod and it's arguments
-        /// </summary>
-        /// <param name="testMethod">A TestMethod</param>
-        /// <param name="args">Arguments to be used</param>
-        /// <returns>The display name</returns>
-        public string GetDisplayName(TestMethod testMethod, object[] args)
-        {
-            var result = new StringBuilder();
-
-            foreach (var fragment in _fragments)
-                result.Append(fragment.GetText(testMethod, args));
-
-            return result.ToString();
-        }
-
-        /// <summary>
-        /// Get the display name for a MethodInfo
-        /// </summary>
-        /// <param name="method">A MethodInfo</param>
-        /// <returns>The display name</returns>
-        private string GetDisplayName(MethodInfo method)
-        {
-            return GetDisplayName(method, null);
-        }
-
-        /// <summary>
-        /// Get the display name for a method with args
-        /// </summary>
-        /// <param name="method">A MethodInfo</param>
-        /// <param name="args">Argument list for the method</param>
-        /// <returns>The display name</returns>
-        private string GetDisplayName(MethodInfo method, object[] args)
-        {
-            var result = new StringBuilder();
-
-            foreach (var fragment in _fragments)
-                result.Append(fragment.GetText(method, args));
-
-            return result.ToString();
-        }
+        #endregion
 
         #region Nested Classes Representing Name Fragments
 

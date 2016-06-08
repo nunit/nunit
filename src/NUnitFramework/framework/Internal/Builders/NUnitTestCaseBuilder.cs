@@ -35,8 +35,6 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class NUnitTestCaseBuilder
     {
-        private const string DEFAULT_TEST_NAME_PATTERN = "{m}{a}";
-
         private readonly Randomizer _randomizer = Randomizer.CreateRandomizer();
         private readonly TestNameGenerator _nameGenerator;
 
@@ -45,7 +43,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         public NUnitTestCaseBuilder()
         {
-            _nameGenerator = new TestNameGenerator(DEFAULT_TEST_NAME_PATTERN);
+            _nameGenerator = new TestNameGenerator();
         }
 
         /// <summary>
@@ -68,19 +66,19 @@ namespace NUnit.Framework.Internal.Builders
             if (parms == null || parms.Arguments == null)
                 testMethod.ApplyAttributesToTest(method.MethodInfo);
 
+            // NOTE: After the call to CheckTestMethodSignature, the Method
+            // property of testMethod may no longer be the same as the
+            // original MethodInfo, so we don't use it here.
+            string prefix = testMethod.Method.TypeInfo.FullName;
+
+            // Needed to give proper fullname to test in a parameterized fixture.
+            // Without this, the arguments to the fixture are not included.
+            if (parentSuite != null)
+                prefix = parentSuite.FullName;
+
             if (parms != null)
             {
-                // NOTE: After the call to CheckTestMethodSignature, the Method
-                // property of testMethod may no longer be the same as the
-                // original MethodInfo, so we reassign it here.
-                method = testMethod.Method;
-
-                string prefix = method.TypeInfo.FullName;
-
-                // Needed to give proper fullname to test in a parameterized fixture.
-                // Without this, the arguments to the fixture are not included.
-                if (parentSuite != null)
-                    prefix = parentSuite.FullName;
+                parms.ApplyToTest(testMethod);
 
                 if (parms.TestName != null)
                 {
@@ -89,15 +87,17 @@ namespace NUnit.Framework.Internal.Builders
                         ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                         : parms.TestName;
                 }
-                else if (parms.OriginalArguments != null)
+                else
                 {
                     testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
                 }
-
-                testMethod.FullName = prefix + "." + testMethod.Name;
-
-                parms.ApplyToTest(testMethod);
             }
+            else
+            {
+                testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
+            }
+
+            testMethod.FullName = prefix + "." + testMethod.Name;
 
             return testMethod;
         }

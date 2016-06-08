@@ -193,6 +193,11 @@ namespace NUnit.Common
         /// </summary>
         public const string SynchronousEvents = "SynchronousEvents";
 
+        /// <summary>
+        /// The default naming pattern used in generating test names
+        /// </summary>
+        public const string DefaultTestNamePattern = "DefaultTestNamePattern";
+
         #endregion
 
         #region Internal Settings - Used only within the engine
