@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class NUnitTestCaseBuilder
     {
-        private const string DEFAULT_TEST_NAME_PATTERN = "{m}{a:40}";
+        private const string DEFAULT_TEST_NAME_PATTERN = "{m}{a}";
 
         private readonly Randomizer _randomizer = Randomizer.CreateRandomizer();
         private readonly TestNameGenerator _nameGenerator;

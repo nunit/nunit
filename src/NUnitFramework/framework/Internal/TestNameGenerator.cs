@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
                         _fragments.Add(new MethodFullNameFragment());
                         break;
                     case "{a}":
-                        _fragments.Add(new ArgListFragment(40));
+                        _fragments.Add(new ArgListFragment(0));
                         break;
                     case "{0}":
                     case "{1}":
@@ -295,8 +295,8 @@ namespace NUnit.Framework.Internal
                 else if (arg is string)
                 {
                     var str = (string)arg;
-                    bool tooLong = str.Length > stringMax;
-                    int limit = stringMax - THREE_DOTS.Length;
+                    bool tooLong = stringMax > 0 && str.Length > stringMax;
+                    int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append("\"");

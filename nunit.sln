@@ -160,6 +160,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", 
 		nuget\extensions\nunit-v2-result-writer.nuspec = nuget\extensions\nunit-v2-result-writer.nuspec
 		nuget\extensions\nunit.v2.driver.addins = nuget\extensions\nunit.v2.driver.addins
 		nuget\extensions\nunit.v2.driver.nuspec = nuget\extensions\nunit.v2.driver.nuspec
+		nuget\extensions\teamcity-event-listener.nuspec = nuget\extensions\teamcity-event-listener.nuspec
 		nuget\extensions\vs-project-loader.nuspec = nuget\extensions\vs-project-loader.nuspec
 	EndProjectSection
 EndProject
