@@ -467,6 +467,7 @@ var BinFiles = new FilePath[]
     "addins/nunit.core.interfaces.dll",
     "addins/nunit.v2.driver.dll",
     "addins/vs-project-loader.dll",
+	"addins/teamcity-event-listener.dll",
     "addins/tests/addin-tests.dll",
     "addins/tests/nunit-project-loader.dll",
     "addins/tests/nunit.engine.api.dll",
@@ -685,6 +686,13 @@ Task("PackageNuGet")
 
         // Package the portable agent
         NuGetPack("nuget/engine/nunit.portable.agent.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+        NuGetPack("nuget/extensions/teamcity-event-listener.nuspec", new NuGetPackSettings()
         {
             Version = packageVersion,
             BasePath = currentImageDir,
