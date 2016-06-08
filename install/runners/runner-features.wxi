@@ -37,6 +37,12 @@
                         Description="Allows you to write test results out in the NUnit 2.x format">
                 <ComponentGroupRef Id="ADDINS.NUNIT.V2.WRITER" />
             </Feature>
+            <Feature Id="TEAMCITY.EVENT.LISTENER"
+                     Level="1"
+                     Title="TeamCity Event Listener"
+                     Description="Provides special progress messages when running under TeamCity">
+              <ComponentGroupRef Id="TEAMCITY.EVENT.LISTENER" />
+            </Feature>
         </Feature>
 
         <Feature Id="NUNIT.CONSOLE"
