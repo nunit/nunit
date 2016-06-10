@@ -40,6 +40,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class Constraint : IConstraint
     {
+        Lazy<string> _displayName;
+
         #region Constructor
 
         /// <summary>
@@ -50,11 +52,15 @@ namespace NUnit.Framework.Constraints
         {
             Arguments = args;
 
-            DisplayName = this.GetType().Name;
-            if (DisplayName.EndsWith("`1", StringComparison.Ordinal) || DisplayName.EndsWith("`2", StringComparison.Ordinal))
-                DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
-            if (DisplayName.EndsWith("Constraint", StringComparison.Ordinal))
-                DisplayName = DisplayName.Substring(0, DisplayName.Length - 10);
+            _displayName = new Lazy<string>(() =>
+            {
+                var displayName = this.GetType().Name;
+                if (displayName.EndsWith("`1", StringComparison.Ordinal) || displayName.EndsWith("`2", StringComparison.Ordinal))
+                    displayName = displayName.Substring(0, displayName.Length - 2);
+                if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
+                    displayName = displayName.Substring(0, displayName.Length - 10);
+                return displayName;
+            });
         }
 
         #endregion
@@ -67,7 +73,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public string DisplayName { get; protected set; }
+        public virtual string DisplayName { get { return _displayName.Value; } }
 
         /// <summary>
         /// The Description of what this constraint tests, for

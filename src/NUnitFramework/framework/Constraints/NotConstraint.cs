@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         public NotConstraint(IConstraint baseConstraint)
             : base(baseConstraint) 
         {
-            this.descriptionPrefix = "not";
+            this.DescriptionPrefix = "not";
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            var baseResult = baseConstraint.ApplyTo(actual);
+            var baseResult = BaseConstraint.ApplyTo(actual);
             return new ConstraintResult(this, baseResult.ActualValue, !baseResult.IsSuccess);
         }
 

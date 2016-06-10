@@ -31,12 +31,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The base constraint
         /// </summary>
-        protected IConstraint baseConstraint;
+        protected IConstraint BaseConstraint { get; set; }
 
         /// <summary>
         /// Prefix used in forming the constraint description
         /// </summary>
-        protected string descriptionPrefix;
+        protected string DescriptionPrefix { get; set; }
 
         /// <summary>
         /// Construct given a base constraint
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         {
             Guard.ArgumentNotNull(baseConstraint, "baseConstraint");
 
-            this.baseConstraint = baseConstraint.Resolve();
+            BaseConstraint = baseConstraint.Resolve();
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace NUnit.Framework.Constraints
             get
             {
                 return string.Format(
-                    baseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}", 
-                    descriptionPrefix, 
-                    baseConstraint.Description);
+                    BaseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}", 
+                    DescriptionPrefix, 
+                    BaseConstraint.Description);
             }
         }
     }
