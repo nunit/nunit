@@ -75,9 +75,6 @@
     <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
       <Link>Compatibility\BindingFlags.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\ICallbackEventHandler.cs">
-      <Link>Compatibility\ICallbackEventHandler.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
       <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
     </Compile>
@@ -197,6 +194,7 @@
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
     <Compile Include="Compatibility\System.Diagnostics\Stopwatch.cs" />
+    <Compile Include="Compatibility\System.Web.UI\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\System\SerializableAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />

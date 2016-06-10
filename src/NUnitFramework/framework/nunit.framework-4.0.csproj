@@ -58,9 +58,6 @@
     <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
       <Link>Compatibility\BindingFlags.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\ICallbackEventHandler.cs">
-      <Link>Compatibility\ICallbackEventHandler.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
       <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
     </Compile>
