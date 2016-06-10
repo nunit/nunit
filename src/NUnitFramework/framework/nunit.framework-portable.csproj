@@ -70,9 +70,6 @@
     <Compile Include="..\..\Common\nunit\Compatibility\ReflectionExtensions.cs">
       <Link>Compatibility\ReflectionExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\SerializableAttribute.cs">
-      <Link>Compatibility\SerializableAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
@@ -183,6 +180,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
+    <Compile Include="Compatibility\System\SerializableAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
