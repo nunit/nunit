@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public event EventHandler Idle;
 
-#if NETCF
+#if NETCF || NETSTANDARD1_3
         /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Internal.Execution
 
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = name;
-#if !NETCF
+#if !NETCF && !NETSTANDARD1_3
             _workerThread.SetApartmentState(apartmentState);
 #endif
         }

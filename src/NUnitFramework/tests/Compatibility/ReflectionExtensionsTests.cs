@@ -272,7 +272,9 @@ namespace NUnit.Framework.Tests.Compatibility
 
         [TestCase(BindingFlags.Static)]
         [TestCase(BindingFlags.FlattenHierarchy)]
+#if !NETSTANDARD1_3
         [TestCase(BindingFlags.Default)]
+#endif
         public void DoesNotFindStaticMethodsOnBase(BindingFlags flags)
         {
             var result = typeof(DerivedTestClass).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | flags);

@@ -1,4 +1,4 @@
-﻿#if PORTABLE
+﻿#if PORTABLE && !NETSTANDARD1_3
 using System;
 
 #if NUNIT_ENGINE

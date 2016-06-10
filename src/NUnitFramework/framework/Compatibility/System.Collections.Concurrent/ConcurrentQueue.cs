@@ -39,7 +39,7 @@ namespace System.Collections.Concurrent
     /// All public  and protected members of <see cref="ConcurrentQueue{T}"/> are thread-safe and may be used
     /// concurrently from multiple threads.
     /// </remarks>
-#if !NETCF
+#if !NETCF && !PORTABLE
 	[System.Diagnostics.DebuggerDisplay ("Count={Count}")]
 	[System.Diagnostics.DebuggerTypeProxy (typeof (CollectionDebuggerView<>))]
 #endif

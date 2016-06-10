@@ -1,0 +1,63 @@
+{
+  "version": "3.3.0-*",
+
+  "buildOptions": {
+    "define": [
+      "NUNIT_FRAMEWORK",
+      "NET_4_0",
+      "PARALLEL",
+      "PORTABLE"
+    ],
+    "compile": {
+      "include": "../../NUnitFramework/framework/**/*.cs",
+      "includeFiles": [
+        "../../Common/nunit/AssemblyHelper.cs",
+        "../../Common/nunit/Env.cs",
+        "../../Common/nunit/Guard.cs",
+        "../../Common/nunit/PackageSettings.cs",
+        "../../Common/nunit/TestNameParser.cs",
+        "../../Common/nunit/TestSelectionParser.cs",
+        "../../Common/nunit/TestSelectionParserException.cs",
+        "../../Common/nunit/Tokenizer.cs",
+        "../../Common/nunit/Compatibility/AttributeHelper.cs",
+        "../../Common/nunit/Compatibility/BindingFlags.cs",
+        "../../Common/nunit/Compatibility/ICallbackEventHandler.cs",
+        "../../Common/nunit/Compatibility/LongLivedMarshalByRefObject.cs",
+        "../../Common/nunit/Compatibility/SerializableAttribute.cs",
+        "../../Common/nunit/Compatibility/Path.cs",
+        "../../Common/nunit/Compatibility/ReflectionExtensions.cs",
+        "../../Common/nunit/Compatibility/SerializableAttribute.cs",
+        "../../Common/nunit/Compatibility/Stopwatch.cs",
+        "../../Common/nunit/Logging/ILogger.cs",
+        "../../Common/nunit/Logging/InternalTrace.cs",
+        "../../Common/nunit/Logging/InternalTraceLevel.cs",
+        "../../Common/nunit/Logging/InternalTraceWriter.cs",
+        "../../Common/nunit/Logging/Logger.cs"
+      ],
+      "exclude": "../../NUnitFramework/framework/Compatibility/**/*.cs"
+    },
+    "keyFile": "../../nunit.snk"
+  },
+
+  "dependencies": {
+    "System.Collections.Concurrent": "4.0.12-rc2-24027",
+    "System.Diagnostics.Debug": "4.0.11-rc2-24027",
+    "System.Globalization": "4.0.11-rc2-24027",
+    "System.IO.FileSystem": "4.0.1-rc2-24027",
+    "System.Linq": "4.1.0-rc2-24027",
+    "System.Reflection": "4.1.0-rc2-24027",
+    "System.Reflection.Extensions": "4.0.1-rc2-24027",
+    "System.Reflection.TypeExtensions": "4.1.0-rc2-24027",
+    "System.Runtime": "4.1.0-rc2-24027",
+    "System.Runtime.Extensions": "4.1.0-rc2-24027",
+    "System.Runtime.Serialization.Primitives": "4.1.1-rc2-24027",
+    "System.Text.RegularExpressions": "4.0.12-rc2-24027",
+    "System.Threading": "4.0.11-rc2-24027",
+    "System.Threading.Thread": "4.0.0-rc2-24027",
+    "System.Xml.XDocument": "4.0.11-rc2-24027"
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}

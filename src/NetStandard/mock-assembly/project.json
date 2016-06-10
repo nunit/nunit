@@ -1,0 +1,24 @@
+{
+  "version": "3.3.0-*",
+  "buildOptions": {
+    "define": [ "PORTABLE" ],
+    "compile": {
+      "includeFiles": [
+        "../../NUnitFramework/mock-assembly/MockAssembly.cs"
+      ]
+    },
+    "keyFile": "../../nunit.snk"
+  },
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "nunit.agent": {
+          "target": "project"
+        },
+        "nunit.framework": {
+          "target": "project"
+        }
+      }
+    }
+  }
+}

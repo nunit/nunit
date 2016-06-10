@@ -1,0 +1,61 @@
+{
+  "version": "3.3.0-*",
+
+  "buildOptions": {
+    "define": [
+      "NUNIT_ENGINE",
+      "PORTABLE"
+    ],
+    "compile": {
+      "includeFiles": [
+        "../../NUnitEngine/nunit.engine.api/ITestFilterBuilder.cs",
+        "../../NUnitEngine/nunit.engine.api/TestFilter.cs",
+
+        "../../Common/nunit/AssemblyHelper.cs",
+        "../../Common/nunit/Guard.cs",
+        "../../Common/nunit/Options.cs",
+        "../../Common/nunit/OutputSpecification.cs",
+        "../../Common/nunit/PackageSettings.cs",
+        "../../Common/nunit/TestNameParser.cs",
+        "../../Common/nunit/TestSelectionParser.cs",
+        "../../Common/nunit/TestSelectionParserException.cs",
+        "../../Common/nunit/Tokenizer.cs",
+
+        "../../Common/nunit/Compatibility/AttributeHelper.cs",
+        "../../Common/nunit/Compatibility/BindingFlags.cs",
+        "../../Common/nunit/Compatibility/Path.cs",
+        "../../Common/nunit/Compatibility/ReflectionExtensions.cs",
+
+        "../../Common/nunit/Logging/ILogger.cs",
+        "../../Common/nunit/Logging/InternalTrace.cs",
+        "../../Common/nunit/Logging/InternalTraceLevel.cs",
+        "../../Common/nunit/Logging/InternalTraceWriter.cs",
+        "../../Common/nunit/Logging/Logger.cs",
+        "../../NUnitEngine/nunit.engine/Services/TestFilterBuilder.cs",
+
+        "../../NUnitEngine/Portable/nunit.portable.agent/NUnitPortableDriver.cs",
+        "../../NUnitEngine/Portable/nunit.portable.agent/NUnitPortableDriverException.cs",
+        "../../NUnitEngine/Portable/nunit.portable.agent/ResultSummary.cs"
+      ]
+    }
+  },
+
+  "dependencies": {
+    "System.Globalization": "4.0.11-rc2-24027",
+    "System.Linq": "4.1.0-rc2-24027",
+    "System.ObjectModel": "4.0.12-rc2-24027",
+    "System.Reflection": "4.1.0-rc2-24027",
+    "System.Reflection.Extensions": "4.0.1-rc2-24027",
+    "System.Reflection.TypeExtensions": "4.1.0-rc2-24027",
+    "System.Runtime": "4.1.0-rc2-24027",
+    "System.Runtime.Extensions": "4.1.0-rc2-24027",
+    "System.Runtime.Serialization.Primitives": "4.1.1-rc2-24027",
+    "System.Text.RegularExpressions": "4.0.12-rc2-24027",
+    "System.Threading": "4.0.11-rc2-24027",
+    "System.Xml.XDocument": "4.0.11-rc2-24027"
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}
