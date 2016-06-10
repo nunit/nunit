@@ -130,6 +130,9 @@ namespace NUnit.Framework.Api
 
             try
             {
+                if (options.ContainsKey(PackageSettings.DefaultTestNamePattern))
+                    TestNameGenerator.DefaultTestNamePattern = options[PackageSettings.DefaultTestNamePattern] as string;
+
                 IList fixtureNames = null;
                 if (options.ContainsKey (PackageSettings.LOAD))
                     fixtureNames = options[PackageSettings.LOAD] as IList;

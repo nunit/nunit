@@ -97,6 +97,8 @@ namespace NUnit.Common
         public int RandomSeed { get { return randomSeed; } }
         public bool RandomSeedSpecified { get { return randomSeed >= 0; } }
 
+        public string DefaultTestNamePattern { get; private set; }
+
         private int numWorkers = -1;
         public int NumberOfTestWorkers { get { return numWorkers; } }
         public bool NumberOfTestWorkersSpecified { get { return numWorkers >= 0; } }
@@ -337,6 +339,10 @@ namespace NUnit.Common
 #endif
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
+
+            this.Add("test-name-format=", "Non-standard naming pattern to use in generating test names.",
+                v => DefaultTestNamePattern = RequiredValue(v, "--test-name-format"));
+
 #if !PORTABLE
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));

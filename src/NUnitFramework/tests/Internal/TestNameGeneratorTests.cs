@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal.Tests
         [TestCase("{m}{a}", new object[] { 1, 2 }, ExpectedResult = "TestMethod(1,2)")]
         [TestCase("{m}{a:50}", new object[] { 1, 2 }, ExpectedResult = "TestMethod(1,2)")]
         [TestCase("{m}{a}", new object[] { "Now is the time for all good men to come to the aid of their country." },
-            ExpectedResult = "TestMethod(\"Now is the time for all good men to c...\")")]
+            ExpectedResult = "TestMethod(\"Now is the time for all good men to come to the aid of their country.\")")]
         [TestCase("{m}{a:20}", new object[] { "Now is the time for all good men to come to the aid of their country." },
             ExpectedResult = "TestMethod(\"Now is the time f...\")")]
         [TestCase("{m}{a:40}", new object[] { "Now is the time for all good men to come to the aid of their country." },

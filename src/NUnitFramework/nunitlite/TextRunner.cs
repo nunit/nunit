@@ -355,6 +355,9 @@ namespace NUnitLite
             if (options.StopOnError)
                 runSettings[PackageSettings.StopOnError] = true;
 
+            if (options.DefaultTestNamePattern != null)
+                runSettings[PackageSettings.DefaultTestNamePattern] = options.DefaultTestNamePattern;
+
             return runSettings;
         }
 
