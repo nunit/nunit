@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
             : base(itemConstraint)
         {
             this.expectedCount = expectedCount;
-            this.descriptionPrefix = expectedCount == 0
+            this.DescriptionPrefix = expectedCount == 0
                 ? "no item"
                 : expectedCount == 1
                     ? "exactly one item"
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Constraints
 
             int count = 0;
             foreach (object item in (IEnumerable)actual)
-                if (baseConstraint.ApplyTo(item).IsSuccess)
+                if (BaseConstraint.ApplyTo(item).IsSuccess)
                     count++;
 
             return new ConstraintResult(this, actual, count == expectedCount);

@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return string.Format("{0} after {1} millisecond delay", baseConstraint.Description, delayInMilliseconds); }
+            get { return string.Format("{0} after {1} millisecond delay", BaseConstraint.Description, delayInMilliseconds); }
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Constraints
                         Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
 
-                    ConstraintResult result = baseConstraint.ApplyTo(actual);
+                    ConstraintResult result = BaseConstraint.ApplyTo(actual);
                     if (result.IsSuccess)
                         return new ConstraintResult(this, actual, true);
                 }
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Constraints
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
-            return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
+            return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Constraints
 
                     try
                     {
-                        ConstraintResult result = baseConstraint.ApplyTo(actual);
+                        ConstraintResult result = BaseConstraint.ApplyTo(actual);
                         if (result.IsSuccess)
                             return new ConstraintResult(this, actual, true);
                     }
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Constraints
                 Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             actual = InvokeDelegate(del);
-            return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
+            return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
@@ -177,7 +177,7 @@ namespace NUnit.Framework.Constraints
 
                     try
                     {
-                        ConstraintResult result = baseConstraint.ApplyTo(actual);
+                        ConstraintResult result = BaseConstraint.ApplyTo(actual);
                         if (result.IsSuccess)
                             return new ConstraintResult(this, actual, true);
                     }
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Constraints
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
-            return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
+            return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<after {0} {1}>", delayInMilliseconds, baseConstraint);
+            return string.Format("<after {0} {1}>", delayInMilliseconds, BaseConstraint);
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return baseConstraint.Description; }
+            get { return BaseConstraint.Description; }
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Constraints
                 this,
                 caughtException,
                 caughtException != null
-                    ? baseConstraint.ApplyTo(caughtException)
+                    ? BaseConstraint.ApplyTo(caughtException)
                     : null);
         }
 

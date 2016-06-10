@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             this.name = name;
-            this.descriptionPrefix = "property " + name;
+            this.DescriptionPrefix = "property " + name;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException(string.Format("Property {0} was not found", name), "name");
 
             propValue = property.GetValue(actual, null);
-            return new ConstraintResult(this, propValue, baseConstraint.ApplyTo(propValue).IsSuccess);
+            return new ConstraintResult(this, propValue, BaseConstraint.ApplyTo(propValue).IsSuccess);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<property {0} {1}>", name, baseConstraint);
+            return string.Format("<property {0} {1}>", name, BaseConstraint);
         }
     }
 }

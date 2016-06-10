@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionSupersetConstraint : CollectionItemsEqualConstraint
     {
-        private IEnumerable expected;
+        private IEnumerable _expected;
 
         /// <summary>
         /// Construct a CollectionSupersetConstraint
@@ -41,9 +41,16 @@ namespace NUnit.Framework.Constraints
         public CollectionSupersetConstraint(IEnumerable expected)
             : base(expected)
         {
-            this.expected = expected;
-            this.DisplayName = "SupersetOf";
+            _expected = expected;
         }
+
+        /// <summary> 
+        /// The display name of this Constraint for use by ToString().
+        /// The default value is the name of the constraint with
+        /// trailing "Constraint" removed. Derived classes may set
+        /// this to another name in their constructors.
+        /// </summary>
+        public override string DisplayName { get { return "SupersetOf"; } }
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -51,7 +58,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "superset of " + MsgUtils.FormatValue(expected); }
+            get { return "superset of " + MsgUtils.FormatValue(_expected); }
         }
 
         /// <summary>
@@ -62,7 +69,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            return Tally(actual).TryRemove(expected);
+            return Tally(actual).TryRemove(_expected);
         }
 
         /// <summary>

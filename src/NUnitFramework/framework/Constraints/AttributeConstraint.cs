@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             this.expectedType = type;
-            this.descriptionPrefix = "attribute " + expectedType.FullName;
+            this.DescriptionPrefix = "attribute " + expectedType.FullName;
 
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
                 throw new ArgumentException(string.Format(
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException(string.Format("Attribute {0} was not found", expectedType), "actual");
 
             attrFound = attrs[0];
-            return baseConstraint.ApplyTo(attrFound);
+            return BaseConstraint.ApplyTo(attrFound);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<attribute {0} {1}>", expectedType, baseConstraint);
+            return string.Format("<attribute {0} {1}>", expectedType, BaseConstraint);
         }
     }
 }

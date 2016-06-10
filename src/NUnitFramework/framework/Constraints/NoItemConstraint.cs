@@ -39,9 +39,16 @@ namespace NUnit.Framework.Constraints
         public NoItemConstraint(IConstraint itemConstraint)
             : base(itemConstraint)
         {
-            this.DisplayName = "None";
-            this.descriptionPrefix = "no item";
+            DescriptionPrefix = "no item";
         }
+
+        /// <summary> 
+        /// The display name of this Constraint for use by ToString().
+        /// The default value is the name of the constraint with
+        /// trailing "Constraint" removed. Derived classes may set
+        /// this to another name in their constructors.
+        /// </summary>
+        public override string DisplayName { get { return "None"; } }
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,
@@ -55,7 +62,7 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException("The actual value must be an IEnumerable", "actual");
 
             foreach (object item in (IEnumerable)actual)
-                if (baseConstraint.ApplyTo(item).IsSuccess)
+                if (BaseConstraint.ApplyTo(item).IsSuccess)
                     return new ConstraintResult(this, actual, ConstraintStatus.Failure);
 
             return new ConstraintResult(this, actual, ConstraintStatus.Success);
