@@ -96,38 +96,46 @@ namespace NUnit.Engine.Internal
 
         public void SaveSettings()
         {
-            if (_writeable)
+            if (_writeable && _settings.Keys.Count > 0)
             {
-                string dirPath = Path.GetDirectoryName(_settingsFile);
-                if (!Directory.Exists(dirPath))
-                    Directory.CreateDirectory(dirPath);
-
-                XmlTextWriter writer = new XmlTextWriter(_settingsFile, System.Text.Encoding.UTF8);
-                writer.Formatting = Formatting.Indented;
-
-                writer.WriteProcessingInstruction("xml", "version=\"1.0\"");
-                writer.WriteStartElement("NUnitSettings");
-                writer.WriteStartElement("Settings");
-
-                List<string> keys = new List<string>(_settings.Keys);
-                keys.Sort();
-
-                foreach (string name in keys)
+                try
                 {
-                    object val = GetSetting(name);
-                    if (val != null)
-                    {
-                        writer.WriteStartElement("Setting");
-                        writer.WriteAttributeString("name", name);
-                        writer.WriteAttributeString("value", 
-                            TypeDescriptor.GetConverter(val).ConvertToInvariantString(val));
-                        writer.WriteEndElement();
-                    }
-                }
+                    string dirPath = Path.GetDirectoryName(_settingsFile);
+                    if (!Directory.Exists(dirPath))
+                        Directory.CreateDirectory(dirPath);
 
-                writer.WriteEndElement();
-                writer.WriteEndElement();
-                writer.Close();
+                    XmlTextWriter writer = new XmlTextWriter(_settingsFile, System.Text.Encoding.UTF8);
+                    writer.Formatting = Formatting.Indented;
+
+                    writer.WriteProcessingInstruction("xml", "version=\"1.0\"");
+                    writer.WriteStartElement("NUnitSettings");
+                    writer.WriteStartElement("Settings");
+
+                    List<string> keys = new List<string>(_settings.Keys);
+                    keys.Sort();
+
+                    foreach (string name in keys)
+                    {
+                        object val = GetSetting(name);
+                        if (val != null)
+                        {
+                            writer.WriteStartElement("Setting");
+                            writer.WriteAttributeString("name", name);
+                            writer.WriteAttributeString("value",
+                                TypeDescriptor.GetConverter(val).ConvertToInvariantString(val));
+                            writer.WriteEndElement();
+                        }
+                    }
+
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                    writer.Close();
+                }
+                catch (Exception)
+                {
+                    // So we won't try this again
+                    _writeable = false;
+                }
             }
         }
 
