@@ -81,7 +81,7 @@
       <Link>Services\Tokenizer.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\XmlHelper.cs">
-      <Link>Internal\XmlHelper.cs</Link>
+      <Link>XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>

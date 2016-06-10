@@ -100,7 +100,7 @@
       <Link>Utilities\TestNameParser.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\XmlHelper.cs">
-      <Link>Utilities\XmlHelper.cs</Link>
+      <Link>XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>Properties\ConsoleVersion.cs</Link>
