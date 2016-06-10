@@ -28,6 +28,15 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
 
+#if NET_4_0 || NET_4_5 || PORTABLE
+using System;
+using System.Threading.Tasks;
+#endif
+
+#if NET_4_0
+using Task = System.Threading.Tasks.TaskEx;
+#endif
+
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
@@ -506,6 +515,20 @@ namespace NUnit.Framework.Attributes
             return a;
         }
 
-        #endregion
+        [TestCase(1, ExpectedResult = 1)]
+        public T TestWithGenericReturnType<T>(T arg1)
+        {
+            return arg1;
+        }
+
+#if NET_4_0 || NET_4_5 || PORTABLE
+        [TestCase(1, ExpectedResult = 1)]
+        public async Task<T> TestWithAsyncGenericReturnType<T>(T arg1)
+        {
+            return await Task.Run(() => arg1);
+        }
+#endif
+
+#endregion
     }
 }
