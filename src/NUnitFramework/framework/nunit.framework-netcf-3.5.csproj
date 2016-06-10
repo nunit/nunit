@@ -73,9 +73,6 @@
     <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
       <Link>Compatibility\BindingFlags.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
-      <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Compatibility\Path.cs">
       <Link>Compatibility\Path.cs</Link>
     </Compile>
@@ -191,6 +188,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
+    <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
     <Compile Include="Compatibility\ReaderWriterLockSlim.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\ConcurrentQueue.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\IProducerConsumerCollection.cs" />

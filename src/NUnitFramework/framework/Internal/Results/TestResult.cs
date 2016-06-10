@@ -30,7 +30,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 #if NETCF || NET_2_0
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 #endif
 using System.Threading;
 using NUnit.Framework.Interfaces;

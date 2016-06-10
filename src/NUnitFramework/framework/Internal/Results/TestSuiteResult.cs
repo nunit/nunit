@@ -29,7 +29,7 @@ using System.Collections.Concurrent;
 using NUnit.Framework.Interfaces;
 using System.Threading;
 #if NETCF || NET_2_0
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 #endif
 
 namespace NUnit.Framework.Internal

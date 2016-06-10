@@ -34,7 +34,7 @@ using NUnit.Framework.Internal.Execution;
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 #endif
 
 namespace NUnit.Framework.Internal

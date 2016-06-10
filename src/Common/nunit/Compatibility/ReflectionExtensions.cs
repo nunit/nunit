@@ -26,13 +26,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 
-#if NUNIT_ENGINE
-namespace NUnit.Engine.Compatibility
-#elif NUNIT_FRAMEWORK
-namespace NUnit.Framework.Compatibility
-#else
-namespace NUnit.Common.Compatibility
-#endif
+namespace NUnit.Compatibility
 {
 #if !NET_4_5 && !PORTABLE
     /// <summary>

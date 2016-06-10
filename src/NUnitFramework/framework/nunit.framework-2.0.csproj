@@ -57,12 +57,6 @@
     <Compile Include="..\..\Common\nunit\Compatibility\AttributeHelper.cs">
       <Link>Compatibility\AttributeHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
-      <Link>Compatibility\BindingFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
-      <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Compatibility\Path.cs">
       <Link>Compatibility\Path.cs</Link>
     </Compile>
@@ -114,6 +108,7 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
+    <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
     <Compile Include="Compatibility\ReaderWriterLockSlim.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\ConcurrentQueue.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\IProducerConsumerCollection.cs" />

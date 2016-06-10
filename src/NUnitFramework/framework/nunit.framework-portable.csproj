@@ -58,9 +58,6 @@
     <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
       <Link>Compatibility\BindingFlags.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
-      <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Compatibility\Path.cs">
       <Link>Compatibility\Path.cs</Link>
     </Compile>
@@ -177,6 +174,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
+    <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
     <Compile Include="Compatibility\System.Web.UI\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\System\SerializableAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
