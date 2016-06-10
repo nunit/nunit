@@ -23,6 +23,7 @@
 
 using NUnit.Framework.Internal;
 using System.Collections;
+using System;
 
 namespace NUnit.Framework.Constraints
 {
@@ -50,9 +51,9 @@ namespace NUnit.Framework.Constraints
             Arguments = args;
 
             DisplayName = this.GetType().Name;
-            if (DisplayName.EndsWith("`1") || DisplayName.EndsWith("`2"))
+            if (DisplayName.EndsWith("`1", StringComparison.Ordinal) || DisplayName.EndsWith("`2", StringComparison.Ordinal))
                 DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
-            if (DisplayName.EndsWith("Constraint"))
+            if (DisplayName.EndsWith("Constraint", StringComparison.Ordinal))
                 DisplayName = DisplayName.Substring(0, DisplayName.Length - 10);
         }
 
