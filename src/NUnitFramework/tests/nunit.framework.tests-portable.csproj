@@ -134,7 +134,6 @@
     <Compile Include="Attributes\ValueSourceTests.cs" />
     <Compile Include="Compatibility\AttributeHelperTests.cs" />
     <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />
-    <Compile Include="Compatibility\StopwatchTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />

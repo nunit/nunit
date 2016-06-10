@@ -158,6 +158,7 @@
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
+    <Compile Include="Compatibility\StopwatchTests.cs" />
     <Compile Include="TestUtilities\AsyncTestDelegates.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
@@ -171,7 +172,6 @@
     <Compile Include="Attributes\ValueSourceTests.cs" />
     <Compile Include="Compatibility\AttributeHelperTests.cs" />
     <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />
-    <Compile Include="Compatibility\StopwatchTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableFromConstraintTests.cs" />

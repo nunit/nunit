@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Diagnostics;
 using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 

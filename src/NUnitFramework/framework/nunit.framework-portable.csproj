@@ -73,9 +73,6 @@
     <Compile Include="..\..\Common\nunit\Compatibility\SerializableAttribute.cs">
       <Link>Compatibility\SerializableAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\Stopwatch.cs">
-      <Link>Compatibility\Stopwatch.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
