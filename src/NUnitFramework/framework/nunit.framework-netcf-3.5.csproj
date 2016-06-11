@@ -196,6 +196,7 @@
     <Compile Include="Compatibility\System.Threading\SpinWait.cs" />
     <Compile Include="Compatibility\System.Web.UI\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\System\Lazy.cs" />
+    <Compile Include="Compatibility\System\StringSplitOptions.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />

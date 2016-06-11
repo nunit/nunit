@@ -90,12 +90,6 @@
     <Compile Include="..\..\Common\nunit\PackageSettings.cs">
       <Link>PackageSettings.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\StringExtensions.cs">
-      <Link>StringExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\StringSplitOptions.cs">
-      <Link>StringSplitOptions.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Utilities\TestNameParser.cs</Link>
     </Compile>
