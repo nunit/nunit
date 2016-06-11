@@ -26,6 +26,8 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
+
 using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Constraints
@@ -37,7 +39,7 @@ namespace NUnit.Framework.Constraints
     {
         private ComparisonAdapter comparer = ComparisonAdapter.Default;
         private string comparerName;
-        private string propertyName;
+        private Dictionary<string, bool> properties;
         private bool descending;
 
         /// <summary>
@@ -63,6 +65,10 @@ namespace NUnit.Framework.Constraints
             get
             {
                 descending = true;
+
+                if (this.properties != null && this.properties.Count != 0)
+                    this.properties[this.properties.Keys.Max()] = true;
+
                 return this;
             }
         }
@@ -103,7 +109,55 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint By(string propertyName)
         {
-            this.propertyName = propertyName;
+            if (this.properties != null && this.properties.Count != 0)
+                throw new InvalidOperationException("Cannot use By on existing collection. Use ThenBy to add additional items.");
+
+            this.properties = new Dictionary<string, bool>();
+            this.properties.Add(propertyName, false);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Modifies the constraint to test descending ordering by the value of
+        /// a specified property and returns self.
+        /// </summary>
+        public CollectionOrderedConstraint ByDescending(string propertyName)
+        {
+            if (this.properties != null && this.properties.Count != 0)
+                throw new InvalidOperationException("Cannot use ByDescending on existing collection. Use ThenByDescending to add additional items.");
+
+            this.properties = new Dictionary<string, bool>();
+            this.properties.Add(propertyName, true);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Modifies the constraint to test additional ordering by
+        /// the value of a specified property and returns self.
+        /// </summary>
+        public CollectionOrderedConstraint ThenBy(string propertyName)
+        {
+            if (this.properties == null || this.properties.Count < 1)
+                throw new InvalidOperationException("Cannot use ThenBy on an empty collection.");
+
+            this.properties.Add(propertyName, false);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Modifies the constraint to test additional descending ordering by
+        /// the value of a specified property and returns self.
+        /// </summary>
+        public CollectionOrderedConstraint ThenByDescending(string propertyName)
+        {
+            if (this.properties == null || this.properties.Count < 1)
+                throw new InvalidOperationException("Cannot use ThenByDescending on an empty collection.");
+
+            this.properties.Add(propertyName, true);
+
             return this;
         }
 
@@ -114,13 +168,33 @@ namespace NUnit.Framework.Constraints
         public override string Description
         {
             get 
-            { 
-                string desc = propertyName == null
-                    ? "collection ordered"
-                    : "collection ordered by "+ MsgUtils.FormatValue(propertyName);
+            {
+                string desc;
 
-                if (descending)
-                    desc += ", descending";
+                if (this.properties == null || this.properties.Count == 0)
+                {
+                    desc = "collection ordered";
+
+                    if (descending)
+                        desc += ", descending";
+                }
+                else
+                {
+                    var first = this.properties.ElementAt(0);
+                    desc = "collection ordered by " + MsgUtils.FormatValue(first.Key);
+
+                    if (first.Value)
+                        desc += ", descending";
+
+                    for (int i = 1; i < this.properties.Count; i++)
+                    {
+                        var item = this.properties.ElementAt(i);
+                        desc += ", then by " + MsgUtils.FormatValue(item.Key);
+
+                        if (item.Value)
+                            desc += ", descending";
+                    }
+                }
 
                 return desc;
             }
@@ -135,32 +209,51 @@ namespace NUnit.Framework.Constraints
         {
             object previous = null;
             int index = 0;
-            foreach (object obj in actual)
+            foreach (object current in actual)
             {
-                object objToCompare = obj;
-                if (obj == null)
+                if (current == null)
                     throw new ArgumentNullException("actual", "Null value at index " + index.ToString());
 
-                if (this.propertyName != null)
+                if (this.properties != null && this.properties.Count > 0)
                 {
-                    PropertyInfo prop = obj.GetType().GetProperty(propertyName);
-                    objToCompare = prop.GetValue(obj, null);
-                    if (objToCompare == null)
-                        throw new ArgumentNullException("actual", "Null property value at index " + index.ToString());
+                    if (index > 0 && previous != null)
+                    {
+                        for (int i = 0; i < this.properties.Count; i++)
+                        {
+                            var item = this.properties.ElementAt(i);
+
+                            var isDescending = item.Value;
+                            var previousValue = previous.GetType().GetProperty(item.Key).GetValue(previous, null);
+                            var currentValue = current.GetType().GetProperty(item.Key).GetValue(current, null);
+
+                            if (currentValue == null)
+                                throw new ArgumentNullException("actual", "Null property value at index " + index.ToString());
+
+                            int comparisonResult = comparer.Compare(previousValue, currentValue);
+
+                            if (isDescending && comparisonResult < 0)
+                                return false;
+                            if (!isDescending && comparisonResult > 0)
+                                return false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (previous != null)
+                    {
+                        int comparisonResult = comparer.Compare(previous, current);
+
+                        if (descending && comparisonResult < 0)
+                            return false;
+                        if (!descending && comparisonResult > 0)
+                            return false;
+                    }
+
+                    
                 }
 
-                if (previous != null)
-                {
-                    //int comparisonResult = comparer.Compare(al[i], al[i + 1]);
-                    int comparisonResult = comparer.Compare(previous, objToCompare);
-
-                    if (descending && comparisonResult < 0)
-                        return false;
-                    if (!descending && comparisonResult > 0)
-                        return false;
-                }
-
-                previous = objToCompare;
+                previous = current;
                 index++;
             }
 
@@ -175,10 +268,29 @@ namespace NUnit.Framework.Constraints
         {
             StringBuilder sb = new StringBuilder("<ordered");
 
-            if (propertyName != null)
-                sb.Append("by " + propertyName);
-            if (descending)
-                sb.Append(" descending");
+            if (this.properties != null && this.properties.Count > 0)
+            {
+                var first = this.properties.ElementAt(0);
+                sb.Append("by " + first.Key);
+
+                if (first.Value)
+                    sb.Append(" descending");
+
+                for (int i = 1; i < this.properties.Count; i++)
+                {
+                    var item = this.properties.ElementAt(i);
+                    sb.Append(", then by " + item.Key);
+
+                    if (item.Value)
+                        sb.Append(" descending");
+                }
+            }
+            else
+            {
+                if (descending)
+                    sb.Append(" descending");
+            }
+
             if (comparerName != null)
                 sb.Append(" " + comparerName);
 

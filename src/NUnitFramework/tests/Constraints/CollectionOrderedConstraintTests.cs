@@ -227,6 +227,46 @@ namespace NUnit.Framework.Constraints
             Assert.That(al, Is.Ordered.By("Value"));
         }
 
+        [Test]
+        public void IsOrderedByThenBy()
+        {
+            var al = new List<OrderedByThenByTestClass>();
+            al.Add(new OrderedByThenByTestClass("ABC", 1));
+            al.Add(new OrderedByThenByTestClass("DEF", 2));
+            
+            Assert.That(al, Is.Ordered.By("A").ThenBy("B"));
+        }
+
+        [Test]
+        public void IsOrderedByDescendingThenBy()
+        {
+            var al = new List<OrderedByThenByTestClass>();
+            al.Add(new OrderedByThenByTestClass("DEF", 1));
+            al.Add(new OrderedByThenByTestClass("ABC", 2));
+
+            Assert.That(al, Is.Ordered.ByDescending("A").ThenBy("B"));
+        }
+
+        [Test]
+        public void IsOrderedByThenByDescending()
+        {
+            var al = new List<OrderedByThenByTestClass>();
+            al.Add(new OrderedByThenByTestClass("ABC", 2));
+            al.Add(new OrderedByThenByTestClass("DEF", 1));
+
+            Assert.That(al, Is.Ordered.By("A").ThenByDescending("B"));
+        }
+
+        [Test]
+        public void IsOrderedByDescendingThenByDescending()
+        {
+            var al = new List<OrderedByThenByTestClass>();
+            al.Add(new OrderedByThenByTestClass("DEF", 2));
+            al.Add(new OrderedByThenByTestClass("ABC", 1));
+
+            Assert.That(al, Is.Ordered.ByDescending("A").ThenByDescending("B"));
+        }
+
         // Public to avoid a MethodAccessException under CF 2.0
         public class OrderedByTestClass
         {
@@ -256,6 +296,30 @@ namespace NUnit.Framework.Constraints
             public OrderedByTestClass2(int value)
             {
                 Value = value;
+            }
+        }
+
+        public class OrderedByThenByTestClass
+        {
+            private string a;
+            private int b;
+
+            public string A
+            {
+                get { return a; }
+                set { a = value; }
+            }
+
+            public int B
+            {
+                get { return b; }
+                set { b = value; }
+            }
+
+            public OrderedByThenByTestClass(string a, int b)
+            {
+                this.A = a;
+                this.B = b;
             }
         }
     }
