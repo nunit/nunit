@@ -50,8 +50,16 @@ var PACKAGE_DIR = PROJECT_DIR + "package/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
-// Package source argument for nuget restore
-var PACKAGE_SOURCE = " -source \"https://www.nuget.org/api/v2;https://www.myget.org/F/nunit/api/v2\""
+var SOLUTION_FILE = IsRunningOnWindows()
+	? "./nunit.sln"
+	: "./nunit.linux.sln";
+
+// Package sources for nuget restore
+var PACKAGE_SOURCE = new string[]
+	{
+		"https://www.nuget.org/api/v2",
+		"https://www.myget.org/F/nunit/api/v2"
+	};
 
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
@@ -92,34 +100,34 @@ Task("Clean")
 Task("InitializeBuild")
     .Does(() =>
     {
-    if (IsRunningOnWindows())
-        NuGetRestore("./nunit.sln" + PACKAGE_SOURCE);
-    else
-        NuGetRestore("./nunit.linux.sln" + PACKAGE_SOURCE);
+		NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
+		{
+			Source = PACKAGE_SOURCE
+		});
 
-    if (BuildSystem.IsRunningOnAppVeyor)
-    {
-        var tag = AppVeyor.Environment.Repository.Tag;
+		if (BuildSystem.IsRunningOnAppVeyor)
+		{
+			var tag = AppVeyor.Environment.Repository.Tag;
 
-        if (tag.IsTag)
-        {
-            packageVersion = tag.Name;
-        }
-        else
-        {
-            var buildNumber = AppVeyor.Environment.Build.Number;
-            packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
-            if (AppVeyor.Environment.PullRequest.IsPullRequest)
-                packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
-            else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-                packageVersion += "-PRE-" + buildNumber;
-            else
-                packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
-        }
+			if (tag.IsTag)
+			{
+				packageVersion = tag.Name;
+			}
+			else
+			{
+				var buildNumber = AppVeyor.Environment.Build.Number;
+				packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
+				if (AppVeyor.Environment.PullRequest.IsPullRequest)
+					packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
+				else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+					packageVersion += "-PRE-" + buildNumber;
+				else
+					packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
+			}
 
-        AppVeyor.UpdateBuildVersion(packageVersion);
-    }
-});
+			AppVeyor.UpdateBuildVersion(packageVersion);
+		}
+	});
 
 //////////////////////////////////////////////////////////////////////
 // BUILD
