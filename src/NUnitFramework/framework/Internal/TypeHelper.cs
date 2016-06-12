@@ -27,7 +27,7 @@ using System.Linq;
 #endif
 using System.Reflection;
 using System.Text;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal

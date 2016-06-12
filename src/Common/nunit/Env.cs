@@ -24,8 +24,6 @@
 using System;
 using System.Text;
 
-#if NUNIT
-#endif
 namespace NUnit
 {
     /// <summary>

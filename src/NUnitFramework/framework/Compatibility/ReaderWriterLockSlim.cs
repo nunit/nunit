@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace NUnit.Framework.Compatibility
+namespace NUnit.Compatibility
 {
 #if NETCF
     /// <summary>

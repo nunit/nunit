@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {

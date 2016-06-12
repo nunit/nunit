@@ -27,7 +27,6 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.IO;
-using NUnit.Common;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Addins

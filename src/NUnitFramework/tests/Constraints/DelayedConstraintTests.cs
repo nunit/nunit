@@ -24,8 +24,9 @@
 #if !PORTABLE
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
 namespace NUnit.Framework.Constraints

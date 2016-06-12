@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution

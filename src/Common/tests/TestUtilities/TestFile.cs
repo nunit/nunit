@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 
 namespace NUnit.TestUtilities
 {
