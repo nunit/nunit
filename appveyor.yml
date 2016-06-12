@@ -7,9 +7,6 @@ install:
         Import-Module '.\appveyor-tool.ps1'
         Bootstrap
         
-before_build:
-  - nuget restore nunit.sln -source "https://www.nuget.org/api/v2;https://www.myget.org/F/nunit/api/v2"
-
 build_script: 
   - ps: .\build.ps1 -Target "Appveyor"
 
