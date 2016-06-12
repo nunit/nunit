@@ -495,7 +495,8 @@ var BinFiles = new FilePath[]
 
 // Not all of these are present in every framework
 // The Microsoft and System assemblies are part of the BCL
-// used by the .NET 4.0 framework. 4.0 tests will not run without them
+// used by the .NET 4.0 framework. 4.0 tests will not run without them.
+// NUnit.System.Linq is only present for the .NET 2.0 build.
 var FrameworkFiles = new FilePath[]
 {
     "AppManifest.xaml",
@@ -503,6 +504,7 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.exe",
     "nunit.framework.dll",
     "nunit.framework.xml",
+	"NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.framework.tests.xap",
     "nunit.framework.tests_TestPage.html",

@@ -34,6 +34,7 @@ Supported platforms:
     <file src="CHANGES.txt" />
     <file src="bin/net-2.0/nunit.framework.dll" target="lib/net20" />
     <file src="bin/net-2.0/nunit.framework.xml" target="lib/net20" />
+    <file src="bin/net-2.0/NUnit.System.Linq.dll" target="lib/net20" />
     <file src="bin/net-3.5/nunit.framework.dll" target="lib/net35" />
     <file src="bin/net-3.5/nunit.framework.xml" target="lib/net35" />
     <file src="bin/net-4.0/nunit.framework.dll" target="lib/net40" />
