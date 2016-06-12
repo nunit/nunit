@@ -50,6 +50,9 @@ var PACKAGE_DIR = PROJECT_DIR + "package/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
+// Package source argument for nuget restore
+var PACKAGE_SOURCE = " -source \"https://www.nuget.org/api/v2;https://www.myget.org/F/nunit/api/v2\""
+
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
@@ -90,9 +93,9 @@ Task("InitializeBuild")
     .Does(() =>
     {
     if (IsRunningOnWindows())
-        NuGetRestore("./nunit.sln");
+        NuGetRestore("./nunit.sln" + PACKAGE_SOURCE);
     else
-        NuGetRestore("./nunit.linux.sln");
+        NuGetRestore("./nunit.linux.sln" + PACKAGE_SOURCE);
 
     if (BuildSystem.IsRunningOnAppVeyor)
     {
