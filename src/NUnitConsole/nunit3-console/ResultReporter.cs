@@ -140,7 +140,7 @@ namespace NUnit.ConsoleRunner
 
             _writer.WriteLabelLine("  Start time: ", startTime.ToString("u"));
             _writer.WriteLabelLine("    End time: ", endTime.ToString("u"));
-            _writer.WriteLabelLine("    Duration: ", string.Format("{0} seconds", duration.ToString("0.000")));
+            _writer.WriteLabelLine("    Duration: ", string.Format(NumberFormatInfo.InvariantInfo, "{0:0.000} seconds", duration));
             _writer.WriteLine();
         }
 
