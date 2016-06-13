@@ -14,13 +14,19 @@
                       Source="$(var.Binaries)\net-2.0\nunit.framework.xml"
                       CompanionFile="nunit.framework.20.dll" />
             </Component>
-            <Component Id="NET20_RUNNER" Location="local" Guid="42CFBBA6-BD82-4D96-958A-11FBAADDBCF1">
-                <File Id="nunitlite.20.dll"
-                      Name="nunitlite.dll"
-                      ProcessorArchitecture="msil"
-                      Source="$(var.Binaries)\net-2.0\nunitlite.dll" />
-            </Component>
-            <Component Id="AssemblyReferenceFolder20" Guid="037FAFFF-9329-47E6-A932-D882C74D6E80">
+          <Component Id="NET20_RUNNER" Location="local" Guid="42CFBBA6-BD82-4D96-958A-11FBAADDBCF1">
+            <File Id="nunitlite.20.dll"
+                  Name="nunitlite.dll"
+                  ProcessorArchitecture="msil"
+                  Source="$(var.Binaries)\net-2.0\nunitlite.dll" />
+          </Component>
+          <Component Id="NUNIT_SYSTEM_LINQ" Location="local" Guid="8FC85194-79F6-4522-886B-F18C2C4A4C4F">
+            <File Id="NUnit.System.Linq.dll"
+                  Name="NUnit.System.Linq.dll"
+                  ProcessorArchitecture="msil"
+                  Source="$(var.Binaries)\net-2.0\NUnit.System.Linq.dll" />
+          </Component>
+          <Component Id="AssemblyReferenceFolder20" Guid="037FAFFF-9329-47E6-A932-D882C74D6E80">
                 <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v2.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
                     <RegistryValue Action="write" Type="string" Value="[NET20]" />
                 </RegistryKey>
