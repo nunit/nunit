@@ -214,8 +214,10 @@ namespace NUnitLite.Tests
             RequiredAttribute(suiteNode, "time");
 #else
             double time;
+            var timeString = RequiredAttribute(suiteNode, "time");
             // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
-            Assert.That(double.TryParse(RequiredAttribute(suiteNode, "time"),System.Globalization.NumberStyles.Float,null, out time), "Invalid value for time");
+            var success = double.TryParse(timeString,System.Globalization.NumberStyles.Float,null, out time);
+            Assert.That(success, "{0} is an invalid value for time", timeString);
 #endif
         }
 
