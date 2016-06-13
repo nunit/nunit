@@ -54,8 +54,9 @@ namespace NUnit.Framework.Constraints
 
             _displayName = new Lazy<string>(() =>
             {
-                var displayName = this.GetType().Name;
-                if (displayName.EndsWith("`1", StringComparison.Ordinal) || displayName.EndsWith("`2", StringComparison.Ordinal))
+                var type = this.GetType();
+                var displayName = type.Name;
+                if (type.IsGenericType)
                     displayName = displayName.Substring(0, displayName.Length - 2);
                 if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
                     displayName = displayName.Substring(0, displayName.Length - 10);
