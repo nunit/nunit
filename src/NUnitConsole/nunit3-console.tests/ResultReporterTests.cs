@@ -105,7 +105,7 @@ namespace NUnit.ConsoleRunner.Tests
             };
 
             var actualSummary = GetReportLines(_reporter.WriteSummaryReport);
-            Assert.That(expected, Is.EqualTo(actualSummary));
+            Assert.That(actualSummary, Is.EqualTo(expected));
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace NUnit.ConsoleRunner.Tests
             };
 
             var report = GetReportLines(_reporter.WriteNotRunReport);
-            Assert.That(expected, Is.EqualTo(report));
+            Assert.That(report, Is.EqualTo(expected));
         }
 
         #region Helper Methods
