@@ -86,6 +86,8 @@ namespace NUnit.Common
         private List<string> testList = new List<string>();
         public IList<string> TestList { get { return testList; } }
 
+        public string TestParameters { get; private set; }
+
         public string WhereClause { get; private set; }
         public bool WhereClauseSpecified { get { return WhereClause != null; } }
 
@@ -295,6 +297,23 @@ namespace NUnit.Common
 #endif
             this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));
+
+            this.Add("params|D=", "Define a test parameter.",
+                v =>
+                {
+                    string parameters = RequiredValue( v, "--params");
+
+                    foreach (string param in parameters.Split(new[] { ';' }))
+                    {
+                        if (!param.Contains("="))
+                            ErrorMessages.Add("Invalid format for test parameter. Use NAME=VALUE.");
+                    }
+
+                    if (TestParameters == null)
+                        TestParameters = parameters;
+                    else
+                        TestParameters += ";" + parameters;
+                });
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
