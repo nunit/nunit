@@ -49,9 +49,6 @@ namespace NUnit.Engine.Services
 
         private ISettings _settingsService;
 
-        // Default settings used if SettingsService is unavailable
-        private string _shadowCopyPath = Path.Combine(NUnitConfiguration.EngineDirectory, "ShadowCopyCache");
-
         #region Create and Unload Domains
         /// <summary>
         /// Construct an application domain for running a test package
@@ -127,7 +124,6 @@ namespace NUnit.Engine.Services
             {
                 setup.ShadowCopyFiles = "true";
                 setup.ShadowCopyDirectories = setup.ApplicationBase;
-                setup.CachePath = GetCachePath();
             }
             else
                 setup.ShadowCopyFiles = "false";
@@ -271,30 +267,6 @@ namespace NUnit.Engine.Services
             return ext == ".dll" || ext == ".exe";
         }
 
-        /// <summary>
-        /// Get the location for caching and delete any old cache info
-        /// </summary>
-        private string GetCachePath()
-        {
-            int processId = Process.GetCurrentProcess().Id;
-            long ticks = DateTime.Now.Ticks;
-            string cachePath = Path.Combine( _shadowCopyPath, processId.ToString() + "_" + ticks.ToString() ); 
-                
-            try 
-            {
-                DirectoryInfo dir = new DirectoryInfo(cachePath);		
-                if(dir.Exists) dir.Delete(true);
-            }
-            catch( Exception ex)
-            {
-                throw new ApplicationException( 
-                    string.Format( "Invalid cache path: {0}",cachePath ),
-                    ex );
-            }
-
-            return cachePath;
-        }
-
         public static string GetCommonAppBase(IList<TestPackage> packages)
         {
             var assemblies = new List<string>();
@@ -370,11 +342,6 @@ namespace NUnit.Engine.Services
             return sb.Length == 0 ? null : sb.ToString();
         }
 
-        public void DeleteShadowCopyPath()
-        {
-            if ( Directory.Exists( _shadowCopyPath ) )
-                Directory.Delete( _shadowCopyPath, true );
-        }
         #endregion
 
         #region Service Overrides
@@ -386,12 +353,6 @@ namespace NUnit.Engine.Services
                 // DomainManager has a soft dependency on the SettingsService.
                 // If it's not available, default values are used.
                 _settingsService = ServiceContext.GetService<ISettings>();
-                if (_settingsService != null)
-                {
-                    var pathSetting = _settingsService.GetSetting("Options.TestLoader.ShadowCopyPath", "");
-                    if (pathSetting != "")
-                        _shadowCopyPath = Environment.ExpandEnvironmentVariables(pathSetting);
-                }
 
                 Status = ServiceStatus.Started;
             }
