@@ -22,8 +22,10 @@
 // ***********************************************************************
 
 using NUnit.Framework.Internal;
+using NUnit.Compatibility;
 using System.Collections;
 using System;
+using System.Reflection;
 
 namespace NUnit.Framework.Constraints
 {
@@ -56,7 +58,7 @@ namespace NUnit.Framework.Constraints
             {
                 var type = this.GetType();
                 var displayName = type.Name;
-                if (type.IsGenericType)
+                if (type.GetTypeInfo().IsGenericType)
                     displayName = displayName.Substring(0, displayName.Length - 2);
                 if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
                     displayName = displayName.Substring(0, displayName.Length - 10);
