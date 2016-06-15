@@ -44,17 +44,23 @@ namespace NUnit.Framework
         /// <returns>Value of the paramter or null if not present</returns>
         public string Get(string name)
         {
-            return _parameters.ContainsKey(name) ? _parameters[name] : null;
+            return this[name];
         }
 
         public string Get(string name, string defaultValue)
         {
-            return _parameters.ContainsKey(name) ? _parameters[name] : defaultValue;
+            return this[name] ?? defaultValue;
         }
-        
-        public int Get(string name, int defaultValue)
+
+        public int GetInt(string name)
         {
-            return _parameters.ContainsKey(name) ? int.Parse(_parameters[name]) : defaultValue;
+            return GetInt(name, 0);
+        }
+
+        public int GetInt(string name, int defaultValue)
+        {
+            string val = this[name];
+            return val != null ? int.Parse(val) : defaultValue;
         }
 
         /// <summary>

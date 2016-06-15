@@ -298,7 +298,7 @@ namespace NUnit.Common
             this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));
 
-            this.Add("params|D=", "Define a test parameter.",
+            this.Add("params|p=", "Define a test parameter.",
                 v =>
                 {
                     string parameters = RequiredValue( v, "--params");

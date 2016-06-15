@@ -571,7 +571,7 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void TwoTestParametersInSeparateOptions()
         {
-            var options = new ConsoleOptions("-D:X=5", "-D:Y=7");
+            var options = new ConsoleOptions("-p:X=5", "-p:Y=7");
             Assert.That(options.errorMessages, Is.Empty);
             Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7"));
         }
@@ -579,7 +579,7 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void ThreeTestParametersInTwoOptions()
         {
-            var options = new ConsoleOptions("--params:X=5;Y=7", "-D:Z=3");
+            var options = new ConsoleOptions("--params:X=5;Y=7", "-p:Z=3");
             Assert.That(options.errorMessages, Is.Empty);
             Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7;Z=3"));
         }
