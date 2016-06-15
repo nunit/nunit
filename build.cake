@@ -50,6 +50,17 @@ var PACKAGE_DIR = PROJECT_DIR + "package/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
+var SOLUTION_FILE = IsRunningOnWindows()
+	? "./nunit.sln"
+	: "./nunit.linux.sln";
+
+// Package sources for nuget restore
+var PACKAGE_SOURCE = new string[]
+	{
+		"https://www.nuget.org/api/v2",
+		"https://www.myget.org/F/nunit/api/v2"
+	};
+
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
@@ -89,34 +100,34 @@ Task("Clean")
 Task("InitializeBuild")
     .Does(() =>
     {
-    if (IsRunningOnWindows())
-        NuGetRestore("./nunit.sln");
-    else
-        NuGetRestore("./nunit.linux.sln");
+		NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
+		{
+			Source = PACKAGE_SOURCE
+		});
 
-    if (BuildSystem.IsRunningOnAppVeyor)
-    {
-        var tag = AppVeyor.Environment.Repository.Tag;
+		if (BuildSystem.IsRunningOnAppVeyor)
+		{
+			var tag = AppVeyor.Environment.Repository.Tag;
 
-        if (tag.IsTag)
-        {
-            packageVersion = tag.Name;
-        }
-        else
-        {
-            var buildNumber = AppVeyor.Environment.Build.Number;
-            packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
-            if (AppVeyor.Environment.PullRequest.IsPullRequest)
-                packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
-            else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-                packageVersion += "-PRE-" + buildNumber;
-            else
-                packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
-        }
+			if (tag.IsTag)
+			{
+				packageVersion = tag.Name;
+			}
+			else
+			{
+				var buildNumber = AppVeyor.Environment.Build.Number;
+				packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
+				if (AppVeyor.Environment.PullRequest.IsPullRequest)
+					packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
+				else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+					packageVersion += "-PRE-" + buildNumber;
+				else
+					packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
+			}
 
-        AppVeyor.UpdateBuildVersion(packageVersion);
-    }
-});
+			AppVeyor.UpdateBuildVersion(packageVersion);
+		}
+	});
 
 //////////////////////////////////////////////////////////////////////
 // BUILD
@@ -484,7 +495,8 @@ var BinFiles = new FilePath[]
 
 // Not all of these are present in every framework
 // The Microsoft and System assemblies are part of the BCL
-// used by the .NET 4.0 framework. 4.0 tests will not run without them
+// used by the .NET 4.0 framework. 4.0 tests will not run without them.
+// NUnit.System.Linq is only present for the .NET 2.0 build.
 var FrameworkFiles = new FilePath[]
 {
     "AppManifest.xaml",
@@ -492,6 +504,7 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.exe",
     "nunit.framework.dll",
     "nunit.framework.xml",
+	"NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.framework.tests.xap",
     "nunit.framework.tests_TestPage.html",

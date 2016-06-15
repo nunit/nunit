@@ -27,7 +27,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using NUnit.Common;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -354,7 +354,7 @@ namespace NUnitLite
 
             _writer.WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
             _writer.WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
-            _writer.WriteLabelLine("    Duration: ", summary.Duration.ToString("0.000") + " seconds");
+            _writer.WriteLabelLine("    Duration: ", string.Format(NumberFormatInfo.InvariantInfo, "{0:0.000} seconds", summary.Duration));
             _writer.WriteLine();
         }
 

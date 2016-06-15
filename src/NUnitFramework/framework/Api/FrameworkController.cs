@@ -31,7 +31,7 @@ using System.IO;
 using System.Reflection;
 using System.Web.UI;
 using NUnit.Common;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 

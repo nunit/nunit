@@ -22,13 +22,7 @@
 // ***********************************************************************
 
 #if PORTABLE
-#if NUNIT_ENGINE
-namespace NUnit.Engine.Compatibility
-#elif NUNIT_FRAMEWORK
-namespace NUnit.Framework.Compatibility
-#else
-namespace NUnit.Common.Compatibility
-#endif
+namespace NUnit.Compatibility
 {
     /// <summary>
     /// Some path based methods that we need even in the Portable framework which

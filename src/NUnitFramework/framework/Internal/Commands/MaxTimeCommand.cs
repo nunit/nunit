@@ -22,7 +22,8 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Compatibility;
+using System.Diagnostics;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands

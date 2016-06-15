@@ -26,21 +26,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 
-#if !CORE_RUNNER
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
     sealed class ExtensionAttribute : Attribute { }
 }
-#endif
 
-#if NUNIT_CONSOLE
-namespace NUnit.ConsoleRunner.Utilities
-#elif NUNIT_ENGINE
-namespace NUnit.Engine.Internal
-#else
-namespace NUnit.Common
-#endif
+namespace NUnit
 {
     /// <summary>
     /// XmlHelper provides static methods for basic XML operations.

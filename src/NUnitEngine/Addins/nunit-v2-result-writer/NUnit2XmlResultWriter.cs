@@ -27,7 +27,6 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.IO;
-using NUnit.Common;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Addins
@@ -80,7 +79,6 @@ namespace NUnit.Engine.Addins
 
         private void InitializeXmlFile(XmlNode result)
         {
-            //ResultSummary summary = new ResultSummary(result);
             NUnit2ResultSummary summary = new NUnit2ResultSummary(result);
 
             xmlWriter.WriteStartDocument(false);
@@ -88,7 +86,7 @@ namespace NUnit.Engine.Addins
 
             xmlWriter.WriteStartElement("test-results");
 
-            xmlWriter.WriteAttributeString("name", result.GetAttribute("fullname"));
+            xmlWriter.WriteAttributeString("name", GetPathOfFirstTestFile(result));
             xmlWriter.WriteAttributeString("total", summary.ResultCount.ToString());
             xmlWriter.WriteAttributeString("errors", summary.Errors.ToString());
             xmlWriter.WriteAttributeString("failures", summary.Failures.ToString());
@@ -103,6 +101,15 @@ namespace NUnit.Engine.Addins
             xmlWriter.WriteAttributeString("time", start.ToString("HH:mm:ss"));
             WriteEnvironment();
             WriteCultureInfo();
+        }
+
+        private string GetPathOfFirstTestFile(XmlNode resultNode)
+        {
+            foreach (XmlNode child in resultNode.ChildNodes)
+                if (child.Name == "test-suite")
+                    return child.GetAttribute("fullname");
+
+            return "UNKNOWN";
         }
 
         private void WriteCultureInfo()

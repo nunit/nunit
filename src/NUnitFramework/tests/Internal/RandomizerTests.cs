@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal

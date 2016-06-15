@@ -54,9 +54,6 @@
     <Compile Include="..\..\Common\tests\TestNameParserTests.cs">
       <Link>TestNameParserTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\XmlHelperTests.cs">
-      <Link>XmlHelperTests.cs</Link>
-    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>

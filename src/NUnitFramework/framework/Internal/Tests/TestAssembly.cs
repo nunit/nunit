@@ -25,7 +25,7 @@ using System.IO;
 using System.Reflection;
 
 #if PORTABLE
-using Path = NUnit.Framework.Compatibility.Path;
+using Path = NUnit.Compatibility.Path;
 #endif
 
 namespace NUnit.Framework.Internal

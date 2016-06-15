@@ -25,7 +25,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using System.Linq;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.RandomAttributeTests;
 using NUnit.TestUtilities;
