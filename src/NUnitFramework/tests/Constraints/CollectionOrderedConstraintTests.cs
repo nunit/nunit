@@ -233,8 +233,8 @@ namespace NUnit.Framework.Constraints
             var al = new List<OrderedByThenByTestClass>();
             al.Add(new OrderedByThenByTestClass("ABC", 1));
             al.Add(new OrderedByThenByTestClass("DEF", 2));
-            
-            Assert.That(al, Is.Ordered.By("A").ThenBy("B"));
+
+            Assert.That(al, Is.Ordered.By("A").Then.By("B"));
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Constraints
             al.Add(new OrderedByThenByTestClass("DEF", 1));
             al.Add(new OrderedByThenByTestClass("ABC", 2));
 
-            Assert.That(al, Is.Ordered.ByDescending("A").ThenBy("B"));
+            Assert.That(al, Is.Ordered.By("A").Descending.Then.By("B"));
         }
 
         [Test]
@@ -254,7 +254,7 @@ namespace NUnit.Framework.Constraints
             al.Add(new OrderedByThenByTestClass("ABC", 2));
             al.Add(new OrderedByThenByTestClass("DEF", 1));
 
-            Assert.That(al, Is.Ordered.By("A").ThenByDescending("B"));
+            Assert.That(al, Is.Ordered.By("A").Then.By("B").Descending);
         }
 
         [Test]
@@ -264,7 +264,7 @@ namespace NUnit.Framework.Constraints
             al.Add(new OrderedByThenByTestClass("DEF", 2));
             al.Add(new OrderedByThenByTestClass("ABC", 1));
 
-            Assert.That(al, Is.Ordered.ByDescending("A").ThenByDescending("B"));
+            Assert.That(al, Is.Ordered.By("A").Descending.Then.By("B").Descending);
         }
 
         // Public to avoid a MethodAccessException under CF 2.0

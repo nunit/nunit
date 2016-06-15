@@ -27,8 +27,6 @@ using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
 using NUnit.Compatibility;
-using System.Linq;
-
 
 namespace NUnit.Framework.Constraints
 {
@@ -37,10 +35,12 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionOrderedConstraint : CollectionConstraint
     {
+        private readonly List<OrderedPropertyInfo> properties = new List<OrderedPropertyInfo>();
+
         private ComparisonAdapter comparer = ComparisonAdapter.Default;
         private string comparerName;
-        private Dictionary<string, bool> properties;
         private bool descending;
+        private bool allowBy = true;
 
         /// <summary>
         /// Construct a CollectionOrderedConstraint
@@ -66,9 +66,24 @@ namespace NUnit.Framework.Constraints
             {
                 descending = true;
 
-                if (this.properties != null && this.properties.Count != 0)
-                    this.properties[this.properties.Keys.Max()] = true;
+                if (!this.allowBy && this.properties != null && this.properties.Count != 0)
+                {
+                    this.properties[this.properties.Count - 1].SortDescending = true;
+                    descending = false;
+                }
 
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Returns self.
+        /// </summary>
+        public CollectionOrderedConstraint Then
+        {
+            get
+            {
+                this.allowBy = true;
                 return this;
             }
         }
@@ -109,54 +124,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint By(string propertyName)
         {
-            if (this.properties != null && this.properties.Count != 0)
-                throw new InvalidOperationException("Cannot use By on existing collection. Use ThenBy to add additional items.");
+            if (!this.allowBy) 
+                throw new InvalidOperationException("The use of 'By' is not allowed.");
 
-            this.properties = new Dictionary<string, bool>();
-            this.properties.Add(propertyName, false);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Modifies the constraint to test descending ordering by the value of
-        /// a specified property and returns self.
-        /// </summary>
-        public CollectionOrderedConstraint ByDescending(string propertyName)
-        {
-            if (this.properties != null && this.properties.Count != 0)
-                throw new InvalidOperationException("Cannot use ByDescending on existing collection. Use ThenByDescending to add additional items.");
-
-            this.properties = new Dictionary<string, bool>();
-            this.properties.Add(propertyName, true);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Modifies the constraint to test additional ordering by
-        /// the value of a specified property and returns self.
-        /// </summary>
-        public CollectionOrderedConstraint ThenBy(string propertyName)
-        {
-            if (this.properties == null || this.properties.Count < 1)
-                throw new InvalidOperationException("Cannot use ThenBy on an empty collection.");
-
-            this.properties.Add(propertyName, false);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Modifies the constraint to test additional descending ordering by
-        /// the value of a specified property and returns self.
-        /// </summary>
-        public CollectionOrderedConstraint ThenByDescending(string propertyName)
-        {
-            if (this.properties == null || this.properties.Count < 1)
-                throw new InvalidOperationException("Cannot use ThenByDescending on an empty collection.");
-
-            this.properties.Add(propertyName, true);
+            this.properties.Add(new OrderedPropertyInfo(propertyName, this.descending));
+            this.allowBy = false;
 
             return this;
         }
@@ -169,7 +141,7 @@ namespace NUnit.Framework.Constraints
         {
             get 
             {
-                string desc;
+                string desc = string.Empty;
 
                 if (this.properties == null || this.properties.Count == 0)
                 {
@@ -180,18 +152,18 @@ namespace NUnit.Framework.Constraints
                 }
                 else
                 {
-                    var first = this.properties.ElementAt(0);
-                    desc = "collection ordered by " + MsgUtils.FormatValue(first.Key);
+                    var first = this.properties[0];
+                    desc = "collection ordered by " + MsgUtils.FormatValue(first.PropertyName);
 
-                    if (first.Value)
+                    if (first.SortDescending)
                         desc += ", descending";
 
                     for (int i = 1; i < this.properties.Count; i++)
                     {
-                        var item = this.properties.ElementAt(i);
-                        desc += ", then by " + MsgUtils.FormatValue(item.Key);
+                        var item = this.properties[i];
+                        desc += ", then by " + MsgUtils.FormatValue(item.PropertyName);
 
-                        if (item.Value)
+                        if (item.SortDescending)
                             desc += ", descending";
                     }
                 }
@@ -220,11 +192,11 @@ namespace NUnit.Framework.Constraints
                     {
                         for (int i = 0; i < this.properties.Count; i++)
                         {
-                            var item = this.properties.ElementAt(i);
+                            var item = this.properties[i];
 
-                            var isDescending = item.Value;
-                            var previousValue = previous.GetType().GetProperty(item.Key).GetValue(previous, null);
-                            var currentValue = current.GetType().GetProperty(item.Key).GetValue(current, null);
+                            var isDescending = item.SortDescending;
+                            var previousValue = previous.GetType().GetProperty(item.PropertyName).GetValue(previous, null);
+                            var currentValue = current.GetType().GetProperty(item.PropertyName).GetValue(current, null);
 
                             if (currentValue == null)
                                 throw new ArgumentNullException("actual", "Null property value at index " + index.ToString());
@@ -250,7 +222,7 @@ namespace NUnit.Framework.Constraints
                             return false;
                     }
 
-                    
+
                 }
 
                 previous = current;
@@ -270,18 +242,18 @@ namespace NUnit.Framework.Constraints
 
             if (this.properties != null && this.properties.Count > 0)
             {
-                var first = this.properties.ElementAt(0);
-                sb.Append("by " + first.Key);
+                var first = this.properties[0];
+                sb.Append("by " + first.PropertyName);
 
-                if (first.Value)
+                if (first.SortDescending)
                     sb.Append(" descending");
 
                 for (int i = 1; i < this.properties.Count; i++)
                 {
-                    var item = this.properties.ElementAt(i);
-                    sb.Append(", then by " + item.Key);
+                    var item = this.properties[i];
+                    sb.Append(", then by " + item.PropertyName);
 
-                    if (item.Value)
+                    if (item.SortDescending)
                         sb.Append(" descending");
                 }
             }
@@ -297,6 +269,25 @@ namespace NUnit.Framework.Constraints
             sb.Append(">");
 
             return sb.ToString();
+        }
+
+        private class OrderedPropertyInfo
+        {
+            public OrderedPropertyInfo(string propertyName)
+            {
+                PropertyName = propertyName;
+            }
+
+            /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+            public OrderedPropertyInfo(string propertyName, bool sortDescending)
+            {
+                PropertyName = propertyName;
+                SortDescending = sortDescending;
+            }
+
+            public string PropertyName { get; private set; }
+
+            public bool SortDescending { get; set; }
         }
     }
 }
