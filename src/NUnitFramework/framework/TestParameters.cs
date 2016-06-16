@@ -28,7 +28,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Indexer is the only public access to the internal dictionary
+        /// Indexer provides access to the internal dictionary
         /// </summary>
         /// <param name="name">Name of the parameter</param>
         /// <returns>Value of the parameter or null if not present</returns>
@@ -41,22 +41,39 @@ namespace NUnit.Framework
         /// Get method is a simple alternative to the indexer
         /// </summary>
         /// <param name="name">Name of the paramter</param>
-        /// <returns>Value of the paramter or null if not present</returns>
+        /// <returns>Value of the parameter or null if not present</returns>
         public string Get(string name)
         {
             return this[name];
         }
 
+        /// <summary>
+        /// Get the value of a parameter or a default string
+        /// </summary>
+        /// <param name="name">Name of the parameter</param>
+        /// <param name="defaultValue">Default value of the parameter</param>
+        /// <returns>Value of the parameter or default value if not present</returns>
         public string Get(string name, string defaultValue)
         {
             return this[name] ?? defaultValue;
         }
 
+        /// <summary>
+        /// Get the int value of a parameter or zero
+        /// </summary>
+        /// <param name="name">Name of the parameter</param>
+        /// <returns>Value of the parameter or default value if not present</returns>
         public int GetInt(string name)
         {
             return GetInt(name, 0);
         }
 
+        /// <summary>
+        /// Get the int value of a parameter or a default int
+        /// </summary>
+        /// <param name="name">Name of the parameter</param>
+        /// <param name="defaultValue">Default value of the parameter</param>
+        /// <returns>Value of the parameter or default value if not present</returns>
         public int GetInt(string name, int defaultValue)
         {
             string val = this[name];
