@@ -29,7 +29,6 @@ using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
 
 #if NET_4_0 || NET_4_5 || PORTABLE
-using System;
 using System.Threading.Tasks;
 #endif
 

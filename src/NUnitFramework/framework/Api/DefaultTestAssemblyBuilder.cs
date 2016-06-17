@@ -133,6 +133,24 @@ namespace NUnit.Framework.Api
                 if (options.ContainsKey(PackageSettings.DefaultTestNamePattern))
                     TestNameGenerator.DefaultTestNamePattern = options[PackageSettings.DefaultTestNamePattern] as string;
 
+                if (options.ContainsKey(PackageSettings.TestParameters))
+                {
+                    string parameters = options[PackageSettings.TestParameters] as string;
+                    if (!string.IsNullOrEmpty(parameters))
+                        foreach (string param in parameters.Split(new[] { ';' }))
+                        {
+                            int eq = param.IndexOf("=");
+
+                            if (eq > 0 && eq < param.Length - 1)
+                            {
+                                var name = param.Substring(0, eq);
+                                var val = param.Substring(eq + 1);
+
+                                TestContext.Parameters.Add(name, val);
+                            }
+                        }
+                }
+
                 IList fixtureNames = null;
                 if (options.ContainsKey (PackageSettings.LOAD))
                     fixtureNames = options[PackageSettings.LOAD] as IList;

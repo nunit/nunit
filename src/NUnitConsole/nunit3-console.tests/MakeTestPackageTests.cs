@@ -73,6 +73,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--workers=0", "NumberOfTestWorkers", 0)]
         [TestCase("--debug", "DebugTests", true)]
         [TestCase("--pause", "PauseBeforeRun", true)]
+        [TestCase("--params:X=5;Y=7", "TestParameters", "X=5;Y=7")]
 #if DEBUG
         [TestCase("--debug-agent", "DebugAgent", true)]
 #endif

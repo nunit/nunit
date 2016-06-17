@@ -198,6 +198,11 @@ namespace NUnit.Common
         /// </summary>
         public const string DefaultTestNamePattern = "DefaultTestNamePattern";
 
+        /// <summary>
+        /// Parameters to be passed on to the test
+        /// </summary>
+        public const string TestParameters = "TestParameters";
+
         #endregion
 
         #region Internal Settings - Used only within the engine
