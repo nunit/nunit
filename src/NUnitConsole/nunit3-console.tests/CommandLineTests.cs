@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.IO;
 using System.Reflection;
 using NUnit.Common;
@@ -206,6 +207,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--work")]
         [TestCase("--trace")]
         [TestCase("--test-name-format")]
+        [TestCase("--params")]
         public void MissingValuesAreReported(string option)
         {
             ConsoleOptions options = new ConsoleOptions(option + "=");
@@ -544,6 +546,64 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("--testlist=" + testListPath);
             Assert.That(options.errorMessages, Is.Empty);
             Assert.That(options.TestList, Is.EqualTo(new[] {"AmazingTest"}));
+        }
+
+        #endregion
+
+        #region Test Parameters
+
+        [Test]
+        public void SingleTestParameter()
+        {
+            var options = new ConsoleOptions("--params=X=5");
+            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.TestParameters, Is.EqualTo("X=5"));
+        }
+
+        [Test]
+        public void TwoTestParametersInOneOption()
+        {
+            var options = new ConsoleOptions("--params:X=5;Y=7");
+            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7"));
+        }
+
+        [Test]
+        public void TwoTestParametersInSeparateOptions()
+        {
+            var options = new ConsoleOptions("-p:X=5", "-p:Y=7");
+            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7"));
+        }
+
+        [Test]
+        public void ThreeTestParametersInTwoOptions()
+        {
+            var options = new ConsoleOptions("--params:X=5;Y=7", "-p:Z=3");
+            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7;Z=3"));
+        }
+
+        [Test]
+        public void ParameterWithoutEqualSignIsInvalid()
+        {
+            var options = new ConsoleOptions("--params=X5");
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void DisplayTestParameters()
+        {
+            if (TestContext.Parameters.Count == 0)
+            {
+                Console.WriteLine("No Test Parameters were passed");
+                return;
+            }
+
+            Console.WriteLine("Test Parameters---");
+
+            foreach (var name in TestContext.Parameters.Names)
+                Console.WriteLine("   Name: {0} Value: {1}", name, TestContext.Parameters[name]);
         }
 
         #endregion

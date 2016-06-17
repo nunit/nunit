@@ -450,6 +450,10 @@ namespace NUnit.Framework.Internal.Execution
 
             if (Completed != null)
                 Completed(this, EventArgs.Empty);
+
+            //Clear references to test objects to reduce memory usage
+            Context.TestObject = null;
+            Test.Fixture = null;
         }
 
 #endregion

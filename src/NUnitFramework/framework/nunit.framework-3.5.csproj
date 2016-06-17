@@ -431,6 +431,7 @@
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
+    <Compile Include="TestParameters.cs" />
     <Compile Include="Throws.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />

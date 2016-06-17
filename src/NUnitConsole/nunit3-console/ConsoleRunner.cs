@@ -383,6 +383,9 @@ namespace NUnit.ConsoleRunner
             if (options.DefaultTestNamePattern != null)
                 package.AddSetting(PackageSettings.DefaultTestNamePattern, options.DefaultTestNamePattern);
 
+            if (options.TestParameters != null)
+                package.AddSetting(PackageSettings.TestParameters, options.TestParameters);
+
             return package;
         }
 
