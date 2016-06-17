@@ -181,7 +181,7 @@ namespace NUnit.Engine.Services
                     domainName = _domain.FriendlyName;
 
                     // Uncomment to simulate an error in unloading
-                    //throw new Exception("Testing");
+                    //throw new Exception("Testing: simulated unload error");
 
                     // Uncomment to simulate a timeout while unloading
                     //while (true) ;
