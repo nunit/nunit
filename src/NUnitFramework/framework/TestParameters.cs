@@ -28,13 +28,23 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Gets a flag indicating whether a parameter with the specified name exists.N
+        /// </summary>
+        /// <param name="name">Name of the parameter</param>
+        /// <returns>True if it exists, otherwise false</returns>
+        public bool Exists(string name)
+        {
+            return _parameters.ContainsKey(name);
+        }
+
+        /// <summary>
         /// Indexer provides access to the internal dictionary
         /// </summary>
         /// <param name="name">Name of the parameter</param>
         /// <returns>Value of the parameter or null if not present</returns>
         public string this[string name]
         {
-            get { return _parameters.ContainsKey(name) ? _parameters[name] : null; }
+            get { return Get(name); }
         }
 
         /// <summary>
@@ -44,7 +54,7 @@ namespace NUnit.Framework
         /// <returns>Value of the parameter or null if not present</returns>
         public string Get(string name)
         {
-            return this[name];
+            return Exists(name) ? _parameters[name] : null;
         }
 
         /// <summary>
@@ -55,29 +65,20 @@ namespace NUnit.Framework
         /// <returns>Value of the parameter or default value if not present</returns>
         public string Get(string name, string defaultValue)
         {
-            return this[name] ?? defaultValue;
+            return Get(name) ?? defaultValue;
         }
 
         /// <summary>
-        /// Get the int value of a parameter or zero
+        /// Get the value of a parameter or return a default
         /// </summary>
-        /// <param name="name">Name of the parameter</param>
-        /// <returns>Value of the parameter or default value if not present</returns>
-        public int GetInt(string name)
-        {
-            return GetInt(name, 0);
-        }
-
-        /// <summary>
-        /// Get the int value of a parameter or a default int
-        /// </summary>
+        /// <typeparam name="T">The return Type</typeparam>
         /// <param name="name">Name of the parameter</param>
         /// <param name="defaultValue">Default value of the parameter</param>
         /// <returns>Value of the parameter or default value if not present</returns>
-        public int GetInt(string name, int defaultValue)
+        public T Get<T>(string name, T defaultValue)
         {
-            string val = this[name];
-            return val != null ? int.Parse(val) : defaultValue;
+            string val = Get(name);
+            return val != null ? (T)Convert.ChangeType(val, typeof(T), null) : defaultValue;
         }
 
         /// <summary>
