@@ -38,7 +38,7 @@ namespace NUnit.Engine.Extensibility
 
 
         /// <summary>
-        /// Construct an ExtensionNode
+        /// Construct an ExtensionNode supplying the assembly path and type name.
         /// </summary>
         /// <param name="assemblyPath">The path to the assembly where this extension is found.</param>
         /// <param name="typeName">The full name of the Type of the extension object.</param>

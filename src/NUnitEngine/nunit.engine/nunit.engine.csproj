@@ -135,6 +135,7 @@
     <Compile Include="Runners\TestEventDispatcher.cs" />
     <Compile Include="Runners\TestExecutionTask.cs" />
     <Compile Include="RuntimeType.cs" />
+    <Compile Include="Services\ExtensionAssembly.cs" />
     <Compile Include="Services\ExtensionService.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
