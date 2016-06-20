@@ -131,6 +131,7 @@ namespace NUnit.Engine.Runners
             {
                 log.Warning("Failed to unload the remote runner. {0}", e.Message);
                 _remoteRunner = null;
+                throw;
             }
         }
 
