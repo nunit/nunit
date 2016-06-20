@@ -707,7 +707,8 @@ Task("PackageNuGet")
         });
         NuGetPack("nuget/extensions/teamcity-event-listener.nuspec", new NuGetPackSettings()
         {
-            Version = packageVersion,
+		    // The teamcity-event-listener extension uses its own versioning
+            Version = "1.0.0" + dbgSuffix,
             BasePath = currentImageDir,
             OutputDirectory = PACKAGE_DIR,
             NoPackageAnalysis = true

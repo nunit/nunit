@@ -40,6 +40,7 @@ namespace NUnit.Engine.Services
     public class ExtensionService : Service, IExtensionService
     {
         static Logger log = InternalTrace.GetLogger(typeof(ExtensionService));
+        static readonly Version ENGINE_VERSION = typeof(TestEngine).Assembly.GetName().Version;
 
         private List<ExtensionPoint> _extensionPoints = new List<ExtensionPoint>();
         private Dictionary<string, ExtensionPoint> _pathIndex = new Dictionary<string, ExtensionPoint>();
@@ -378,61 +379,65 @@ namespace NUnit.Engine.Services
             {
                 CustomAttribute extensionAttr = type.GetAttribute("NUnit.Engine.Extensibility.ExtensionAttribute");
 
-                if (extensionAttr != null)
+                if (extensionAttr == null)
+                    continue;
+
+                object versionArg = extensionAttr.GetNamedArgument("EngineVersion");
+                if (versionArg != null && new Version((string)versionArg) > ENGINE_VERSION)
+                    continue;
+
+                var node = new ExtensionNode(assembly.FilePath, type.FullName);
+                node.Path = extensionAttr.GetNamedArgument("Path") as string;
+                node.Description = extensionAttr.GetNamedArgument("Description") as string;
+
+                object enabledArg = extensionAttr.GetNamedArgument("Enabled");
+                node.Enabled = enabledArg != null
+                    ? (bool)enabledArg : true;
+
+                log.Info("  Found ExtensionAttribute on Type " + type.Name);
+
+                foreach (var attr in type.GetAttributes("NUnit.Engine.Extensibility.ExtensionPropertyAttribute"))
                 {
-                    var node = new ExtensionNode(assembly.FilePath, type.FullName);
-                    node.Path = extensionAttr.GetNamedArgument("Path") as string;
-                    node.Description = extensionAttr.GetNamedArgument("Description") as string;
+                    string name = attr.ConstructorArguments[0].Value as string;
+                    string value = attr.ConstructorArguments[1].Value as string;
 
-                    object enabledArg = extensionAttr.GetNamedArgument("Enabled");
-                    node.Enabled = enabledArg != null
-                       ? (bool)enabledArg : true;
-
-                    log.Info("  Found ExtensionAttribute on Type " + type.Name);
-
-                    foreach (var attr in type.GetAttributes("NUnit.Engine.Extensibility.ExtensionPropertyAttribute"))
+                    if (name != null && value != null)
                     {
-                        string name = attr.ConstructorArguments[0].Value as string;
-                        string value = attr.ConstructorArguments[1].Value as string;
-
-                        if (name != null && value != null)
-                        {
-                            node.AddProperty(name, value);
-                            log.Info("        ExtensionProperty {0} = {1}", name, value);
-                        }
+                        node.AddProperty(name, value);
+                        log.Info("        ExtensionProperty {0} = {1}", name, value);
                     }
-
-                    _extensions.Add(node);
-
-                    ExtensionPoint ep;
-                    if (node.Path == null)
-                    {
-                        ep = DeduceExtensionPointFromType(type);
-                        if (ep == null)
-                        {
-                            string msg = string.Format(
-                                "Unable to deduce ExtensionPoint for Type {0}. Specify Path on ExtensionAttribute to resolve.",
-                                type.FullName);
-                            throw new NUnitEngineException(msg);
-                        }
-
-                        node.Path = ep.Path;
-                    }
-                    else
-                    {
-                        ep = GetExtensionPoint(node.Path);
-                        if (ep == null)
-                        {
-                            string msg = string.Format(
-                                "Unable to locate ExtensionPoint for Type {0}. The Path {1} cannot be found.",
-                                type.FullName,
-                                node.Path);
-                            throw new NUnitEngineException(msg);
-                        }
-                    }
-
-                    ep.Install(node);
                 }
+
+                _extensions.Add(node);
+
+                ExtensionPoint ep;
+                if (node.Path == null)
+                {
+                    ep = DeduceExtensionPointFromType(type);
+                    if (ep == null)
+                    {
+                        string msg = string.Format(
+                            "Unable to deduce ExtensionPoint for Type {0}. Specify Path on ExtensionAttribute to resolve.",
+                            type.FullName);
+                        throw new NUnitEngineException(msg);
+                    }
+
+                    node.Path = ep.Path;
+                }
+                else
+                {
+                    ep = GetExtensionPoint(node.Path);
+                    if (ep == null)
+                    {
+                        string msg = string.Format(
+                            "Unable to locate ExtensionPoint for Type {0}. The Path {1} cannot be found.",
+                            type.FullName,
+                            node.Path);
+                        throw new NUnitEngineException(msg);
+                    }
+                }
+
+                ep.Install(node);
             }
         }
 
