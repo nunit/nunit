@@ -99,27 +99,8 @@ namespace NUnit.Engine.Services
             if (version < otherVersion)
                 return false;
 
-            // Versions are equal, check for a nuget package version.
-            
-            // Override only if this one was specified exactly while the other wasn't
+            // Versions are equal, override only if this one was specified exactly while the other wasn't
             return !FromWildCard && other.FromWildCard;
         }
-
-        //private bool TryGetNugetPackageVersion(out version)
-        //{
-        //    var dir = new DirectoryInfo(Path.GetDirectoryName(FilePath));
-        //    if (dir.Name != "tools")
-        //        return false;
-
-        //    dir = dir.Parent;
-        //    if (dir == null)
-        //        return false;
-
-        //    var packages = dir.GetFiles("*.nupkg");
-        //    if (packages.Length != 1)
-        //        return false;
-
-        //    return packages[0].FullName;
-        //}
     }
 }
