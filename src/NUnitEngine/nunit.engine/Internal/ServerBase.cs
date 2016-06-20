@@ -100,8 +100,16 @@ namespace NUnit.Engine.Internal
 
                 if ( this.channel != null )
                 {
-                    ChannelServices.UnregisterChannel( this.channel );
-                    this.channel = null;
+                    try
+                    {
+                        ChannelServices.UnregisterChannel(this.channel);
+                        this.channel = null;
+                    }
+                    catch (RemotingException)
+                    {
+                        // Mono 4.4 appears to unregister the channel itself
+                        // so don't do anything here.
+                    }
                 }
 
                 Monitor.PulseAll( theLock );
