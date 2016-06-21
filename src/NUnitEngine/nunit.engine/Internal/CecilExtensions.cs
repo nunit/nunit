@@ -41,18 +41,8 @@ namespace NUnit.Engine.Internal
 
             foreach (CustomAttribute attr in type.CustomAttributes)
             {
-                var attrType = attr.AttributeType;
-                do
-                {
-                    if (attrType.FullName == fullName)
-                    {
-                        attributes.Add(attr);
-                        break;
-                    }
-
-                    attrType = attrType.Resolve().BaseType;
-                } 
-                while (attrType != null && attrType.FullName != "System.Object");
+                if (attr.AttributeType.FullName == fullName)
+                    attributes.Add(attr);
             }
 
             return attributes;
@@ -62,16 +52,8 @@ namespace NUnit.Engine.Internal
         {
             foreach (CustomAttribute attr in type.CustomAttributes)
             {
-                var attrType = attr.AttributeType;
-                while (true)
-                {
-                    if (attrType.FullName == fullName)
-                        return attr;
-
-                    attrType = attrType.Resolve().BaseType;
-                    if (attrType == null || attrType.FullName == "System.Object")
-                        break;
-                }
+                if (attr.AttributeType.FullName == fullName)
+                    return attr;
             }
 
             return null;

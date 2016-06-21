@@ -41,6 +41,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\EngineVersion.cs">
+      <Link>Properties\EngineVersion.cs</Link>
+    </Compile>
     <Compile Include="TestEventAdapter.cs" />
     <Compile Include="XmlExtensions.cs" />
     <Compile Include="NUnit2FrameworkDriver.cs" />

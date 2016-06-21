@@ -57,5 +57,10 @@ namespace NUnit.Engine.Extensibility
         /// </summary>
         /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
         public bool Enabled { get; set; }
+
+        /// <summary>
+        /// The minimum Engine version for which this extension is designed
+        /// </summary>
+        public string EngineVersion { get; set; }
     }
 }
