@@ -35,16 +35,16 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionOrderedConstraint : CollectionConstraint
     {
-        private ComparisonAdapter comparer = ComparisonAdapter.Default;
-        private string comparerName;
-        private string propertyName;
-        private bool descending;
+        private ComparisonAdapter _comparer = ComparisonAdapter.Default;
+        private string _comparerName;
+        private string _propertyName;
+        private OrderDirection _direction = OrderDirection.Unspecified;
 
-        /// <summary>
-        /// Construct a CollectionOrderedConstraint
-        /// </summary>
-        public CollectionOrderedConstraint()
+        enum OrderDirection
         {
+            Unspecified,
+            Ascending,
+            Descending
         }
 
         /// <summary> 
@@ -56,13 +56,29 @@ namespace NUnit.Framework.Constraints
         public override string DisplayName { get { return "Ordered"; } }
 
         ///<summary>
+        /// If used performs a default ascending comparison
+        ///</summary>
+        public CollectionOrderedConstraint Ascending
+        {
+            get
+            {
+                if (_direction != OrderDirection.Unspecified)
+                    throw new InvalidOperationException("Only one directional modifier may be used");
+                _direction = OrderDirection.Ascending;
+                return this;
+            }
+        }
+
+        ///<summary>
         /// If used performs a reverse comparison
         ///</summary>
         public CollectionOrderedConstraint Descending
         {
             get
             {
-                descending = true;
+                if (_direction != OrderDirection.Unspecified)
+                    throw new InvalidOperationException("Only one directional modifier may be used");
+                _direction = OrderDirection.Descending;
                 return this;
             }
         }
@@ -72,8 +88,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint Using(IComparer comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
-            this.comparerName = comparer.GetType().FullName;
+            if (_comparerName != null)
+                throw new InvalidOperationException("Only one Using modifier may be used");
+            _comparer = ComparisonAdapter.For(comparer);
+            _comparerName = comparer.GetType().FullName;
             return this;
         }
 
@@ -82,8 +100,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint Using<T>(IComparer<T> comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
-            this.comparerName = comparer.GetType().FullName;
+            if (_comparerName != null)
+                throw new InvalidOperationException("Only one Using modifier may be used");
+            _comparer = ComparisonAdapter.For(comparer);
+            _comparerName = comparer.GetType().FullName;
             return this;
         }
 
@@ -92,8 +112,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint Using<T>(Comparison<T> comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
-            this.comparerName = comparer.GetType().FullName;
+            if (_comparerName != null)
+                throw new InvalidOperationException("Only one Using modifier may be used");
+            _comparer = ComparisonAdapter.For(comparer);
+            _comparerName = comparer.GetType().FullName;
             return this;
         }
 
@@ -103,7 +125,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint By(string propertyName)
         {
-            this.propertyName = propertyName;
+            _propertyName = propertyName;
             return this;
         }
 
@@ -115,11 +137,11 @@ namespace NUnit.Framework.Constraints
         {
             get 
             { 
-                string desc = propertyName == null
+                string desc = _propertyName == null
                     ? "collection ordered"
-                    : "collection ordered by "+ MsgUtils.FormatValue(propertyName);
+                    : "collection ordered by "+ MsgUtils.FormatValue(_propertyName);
 
-                if (descending)
+                if (_direction == OrderDirection.Descending)
                     desc += ", descending";
 
                 return desc;
@@ -141,9 +163,9 @@ namespace NUnit.Framework.Constraints
                 if (obj == null)
                     throw new ArgumentNullException("actual", "Null value at index " + index.ToString());
 
-                if (this.propertyName != null)
+                if (_propertyName != null)
                 {
-                    PropertyInfo prop = obj.GetType().GetProperty(propertyName);
+                    PropertyInfo prop = obj.GetType().GetProperty(_propertyName);
                     objToCompare = prop.GetValue(obj, null);
                     if (objToCompare == null)
                         throw new ArgumentNullException("actual", "Null property value at index " + index.ToString());
@@ -152,11 +174,11 @@ namespace NUnit.Framework.Constraints
                 if (previous != null)
                 {
                     //int comparisonResult = comparer.Compare(al[i], al[i + 1]);
-                    int comparisonResult = comparer.Compare(previous, objToCompare);
+                    int comparisonResult = _comparer.Compare(previous, objToCompare);
 
-                    if (descending && comparisonResult < 0)
+                    if (_direction == OrderDirection.Descending && comparisonResult < 0)
                         return false;
-                    if (!descending && comparisonResult > 0)
+                    if (_direction != OrderDirection.Descending && comparisonResult > 0)
                         return false;
                 }
 
@@ -175,12 +197,12 @@ namespace NUnit.Framework.Constraints
         {
             StringBuilder sb = new StringBuilder("<ordered");
 
-            if (propertyName != null)
-                sb.Append("by " + propertyName);
-            if (descending)
+            if (_propertyName != null)
+                sb.Append("by " + _propertyName);
+            if (_direction == OrderDirection.Descending)
                 sb.Append(" descending");
-            if (comparerName != null)
-                sb.Append(" " + comparerName);
+            if (_comparerName != null)
+                sb.Append(" " + _comparerName);
 
             sb.Append(">");
 
