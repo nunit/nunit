@@ -71,9 +71,8 @@ var EXECUTABLE_FRAMEWORK_TESTS = "nunit.framework.tests.exe";
 var NUNITLITE_TESTS = "nunitlite.tests.dll";
 var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 var ENGINE_TESTS = "nunit.engine.tests.dll";
-var PORTABLE_AGENT_TESTS = "agents/nunit.portable.agent.tests.dll";
 var ADDIN_TESTS = "addins/tests/addin-tests.dll";
-var V2_PORTABLE_AGENT_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
+var V2_DRIVER_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
 var CONSOLE_TESTS = "nunit3-console.tests.dll";
 
 // Packages
@@ -256,13 +255,6 @@ Task("BuildEngine")
         // Engine tests
         BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration);
 
-        // Driver and tests
-        if(IsRunningOnWindows())
-        {
-            BuildProject("./src/NUnitEngine/Portable/nunit.portable.agent/nunit.portable.agent.csproj", configuration);
-            BuildProject("./src/NUnitEngine/Portable/nunit.portable.agent.tests/nunit.portable.agent.tests.csproj", configuration);
-        }
-
         // Addins
         BuildProject("./src/NUnitEngine/Addins/nunit-project-loader/nunit-project-loader.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);
@@ -403,14 +395,6 @@ Task("TestEngine")
         RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine", ref ErrorDetail);
     });
 
-Task("TestDriver")
-    .IsDependentOn("Build")
-    .WithCriteria(IsRunningOnWindows)
-    .Does(() =>
-    {
-        RunTest(NUNIT3_CONSOLE, BIN_DIR, PORTABLE_AGENT_TESTS, "TestDriver", ref ErrorDetail);
-    });
-
 Task("TestAddins")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .IsDependentOn("Build")
@@ -424,7 +408,7 @@ Task("TestV2Driver")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_PORTABLE_AGENT_TESTS,"TestV2Driver", ref ErrorDetail);
+        RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS,"TestV2Driver", ref ErrorDetail);
     });
 
 Task("TestConsole")
@@ -488,9 +472,7 @@ var BinFiles = new FilePath[]
     "addins/tests/vs-project-loader.dll",
     "addins/v2-tests/nunit.framework.dll",
     "addins/v2-tests/nunit.framework.xml",
-    "addins/v2-tests/nunit.v2.driver.tests.dll",
-    "agents/nunit.portable.agent.dll",
-    "agents/nunit.portable.agent.xml"
+    "addins/v2-tests/nunit.v2.driver.tests.dll"
 };
 
 // Not all of these are present in every framework
@@ -690,15 +672,6 @@ Task("PackageNuGet")
             NoPackageAnalysis = true
         });
         NuGetPack("nuget/extensions/nunit.v2.driver.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        // Package the portable agent
-        NuGetPack("nuget/engine/nunit.portable.agent.nuspec", new NuGetPackSettings()
         {
             Version = packageVersion,
             BasePath = currentImageDir,
@@ -907,7 +880,6 @@ Task("BuildAllFrameworks")
 Task("TestAll")
     .IsDependentOn("TestAllFrameworks")
     .IsDependentOn("TestEngine")
-    .IsDependentOn("TestDriver")
     .IsDependentOn("TestAddins")
     .IsDependentOn("TestV2Driver")
     .IsDependentOn("TestConsole");
@@ -916,7 +888,6 @@ Task("TestAll")
 Task("Test")
     .IsDependentOn("TestAllFrameworks")
     .IsDependentOn("TestEngine")
-    .IsDependentOn("TestDriver")
     .IsDependentOn("TestAddins")
     .IsDependentOn("TestV2Driver")
     .IsDependentOn("TestConsole");
