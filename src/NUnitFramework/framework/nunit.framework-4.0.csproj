@@ -52,15 +52,6 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\AttributeHelper.cs">
-      <Link>Compatibility\AttributeHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\Path.cs">
-      <Link>Compatibility\Path.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\ReflectionExtensions.cs">
-      <Link>Compatibility\ReflectionExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
@@ -172,7 +163,9 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
+    <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
+    <Compile Include="Compatibility\ReflectionExtensions.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
