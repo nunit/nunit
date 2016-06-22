@@ -17,7 +17,7 @@ var ErrorDetail = new List<string>();
 //////////////////////////////////////////////////////////////////////
 
 var version = "3.4.0";
-var modifier = "-alpha-1";
+var modifier = "";
 
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
 
