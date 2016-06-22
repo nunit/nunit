@@ -90,7 +90,7 @@ namespace NUnit.Engine.Services.Tests
         {
             var configFileName = "nunit.engine.tests.dll.config";
             var expectedPath = Path.Combine(TestContext.CurrentContext.TestDirectory, configFileName);
-            Assert.That(expectedPath, Is.EqualTo(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile));
+            Assert.That(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile, Is.EqualTo(expectedPath));
         }
 
         [Test]

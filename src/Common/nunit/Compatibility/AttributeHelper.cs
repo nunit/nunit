@@ -23,13 +23,7 @@
 using System;
 using System.Reflection;
 
-#if NUNIT_ENGINE
-namespace NUnit.Engine.Compatibility
-#elif NUNIT_FRAMEWORK
-namespace NUnit.Framework.Compatibility
-#else
-namespace NUnit.Common.Compatibility
-#endif
+namespace NUnit.Compatibility
 {
     /// <summary>
     /// Provides a platform-independent methods for getting attributes

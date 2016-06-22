@@ -144,10 +144,8 @@ using System.Text.RegularExpressions;
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if NUNIT_ENGINE
-using NUnit.Engine.Compatibility;
-#elif PORTABLE
-using NUnit.Framework.Compatibility;
+#if PORTABLE
+using NUnit.Compatibility;
 #else
 using System.Security.Permissions;
 #endif

@@ -87,8 +87,8 @@ namespace NUnit.Engine.Internal.Tests
 		}
 
 		[Test]
-		[Platform(Exclude="Linux")]
-		public void RelativePath()
+		[Platform(Exclude="Linux,UNIX,MacOSX")]
+        public void RelativePath()
 		{
 			Assert.AreEqual( @"folder2\folder3", PathUtils.RelativePath( 
 				@"c:\folder1", @"c:\folder1\folder2\folder3" ) );

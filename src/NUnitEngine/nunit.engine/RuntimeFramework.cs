@@ -593,14 +593,16 @@ namespace NUnit.Engine
                     frameworks.Add(framework);
                 }
 
-                if (File.Exists(Path.Combine(monoPrefix, "lib/mono/2.0/mscorlib.dll")))
+                if (File.Exists(Path.Combine(monoPrefix, "lib/mono/2.0/mscorlib.dll")) ||
+                    File.Exists(Path.Combine(monoPrefix, "lib/mono/2.0-api/mscorlib.dll")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(2, 0, 50727));
                     framework.DisplayName = string.Format(displayFmt, "2.0");
                     frameworks.Add(framework);
                 }
 
-                if (Directory.Exists(Path.Combine(monoPrefix, "lib/mono/3.5")))
+                if (Directory.Exists(Path.Combine(monoPrefix, "lib/mono/3.5")) ||
+                    Directory.Exists(Path.Combine(monoPrefix, "lib/mono/3.5-api")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(2, 0, 50727));
                     framework.FrameworkVersion = new Version(3,5);
@@ -608,14 +610,16 @@ namespace NUnit.Engine
                     frameworks.Add(framework);
                 }
 
-                if (File.Exists(Path.Combine(monoPrefix, "lib/mono/4.0/mscorlib.dll")))
+                if (File.Exists(Path.Combine(monoPrefix, "lib/mono/4.0/mscorlib.dll")) ||
+                    File.Exists(Path.Combine(monoPrefix, "lib/mono/4.0-api/mscorlib.dll")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(4, 0, 30319));
                     framework.DisplayName = string.Format(displayFmt, "4.0");
                     frameworks.Add(framework);
                 }
 
-                if (File.Exists(Path.Combine(monoPrefix, "lib/mono/4.5/mscorlib.dll")))
+                if (File.Exists(Path.Combine(monoPrefix, "lib/mono/4.5/mscorlib.dll")) ||
+                    File.Exists(Path.Combine(monoPrefix, "lib/mono/4.5-api/mscorlib.dll")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(4, 0, 30319));
                     framework.FrameworkVersion = new Version(4,5);

@@ -49,9 +49,6 @@ namespace NUnit.Engine.Services
 
         private ISettings _settingsService;
 
-        // Default settings used if SettingsService is unavailable
-        private string _shadowCopyPath = Path.Combine(NUnitConfiguration.EngineDirectory, "ShadowCopyCache");
-
         #region Create and Unload Domains
         /// <summary>
         /// Construct an application domain for running a test package
@@ -127,7 +124,6 @@ namespace NUnit.Engine.Services
             {
                 setup.ShadowCopyFiles = "true";
                 setup.ShadowCopyDirectories = setup.ApplicationBase;
-                setup.CachePath = GetCachePath();
             }
             else
                 setup.ShadowCopyFiles = "false";
@@ -145,62 +141,61 @@ namespace NUnit.Engine.Services
         #region Nested DomainUnloader Class
         class DomainUnloader
         {
-            private Thread thread;
-            private AppDomain domain;
+            private Thread _unloadThread;
+            private AppDomain _domain;
+            private Exception _unloadException;
 
             public DomainUnloader(AppDomain domain)
             {
-                this.domain = domain;
+                _domain = domain;
             }
 
             public void Unload()
             {
-                string domainName;
-                try
+                _unloadThread = new Thread(new ThreadStart(UnloadOnThread));
+
+                _unloadThread.Start();
+
+                if (!_unloadThread.Join(30000))
                 {
-                    domainName = "UNKNOWN";//domain.FriendlyName;
-                }
-                catch (AppDomainUnloadedException)
-                {
-                    return;
+                    string msg = "Unable to unload AppDomain, Unload thread timed out";
+
+                    log.Error(msg);
+                    _unloadThread.Abort();
+
+                    throw new NUnitEngineException(msg);
                 }
 
-                log.Info("Unloading AppDomain " + domainName);
-
-                thread = new Thread(new ThreadStart(UnloadOnThread));
-                thread.Start();
-                if (!thread.Join(30000))
-                {
-                    log.Error("Unable to unload AppDomain {0}, Unload thread timed out", domainName);
-                    thread.Abort();
-                }
+                if (_unloadException != null)
+                    throw new NUnitEngineException("Exception encountered unloading AppDomain", _unloadException);
             }
 
             private void UnloadOnThread()
             {
                 bool shadowCopy = false;
-                string cachePath = null;
                 string domainName = "UNKNOWN";               
 
                 try
                 {
-                    shadowCopy = domain.ShadowCopyFiles;
-                    cachePath = domain.SetupInformation.CachePath;
-                    domainName = domain.FriendlyName;
+                    shadowCopy = _domain.ShadowCopyFiles;
+                    domainName = _domain.FriendlyName;
 
-                    AppDomain.Unload(domain);
+                    // Uncomment to simulate an error in unloading
+                    //throw new Exception("Testing: simulated unload error");
+
+                    // Uncomment to simulate a timeout while unloading
+                    //while (true) ;
+
+                    AppDomain.Unload(_domain);
                 }
                 catch (Exception ex)
                 {
+                    _unloadException = ex;
+
                     // We assume that the tests did something bad and just leave
                     // the orphaned AppDomain "out there". 
                     // TODO: Something useful.
                     log.Error("Unable to unload AppDomain " + domainName, ex);
-                }
-                finally
-                {
-                    if (shadowCopy && cachePath != null)
-                        DeleteCacheDir(new DirectoryInfo(cachePath));
                 }
             }
         }
@@ -270,84 +265,6 @@ namespace NUnit.Engine.Services
 
             string ext = Path.GetExtension(fileName).ToLower();
             return ext == ".dll" || ext == ".exe";
-        }
-
-        /// <summary>
-        /// Get the location for caching and delete any old cache info
-        /// </summary>
-        private string GetCachePath()
-        {
-            int processId = Process.GetCurrentProcess().Id;
-            long ticks = DateTime.Now.Ticks;
-            string cachePath = Path.Combine( _shadowCopyPath, processId.ToString() + "_" + ticks.ToString() ); 
-                
-            try 
-            {
-                DirectoryInfo dir = new DirectoryInfo(cachePath);		
-                if(dir.Exists) dir.Delete(true);
-            }
-            catch( Exception ex)
-            {
-                throw new ApplicationException( 
-                    string.Format( "Invalid cache path: {0}",cachePath ),
-                    ex );
-            }
-
-            return cachePath;
-        }
-
-        /// <summary>
-        /// Helper method to delete the cache dir. This method deals 
-        /// with a bug that occurs when files are marked read-only
-        /// and deletes each file separately in order to give better 
-        /// exception information when problems occur.
-        /// 
-        /// TODO: This entire method is problematic. Should we be doing it?
-        /// </summary>
-        /// <param name="cacheDir"></param>
-        private static void DeleteCacheDir( DirectoryInfo cacheDir )
-        {
-            //			Debug.WriteLine( "Modules:");
-            //			foreach( ProcessModule module in Process.GetCurrentProcess().Modules )
-            //				Debug.WriteLine( module.ModuleName );
-            
-
-            if(cacheDir.Exists)
-            {
-                foreach( DirectoryInfo dirInfo in cacheDir.GetDirectories() )
-                    DeleteCacheDir( dirInfo );
-
-                foreach( FileInfo fileInfo in cacheDir.GetFiles() )
-                {
-                    fileInfo.Attributes = FileAttributes.Normal;
-                    try 
-                    {
-                        fileInfo.Delete();
-                    }
-                    catch( Exception ex )
-                    {
-                        Debug.WriteLine( string.Format( 
-                            "Error deleting {0}, {1}", fileInfo.Name, ex.Message ) );
-                    }
-                }
-
-                cacheDir.Attributes = FileAttributes.Normal;
-
-                try
-                {
-                    cacheDir.Delete();
-                }
-                catch( Exception ex )
-                {
-                    Debug.WriteLine( string.Format( 
-                        "Error deleting {0}, {1}", cacheDir.Name, ex.Message ) );
-                }
-            }
-        }
-
-        private bool IsTestDomain(AppDomain domain)
-        {
-            return domain.FriendlyName.StartsWith( "test-domain-" );
         }
 
         public static string GetCommonAppBase(IList<TestPackage> packages)
@@ -425,11 +342,6 @@ namespace NUnit.Engine.Services
             return sb.Length == 0 ? null : sb.ToString();
         }
 
-        public void DeleteShadowCopyPath()
-        {
-            if ( Directory.Exists( _shadowCopyPath ) )
-                Directory.Delete( _shadowCopyPath, true );
-        }
         #endregion
 
         #region Service Overrides
@@ -441,12 +353,6 @@ namespace NUnit.Engine.Services
                 // DomainManager has a soft dependency on the SettingsService.
                 // If it's not available, default values are used.
                 _settingsService = ServiceContext.GetService<ISettings>();
-                if (_settingsService != null)
-                {
-                    var pathSetting = _settingsService.GetSetting("Options.TestLoader.ShadowCopyPath", "");
-                    if (pathSetting != "")
-                        _shadowCopyPath = Environment.ExpandEnvironmentVariables(pathSetting);
-                }
 
                 Status = ServiceStatus.Started;
             }

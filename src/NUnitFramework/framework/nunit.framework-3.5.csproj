@@ -56,26 +56,11 @@
     <Compile Include="..\..\Common\nunit\Compatibility\AttributeHelper.cs">
       <Link>Compatibility\AttributeHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\BindingFlags.cs">
-      <Link>Compatibility\BindingFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\ICallbackEventHandler.cs">
-      <Link>Compatibility\ICallbackEventHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\LongLivedMarshalByRefObject.cs">
-      <Link>Compatibility\LongLivedMarshalByRefObject.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Compatibility\Path.cs">
       <Link>Compatibility\Path.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Compatibility\ReflectionExtensions.cs">
       <Link>Compatibility\ReflectionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\SerializableAttribute.cs">
-      <Link>Compatibility\SerializableAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Compatibility\Stopwatch.cs">
-      <Link>Compatibility\Stopwatch.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Env.cs">
       <Link>Env.cs</Link>
@@ -122,6 +107,7 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
+    <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\ConcurrentQueue.cs" />
     <Compile Include="Compatibility\System.Collections.Concurrent\IProducerConsumerCollection.cs" />
     <Compile Include="Compatibility\System.Collections\CollectionDebuggerView.cs" />
@@ -445,6 +431,7 @@
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
+    <Compile Include="TestParameters.cs" />
     <Compile Include="Throws.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />

@@ -70,7 +70,7 @@ namespace NUnit.Engine.Services.Tests
             _serviceClass.FindExtensionPoints(typeof(TestEngine).Assembly);
             _serviceClass.FindExtensionPoints(typeof(ITestEngine).Assembly);
 
-            _serviceClass.FindExtensionsInAssembly(GetType().Assembly.Location, true);
+            _serviceClass.FindExtensionsInAssembly(new ExtensionAssembly(GetType().Assembly.Location, true));
         }
 
         [TestCaseSource("KNOWN_EXTENSION_POINT_PATHS")]

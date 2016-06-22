@@ -21,23 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if SILVERLIGHT
 using System;
 
-#if NUNIT_ENGINE
-namespace NUnit.Engine.Compatibility
-#elif NUNIT_FRAMEWORK
-namespace NUnit.Framework.Compatibility
-#else
-namespace NUnit.Common.Compatibility
-#endif
+namespace System.Diagnostics
 {
     /// <summary>
     /// This class is a System.Diagnostics.Stopwatch on operating systems that support it. On those that don't,
     /// it replicates the functionality at the resolution supported.
     /// </summary>
-#if !SILVERLIGHT && !PORTABLE
-    public class Stopwatch : System.Diagnostics.Stopwatch { }
-#else
     public class Stopwatch
     {
         private const long TicksPerMillisecond = 10000;
@@ -170,5 +162,5 @@ namespace NUnit.Common.Compatibility
             return 0;
         }
     }
-#endif
 }
+#endif

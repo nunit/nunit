@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Constraints;
@@ -87,6 +88,11 @@ namespace NUnit.Framework
         /// </summary>
         public static readonly TextWriter Progress = new EventListenerTextWriter("Progress", Console.Error);
 #endif
+
+        /// <summary>
+        /// TestParameters object holds parameters for the test run, if any are specified
+        /// </summary>
+        public static readonly TestParameters Parameters = new TestParameters();
 
         /// <summary>
         /// Get a representation of the current test.
@@ -458,7 +464,7 @@ namespace NUnit.Framework
 
             #endregion
         }
-        
+
         #endregion
     }
 }

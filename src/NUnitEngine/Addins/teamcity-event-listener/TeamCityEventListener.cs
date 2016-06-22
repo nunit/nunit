@@ -30,7 +30,11 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Listeners
 {
-    [Extension(Enabled = false)]
+    // Note: Setting mimimum engine version in this case is
+    // purely documentary since engines prior to 3.6 do not
+    // check the EngineVersion property and will try to 
+    // load this extension anyway.
+    [Extension(Enabled = false, EngineVersion = "3.6")]
     public class TeamCityEventListener : ITestEventListener
     {
         private readonly TextWriter _outWriter;

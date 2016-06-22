@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
@@ -33,7 +33,7 @@ using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
 
 #if PORTABLE
-using BindingFlags = NUnit.Framework.Compatibility.BindingFlags;
+using BindingFlags = NUnit.Compatibility.BindingFlags;
 #endif
 
 namespace NUnit.TestUtilities

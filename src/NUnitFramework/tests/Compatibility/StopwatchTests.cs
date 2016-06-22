@@ -21,15 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if SILVERLIGHT
+using System.Diagnostics;
 using System.Threading;
-using NUnit.Framework.Compatibility;
 
 namespace NUnit.Framework.Tests.Compatibility
 {
     [TestFixture]
     public class StopwatchTests
     {
-#if SILVERLIGHT || PORTABLE
         private const int DELAY = 100;
         private const int TOLERANCE = 50;
 
@@ -114,12 +114,6 @@ namespace NUnit.Framework.Tests.Compatibility
         {
             waitEvent.WaitOne(delay);
         }
-#else
-        [Test]
-        public void StopwatchIsDotNetStopwatch()
-        {
-            Assert.That(new NUnit.Framework.Compatibility.Stopwatch(), Is.AssignableTo<System.Diagnostics.Stopwatch>());
-        }
-#endif
     }
 }
+#endif

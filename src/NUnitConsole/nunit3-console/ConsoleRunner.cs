@@ -169,7 +169,8 @@ namespace NUnit.ConsoleRunner
                 ? _options.DisplayTestLabels.ToUpperInvariant()
                 : "ON";
 
-            XmlNode result;
+            XmlNode result = null;
+            NUnitEngineException engineException = null;
 
             try
             {
@@ -178,10 +179,14 @@ namespace NUnit.ConsoleRunner
                 using (ITestRunner runner = _engine.GetRunner(package))
                 using (var output = CreateOutputWriter())
                 {
-                    var eventHandler = new TestEventHandler(output, labels); 
+                    var eventHandler = new TestEventHandler(output, labels);
 
                     result = runner.Run(eventHandler, filter);
                 }
+            }
+            catch (NUnitEngineException ex)
+            {
+                engineException = ex;
             }
             finally
             {
@@ -189,26 +194,39 @@ namespace NUnit.ConsoleRunner
             }
 
             var writer = new ColorConsoleWriter(!_options.NoColor);
-            var reporter = new ResultReporter(result, writer, _options);
-            reporter.ReportResults();
 
-            foreach (var spec in _options.ResultOutputSpecifications)
+            if (result != null)
             {
-                var outputPath = Path.Combine(_workDirectory, spec.OutputPath);
-                GetResultWriter(spec).WriteResultFile(result, outputPath);
-                _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
-            }
+                var reporter = new ResultReporter(result, writer, _options);
+                reporter.ReportResults();
 
-            if (reporter.Summary.UnexpectedError)
-                return ConsoleRunner.UNEXPECTED_ERROR;
+                foreach (var spec in _options.ResultOutputSpecifications)
+                {
+                    var outputPath = Path.Combine(_workDirectory, spec.OutputPath);
+                    GetResultWriter(spec).WriteResultFile(result, outputPath);
+                    _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
+                }
 
-            if (reporter.Summary.InvalidAssemblies > 0)
-                return ConsoleRunner.INVALID_ASSEMBLY;
+                // Since we got a result, we display any engine exception as a warning
+                if (engineException != null)
+                    writer.WriteLine(ColorStyle.Warning, Environment.NewLine + engineException.Message);
 
-            return reporter.Summary.InvalidTestFixtures > 0
+                if (reporter.Summary.UnexpectedError)
+                    return ConsoleRunner.UNEXPECTED_ERROR;
+
+                if (reporter.Summary.InvalidAssemblies > 0)
+                    return ConsoleRunner.INVALID_ASSEMBLY;
+
+                return reporter.Summary.InvalidTestFixtures > 0
                     ? ConsoleRunner.INVALID_TEST_FIXTURE
                     : reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
+            }
 
+            // If we got here, it's because we had an exception, but check anyway
+            if (engineException != null)
+                writer.WriteLine(ColorStyle.Error, engineException.Message);
+
+            return ConsoleRunner.UNEXPECTED_ERROR;
         }
 
         private void DisplayRuntimeEnvironment(ExtendedTextWriter OutWriter)
@@ -364,6 +382,9 @@ namespace NUnit.ConsoleRunner
 
             if (options.DefaultTestNamePattern != null)
                 package.AddSetting(PackageSettings.DefaultTestNamePattern, options.DefaultTestNamePattern);
+
+            if (options.TestParameters != null)
+                package.AddSetting(PackageSettings.TestParameters, options.TestParameters);
 
             return package;
         }
