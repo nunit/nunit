@@ -35,16 +35,29 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionOrderedConstraint : CollectionConstraint
     {
+        private List<OrderingStep> _steps;
+        // The step we are currently building
+        private OrderingStep _active;
+
         private ComparisonAdapter _comparer = ComparisonAdapter.Default;
         private string _comparerName;
-        private string _propertyName;
-        private OrderDirection _direction = OrderDirection.Unspecified;
 
         enum OrderDirection
         {
             Unspecified,
             Ascending,
             Descending
+        }
+
+        /// <summary>
+        /// Construct a CollectionOrderedConstraint
+        /// </summary>
+        public CollectionOrderedConstraint()
+        {
+            _steps = new List<OrderingStep>();
+
+            // Ensure there is an active specification
+            CreateNextStep(null);
         }
 
         /// <summary> 
@@ -62,9 +75,9 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                if (_direction != OrderDirection.Unspecified)
+                if (_active.Direction != OrderDirection.Unspecified)
                     throw new InvalidOperationException("Only one directional modifier may be used");
-                _direction = OrderDirection.Ascending;
+                _active.Direction = OrderDirection.Ascending;
                 return this;
             }
         }
@@ -76,9 +89,9 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                if (_direction != OrderDirection.Unspecified)
+                if (_active.Direction != OrderDirection.Unspecified)
                     throw new InvalidOperationException("Only one directional modifier may be used");
-                _direction = OrderDirection.Descending;
+                _active.Direction = OrderDirection.Descending;
                 return this;
             }
         }
@@ -125,8 +138,24 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint By(string propertyName)
         {
-            _propertyName = propertyName;
+            if (_active.PropertyName == null)
+                _active.PropertyName = propertyName;
+            else
+                CreateNextStep(propertyName);
+
             return this;
+        }
+
+        /// <summary>
+        /// Then signals a break between two ordering steps
+        /// </summary>
+        public CollectionOrderedConstraint Then
+        {
+            get
+            {
+                CreateNextStep(null);
+                return this;
+            }
         }
 
         /// <summary>
@@ -136,15 +165,22 @@ namespace NUnit.Framework.Constraints
         public override string Description
         {
             get 
-            { 
-                string desc = _propertyName == null
-                    ? "collection ordered"
-                    : "collection ordered by "+ MsgUtils.FormatValue(_propertyName);
+            {
+                string description = "collection ordered";
 
-                if (_direction == OrderDirection.Descending)
-                    desc += ", descending";
+                int index = 0;
+                foreach (var step in _steps)
+                {
+                    if (index++ != 0) description += " then";
 
-                return desc;
+                    if (step.PropertyName != null)
+                        description += " by " + MsgUtils.FormatValue(step.PropertyName);
+
+                    if (step.Direction == OrderDirection.Descending)
+                        description += ", descending";
+                }
+
+                return description;
             }
         }
 
@@ -157,32 +193,51 @@ namespace NUnit.Framework.Constraints
         {
             object previous = null;
             int index = 0;
-            foreach (object obj in actual)
+            foreach (object current in actual)
             {
-                object objToCompare = obj;
-                if (obj == null)
+                if (current == null)
                     throw new ArgumentNullException("actual", "Null value at index " + index.ToString());
-
-                if (_propertyName != null)
-                {
-                    PropertyInfo prop = obj.GetType().GetProperty(_propertyName);
-                    objToCompare = prop.GetValue(obj, null);
-                    if (objToCompare == null)
-                        throw new ArgumentNullException("actual", "Null property value at index " + index.ToString());
-                }
 
                 if (previous != null)
                 {
-                    //int comparisonResult = comparer.Compare(al[i], al[i + 1]);
-                    int comparisonResult = _comparer.Compare(previous, objToCompare);
+                    if (_steps[0].PropertyName != null)
+                    {
+                        foreach (var step in _steps)
+                        {
+                            string propertyName = step.PropertyName;
+                            PropertyInfo previousProp = previous.GetType().GetProperty(propertyName);
+                            PropertyInfo prop = current.GetType().GetProperty(propertyName);
+                            var previousValue = previousProp.GetValue(previous, null);
+                            var currentValue = prop.GetValue(current, null);
 
-                    if (_direction == OrderDirection.Descending && comparisonResult < 0)
-                        return false;
-                    if (_direction != OrderDirection.Descending && comparisonResult > 0)
-                        return false;
+                            if (currentValue == null)
+                                throw new ArgumentException("actual", "Null property value at index " + index.ToString());
+
+                            int comparisonResult = _comparer.Compare(previousValue, currentValue);
+
+                            if (comparisonResult < 0)
+                                if (step.Direction == OrderDirection.Descending)
+                                    return false;
+                                else break;
+
+                            if (comparisonResult > 0)
+                                if (step.Direction != OrderDirection.Descending)
+                                    return false;
+                                else break;
+                        }
+                    }
+                    else
+                    {
+                        int comparisonResult = _comparer.Compare(previous, current);
+
+                        if (_active.Direction == OrderDirection.Descending && comparisonResult < 0)
+                            return false;
+                        if (_active.Direction != OrderDirection.Descending && comparisonResult > 0)
+                            return false;
+                    }
                 }
 
-                previous = objToCompare;
+                previous = current;
                 index++;
             }
 
@@ -197,10 +252,17 @@ namespace NUnit.Framework.Constraints
         {
             StringBuilder sb = new StringBuilder("<ordered");
 
-            if (_propertyName != null)
-                sb.Append("by " + _propertyName);
-            if (_direction == OrderDirection.Descending)
-                sb.Append(" descending");
+            if (_steps.Count > 0) // Should always be true
+            {
+                // For now, just using the first step
+                // TODO: Revise format and tests that depend on it
+                var step = _steps[0];
+                if (step.PropertyName != null)
+                    sb.Append("by " + step.PropertyName);
+                if (step.Direction == OrderDirection.Descending)
+                    sb.Append(" descending");
+            }
+
             if (_comparerName != null)
                 sb.Append(" " + _comparerName);
 
@@ -208,5 +270,30 @@ namespace NUnit.Framework.Constraints
 
             return sb.ToString();
         }
+
+        private void CreateNextStep(string propertyName)
+        {
+            _active = new OrderingStep(propertyName);
+            _steps.Add(_active);
+        }
+
+        #region Internal Ordering Class
+
+        /// <summary>
+        /// An Ordering represents one stage of the sort
+        /// </summary>
+        private class OrderingStep
+        {
+            public OrderingStep(string propertyName)
+            {
+                PropertyName = propertyName;
+            }
+
+            public string PropertyName { get; set; }
+
+            public OrderDirection Direction { get; set; }
+        }
+
+        #endregion
     }
 }
