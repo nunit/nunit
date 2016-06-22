@@ -1,4 +1,73 @@
-﻿NUnit 3.2.1 - April 19, 2016
+﻿NUnit 3.4 - June 25, 2016
+
+Framework
+
+ * Improvements in comparing equality using IEquatable<T>
+ * Test case names will only be truncated if the runner requests it or it is overridden on the command line
+   with the --test-name-format option 
+
+Engine
+
+ * The TeamCity event listener has been separated out into an engine extension
+ * Fixed numerous issues around thread safety of parallel test runs
+ * Additional fixes to reduce memory usage
+ * Fixes for Mono 4.4
+
+Console Runner
+
+ * There is a new --params command line option that allows you to pass parameters to your tests
+   which can be retrieved using TestContext.Parameters
+
+Issues Resolved
+
+ * 329 (CLI) Runner does not report AppDomain unloading timeout
+ * 720 Need a way to get test-specific command-line arguments at runtime
+ * 1010 Need to control engine use of extensions
+ * 1139 Nunit3 console doesn't show test output continously
+ * 1225 The --teamcity option should really be an extension
+ * 1241 Make TestDirectory accessible when TestCaseSource attributes are evaluated
+ * 1366 Classname for inherited test is not correct
+ * 1371 Support `dotnet test` in .NET CLI and .NET Core
+ * 1379 Console returns 0 for invalid fixtures
+ * 1423 SingleThreaded attribute should raise an error if a thread is required
+ * 1425 Lazy initialization of OutWriter in TestResult is not thread safe
+ * 1427 Engine extensions load old packages
+ * 1430 TestObjects are retained for lifetime of test run, causing high memory usage
+ * 1432 NUnit hangs when reporting to TeamCity
+ * 1434 TestResult class needs to be thread-safe
+ * 1435 Parallel queue creation needs to be thread-safe
+ * 1436 CurrentFramework and Current Platform need to be more thread-safe
+ * 1439 EqualConstraint does Not use Equals Override on the Expected Object
+ * 1441 Add Linq for use internally in .NET 2.0 code
+ * 1446 TestOrderAttributeTests is not public
+ * 1450 Silverlight detection doesn't work when building on 32-bit OS
+ * 1457 Set the 2.0 build to ignore missing xml dcoumentation
+ * 1463 Should TestResult.AssertCount have a public setter?
+ * 1464 TNode.EscapeInvalidXmlCharacters recreates Regex continually
+ * 1470 Make EventQueue and associated classes lock-less and thread safe
+ * 1476 Examine need for "synchronous" events in event queue
+ * 1481 TestCase with generic return type causes NullReferenceException 
+ * 1483 Remoting exceptions during test execution
+ * 1484 Comparing Equality using IEquatable<T> Should Use Most Specific Method
+ * 1493 NUnit 2 test results report ParameterizedMethod but should be ParameterizedTest
+ * 1507 NullReferenceException when null arguments are used in TestFixtureAttribute
+ * 1513 Add new teamcity extension to packages
+ * 1518 NUnit does not send the "testStarted" TeamCity service message when exception was thrown from SetUp/OneTimeSetUp
+ * 1520 Detect Portable, Silverlight and Compact and give error message
+ * 1528 Use of Sleep(0) in NUnit
+ * 1543 Blank name attribute in nunit2-formatted XML result file test-run element
+ * 1547 Create separate assembly for System.Linq compatibility classes
+ * 1548 Invalid Exception when engine is in a 32-bit process
+ * 1549 Changing default behavior for generating test case names
+ * 1555 EndsWith calls in Constraint constructor can cause major perf issues
+ * 1560 Engine writes setting file unnecessarily
+ * 1573 Move Nunit.Portable.Agent to new Repo
+ * 1579 NUnit v3 dangerously overrides COMPLUS_Version environment variable
+ * 1582 Mono 4.4.0 Causes Test Failures
+ * 1593 Nunit Console Runner 3.2.1 and Mono 4.4 throws RemotingException
+ * 1597 Move Portable agent to its own repository
+
+NUnit 3.2.1 - April 19, 2016
 
 Framework
 
