@@ -212,8 +212,12 @@ namespace NUnit.Engine.Services
 
                 case RuntimeType.Net:
                     p.StartInfo.FileName = agentExePath;
+                    // Override the COMPLUS_Version env variable, this would cause CLR meta host to run a CLR of the specific version
                     string envVar = "v" + targetRuntime.ClrVersion.ToString(3);
                     p.StartInfo.EnvironmentVariables["COMPLUS_Version"] = envVar;
+                    // Leave a marker that we have changed this variable, so that the agent could restore it for any code or child processes running within the agent
+                    string cpvOriginal = Environment.GetEnvironmentVariable("COMPLUS_Version");
+                    p.StartInfo.EnvironmentVariables["TestAgency_COMPLUS_Version_Original"] = string.IsNullOrEmpty(cpvOriginal) ? "NULL" : cpvOriginal;
                     p.StartInfo.Arguments = arglist;
                     break;
 

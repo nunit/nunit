@@ -89,6 +89,22 @@ namespace NUnit.Agent
                 Environment.Version,
                 RuntimeFramework.CurrentFramework.DisplayName);
 
+            // Restore the COMPLUS_Version env variable if it's been overridden by TestAgency::LaunchAgentProcess
+            try
+            {
+              string cpvOriginal = Environment.GetEnvironmentVariable("TestAgency_COMPLUS_Version_Original");
+              if(!string.IsNullOrEmpty(cpvOriginal))
+              {
+                log.Debug("Agent process has the COMPLUS_Version environment variable value \"{0}\" overridden with \"{1}\", restoring the original value.", cpvOriginal, Environment.GetEnvironmentVariable("COMPLUS_Version"));
+                Environment.SetEnvironmentVariable("TestAgency_COMPLUS_Version_Original", null, EnvironmentVariableTarget.Process); // Erase marker
+                Environment.SetEnvironmentVariable("COMPLUS_Version", (cpvOriginal == "NULL" ? null : cpvOriginal), EnvironmentVariableTarget.Process); // Restore original (which might be n/a)
+              }
+            }
+            catch(Exception ex)
+            {
+              log.Warning("Failed to restore the COMPLUS_Version variable. " + ex.Message); // Proceed with running tests anyway
+            }
+
             // Create TestEngine - this program is
             // conceptually part of  the engine and
             // can access it's internals as needed.
