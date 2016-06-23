@@ -65,20 +65,20 @@
     <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
       <Link>TestSelectionParserTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\TestUtilities\Fakes.cs">
-      <Link>TestUtilities\Fakes.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestUtilities\TestBuilder.cs">
-      <Link>TestUtilities\TestBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestUtilities\TestFile.cs">
-      <Link>TestUtilities\TestFile.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\tests\TokenizerTests.cs">
       <Link>TokenizerTests.cs</Link>
     </Compile>
+    <Compile Include="..\Fakes.cs">
+      <Link>TestUtilities\Fakes.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\TestBuilder.cs">
+      <Link>TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\TestFile.cs">
+      <Link>TestUtilities\TestFile.cs</Link>
     </Compile>
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="CreateTestFilterTests.cs" />
