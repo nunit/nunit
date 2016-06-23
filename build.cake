@@ -54,7 +54,6 @@ var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
 var PACKAGE_DIR = PROJECT_DIR + "package/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
-var TOOLS_DIR = PROJECT_DIR + "tools/";
 
 var SOLUTION_FILE = IsRunningOnWindows()
 	? "./nunit.sln"
@@ -70,9 +69,6 @@ var PACKAGE_SOURCE = new string[]
 // Test Runners
 var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
-
-// NuGet.exe
-var NUGET_EXE = TOOLS_DIR + "nuget.exe";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
@@ -882,8 +878,9 @@ void PackageRunnerWithExtensions(string package, string version, string tcVersio
 	var arguments = string.Format(
 		"pack {0} -Version {1} -Properties teamcityVersion={2} -BasePath {3} -OutputDirectory {4} -NoPackageAnalysis",
 		package, version, tcVersion, imageDir, packageDir);
+	var nugetPath = File("tools/nuget.exe");
 
-    StartProcess(NUGET_EXE, arguments);
+    StartProcess(nugetPath, arguments);
 }
 
 //////////////////////////////////////////////////////////////////////
