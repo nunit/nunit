@@ -19,6 +19,10 @@ var ErrorDetail = new List<string>();
 var version = "3.3.0";
 var modifier = "";
 
+//For now, set teamcity extension verson and modifier separately
+var tcVersion = "1.0.0";
+var tcModifier = "";
+
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
 
 //Find program files on 32-bit or 64-bit Windows
@@ -28,6 +32,7 @@ var isSilverlightSDKInstalled = FileExists(programFiles  + "\\MSBuild\\Microsoft
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
+var teamcityVersion = tcVersion + tcModifier + dbgSuffix;
 
 //////////////////////////////////////////////////////////////////////
 // SUPPORTED FRAMEWORKS
@@ -111,17 +116,23 @@ Task("InitializeBuild")
 			if (tag.IsTag)
 			{
 				packageVersion = tag.Name;
+				// NOTE: tag doesn't currently change the TeamCity version
 			}
 			else
 			{
 				var buildNumber = AppVeyor.Environment.Build.Number;
-				packageVersion = version + "-CI-" + buildNumber + dbgSuffix;
+
+				var suffix = "-CI-" + buildNumber + dbgSuffix;
+
 				if (AppVeyor.Environment.PullRequest.IsPullRequest)
-					packageVersion += "-PR-" + AppVeyor.Environment.PullRequest.Number;
+					suffix += "-PR-" + AppVeyor.Environment.PullRequest.Number;
 				else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-					packageVersion += "-PRE-" + buildNumber;
+					suffix += "-PRE-" + buildNumber;
 				else
-					packageVersion += "-" + AppVeyor.Environment.Repository.Branch;
+					suffix += "-" + AppVeyor.Environment.Repository.Branch;
+
+				packageVersion = version + suffix;
+				teamcityVersion = tcVersion + suffix;
 			}
 
 			AppVeyor.UpdateBuildVersion(packageVersion);
@@ -681,7 +692,7 @@ Task("PackageNuGet")
         NuGetPack("nuget/extensions/teamcity-event-listener.nuspec", new NuGetPackSettings()
         {
 		    // The teamcity-event-listener extension uses its own versioning
-            Version = "1.0.0" + dbgSuffix,
+            Version = teamcityVersion,
             BasePath = currentImageDir,
             OutputDirectory = PACKAGE_DIR,
             NoPackageAnalysis = true
