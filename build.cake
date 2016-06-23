@@ -630,24 +630,11 @@ Task("PackageNuGet")
             NoPackageAnalysis = true
         });
 
+        // NOTE: We can't use NuGetPack for these because our current version
+        // of Cake doesn't support the Properties option.
 		PackageRunnerWithExtensions("nuget/runners/nunit.console-runner-with-extensions.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
 
 		PackageRunnerWithExtensions("nuget/runners/nunit.runners.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
-
-        //NuGetPack("nuget/runners/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
-        //{
-        //    Version = packageVersion,
-        //    BasePath = currentImageDir,
-        //    OutputDirectory = PACKAGE_DIR,
-        //    NoPackageAnalysis = true
-        //});
-        //NuGetPack("nuget/runners/nunit.runners.nuspec", new NuGetPackSettings()
-        //{
-        //    Version = packageVersion,
-        //    BasePath = currentImageDir,
-        //    OutputDirectory = PACKAGE_DIR,
-        //    NoPackageAnalysis = true
-        //});
 
         // Package engine
         NuGetPack("nuget/engine/nunit.engine.nuspec", new NuGetPackSettings()
