@@ -465,6 +465,7 @@ var BinFiles = new FilePath[]
     "nunit3-console.exe",
     "nunit3-console.exe.config",
     "nunit3-console.tests.dll",
+    "TestListWithEmptyLine.tst",
     "nunitlite.dll",
     "TextSummary.xslt",
     "addins/nunit-project-loader.dll",
