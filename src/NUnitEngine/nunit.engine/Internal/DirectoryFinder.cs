@@ -119,7 +119,10 @@ namespace NUnit.Engine.Internal
                 if (pattern == "." || pattern == "")
                     newList.Add(dir);
                 else if (pattern == "..")
-                    newList.Add(dir.Parent);
+                {
+                    if (dir.Parent != null)
+                        newList.Add(dir.Parent);
+                }
                 else if (pattern == "**")
                 {
                     var subDirs = dir.GetDirectories("*", SearchOption.AllDirectories);
