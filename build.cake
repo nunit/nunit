@@ -16,7 +16,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.3.0";
+var version = "3.5.0";
 var modifier = "";
 
 //For now, set teamcity extension verson and modifier separately
@@ -461,6 +461,7 @@ var BinFiles = new FilePath[]
     "nunit.engine.tests.dll.config",
     "nunit.framework.dll",
     "nunit.framework.xml",
+    "NUnit.System.Linq.dll",
     "NUnit2TestResult.xsd",
     "nunit3-console.exe",
     "nunit3-console.exe.config",
