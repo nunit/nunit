@@ -436,7 +436,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="NUnit.System.Linq, Version=0.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.System.Linq.0.2.0-CI-12-master\lib\net20\NUnit.System.Linq.dll</HintPath>
+      <HintPath>..\..\..\packages\NUnit.System.Linq.0.2.0-CI-17-master\lib\net20\NUnit.System.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
