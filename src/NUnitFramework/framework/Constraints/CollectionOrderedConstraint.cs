@@ -35,10 +35,12 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionOrderedConstraint : CollectionConstraint
     {
+        private readonly List<OrderedPropertyInfo> properties = new List<OrderedPropertyInfo>();
+
         private ComparisonAdapter comparer = ComparisonAdapter.Default;
         private string comparerName;
-        private string propertyName;
         private bool descending;
+        private bool allowBy = true;
 
         /// <summary>
         /// Construct a CollectionOrderedConstraint
@@ -63,6 +65,25 @@ namespace NUnit.Framework.Constraints
             get
             {
                 descending = true;
+
+                if (!this.allowBy && this.properties != null && this.properties.Count != 0)
+                {
+                    this.properties[this.properties.Count - 1].SortDescending = true;
+                    descending = false;
+                }
+
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Returns self.
+        /// </summary>
+        public CollectionOrderedConstraint Then
+        {
+            get
+            {
+                this.allowBy = true;
                 return this;
             }
         }
@@ -103,7 +124,12 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint By(string propertyName)
         {
-            this.propertyName = propertyName;
+            if (!this.allowBy) 
+                throw new InvalidOperationException("The use of 'By' is not allowed.");
+
+            this.properties.Add(new OrderedPropertyInfo(propertyName, this.descending));
+            this.allowBy = false;
+
             return this;
         }
 
@@ -114,13 +140,33 @@ namespace NUnit.Framework.Constraints
         public override string Description
         {
             get 
-            { 
-                string desc = propertyName == null
-                    ? "collection ordered"
-                    : "collection ordered by "+ MsgUtils.FormatValue(propertyName);
+            {
+                string desc = string.Empty;
 
-                if (descending)
-                    desc += ", descending";
+                if (this.properties == null || this.properties.Count == 0)
+                {
+                    desc = "collection ordered";
+
+                    if (descending)
+                        desc += ", descending";
+                }
+                else
+                {
+                    var first = this.properties[0];
+                    desc = "collection ordered by " + MsgUtils.FormatValue(first.PropertyName);
+
+                    if (first.SortDescending)
+                        desc += ", descending";
+
+                    for (int i = 1; i < this.properties.Count; i++)
+                    {
+                        var item = this.properties[i];
+                        desc += ", then by " + MsgUtils.FormatValue(item.PropertyName);
+
+                        if (item.SortDescending)
+                            desc += ", descending";
+                    }
+                }
 
                 return desc;
             }
@@ -135,32 +181,51 @@ namespace NUnit.Framework.Constraints
         {
             object previous = null;
             int index = 0;
-            foreach (object obj in actual)
+            foreach (object current in actual)
             {
-                object objToCompare = obj;
-                if (obj == null)
+                if (current == null)
                     throw new ArgumentNullException("actual", "Null value at index " + index.ToString());
 
-                if (this.propertyName != null)
+                if (this.properties != null && this.properties.Count > 0)
                 {
-                    PropertyInfo prop = obj.GetType().GetProperty(propertyName);
-                    objToCompare = prop.GetValue(obj, null);
-                    if (objToCompare == null)
-                        throw new ArgumentNullException("actual", "Null property value at index " + index.ToString());
+                    if (index > 0 && previous != null)
+                    {
+                        for (int i = 0; i < this.properties.Count; i++)
+                        {
+                            var item = this.properties[i];
+
+                            var isDescending = item.SortDescending;
+                            var previousValue = previous.GetType().GetProperty(item.PropertyName).GetValue(previous, null);
+                            var currentValue = current.GetType().GetProperty(item.PropertyName).GetValue(current, null);
+
+                            if (currentValue == null)
+                                throw new ArgumentNullException("actual", "Null property value at index " + index.ToString());
+
+                            int comparisonResult = comparer.Compare(previousValue, currentValue);
+
+                            if (isDescending && comparisonResult < 0)
+                                return false;
+                            if (!isDescending && comparisonResult > 0)
+                                return false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (previous != null)
+                    {
+                        int comparisonResult = comparer.Compare(previous, current);
+
+                        if (descending && comparisonResult < 0)
+                            return false;
+                        if (!descending && comparisonResult > 0)
+                            return false;
+                    }
+
+
                 }
 
-                if (previous != null)
-                {
-                    //int comparisonResult = comparer.Compare(al[i], al[i + 1]);
-                    int comparisonResult = comparer.Compare(previous, objToCompare);
-
-                    if (descending && comparisonResult < 0)
-                        return false;
-                    if (!descending && comparisonResult > 0)
-                        return false;
-                }
-
-                previous = objToCompare;
+                previous = current;
                 index++;
             }
 
@@ -175,16 +240,54 @@ namespace NUnit.Framework.Constraints
         {
             StringBuilder sb = new StringBuilder("<ordered");
 
-            if (propertyName != null)
-                sb.Append("by " + propertyName);
-            if (descending)
-                sb.Append(" descending");
+            if (this.properties != null && this.properties.Count > 0)
+            {
+                var first = this.properties[0];
+                sb.Append("by " + first.PropertyName);
+
+                if (first.SortDescending)
+                    sb.Append(" descending");
+
+                for (int i = 1; i < this.properties.Count; i++)
+                {
+                    var item = this.properties[i];
+                    sb.Append(", then by " + item.PropertyName);
+
+                    if (item.SortDescending)
+                        sb.Append(" descending");
+                }
+            }
+            else
+            {
+                if (descending)
+                    sb.Append(" descending");
+            }
+
             if (comparerName != null)
                 sb.Append(" " + comparerName);
 
             sb.Append(">");
 
             return sb.ToString();
+        }
+
+        private class OrderedPropertyInfo
+        {
+            public OrderedPropertyInfo(string propertyName)
+            {
+                PropertyName = propertyName;
+            }
+
+            /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+            public OrderedPropertyInfo(string propertyName, bool sortDescending)
+            {
+                PropertyName = propertyName;
+                SortDescending = sortDescending;
+            }
+
+            public string PropertyName { get; private set; }
+
+            public bool SortDescending { get; set; }
         }
     }
 }
