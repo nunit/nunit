@@ -461,6 +461,7 @@ var BinFiles = new FilePath[]
     "nunit.engine.tests.dll.config",
     "nunit.framework.dll",
     "nunit.framework.xml",
+    "NUnit.System.Linq.dll",
     "NUnit2TestResult.xsd",
     "nunit3-console.exe",
     "nunit3-console.exe.config",
