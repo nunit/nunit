@@ -56,6 +56,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("TeamCity", "teamcity")]
         [TestCase("DebugTests", "debug")]
         [TestCase("PauseBeforeRun", "pause")]
+        [TestCase("LoadUserProfile", "loaduserprofile")]
 #if DEBUG
         [TestCase("DebugAgent", "debug-agent")]
 #endif
