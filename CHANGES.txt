@@ -19,6 +19,8 @@ Console Runner
 
  * There is a new --params command line option that allows you to pass parameters to your tests
    which can be retrieved using TestContext.Parameters
+ * Another new command line option --loaduserprofile causes the User Profile to be loaded into the
+   NUnit Agent process.
 
 Issues Resolved
 
@@ -62,6 +64,7 @@ Issues Resolved
  * 1547 Create separate assembly for System.Linq compatibility classes
  * 1548 Invalid Exception when engine is in a 32-bit process
  * 1549 Changing default behavior for generating test case names
+ * 1551 Path in default .addins file for ConsoleRunner package may not exist
  * 1555 EndsWith calls in Constraint constructor can cause major perf issues
  * 1560 Engine writes setting file unnecessarily
  * 1573 Move Nunit.Portable.Agent to new Repo
@@ -70,6 +73,8 @@ Issues Resolved
  * 1593 Nunit Console Runner 3.2.1 and Mono 4.4 throws RemotingException
  * 1597 Move Portable agent to its own repository
  * 1605 TeamCity package has no pre-release suffix
+ * 1607 nunit.nuget.addins discovery pattern is wrong then restored through project.json
+ * 1617 Load user profile on test runners
 
 NUnit 3.2.1 - April 19, 2016
 
