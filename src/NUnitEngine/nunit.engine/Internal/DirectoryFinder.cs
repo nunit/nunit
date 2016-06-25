@@ -106,6 +106,22 @@ namespace NUnit.Engine.Internal
             return fileList;
         }
 
+        public static DirectoryInfo GetPackageDirectory(DirectoryInfo startDir)
+        {
+            var dir = new DirectoryInfo(startDir.FullName).Parent;
+
+            while (dir != null)
+            {
+                string tryPath = Path.Combine(dir.FullName, "packages");
+                if (Directory.Exists(tryPath))
+                    return new DirectoryInfo(tryPath);
+
+                dir = dir.Parent;
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Helper Methods
@@ -119,9 +135,15 @@ namespace NUnit.Engine.Internal
                 if (pattern == "." || pattern == "")
                     newList.Add(dir);
                 else if (pattern == "..")
-                    newList.Add(dir.Parent);
+                {
+                    if (dir.Parent != null)
+                        newList.Add(dir.Parent);
+                }
                 else if (pattern == "**")
                 {
+                    // ** means zero or more intervening directories, so we
+                    // add the directory itself to start out.
+                    newList.Add(dir);
                     var subDirs = dir.GetDirectories("*", SearchOption.AllDirectories);
                     if (subDirs.Length > 0) newList.AddRange(subDirs);
                 }

@@ -27,7 +27,7 @@ Users may update their projects to use the NUnit.Console package directly if des
         <dependency id="NUnit.Extension.VSProjectLoader" version="[$version$]" />
         <dependency id="NUnit.Extension.NUnitV2ResultWriter" version="[$version$]" />
         <dependency id="NUnit.Extension.NUnitV2Driver" version="[$version$]" />
-        <dependency id="NUnit.Extension.TeamCityEventListener" version="[$version$]" />
+        <dependency id="NUnit.Extension.TeamCityEventListener" version="[$teamcityVersion$]" />
       </group>
     </dependencies>
   </metadata>
