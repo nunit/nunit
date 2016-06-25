@@ -66,9 +66,6 @@
     <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
       <Link>DefaultOptionsProvider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Env.cs">
-      <Link>Env.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
       <Link>ExtendedTextWrapper.cs</Link>
     </Compile>
