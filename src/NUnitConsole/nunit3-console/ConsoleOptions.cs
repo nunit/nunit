@@ -131,7 +131,7 @@ namespace NUnit.Common
             this.Add("shadowcopy", "Shadow copy test files",
                 v => ShadowCopyFiles = v != null);
 
-            this.Add("loaduserprofile", "Load user profile on test runner processes",
+            this.Add("loaduserprofile", "Load user profile in test runner processes",
                 v => LoadUserProfile = v != null);
 
             this.Add("agents=", "Specify the maximum {NUMBER} of test assembly agents to run at one time. If not specified, there is no limit.",
