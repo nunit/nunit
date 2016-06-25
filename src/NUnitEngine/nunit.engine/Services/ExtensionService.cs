@@ -178,9 +178,11 @@ namespace NUnit.Engine.Services
                 FindExtensionPoints(thisAssembly);
                 FindExtensionPoints(apiAssembly);
 
-                // Finding extensions is a two-stage process, which
-                // enables us to weed out duplicate assemblies
-                FindExtensionAssemblies(startDir, false);
+                // Create the list of possible extension assemblies, 
+                // eliminating duplicates. Start in Engine directory.
+                FindExtensionAssemblies(startDir);
+
+                // Check each assembly to see if it contains extensions
                 foreach (var candidate in _assemblies)
                     FindExtensionsInAssembly(candidate);
 
@@ -284,21 +286,48 @@ namespace NUnit.Engine.Services
         #region Helper Methods - Extensions
 
         /// <summary>
+        /// Find candidate extension assemblies starting from a
+        /// given base directory.
+        /// </summary>
+        /// <param name="startDir"></param>
+        private void FindExtensionAssemblies(DirectoryInfo startDir)
+        {
+            // First check the directory itself
+            ProcessAddinsFiles(startDir, false);
+
+            // Use any packages directory we find as well
+            var packageDir = DirectoryFinder.GetPackageDirectory(startDir);
+            if (packageDir != null)
+                foreach (var dir in DirectoryFinder.GetDirectories(packageDir, "NUnit.Extension.*/**/tools/"))
+                    ProcessDirectory(dir, false);
+        }
+
+        /// <summary>
         /// Scans a directory for candidate addin assemblies. Note that assemblies in 
         /// the directory are only scanned if no file of type .addins is found. If such 
         /// a file is found, then those assemblies it references are scanned.
         /// </summary>
-        private void FindExtensionAssemblies(DirectoryInfo startDir, bool fromWildCard)
+        private void ProcessDirectory(DirectoryInfo startDir, bool fromWildCard)
         {
             log.Info("Scanning directory {0} for extensions", startDir.FullName);
 
+            if (ProcessAddinsFiles(startDir, fromWildCard) == 0)
+                foreach (var file in startDir.GetFiles("*.dll"))
+                    ProcessCandidateAssembly(file.FullName, true);
+        }
+
+        /// <summary>
+        /// Process all .addins files found in a directory
+        /// </summary>
+        private int ProcessAddinsFiles(DirectoryInfo startDir, bool fromWildCard)
+        {
             var addinsFiles = startDir.GetFiles("*.addins");
+
             if (addinsFiles.Length > 0)
                 foreach (var file in addinsFiles)
                     ProcessAddinsFile(startDir, file.FullName, fromWildCard);
-            else
-                foreach (var file in startDir.GetFiles("*.dll"))
-                    ProcessCandidateAssembly(file.FullName, true);
+
+            return addinsFiles.Length;
         }
 
         /// <summary>
@@ -330,7 +359,7 @@ namespace NUnit.Engine.Services
                     bool isWild = fromWildCard || line.Contains("*");
                     if (line.EndsWith("/"))
                         foreach (var dir in DirectoryFinder.GetDirectories(baseDir, line))
-                            FindExtensionAssemblies(dir, isWild);
+                            ProcessDirectory(dir, isWild);
                     else
                         foreach (var file in DirectoryFinder.GetFiles(baseDir, line))
                             ProcessCandidateAssembly(file.FullName, isWild);
