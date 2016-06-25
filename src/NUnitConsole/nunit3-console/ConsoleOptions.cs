@@ -65,6 +65,8 @@ namespace NUnit.Common
 
         public bool ShadowCopyFiles { get; private set; }
 
+        public bool LoadUserProfile { get; private set; }
+
         private int maxAgents = -1;
         public int MaxAgents { get { return maxAgents; } }
         public bool MaxAgentsSpecified { get { return maxAgents >= 0; } }
@@ -128,6 +130,9 @@ namespace NUnit.Common
 
             this.Add("shadowcopy", "Shadow copy test files",
                 v => ShadowCopyFiles = v != null);
+
+            this.Add("loaduserprofile", "Load user profile on test runner processes",
+                v => LoadUserProfile = v != null);
 
             this.Add("agents=", "Specify the maximum {NUMBER} of test assembly agents to run at one time. If not specified, there is no limit.",
                 v => maxAgents = RequiredInt(v, "--agents"));

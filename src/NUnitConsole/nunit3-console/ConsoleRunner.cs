@@ -335,6 +335,9 @@ namespace NUnit.ConsoleRunner
             if (options.ShadowCopyFiles)
                 package.AddSetting(PackageSettings.ShadowCopyFiles, true);
 
+            if (options.LoadUserProfile)
+                package.AddSetting(PackageSettings.LoadUserProfile, true);
+
             if (options.DefaultTimeout >= 0)
                 package.AddSetting(PackageSettings.DefaultTimeout, options.DefaultTimeout);
 

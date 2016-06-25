@@ -145,6 +145,10 @@ namespace NUnit.Common
         /// </summary>
         public const string ShadowCopyFiles = "ShadowCopyFiles";
 
+        /// <summary>
+        /// Bool flag indicating that user profile should be loaded on test runner processes
+        /// </summary>
+        public const string LoadUserProfile = "LoadUserProfile";
         #endregion
 
         #region Framework Settings - Passed through and used by the 3.0 Framework

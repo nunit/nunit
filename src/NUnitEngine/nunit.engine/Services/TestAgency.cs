@@ -168,6 +168,7 @@ namespace NUnit.Engine.Services
             bool debugTests = package.GetSetting(PackageSettings.DebugTests, false);
             bool debugAgent = package.GetSetting(PackageSettings.DebugAgent, false);
             string traceLevel = package.GetSetting(PackageSettings.InternalTraceLevel, "Off");
+            bool loadUserProfile = package.GetSetting(PackageSettings.LoadUserProfile, false);
 
             // Set options that need to be in effect before the package
             // is loaded by using the command line.
@@ -219,6 +220,7 @@ namespace NUnit.Engine.Services
                     string cpvOriginal = Environment.GetEnvironmentVariable("COMPLUS_Version");
                     p.StartInfo.EnvironmentVariables["TestAgency_COMPLUS_Version_Original"] = string.IsNullOrEmpty(cpvOriginal) ? "NULL" : cpvOriginal;
                     p.StartInfo.Arguments = arglist;
+                    p.StartInfo.LoadUserProfile = loadUserProfile;
                     break;
 
                 default:
