@@ -90,9 +90,6 @@
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Utilities\TestNameParser.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
-      <Link>XmlHelper.cs</Link>
-    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>
@@ -100,6 +97,7 @@
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
+    <Compile Include="SafeAttributeAccess.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\SaveConsoleOutput.cs" />
     <Compile Include="ResultReporter.cs" />
