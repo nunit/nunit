@@ -34,7 +34,7 @@ namespace NUnit.Engine.Listeners
     // purely documentary since engines prior to 3.6 do not
     // check the EngineVersion property and will try to 
     // load this extension anyway.
-    [Extension(Enabled = false, EngineVersion = "3.6")]
+    [Extension(Enabled = false, EngineVersion = "3.4.0.0")]
     public class TeamCityEventListener : ITestEventListener
     {
         private readonly TextWriter _outWriter;
