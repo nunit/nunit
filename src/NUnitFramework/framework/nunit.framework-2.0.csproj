@@ -54,9 +54,6 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Env.cs">
-      <Link>Env.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Guard.cs">
       <Link>Guard.cs</Link>
     </Compile>
@@ -142,6 +139,7 @@
     <Compile Include="Assert.Conditions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Env.cs" />
     <Compile Include="Interfaces\IDisposableFixture.cs" />
     <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />

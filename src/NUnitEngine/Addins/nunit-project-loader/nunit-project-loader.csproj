@@ -35,12 +35,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Common\nunit\XmlHelper.cs">
-      <Link>XmlHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
+    <Compile Include="SafeAttributeAccess.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="NUnitProject.cs" />
     <Compile Include="NUnitProjectLoader.cs" />

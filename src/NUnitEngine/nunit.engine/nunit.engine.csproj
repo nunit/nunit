@@ -80,9 +80,6 @@
     <Compile Include="..\..\Common\nunit\Tokenizer.cs">
       <Link>Services\Tokenizer.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
-      <Link>XmlHelper.cs</Link>
-    </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
@@ -160,6 +157,7 @@
     <Compile Include="Services\TestFilterService.cs" />
     <Compile Include="TestEngine.cs" />
     <Compile Include="TestEngineResult.cs" />
+    <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
