@@ -39,6 +39,7 @@ namespace NUnit.Engine.Services.Tests
         // directory. As extensions are moved out to separate builds, we will
         // need to modify those tests.
 
+#pragma warning disable 414
         private static readonly string[] KNOWN_EXTENSION_POINT_PATHS = new string[] {
             "/NUnit/Engine/TypeExtensions/IDriverFactory",
             "/NUnit/Engine/TypeExtensions/IProjectLoader", 
@@ -58,6 +59,7 @@ namespace NUnit.Engine.Services.Tests
         };
 
         private static readonly int[] KNOWN_EXTENSION_POINT_COUNTS = new int[] { 1, 1, 1, 2, 1, 1 };
+#pragma warning restore 414
 
         [SetUp]
         public void CreateService()
@@ -122,6 +124,7 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(ep.TypeName, Is.EqualTo(type.FullName));
         }
 
+#pragma warning disable 414
         private static readonly string[] KNOWN_EXTENSIONS = new string[] {
             "NUnit.Engine.Tests.DummyFrameworkDriverExtension",
             "NUnit.Engine.Tests.DummyProjectLoaderExtension",
@@ -130,6 +133,7 @@ namespace NUnit.Engine.Services.Tests
             "NUnit.Engine.Tests.DummyServiceExtension",
             "NUnit.Engine.Tests.V2DriverExtension"
         };
+#pragma warning restore 414
 
         [TestCaseSource("KNOWN_EXTENSIONS")]
         public void CanListExtensions(string typeName)

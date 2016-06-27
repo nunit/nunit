@@ -129,10 +129,8 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
                 Assert.AreEqual(releaseDir, package2.Settings["BasePath"]);
                 Assert.AreEqual(true, package2.Settings["AutoBinPath"]);
 
-                Assert.Throws<NUnitEngineException>(() =>
-                {
-                    var package3 = _project.GetTestPackage("MissingConfiguration");
-                }, "Project loader should throw exception when attempting to use missing configuration");
+                Assert.Throws<NUnitEngineException>(() => _project.GetTestPackage("MissingConfiguration"), 
+                "Project loader should throw exception when attempting to use missing configuration");
             }
         }
 

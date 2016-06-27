@@ -59,34 +59,27 @@ namespace NUnit.Engine.Internal
         {
             get
             {
-                if (_monoExePath == null)
+                if (_monoExePath == null && IsWindows())
                 {
-                    string[] searchNames = IsWindows()
-                        ? new string[] { "mono.bat", "mono.cmd", "mono.exe" }
-                        : new string[] { "mono", "mono.exe" };
-                    
-                    if (_monoExePath == null && IsWindows())
+                    RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Novell\Mono");
+                    if (key != null)
                     {
-                        RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Novell\Mono");
-                        if (key != null)
+                        string version = key.GetValue("DefaultCLR") as string;
+                        if (version != null)
                         {
-                            string version = key.GetValue("DefaultCLR") as string;
-                            if (version != null)
+                            key = key.OpenSubKey(version);
+                            if (key != null)
                             {
-                                key = key.OpenSubKey(version);
-                                if (key != null)
-                                {
-                                    string installDir = key.GetValue("SdkInstallRoot") as string;
-                                    if (installDir != null)
-                                        _monoExePath = Path.Combine(installDir, @"bin\mono.exe");
-                                }
+                                string installDir = key.GetValue("SdkInstallRoot") as string;
+                                if (installDir != null)
+                                    _monoExePath = Path.Combine(installDir, @"bin\mono.exe");
                             }
                         }
                     }
-
-                    if (_monoExePath == null)
-                        _monoExePath = "mono";
                 }
+
+                if (_monoExePath == null)
+                    _monoExePath = "mono";
 
                 return _monoExePath;
             }

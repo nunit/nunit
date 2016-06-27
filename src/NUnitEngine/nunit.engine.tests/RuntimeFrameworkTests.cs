@@ -128,6 +128,7 @@ namespace NUnit.Engine.Tests
             return f1.Supports(f2);
         }
 
+#pragma warning disable 414
         static TestCaseData[] matchData = new TestCaseData[] {
             new TestCaseData(
                 new RuntimeFramework(RuntimeType.Net, new Version(3,5)), 
@@ -206,6 +207,7 @@ namespace NUnit.Engine.Tests
                 new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion)) 
                 .Returns(true)
             };
+#pragma warning restore 414
 
         public struct FrameworkData
         {
@@ -231,6 +233,7 @@ namespace NUnit.Engine.Tests
             }
         }
 
+#pragma warning disable 414
         static FrameworkData[] frameworkData = new FrameworkData[] {
             new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
             //new FrameworkData(RuntimeType.Net, new Version(1,0,3705), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
@@ -257,5 +260,6 @@ namespace NUnit.Engine.Tests
             new FrameworkData(RuntimeType.Any, new Version(4,0), new Version(4,0,30319), "v4.0", "v4.0"),
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
         };
+#pragma warning restore 414
     }
 }
