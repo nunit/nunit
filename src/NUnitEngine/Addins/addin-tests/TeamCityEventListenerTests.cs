@@ -25,6 +25,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using NUnit.Framework;
+using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Listeners
 {
@@ -48,6 +49,15 @@ namespace NUnit.Engine.Listeners
         public void TearDown()
         {
             _outputWriter.Dispose();
+        }
+
+        [Test]
+        public void CheckExtensionAttribute()
+        {
+            Assert.That(typeof(TeamCityEventListener),
+                Has.Attribute<ExtensionAttribute>()
+                    .With.Property("EngineVersion").EqualTo("3.4")
+                    .And.Property("Enabled").EqualTo(false));
         }
 
         [Test]
