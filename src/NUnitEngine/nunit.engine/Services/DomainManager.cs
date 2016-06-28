@@ -161,7 +161,7 @@ namespace NUnit.Engine.Services
                     string msg = "Unable to unload AppDomain, Unload thread timed out";
 
                     log.Error(msg);
-                    _unloadThread.Abort();
+                    Kill(_unloadThread);
 
                     throw new NUnitEngineException(msg);
                 }
@@ -340,6 +340,29 @@ namespace NUnit.Engine.Services
             }
 
             return sb.Length == 0 ? null : sb.ToString();
+        }
+
+        /// <summary>
+        /// Do our best to kill a thread, passing state info
+        /// </summary>
+        /// <param name="thread">The thread to kill</param>
+        private static void Kill(Thread thread)
+        {
+            try
+            {
+                thread.Abort();
+            }
+            catch (ThreadStateException)
+            {
+                // Although obsolete, this use of Resume() takes care of
+                // the odd case where a ThreadStateException is received.
+#pragma warning disable 0618, 0612    // Thread.Resume has been deprecated
+                thread.Resume();
+#pragma warning restore 0618, 0612   // Thread.Resume has been deprecated
+            }
+
+            if ((thread.ThreadState & System.Threading.ThreadState.WaitSleepJoin) != 0)
+                thread.Interrupt();
         }
 
         #endregion
