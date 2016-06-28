@@ -56,6 +56,45 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
         }
 
         [Test]
+        public void CheckExtensionAttribute()
+        {
+            Assert.That(typeof(VisualStudioProjectLoader),
+                Has.Attribute<ExtensionAttribute>());
+        }
+
+        // Note for review:
+        // The following test doesn't pass because AttributeConstraint always uses the
+        // first attribute it finds. Should we fix the syntax or just document it?
+        //[TestCase(".sln")]
+        //[TestCase(".csproj")]
+        //[TestCase(".vbproj")]
+        //[TestCase(".vjsproj")]
+        //[TestCase(".vcproj")]
+        //[TestCase(".fsproj")]
+        //public void CheckExtensionPropertyAttributes(string ext)
+        //{
+        //    Assert.That(typeof(VisualStudioProjectLoader),
+        //        Has.Attribute<ExtensionPropertyAttribute>()
+        //            .With.Property("Name").EqualTo("FileExtension").And.Property("Value").EqualTo(ext));
+        //}
+
+        [TestCase(".sln")]
+        [TestCase(".csproj")]
+        [TestCase(".vbproj")]
+        [TestCase(".vjsproj")]
+        [TestCase(".vcproj")]
+        [TestCase(".fsproj")]
+        public void CheckExtensionPropertyAttributes(string ext)
+        {
+            var attrs = typeof(VisualStudioProjectLoader).GetCustomAttributes(typeof(ExtensionPropertyAttribute), false);
+
+            Assert.That(attrs, 
+                Has.Exactly(1)
+                    .With.Property("Name").EqualTo("FileExtension")
+                    .And.Property("Value").EqualTo(ext));
+        }
+
+        [Test]
         public void CannotLoadWebProject()
         {
             Assert.IsFalse(_loader.CanLoadFrom(@"http://localhost/web.csproj"));

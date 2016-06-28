@@ -42,6 +42,22 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
         }
 
         [Test]
+        public void CheckExtensionAttribute()
+        {
+            Assert.That(typeof(NUnitProjectLoader),
+                Has.Attribute<ExtensionAttribute>());
+        }
+
+        [Test]
+        public void CheckExtensionPropertyAttribute()
+        {
+            Assert.That(typeof(NUnitProjectLoader),
+                Has.Attribute<ExtensionPropertyAttribute>()
+                    .With.Property("Name").EqualTo("FileExtension")
+                    .And.Property("Value").EqualTo(".nunit"));
+        }
+
+        [Test]
         public void CheckExtension()
         {
             Assert.That(_loader.CanLoadFrom("dummy.nunit"));
