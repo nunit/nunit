@@ -62,7 +62,7 @@ namespace NUnit.Engine.Internal.Tests
         [TestCase("*/v2-tests/*.dll", 2)]
         [TestCase("add*/v?-*/*.dll", 2)]
         [TestCase("**/v2-tests/*.dll", 2)]
-        [TestCase("addins/**/*.dll", 18)]
+        [TestCase("addins/**/*.dll", 17)]
         [TestCase("addins/../net-*/nunit.framework.dll", 4)]
         public void GetFiles(string pattern, int count)
         {
