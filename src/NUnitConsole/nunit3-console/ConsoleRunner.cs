@@ -103,6 +103,17 @@ namespace NUnit.ConsoleRunner
 
             DisplayRuntimeEnvironment(_outWriter);
 
+            if (_options.ListExtensions)
+                DisplayExtensionList();
+
+            if (_options.InputFiles.Count == 0)
+            {
+                if (!_options.ListExtensions)
+                    using (new ColorConsole(ColorStyle.Error))
+                        Console.Error.WriteLine("Error: no inputs specified");
+                return ConsoleRunner.OK;
+            }
+
             DisplayTestFiles();
 
             TestPackage package = MakeTestPackage(_options);
@@ -259,6 +270,31 @@ namespace NUnit.ConsoleRunner
 
         [DllImport("libc")]
         static extern int uname(IntPtr buf);
+
+        private void DisplayExtensionList()
+        {
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Installed Extensions");
+
+            foreach (var ep in _extensionService.ExtensionPoints)
+            {
+                _outWriter.WriteLabelLine("  Extension Point: ", ep.Path);
+                foreach (var node in ep.Extensions)
+                {
+                    _outWriter.Write("    Extension: ");
+                    _outWriter.Write(ColorStyle.Value, node.TypeName);
+                    _outWriter.WriteLine(node.Enabled ? "" : " (Disabled)");
+                    foreach (var prop in node.PropertyNames)
+                    {
+                        _outWriter.Write("      " + prop + ":");
+                        foreach (var val in node.GetValues(prop))
+                            _outWriter.Write(ColorStyle.Value, " " + val);
+                        _outWriter.WriteLine();
+                    }
+                }
+            }
+
+            _outWriter.WriteLine();
+        }
 
         private void DisplayTestFilters()
         {

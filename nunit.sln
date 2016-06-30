@@ -163,6 +163,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "engine", "engine", "{43A219
 	ProjectSection(SolutionItems) = preProject
 		nuget\engine\nunit.engine.nuspec = nuget\engine\nunit.engine.nuspec
 		nuget\engine\nunit.engine.tool.nuspec = nuget\engine\nunit.engine.tool.nuspec
+		nuget\engine\nunit.nuget.addins = nuget\engine\nunit.nuget.addins
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{BC87F477-1A7A-45D0-9AC1-9F7315264732}"
