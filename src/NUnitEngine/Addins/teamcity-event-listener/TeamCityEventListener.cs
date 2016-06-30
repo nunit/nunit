@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -32,7 +32,7 @@ namespace NUnit.Engine.Listeners
 {
     // Note: Setting mimimum engine version in this case is
     // purely documentary since engines prior to 3.4 do not
-    // check the EngineVersion property and will try to 
+    // check the EngineVersion property and will try to
     // load this extension anyway.
     [Extension(Enabled = false, EngineVersion = "3.4")]
     public class TeamCityEventListener : ITestEventListener
@@ -85,7 +85,7 @@ namespace NUnit.Engine.Listeners
             {
                 _refs.Clear();
                 return;
-            }           
+            }
 
             var fullName = testEvent.GetAttribute("fullname");
             if (string.IsNullOrEmpty(fullName))
@@ -181,8 +181,8 @@ namespace NUnit.Engine.Listeners
                         }
                     }
 
-                    break;                
-            }            
+                    break;
+            }
         }
 
         private void CaseStartTest(string id, string flowId, string parentId, string testFlowId, string fullName)
@@ -196,7 +196,7 @@ namespace NUnit.Engine.Listeners
         }
 
         private void TestSuiteCase(string id, string parentId, string flowId, string fullName)
-        {            
+        {
             // NUnit 3 case
             if (parentId == string.Empty)
             {
@@ -215,7 +215,7 @@ namespace NUnit.Engine.Listeners
         }
 
         private void StartSuiteCase(string id, string parentId, string flowId, string fullName)
-        {            
+        {
             // NUnit 3 case
             if (parentId == string.Empty)
             {
@@ -284,18 +284,18 @@ namespace NUnit.Engine.Listeners
         private void OnRootSuiteStart(string flowId, string assemblyName)
         {
             assemblyName = Path.GetFileName(assemblyName);
-            WriteLine("##teamcity[testSuiteStarted name='{0}' flowId='{1}']", assemblyName, flowId);         
+            WriteLine("##teamcity[testSuiteStarted name='{0}' flowId='{1}']", assemblyName, flowId);
         }
 
         private void OnRootSuiteFinish(string flowId, string assemblyName)
         {
             assemblyName = Path.GetFileName(assemblyName);
-            WriteLine("##teamcity[testSuiteFinished name='{0}' flowId='{1}']", assemblyName, flowId);            
+            WriteLine("##teamcity[testSuiteFinished name='{0}' flowId='{1}']", assemblyName, flowId);
         }
 
         private void OnFlowStarted(string flowId, string parentFlowId)
         {
-            WriteLine("##teamcity[flowStarted flowId='{0}' parent='{1}']", flowId, parentFlowId);            
+            WriteLine("##teamcity[flowStarted flowId='{0}' parent='{1}']", flowId, parentFlowId);
         }
 
         private void OnFlowFinished(string flowId)
@@ -328,7 +328,7 @@ namespace NUnit.Engine.Listeners
                 "##teamcity[testFinished name='{0}' duration='{1}' flowId='{2}']",
                 fullName,
                 durationMilliseconds.ToString(),
-                flowId);            
+                flowId);
         }
 
         private void OnTestFailed(string flowId, XmlNode message, string fullName)

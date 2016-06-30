@@ -19,6 +19,7 @@
       * VSProjectLoader        - loads tests from Visual Studio projects
       * NUnitV2ResultWriter    - saves results in NUnit V2 format.
       * NUnitV2FrameworkDriver - runs NUnit V2 tests.
+      * TeamCityEventListener  - enables use of the --teamcity option of the console runner.
 
       Other extensions, if needed, must be installed separately.
     </description>

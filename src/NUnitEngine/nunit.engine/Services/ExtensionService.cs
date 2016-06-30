@@ -173,13 +173,13 @@ namespace NUnit.Engine.Services
             {
                 var thisAssembly = Assembly.GetExecutingAssembly();
                 var apiAssembly = typeof(ITestEngine).Assembly;
-                var startDir = new DirectoryInfo(AssemblyHelper.GetDirectoryName(thisAssembly));
 
                 FindExtensionPoints(thisAssembly);
                 FindExtensionPoints(apiAssembly);
 
                 // Create the list of possible extension assemblies, 
                 // eliminating duplicates. Start in Engine directory.
+                var startDir = new DirectoryInfo(AssemblyHelper.GetDirectoryName(thisAssembly));
                 FindExtensionAssemblies(startDir);
 
                 // Check each assembly to see if it contains extensions
@@ -295,11 +295,11 @@ namespace NUnit.Engine.Services
             // First check the directory itself
             ProcessAddinsFiles(startDir, false);
 
-            // Use any packages directory we find as well
-            var packageDir = DirectoryFinder.GetPackageDirectory(startDir);
-            if (packageDir != null)
-                foreach (var dir in DirectoryFinder.GetDirectories(packageDir, "NUnit.Extension.*/**/tools/"))
-                    ProcessDirectory(dir, false);
+            //// Use any packages directory we find as well
+            //var packageDir = DirectoryFinder.GetPackageDirectory(startDir);
+            //if (packageDir != null)
+            //    foreach (var dir in DirectoryFinder.GetDirectories(packageDir, "NUnit.Extension.*/**/tools/"))
+            //        ProcessDirectory(dir, false);
         }
 
         /// <summary>
@@ -369,30 +369,47 @@ namespace NUnit.Engine.Services
 
         private void ProcessCandidateAssembly(string filePath, bool fromWildCard)
         {
-            try
+            if (!Visited(filePath))
             {
-                var candidate = new ExtensionAssembly(filePath, fromWildCard);
+                Visit(filePath);
 
-                for (int i = 0; i < _assemblies.Count; i++)
+                try
                 {
-                    var assembly = _assemblies[i];
+                    var candidate = new ExtensionAssembly(filePath, fromWildCard);
 
-                    if (candidate.IsDuplicateOf(assembly))
+                    for (int i = 0; i < _assemblies.Count; i++)
                     {
-                        if (candidate.IsBetterVersionOf(assembly))
-                            _assemblies[i] = candidate;
-                            
-                        return;
-                    }
-                }
+                        var assembly = _assemblies[i];
 
-                _assemblies.Add(candidate);
+                        if (candidate.IsDuplicateOf(assembly))
+                        {
+                            if (candidate.IsBetterVersionOf(assembly))
+                                _assemblies[i] = candidate;
+
+                            return;
+                        }
+                    }
+
+                    _assemblies.Add(candidate);
+                }
+                catch (BadImageFormatException e)
+                {
+                    if (!fromWildCard)
+                        throw new NUnitEngineException(String.Format("Specified extension {0} could not be read", filePath), e);
+                }
             }
-            catch(BadImageFormatException e)
-            {
-                if (!fromWildCard)
-                    throw new NUnitEngineException(String.Format("Specified extension {0} could not be read", filePath), e);
-            }
+        }
+
+        private Dictionary<string, object> _visited = new Dictionary<string, object>();
+
+        private bool Visited(string filePath)
+        {
+            return _visited.ContainsKey(filePath);
+        }
+
+        private void Visit(string filePath)
+        {
+            _visited.Add(filePath, null);
         }
 
         /// <summary>
