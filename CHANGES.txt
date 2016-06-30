@@ -1,4 +1,18 @@
-﻿NUnit 3.4 - June 25, 2016
+﻿NUnit 3.4 - June 30, 2016
+
+Console Runner
+
+ * A new option, --list-extensions, will display all the engine extensions that
+   have been installed by the engine.
+
+Issues Resolved
+
+ * 1623 NUnit 3.4 is not integrated with TeamCity
+ * 1626 NUnit.ConsoleRunner is not picking up NUnit.Extension.NUnitV2ResultWriter
+ * 1628 Agent's process stays in memory when it was failed to unload AppDomain
+ * 1635 Console option to list loaded extensions
+
+NUnit 3.4 - June 25, 2016
 
 Framework
 
