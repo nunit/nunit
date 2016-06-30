@@ -75,6 +75,8 @@ namespace NUnit.Common
 
         public bool DebugAgent { get; private set; }
 
+        public bool ListExtensions { get; private set; }
+
         public bool PauseBeforeRun { get; private set; }
 
         #endregion
@@ -142,6 +144,9 @@ namespace NUnit.Common
 
             this.Add("pause", "Pause before running to allow attaching a debugger.",
                 v => PauseBeforeRun = v != null);
+
+            this.Add("list-extensions", "List all extension points and the extensions for each.",
+                v => ListExtensions = v != null);
 
 #if DEBUG
             this.Add("debug-agent", "Launch debugger in nunit-agent when it starts.",
