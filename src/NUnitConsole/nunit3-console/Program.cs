@@ -101,13 +101,6 @@ namespace NUnit.ConsoleRunner
                     return ConsoleRunner.INVALID_ARG;
                 }
 
-                if (Options.InputFiles.Count == 0)
-                {
-                    using (new ColorConsole(ColorStyle.Error))
-                        Console.Error.WriteLine("Error: no inputs specified");
-                    return ConsoleRunner.OK;
-                }
-
                 using (ITestEngine engine = TestEngineActivator.CreateInstance(false))
                 {
                     if (Options.WorkDirectory != null)
