@@ -4,10 +4,6 @@ mono:
   - latest
   - 3.2.8
 
-matrix:
-  allow_failures:
-    - mono: 3.2.8
-
 script: 
   - ./build.sh --target "Travis"
     
