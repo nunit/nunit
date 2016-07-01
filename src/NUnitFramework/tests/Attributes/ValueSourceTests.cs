@@ -219,11 +219,7 @@ namespace NUnit.Framework.Attributes
             foreach (var parameter in parameters)
             {
                 var dataSource = parameter.GetCustomAttributes<IParameterDataSource>(false)[0];
-
-                Assert.Throws<InvalidDataSourceException>(() =>
-                {
-                    var data = dataSource.GetData(parameter);
-                }); 
+                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(parameter)); 
             }
         }
     }

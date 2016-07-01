@@ -24,6 +24,7 @@
     <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>..\..\..\bin\Debug\portable\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>..\..\..\bin\Release\portable\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>

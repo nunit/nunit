@@ -22,6 +22,7 @@
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_2_0;PARALLEL;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -31,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
-    <NoWarn>0414</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Externalconsole>true</Externalconsole>
+    <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -286,8 +288,8 @@
     <Compile Include="ThrowsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="NUnit.System.Linq, Version=0.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.System.Linq.0.2.0-CI-17-master\lib\net20\NUnit.System.Linq.dll</HintPath>
+    <Reference Include="NUnit.System.Linq, Version=0.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NUnit.System.Linq.0.6.0\lib\net20\NUnit.System.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

@@ -118,8 +118,6 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
-        private static readonly char[] COMMA = new char[] { ',' };
-
         /// <summary>
         /// Create a TestFilter instance from an xml representation.
         /// </summary>

@@ -188,7 +188,7 @@ namespace NUnit.Framework.Api
         public void Run_AfterLoad_SendsExpectedEvents()
         {
             LoadMockAssembly();
-            var result = _runner.Run(this, TestFilter.Empty);
+            _runner.Run(this, TestFilter.Empty);
 
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));

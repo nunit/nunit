@@ -116,7 +116,9 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             Assert.AreEqual("InstanceField", source);
         }
 
+#pragma warning disable 414
         object[] InstanceField = { new object[] { "InstanceField" } };
+#pragma warning restore 414
 
         #endregion
 
