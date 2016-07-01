@@ -24,7 +24,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE;NUNITLITE</DefineConstants>
@@ -34,7 +33,6 @@
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0414</NoWarn>
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup>

@@ -22,7 +22,6 @@
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_2_0;PARALLEL;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_2_0;PARALLEL;NUNITLITE</DefineConstants>
@@ -31,7 +30,6 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
-    <NoWarn>0414</NoWarn>
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup>
