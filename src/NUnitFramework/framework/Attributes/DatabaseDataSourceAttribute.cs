@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008-2016 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -39,50 +39,48 @@ namespace NUnit.Framework.Attributes
     /// Imports CSV data from a file
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class CsvDataAttribute : BaseTestCaseSourceAttribute
+    public class DatabaseDataAttribute : TestCaseSourceAttribute
     {
-        private CsvData _csv;
+        private DatabaseData _db;
 
         /// <summary>
         /// Number of rows to read
         /// </summary>
         public int RowsToRead
         {
-            get { return _csv.RowsToRead; }
-            set { _csv.RowsToRead = value; }
+            get { return _db.RowsToRead; }
+            set { _db.RowsToRead = value; }
         }
 
+        
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="source">The CSV filename</param>
-        public CsvDataAttribute(string source) 
+        /// <param name="source">The connection string</param>
+        /// <param name="tableName">The name of the table against which to query</param>
+        /// <param name="columns">The columns to query. It must equal the number of parameters in method</param>
+        public DatabaseDataAttribute(string source, string tableName, string columns) : base(source)
         {
-            _csv = new CsvData(source);
+            _db = new DatabaseData(source, tableName, columns);
         }
 
         /// <summary>
-        /// Retreives the method's signature where the source data's fields will be injected
+        /// 
         /// </summary>
-        /// <param name="methodInfo">name of the method under </param>
-        /// <returns>List of test cases based on signature and data</returns>
+        /// <param name="methodInfo"></param>
+        /// <returns></returns>
         protected override IEnumerable GetTestCaseSource(IMethodInfo methodInfo)
         {
-            if (!_csv.SourceFileExists)
-            {
-                string errMsg = String.Format("Unable to find source: {0}", _csv.Name);
-                throw new FileNotFoundException(errMsg);
-            }
 
             // get dimensions from method parameters
             var paramInfo = methodInfo.GetParameters();
             var paramDim = paramInfo.Length;
 
-            var dataFromQuery = _csv.GetData();
+            var dataFromQuery = _db.GetData();
 
             // check if items were returned
             if (((IList)dataFromQuery).Count == 0)
-                throw new Exception("No data returned for query. Please check file.");
+                throw new Exception("No data returned for query. Please check columns");
 
             foreach (object[] data in dataFromQuery)
             {

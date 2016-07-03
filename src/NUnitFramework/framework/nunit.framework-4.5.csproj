@@ -113,12 +113,14 @@
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
+    <Compile Include="Attributes\BaseTestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\CsvDataSourceAttribute.cs" />
     <Compile Include="Attributes\CultureAttribute.cs" />
     <Compile Include="Attributes\DataAttribute.cs" />
+    <Compile Include="Attributes\DatabaseDataSourceAttribute.cs" />
     <Compile Include="Attributes\DatapointAttribute.cs" />
     <Compile Include="Attributes\DatapointsAttribute.cs" />
     <Compile Include="Attributes\DatapointSourceAttribute.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
+    <Compile Include="Attributes\XmlDataSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
@@ -270,6 +273,7 @@
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
     <Compile Include="CsvData.cs" />
+    <Compile Include="DatabaseData.cs" />
     <Compile Include="DataSource.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
@@ -428,6 +432,7 @@
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
+    <Compile Include="XmlData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
