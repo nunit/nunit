@@ -116,6 +116,7 @@
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\CsvDataSourceAttribute.cs" />
     <Compile Include="Attributes\CultureAttribute.cs" />
     <Compile Include="Attributes\DataAttribute.cs" />
     <Compile Include="Attributes\DatapointAttribute.cs" />
@@ -268,6 +269,8 @@
     <Compile Include="Constraints\UniqueItemsConstraint.cs" />
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
+    <Compile Include="CsvData.cs" />
+    <Compile Include="DataSource.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Env.cs" />
