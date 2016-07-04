@@ -197,6 +197,7 @@ namespace NUnit.Framework.Attributes
             try
             {
                 var dbData = new DatabaseData(source, table, columns);
+                Debug.WriteLine(dbData);
             }
             catch (Exception e)
             {
