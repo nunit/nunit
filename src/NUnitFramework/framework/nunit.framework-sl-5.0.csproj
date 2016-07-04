@@ -126,6 +126,7 @@
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
+    <Compile Include="Attributes\BaseTestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
