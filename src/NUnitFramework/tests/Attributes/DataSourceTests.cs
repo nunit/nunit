@@ -33,11 +33,9 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class DataSourceTests
     {
-
         [OneTimeTearDown]
         public void CleanUp()
         {
-
             ArrayList testFiles = new ArrayList();
 
             testFiles.Add("TestCsvFile1.csv");
@@ -57,9 +55,7 @@ namespace NUnit.Framework.Attributes
             {
                 File.Delete(f);
             }
-
         }
-
 
         #region General
 
@@ -78,7 +74,6 @@ namespace NUnit.Framework.Attributes
                 Assert.IsInstanceOf(typeof(FileNotFoundException), e);
             }
         }
-
 
         [Description("Cannot set number of records to read as negative number")]
         [TestCase(@"TestCsvFile1.csv")]
@@ -103,7 +98,6 @@ namespace NUnit.Framework.Attributes
                 Assert.IsInstanceOf(typeof(InvalidCastException), e);
             }
         }
-
 
         #endregion
 
@@ -205,10 +199,8 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-
         private class TestDatabaseConnectionStub1 : INUnitDatabaseConnection
         {
-
             public TestDatabaseConnectionStub1(int expectedRowsCount)
             {
                 ReturnRowCount = expectedRowsCount;
@@ -221,7 +213,6 @@ namespace NUnit.Framework.Attributes
                     return "TestDatabase Driver";
                 }
             }
-
 
             public int ReturnRowCount { get; private set; }
 
@@ -261,7 +252,6 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(expectedRowsCount, ((IList<object[]>)data).Count);
         }
 
-
         [Test]
         [Platform(Include = "Win", Reason = "Driver exists only on windows machines")]
         [DatabaseData("Driver={Microsoft Excel Driver (*.xls)};Driverid=790;Dbq=TestXlsFile.xls;DefaultDir=.;", "Test1", "c1,c2,c3")]
@@ -269,7 +259,6 @@ namespace NUnit.Framework.Attributes
         {
             Assert.AreEqual(q, n / d);
         }
-
 
         private class TestDatabaseConnectionStub2 : INUnitDatabaseConnection {
 
@@ -291,7 +280,6 @@ namespace NUnit.Framework.Attributes
                 {
                     return (conn as NUnitDatabaseConnection).ConnectionType.Name;
                 }
-
             }
 
             public IEnumerable Query(string qry)
@@ -320,11 +308,7 @@ namespace NUnit.Framework.Attributes
             Debug.WriteLine(data);
             Assert.AreEqual(dbDriver, (dbData.Connection as TestDatabaseConnectionStub2).DatabaseDriverType);
         }
-
-                       
-                        
-              
+    
         #endregion
-
     }
 }
