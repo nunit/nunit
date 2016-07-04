@@ -317,6 +317,7 @@ namespace NUnit.Framework.Attributes
             var dbData = new DatabaseData(connString, "table", "c1,c2,c3");
             dbData.Connection = new TestDatabaseConnectionStub2(connString);
             var data = dbData.GetData();
+            Debug.WriteLine(data);
             Assert.AreEqual(dbDriver, (dbData.Connection as TestDatabaseConnectionStub2).DatabaseDriverType);
         }
 
