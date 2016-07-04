@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using System.IO;
+using System.ComponentModel;
 
 namespace NUnit.Framework
 {
@@ -36,14 +37,26 @@ namespace NUnit.Framework
     {
 
         /// <summary>
+        /// The default character to use as a delimiter
+        /// </summary>
+        public string Delimiter {get; set;}
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="source">Filename of CSV file</param>
-        public CsvData(string source)
+        public CsvData(string source): this(source, ",") { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="source">Filename of CSV file</param>
+        /// <param name="delimiter">data delimiter. Defaults to comma (",")</param>
+        public CsvData(string source, string delimiter) 
         {
             Name = source;
+            Delimiter = delimiter;
         }
-
 
         /// <summary>
         /// Retrieve data from source
@@ -51,19 +64,16 @@ namespace NUnit.Framework
         /// <returns>List of test data to map on target method</returns>
         public override IEnumerable GetData()
         {
-
             // open file and check that dimensions match that of parameters
             IList<object[]> testData = new List<object[]>();
 
             // iterate through each row and generate the list of data parameters
             using (var sr = File.OpenText(Name))
             {
-
                 string lineData = string.Empty;
                 int lineIdx = 1;
                 while ((lineData = sr.ReadLine()) != null)
                 {
-
                     // determine if we need to stop before the end of the file
                     if (RowsToRead > 0 && lineIdx > RowsToRead)
                         break;
@@ -71,18 +81,16 @@ namespace NUnit.Framework
                     // skip empty lines as denoted by a newline character
                     if (lineData == string.Empty || lineData == Environment.NewLine)
                         continue;
-
+                    
                     // once we have a valid (non-empty) string I continue to process
-                    var csv = lineData.Split(',');
+                    var csv = lineData.Split(new string[] { Delimiter}, StringSplitOptions.None);
 
                     var formatted_csv = stripExtraCharacters(csv);
 
                     testData.Add(formatted_csv);
                     lineIdx++;
                 }
-
             }
-
             return testData;
         }
 
@@ -108,6 +116,5 @@ namespace NUnit.Framework
 
             return s;
         }
-
     }
 }

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008-2016 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -44,6 +44,15 @@ namespace NUnit.Framework.Attributes
         private CsvData _csv;
 
         /// <summary>
+        /// The character on which to parse each row. Defaults to comma (",")
+        /// </summary>
+        public string Delimiter
+        {
+            get { return _csv.Delimiter; }
+            set { _csv.Delimiter = value; }
+        }
+
+        /// <summary>
         /// Number of rows to read
         /// </summary>
         public int RowsToRead
@@ -71,24 +80,23 @@ namespace NUnit.Framework.Attributes
             if (!_csv.SourceFileExists)
             {
                 string errMsg = String.Format("Unable to find source: {0}", _csv.Name);
-                throw new FileNotFoundException(errMsg);
+                ReturnErrorAsParameter(errMsg);
             }
 
             // get dimensions from method parameters
             var paramInfo = methodInfo.GetParameters();
             var paramDim = paramInfo.Length;
-
             var dataFromQuery = _csv.GetData();
 
             // check if items were returned
             if (((IList)dataFromQuery).Count == 0)
-                throw new Exception("No data returned for query. Please check file.");
+                ReturnErrorAsParameter("No data returned for query. Please check file.");
 
             foreach (object[] data in dataFromQuery)
             {
                 // check that dimensions are the same for each row
                 if (data.Length != paramDim)
-                    throw new ArgumentException(String.Format("Method parameters ({0}) and number of columns ({1}) differ. They need to be equal.", paramDim, data.Length));
+                    ReturnErrorAsParameter(String.Format("Method parameters ({0}) and number of columns ({1}) differ. They need to be equal.", paramDim, data.Length));
 
                 // Convert the identified columns to the type(s) of each method parameter
                 var paramList = new ArrayList(data.Length);
@@ -97,7 +105,6 @@ namespace NUnit.Framework.Attributes
                     var paramType = paramInfo[i].ParameterType;
                     paramList.Add(Convert.ChangeType(data[i], paramType));
                 }
-
                 yield return paramList.ToArray();
             }
         }

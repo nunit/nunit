@@ -26,6 +26,7 @@ using System.IO;
 using System.Collections;
 using NUnit.Framework.Internal;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NUnit.Framework.Attributes
 {
@@ -44,6 +45,8 @@ namespace NUnit.Framework.Attributes
             testFiles.Add("TestCsvFile3.csv");
             testFiles.Add("TestCsvFile4.csv");
             testFiles.Add("TestCsvFile5.csv");
+            testFiles.Add("TestCsvFile6.csv");
+            testFiles.Add("TestCsvFile7.csv");
             testFiles.Add("TestXlsFile.xls");
             testFiles.Add("TestXmlFile1.xml");
             testFiles.Add("TestXmlFile2.xml");
@@ -68,6 +71,7 @@ namespace NUnit.Framework.Attributes
             try
             {
                 var instance = Activator.CreateInstance(dataSourceType, new object[] { filename });
+                Debug.WriteLine(instance.ToString());
             }
             catch (Exception e)
             {
@@ -81,7 +85,7 @@ namespace NUnit.Framework.Attributes
         public void CannotSetRowsToReadLessThanZero(string source)
         {
             var csvData = new CsvData(source);
-            Assert.Throws(typeof(Exception), () => { csvData.RowsToRead = -1; });
+            Assert.Throws(typeof(ArgumentException), () => { csvData.RowsToRead = -1; });
         }
 
         [Test]
@@ -92,6 +96,7 @@ namespace NUnit.Framework.Attributes
             try
             {
                 var instance = Activator.CreateInstance(dataSourceType, new string[] { source });
+                Debug.WriteLine(instance.ToString());
             }
             catch (Exception e)
             {
@@ -130,6 +135,13 @@ namespace NUnit.Framework.Attributes
             csvData.RowsToRead = rows;
             IEnumerable data = csvData.GetData();
             Assert.AreEqual(rows, ((IList<object[]>)data).Count);
+        }
+
+        [Description("Parse a CSV with a different delimiter than default (comma).")]
+        [CsvData(@"TestCsvFile7.csv", Delimiter = ":")]
+        public void CsvOpenSourceParseWithNonDefaultDelimiter(int n, int d, int q)
+        {
+            Assert.AreEqual(q, n / d);
         }
 
         [Test]

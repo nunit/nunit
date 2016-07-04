@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008-2016 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -70,24 +70,22 @@ namespace NUnit.Framework.Attributes
             if (!_xml.SourceFileExists)
             {
                 string errMsg = String.Format("Unable to find source: {0}", _xml.Name);
-                throw new FileNotFoundException(errMsg);
+                ReturnErrorAsParameter(errMsg);
             }
 
             // get dimensions from method parameters
             var paramInfo = methodInfo.GetParameters();
             var paramDim = paramInfo.Length;
-
-
             var dataFromQuery = _xml.GetData();
 
             // check if items were returned
             if (((IList)dataFromQuery).Count == 0)
-                throw new Exception("No data returned. Please check file.");
+                ReturnErrorAsParameter("No data returned. Please check file.");
 
             foreach (object[] data in dataFromQuery)
             {
                 if (data.Length != paramDim)
-                    throw new ArgumentException(String.Format("Method parameters ({0}) and number of columns ({1}) differ. They need to be equal.", paramDim, data.Length));
+                    ReturnErrorAsParameter(String.Format("Method parameters ({0}) and number of columns ({1}) differ. They need to be equal.", paramDim, data.Length));
 
                 // Convert the identified columns to the type(s) of each method parameter
                 var paramList = new ArrayList(data.Length);

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -71,22 +71,20 @@ namespace NUnit.Framework.Attributes
         /// <returns></returns>
         protected override IEnumerable GetTestCaseSource(IMethodInfo methodInfo)
         {
-
             // get dimensions from method parameters
             var paramInfo = methodInfo.GetParameters();
             var paramDim = paramInfo.Length;
-
             var dataFromQuery = _db.GetData();
 
             // check if items were returned
             if (((IList)dataFromQuery).Count == 0)
-                throw new Exception("No data returned for query. Please check columns");
+                ReturnErrorAsParameter("No data returned for query. Please check columns");
 
             foreach (object[] data in dataFromQuery)
             {
                 // check that dimensions are the same for each row
                 if (data.Length != paramDim)
-                    throw new ArgumentException(String.Format("Method parameters ({0}) and number of columns ({1}) differ. They need to be equal.", paramDim, data.Length));
+                    ReturnErrorAsParameter(String.Format("Method parameters ({0}) and number of columns ({1}) differ. They need to be equal.", paramDim, data.Length));
 
                 // Convert the identified columns to the type(s) of each method parameter
                 var paramList = new ArrayList(data.Length);

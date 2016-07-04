@@ -323,42 +323,47 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestXmlFile1.xml">
+    <EmbeddedResource Include="TestXmlFile1.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestXmlFile2.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestXmlFile2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestXmlFile4.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestXmlFile4.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestXmlFile5.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestXmlFile5.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
     <Content Include="FrameworkTests.nunit">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="TestCsvFile1.csv">
+    <EmbeddedResource Include="TestCsvFile1.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestCsvFile2.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestCsvFile2.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestCsvFile3.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestCsvFile7.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestCsvFile4.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestCsvFile3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestCsvFile5.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestCsvFile4.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestCsvFile6.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestCsvFile5.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestXlsFile.xls" />
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestCsvFile6.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestXlsFile.xls">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

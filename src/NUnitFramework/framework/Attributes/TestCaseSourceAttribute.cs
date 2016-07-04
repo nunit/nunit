@@ -91,10 +91,10 @@ namespace NUnit.Framework
         #region Helper Methods
 
         /// <summary>
-        /// 
+        /// Retrieves the method's signature where the source data's fields will be injected
         /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
+        /// <param name="method">name of the method to be analyzed</param>
+        /// <returns>List of test cases based on signature and data</returns>
         protected override IEnumerable GetTestCaseSource(IMethodInfo method)
         {
             Type sourceType = SourceType ?? method.TypeInfo.Type;
@@ -137,13 +137,6 @@ namespace NUnit.Framework
             return null;
         }
         
-        private static IEnumerable ReturnErrorAsParameter(string errorMessage)
-        {
-            var parms = new TestCaseParameters();
-            parms.RunState = RunState.NotRunnable;
-            parms.Properties.Set(PropertyNames.SkipReason, errorMessage);
-            return new TestCaseParameters[] { parms };
-        }
 
         private const string SourceMustBeStatic =
             "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method.";

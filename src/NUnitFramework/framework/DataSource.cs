@@ -53,7 +53,7 @@ namespace NUnit.Framework
             set
             {
                 if (value < 0)
-                    throw new Exception("Cannot set Rows to Read less than zero");
+                    throw new ArgumentException("Cannot set Rows to Read less than zero", "RowsToRead");
                 else
                     _rowsToRead = value;
             }
@@ -80,6 +80,5 @@ namespace NUnit.Framework
                 return File.Exists(Name);
             }
         }
-
     }
 }

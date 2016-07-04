@@ -197,9 +197,22 @@ namespace NUnit.Framework.Attributes
         }
 
         /// <summary>
-        /// Retreives the method's signature where the source data's fields will be injected
+        /// Return 
         /// </summary>
-        /// <param name="methodInfo">name of the method under </param>
+        /// <param name="errorMessage">message to return indicating reason why a testcase cannot be executed.</param>
+        /// <returns></returns>
+        public IEnumerable ReturnErrorAsParameter(string errorMessage)
+        {
+            var parms = new TestCaseParameters();
+            parms.RunState = RunState.NotRunnable;
+            parms.Properties.Set(PropertyNames.SkipReason, errorMessage);
+            return new TestCaseParameters[] { parms };
+        }
+
+        /// <summary>
+        /// Retrieves the method's signature where the source data's fields will be injected
+        /// </summary>
+        /// <param name="methodInfo">name of the method to be analyzed.</param>
         /// <returns>List of test cases based on signature and data</returns>
         protected abstract IEnumerable GetTestCaseSource(IMethodInfo methodInfo);
 
