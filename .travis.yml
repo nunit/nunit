@@ -3,7 +3,8 @@ sudo: false
 mono:
   - latest
   - 3.2.8
-
-script: 
+os:
+  - linux
+  - osx
+script:
   - ./build.sh --target "Travis"
-    
