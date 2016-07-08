@@ -59,9 +59,6 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Guard.cs">
-      <Link>Guard.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
       <Link>Internal\InternalTrace.cs</Link>
     </Compile>
@@ -94,6 +91,7 @@
     <Compile Include="Extensibility\ExtensionPoint.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Guard.cs" />
     <Compile Include="IDriverService.cs" />
     <Compile Include="Internal\CecilExtensions.cs" />
     <Compile Include="Internal\DirectoryFinder.cs" />

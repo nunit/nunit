@@ -74,9 +74,6 @@
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>ExtendedTextWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Guard.cs">
-      <Link>Utilities\Guard.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
       <Link>IDefaultOptionsProvider.cs</Link>
     </Compile>
