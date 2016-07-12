@@ -374,6 +374,38 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Converts any null characters in a string 
+        /// to their escaped representation.
+        /// </summary>
+        /// <param name="s">The string to be converted</param>
+        /// <returns>The converted string</returns>
+        public static string EscapeNullCharacters(string s)
+        {
+            if(s != null)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach(char c in s)
+                {
+                    switch(c)
+                    {
+                        case '\0':
+                            sb.Append("\\0");
+                            break;
+
+                        default:
+                            sb.Append(c);
+                            break;
+                    }
+                }
+
+                s = sb.ToString();               
+            }
+
+            return s;
+        }
+
+        /// <summary>
         /// Return the a string representation for a set of indices into an array
         /// </summary>
         /// <param name="indices">Array of indices for which a string is needed</param>

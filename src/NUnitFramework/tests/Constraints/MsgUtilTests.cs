@@ -173,7 +173,24 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+        #region EscapeNullChars
+        [TestCase("\n", "\n")]
+        [TestCase("\r", "\r")]
+        [TestCase("\r\n\r", "\r\n\r")]
+        [TestCase("\f", "\f")]
+        [TestCase("\b", "\b")]
+        public static void DoNotEscapeNonNullControlChars(string input, string expected)
+        {
+            Assert.That(MsgUtils.EscapeNullCharacters(input), Is.EqualTo(expected));
+        }
 
+        [Test]
+        public static void EscapesNullControlChars()
+        {
+            Assert.That(MsgUtils.EscapeNullCharacters("\0"), Is.EqualTo("\\0"));
+        }
+
+        #endregion
         #region ClipString
 
         private const string s52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

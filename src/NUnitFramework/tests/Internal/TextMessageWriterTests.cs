@@ -96,6 +96,20 @@ namespace NUnit.Framework.Internal
             Assert.That(message, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void WriteMessageLine_EmbeddedNonNullControlChars()
+        {
+            string expected, message;
+
+            expected = message = "Here we have embedded control characters \b\f in the string!";
+
+            writer.WriteMessageLine(0, message, null);
+            message = writer.ToString();
+            expected = "  " + expected.Replace("\0", "\\0") + NL;
+
+            Assert.That(message, Is.EqualTo(expected));
+        }
+
         private string Q(string s)
         {
             return "\"" + s + "\"";
