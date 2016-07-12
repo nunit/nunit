@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,10 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using NUnit.Engine.Extensibility;
+using NUnit.Framework;
 
-//
-// Current version for the NUnit Console
-//
-[assembly: AssemblyVersion("3.5.0.0")]
-[assembly: AssemblyFileVersion("3.5.0.0")]
+namespace NUnit.Engine.Addins
+{
+    public class NUnit2XmlResultWriterTests
+    {
+        [Test]
+        public void CheckExtensionAttribute()
+        {
+            Assert.That(typeof(NUnit2XmlResultWriter),
+                Has.Attribute<ExtensionAttribute>());
+        }
+
+        [Test]
+        public void CheckExtensionPropertyAttribute()
+        {
+            Assert.That(typeof(NUnit2XmlResultWriter),
+                Has.Attribute<ExtensionPropertyAttribute>()
+                    .With.Property("Name").EqualTo("Format")
+                    .And.Property("Value").EqualTo("nunit2"));
+        }
+    }
+}

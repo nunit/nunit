@@ -19,7 +19,7 @@ var version = "3.5.0";
 var modifier = "";
 
 //For now, set teamcity extension verson and modifier separately
-var tcVersion = "1.0.0";
+var tcVersion = "1.0.1";
 var tcModifier = "";
 
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
