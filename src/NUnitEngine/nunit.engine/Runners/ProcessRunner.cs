@@ -254,8 +254,8 @@ namespace NUnit.Engine.Runners
             XmlHelper.AddAttribute(suite, "asserts", "0");
 
             var failure = suite.AddElement("failure");
-            var message = failure.AddElementWithCDataSection("message", e.Message);
-            var stack = failure.AddElementWithCDataSection("stack-trace", e.StackTrace);
+            failure.AddElementWithCDataSection("message", e.Message);
+            failure.AddElementWithCDataSection("stack-trace", e.StackTrace);
 
             return new TestEngineResult(suite);
         }

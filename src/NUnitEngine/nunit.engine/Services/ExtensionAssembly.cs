@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
 using Mono.Cecil;
 
 namespace NUnit.Engine.Services
@@ -50,7 +48,7 @@ namespace NUnit.Engine.Services
                     resolver.AddSearchDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
                     var parameters = new ReaderParameters() { AssemblyResolver = resolver };
 
-                    _assemblyDefinition = AssemblyDefinition.ReadAssembly(FilePath);
+                    _assemblyDefinition = AssemblyDefinition.ReadAssembly(FilePath, parameters);
                 }
 
                 return _assemblyDefinition;

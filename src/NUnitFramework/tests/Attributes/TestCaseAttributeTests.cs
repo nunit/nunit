@@ -201,20 +201,20 @@ namespace NUnit.Framework.Attributes
         }
 
 #if !NETCF
-        [TestCase("a")]
-        [TestCase("a", "b")]
-        public void HandlesOptionalArguments(string s1, string s2 = "b")
+        [TestCase("x", ExpectedResult = new []{"x", "b", "c"})]
+        [TestCase("x", "y", ExpectedResult = new[] { "x", "y", "c" })]
+        [TestCase("x", "y", "z", ExpectedResult = new[] { "x", "y", "z" })]
+        public string[] HandlesOptionalArguments(string s1, string s2 = "b", string s3 = "c")
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
+            return new[] {s1, s2, s3};
         }
 
-        [TestCase]
-        [TestCase("a", "b")]
-        public void HandlesAllOptionalArguments(string s1 = "a", string s2 = "b")
+        [TestCase(ExpectedResult = new []{"a", "b"})]
+        [TestCase("x", ExpectedResult = new[] { "x", "b" })]
+        [TestCase("x", "y", ExpectedResult = new[] { "x", "y" })]
+        public string[] HandlesAllOptionalArguments(string s1 = "a", string s2 = "b")
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
+            return new[] {s1, s2};
         }
 #endif
 

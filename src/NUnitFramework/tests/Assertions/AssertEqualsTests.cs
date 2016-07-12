@@ -431,7 +431,7 @@ namespace NUnit.Framework.Assertions
             using (var one = new TestDirectory())
             using (var two = new TestDirectory())
             {
-                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one.Directory, two.Directory));
+                Assert.Throws<AssertionException>(() => Assert.AreEqual(one.Directory, two.Directory));
             }
         }
 #endif

@@ -23,13 +23,13 @@
 
 using System;
 
-namespace NUnit
+namespace NUnit.Framework
 {
     /// <summary>
     /// Class used to guard against unexpected argument values
     /// or operations by throwing an appropriate exception.
     /// </summary>
-    static class Guard
+    internal static class Guard
     {
         /// <summary>
         /// Throws an exception if an argument is null

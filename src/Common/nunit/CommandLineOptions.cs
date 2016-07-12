@@ -39,12 +39,21 @@ namespace NUnit.Common
     /// </summary>
     public class CommandLineOptions : OptionSet
     {
+        private static readonly string DEFAULT_WORK_DIRECTORY =
+#if NETCF || PORTABLE
+            @"\My Documents";
+#elif SILVERLIGHT
+            Environment.GetFolderPath(Environment.SpecialFolder.Personal);   
+#else
+            Environment.CurrentDirectory;
+#endif
+
         private bool validated;
 #if !PORTABLE
         private bool noresult;
 #endif
 
-        #region Constructor
+#region Constructor
 
         internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, params string[] args)
         {
@@ -66,9 +75,9 @@ namespace NUnit.Common
                 Parse(args);
         }
         
-        #endregion
+#endregion
         
-        #region Properties
+#region Properties
 
         // Action to Perform
 
@@ -131,7 +140,7 @@ namespace NUnit.Common
         private string workDirectory = null;
         public string WorkDirectory 
         {
-            get { return workDirectory ?? NUnit.Env.DefaultWorkDirectory; }
+            get { return workDirectory ?? DEFAULT_WORK_DIRECTORY; }
         }
         public bool WorkDirectorySpecified { get { return workDirectory != null; } }
 #endif
@@ -182,9 +191,9 @@ namespace NUnit.Common
             return ErrorMessages.Count == 0;
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         protected virtual void CheckOptionCombinations()
         {
@@ -248,7 +257,7 @@ namespace NUnit.Common
             if (path == null) return null;
 
 #if NETCF || PORTABLE
-            return Path.Combine(NUnit.Env.DocumentFolder, path);
+            return Path.Combine(DEFAULT_WORK_DIRECTORY , path);
 #else
             return Path.GetFullPath(path);
 #endif

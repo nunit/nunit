@@ -54,6 +54,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.That(Output, Is.EqualTo(expected));
         }
 
+#pragma warning disable 414
         static TestCaseData[] EventData = new TestCaseData[]
         {
             // Start Events
@@ -109,5 +110,6 @@ namespace NUnit.ConsoleRunner.Tests
                 "All",
                 "OUTPUT\r\n")
         };
+#pragma warning restore 414
     }
 }

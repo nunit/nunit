@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,10 +21,33 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
+using System;
+using System.Xml;
 
-//
-// Current version for the NUnit Console
-//
-[assembly: AssemblyVersion("3.5.0.0")]
-[assembly: AssemblyFileVersion("3.5.0.0")]
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
+    sealed class ExtensionAttribute : Attribute { }
+}
+
+namespace NUnit.Engine.Services.ProjectLoaders
+{
+    /// <summary>
+    /// SafeAttributeAccess provides an extension method for accessing XML attributes.
+    /// </summary>
+    public static class SafeAttributeAccess
+    {
+        /// <summary>
+        /// Gets the value of the given attribute.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public static string GetAttribute(this XmlNode result, string name)
+        {
+            XmlAttribute attr = result.Attributes[name];
+
+            return attr == null ? null : attr.Value;
+        }
+    }
+}

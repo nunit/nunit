@@ -28,8 +28,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
-    <NoWarn>1699</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +40,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -55,12 +56,6 @@
     </Compile>
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Env.cs">
-      <Link>Env.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Guard.cs">
-      <Link>Guard.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
       <Link>Internal\ILogger.cs</Link>
@@ -272,6 +267,7 @@
     <Compile Include="Contains.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
+    <Compile Include="Env.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />
     <Compile Include="Exceptions\InconclusiveException.cs" />
@@ -279,6 +275,7 @@
     <Compile Include="Exceptions\SuccessException.cs" />
     <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
+    <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\IApplyToContext.cs" />
     <Compile Include="Interfaces\IApplyToTest.cs" />

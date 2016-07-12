@@ -4,7 +4,6 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
-var framework = Argument("framework", "net-4.5");
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -16,7 +15,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.4.1";
+var version = "3.5.0";
 var modifier = "";
 
 //For now, set teamcity extension verson and modifier separately

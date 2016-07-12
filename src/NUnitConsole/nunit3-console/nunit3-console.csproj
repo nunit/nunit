@@ -25,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <Commandlineparameters>nunit.engine.tests.dll --inprocess</Commandlineparameters>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <Commandlineparameters>nunit.engine.tests.dll -process:Single</Commandlineparameters>
     <Externalconsole>true</Externalconsole>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -66,17 +68,11 @@
     <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
       <Link>DefaultOptionsProvider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Env.cs">
-      <Link>Env.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
       <Link>ExtendedTextWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
       <Link>ExtendedTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Guard.cs">
-      <Link>Utilities\Guard.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
       <Link>IDefaultOptionsProvider.cs</Link>
@@ -93,9 +89,6 @@
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Utilities\TestNameParser.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
-      <Link>XmlHelper.cs</Link>
-    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>
@@ -103,6 +96,7 @@
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
+    <Compile Include="SafeAttributeAccess.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\SaveConsoleOutput.cs" />
     <Compile Include="ResultReporter.cs" />

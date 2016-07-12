@@ -1,4 +1,4 @@
-﻿NUnit 3.4 - June 30, 2016
+﻿NUnit 3.4.1 - June 30, 2016
 
 Console Runner
 

@@ -23,6 +23,7 @@
     <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -59,9 +61,6 @@
     </Compile>
     <Compile Include="..\..\Common\tests\TokenizerTests.cs">
       <Link>Services\TokenizerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\XmlHelperTests.cs">
-      <Link>Internal\XmlHelperTests.cs</Link>
     </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
@@ -110,6 +109,7 @@
     <Compile Include="TempResourceFile.cs" />
     <Compile Include="TestEngineResultTests.cs" />
     <Compile Include="Extensibility\ExtensionAttributeTests.cs" />
+    <Compile Include="XmlHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-2.0.csproj">

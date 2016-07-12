@@ -318,7 +318,8 @@ namespace NUnit.Framework
                     object[] newArgList = new object[parameters.Length];
                     Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
 
-                    for (var i = 0; i < parameters.Length; i++)
+                    //Fill with Type.Missing for remaining required parameters where optional
+                    for (var i = parms.Arguments.Length; i < parameters.Length; i++)
                     {
                         if (parameters[i].IsOptional)
                             newArgList[i] = Type.Missing;

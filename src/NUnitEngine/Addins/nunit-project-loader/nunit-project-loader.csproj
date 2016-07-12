@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -35,12 +37,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Common\nunit\XmlHelper.cs">
-      <Link>XmlHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
+    <Compile Include="SafeAttributeAccess.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="NUnitProject.cs" />
     <Compile Include="NUnitProjectLoader.cs" />

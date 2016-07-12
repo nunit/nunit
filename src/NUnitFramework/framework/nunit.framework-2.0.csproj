@@ -27,7 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
-    <NoWarn>1699,1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,7 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
-    <NoWarn>1699,1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -53,12 +53,6 @@
     </Compile>
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Env.cs">
-      <Link>Env.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Guard.cs">
-      <Link>Guard.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
       <Link>Internal\ILogger.cs</Link>
@@ -142,6 +136,8 @@
     <Compile Include="Assert.Conditions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Env.cs" />
+    <Compile Include="Guard.cs" />
     <Compile Include="Interfaces\IDisposableFixture.cs" />
     <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />
@@ -435,8 +431,8 @@
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="NUnit.System.Linq, Version=0.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.System.Linq.0.2.0-CI-17-master\lib\net20\NUnit.System.Linq.dll</HintPath>
+    <Reference Include="NUnit.System.Linq, Version=0.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NUnit.System.Linq.0.6.0\lib\net20\NUnit.System.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
