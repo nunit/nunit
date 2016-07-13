@@ -27,7 +27,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NUnit.Common;
-using NUnit.Framework;
+using NUnit;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
