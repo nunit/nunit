@@ -115,7 +115,7 @@ namespace NUnit.Engine.Services
             ApplyImageData(package);
 
             // Modify settings if necessary
-            targetVersion = package.GetSetting(PackageSettings.ImageRuntimeVersion, targetVersion);
+            targetVersion = package.GetSetting(InternalEngineSettings.ImageRuntimeVersion, targetVersion);
             RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
             if (!checkFramework.IsAvailable)
             {
@@ -161,12 +161,12 @@ namespace NUnit.Engine.Services
                     ApplyImageData(subPackage);
 
                     // Collect the highest version required
-                    Version v = subPackage.GetSetting(PackageSettings.ImageRuntimeVersion, new Version(0, 0));
+                    Version v = subPackage.GetSetting(InternalEngineSettings.ImageRuntimeVersion, new Version(0, 0));
                     if (v > targetVersion) targetVersion = v;
 
                     // Collect highest framework name 
                     // TODO: This assumes lexical ordering is valid - check it
-                    string fn = subPackage.GetSetting(PackageSettings.ImageTargetFrameworkName, "");
+                    string fn = subPackage.GetSetting(InternalEngineSettings.ImageTargetFrameworkName, "");
                     if (fn != "")
                     {
                         if (frameworkName == null || fn.CompareTo(frameworkName) < 0)
@@ -174,10 +174,10 @@ namespace NUnit.Engine.Services
                     }
 
                     // If any assembly requires X86, then the aggregate package requires it
-                    if (subPackage.GetSetting(PackageSettings.ImageRequiresX86, false))
+                    if (subPackage.GetSetting(InternalEngineSettings.ImageRequiresX86, false))
                         requiresX86 = true;
 
-                    if (subPackage.GetSetting(PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
+                    if (subPackage.GetSetting(InternalEngineSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
                         requiresAssemblyResolver = true;
                 }
             }
@@ -228,16 +228,16 @@ namespace NUnit.Engine.Services
             }
 
             if (targetVersion.Major > 0)
-                package.Settings[PackageSettings.ImageRuntimeVersion] = targetVersion;
+                package.Settings[InternalEngineSettings.ImageRuntimeVersion] = targetVersion;
 
             if (!string.IsNullOrEmpty(frameworkName))
-                package.Settings[PackageSettings.ImageTargetFrameworkName] = frameworkName;
+                package.Settings[InternalEngineSettings.ImageTargetFrameworkName] = frameworkName;
 
-            package.Settings[PackageSettings.ImageRequiresX86] = requiresX86;
+            package.Settings[InternalEngineSettings.ImageRequiresX86] = requiresX86;
             if (requiresX86)
                 package.Settings[PackageSettings.RunAsX86] = true;
 
-            package.Settings[PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver] = requiresAssemblyResolver;
+            package.Settings[InternalEngineSettings.ImageRequiresDefaultAppDomainAssemblyResolver] = requiresAssemblyResolver;
         }
 
         #endregion

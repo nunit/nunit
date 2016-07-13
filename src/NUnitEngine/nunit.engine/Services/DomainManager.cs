@@ -114,7 +114,7 @@ namespace NUnit.Engine.Services
                 // If property is null, .NET 4.5+ is not installed, so there is no need
                 if (TargetFrameworkNameProperty != null)
                 {
-                    var frameworkName = package.GetSetting(PackageSettings.ImageTargetFrameworkName, "");
+                    var frameworkName = package.GetSetting(InternalEngineSettings.ImageTargetFrameworkName, "");
                     if (frameworkName != "")
                         TargetFrameworkNameProperty.SetValue(setup, frameworkName, null);
                 }

@@ -99,14 +99,14 @@ namespace NUnit.Engine.Runners
                 var testFile = subPackage.FullName;
 
                 if (_assemblyResolver != null && !TestDomain.IsDefaultAppDomain()
-                    && subPackage.GetSetting(PackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
+                    && subPackage.GetSetting(InternalEngineSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
                 {
                     // It's OK to do this in the loop because the Add method 
                     // checks to see if the path is already present.
                     _assemblyResolver.AddPathFromFile(testFile);
                 }
 
-                var targetFramework = subPackage.GetSetting(PackageSettings.ImageTargetFrameworkName, (string)null);
+                var targetFramework = subPackage.GetSetting(InternalEngineSettings.ImageTargetFrameworkName, (string)null);
 
                 IFrameworkDriver driver = driverService.GetDriver(TestDomain, testFile, targetFramework);
                 driver.ID = TestPackage.ID;
