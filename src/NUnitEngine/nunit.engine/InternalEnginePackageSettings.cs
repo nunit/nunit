@@ -29,7 +29,7 @@ namespace NUnit.Engine
     /// Values here are set/used internally within the engine. 
     /// Setting values may be a string, int or bool.
     /// </summary>
-    internal static class InternalEngineSettings
+    internal static class InternalEnginePackageSettings
     {
         #region Internal Settings - Used only within the engine
 

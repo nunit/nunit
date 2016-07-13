@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Common;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -130,12 +129,12 @@ namespace NUnit.Framework.Api
 
             try
             {
-                if (options.ContainsKey(PackageSettings.DefaultTestNamePattern))
-                    TestNameGenerator.DefaultTestNamePattern = options[PackageSettings.DefaultTestNamePattern] as string;
+                if (options.ContainsKey(FrameworkPackageSettings.DefaultTestNamePattern))
+                    TestNameGenerator.DefaultTestNamePattern = options[FrameworkPackageSettings.DefaultTestNamePattern] as string;
 
-                if (options.ContainsKey(PackageSettings.TestParameters))
+                if (options.ContainsKey(FrameworkPackageSettings.TestParameters))
                 {
-                    string parameters = options[PackageSettings.TestParameters] as string;
+                    string parameters = options[FrameworkPackageSettings.TestParameters] as string;
                     if (!string.IsNullOrEmpty(parameters))
                         foreach (string param in parameters.Split(new[] { ';' }))
                         {
@@ -152,8 +151,8 @@ namespace NUnit.Framework.Api
                 }
 
                 IList fixtureNames = null;
-                if (options.ContainsKey (PackageSettings.LOAD))
-                    fixtureNames = options[PackageSettings.LOAD] as IList;
+                if (options.ContainsKey (FrameworkPackageSettings.LOAD))
+                    fixtureNames = options[FrameworkPackageSettings.LOAD] as IList;
                 var fixtures = GetFixtures(assembly, fixtureNames);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyPath, fixtures);

@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Runners;
 
@@ -138,7 +136,7 @@ namespace NUnit.Engine.Services
         {
             return (ProcessModel)System.Enum.Parse(
                 typeof(ProcessModel),
-                package.GetSetting(PackageSettings.ProcessModel, "Default"));
+                package.GetSetting(EnginePackageSettings.ProcessModel, "Default"));
         }
 
         #endregion

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Mono.Cecil;
-using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -94,7 +93,7 @@ namespace NUnit.Engine.Services
         {
             // Start by examining the provided settings
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            string frameworkSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
+            string frameworkSetting = package.GetSetting(EnginePackageSettings.RuntimeFramework, "");
             RuntimeFramework requestedFramework = frameworkSetting.Length > 0
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion);
@@ -115,7 +114,7 @@ namespace NUnit.Engine.Services
             ApplyImageData(package);
 
             // Modify settings if necessary
-            targetVersion = package.GetSetting(InternalEngineSettings.ImageRuntimeVersion, targetVersion);
+            targetVersion = package.GetSetting(InternalEnginePackageSettings.ImageRuntimeVersion, targetVersion);
             RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
             if (!checkFramework.IsAvailable)
             {
@@ -125,7 +124,7 @@ namespace NUnit.Engine.Services
             }
 
             RuntimeFramework targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
-            package.Settings[PackageSettings.RuntimeFramework] = targetFramework.ToString();
+            package.Settings[EnginePackageSettings.RuntimeFramework] = targetFramework.ToString();
 
             log.Debug("Test will use {0} framework", targetFramework);
 
@@ -161,12 +160,12 @@ namespace NUnit.Engine.Services
                     ApplyImageData(subPackage);
 
                     // Collect the highest version required
-                    Version v = subPackage.GetSetting(InternalEngineSettings.ImageRuntimeVersion, new Version(0, 0));
+                    Version v = subPackage.GetSetting(InternalEnginePackageSettings.ImageRuntimeVersion, new Version(0, 0));
                     if (v > targetVersion) targetVersion = v;
 
                     // Collect highest framework name 
                     // TODO: This assumes lexical ordering is valid - check it
-                    string fn = subPackage.GetSetting(InternalEngineSettings.ImageTargetFrameworkName, "");
+                    string fn = subPackage.GetSetting(InternalEnginePackageSettings.ImageTargetFrameworkName, "");
                     if (fn != "")
                     {
                         if (frameworkName == null || fn.CompareTo(frameworkName) < 0)
@@ -174,10 +173,10 @@ namespace NUnit.Engine.Services
                     }
 
                     // If any assembly requires X86, then the aggregate package requires it
-                    if (subPackage.GetSetting(InternalEngineSettings.ImageRequiresX86, false))
+                    if (subPackage.GetSetting(InternalEnginePackageSettings.ImageRequiresX86, false))
                         requiresX86 = true;
 
-                    if (subPackage.GetSetting(InternalEngineSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
+                    if (subPackage.GetSetting(InternalEnginePackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
                         requiresAssemblyResolver = true;
                 }
             }
@@ -228,16 +227,16 @@ namespace NUnit.Engine.Services
             }
 
             if (targetVersion.Major > 0)
-                package.Settings[InternalEngineSettings.ImageRuntimeVersion] = targetVersion;
+                package.Settings[InternalEnginePackageSettings.ImageRuntimeVersion] = targetVersion;
 
             if (!string.IsNullOrEmpty(frameworkName))
-                package.Settings[InternalEngineSettings.ImageTargetFrameworkName] = frameworkName;
+                package.Settings[InternalEnginePackageSettings.ImageTargetFrameworkName] = frameworkName;
 
-            package.Settings[InternalEngineSettings.ImageRequiresX86] = requiresX86;
+            package.Settings[InternalEnginePackageSettings.ImageRequiresX86] = requiresX86;
             if (requiresX86)
-                package.Settings[PackageSettings.RunAsX86] = true;
+                package.Settings[EnginePackageSettings.RunAsX86] = true;
 
-            package.Settings[InternalEngineSettings.ImageRequiresDefaultAppDomainAssemblyResolver] = requiresAssemblyResolver;
+            package.Settings[InternalEnginePackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver] = requiresAssemblyResolver;
         }
 
         #endregion

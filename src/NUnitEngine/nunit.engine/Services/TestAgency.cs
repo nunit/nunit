@@ -26,8 +26,6 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -157,18 +155,18 @@ namespace NUnit.Engine.Services
         private Guid LaunchAgentProcess(TestPackage package)
         {
             RuntimeFramework targetRuntime = RuntimeFramework.CurrentFramework;
-            string runtimeSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
+            string runtimeSetting = package.GetSetting(EnginePackageSettings.RuntimeFramework, "");
             if (runtimeSetting != "")
                 targetRuntime = RuntimeFramework.Parse(runtimeSetting);
 
             if (targetRuntime.Runtime == RuntimeType.Any)
                 targetRuntime = new RuntimeFramework(RuntimeFramework.CurrentFramework.Runtime, targetRuntime.ClrVersion);
 
-            bool useX86Agent = package.GetSetting(PackageSettings.RunAsX86, false);
-            bool debugTests = package.GetSetting(PackageSettings.DebugTests, false);
-            bool debugAgent = package.GetSetting(PackageSettings.DebugAgent, false);
-            string traceLevel = package.GetSetting(PackageSettings.InternalTraceLevel, "Off");
-            bool loadUserProfile = package.GetSetting(PackageSettings.LoadUserProfile, false);
+            bool useX86Agent = package.GetSetting(EnginePackageSettings.RunAsX86, false);
+            bool debugTests = package.GetSetting(EnginePackageSettings.DebugTests, false);
+            bool debugAgent = package.GetSetting(EnginePackageSettings.DebugAgent, false);
+            string traceLevel = package.GetSetting(EnginePackageSettings.InternalTraceLevel, "Off");
+            bool loadUserProfile = package.GetSetting(EnginePackageSettings.LoadUserProfile, false);
 
             // Set options that need to be in effect before the package
             // is loaded by using the command line.

@@ -22,13 +22,12 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using NUnit.Common;
+using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -343,20 +342,20 @@ namespace NUnitLite
             var runSettings = new Dictionary<string, object>();
 
             if (options.RandomSeed >= 0)
-                runSettings[PackageSettings.RandomSeed] = options.RandomSeed;
+                runSettings[FrameworkPackageSettings.RandomSeed] = options.RandomSeed;
 
 #if !PORTABLE
             if (options.WorkDirectory != null)
-                runSettings[PackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
+                runSettings[FrameworkPackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
 #endif
             if (options.DefaultTimeout >= 0)
-                runSettings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
+                runSettings[FrameworkPackageSettings.DefaultTimeout] = options.DefaultTimeout;
 
             if (options.StopOnError)
-                runSettings[PackageSettings.StopOnError] = true;
+                runSettings[FrameworkPackageSettings.StopOnError] = true;
 
             if (options.DefaultTestNamePattern != null)
-                runSettings[PackageSettings.DefaultTestNamePattern] = options.DefaultTestNamePattern;
+                runSettings[FrameworkPackageSettings.DefaultTestNamePattern] = options.DefaultTestNamePattern;
 
             return runSettings;
         }

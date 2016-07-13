@@ -24,7 +24,6 @@
 // TODO: Test uses features not available in Silverlight
 #if !SILVERLIGHT && !PORTABLE
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;

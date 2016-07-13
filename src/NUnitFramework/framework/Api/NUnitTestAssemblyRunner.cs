@@ -22,16 +22,13 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.IO;
 using System.Reflection;
 using System.Threading;
-using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
-
+using System.IO;
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -155,8 +152,8 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.ContainsKey(PackageSettings.RandomSeed))
-                Randomizer.InitialSeed = (int)settings[PackageSettings.RandomSeed];
+            if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
+                Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
             return LoadedTest = _builder.Build(assemblyName, settings);
 
@@ -172,8 +169,8 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.ContainsKey(PackageSettings.RandomSeed))
-                Randomizer.InitialSeed = (int)settings[PackageSettings.RandomSeed];
+            if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
+                Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
             return LoadedTest = _builder.Build(assembly, settings);
         }
@@ -281,7 +278,7 @@ namespace NUnit.Framework.Api
 
 #if PARALLEL
             // Queue and pump events, unless settings have SynchronousEvents == false
-            if (!Settings.ContainsKey(PackageSettings.SynchronousEvents) || !(bool)Settings[PackageSettings.SynchronousEvents])
+            if (!Settings.ContainsKey(FrameworkPackageSettings.SynchronousEvents) || !(bool)Settings[FrameworkPackageSettings.SynchronousEvents])
             {
                 QueuingEventListener queue = new QueuingEventListener();
                 Context.Listener = queue;
@@ -293,13 +290,13 @@ namespace NUnit.Framework.Api
 
 #if !NETCF
             if (!System.Diagnostics.Debugger.IsAttached &&
-                Settings.ContainsKey(PackageSettings.DebugTests) &&
-                (bool)Settings[PackageSettings.DebugTests])
+                Settings.ContainsKey(FrameworkPackageSettings.DebugTests) &&
+                (bool)Settings[FrameworkPackageSettings.DebugTests])
                 System.Diagnostics.Debugger.Launch();
 
 #if !SILVERLIGHT && !PORTABLE
-            if (Settings.ContainsKey(PackageSettings.PauseBeforeRun) &&
-                (bool)Settings[PackageSettings.PauseBeforeRun])
+            if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
+                (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
 
 #endif
@@ -317,13 +314,13 @@ namespace NUnit.Framework.Api
             Context = new TestExecutionContext();
 
             // Apply package settings to the context
-            if (Settings.ContainsKey(PackageSettings.DefaultTimeout))
-                Context.TestCaseTimeout = (int)Settings[PackageSettings.DefaultTimeout];
-            if (Settings.ContainsKey(PackageSettings.StopOnError))
-                Context.StopOnError = (bool)Settings[PackageSettings.StopOnError];
+            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultTimeout))
+                Context.TestCaseTimeout = (int)Settings[FrameworkPackageSettings.DefaultTimeout];
+            if (Settings.ContainsKey(FrameworkPackageSettings.StopOnError))
+                Context.StopOnError = (bool)Settings[FrameworkPackageSettings.StopOnError];
 
-            if (Settings.ContainsKey(PackageSettings.WorkDirectory))
-                Context.WorkDirectory = (string)Settings[PackageSettings.WorkDirectory];
+            if (Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory))
+                Context.WorkDirectory = (string)Settings[FrameworkPackageSettings.WorkDirectory];
             else
                 Context.WorkDirectory = Env.DefaultWorkDirectory;
 
@@ -378,8 +375,8 @@ namespace NUnit.Framework.Api
 #if PARALLEL
         private int GetLevelOfParallelism()
         {
-            return Settings.ContainsKey(PackageSettings.NumberOfTestWorkers)
-                ? (int)Settings[PackageSettings.NumberOfTestWorkers]
+            return Settings.ContainsKey(FrameworkPackageSettings.NumberOfTestWorkers)
+                ? (int)Settings[FrameworkPackageSettings.NumberOfTestWorkers]
                 : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
                    : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);

@@ -21,9 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Common;
-
 namespace NUnit.Engine.Runners
 {
     /// <summary>
@@ -48,7 +45,7 @@ namespace NUnit.Engine.Runners
 
         protected override int GetLevelOfParallelism()
         {
-            return TestPackage.GetSetting(PackageSettings.MaxAgents, int.MaxValue);
+            return TestPackage.GetSetting(EnginePackageSettings.MaxAgents, int.MaxValue);
         }
 
         #endregion

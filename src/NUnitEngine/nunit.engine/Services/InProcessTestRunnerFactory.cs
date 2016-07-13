@@ -20,9 +20,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
-using System;
-using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Runners;
 
@@ -49,7 +46,7 @@ namespace NUnit.Engine.Services
         {
             DomainUsage domainUsage = (DomainUsage)System.Enum.Parse(
                 typeof(DomainUsage),
-                package.GetSetting(PackageSettings.DomainUsage, "Default"));
+                package.GetSetting(EnginePackageSettings.DomainUsage, "Default"));
 
             switch (domainUsage)
             {

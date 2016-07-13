@@ -31,7 +31,6 @@ using System.Diagnostics;
 using System.Security;
 using System.Security.Policy;
 using System.Security.Principal;
-using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -114,13 +113,13 @@ namespace NUnit.Engine.Services
                 // If property is null, .NET 4.5+ is not installed, so there is no need
                 if (TargetFrameworkNameProperty != null)
                 {
-                    var frameworkName = package.GetSetting(InternalEngineSettings.ImageTargetFrameworkName, "");
+                    var frameworkName = package.GetSetting(InternalEnginePackageSettings.ImageTargetFrameworkName, "");
                     if (frameworkName != "")
                         TargetFrameworkNameProperty.SetValue(setup, frameworkName, null);
                 }
             }
 
-            if (package.GetSetting(PackageSettings.ShadowCopyFiles, false))
+            if (package.GetSetting(EnginePackageSettings.ShadowCopyFiles, false))
             {
                 setup.ShadowCopyFiles = "true";
                 setup.ShadowCopyDirectories = setup.ApplicationBase;
@@ -212,7 +211,7 @@ namespace NUnit.Engine.Services
         {
             Guard.ArgumentNotNull(package, "package");
 
-            var appBase = package.GetSetting(PackageSettings.BasePath, string.Empty);
+            var appBase = package.GetSetting(EnginePackageSettings.BasePath, string.Empty);
 
             if (string.IsNullOrEmpty(appBase))
                 appBase = string.IsNullOrEmpty(package.FullName)
@@ -235,7 +234,7 @@ namespace NUnit.Engine.Services
             Guard.ArgumentNotNull(package, "package");
 
             // Use provided setting if available
-            string configFile = package.GetSetting(PackageSettings.ConfigurationFile, string.Empty);
+            string configFile = package.GetSetting(EnginePackageSettings.ConfigurationFile, string.Empty);
             if (configFile != string.Empty)
                 return Path.Combine(appBase, configFile);
         
@@ -299,9 +298,9 @@ namespace NUnit.Engine.Services
 
         public static string GetPrivateBinPath(string appBase, TestPackage package)
         {
-            var binPath = package.GetSetting(PackageSettings.PrivateBinPath, string.Empty);
+            var binPath = package.GetSetting(EnginePackageSettings.PrivateBinPath, string.Empty);
 
-            if (package.GetSetting(PackageSettings.AutoBinPath, binPath == string.Empty))
+            if (package.GetSetting(EnginePackageSettings.AutoBinPath, binPath == string.Empty))
                 binPath = package.SubPackages.Count > 0
                     ? GetPrivateBinPath(appBase, package.SubPackages)
                     : package.FullName != null

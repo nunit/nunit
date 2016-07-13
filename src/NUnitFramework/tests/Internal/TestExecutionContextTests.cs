@@ -28,8 +28,6 @@ using System.Globalization;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
-using NUnit.TestData.TestContextData;
-using NUnit.TestUtilities;
 
 #if !NETCF
 using System.Security.Principal;

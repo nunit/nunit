@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Xml;
-using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
@@ -89,8 +87,8 @@ namespace NUnit.Engine.Runners
                 if (_agent == null)
                 {
                     // Increase the timeout to give time to attach a debugger
-                    bool debug = TestPackage.GetSetting(PackageSettings.DebugAgent, false) ||
-                                 TestPackage.GetSetting(PackageSettings.PauseBeforeRun, false);
+                    bool debug = TestPackage.GetSetting(EnginePackageSettings.DebugAgent, false) ||
+                                 TestPackage.GetSetting(EnginePackageSettings.PauseBeforeRun, false);
 
                     _agent = _agency.GetAgent(TestPackage, debug ? DEBUG_TIMEOUT : NORMAL_TIMEOUT);
 
