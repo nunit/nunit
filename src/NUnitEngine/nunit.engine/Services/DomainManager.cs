@@ -120,7 +120,7 @@ namespace NUnit.Engine.Services
                 }
             }
 
-            if (package.GetSetting("ShadowCopyFiles", false))
+            if (package.GetSetting(PackageSettings.ShadowCopyFiles, false))
             {
                 setup.ShadowCopyFiles = "true";
                 setup.ShadowCopyDirectories = setup.ApplicationBase;
