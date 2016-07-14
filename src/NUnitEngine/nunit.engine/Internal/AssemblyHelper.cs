@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,36 +24,29 @@
 using System;
 using System.IO;
 using System.Reflection;
-
-#if NUNIT_ENGINE
 namespace NUnit.Engine.Internal
-#elif NUNIT_FRAMEWORK
-namespace NUnit.Framework.Internal
-#else
-namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// AssemblyHelper provides static methods for working
     /// with assemblies.
     /// </summary>
-    public class AssemblyHelper
+    public static class AssemblyHelper
     {
-        #region GetAssemblyPath
+        #region GetDirectoryName
 
         /// <summary>
-        /// Gets the path from which the assembly defining a type was loaded.
+        /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>
-        /// <param name="type">The Type.</param>
+        /// <param name="assembly">The assembly.</param>
         /// <returns>The path.</returns>
-        public static string GetAssemblyPath(Type type)
+        public static string GetDirectoryName(Assembly assembly)
         {
-#if PORTABLE
-            return GetAssemblyPath(type.GetTypeInfo().Assembly);
-#else
-            return GetAssemblyPath(type.Assembly);
-#endif
+            return Path.GetDirectoryName(GetAssemblyPath(assembly));
         }
+
+        #endregion
+
+        #region GetAssemblyPath
 
         /// <summary>
         /// Gets the path from which an assembly was loaded.
@@ -64,106 +57,18 @@ namespace NUnit.Common
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if SILVERLIGHT
-            return GetAssemblyName(assembly).Name;
-#elif NETCF || PORTABLE
-            return assembly.ManifestModule.FullyQualifiedName;
-#else
             string codeBase = assembly.CodeBase;
 
             if (IsFileUri(codeBase))
                 return GetAssemblyPathFromCodeBase(codeBase);
 
             return assembly.Location;
-#endif
-        }
-
-#endregion
-
-#region GetDirectoryName
-
-#if !SILVERLIGHT && !PORTABLE
-        /// <summary>
-        /// Gets the path to the directory from which an assembly was loaded.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <returns>The path.</returns>
-        public static string GetDirectoryName(Assembly assembly)
-        {
-            return Path.GetDirectoryName(GetAssemblyPath(assembly));
-        }
-#endif
-
-#endregion
-
-#region GetAssemblyName
-
-        /// <summary>
-        /// Gets the AssemblyName of an assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly</param>
-        /// <returns>An AssemblyName</returns>
-        public static AssemblyName GetAssemblyName(Assembly assembly)
-        {
-#if SILVERLIGHT || PORTABLE
-            return new AssemblyName(assembly.FullName);
-#else
-            return assembly.GetName();
-#endif
         }
 
         #endregion
 
-        #region Load
+        #region Helper Methods
 
-#if PORTABLE
-        /// <summary>
-        /// Loads an assembly given a string, which is the AssemblyName
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static Assembly Load(string name)
-        {
-            var ext = Path.GetExtension(name);
-            if (ext == ".dll" || ext == ".exe")
-                name = Path.GetFileNameWithoutExtension(name);
-
-            return Assembly.Load(new AssemblyName { Name = name });
-        }
-#else
-
-        /// <summary>
-        /// Loads an assembly given a string, which may be the 
-        /// path to the assembly or the AssemblyName
-        /// </summary>
-        /// <param name="nameOrPath"></param>
-        /// <returns></returns>
-        public static Assembly Load(string nameOrPath)
-        {
-            var ext = Path.GetExtension(nameOrPath).ToLower();
-
-            // Handle case where this is the path to an assembly
-            if (ext == ".dll" || ext == ".exe")
-            {
-#if SILVERLIGHT
-                return Assembly.Load(Path.GetFileNameWithoutExtension(nameOrPath));
-#elif NETCF
-                return Assembly.LoadFrom(nameOrPath);
-#else
-                return Assembly.Load(AssemblyName.GetAssemblyName(nameOrPath));
-#endif
-            }
-
-            // Assume it's the string representation of an AssemblyName
-            return Assembly.Load(nameOrPath);
-        }
-#endif
-
-        #endregion
-
-#region Helper Methods
-
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         private static bool IsFileUri(string uri)
         {
             return uri.ToLower().StartsWith(Uri.UriSchemeFile);
@@ -195,8 +100,7 @@ namespace NUnit.Common
 
             return codeBase.Substring(start);
         }
-#endif
 
-#endregion
+        #endregion
     }
 }

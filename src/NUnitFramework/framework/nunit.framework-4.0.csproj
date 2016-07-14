@@ -50,9 +50,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
-      <Link>Internal\AssemblyHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
       <Link>Internal\ILogger.cs</Link>
     </Compile>
@@ -303,6 +300,7 @@
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\TNode.cs" />
     <Compile Include="Internal\ActionsHelper.cs" />
+    <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />

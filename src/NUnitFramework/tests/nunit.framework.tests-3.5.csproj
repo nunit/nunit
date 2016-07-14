@@ -54,9 +54,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
-      <Link>Internal\AssemblyHelperTests.cs</Link>
-    </Compile>
     <Compile Include="..\Fakes.cs">
       <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
@@ -86,6 +83,7 @@
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
