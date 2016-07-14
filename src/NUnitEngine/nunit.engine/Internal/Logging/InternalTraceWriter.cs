@@ -22,13 +22,7 @@
 // ***********************************************************************
 using System.IO;
 
-#if NUNIT_ENGINE
 namespace NUnit.Engine.Internal
-#elif NUNIT_FRAMEWORK
-namespace NUnit.Framework.Internal
-#else
-namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// A trace listener that writes to a separate file per domain
@@ -39,7 +33,6 @@ namespace NUnit.Common
         TextWriter writer;
         object myLock = new object();
 
-#if !PORTABLE
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.
         /// </summary>
@@ -50,7 +43,6 @@ namespace NUnit.Common
             streamWriter.AutoFlush = true;
             this.writer = streamWriter;
         }
-#endif
 
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a 

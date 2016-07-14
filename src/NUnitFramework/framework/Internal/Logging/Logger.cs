@@ -24,13 +24,7 @@
 using System;
 using System.IO;
 
-#if NUNIT_ENGINE
-namespace NUnit.Engine.Internal
-#elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Internal
-#else
-namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// Provides internal logging to the NUnit framework
