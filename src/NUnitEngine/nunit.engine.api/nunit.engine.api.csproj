@@ -52,12 +52,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
-      <Link>ILogger.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\InternalTraceLevel.cs">
-      <Link>InternalTraceLevel.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
       <Link>TestSelectionParserException.cs</Link>
     </Compile>
@@ -72,6 +66,8 @@
     <Compile Include="Extensibility\IProject.cs" />
     <Compile Include="Extensibility\IProjectLoader.cs" />
     <Compile Include="Extensibility\IResultWriter.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="InternalTraceLevel.cs" />
     <Compile Include="IRuntimeFramework.cs" />
     <Compile Include="IAvailableRuntimes.cs" />
     <Compile Include="IResultService.cs" />

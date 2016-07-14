@@ -56,15 +56,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
-      <Link>Internal\InternalTrace.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\InternalTraceWriter.cs">
-      <Link>Internal\InternalTraceWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
-      <Link>Internal\Logger.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
       <Link>Services\TestSelectionParser.cs</Link>
     </Compile>
@@ -92,6 +83,9 @@
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\CecilExtensions.cs" />
     <Compile Include="Internal\DirectoryFinder.cs" />
+    <Compile Include="Internal\Logging\InternalTrace.cs" />
+    <Compile Include="Internal\Logging\InternalTraceWriter.cs" />
+    <Compile Include="Internal\Logging\Logger.cs" />
     <Compile Include="Internal\ProvidedPathsAssemblyResolver.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />

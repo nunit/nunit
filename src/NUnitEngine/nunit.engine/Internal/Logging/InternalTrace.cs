@@ -22,15 +22,8 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
 
-#if NUNIT_ENGINE
 namespace NUnit.Engine.Internal
-#elif NUNIT_FRAMEWORK
-namespace NUnit.Framework.Internal
-#else
-namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// InternalTrace provides facilities for tracing the execution
@@ -57,7 +50,6 @@ namespace NUnit.Common
         /// </summary>
         public static bool Initialized { get; private set; }
 
-#if !PORTABLE
         /// <summary>
         /// Initialize the internal trace facility using the name of the log
         /// to be written to and the trace level.
@@ -80,28 +72,6 @@ namespace NUnit.Common
             }
             else
                 traceWriter.WriteLine("InternalTrace: Ignoring attempted re-initialization at level {0}", level);
-        }
-#endif
-
-        /// <summary>
-        /// Initialize the internal trace using a provided TextWriter and level
-        /// </summary>
-        /// <param name="writer">A TextWriter</param>
-        /// <param name="level">The InternalTraceLevel</param>
-        public static void Initialize(TextWriter writer, InternalTraceLevel level)
-        {
-            if (!Initialized)
-            {
-                traceLevel = level;
-
-                if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
-                {
-                    traceWriter = new InternalTraceWriter(writer);
-                    traceWriter.WriteLine("InternalTrace: Initializing at level " + traceLevel.ToString());
-                }
-
-                Initialized = true;
-            }
         }
 
         /// <summary>

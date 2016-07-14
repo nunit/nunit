@@ -66,21 +66,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
-      <Link>Internal\ILogger.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
-      <Link>Internal\InternalTrace.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\InternalTraceLevel.cs">
-      <Link>Internal\InternalTraceLevel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\InternalTraceWriter.cs">
-      <Link>Internal\InternalTraceWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
-      <Link>Internal\Logger.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -385,6 +370,11 @@
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
     <Compile Include="Internal\Filters\TestNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
+    <Compile Include="Internal\Logging\ILogger.cs" />
+    <Compile Include="Internal\Logging\InternalTrace.cs" />
+    <Compile Include="Internal\Logging\InternalTraceLevel.cs" />
+    <Compile Include="Internal\Logging\InternalTraceWriter.cs" />
+    <Compile Include="Internal\Logging\Logger.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
