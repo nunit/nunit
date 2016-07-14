@@ -45,9 +45,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
-      <Link>Internal\AssemblyHelperTests.cs</Link>
-    </Compile>
     <Compile Include="..\Fakes.cs">
       <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
@@ -187,6 +184,7 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
     <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
     <Compile Include="Internal\Filters\ClassNameFilterTests.cs" />

@@ -61,9 +61,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
-      <Link>Internal\AssemblyHelperTests.cs</Link>
-    </Compile>
     <Compile Include="..\Fakes.cs">
       <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
@@ -225,6 +222,7 @@
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs">
       <SubType>Code</SubType>

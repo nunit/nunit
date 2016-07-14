@@ -161,6 +161,7 @@
     <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Compatibility\StopwatchTests.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="TestUtilities\AsyncTestDelegates.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />

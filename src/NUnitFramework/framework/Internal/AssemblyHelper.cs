@@ -25,35 +25,15 @@ using System;
 using System.IO;
 using System.Reflection;
 
-#if NUNIT_ENGINE
-namespace NUnit.Engine.Internal
-#elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Internal
-#else
-namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// AssemblyHelper provides static methods for working
     /// with assemblies.
     /// </summary>
-    public class AssemblyHelper
+    public static class AssemblyHelper
     {
         #region GetAssemblyPath
-
-        /// <summary>
-        /// Gets the path from which the assembly defining a type was loaded.
-        /// </summary>
-        /// <param name="type">The Type.</param>
-        /// <returns>The path.</returns>
-        public static string GetAssemblyPath(Type type)
-        {
-#if PORTABLE
-            return GetAssemblyPath(type.GetTypeInfo().Assembly);
-#else
-            return GetAssemblyPath(type.Assembly);
-#endif
-        }
 
         /// <summary>
         /// Gets the path from which an assembly was loaded.
@@ -78,9 +58,9 @@ namespace NUnit.Common
 #endif
         }
 
-#endregion
+        #endregion
 
-#region GetDirectoryName
+        #region GetDirectoryName
 
 #if !SILVERLIGHT && !PORTABLE
         /// <summary>
@@ -94,9 +74,9 @@ namespace NUnit.Common
         }
 #endif
 
-#endregion
+        #endregion
 
-#region GetAssemblyName
+        #region GetAssemblyName
 
         /// <summary>
         /// Gets the AssemblyName of an assembly.
@@ -161,7 +141,7 @@ namespace NUnit.Common
 
         #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
         private static bool IsFileUri(string uri)
@@ -197,6 +177,6 @@ namespace NUnit.Common
         }
 #endif
 
-#endregion
+        #endregion
     }
 }
