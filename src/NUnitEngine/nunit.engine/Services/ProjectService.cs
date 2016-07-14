@@ -21,10 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Common;
 using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Services
@@ -70,7 +68,7 @@ namespace NUnit.Engine.Services
             IProject project = LoadFrom(path);
             Guard.ArgumentValid(project != null, "Unable to load project " + path, "package");
 
-            string configName = package.GetSetting(PackageSettings.ActiveConfig, (string)null); // Need RunnerSetting
+            string configName = package.GetSetting(EnginePackageSettings.ActiveConfig, (string)null); // Need RunnerSetting
             TestPackage tempPackage = project.GetTestPackage(configName);
 
             // The original package held overrides, so don't change them, but
@@ -85,11 +83,11 @@ namespace NUnit.Engine.Services
             // If no config is specified (by user or by the proejct loader) check
             // to see if one exists in same directory as the package. If so, we
             // use it. If not, each assembly will use it's own config, if present.
-            if (!package.Settings.ContainsKey(PackageSettings.ConfigurationFile))
+            if (!package.Settings.ContainsKey(EnginePackageSettings.ConfigurationFile))
             {
                 var packageConfig = Path.ChangeExtension(path, ".config");
                 if (File.Exists(packageConfig))
-                    package.Settings[PackageSettings.ConfigurationFile] = packageConfig;
+                    package.Settings[EnginePackageSettings.ConfigurationFile] = packageConfig;
             }
         }
 

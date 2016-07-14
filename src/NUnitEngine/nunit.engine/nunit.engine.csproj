@@ -68,9 +68,6 @@
     <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\PackageSettings.cs">
-      <Link>PackageSettings.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
       <Link>Services\TestSelectionParser.cs</Link>
     </Compile>
@@ -87,12 +84,14 @@
     <Compile Include="Drivers\NUnit3DriverFactory.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriver.cs" />
     <Compile Include="EngineExtensionPoints.cs" />
+    <Compile Include="EnginePackageSettings.cs" />
     <Compile Include="Extensibility\ExtensionNode.cs" />
     <Compile Include="Extensibility\ExtensionPoint.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Guard.cs" />
     <Compile Include="IDriverService.cs" />
+    <Compile Include="InternalEnginePackageSettings.cs" />
     <Compile Include="Internal\CecilExtensions.cs" />
     <Compile Include="Internal\DirectoryFinder.cs" />
     <Compile Include="Internal\ProvidedPathsAssemblyResolver.cs" />

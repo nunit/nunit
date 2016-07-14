@@ -28,7 +28,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
@@ -88,8 +87,8 @@ namespace NUnit.Engine.Runners
             _runtimeService.SelectRuntimeFramework(TestPackage);
 
             if (IntPtr.Size == 8 &&
-                TestPackage.GetSetting(PackageSettings.ProcessModel, "") == "InProcess" &&
-                TestPackage.GetSetting(PackageSettings.RunAsX86, false))
+                TestPackage.GetSetting(EnginePackageSettings.ProcessModel, "") == "InProcess" &&
+                TestPackage.GetSetting(EnginePackageSettings.RunAsX86, false))
             {
                 throw new NUnitEngineException("Cannot run tests in process - a 32 bit process is required.");
             }
@@ -270,7 +269,7 @@ namespace NUnit.Engine.Runners
         // runner is putting invalid values into the package.
         private void ValidatePackageSettings()
         {
-            var frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
+            var frameworkSetting = TestPackage.GetSetting(EnginePackageSettings.RuntimeFramework, "");
             if (frameworkSetting.Length > 0)
             {
                 // Check requested framework is actually available
@@ -279,7 +278,7 @@ namespace NUnit.Engine.Runners
                     throw new NUnitEngineException(string.Format("The requested framework {0} is unknown or not available.", frameworkSetting));
 
                 // If running in process, check requested framework is compatible
-                var processModel = TestPackage.GetSetting(PackageSettings.ProcessModel, "Default");
+                var processModel = TestPackage.GetSetting(EnginePackageSettings.ProcessModel, "Default");
                 if (processModel.ToLower() == "single")
                 {
                     var currentFramework = RuntimeFramework.CurrentFramework;

@@ -83,9 +83,6 @@
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Utilities\OutputSpecification.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\PackageSettings.cs">
-      <Link>PackageSettings.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Utilities\TestNameParser.cs</Link>
     </Compile>
@@ -94,6 +91,8 @@
     </Compile>
     <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="EnginePackageSettings.cs" />
+    <Compile Include="FrameworkPackageSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="SafeAttributeAccess.cs" />
