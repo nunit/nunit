@@ -29,7 +29,6 @@ using NUnit.ConsoleRunner.Utilities;
 using NUnit.Engine;
 using NUnit.Engine.Extensibility;
 using System.Runtime.InteropServices;
-using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner
 {
@@ -412,7 +411,7 @@ namespace NUnit.ConsoleRunner
 
 #if DEBUG
             if (options.DebugAgent)
-                package.AddSetting(PackageSettings.DebugAgent, true);
+                package.AddSetting(EnginePackageSettings.DebugAgent, true);
 
             //foreach (KeyValuePair<string, object> entry in package.Settings)
             //    if (!(entry.Value is string || entry.Value is int || entry.Value is bool))
