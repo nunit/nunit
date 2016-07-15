@@ -56,12 +56,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
-      <Link>Services\TestSelectionParser.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Tokenizer.cs">
-      <Link>Services\Tokenizer.cs</Link>
-    </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>Properties\EngineVersion.cs</Link>
     </Compile>
@@ -144,6 +138,8 @@
     <Compile Include="Services\TestAgency.cs" />
     <Compile Include="Services\TestFilterBuilder.cs" />
     <Compile Include="Services\TestFilterService.cs" />
+    <Compile Include="Services\TestSelectionParser.cs" />
+    <Compile Include="Services\Tokenizer.cs" />
     <Compile Include="TestEngine.cs" />
     <Compile Include="TestEngineResult.cs" />
     <Compile Include="XmlHelper.cs" />
