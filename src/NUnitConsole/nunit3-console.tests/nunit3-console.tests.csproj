@@ -42,15 +42,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
-      <Link>DefaultOptionsProviderTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\OutputSpecificationTests.cs">
-      <Link>OutputSpecificationTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestNameParserTests.cs">
-      <Link>TestNameParserTests.cs</Link>
-    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>
@@ -58,11 +49,14 @@
     <Compile Include="ColorStyleTests.cs" />
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="ConsoleOutputTests.cs" />
+    <Compile Include="DefaultOptionsProviderTests.cs" />
     <Compile Include="ExtendedTextWrapperTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
+    <Compile Include="OutputSpecificationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultReporterTests.cs" />
     <Compile Include="TestEventHandlerTests.cs" />
+    <Compile Include="TestNameParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestListWithEmptyLine.tst">

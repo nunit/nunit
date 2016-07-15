@@ -53,40 +53,28 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\CommandLineOptions.cs">
-      <Link>CommandLineOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
-      <Link>DefaultOptionsProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
-      <Link>IDefaultOptionsProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Options.cs">
-      <Link>Options.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
-      <Link>Utilities\OutputSpecification.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
-      <Link>Utilities\TestNameParser.cs</Link>
-    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>Properties\ConsoleVersion.cs</Link>
     </Compile>
     <Compile Include="ColorConsole.cs" />
     <Compile Include="ColorConsoleWriter.cs" />
     <Compile Include="ColorStyle.cs" />
+    <Compile Include="CommandLineOptions.cs" />
     <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="DefaultOptionsProvider.cs" />
     <Compile Include="EnginePackageSettings.cs" />
     <Compile Include="ExtendedTextWrapper.cs" />
     <Compile Include="ExtendedTextWriter.cs" />
     <Compile Include="FrameworkPackageSettings.cs" />
+    <Compile Include="IDefaultOptionsProvider.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="OutputSpecification.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="SafeAttributeAccess.cs" />
     <Compile Include="TestEventHandler.cs" />
+    <Compile Include="TestNameParser.cs" />
     <Compile Include="Utilities\SaveConsoleOutput.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
