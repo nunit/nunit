@@ -130,6 +130,10 @@ Task("InitializeBuild")
 				else
 					suffix += "-" + AppVeyor.Environment.Repository.Branch;
 
+				// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
+				if (suffix.Length > 21)
+					suffix = suffix.Substring(0, 21);
+
 				packageVersion = version + suffix;
 				teamcityVersion = tcVersion + suffix;
 			}
