@@ -44,6 +44,15 @@ namespace NUnit.Engine.Listeners
 
         public static class Names
         {
+            public const string Name = "name";            
+            public const string FlowId = "flowId";
+            public const string Message = "message";
+            public const string Out = "out";            
+            public const string TcTags = "tc:tags";
+            public const string Parent = "parent";
+            public const string CaptureStandardOutput = "captureStandardOutput";
+            public const string Duration = "duration";            
+            public const string Details = "details";
         }
     }
 }

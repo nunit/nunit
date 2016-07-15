@@ -71,7 +71,7 @@ namespace NUnit.Engine.Listeners
 
         public void RegisterMessage(XmlNode testEvent)
         {
-            if (testEvent == null) throw new ArgumentNullException("message");
+            if (testEvent == null) throw new ArgumentNullException("testEvent");
 
             var messageName = testEvent.Name;
             if (string.IsNullOrEmpty(messageName))
@@ -274,56 +274,50 @@ namespace NUnit.Engine.Listeners
                 return;
             }
 
-            Write(new ServiceMessage(
-                "testStdOut", 
-                new ServiceMessageAttribute("name", fullName),
-                new ServiceMessageAttribute("out", outputStr),
-                new ServiceMessageAttribute("flowId", flowId),
-                new ServiceMessageAttribute("tc:tags", "tc:parseServiceMessagesInside")));            
+            Write(new ServiceMessage(ServiceMessage.Names.TestStdOut, 
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, fullName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Out, outputStr),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.TcTags, "tc:parseServiceMessagesInside")));            
         }        
 
         private void OnRootSuiteStart(string flowId, string assemblyName)
         {
             assemblyName = Path.GetFileName(assemblyName);
             
-            Write(new ServiceMessage(
-                "testSuiteStarted",
-                new ServiceMessageAttribute("name", assemblyName),
-                new ServiceMessageAttribute("flowId", flowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.TestSuiteStarted,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, assemblyName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));
         }
 
         private void OnRootSuiteFinish(string flowId, string assemblyName)
         {
             assemblyName = Path.GetFileName(assemblyName);
             
-            Write(new ServiceMessage(
-                "testSuiteFinished",
-                new ServiceMessageAttribute("name", assemblyName),
-                new ServiceMessageAttribute("flowId", flowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.TestSuiteFinished,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, assemblyName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));
         }
 
         private void OnFlowStarted(string flowId, string parentFlowId)
         {
-            Write(new ServiceMessage(
-                "flowStarted",
-                new ServiceMessageAttribute("flowId", flowId),
-                new ServiceMessageAttribute("parent", parentFlowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.FlowStarted,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Parent, parentFlowId)));
         }
 
         private void OnFlowFinished(string flowId)
         {
-            Write(new ServiceMessage(
-                "flowFinished",
-                new ServiceMessageAttribute("flowId", flowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.FlowFinished,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));
         }
 
         private void OnTestStart(string flowId, string fullName)
         {
-            Write(new ServiceMessage(
-                "testStarted",
-                new ServiceMessageAttribute("name", fullName),
-                new ServiceMessageAttribute("captureStandardOutput", "false"),
-                new ServiceMessageAttribute("flowId", flowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.TestStarted,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, fullName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.CaptureStandardOutput, "false"),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));
         }
 
         private void OnTestFinished(string flowId, XmlNode message, string fullName)
@@ -333,7 +327,7 @@ namespace NUnit.Engine.Listeners
                 throw new ArgumentNullException("message");
             }
 
-            var durationStr = message.GetAttribute("duration");
+            var durationStr = message.GetAttribute(ServiceMessageAttribute.Names.Duration);
             double durationDecimal;
             int durationMilliseconds = 0;
             if (durationStr != null && double.TryParse(durationStr, NumberStyles.Any, CultureInfo.InvariantCulture, out durationDecimal))
@@ -343,11 +337,10 @@ namespace NUnit.Engine.Listeners
 
             TrySendOutput(flowId, message, fullName);
 
-            Write(new ServiceMessage(
-                "testFinished",
-                new ServiceMessageAttribute("name", fullName),
-                new ServiceMessageAttribute("duration", durationMilliseconds.ToString()),
-                new ServiceMessageAttribute("flowId", flowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.TestFinished,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, fullName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Duration, durationMilliseconds.ToString()),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));
         }
 
         private void OnTestFailed(string flowId, XmlNode message, string fullName)
@@ -360,12 +353,11 @@ namespace NUnit.Engine.Listeners
             var errorMessage = message.SelectSingleNode("failure/message");
             var stackTrace = message.SelectSingleNode("failure/stack-trace");
 
-            Write(new ServiceMessage(
-                "testFailed",
-                new ServiceMessageAttribute("name", fullName),
-                new ServiceMessageAttribute("message", errorMessage == null ? string.Empty : errorMessage.InnerText),
-                new ServiceMessageAttribute("details", stackTrace == null ? string.Empty : stackTrace.InnerText),
-                new ServiceMessageAttribute("flowId", flowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.TestFailed,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, fullName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Message, errorMessage == null ? string.Empty : errorMessage.InnerText),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Details, stackTrace == null ? string.Empty : stackTrace.InnerText),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));
 
             OnTestFinished(flowId, message, fullName);
         }
@@ -380,11 +372,10 @@ namespace NUnit.Engine.Listeners
             TrySendOutput(flowId, message, fullName);
             var reason = message.SelectSingleNode("reason/message");
 
-            Write(new ServiceMessage(
-                "testIgnored",
-                new ServiceMessageAttribute("name", fullName),
-                new ServiceMessageAttribute("message", reason == null ? string.Empty : reason.InnerText),
-                new ServiceMessageAttribute("flowId", flowId)));
+            Write(new ServiceMessage(ServiceMessage.Names.TestIgnored,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, fullName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Message, reason == null ? string.Empty : reason.InnerText),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));
         }
 
         private void OnTestInconclusive(string flowId, XmlNode message, string fullName)
@@ -396,11 +387,10 @@ namespace NUnit.Engine.Listeners
 
             TrySendOutput(flowId, message, fullName);
 
-            Write(new ServiceMessage(
-                "testIgnored",
-                new ServiceMessageAttribute("name", fullName),
-                new ServiceMessageAttribute("message", "Inconclusive"),
-                new ServiceMessageAttribute("flowId", flowId)));            
+            Write(new ServiceMessage(ServiceMessage.Names.TestIgnored,
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Name, fullName),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.Message, "Inconclusive"),
+                new ServiceMessageAttribute(ServiceMessageAttribute.Names.FlowId, flowId)));            
         }
 
         private void Write(ServiceMessage serviceMessage)

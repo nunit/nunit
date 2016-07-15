@@ -42,10 +42,19 @@ namespace NUnit.Engine.Listeners
 
         public string Name { get; private set; }
 
-        public IEnumerable<ServiceMessageAttribute> Attributes { get; private set; }        
-    }
+        public IEnumerable<ServiceMessageAttribute> Attributes { get; private set; }
 
-    public static class Names
-    {        
-    }
+        public static class Names
+        {
+            public const string TestStdOut = "testStdOut";
+            public const string TestSuiteStarted = "testSuiteStarted";
+            public const string TestSuiteFinished = "testSuiteFinished";
+            public const string FlowStarted = "flowStarted";
+            public const string FlowFinished = "flowFinished";
+            public const string TestStarted = "testStarted";
+            public const string TestFinished = "testFinished";
+            public const string TestFailed = "testFailed";
+            public const string TestIgnored = "testIgnored";
+        }
+    }    
 }
