@@ -153,9 +153,7 @@ namespace NUnitLite
 
         public int Execute(ExtendedTextWriter writer, TextReader reader, string[] args)
         {
-            var options = new NUnitLiteOptions(args);
-            var textUI = new TextUI(writer, reader, options);
-            return Execute(textUI, options);
+            return Execute(writer, reader, new NUnitLiteOptions(args));
         }
 
         public int Execute(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
@@ -176,15 +174,18 @@ namespace NUnitLite
 
             try
             {
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT
+#if !PORTABLE
                 if (!Directory.Exists(_options.WorkDirectory))
                     Directory.CreateDirectory(_options.WorkDirectory);
+#endif
 
 #if !NETCF
                 if (_options.TeamCity)
-                    _teamCity = new TeamCityEventListener();
+                    _teamCity = new TeamCityEventListener(_textUI.Writer);
 #endif
 #endif
+
 
                 if (_options.ShowVersion || !_options.NoHeader)
                     _textUI.DisplayHeader();
