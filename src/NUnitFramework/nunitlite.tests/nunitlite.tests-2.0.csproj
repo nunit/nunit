@@ -52,24 +52,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
-      <Link>DefaultOptionsProviderTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>ExtendedTextWrapperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\OutputSpecificationTests.cs">
-      <Link>OutputSpecificationTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestNameParserTests.cs">
-      <Link>TestNameParserTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
-      <Link>TestSelectionParserTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
-      <Link>TokenizerTests.cs</Link>
-    </Compile>
     <Compile Include="..\Fakes.cs">
       <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
@@ -82,16 +64,22 @@
     <Compile Include="..\TestFile.cs">
       <Link>TestUtilities\TestFile.cs</Link>
     </Compile>
+    <Compile Include="DefaultOptionsProviderTests.cs" />
+    <Compile Include="ExtendedTextWrapperTests.cs" />
+    <Compile Include="OutputSpecificationTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="CreateTestFilterTests.cs" />
     <Compile Include="MakeRunSettingsTests.cs" />
     <Compile Include="NUnit2XmlOutputWriterTests.cs" />
+    <Compile Include="TestNameParserTests.cs" />
+    <Compile Include="TestSelectionParserTests.cs" />
     <Compile Include="TextUITests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TeamCityEventListenerTests.cs" />
+    <Compile Include="TokenizerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

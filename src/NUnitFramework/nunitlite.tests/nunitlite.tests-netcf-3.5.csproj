@@ -61,15 +61,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>ExtendedTextWrapperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TestSelectionParserTests.cs">
-      <Link>TestSelectionParserTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\TokenizerTests.cs">
-      <Link>TokenizerTests.cs</Link>
-    </Compile>
     <Compile Include="..\Fakes.cs">
       <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
@@ -84,12 +75,15 @@
     </Compile>
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="CreateTestFilterTests.cs" />
+    <Compile Include="ExtendedTextWrapperTests.cs" />
     <Compile Include="MakeRunSettingsTests.cs" />
     <Compile Include="NUnit2XmlOutputWriterTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCityEventListenerTests.cs" />
+    <Compile Include="TestSelectionParserTests.cs" />
     <Compile Include="TextUITests.cs" />
+    <Compile Include="TokenizerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-netcf-3.5.csproj">

@@ -48,55 +48,23 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
-      <Link>ColorConsole.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsoleWriter.cs">
-      <Link>ColorConsoleWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ColorStyle.cs">
-      <Link>ColorStyle.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\CommandLineOptions.cs">
-      <Link>CommandLineOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\DefaultOptionsProvider.cs">
-      <Link>DefaultOptionsProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ExtendedTextWrapper.cs">
-      <Link>ExtendedTextWrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
-      <Link>ExtendedTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\IDefaultOptionsProvider.cs">
-      <Link>IDefaultOptionsProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Options.cs">
-      <Link>Options.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
-      <Link>OutputSpecification.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
-      <Link>TestNameParser.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\TestSelectionParser.cs">
-      <Link>TestSelectionParser.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\TestSelectionParserException.cs">
-      <Link>TestSelectionParserException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\Tokenizer.cs">
-      <Link>Tokenizer.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="AutoRun.cs" />
+    <Compile Include="ColorConsole.cs" />
+    <Compile Include="ColorConsoleWriter.cs" />
+    <Compile Include="ColorStyle.cs" />
+    <Compile Include="CommandLineOptions.cs" />
     <Compile Include="DebugWriter.cs" />
+    <Compile Include="DefaultOptionsProvider.cs" />
+    <Compile Include="ExtendedTextWrapper.cs" />
+    <Compile Include="ExtendedTextWriter.cs" />
+    <Compile Include="IDefaultOptionsProvider.cs" />
     <Compile Include="NUnitLiteOptions.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputSpecification.cs" />
     <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="OutputWriters\OutputWriter.cs" />
@@ -105,8 +73,12 @@
     <Compile Include="ResultSummary.cs" />
     <Compile Include="TcpWriter.cs" />
     <Compile Include="TeamCityEventListener.cs" />
+    <Compile Include="TestNameParser.cs" />
+    <Compile Include="TestSelectionParser.cs" />
+    <Compile Include="TestSelectionParserException.cs" />
     <Compile Include="TextRunner.cs" />
     <Compile Include="TextUI.cs" />
+    <Compile Include="Tokenizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.0.csproj">
