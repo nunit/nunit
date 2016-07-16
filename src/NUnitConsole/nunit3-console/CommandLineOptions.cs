@@ -355,7 +355,7 @@ namespace NUnit.Common
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
-            this.Add("teamcity", "Turns on use of TeamCity service messages.",
+            this.Add("teamcity", "Turns on use of TeamCity service messages. TeamCity engine extension is required.",
                 v => TeamCity = v != null);
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",

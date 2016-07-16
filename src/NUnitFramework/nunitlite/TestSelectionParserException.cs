@@ -24,11 +24,7 @@
 using System;
 using System.Runtime.Serialization;
 
-#if NUNIT_ENGINE
-namespace NUnit.Engine
-#else
 namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// TestSelectionParserException is thrown when an error 
