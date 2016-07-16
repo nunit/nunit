@@ -37,6 +37,7 @@ namespace NUnitLite
     {
         readonly TextWriter _outWriter;
 
+#if !PORTABLE
         /// <summary>
         /// Default constructor using Console.Out
         /// </summary>
@@ -45,6 +46,7 @@ namespace NUnitLite
         /// redirected in order to work correctly under TeamCity.
         /// </remarks>
         public TeamCityEventListener() : this(Console.Out) { }
+#endif
 
         /// <summary>
         /// Construct a TeamCityEventListener specifying a TextWriter. Used for testing.
@@ -102,7 +104,7 @@ namespace NUnitLite
         /// <param name="output">A TestOutput object containing the text to display</param>
         public void TestOutput(TestOutput output) { }
 
-        #region Helper Methods
+#region Helper Methods
 
         private void TC_TestSuiteStarted(string name)
         {
@@ -151,7 +153,7 @@ namespace NUnitLite
                 : null;
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

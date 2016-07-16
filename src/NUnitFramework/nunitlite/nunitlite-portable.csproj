@@ -83,6 +83,7 @@
     <Compile Include="NUnitLiteOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultSummary.cs" />
+    <Compile Include="TeamCityEventListener.cs" />
     <Compile Include="TextRunner.cs" />
     <Compile Include="TextUI.cs" />
   </ItemGroup>

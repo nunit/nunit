@@ -59,9 +59,8 @@ namespace NUnit.Common
         {
             // Apply default options
             if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
-#if !PORTABLE
+
             TeamCity = defaultOptionsProvider.TeamCity;
-#endif
             
             ConfigureOptions();            
             if (args != null)
@@ -371,14 +370,14 @@ namespace NUnit.Common
             this.Add("test-name-format=", "Non-standard naming pattern to use in generating test names.",
                 v => DefaultTestNamePattern = RequiredValue(v, "--test-name-format"));
 
-#if !PORTABLE
-            this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
-                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
-
 #if !NETCF
             this.Add("teamcity", "Turns on use of TeamCity service messages.",
                 v => TeamCity = v != null);
 #endif
+
+#if !PORTABLE
+            this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
+                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v != null);
