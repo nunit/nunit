@@ -53,9 +53,9 @@ namespace NUnitLite.Tests
 #if !PORTABLE
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
+#endif
 #if !SILVERLIGHT && !NETCF
         [TestCase("TeamCity", "teamcity")]
-#endif
 #endif
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
@@ -395,7 +395,7 @@ namespace NUnitLite.Tests
         }
 #endif
 
-#endregion
+        #endregion
 
         #region Explore Option
 
@@ -464,6 +464,8 @@ namespace NUnitLite.Tests
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
 
+#endif
+
 #if !SILVERLIGHT && !NETCF
         [TestCase(true, null, true)]
         [TestCase(false, null, false)]
@@ -496,7 +498,6 @@ namespace NUnitLite.Tests
             // Then
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
         }
-#endif
 #endif
 
         #endregion
