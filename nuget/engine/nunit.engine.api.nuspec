@@ -10,7 +10,7 @@
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>The NUnit Test Engine is used by runners to discover and execute tests.</summary>
+    <summary>The NUnit Test Engine Api is used by runners to interface with the NUnit Engine in order to discover and execute tests.</summary>
     <description>This package includes the nunit.engine.api, which is normally the only assembly referenced by runners as well as by engine extensions. It is not intended for direct use by users who simply want to run tests using NUnit.</description>
     <releaseNotes></releaseNotes>
     <language>en-US</language>

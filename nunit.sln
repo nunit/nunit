@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitFramework", "NUnitFramework", "{5D8A9D62-C11C-45B2-8965-43DE8160B558}"
 EndProject
@@ -161,6 +161,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "engine", "engine", "{43A219A8-2995-4884-806F-FDB9CD25D403}"
 	ProjectSection(SolutionItems) = preProject
+		nuget\engine\nunit.engine.api.nuspec = nuget\engine\nunit.engine.api.nuspec
 		nuget\engine\nunit.engine.nuspec = nuget\engine\nunit.engine.nuspec
 		nuget\engine\nunit.engine.tool.nuspec = nuget\engine\nunit.engine.tool.nuspec
 		nuget\engine\nunit.nuget.addins = nuget\engine\nunit.nuget.addins
