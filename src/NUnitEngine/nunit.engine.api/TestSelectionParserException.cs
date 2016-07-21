@@ -24,19 +24,13 @@
 using System;
 using System.Runtime.Serialization;
 
-#if NUNIT_ENGINE
 namespace NUnit.Engine
-#else
-namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// TestSelectionParserException is thrown when an error 
     /// is found while parsing the selection expression.
     /// </summary>
-#if !PORTABLE
     [Serializable]
-#endif
     public class TestSelectionParserException : Exception
     {
         /// <summary>
@@ -51,11 +45,9 @@ namespace NUnit.Common
         /// <param name="innerException"></param>
         public TestSelectionParserException(string message, Exception innerException) : base(message, innerException) { }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Serialization constructor
         /// </summary>
         public TestSelectionParserException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-#endif
     }
 }

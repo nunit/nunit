@@ -86,9 +86,6 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>ExtendedTextWrapperTests.cs</Link>
-    </Compile>
     <Compile Include="..\Fakes.cs">
       <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
@@ -106,6 +103,7 @@
     </Compile>
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="CreateTestFilterTests.cs" />
+    <Compile Include="ExtendedTextWrapperTests.cs" />
     <Compile Include="MakeRunSettingsTests.cs" />
     <Compile Include="NUnit2XmlOutputWriterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

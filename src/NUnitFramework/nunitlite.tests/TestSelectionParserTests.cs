@@ -27,11 +27,7 @@ using System.Text;
 using System.Xml;
 using NUnit.Framework;
 
-#if NUNIT_ENGINE
-namespace NUnit.Engine.Tests
-#else
 namespace NUnit.Common.Tests
-#endif
 {
     public class TestSelectionParserTests
     {
