@@ -491,7 +491,7 @@ namespace Mono.Options
         }
     }
 
-#if !PORTABLE
+#if !SILVERLIGHT && !PORTABLE
     [Serializable]
 #endif
     public class OptionException : Exception
