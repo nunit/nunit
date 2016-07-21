@@ -37,9 +37,9 @@ Issues that need confirmation will have the **confirm** label or be unlabeled an
 
 ## Documentation
 
-Great documentation is essential for any open source project and NUnit is no exception. [Our documentation](https://github.com/nunit/nunit/wiki) often lags behind the features that have been implemented or would benefit from better examples.
+Great documentation is essential for any open source project and NUnit is no exception. [Our documentation](https://github.com/nunit/docs/wiki/NUnit-Documentation) often lags behind the features that have been implemented or would benefit from better examples.
 
-A great place to start is by going through the [NUnit release notes](https://github.com/nunit/nunit/wiki/Release-Notes) and ensuring that the documentation for new features is up to date.
+A great place to start is by going through the [NUnit release notes](https://github.com/nunit/docs/wiki/Release-Notes) and ensuring that the documentation for new features is up to date.
 
 ## Fixing Bugs and Adding Features 
 
@@ -49,7 +49,7 @@ To help new contributors get their feet wet, we have marked a number of issues w
 
 It is also a good idea to add a comment to an issue that you are working on to let everyone know. If you stop working on it, also please let us know.
 
-Please read through the [NUnit Dev Wiki](https://github.com/nunit/dev/wiki) before contributing to understand our coding standards and contribution guidelines.
+Please read through the developer section of the [NUnit documentation](https://github.com/nunit/docs/wiki/NUnit-Documentation) before contributing to understand our coding standards and contribution guidelines.
 
 ## License
 
