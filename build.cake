@@ -642,6 +642,13 @@ Task("PackageNuGet")
 		PackageRunnerWithExtensions("nuget/runners/nunit.runners.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
 
         // Package engine
+        NuGetPack("nuget/engine/nunit.engine.api.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
         NuGetPack("nuget/engine/nunit.engine.nuspec", new NuGetPackSettings()
         {
             Version = packageVersion,
