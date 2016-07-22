@@ -30,7 +30,7 @@ namespace NUnit.Common
     /// TestSelectionParserException is thrown when an error 
     /// is found while parsing the selection expression.
     /// </summary>
-#if !PORTABLE
+#if !SILVERLIGHT && !PORTABLE
     [Serializable]
 #endif
     public class TestSelectionParserException : Exception
