@@ -14,7 +14,7 @@
     <description>
       This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
 
-      Any extensions, if needed, must be installed as separate packages.
+      Any extensions, if needed, may be installed as separate packages.
     </description>
     <releaseNotes></releaseNotes>
     <language>en-US</language>

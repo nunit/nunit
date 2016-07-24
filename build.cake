@@ -18,10 +18,6 @@ var ErrorDetail = new List<string>();
 var version = "3.5.0";
 var modifier = "";
 
-//For now, set teamcity extension verson and modifier separately
-var tcVersion = "1.0.1";
-var tcModifier = "";
-
 var isCompactFrameworkInstalled = FileExists(Environment.GetEnvironmentVariable("windir") + "\\Microsoft.NET\\Framework\\v3.5\\Microsoft.CompactFramework.CSharp.targets");
 
 //Find program files on 32-bit or 64-bit Windows
@@ -31,7 +27,6 @@ var isSilverlightSDKInstalled = FileExists(programFiles  + "\\MSBuild\\Microsoft
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
-var teamcityVersion = tcVersion + tcModifier + dbgSuffix;
 
 //////////////////////////////////////////////////////////////////////
 // SUPPORTED FRAMEWORKS
@@ -115,7 +110,6 @@ Task("InitializeBuild")
 			if (tag.IsTag)
 			{
 				packageVersion = tag.Name;
-				// NOTE: tag doesn't currently change the TeamCity version
 			}
 			else
 			{
@@ -135,7 +129,6 @@ Task("InitializeBuild")
 					suffix = suffix.Substring(0, 21);
 
 				packageVersion = version + suffix;
-				teamcityVersion = tcVersion + suffix;
 			}
 
 			AppVeyor.UpdateBuildVersion(packageVersion);
@@ -278,7 +271,6 @@ Task("BuildEngine")
         BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/nunit-v2-result-writer/nunit-v2-result-writer.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/nunit.v2.driver/nunit.v2.driver.csproj", configuration);
-        BuildProject("./src/NUnitEngine/Addins/teamcity-event-listener/teamcity-event-listener.csproj", configuration);
 
         // Addin tests
         BuildProject("./src/NUnitEngine/Addins/addin-tests/addin-tests.csproj", configuration);
@@ -510,7 +502,6 @@ var BinFiles = new FilePath[]
     "addins/nunit.core.interfaces.dll",
     "addins/nunit.v2.driver.dll",
     "addins/vs-project-loader.dll",
-	"addins/teamcity-event-listener.dll",
     "addins/tests/addin-tests.dll",
     "addins/tests/nunit-project-loader.dll",
     "addins/tests/nunit.engine.api.dll",
@@ -704,15 +695,6 @@ Task("PackageExtensions")
             OutputDirectory = PACKAGE_DIR,
             NoPackageAnalysis = true
         });
-
-        NuGetPack("nuget/extensions/teamcity-event-listener.nuspec", new NuGetPackSettings()
-        {
-		    // The teamcity-event-listener extension uses its own versioning
-            Version = teamcityVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
     });
 
 Task("PackageConsole")
@@ -723,7 +705,6 @@ Task("PackageConsole")
 
         CreateDirectory(PACKAGE_DIR);
 
-        // Package Runners
         NuGetPack("nuget/runners/nunit.console-runner.nuspec", new NuGetPackSettings()
         {
             Version = packageVersion,
@@ -732,11 +713,21 @@ Task("PackageConsole")
             NoPackageAnalysis = true
         });
 
-        // NOTE: We can't use NuGetPack for these because our current version
-        // of Cake doesn't support the Properties option.
-		PackageRunnerWithExtensions("nuget/runners/nunit.console-runner-with-extensions.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
+        NuGetPack("nuget/runners/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
 
-		PackageRunnerWithExtensions("nuget/runners/nunit.runners.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
+        NuGetPack("nuget/runners/nunit.runners.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
     });
 
 Task("PackageZip")
@@ -929,20 +920,6 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
         errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
     else if (rc < 0)
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
-}
-
-//////////////////////////////////////////////////////////////////////
-// HELPER METHODS - PACKAGING
-//////////////////////////////////////////////////////////////////////
-
-void PackageRunnerWithExtensions(string package, string version, string tcVersion, string imageDir, string packageDir)
-{
-	var arguments = string.Format(
-		"pack {0} -Version {1} -Properties teamcityVersion={2} -BasePath {3} -OutputDirectory {4} -NoPackageAnalysis",
-		package, version, tcVersion, imageDir, packageDir);
-	var nugetPath = File("tools/nuget.exe");
-
-    StartProcess(nugetPath, arguments);
 }
 
 //////////////////////////////////////////////////////////////////////
