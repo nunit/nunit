@@ -278,7 +278,7 @@ Task("BuildEngine")
         BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/nunit-v2-result-writer/nunit-v2-result-writer.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/nunit.v2.driver/nunit.v2.driver.csproj", configuration);
-        BuildProject("./src/NUnitEngine/addins/teamcity-event-listener/teamcity-event-listener.csproj", configuration);
+        BuildProject("./src/NUnitEngine/Addins/teamcity-event-listener/teamcity-event-listener.csproj", configuration);
 
         // Addin tests
         BuildProject("./src/NUnitEngine/Addins/addin-tests/addin-tests.csproj", configuration);
