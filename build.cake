@@ -143,7 +143,7 @@ Task("InitializeBuild")
 	});
 
 //////////////////////////////////////////////////////////////////////
-// BUILD
+// BUILD FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
 Task("Build45")
@@ -256,6 +256,10 @@ Task("BuildCF")
         }
     });
 
+//////////////////////////////////////////////////////////////////////
+// BUILD ENGINE
+//////////////////////////////////////////////////////////////////////
+
 Task("BuildEngine")
     .IsDependentOn("InitializeBuild")
     .Does(() =>
@@ -274,11 +278,16 @@ Task("BuildEngine")
         BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/nunit-v2-result-writer/nunit-v2-result-writer.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/nunit.v2.driver/nunit.v2.driver.csproj", configuration);
+        BuildProject("./src/NUnitEngine/Addins/teamcity-event-listener/teamcity-event-listener.csproj", configuration);
 
         // Addin tests
         BuildProject("./src/NUnitEngine/Addins/addin-tests/addin-tests.csproj", configuration);
         BuildProject("./src/NUnitEngine/Addins/nunit.v2.driver.tests/nunit.v2.driver.tests.csproj", configuration);
     });
+
+//////////////////////////////////////////////////////////////////////
+// BUILD CONSOLE
+//////////////////////////////////////////////////////////////////////
 
 Task("BuildConsole")
     .IsDependentOn("InitializeBuild")
@@ -287,6 +296,10 @@ Task("BuildConsole")
         BuildProject("src/NUnitConsole/nunit3-console/nunit3-console.csproj", configuration);
         BuildProject("src/NUnitConsole/nunit3-console.tests/nunit3-console.tests.csproj", configuration);
     });
+
+//////////////////////////////////////////////////////////////////////
+// BUILD C++  TESTS
+//////////////////////////////////////////////////////////////////////
 
 Task("BuildCppTestFiles")
     .IsDependentOn("InitializeBuild")
@@ -314,7 +327,12 @@ Task("BuildCppTestFiles")
 Task("CheckForError")
     .Does(() => CheckForError(ref ErrorDetail));
 
+//////////////////////////////////////////////////////////////////////
+// TEST FRAMEWORK
+//////////////////////////////////////////////////////////////////////
+
 Task("Test45")
+    .IsDependentOn("Build45")
     .OnError(exception => {ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -325,6 +343,7 @@ Task("Test45")
     });
 
 Task("Test40")
+    .IsDependentOn("Build40")
     .OnError(exception => {ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -335,6 +354,7 @@ Task("Test40")
     });
 
 Task("Test35")
+    .IsDependentOn("Build35")
     .OnError(exception => {ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -345,6 +365,7 @@ Task("Test35")
     });
 
 Task("Test20")
+    .IsDependentOn("Build20")
     .OnError(exception => {ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -356,6 +377,7 @@ Task("Test20")
 
 Task("TestPortable")
     .WithCriteria(IsRunningOnWindows())
+    .IsDependentOn("BuildPortable")
     .OnError(exception => {ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -367,6 +389,7 @@ Task("TestPortable")
 
 Task("TestSL")
     .WithCriteria(IsRunningOnWindows())
+    .IsDependentOn("BuildSL")
     .OnError(exception => {ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -385,6 +408,7 @@ Task("TestSL")
 
 Task("TestCF")
     .WithCriteria(IsRunningOnWindows())
+    .IsDependentOn("BuildCF")
     .OnError(exception => {ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -400,6 +424,10 @@ Task("TestCF")
             Warning("Compact framework tests skipped because files were not present.");
         }
     });
+
+//////////////////////////////////////////////////////////////////////
+// TEST ENGINE
+//////////////////////////////////////////////////////////////////////
 
 Task("TestEngine")
     .IsDependentOn("Build")
@@ -424,6 +452,10 @@ Task("TestV2Driver")
     {
         RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS,"TestV2Driver", ref ErrorDetail);
     });
+
+//////////////////////////////////////////////////////////////////////
+// TEST CONSOLE
+//////////////////////////////////////////////////////////////////////
 
 Task("TestConsole")
     .IsDependentOn("Build")
@@ -563,6 +595,150 @@ Task("CreateImage")
         }
     });
 
+Task("PackageFramework")
+    .IsDependentOn("CreateImage")
+    .Does(() =>
+    {
+        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+
+        CreateDirectory(PACKAGE_DIR);
+
+        NuGetPack("nuget/framework/nunit.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR
+        });
+
+        NuGetPack("nuget/framework/nunitSL.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR
+        });
+
+        NuGetPack("nuget/nunitlite/nunitlite.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR
+        });
+
+        NuGetPack("nuget/nunitlite/nunitliteSL.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR
+        });
+    });
+
+Task("PackageEngine")
+    .IsDependentOn("CreateImage")
+    .Does(() =>
+    {
+        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+
+        CreateDirectory(PACKAGE_DIR);
+
+        NuGetPack("nuget/engine/nunit.engine.api.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        NuGetPack("nuget/engine/nunit.engine.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        NuGetPack("nuget/engine/nunit.engine.tool.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+    });
+
+Task("PackageExtensions")
+    .IsDependentOn("CreateImage")
+    .Does(() =>
+    {
+        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+
+        CreateDirectory(PACKAGE_DIR);
+
+        NuGetPack("nuget/extensions/nunit-project-loader.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        NuGetPack("nuget/extensions/vs-project-loader.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        NuGetPack("nuget/extensions/nunit-v2-result-writer.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        NuGetPack("nuget/extensions/nunit.v2.driver.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        NuGetPack("nuget/extensions/teamcity-event-listener.nuspec", new NuGetPackSettings()
+        {
+		    // The teamcity-event-listener extension uses its own versioning
+            Version = teamcityVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+    });
+
+Task("PackageConsole")
+    .IsDependentOn("CreateImage")
+    .Does(() =>
+    {
+        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+
+        CreateDirectory(PACKAGE_DIR);
+
+        // Package Runners
+        NuGetPack("nuget/runners/nunit.console-runner.nuspec", new NuGetPackSettings()
+        {
+            Version = packageVersion,
+            BasePath = currentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            NoPackageAnalysis = true
+        });
+
+        // NOTE: We can't use NuGetPack for these because our current version
+        // of Cake doesn't support the Properties option.
+		PackageRunnerWithExtensions("nuget/runners/nunit.console-runner-with-extensions.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
+
+		PackageRunnerWithExtensions("nuget/runners/nunit.runners.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
+    });
+
 Task("PackageZip")
     .IsDependentOn("CreateImage")
     .Does(() =>
@@ -588,119 +764,6 @@ Task("PackageZip")
             GetFiles(currentImageDir + "*.*") +
             GetFiles(currentImageDir + "bin/sl-5.0/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE_SL), zipFiles);
-    });
-
-Task("PackageNuGet")
-    .IsDependentOn("CreateImage")
-    .Does(() =>
-    {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-
-        CreateDirectory(PACKAGE_DIR);
-
-        // Package framework
-        NuGetPack("nuget/framework/nunit.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR
-        });
-        NuGetPack("nuget/framework/nunitSL.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR
-        });
-
-        // Package NUnitLite
-        NuGetPack("nuget/nunitlite/nunitlite.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR
-        });
-        NuGetPack("nuget/nunitlite/nunitliteSL.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR
-        });
-
-        // Package Runners
-        NuGetPack("nuget/runners/nunit.console-runner.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        // NOTE: We can't use NuGetPack for these because our current version
-        // of Cake doesn't support the Properties option.
-		PackageRunnerWithExtensions("nuget/runners/nunit.console-runner-with-extensions.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
-
-		PackageRunnerWithExtensions("nuget/runners/nunit.runners.nuspec", packageVersion, teamcityVersion, currentImageDir, PACKAGE_DIR);
-
-        // Package engine
-        NuGetPack("nuget/engine/nunit.engine.api.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-        NuGetPack("nuget/engine/nunit.engine.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-        NuGetPack("nuget/engine/nunit.engine.tool.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        // Package Extensions
-        NuGetPack("nuget/extensions/nunit-project-loader.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-        NuGetPack("nuget/extensions/vs-project-loader.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-        NuGetPack("nuget/extensions/nunit-v2-result-writer.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-        NuGetPack("nuget/extensions/nunit.v2.driver.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-        NuGetPack("nuget/extensions/teamcity-event-listener.nuspec", new NuGetPackSettings()
-        {
-		    // The teamcity-event-listener extension uses its own versioning
-            Version = teamcityVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
     });
 
 Task("PackageMsi")
@@ -887,7 +950,7 @@ void PackageRunnerWithExtensions(string package, string version, string tcVersio
 //////////////////////////////////////////////////////////////////////
 
 Task("Build")
-  .IsDependentOn("BuildAllFrameworks")
+  .IsDependentOn("BuildFramework")
   .IsDependentOn("BuildEngine")
   .IsDependentOn("BuildConsole");
 
@@ -895,7 +958,7 @@ Task("Rebuild")
     .IsDependentOn("Clean")
     .IsDependentOn("Build");
 
-Task("BuildAllFrameworks")
+Task("BuildFramework")
     .IsDependentOn("InitializeBuild")
     .IsDependentOn("Build45")
     .IsDependentOn("Build40")
@@ -907,7 +970,7 @@ Task("BuildAllFrameworks")
     .IsDependentOn("BuildCF");
 
 Task("TestAll")
-    .IsDependentOn("TestAllFrameworks")
+    .IsDependentOn("TestFramework")
     .IsDependentOn("TestEngine")
     .IsDependentOn("TestAddins")
     .IsDependentOn("TestV2Driver")
@@ -915,14 +978,14 @@ Task("TestAll")
 
 // NOTE: Test has been changed to now be a synonym of TestAll
 Task("Test")
-    .IsDependentOn("TestAllFrameworks")
+    .IsDependentOn("TestFramework")
     .IsDependentOn("TestEngine")
     .IsDependentOn("TestAddins")
     .IsDependentOn("TestV2Driver")
     .IsDependentOn("TestConsole");
 
-Task("TestAllFrameworks")
-    .IsDependentOn("Build")
+Task("TestFramework")
+    .IsDependentOn("BuildFramework")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
@@ -934,9 +997,12 @@ Task("TestAllFrameworks")
 
 Task("Package")
     .IsDependentOn("CheckForError")
-    .IsDependentOn("PackageSource")
+    .IsDependentOn("PackageFramework")
+    .IsDependentOn("PackageEngine")
+    .IsDependentOn("PackageExtensions")
+    .IsDependentOn("PackageConsole")
+    // The following two package  targets include framework, engine and console components
     .IsDependentOn("PackageZip")
-    .IsDependentOn("PackageNuGet")
     .IsDependentOn("PackageMsi");
 
 Task("Appveyor")
