@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
 
 namespace NUnit.Framework.Tests
 {
@@ -185,6 +182,13 @@ namespace NUnit.Framework.Tests
             Assert.That(() => _parameters.Get("SomeParm", 99.9), Throws.TypeOf<FormatException>());
         }
 
+        [Test]
+        public void GetDouble_BadFormatThrowsException()
+        {
+            _parameters.Add("SomeParm", "1,234");
+            Assert.That(() => _parameters.Get("SomeParm", 99.9), Throws.TypeOf<FormatException>());
+        }
+
         #endregion
 
         #region Get Decimal
@@ -206,6 +210,13 @@ namespace NUnit.Framework.Tests
         public void GetDecimal_BadValueThrowsException()
         {
             _parameters.Add("SomeParm", "five");
+            Assert.That(() => _parameters.Get("SomeParm", 99.9M), Throws.TypeOf<FormatException>());
+        }
+
+        [Test]
+        public void GetDecimal_BadFormatThrowsException()
+        {
+            _parameters.Add("SomeParm", "1,234");
             Assert.That(() => _parameters.Get("SomeParm", 99.9M), Throws.TypeOf<FormatException>());
         }
 
