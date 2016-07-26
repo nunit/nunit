@@ -21,15 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
-using System.Text;
-using System.Xml;
-using NUnit.Framework;
-using NUnit.Engine.Extensibility;
-
-namespace NUnit.Engine.Listeners
+namespace NUnit.Engine.Tests
 {
     using System;
+    using System.IO;
+    using System.Text;
+    using System.Xml;
+
+    using Extensibility;
+
+    using Framework;
+
+    using Listeners;
 
     [TestFixture]
     
@@ -106,13 +109,13 @@ namespace NUnit.Engine.Listeners
                 
                 + "##teamcity[flowStarted flowId='1-4' parent='1-1']" + Environment.NewLine
                 + "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-4']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-4']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-4' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='100' flowId='1-4']" + Environment.NewLine
                 + "##teamcity[flowFinished flowId='1-4']" + Environment.NewLine
 
                 + "##teamcity[flowStarted flowId='1-8' parent='1-6']" + Environment.NewLine
                 + "##teamcity[testStarted name='Assembly2.Namespace2.1.Test1' captureStandardOutput='false' flowId='1-8']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly2.Namespace2.1.Test1' out='Text output' flowId='1-8']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly2.Namespace2.1.Test1' out='Text output' flowId='1-8' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly2.Namespace2.1.Test1' duration='100' flowId='1-8']" + Environment.NewLine
                 + "##teamcity[flowFinished flowId='1-8']" + Environment.NewLine
 
@@ -153,7 +156,7 @@ namespace NUnit.Engine.Listeners
 
                 + "##teamcity[flowStarted flowId='1-2' parent='1-1']" + Environment.NewLine
                 + "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-2']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-2']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-2' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='100' flowId='1-2']" + Environment.NewLine
                 + "##teamcity[flowFinished flowId='1-2']" + Environment.NewLine
 
@@ -179,7 +182,7 @@ namespace NUnit.Engine.Listeners
             // Then
             Assert.AreEqual(                
                 "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-1']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='100' flowId='1-1']" + Environment.NewLine,
                 _output.ToString());
         }
@@ -272,7 +275,7 @@ namespace NUnit.Engine.Listeners
                 "##teamcity[testSuiteStarted name='Assembly1' flowId='1-1']" + Environment.NewLine
 
                 + "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-1']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='100' flowId='1-1']" + Environment.NewLine
 
                 + "##teamcity[testStarted name='Assembly1.Namespace1.1.Test2' captureStandardOutput='false' flowId='1-1']" + Environment.NewLine
@@ -283,7 +286,7 @@ namespace NUnit.Engine.Listeners
                 
                 + "##teamcity[testSuiteStarted name='Assembly2' flowId='1-6']" + Environment.NewLine
                 + "##teamcity[testStarted name='Assembly2.Namespace2.1.Test1' captureStandardOutput='false' flowId='1-6']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly2.Namespace2.1.Test1' out='Text output' flowId='1-6']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly2.Namespace2.1.Test1' out='Text output' flowId='1-6' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly2.Namespace2.1.Test1' duration='300' flowId='1-6']" + Environment.NewLine
 
                 + "##teamcity[testSuiteFinished name='Assembly2' flowId='1-6']" + Environment.NewLine,
@@ -315,7 +318,7 @@ namespace NUnit.Engine.Listeners
                 "##teamcity[testSuiteStarted name='Assembly1' flowId='1-1']" + Environment.NewLine
 
                 + "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-1']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='1300' flowId='1-1']" + Environment.NewLine
                 
                 + "##teamcity[testSuiteFinished name='Assembly1' flowId='1-1']" + Environment.NewLine,
@@ -340,7 +343,7 @@ namespace NUnit.Engine.Listeners
             // Then
             Assert.AreEqual(                
                 "##teamcity[testStarted name='Assembly1.Namespace1.1.Test1' captureStandardOutput='false' flowId='1-1']" + Environment.NewLine
-                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1']" + Environment.NewLine
+                + "##teamcity[testStdOut name='Assembly1.Namespace1.1.Test1' out='Text output' flowId='1-1' tc:tags='tc:parseServiceMessagesInside']" + Environment.NewLine
                 + "##teamcity[testFinished name='Assembly1.Namespace1.1.Test1' duration='100' flowId='1-1']" + Environment.NewLine,
                 _output.ToString());
         }
