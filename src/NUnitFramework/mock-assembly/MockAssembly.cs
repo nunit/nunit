@@ -136,7 +136,7 @@ namespace NUnit.Tests
             [Test]
             public void FailingTest()
             {
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE && !SILVERLIGHT && !NETCF
                 Console.Error.WriteLine("Immediate Error Message");
 #endif
                 Assert.Fail("Intentional failure");
