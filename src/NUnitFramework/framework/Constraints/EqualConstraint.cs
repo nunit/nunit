@@ -61,7 +61,6 @@ namespace NUnit.Framework.Constraints
             AdjustArgumentIfNeeded(ref expected);
 
             _expected = expected;
-            ClipStrings = true;
         }
         #endregion
 
@@ -94,14 +93,6 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Gets a value indicating whether or not to clip strings.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if set to clip strings otherwise, <c>false</c>.
-        /// </value>
-        public bool ClipStrings { get; private set; }
-
-        /// <summary>
         /// Gets the failure points.
         /// </summary>
         /// <value>
@@ -123,19 +114,6 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _comparer.IgnoreCase = true;
-                return this;
-            }
-        }
-
-        /// <summary>
-        /// Flag the constraint to suppress string clipping 
-        /// and return self.
-        /// </summary>
-        public EqualConstraint NoClip
-        {
-            get
-            {
-                ClipStrings = false;
                 return this;
             }
         }

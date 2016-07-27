@@ -42,6 +42,11 @@ namespace NUnit.Framework.Constraints
         string Description { get; }
 
         /// <summary>
+        /// A value indicating whether or not to clip strings.
+        /// </summary>
+        bool ClipStrings { get; }
+
+        /// <summary>
         /// Arguments provided to this Constraint, for use in
         /// formatting the description.
         /// </summary>
@@ -51,6 +56,16 @@ namespace NUnit.Framework.Constraints
         /// The ConstraintBuilder holding this constraint
         /// </summary>
         ConstraintBuilder Builder { get; set; }
+
+        #endregion
+
+        #region Constraint Modifiers
+
+        /// <summary>
+        /// Flag the constraint to suppress string clipping 
+        /// and return self.
+        /// </summary>
+        IConstraint NoClip { get; }
 
         #endregion
 
