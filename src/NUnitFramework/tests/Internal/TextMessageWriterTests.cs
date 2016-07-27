@@ -33,46 +33,11 @@ namespace NUnit.Framework.Internal
         private static readonly string NL = NUnit.Env.NewLine;
 
         private TextMessageWriter writer;
-        private int defaultLineLength;
 
         [SetUp]
         public void SetUp()
         {
             writer = new TextMessageWriter();
-            defaultLineLength = TextMessageWriter.DefaultLineLength;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            TextMessageWriter.DefaultLineLength = defaultLineLength;
-        }
-
-        [Test]
-        public void TestSetDefaultMaxLineLength()
-        {
-            TextMessageWriter.DefaultLineLength = 120;
-            Assert.That(120, Is.EqualTo(TextMessageWriter.DefaultLineLength));
-            TextMessageWriter w = new TextMessageWriter();
-            Assert.That(120, Is.EqualTo(w.MaxLineLength));
-        }
-
-        [Test]
-        public void TestChangeDefaultMaxLineLengthAfterInstantiation()
-        {
-            TextMessageWriter.DefaultLineLength = 120;
-            TextMessageWriter w = new TextMessageWriter();
-            TextMessageWriter.DefaultLineLength = 43;
-            Assert.That(120, Is.EqualTo(w.MaxLineLength));
-        }
-
-        [Test]
-        public void TestMaxLineLength()
-        {
-            TextMessageWriter w = new TextMessageWriter();
-            Assert.That(TextMessageWriter.DefaultLineLength, Is.EqualTo(w.MaxLineLength));
-            w.MaxLineLength = 89;
-            Assert.That(89, Is.EqualTo(w.MaxLineLength));
         }
 
         [Test]
