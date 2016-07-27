@@ -33,28 +33,46 @@ namespace NUnit.Framework.Internal
         private static readonly string NL = NUnit.Env.NewLine;
 
         private TextMessageWriter writer;
+        private int defaultLineLength;
 
         [SetUp]
         public void SetUp()
         {
             writer = new TextMessageWriter();
+            defaultLineLength = TextMessageWriter.DefaultLineLength;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TextMessageWriter.DefaultLineLength = defaultLineLength;
         }
 
         [Test]
-        public void TestMaLineLength()
+        public void TestSetDefaultMaxLineLength()
         {
-            Assert.That(78, Is.EqualTo(TextMessageWriter.DefaultLineLength));
-            TextMessageWriter w = new TextMessageWriter();
-            Assert.That(78, Is.EqualTo(w.MaxLineLength));
             TextMessageWriter.DefaultLineLength = 120;
             Assert.That(120, Is.EqualTo(TextMessageWriter.DefaultLineLength));
-            Assert.That(78, Is.EqualTo(w.MaxLineLength));
-            w.MaxLineLength = 42;
-            Assert.That(42, Is.EqualTo(w.MaxLineLength));
-            w = new TextMessageWriter();
+            TextMessageWriter w = new TextMessageWriter();
             Assert.That(120, Is.EqualTo(w.MaxLineLength));
-            TextMessageWriter.DefaultLineLength = 78;
-            Assert.That(78, Is.EqualTo(TextMessageWriter.DefaultLineLength));
+        }
+
+        [Test]
+        public void TestChangeDefaultMaxLineLengthAfterInstantiation()
+        {
+            TextMessageWriter.DefaultLineLength = 120;
+            TextMessageWriter w = new TextMessageWriter();
+            TextMessageWriter.DefaultLineLength = 43;
+            Assert.That(120, Is.EqualTo(w.MaxLineLength));
+        }
+
+        [Test]
+        public void TestMaxLineLength()
+        {
+            TextMessageWriter w = new TextMessageWriter();
+            Assert.That(TextMessageWriter.DefaultLineLength, Is.EqualTo(w.MaxLineLength));
+            w.MaxLineLength = 89;
+            Assert.That(89, Is.EqualTo(w.MaxLineLength));
         }
 
         [Test]
