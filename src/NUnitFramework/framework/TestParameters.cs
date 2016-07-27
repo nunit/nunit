@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
 
 namespace NUnit.Framework
 {
@@ -9,6 +9,8 @@ namespace NUnit.Framework
     /// </summary>
     public class TestParameters
     {
+        private static readonly IFormatProvider MODIFIED_INVARIANT_CULTURE = CreateModifiedInvariantCulture();
+
         private readonly Dictionary<string, string> _parameters = new Dictionary<string, string>();
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace NUnit.Framework
         public T Get<T>(string name, T defaultValue)
         {
             string val = Get(name);
-            return val != null ? (T)Convert.ChangeType(val, typeof(T), null) : defaultValue;
+            return val != null ? (T)Convert.ChangeType(val, typeof(T), MODIFIED_INVARIANT_CULTURE) : defaultValue;
         }
 
         /// <summary>
@@ -89,6 +91,19 @@ namespace NUnit.Framework
         internal void Add(string name, string value)
         {
             _parameters[name] = value;
+        }
+
+        private static IFormatProvider CreateModifiedInvariantCulture()
+        {
+            var culture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+
+            // Remove comma (,) as group separator since it may confuse developers in cultures
+            // where comma is a decimal separator
+            culture.NumberFormat.CurrencyGroupSeparator = string.Empty;
+            culture.NumberFormat.NumberGroupSeparator = string.Empty;
+            culture.NumberFormat.PercentGroupSeparator = string.Empty;
+
+            return culture;
         }
     }
 }
