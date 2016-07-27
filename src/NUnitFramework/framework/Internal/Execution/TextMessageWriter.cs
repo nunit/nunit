@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
     public class TextMessageWriter : MessageWriter
     {
         #region Message Formats and Constants
-        private static int Default_Line_Length = 78;
+        private static int _defaultLineLength = 78;
 
         // Prefixes used in all failure messages. All must be the same
         // length, which is held in the PrefixLength field. Should not
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal
         
         #endregion
 
-        private int maxLineLength = Default_Line_Length;
+        private int maxLineLength = _defaultLineLength;
 
         #region Constructors
         /// <summary>
@@ -84,8 +84,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static int DefaultLineLength
         {
-            get { return Default_Line_Length; }
-            set { Default_Line_Length = value; }
+            get { return _defaultLineLength; }
+            set { _defaultLineLength = value; }
         }
 
         /// <summary>
