@@ -3,7 +3,7 @@
     <Product Id="*"
              Name="NUnit $(var.DisplayVersion)"
              Language="1033"
-             Version="!(bind.FileVersion.nunit.framework.45.dll)"
+             Version="!(bind.FileVersion.nunit.engine.dll)"
              Manufacturer="nunit.org"
              UpgradeCode="ED9BC7BB-45EE-481A-9479-2753770EF704">
 
@@ -16,20 +16,17 @@
 
         <!-- Features -->
         <?include ..\common\common-features.wxi ?>
-        <?include ..\runners\runner-features.wxi ?>
-        <?include ..\framework\framework-features.wxi ?>
+        <?include runner-features.wxi ?>
 
     </Product>
 
     <!-- Directories -->
     <?include ..\common\common-directories.wxi ?>
-    <?include ..\runners\runner-directories.wxi ?>
-    <?include ..\framework\framework-directories.wxi ?>
+    <?include runner-directories.wxi ?>
 
     <!-- Components and files -->
     <?include ..\common\common-files.wxi ?>
-    <?include ..\runners\addin-files.wxi ?>
-    <?include ..\runners\console-files.wxi ?>
-    <?include ..\runners\engine-files.wxi ?>
-    <?include ..\framework\framework-files.wxi ?>
+    <?include addin-files.wxi ?>
+    <?include console-files.wxi ?>
+    <?include engine-files.wxi ?>
 </Wix>

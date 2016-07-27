@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Include>
+    <Feature Id="NUNIT.COMMON"
+             ConfigurableDirectory="INSTALLDIR"
+             Level="1"
+             Absent="disallow"
+             Title="NUnit Common"
+             Description="Installs common NUnit files." >
+        <ComponentGroupRef Id="NUNIT.COMMON"/>
+    </Feature>
+</Include>
