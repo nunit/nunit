@@ -41,6 +41,23 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void TestMaLineLength()
+        {
+            Assert.That(78, Is.EqualTo(TextMessageWriter.DefaultLineLength));
+            TextMessageWriter w = new TextMessageWriter();
+            Assert.That(78, Is.EqualTo(w.MaxLineLength));
+            TextMessageWriter.DefaultLineLength = 120;
+            Assert.That(120, Is.EqualTo(TextMessageWriter.DefaultLineLength));
+            Assert.That(78, Is.EqualTo(w.MaxLineLength));
+            w.MaxLineLength = 42;
+            Assert.That(42, Is.EqualTo(w.MaxLineLength));
+            w = new TextMessageWriter();
+            Assert.That(120, Is.EqualTo(w.MaxLineLength));
+            TextMessageWriter.DefaultLineLength = 78;
+            Assert.That(78, Is.EqualTo(TextMessageWriter.DefaultLineLength));
+        }
+
+        [Test]
         public void DisplayStringDifferences()
         {
             string s72 = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
