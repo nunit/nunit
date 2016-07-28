@@ -123,6 +123,12 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void FixtureSetUpHasNullMethodName()
+        {
+            Assert.That(fixtureContext.CurrentTest.MethodName, Is.Null);
+        }
+
+        [Test]
         public void FixtureSetUpCanAccessFixtureId()
         {
             Assert.That(fixtureContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
@@ -145,6 +151,13 @@ namespace NUnit.Framework.Internal
         {
             Assert.That(setupContext.CurrentTest.FullName,
                 Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
+        }
+
+        [Test]
+        public void SetUpCanAccessTestMethodName()
+        {
+            Assert.That(setupContext.CurrentTest.MethodName,
+                Is.EqualTo("SetUpCanAccessTestMethodName"));
         }
 
         [Test]
@@ -174,6 +187,13 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void TestCanAccessItsOwnMethodName()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.MethodName,
+                Is.EqualTo("TestCanAccessItsOwnMethodName"));
+        }
+
+        [Test]
         public void TestCanAccessItsOwnId()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
@@ -188,6 +208,7 @@ namespace NUnit.Framework.Internal
             Assert.That(workerId != null || !isRunningUnderTestWorker);
         }
 #endif
+
         [Test]
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()

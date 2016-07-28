@@ -33,6 +33,8 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public class TestContextTests
     {
+        private TestContext _setupContext;
+
         private string _name;
 
 #if !SILVERLIGHT && !PORTABLE
@@ -48,6 +50,12 @@ namespace NUnit.Framework.Tests
             _testDirectory = TestContext.CurrentContext.TestDirectory;
 #endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
+        }
+
+        [SetUp]
+        public void SaveSetUpContext()
+        {
+            _setupContext = TestContext.CurrentContext;
         }
 
 #if !SILVERLIGHT && !PORTABLE
@@ -87,10 +95,22 @@ namespace NUnit.Framework.Tests
             Assert.That(_name, Is.EqualTo("TestContextTests"));
         }
 
+        [Test]
+        public void SetUpCanAccessTestName()
+        {
+            Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
+        }
+
         [TestCase(5)]
         public void TestCaseCanAccessItsOwnName(int x)
         {
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
+        }
+
+        [Test]
+        public void SetUpCanAccessTestFullName()
+        {
+            Assert.That(_setupContext.Test.FullName, Is.EqualTo(TestContext.CurrentContext.Test.FullName));
         }
 
         [Test]
@@ -105,6 +125,12 @@ namespace NUnit.Framework.Tests
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
                 Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
+        }
+
+        [Test]
+        public void SetUpCanAccessTestMethodName()
+        {
+            Assert.That(_setupContext.Test.MethodName, Is.EqualTo(TestContext.CurrentContext.Test.MethodName));
         }
 
         [Test]
@@ -123,6 +149,12 @@ namespace NUnit.Framework.Tests
         public void TestCanAccessItsOwnId()
         {
             Assert.That(TestContext.CurrentContext.Test.ID, Is.Not.Null.And.Not.Empty);
+        }
+
+        [Test]
+        public void SetUpCanAccessTestId()
+        {
+            Assert.That(_setupContext.Test.ID, Is.EqualTo(TestContext.CurrentContext.Test.ID));
         }
 
         [Test]
