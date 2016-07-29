@@ -15,7 +15,7 @@ test: off
 
 artifacts:
 - path: package\*.nupkg
-#  - path: package\*.msi
+- path: package\*.msi
 
 deploy:
   - provider: NuGet
