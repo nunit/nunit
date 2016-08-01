@@ -70,6 +70,7 @@
     <Compile Include="Internal\ServerUtilityTests.cs" />
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="ResultHelperTests.cs" />
+    <Compile Include="Runners\MultipleTestProcessRunnerTests.cs" />
     <Compile Include="Runners\ParallelTaskWorkerPoolTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\ExtensionAssemblyTests.cs" />

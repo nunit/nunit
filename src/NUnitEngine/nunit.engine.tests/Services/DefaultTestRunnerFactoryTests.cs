@@ -94,11 +94,6 @@ namespace NUnit.Engine.Services.Tests
             var runner = _factory.MakeTestRunner(package);
 
             Assert.That(runner, Is.TypeOf(expectedType));
-
-            var aggRunner = runner as AggregatingTestRunner;
-            if (aggRunner != null)
-                foreach (var childRunner in aggRunner.Runners)
-                    Assert.That(childRunner, Is.TypeOf<TestDomainRunner>());
         }
 
         [TestCase("x.junk", typeof(ProcessRunner))]

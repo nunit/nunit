@@ -36,8 +36,6 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class AbstractTestRunner : ITestEngineRunner
     {
-        protected const string TEST_RUN_ELEMENT = "test-run";
-
         public AbstractTestRunner(IServiceLocator services, TestPackage package)
         {
             Services = services;
@@ -169,8 +167,6 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public TestEngineResult Explore(TestFilter filter)
         {
-            EnsurePackageIsLoaded();
-
             return ExploreTests(filter);
         }
 
@@ -213,8 +209,6 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases.</returns>
         public int CountTestCases(TestFilter filter)
         {
-            EnsurePackageIsLoaded();
-
             return CountTests(filter);
         }
 
@@ -227,8 +221,6 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         public TestEngineResult Run(ITestEventListener listener, TestFilter filter)
         {
-            EnsurePackageIsLoaded();
-
             return RunTests(listener, filter);
         }
 
@@ -241,23 +233,9 @@ namespace NUnit.Engine.Runners
         /// <returns>An <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
         public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
         {
-            EnsurePackageIsLoaded();
-
             return RunTestsAsync(listener, filter);
         }
         
-        /// <summary>
-        /// Start a run of the tests in the TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
-        /// Loads the TestPackage if not already loaded.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        public void StartRun(ITestEventListener listener, TestFilter filter)
-        {
-            RunAsync(listener, filter);
-        }
-
         #endregion
 
         #region IDisposable Members
@@ -293,7 +271,7 @@ namespace NUnit.Engine.Runners
                 && ProjectService.CanLoadFrom(package.FullName);
         }
 
-        private void EnsurePackageIsLoaded()
+        protected void EnsurePackageIsLoaded()
         {
             if (!IsPackageLoaded)
                 LoadResult = LoadPackage();
