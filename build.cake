@@ -113,22 +113,31 @@ Task("InitializeBuild")
 			}
 			else
 			{
-				var buildNumber = AppVeyor.Environment.Build.Number;
+				var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
+				var branch = AppVeyor.Environment.Repository.Branch;
+				var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 
-				var suffix = "-CI-" + buildNumber + dbgSuffix;
-
-				if (AppVeyor.Environment.PullRequest.IsPullRequest)
-					suffix += "-PR-" + AppVeyor.Environment.PullRequest.Number;
-				else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-					suffix += "-PRE-" + buildNumber;
+				if (branch == "master" && !isPullRequest)
+				{
+					packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
+				}
 				else
-					suffix += "-" + AppVeyor.Environment.Repository.Branch;
+				{
+				    var suffix = "-ci-" + buildNumber + dbgSuffix;
 
-				// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-				if (suffix.Length > 21)
-					suffix = suffix.Substring(0, 21);
+					if (isPullRequest)
+						suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
+					else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+						suffix += "-pre-" + buildNumber;
+					else
+						suffix += "-" + AppVeyor.Environment.Repository.Branch;
 
-				packageVersion = version + suffix;
+					// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
+					if (suffix.Length > 21)
+						suffix = suffix.Substring(0, 21);
+
+					packageVersion = version + suffix;
+				}
 			}
 
 			AppVeyor.UpdateBuildVersion(packageVersion);
