@@ -1,0 +1,11 @@
+{
+  "projects": [
+    "src/NUnitFramework/nunit.dnx.tests",
+    "wrap"
+  ],
+  "sdk": {
+    "version": "1.0.0-beta8",
+    "runtime": "clr",
+    "architecture": "x86"
+  }
+}

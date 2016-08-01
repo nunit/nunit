@@ -1,0 +1,51 @@
+﻿Attribute Inheritance             : Interfaces
+
+NUnitAttribute
+	ActionAttribute
+		TestCaseActionAttribute       : 
+		TestSuiteActionAttribute      : 
+	DataAttribute
+		ValuesAttribute               : IParameterDataSource
+			RandomAttribute           : IParameterDataSource
+			RangeAttribute
+		ValueSourceAttribute          : IParameterDataSource
+	DatapointAttribute
+	DatapointSourceAttribute
+		DatapointsAttribute
+	ExpectedExceptionAttribute        : 
+	FixtureBuilderAttribute
+		TestFixtureAttribute          : IFixtureBuilder, IApplyToTest
+	SetUpAttribute                    : 
+	PreTestAttribute                  : 
+	PostTestAttribute                 : 
+	SetUpFixtureAttribute         
+	SuiteAttribute                
+	TearDownAttribute             
+	TestFixtureSetUpAttribute      
+	TestFixtureTearDownAttribute   
+	CategoryAttribute			      : IApplyToTest
+	ExplicitAttribute	              : IApplyToTest
+	IgnoreAttribute			          : IApplyToTest
+	IncludeExcludeAttribute
+		CultureAttribute		      : IApplyToTest
+		PlatformAttribute		      : IApplyToTest
+	PropertyAttribute			      : IApplyToTest
+		DescriptionAttribute
+		MaxTimeAttribute              : ICommandDecorator
+		RepeatAttribute			      : ICommandDecorator
+		RequiresMTAAttribute 
+		RequiresSTAAttribute 
+		RequiresThreadAttribute 
+		SetCultureAttribute           : ICommandDecorator
+		SetUICultureAttribute         : ICommandDecorator
+		TimeoutAttribute              : ICommandDecorator
+		RequiredAddinAttribute        : IApplyToTest
+	TestCaseBuilderAttribute
+		CombiningStrategyAttribute    : ITestMethodBuilder
+			CombinatorialAttribute
+			PairwiseAttribute		   
+			SequentialAttribute
+		TestAttribute                 : ITestMethodBuilder, IApplyToTest, IImplyFixture
+		TestCaseAttribute             : ITestMethodBuilder, ITestCaseData, ITestCaseSource, IImplyFixture
+		TestCaseSourceAttribute       : ITestMethodBilder, ITestCaseSource, IImplyFixture
+		TheoryAttribute               : ITestMethodBuilder, IImplyFixture

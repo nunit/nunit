@@ -1,0 +1,13 @@
+# Normalize line endings
+* text=auto
+
+# Prevent files from being exported
+.gitattributes export-ignore
+.gitignore     export-ignore
+
+# Resharper DotSettings files are in Unix Format
+*.DotSettings text eol=lf
+
+# Monodevelop on Linux uses CRLF for these files
+*.sln	text	eol=crlf
+packages/repositories.config	text	eol=crlf

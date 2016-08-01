@@ -1,0 +1,14 @@
+language: csharp
+sudo: false
+mono:
+  - latest
+  - 3.2.8
+os:
+  - linux
+  - osx
+matrix:
+  exclude:
+    - os: osx
+      mono: 3.2.8
+script:
+  - ./build.sh --target "Travis"

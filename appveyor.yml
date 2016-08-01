@@ -1,0 +1,27 @@
+branches:
+  except:
+    - /travis-.*/
+
+install:
+  ps: |
+        Import-Module '.\appveyor-tool.ps1'
+        Bootstrap
+        
+build_script: 
+  - ps: .\build.ps1 -Target "Appveyor"
+
+# disable built-in tests.
+test: off
+
+artifacts:
+- path: package\*.nupkg
+- path: package\*.msi
+
+deploy:
+  - provider: NuGet
+    server: https://www.myget.org/F/nunit/api/v2
+    api_key:
+      secure: wtAvJDVl2tfwiVcyLExFHLvZVfUWiQRHsfdHBFCNEATeCHo1Nd8JP642PfY8xhji
+    skip_symbols: true
+    on:
+      branch: master
