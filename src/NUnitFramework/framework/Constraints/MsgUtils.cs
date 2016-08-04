@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => (val, clip) => val.GetType().IsArray ? FormatArray((Array)val) : next(val, clip));
 
 #if NETCF
-            AddFormatter(next => val =>
+            AddFormatter(next => (val, clip) =>
             {
                 var vi = val as System.Reflection.MethodInfo;
                 return (vi != null && vi.IsGenericMethodDefinition)
