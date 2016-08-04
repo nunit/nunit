@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         {
             get 
             { 
-                string desc = string.Format("{0} {1}", descriptionText, MsgUtils.FormatValue(expected));
+                string desc = string.Format("{0} {1}", descriptionText, MsgUtils.FormatValue(expected, false));
                 if (caseInsensitive)
                     desc += ", ignoring case";
                 return desc;

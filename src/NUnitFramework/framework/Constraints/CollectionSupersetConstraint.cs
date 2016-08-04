@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "superset of " + MsgUtils.FormatValue(_expected); }
+            get { return "superset of " + MsgUtils.FormatValue(_expected, false); }
         }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "type with attribute " + MsgUtils.FormatValue(expectedType); }
+            get { return "type with attribute " + MsgUtils.FormatValue(expectedType, false); }
         }
 
         /// <summary>

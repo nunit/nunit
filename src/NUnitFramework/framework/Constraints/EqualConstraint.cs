@@ -358,12 +358,12 @@ namespace NUnit.Framework.Constraints
         {
             get 
             { 
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected));
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected, false));
 
                 if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
                 {
                     sb.Append(" +/- ");
-                    sb.Append(MsgUtils.FormatValue(_tolerance.Value));
+                    sb.Append(MsgUtils.FormatValue(_tolerance.Value, false));
                     if (_tolerance.Mode != ToleranceMode.Linear)
                     {
                         sb.Append(" ");

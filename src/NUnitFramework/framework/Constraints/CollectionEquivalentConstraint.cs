@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "equivalent to " + MsgUtils.FormatValue(_expected); }
+            get { return "equivalent to " + MsgUtils.FormatValue(_expected, false); }
         }
 
         /// <summary>

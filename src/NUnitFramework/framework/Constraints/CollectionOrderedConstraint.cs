@@ -117,7 +117,7 @@ namespace NUnit.Framework.Constraints
             { 
                 string desc = propertyName == null
                     ? "collection ordered"
-                    : "collection ordered by "+ MsgUtils.FormatValue(propertyName);
+                    : "collection ordered by "+ MsgUtils.FormatValue(propertyName, false);
 
                 if (descending)
                     desc += ", descending";
