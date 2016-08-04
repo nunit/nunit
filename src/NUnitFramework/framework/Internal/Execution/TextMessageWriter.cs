@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal
         /// <param name="clipping">If true, clip the strings to fit the max line length</param>
         public override void WriteValue(object val, bool clipping)
         {
-            Write(MsgUtils.FormatValue(val, clip));
+            Write(MsgUtils.FormatValue(val, clipping));
         }
 
         /// <summary>
