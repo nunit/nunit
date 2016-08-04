@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         public override void DisplayDifferences(ConstraintResult result)
         {
             WriteExpectedLine(result);
-            WriteActualLine(result, result.ClipStrings);
+            WriteActualLine(result);
         }
 
         /// <summary>
