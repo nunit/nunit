@@ -109,7 +109,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to suppress string clipping 
         /// and return self.
         /// </summary>
-        public Constraint NoClip
+        public IConstraint NoClip
         {   
             get
             {

@@ -77,7 +77,7 @@ namespace NUnit.Framework.Constraints
                     }
                     else
                     {
-                        writer.WriteActualValue(ex);
+                        writer.WriteActualValue(ex, this.ClipStrings);
                     }
                 }
             }

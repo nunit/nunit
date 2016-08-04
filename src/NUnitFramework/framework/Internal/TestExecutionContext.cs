@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
-            CurrentValueFormatter = (val, bool) => MsgUtils.DefaultValueFormatter(val, bool);
+            CurrentValueFormatter = (val, clip) => MsgUtils.DefaultValueFormatter(val, clip);
             IsSingleThreaded = false;
         }
 

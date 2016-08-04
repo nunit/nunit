@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
             else if (tolerance != null)
                 writer.DisplayDifferences(expected, actual, tolerance);
             else
-                writer.DisplayDifferences(expected, actual);
+                writer.DisplayDifferences(expected, actual, this.ClipStrings);
         }
 
         #region DisplayStringDifferences
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Constraints
             else
                 writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
 
-            writer.DisplayStringDifferences(expected, actual, mismatch, caseInsensitive, _constraint.ClipStrings);
+            writer.DisplayStringDifferences(expected, actual, mismatch, caseInsensitive, this.ClipStrings);
         }
         #endregion
 
@@ -150,12 +150,12 @@ namespace NUnit.Framework.Constraints
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
-                    writer.WriteCollectionElements(actual, failurePoint.Position, _constraint.ClipStrings ? 3 : Int32.MaxValue);
+                    writer.WriteCollectionElements(actual, failurePoint.Position, this.ClipStrings ? 3 : Int32.MaxValue);
                 }
                 else
                 {
                     writer.Write("  Missing:  ");
-                    writer.WriteCollectionElements(expected, failurePoint.Position, _constraint.ClipStrings ? 3: Int32.MaxValue);
+                    writer.WriteCollectionElements(expected, failurePoint.Position, this.ClipStrings ? 3: Int32.MaxValue);
                 }
             }
         }

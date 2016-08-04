@@ -182,7 +182,7 @@ namespace NUnit.Framework.Internal
             if ( ignoreCase )
                 Write( ", ignoring case" );
             WriteLine();
-            WriteActualLine( actual );
+            WriteActualLine(actual, clipping);
             //DisplayDifferences(expected, actual);
             if (mismatch >= 0)
                 WriteCaretLine(mismatch);
