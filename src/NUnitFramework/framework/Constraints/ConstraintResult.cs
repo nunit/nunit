@@ -143,7 +143,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The MessageWriter on which to display the message</param>
         public virtual void WriteMessageTo(MessageWriter writer)
         {
-            writer.DisplayDifferences(this);
+            writer.DisplayDifferences(this, _constraint.ClipStrings);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The writer on which the actual value is displayed</param>
         public virtual void WriteActualValueTo(MessageWriter writer)
         {
-            writer.WriteActualValue(ActualValue);
+            writer.WriteActualValue(ActualValue, _constraint.ClipStrings);
         }
 
         #endregion

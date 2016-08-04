@@ -286,7 +286,7 @@ namespace NUnit.Framework
         /// <param name="formatter">The ValueFormatter delegate</param>
         public static void AddFormatter<TSUPPORTED>(ValueFormatter formatter)
         {
-            AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
+            AddFormatter(next => (val, clip) => (val is TSUPPORTED) ? formatter(val, clip) : next(val, clip));
         }
 
         #endregion
