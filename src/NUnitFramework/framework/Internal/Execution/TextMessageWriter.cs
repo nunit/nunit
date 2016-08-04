@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         public override void DisplayDifferences(ConstraintResult result)
         {
             WriteExpectedLine(result);
-            WriteActualLine(result);
+            WriteActualLine(result, result.ClipStrings);
         }
 
         /// <summary>
@@ -131,10 +131,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
-        public override void DisplayDifferences(object expected, object actual)
+        /// <param name="clipping">If true, clip the strings to fit the max line length</param>
+        public override void DisplayDifferences(object expected, object actual, bool clipping)
         {
             WriteExpectedLine(expected);
-            WriteActualLine(actual);
+            WriteActualLine(actual, clipping);
         }
 
         /// <summary>
@@ -147,7 +148,7 @@ namespace NUnit.Framework.Internal
         public override void DisplayDifferences(object expected, object actual, Tolerance tolerance)
         {
             WriteExpectedLine(expected, tolerance);
-            WriteActualLine(actual);
+            WriteActualLine(actual, false);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace NUnit.Framework.Internal
             mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, ignoreCase);
 
             Write( Pfx_Expected );
-            Write( MsgUtils.FormatValue(expected) );
+            Write( MsgUtils.FormatValue(expected, clipping) );
             if ( ignoreCase )
                 Write( ", ignoring case" );
             WriteLine();
@@ -194,18 +195,20 @@ namespace NUnit.Framework.Internal
         /// Writes the text for an actual value.
         /// </summary>
         /// <param name="actual">The actual value.</param>
-        public override void WriteActualValue(object actual)
+        /// <param name="clipping">If true, clip the strings to fit the max line length</param>
+        public override void WriteActualValue(object actual, bool clipping)
         {
-            WriteValue(actual);
+            WriteValue(actual, clipping);
         }
 
         /// <summary>
         /// Writes the text for a generalized value.
         /// </summary>
         /// <param name="val">The value.</param>
-        public override void WriteValue(object val)
+        /// <param name="clipping">If true, clip the strings to fit the max line length</param>
+        public override void WriteValue(object val, bool clipping)
         {
-            Write(MsgUtils.FormatValue(val));
+            Write(MsgUtils.FormatValue(val, clip));
         }
 
         /// <summary>
@@ -251,12 +254,12 @@ namespace NUnit.Framework.Internal
         private void WriteExpectedLine(object expected, Tolerance tolerance)
         {
             Write(Pfx_Expected);
-            Write(MsgUtils.FormatValue(expected));
+            Write(MsgUtils.FormatValue(expected, false));
 
             if (tolerance != null && !tolerance.IsUnsetOrDefault)
             {
                 Write(" +/- ");
-                Write(MsgUtils.FormatValue(tolerance.Value));
+                Write(MsgUtils.FormatValue(tolerance.Value, false));
                 if (tolerance.Mode != ToleranceMode.Linear)
                     Write(" {0}", tolerance.Mode);
             }
@@ -280,10 +283,11 @@ namespace NUnit.Framework.Internal
         /// Write the generic 'Actual' line for a given value
         /// </summary>
         /// <param name="actual">The actual value causing a failure</param>
-        private void WriteActualLine(object actual)
+        /// <param name="clipping">If true, clip the strings to fit the max line length</param>
+        private void WriteActualLine(object actual, bool clipping)
         {
             Write(Pfx_Actual);
-            WriteActualValue(actual);
+            WriteActualValue(actual, clipping);
             WriteLine();
         }
 
