@@ -134,13 +134,12 @@ namespace NUnit.ConsoleRunner.Tests
         //}
 
         [Test]
-        public void WhenNoOptionsAreSpecified_PackageContainsWorkDirectorySettingOnly()
+        public void WhenNoOptionsAreSpecified_PackageContainsOnlyTwoSettings()
         {
             var options = new ConsoleOptions("test.dll");
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(1, package.Settings.Count);
-            Assert.That(package.Settings.Keys, Contains.Item("WorkDirectory"));
+            Assert.That(package.Settings.Keys, Is.EquivalentTo(new string[] { "WorkDirectory", "DisposeRunners" }));
         }
     }
 }

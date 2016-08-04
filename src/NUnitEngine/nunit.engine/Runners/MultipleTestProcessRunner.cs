@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Engine.Runners
 {
     /// <summary>
@@ -34,18 +36,24 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="package">The package.</param>
-        public MultipleTestProcessRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
+        public MultipleTestProcessRunner(IServiceLocator services, TestPackage package) : base(services, package)
+        {
+        }
 
         #region AggregatingTestRunner Overrides
+
+        public override int LevelOfParallelism
+        {
+            get
+            {
+                int maxAgents = TestPackage.GetSetting(EnginePackageSettings.MaxAgents, int.MaxValue);
+                return Math.Min(maxAgents, TestPackage.SubPackages.Count);
+            }
+        }
 
         protected override ITestEngineRunner CreateRunner(TestPackage package)
         {
             return new ProcessRunner(Services, package);
-        }
-
-        protected override int GetLevelOfParallelism()
-        {
-            return TestPackage.GetSetting(EnginePackageSettings.MaxAgents, int.MaxValue);
         }
 
         #endregion

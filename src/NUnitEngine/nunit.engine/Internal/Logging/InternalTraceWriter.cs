@@ -93,7 +93,10 @@ namespace NUnit.Engine.Internal
         /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
         public override void WriteLine(string value)
         {
-            writer.WriteLine(value);
+            lock (myLock)
+            {
+                writer.WriteLine(value);
+            }
         }
 
         /// <summary>
@@ -102,11 +105,14 @@ namespace NUnit.Engine.Internal
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && writer != null)
+            lock (myLock)
             {
-                writer.Flush();
-                writer.Dispose();
-                writer = null;
+                if (disposing && writer != null)
+                {
+                    writer.Flush();
+                    writer.Dispose();
+                    writer = null;
+                }
             }
 
             base.Dispose(disposing);

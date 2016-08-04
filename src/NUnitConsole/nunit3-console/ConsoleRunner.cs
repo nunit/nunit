@@ -364,7 +364,8 @@ namespace NUnit.ConsoleRunner
             if (options.RunAsX86)
                 package.AddSetting(EnginePackageSettings.RunAsX86, true);
 
-            if (options.DisposeRunners)
+            // Console runner always sets DisposeRunners
+            //if (options.DisposeRunners)
                 package.AddSetting(EnginePackageSettings.DisposeRunners, true);
 
             if (options.ShadowCopyFiles)
