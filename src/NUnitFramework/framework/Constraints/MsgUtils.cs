@@ -124,12 +124,22 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Formats text to represent a generalized value without clipping.
+        /// </summary>
+        /// <param name="val">The value</param>
+        /// <returns>The formatted text</returns>
+        public static string FormatValue(object val)
+        {
+            return FormatValue(val, false);
+        }
+
+        /// <summary>
         /// Formats text to represent a generalized value.
         /// </summary>
         /// <param name="val">The value</param>
-		/// <param name="clip">Whether or not to clip values when displaying them</param>
+        /// <param name="clip">Whether or not to clip values when displaying them</param>
         /// <returns>The formatted text</returns>
-        public static string FormatValue(object val, bool clip = false)
+        public static string FormatValue(object val, bool clip)
         {
             if (val == null)
                 return Fmt_Null;
