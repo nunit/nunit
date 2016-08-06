@@ -350,7 +350,7 @@ namespace NUnit.Framework.Internal
                 Assert.That(context.CurrentValueFormatter, Is.EqualTo(f));
 
                 context.EstablishExecutionEnvironment();
-                Assert.That(MsgUtils.FormatValue(123, false), Is.EqualTo("dummy"));
+                Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("dummy"));
             }
             finally
             {
@@ -358,7 +358,7 @@ namespace NUnit.Framework.Internal
             }
 
             Assert.That(TestExecutionContext.CurrentContext.CurrentValueFormatter, Is.EqualTo(originalFormatter));
-            Assert.That(MsgUtils.FormatValue(123, false), Is.EqualTo("123"));
+            Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
         }
 
         #endregion

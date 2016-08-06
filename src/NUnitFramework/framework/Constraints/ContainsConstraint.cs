@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         {
             get { return _realConstraint != null ? 
                     _realConstraint.Description : 
-                    "containing " + MsgUtils.FormatValue(_expected, false); }
+                    "containing " + MsgUtils.FormatValue(_expected); }
         }
 
         /// <summary>

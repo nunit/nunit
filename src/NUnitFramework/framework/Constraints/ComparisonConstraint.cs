@@ -71,7 +71,7 @@ namespace NUnit.Framework.Constraints
             this.lessComparisonResult = lessComparisonResult;
             this.equalComparisonResult = equalComparisonResult;
             this.greaterComparisonResult = greaterComparisonResult;
-            this.Description = predicate + " " + MsgUtils.FormatValue(expected, false);
+            this.Description = predicate + " " + MsgUtils.FormatValue(expected);
         }
 
         /// <summary>

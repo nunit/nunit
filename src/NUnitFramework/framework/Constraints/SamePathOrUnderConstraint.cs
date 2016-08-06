@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "Path under or matching " + MsgUtils.FormatValue(expected, false); }
+            get { return "Path under or matching " + MsgUtils.FormatValue(expected); }
         }
 
         /// <summary>

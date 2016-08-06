@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         {
             TestContext.AddFormatter(next => (val, clip) => (val is CustomFormattableType) ? "custom_formatted" : next(val, clip));
 
-            Assert.That(MsgUtils.FormatValue(new CustomFormattableType(), false), Is.EqualTo("custom_formatted"));
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted"));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
             // If this factory is actually called with null, it will throw
             TestContext.AddFormatter(next => (val, clip) => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val, clip));
 
-            Assert.That(MsgUtils.FormatValue(null, false), Is.EqualTo("null"));
+            Assert.That(MsgUtils.FormatValue(null), Is.EqualTo("null"));
         }
 
         [Test]
@@ -56,19 +56,19 @@ namespace NUnit.Framework.Constraints
         {
             TestContext.AddFormatter<CustomFormattableType>((val, clip) => "custom_formatted_using_type");
 
-            Assert.That(MsgUtils.FormatValue(new CustomFormattableType(), false), Is.EqualTo("custom_formatted_using_type"));
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted_using_type"));
         }
 
         [Test]
         public static void FormatValue_IntegerIsWrittenAsIs()
         {
-            Assert.That(MsgUtils.FormatValue(42, false), Is.EqualTo("42"));
+            Assert.That(MsgUtils.FormatValue(42), Is.EqualTo("42"));
         }
 
         [Test]
         public static void FormatValue_StringIsWrittenWithQuotes()
         {
-            Assert.That(MsgUtils.FormatValue("Hello", false), Is.EqualTo("\"Hello\""));
+            Assert.That(MsgUtils.FormatValue("Hello"), Is.EqualTo("\"Hello\""));
         }
 
         // This test currently fails because control character replacement is
@@ -84,13 +84,13 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void FormatValue_FloatIsWrittenWithTrailingF()
         {
-            Assert.That(MsgUtils.FormatValue(0.5f, false), Is.EqualTo("0.5f"));
+            Assert.That(MsgUtils.FormatValue(0.5f), Is.EqualTo("0.5f"));
         }
 
         [Test]
         public static void FormatValue_FloatIsWrittenToNineDigits()
         {
-            string s = MsgUtils.FormatValue(0.33333333333333f, false);
+            string s = MsgUtils.FormatValue(0.33333333333333f);
             int digits = s.Length - 3;   // 0.dddddddddf
             Assert.That(digits, Is.EqualTo(9));
         }
@@ -98,39 +98,39 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void FormatValue_DoubleIsWrittenWithTrailingD()
         {
-            Assert.That(MsgUtils.FormatValue(0.5d, false), Is.EqualTo("0.5d"));
+            Assert.That(MsgUtils.FormatValue(0.5d), Is.EqualTo("0.5d"));
         }
 
         [Test]
         public static void FormatValue_DoubleIsWrittenToSeventeenDigits()
         {
-            string s = MsgUtils.FormatValue(0.33333333333333333333333333333333333333333333d, false);
+            string s = MsgUtils.FormatValue(0.33333333333333333333333333333333333333333333d);
             Assert.That(s.Length, Is.EqualTo(20)); // add 3 for leading 0, decimal and trailing d
         }
 
         [Test]
         public static void FormatValue_DecimalIsWrittenWithTrailingM()
         {
-            Assert.That(MsgUtils.FormatValue(0.5m, false), Is.EqualTo("0.5m"));
+            Assert.That(MsgUtils.FormatValue(0.5m), Is.EqualTo("0.5m"));
         }
 
         [Test]
         public static void FormatValue_DecimalIsWrittenToTwentyNineDigits()
         {
-            Assert.That(MsgUtils.FormatValue(12345678901234567890123456789m, false), Is.EqualTo("12345678901234567890123456789m"));
+            Assert.That(MsgUtils.FormatValue(12345678901234567890123456789m), Is.EqualTo("12345678901234567890123456789m"));
         }
 
         [Test]
         public static void FormatValue_DateTimeTest()
         {
-            Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123), false), Is.EqualTo("2007-07-04 09:15:30.123"));
+            Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123)), Is.EqualTo("2007-07-04 09:15:30.123"));
         }
 
 #if !NETCF
 		[Test]
         public static void FormatValue_DateTimeOffsetTest()
         {
-            Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8)), false), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
+            Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
         }
 #endif
 

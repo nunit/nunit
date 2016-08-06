@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "same as " + MsgUtils.FormatValue(expected, false); }
+            get { return "same as " + MsgUtils.FormatValue(expected); }
         }
 
         /// <summary>

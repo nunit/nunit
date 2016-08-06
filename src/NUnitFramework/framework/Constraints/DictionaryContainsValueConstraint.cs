@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "dictionary containing value " + MsgUtils.FormatValue(Expected, false); }
+            get { return "dictionary containing value " + MsgUtils.FormatValue(Expected); }
         }
 
         /// <summary>

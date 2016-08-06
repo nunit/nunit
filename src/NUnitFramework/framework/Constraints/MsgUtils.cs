@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="val">The value</param>
 		/// <param name="clip">Whether or not to clip values when displaying them</param>
         /// <returns>The formatted text</returns>
-        public static string FormatValue(object val, bool clip)
+        public static string FormatValue(object val, bool clip = false)
         {
             if (val == null)
                 return Fmt_Null;
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Constraints
                     if (++count > max)
                         break;
                     sb.Append(count == 1 ? "< " : ", ");
-                    sb.Append(FormatValue(obj, false));
+                    sb.Append(FormatValue(obj));
                 }
             }
 
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Constraints
                     if (startSegment) sb.Append("< ");
                 }
 
-                sb.Append(FormatValue(obj, false));
+                sb.Append(FormatValue(obj));
 
                 ++count;
 

@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
             : base(type)
         {
             this.expectedType = type;
-            this.Description = descriptionPrefix + MsgUtils.FormatValue(expectedType, false);
+            this.Description = descriptionPrefix + MsgUtils.FormatValue(expectedType);
         }
 
         /// <summary>

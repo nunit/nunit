@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "collection containing " + MsgUtils.FormatValue(Expected, false); }
+            get { return "collection containing " + MsgUtils.FormatValue(Expected); }
         }
 
         /// <summary>

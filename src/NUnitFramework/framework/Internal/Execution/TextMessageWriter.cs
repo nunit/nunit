@@ -254,12 +254,12 @@ namespace NUnit.Framework.Internal
         private void WriteExpectedLine(object expected, Tolerance tolerance)
         {
             Write(Pfx_Expected);
-            Write(MsgUtils.FormatValue(expected, false));
+            Write(MsgUtils.FormatValue(expected));
 
             if (tolerance != null && !tolerance.IsUnsetOrDefault)
             {
                 Write(" +/- ");
-                Write(MsgUtils.FormatValue(tolerance.Value, false));
+                Write(MsgUtils.FormatValue(tolerance.Value));
                 if (tolerance.Mode != ToleranceMode.Linear)
                     Write(" {0}", tolerance.Mode);
             }

@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return  "Subpath of " + MsgUtils.FormatValue(expected, false); }
+            get { return  "Subpath of " + MsgUtils.FormatValue(expected); }
         }
 
         /// <summary>
