@@ -101,6 +101,10 @@ namespace NUnit.Engine.Drivers
             thisNode.AddAttribute("id", string.Format("{0}-{1}", tn.RunnerID, tn.TestID));
             thisNode.AddAttribute("name", tn.Name);
             thisNode.AddAttribute("fullname", tn.FullName);
+            if (!string.IsNullOrEmpty(test.MethodName))
+                thisNode.AddAttribute("methodname", test.MethodName);
+            if (!string.IsNullOrEmpty(test.ClassName))
+                thisNode.AddAttribute("classname", test.ClassName);
             thisNode.AddAttribute("runstate", test.RunState.ToString());
 
             if (test.IsSuite)
