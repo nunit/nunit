@@ -217,8 +217,6 @@ Task("BuildSL")
     .WithCriteria(IsRunningOnWindows())
     .Does(() =>
     {
-        if(isSilverlightSDKInstalled)
-        {
             BuildProject("src/NUnitFramework/framework/nunit.framework-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
             BuildProject("src/NUnitFramework/nunitlite/nunitlite-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
             BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
@@ -226,13 +224,6 @@ Task("BuildSL")
             BuildProject("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
             BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
             BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-        }
-        else
-        {
-            Warning("Silverlight build skipped because files were not present.");
-            if(isAppveyor)
-                throw new Exception("Running Build on Appveyor, but Silverlight not found.");
-        }
     });
 
 Task("BuildCF")
