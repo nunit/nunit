@@ -130,7 +130,7 @@ Task("InitializeBuild")
 					else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
 						suffix += "-pre-" + buildNumber;
 					else
-						suffix += "-" + AppVeyor.Environment.Repository.Branch;
+						suffix += "-" + branch;
 
 					// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
 					if (suffix.Length > 21)
@@ -955,14 +955,6 @@ Task("BuildFramework")
     .IsDependentOn("BuildSL")
     .IsDependentOn("BuildCF");
 
-Task("TestAll")
-    .IsDependentOn("TestFramework")
-    .IsDependentOn("TestEngine")
-    .IsDependentOn("TestAddins")
-    .IsDependentOn("TestV2Driver")
-    .IsDependentOn("TestConsole");
-
-// NOTE: Test has been changed to now be a synonym of TestAll
 Task("Test")
     .IsDependentOn("TestFramework")
     .IsDependentOn("TestEngine")
@@ -993,12 +985,12 @@ Task("Package")
 
 Task("Appveyor")
     .IsDependentOn("Build")
-    .IsDependentOn("TestAll")
+    .IsDependentOn("Test")
     .IsDependentOn("Package");
 
 Task("Travis")
     .IsDependentOn("Build")
-    .IsDependentOn("TestAll");
+    .IsDependentOn("Test");
 
 Task("Default")
     .IsDependentOn("Build"); // Rebuild?

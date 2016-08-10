@@ -194,17 +194,6 @@ namespace NUnit.Engine.Agents
         }
 
         /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        public void StartRun(ITestEventListener listener, TestFilter filter)
-        {
-            RunAsync(listener, filter);
-        }
-
-        /// <summary>
         /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>
         /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>

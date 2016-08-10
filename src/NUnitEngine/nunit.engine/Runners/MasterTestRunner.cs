@@ -33,43 +33,193 @@ using NUnit.Engine.Services;
 
 namespace NUnit.Engine.Runners
 {
-    public class MasterTestRunner : AbstractTestRunner, ITestRunner
+    public class MasterTestRunner : ITestRunner
     {
-        private ITestEngineRunner _realRunner;
+        private const string TEST_RUN_ELEMENT = "test-run";
+
+        private ITestEngineRunner _engineRunner;
+
+        private IServiceLocator _services;
         private IRuntimeFrameworkService _runtimeService;
         private ExtensionService _extensionService;
+        private IProjectService _projectService;
+        private ITestRunnerFactory _testRunnerFactory;
 
         public MasterTestRunner(IServiceLocator services, TestPackage package)
-            : base(services, package)
         {
-            _runtimeService = Services.GetService<IRuntimeFrameworkService>();
-            _extensionService = Services.GetService<ExtensionService>();
+            _services = services;
+            TestPackage = package;
+
+            _testRunnerFactory = _services.GetService<ITestRunnerFactory>();
+            _projectService = _services.GetService<IProjectService>();
+            _runtimeService = _services.GetService<IRuntimeFrameworkService>();
+            _extensionService = _services.GetService<ExtensionService>();
+            _engineRunner = _testRunnerFactory.MakeTestRunner(package);
         }
 
         #region Properties
 
-        public bool IsTestRunning { get; private set; }
+        /// <summary>
+        /// The TestPackage for which this is the runner
+        /// </summary>
+        protected TestPackage TestPackage { get; set; }
+
+        /// <summary>
+        /// The result of the last call to LoadPackage
+        /// </summary>
+        protected TestEngineResult LoadResult { get; set; }
+
+        /// <summary>
+        /// Gets an indicator of whether the package has been loaded.
+        /// </summary>
+        protected bool IsPackageLoaded
+        {
+            get { return LoadResult != null; }
+        }
 
         #endregion
 
-        #region AbstractTestRunner Overrides
+        #region ITestRunner Members
+
+        /// <summary>
+        /// Get a flag indicating whether a test is running
+        /// </summary>
+        public bool IsTestRunning { get; private set; }
+
+        /// <summary>
+        /// Load a TestPackage for possible execution. The 
+        /// explicit implementation returns an ITestEngineResult
+        /// for consumption by clients.
+        /// </summary>
+        /// <returns>An XmlNode representing the loaded assembly.</returns>
+        public XmlNode Load()
+        {
+            LoadResult = _engineRunner.Load();
+            return LoadResult.Xml;
+        }
+
+        /// <summary>
+        /// Unload any loaded TestPackage. If none is loaded,
+        /// the call is ignored.
+        /// </summary>
+        public void Unload()
+        {
+            UnloadPackage();
+        }
+
+        /// <summary>
+        /// Reload the currently loaded test jpackage.
+        /// </summary>
+        /// <returns>An XmlNode representing the loaded package</returns>
+        /// <exception cref="InvalidOperationException">If no package has been loaded</exception>
+        public XmlNode Reload()
+        {
+            LoadResult = _engineRunner.Reload();
+            return LoadResult.Xml;
+        }
+
+        /// <summary>
+        /// Count the test cases that would be run under the specified
+        /// filter, loading the TestPackage if it is not already loaded.
+        /// </summary>
+        /// <param name="filter">A TestFilter</param>
+        /// <returns>The count of test cases.</returns>
+        public int CountTestCases(TestFilter filter)
+        {
+            EnsurePackageIsLoaded();
+
+            return _engineRunner.CountTestCases(filter);
+        }
+
+        /// <summary>
+        /// Run the tests in a loaded TestPackage. The explicit
+        /// implementation returns an ITestEngineResult for use
+        /// by external clients.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>An XmlNode giving the result of the test execution</returns>
+        public XmlNode Run(ITestEventListener listener, TestFilter filter)
+        {
+            return RunTests(listener, filter).Xml;
+        }
+
+        /// <summary>
+        /// Start a run of the tests in the loaded TestPackage. The tests are run
+        /// asynchronously and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">The listener that is notified as the run progresses</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns></returns>
+        public ITestRun RunAsync(ITestEventListener listener, TestFilter filter)
+        {
+            return _engineRunner.RunAsync(listener, filter);
+        }
+
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public void StopRun(bool force)
+        {
+            _engineRunner.StopRun(force);
+        }
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>A TestEngineResult.</returns>
-        protected override TestEngineResult ExploreTests(TestFilter filter)
+        /// <returns>An XmlNode representing the tests found.</returns>
+        public XmlNode Explore(TestFilter filter)
         {
-            return _realRunner.Explore(filter).Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
+            EnsurePackageIsLoaded(); // Needed?
+
+            return _engineRunner.Explore(filter)
+                .Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName).Xml;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _disposed = false;
+
+        /// <summary>
+        /// Dispose of this object.
+        /// </summary>
+        private void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing && _engineRunner != null)
+                    _engineRunner.Dispose();
+
+                _disposed = true;
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private void EnsurePackageIsLoaded()
+        {
+            if (!IsPackageLoaded)
+                LoadPackage();
         }
 
         /// <summary>
-        /// Load a TestPackage for possible execution
+        /// Load a TestPackage for possible execution,
+        /// saving the result in the LoadResult property.
         /// </summary>
-        /// <returns>A TestEngineResult.</returns>
-        protected override TestEngineResult LoadPackage()
+        private void LoadPackage()
         {
             // Last chance to catch invalid settings in package,
             // in case the client runner missed them.
@@ -93,9 +243,7 @@ namespace NUnit.Engine.Runners
                 throw new NUnitEngineException("Cannot run tests in process - a 32 bit process is required.");
             }
 
-            _realRunner = TestRunnerFactory.MakeTestRunner(TestPackage);
-
-            return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
+            LoadResult = _engineRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
         }
 
         private void ExpandProjects()
@@ -104,29 +252,58 @@ namespace NUnit.Engine.Runners
             {
                 string packageName = package.FullName;
 
-                if (File.Exists(packageName) && ProjectService.CanLoadFrom(packageName))
-                        ProjectService.ExpandProjectPackage(package);
+                if (File.Exists(packageName) && _projectService.CanLoadFrom(packageName))
+                    _projectService.ExpandProjectPackage(package);
+            }
+        }
+
+        // Any Errors thrown from this method indicate that the client
+        // runner is putting invalid values into the package.
+        private void ValidatePackageSettings()
+        {
+            var frameworkSetting = TestPackage.GetSetting(EnginePackageSettings.RuntimeFramework, "");
+            if (frameworkSetting.Length > 0)
+            {
+                // Check requested framework is actually available
+                var runtimeService = _services.GetService<IRuntimeFrameworkService>();
+                if (!runtimeService.IsAvailable(frameworkSetting))
+                    throw new NUnitEngineException(string.Format("The requested framework {0} is unknown or not available.", frameworkSetting));
+
+                // If running in process, check requested framework is compatible
+                var processModel = TestPackage.GetSetting(EnginePackageSettings.ProcessModel, "Default");
+                if (processModel.ToLower() == "single")
+                {
+                    var currentFramework = RuntimeFramework.CurrentFramework;
+                    var requestedFramework = RuntimeFramework.Parse(frameworkSetting);
+                    if (!currentFramework.Supports(requestedFramework))
+                        throw new NUnitEngineException(string.Format(
+                            "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
+                }
             }
         }
 
         /// <summary>
         /// Unload any loaded TestPackage.
         /// </summary>
-        public override void UnloadPackage()
+        private void UnloadPackage()
         {
-            if (_realRunner != null)
-                _realRunner.Unload();
+            LoadResult = null;
+            if (_engineRunner != null)
+                _engineRunner.Unload();
         }
 
         /// <summary>
         /// Count the test cases that would be run under
-        /// the specified filter.
+        /// the specified filter. Returns zero if the
+        /// package has not yet been loaded.
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        protected override int CountTests(TestFilter filter)
+        private int CountTests(TestFilter filter)
         {
-            return _realRunner.CountTestCases(filter);
+            if (!IsPackageLoaded) return 0;
+
+            return _engineRunner.CountTestCases(filter);
         }
 
         /// <summary>
@@ -136,7 +313,7 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
+        private TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
             var eventDispatcher = new TestEventDispatcher();
             if (listener != null)
@@ -146,12 +323,12 @@ namespace NUnit.Engine.Runners
 
             IsTestRunning = true;
 
-            eventDispatcher.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
+            eventDispatcher.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTests(filter)));
 
             DateTime startTime = DateTime.UtcNow;
             long startTicks = Stopwatch.GetTimestamp();
 
-            TestEngineResult result = _realRunner.Run(eventDispatcher, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
+            TestEngineResult result = _engineRunner.Run(eventDispatcher, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             // These are inserted in reverse order, since each is added as the first child.
             InsertFilterElement(result.Xml, filter);
@@ -172,124 +349,6 @@ namespace NUnit.Engine.Runners
             return result;
         }
 
-        /// <summary>
-        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
-        /// </summary>
-        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
-        public override void StopRun(bool force)
-        {
-            _realRunner.StopRun(force);
-        }
-
-        /// <summary>
-        /// Dispose of this object.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                base.Dispose(disposing);
-
-                if (disposing && _realRunner != null)
-                    _realRunner.Dispose();
-            }
-        }
-
-        #endregion
-
-        #region ITestRunner Explicit Implementation
-
-        // NOTE: Only those methods which differ from those in
-        // ITestEngineRunner have an explicit implementation. 
-        // Methods that are the same for both interfaces
-        // use the class methods.
-
-        /// <summary>
-        /// Load a TestPackage for possible execution. The 
-        /// explicit implementation returns an ITestEngineResult
-        /// for consumption by clients.
-        /// </summary>
-        /// <returns>An XmlNode representing the loaded assembly.</returns>
-        XmlNode ITestRunner.Load()
-        {
-            return Load().Xml;
-        }
-
-        /// <summary>
-        /// Reload the currently loaded test jpackage.
-        /// </summary>
-        /// <returns>An XmlNode representing the loaded package</returns>
-        /// <exception cref="InvalidOperationException">If no package has been loaded</exception>
-        XmlNode ITestRunner.Reload()
-        {
-            return Reload().Xml;
-        }
-
-        /// <summary>
-        /// Run the tests in a loaded TestPackage. The explicit
-        /// implementation returns an ITestEngineResult for use
-        /// by external clients.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>An XmlNode giving the result of the test execution</returns>
-        XmlNode ITestRunner.Run(ITestEventListener listener, TestFilter filter)
-        {
-            return Run(listener, filter).Xml;
-        }
-
-        /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
-        /// </summary>
-        /// <param name="listener">The listener that is notified as the run progresses</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns></returns>
-        ITestRun ITestRunner.RunAsync(ITestEventListener listener, TestFilter filter)
-        {
-            return RunAsync(listener, filter);
-        }
-
-        /// <summary>
-        /// Explore a loaded TestPackage and return information about
-        /// the tests found.
-        /// </summary>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>An XmlNode representing the tests found.</returns>
-        XmlNode ITestRunner.Explore(TestFilter filter)
-        {
-            return this.Explore(filter).Xml;
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        // Any Errors thrown from this method indicate that the client
-        // runner is putting invalid values into the package.
-        private void ValidatePackageSettings()
-        {
-            var frameworkSetting = TestPackage.GetSetting(EnginePackageSettings.RuntimeFramework, "");
-            if (frameworkSetting.Length > 0)
-            {
-                // Check requested framework is actually available
-                var runtimeService = Services.GetService<IRuntimeFrameworkService>();
-                if (!runtimeService.IsAvailable(frameworkSetting))
-                    throw new NUnitEngineException(string.Format("The requested framework {0} is unknown or not available.", frameworkSetting));
-
-                // If running in process, check requested framework is compatible
-                var processModel = TestPackage.GetSetting(EnginePackageSettings.ProcessModel, "Default");
-                if (processModel.ToLower() == "single")
-                {
-                    var currentFramework = RuntimeFramework.CurrentFramework;
-                    var requestedFramework = RuntimeFramework.Parse(frameworkSetting);
-                    if (!currentFramework.Supports(requestedFramework))
-                        throw new NUnitEngineException(string.Format(
-                            "Cannot run {0} framework in process already running {1}.", frameworkSetting, currentFramework));
-                }
-            }
-        }
-
         private static void InsertCommandLineElement(XmlNode resultNode)
         {
             var doc = resultNode.OwnerDocument;
@@ -299,23 +358,6 @@ namespace NUnit.Engine.Runners
 
             var cdata = doc.CreateCDataSection(Environment.CommandLine);
             cmd.AppendChild(cdata);
-        }
-
-        private static void InsertSettingsElement(XmlNode resultNode, IDictionary<string, object> settings)
-        {
-            var doc = resultNode.OwnerDocument;
-
-            XmlNode settingsNode = doc.CreateElement("settings");
-            resultNode.InsertAfter(settingsNode, null);
-
-            foreach (string name in settings.Keys)
-            {
-                string value = settings[name].ToString();
-                XmlNode settingNode = doc.CreateElement("setting");
-                settingNode.AddAttribute("name", name);
-                settingNode.AddAttribute("value", value);
-                settingsNode.AppendChild(settingNode);
-            }
         }
 
         private static void InsertFilterElement(XmlNode resultNode, TestFilter filter)

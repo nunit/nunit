@@ -229,8 +229,8 @@ namespace NUnit.Engine.Services
             
             //p.Exited += new EventHandler(OnProcessExit);
             p.Start();
-            log.Info("Launched Agent process {0} - see nunit-agent_{0}.log", p.Id);
-            log.Info("Command line: \"{0}\" {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
+            log.Debug("Launched Agent process {0} - see nunit-agent_{0}.log", p.Id);
+            log.Debug("Command line: \"{0}\" {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 
             _agentData.Add( new AgentRecord( agentId, p, null, AgentStatus.Starting ) );
             return agentId;

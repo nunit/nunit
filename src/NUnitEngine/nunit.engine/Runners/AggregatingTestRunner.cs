@@ -29,6 +29,9 @@ namespace NUnit.Engine.Runners
     /// <summary>
     /// AggregatingTestRunner runs tests using multiple
     /// subordinate runners and combines the results.
+    /// The individual runners may be run in parallel
+    /// if a derived class sets the LevelOfParallelism
+    /// property in its constructor.
     /// </summary>
     public class AggregatingTestRunner : AbstractTestRunner
     {
@@ -36,7 +39,17 @@ namespace NUnit.Engine.Runners
         // of writing this comment) be either TestDomainRunners or ProcessRunners.
         protected readonly List<ITestEngineRunner> _runners = new List<ITestEngineRunner>();
 
-        public AggregatingTestRunner(IServiceLocator services, TestPackage package) : base(services, package) { }
+        // Public for testing purposes
+        public virtual int LevelOfParallelism
+        {
+            get { return 1; }
+        }
+
+        public AggregatingTestRunner(IServiceLocator services, TestPackage package) : base(services, package)
+        {
+            foreach (var subPackage in package.SubPackages)
+                _runners.Add(CreateRunner(subPackage));
+        }
 
         #region AbstractTestRunner Overrides
 
@@ -68,12 +81,8 @@ namespace NUnit.Engine.Runners
         {
             var results = new List<TestEngineResult>();
 
-            foreach (var subPackage in TestPackage.SubPackages)
-            {
-                var runner = CreateRunner(subPackage);
-                _runners.Add(runner);
+            foreach (ITestEngineRunner runner in _runners)
                 results.Add(runner.Load());
-            }
 
             return ResultHelper.Merge(results);
         }
@@ -117,9 +126,7 @@ namespace NUnit.Engine.Runners
 
             bool disposeRunners = TestPackage.GetSetting(EnginePackageSettings.DisposeRunners, false);
 
-            int levelOfParallelism = GetLevelOfParallelism();
-
-            if (levelOfParallelism <= 1 || _runners.Count <= 1)
+            if (LevelOfParallelism <= 1)
             {
                 foreach (ITestEngineRunner runner in _runners)
                 {
@@ -129,7 +136,7 @@ namespace NUnit.Engine.Runners
             }
             else
             {
-                var workerPool = new ParallelTaskWorkerPool(levelOfParallelism);
+                var workerPool = new ParallelTaskWorkerPool(LevelOfParallelism);
                 var tasks = new List<TestExecutionTask>();
 
                 foreach (ITestEngineRunner runner in _runners)
@@ -186,11 +193,6 @@ namespace NUnit.Engine.Runners
         protected virtual ITestEngineRunner CreateRunner(TestPackage package)
         {
             return TestRunnerFactory.MakeTestRunner(package);
-        }
-
-        protected virtual int GetLevelOfParallelism()
-        {
-            return 1;
         }
     }
 }
