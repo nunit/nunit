@@ -167,6 +167,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public TestEngineResult Explore(TestFilter filter)
         {
+            EnsurePackageIsLoaded();
             return ExploreTests(filter);
         }
 
@@ -209,6 +210,7 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases.</returns>
         public int CountTestCases(TestFilter filter)
         {
+            EnsurePackageIsLoaded();
             return CountTests(filter);
         }
 
@@ -221,6 +223,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         public TestEngineResult Run(ITestEventListener listener, TestFilter filter)
         {
+            EnsurePackageIsLoaded();
             return RunTests(listener, filter);
         }
 
@@ -233,6 +236,7 @@ namespace NUnit.Engine.Runners
         /// <returns>An <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
         public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
         {
+            EnsurePackageIsLoaded();
             return RunTestsAsync(listener, filter);
         }
         
