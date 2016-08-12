@@ -126,8 +126,6 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases.</returns>
         public int CountTestCases(TestFilter filter)
         {
-            EnsurePackageIsLoaded();
-
             return _engineRunner.CountTestCases(filter);
         }
 
@@ -173,8 +171,6 @@ namespace NUnit.Engine.Runners
         /// <returns>An XmlNode representing the tests found.</returns>
         public XmlNode Explore(TestFilter filter)
         {
-            EnsurePackageIsLoaded(); // Needed?
-
             return _engineRunner.Explore(filter)
                 .Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName).Xml;
         }
@@ -208,12 +204,6 @@ namespace NUnit.Engine.Runners
         #endregion
 
         #region Helper Methods
-
-        private void EnsurePackageIsLoaded()
-        {
-            if (!IsPackageLoaded)
-                LoadPackage();
-        }
 
         /// <summary>
         /// Load a TestPackage for possible execution,

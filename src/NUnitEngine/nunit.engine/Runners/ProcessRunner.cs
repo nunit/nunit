@@ -64,7 +64,6 @@ namespace NUnit.Engine.Runners
         {
             try
             {
-                EnsurePackageIsLoaded();
                 return _remoteRunner.Explore(filter);
             }
             catch (Exception e)
@@ -144,7 +143,6 @@ namespace NUnit.Engine.Runners
         {
             try
             {
-                EnsurePackageIsLoaded();
                 return _remoteRunner.CountTestCases(filter);
             }
             catch (Exception e)
@@ -166,8 +164,6 @@ namespace NUnit.Engine.Runners
 
             try
             {
-                EnsurePackageIsLoaded();
-
                 var result = _remoteRunner.Run(listener, filter);
                 log.Info("Done running " + TestPackage.Name);
                 return result;
@@ -193,7 +189,6 @@ namespace NUnit.Engine.Runners
 
             try
             {
-                EnsurePackageIsLoaded();
                 return _remoteRunner.RunAsync(listener, filter);
             }
             catch (Exception e)
