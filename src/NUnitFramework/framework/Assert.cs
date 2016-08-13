@@ -68,7 +68,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static new bool Equals(object a, object b)
+        public new static bool Equals(object a, object b)
         {
             throw new InvalidOperationException("Assert.Equals should not be used for Assertions");
         }
@@ -80,7 +80,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static new void ReferenceEquals(object a, object b)
+        public new static void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used for Assertions");
         }
@@ -96,13 +96,20 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Pass(string message, params object[] args)
+        public static void Pass(string message, params object[] args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
-                message = string.Format(message, args);
+            Assert.Pass(BuildExceptionMessage(message, args));
+        }
 
-            throw new SuccessException(message);
+        /// <summary>
+        /// Throws a <see cref="SuccessException"/> with the message and arguments 
+        /// that are passed in. This allows a test to be cut short, with a result
+        /// of success returned to NUnit.
+        /// </summary>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void Pass(Func<string> getExceptionMessage)
+        {
+            throw new SuccessException(getExceptionMessage());
         }
 
         /// <summary>
@@ -111,7 +118,7 @@ namespace NUnit.Framework
         /// of success returned to NUnit.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Pass(string message)
+        public static void Pass(string message)
         {
             Assert.Pass(message, null);
         }
@@ -121,7 +128,7 @@ namespace NUnit.Framework
         /// that are passed in. This allows a test to be cut short, with a result
         /// of success returned to NUnit.
         /// </summary>
-        static public void Pass()
+        public static void Pass()
         {
             Assert.Pass(string.Empty, null);
         }
@@ -136,13 +143,19 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Fail(string message, params object[] args)
+        public static void Fail(string message, params object[] args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
-                message = string.Format(message, args);
+            Assert.Fail(BuildExceptionMessage(message, args));
+        }
 
-            throw new AssertionException(message);
+        /// <summary>
+        /// Throws an <see cref="AssertionException"/> with the message and arguments 
+        /// that are passed in. This is used by the other Assert functions. 
+        /// </summary>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void Fail(Func<string> getExceptionMessage)
+        {
+            throw new AssertionException(getExceptionMessage());
         }
 
         /// <summary>
@@ -150,7 +163,7 @@ namespace NUnit.Framework
         /// passed in. This is used by the other Assert functions. 
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Fail(string message)
+        public static void Fail(string message)
         {
             Assert.Fail(message, null);
         }
@@ -159,7 +172,7 @@ namespace NUnit.Framework
         /// Throws an <see cref="AssertionException"/>. 
         /// This is used by the other Assert functions. 
         /// </summary>
-        static public void Fail()
+        public static void Fail()
         {
             Assert.Fail(string.Empty, null);
         }
@@ -174,13 +187,19 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Ignore(string message, params object[] args)
+        public static void Ignore(string message, params object[] args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
-                message = string.Format(message, args);
+            Assert.Ignore(BuildExceptionMessage(message, args));
+        }
 
-            throw new IgnoreException(message);
+        /// <summary>
+        /// Throws an <see cref="IgnoreException"/> with the message and arguments 
+        /// that are passed in.  This causes the test to be reported as ignored.
+        /// </summary>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void Ignore(Func<string> getExceptionMessage)
+        {
+            throw new IgnoreException(getExceptionMessage());
         }
 
         /// <summary>
@@ -188,7 +207,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as ignored. 
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Ignore(string message)
+        public static void Ignore(string message)
         {
             Assert.Ignore(message, null);
         }
@@ -197,7 +216,7 @@ namespace NUnit.Framework
         /// Throws an <see cref="IgnoreException"/>. 
         /// This causes the test to be reported as ignored. 
         /// </summary>
-        static public void Ignore()
+        public static void Ignore()
         {
             Assert.Ignore(string.Empty, null);
         }
@@ -212,13 +231,19 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Inconclusive(string message, params object[] args)
+        public static void Inconclusive(string message, params object[] args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
-                message = string.Format(message, args);
+            Assert.Inconclusive(BuildExceptionMessage(message, args));
+        }
 
-            throw new InconclusiveException(message);
+        /// <summary>
+        /// Throws an <see cref="InconclusiveException"/> with the message and arguments 
+        /// that are passed in.  This causes the test to be reported as inconclusive.
+        /// </summary>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void Inconclusive(Func<string> getExceptionMessage)
+        {
+            throw new InconclusiveException(getExceptionMessage());
         }
 
         /// <summary>
@@ -226,7 +251,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as inconclusive. 
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
-        static public void Inconclusive(string message)
+        public static void Inconclusive(string message)
         {
             Assert.Inconclusive(message, null);
         }
@@ -235,7 +260,7 @@ namespace NUnit.Framework
         /// Throws an <see cref="InconclusiveException"/>. 
         /// This causes the test to be reported as Inconclusive. 
         /// </summary>
-        static public void Inconclusive()
+        public static void Inconclusive()
         {
             Assert.Inconclusive(string.Empty, null);
         }
@@ -253,7 +278,18 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Contains(object expected, ICollection actual, string message, params object[] args)
         {
-            Assert.That(actual, new CollectionContainsConstraint(expected) ,message, args);
+            Assert.That(actual, new CollectionContainsConstraint(expected), message, args);
+        }
+
+        /// <summary>
+        /// Asserts that an object is contained in a list.
+        /// </summary>
+        /// <param name="expected">The expected object</param>
+        /// <param name="actual">The list to be examined</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void Contains(object expected, ICollection actual, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            Assert.That(actual, new CollectionContainsConstraint(expected), getExceptionMessage);
         }
 
         /// <summary>
@@ -263,7 +299,7 @@ namespace NUnit.Framework
         /// <param name="actual">The list to be examined</param>
         public static void Contains(object expected, ICollection actual)
         {
-            Assert.That(actual, new CollectionContainsConstraint(expected) ,null, null);
+            Assert.That(actual, new CollectionContainsConstraint(expected), null, null);
         }
 
         #endregion
@@ -281,5 +317,23 @@ namespace NUnit.Framework
         //}
 
         #endregion
+
+        /// <summary>
+        /// Helper function that creates a lambda function passed to an Assert method that lazily builds the Exception message.
+        /// </summary>
+        /// <param name="message">The message to initialize the <see cref="Exception"/> with.</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>A lambda function to lazily build the string</returns>
+        private static Func<string> BuildExceptionMessage(string message, object[] args)
+        {
+            return () =>
+            {
+                if (message == null)
+                    message = string.Empty;
+                else if (args != null && args.Length > 0)
+                    message = string.Format(message, args);
+                return message;
+            };
+        }
     }
 }
