@@ -95,8 +95,8 @@ namespace NUnit.ConsoleRunner.Tests
             var expected = new [] {
                 "Test Run Summary",
                 "  Overall result: Failed",
-                "  Test Count: 42, Passed: 27, Failed: 7, Inconclusive: 1, Skipped: 7",
-                "    Failed Tests - Failures: 3, Errors: 1, Invalid: 3",
+                "  Test Count: 28, Passed: 15, Failed: 5, Inconclusive: 1, Skipped: 7",
+                "    Failed Tests - Failures: 1, Errors: 1, Invalid: 3",
                 "    Skipped Tests - Ignored: 4, Explicit: 3, Other: 0",
                 "  Start time: 2015-10-19 02:12:28Z",
                 "    End time: 2015-10-19 02:12:29Z",
@@ -124,11 +124,7 @@ namespace NUnit.ConsoleRunner.Tests
                 "4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException" + nl +
                 "System.Exception : Intentional Exception",
                 "5) Invalid : NUnit.Tests.BadFixture" + nl +
-                "No suitable constructor was found",
-                "6) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceAtEndOfFailureMessage" + nl +
-                "The CDATA was: <![CDATA[ My <xml> ]]>",
-                "7) Failed : NUnit.Tests.CDataTestFixure.DemonstrateIllegalSequenceInFailureMessage" + nl +
-                "Deliberate failure to illustrate ]]> in message",
+                "No suitable constructor was found"
             };
 
             var actualErrorFailuresReport = GetReport(_reporter.WriteErrorsAndFailuresReport);
