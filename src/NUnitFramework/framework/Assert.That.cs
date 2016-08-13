@@ -27,6 +27,10 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
+    /// <summary>
+    /// The Assert class contains a collection of static methods that
+    /// implement the most common assertions used in NUnit.
+    /// </summary>
     public partial class Assert
     {
         #region Assert.That
@@ -77,7 +81,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(Func<bool> condition, string message, params object[] args)
+        public static void That(Func<bool> condition, string message, params object[] args)
         {
             Assert.That(condition.Invoke(), Is.True, message, args);
         }
@@ -88,7 +92,7 @@ namespace NUnit.Framework
         /// </summary> 
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        static public void That(Func<bool> condition, Func<ConstraintResult, string> getExceptionMessage)
+        public static void That(Func<bool> condition, Func<ConstraintResult, string> getExceptionMessage)
         {
             Assert.That(condition.Invoke(), Is.True, getExceptionMessage);
         }
@@ -98,7 +102,7 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
-        static public void That(Func<bool> condition)
+        public static void That(Func<bool> condition)
         {
             Assert.That(condition.Invoke(), Is.True, null, null);
         }
@@ -111,8 +115,9 @@ namespace NUnit.Framework
         /// Apply a expression to an actual value, succeeding if the expression
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
         /// <param name="actual">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         public static void That<TActual>(ActualValueDelegate<TActual> actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
@@ -122,8 +127,9 @@ namespace NUnit.Framework
         /// Apply a expression to an actual value, succeeding if the expression
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
         /// <param name="actual">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That<TActual>(ActualValueDelegate<TActual> actual, IResolveConstraint expression, Func<ConstraintResult, string> getExceptionMessage)
         {
@@ -134,6 +140,7 @@ namespace NUnit.Framework
         /// Apply a expression to an actual value, succeeding if the expression
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
+        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
         /// <param name="actual">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
@@ -193,6 +200,7 @@ namespace NUnit.Framework
         /// Apply a expression to an actual value, succeeding if the expression
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
+        /// <typeparam name="TActual">The type of <paramref name="actual"/></typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint to be applied</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression)
@@ -204,6 +212,7 @@ namespace NUnit.Framework
         /// Apply a expression to an actual value, succeeding if the expression
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
+        /// <typeparam name="TActual">The type of <paramref name="actual"/></typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
@@ -223,6 +232,7 @@ namespace NUnit.Framework
         /// Apply a expression to an actual value, succeeding if the expression
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
+        /// <typeparam name="TActual">The type of <paramref name="actual"/></typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
@@ -250,8 +260,8 @@ namespace NUnit.Framework
         /// Used as a synonym for That in rare cases where a private setter 
         /// causes a Visual Basic compilation error.
         /// </summary>
-        /// <param name="expression">A Constraint to be applied</param>
         /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
         public static void ByVal(object actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
@@ -267,8 +277,8 @@ namespace NUnit.Framework
         /// This method is provided for use by VB developers needing to test
         /// the value of properties with private setters.
         /// </remarks>
-        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void ByVal(object actual, IResolveConstraint expression, Func<ConstraintResult, string> getExceptionMessage)
         {
@@ -285,8 +295,8 @@ namespace NUnit.Framework
         /// This method is provided for use by VB developers needing to test
         /// the value of properties with private setters.
         /// </remarks>
-        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void ByVal(object actual, IResolveConstraint expression, string message, params object[] args)

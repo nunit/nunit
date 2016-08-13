@@ -51,11 +51,14 @@ namespace NUnit.Framework
         #region Constructor
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Assert"/> class. 
         /// We don't actually want any instances of this object, but some people
         /// like to inherit from it to add other static methods. Hence, the
         /// protected constructor disallows any instances of this object. 
         /// </summary>
-        protected Assert() { }
+        protected Assert()
+        {
+        }
 
         #endregion
 
@@ -65,10 +68,11 @@ namespace NUnit.Framework
         /// The Equals method throws an InvalidOperationException. This is done 
         /// to make sure there is no mistake by calling this function.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
+        /// <param name="a">The left object</param>
+        /// <param name="b">The right object</param>
+        /// <returns>Not applicable</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static bool Equals(object a, object b)
+        public static new bool Equals(object a, object b)
         {
             throw new InvalidOperationException("Assert.Equals should not be used for Assertions");
         }
@@ -78,9 +82,9 @@ namespace NUnit.Framework
         /// implementation makes sure there is no mistake in calling this function 
         /// as part of Assert. 
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        public new static void ReferenceEquals(object a, object b)
+        /// <param name="a">The left object</param>
+        /// <param name="b">The right object</param>
+        public static new void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used for Assertions");
         }
@@ -311,10 +315,10 @@ namespace NUnit.Framework
         ///// the errors will be reported at the end of the block.
         ///// </summary>
         ///// <param name="del">The test delegate</param>
-        //public static void Multiple(TestDelegate del)
-        //{
-        //    del();
-        //}
+        ////public static void Multiple(TestDelegate del)
+        ////{
+        ////    del();
+        ////}
 
         #endregion
 
@@ -329,9 +333,14 @@ namespace NUnit.Framework
             return () =>
             {
                 if (message == null)
+                {
                     message = string.Empty;
+                }
                 else if (args != null && args.Length > 0)
+                {
                     message = string.Format(message, args);
+                }
+
                 return message;
             };
         }
