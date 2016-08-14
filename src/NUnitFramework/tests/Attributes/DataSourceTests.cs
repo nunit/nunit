@@ -253,6 +253,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        [Ignore("Test is a bit unstable on different windows platforms. Needs more investigation.")]
         [Platform(Include = "Win", Reason = "Driver exists only on windows machines")]
         [DatabaseData("Driver={Microsoft Excel Driver (*.xls)};Driverid=790;Dbq=TestXlsFile.xls;DefaultDir=.;", "Test1", "c1,c2,c3")]
         public void DatabaseSourceMayReturnArgumentsAsObjectArray(int n, int d, int q)
