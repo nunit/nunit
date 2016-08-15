@@ -57,6 +57,26 @@ namespace NUnit.Framework
         private object _expectedResult;
         private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
+        #region Constructors
+
+        /// <summary>
+        /// Construct a test <see cref="Attribute"/>
+        /// </summary>
+        public TestAttribute()
+        {
+        }
+
+        /// <summary>
+        /// Construct a test <see cref="Attribute"/>
+        /// </summary>
+        /// <param name="description">Descriptive text for this test</param>
+        public TestAttribute(string description)
+        {
+            Description = description;
+        }
+
+        #endregion
+
         /// <summary>
         /// Descriptive text for this test
         /// </summary>
