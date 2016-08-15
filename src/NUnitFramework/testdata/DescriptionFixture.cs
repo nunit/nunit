@@ -25,10 +25,10 @@ using NUnit.Framework;
 
 namespace NUnit.TestData
 {
-    [TestFixture(Description = "Fixture Description")]
+    [TestFixture("Fixture Description")]
     public class DescriptionFixture
     {
-        [Test(Description = "Test Description")]
+        [Test("Test Description")]
         public void Method()
         {}
 
