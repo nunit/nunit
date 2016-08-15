@@ -40,10 +40,19 @@ namespace NUnit.Framework
         #region Constructors
 
         /// <summary>
+        /// Constructs a test fixture <see cref="Attribute"/>
+        /// </summary>
+        /// <param name="description">Descriptive text for this fixture</param>
+        public TestFixtureAttribute(string description) : this()
+        {
+            Description = description;
+        }
+
+        /// <summary>
         /// Default constructor
         /// </summary>
         public TestFixtureAttribute() : this( new object[0] ) { }
-        
+
         /// <summary>
         /// Construct with a object[] representing a set of arguments. 
         /// In .NET 2.0, the arguments may later be separated into
