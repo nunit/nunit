@@ -61,7 +61,6 @@ var PACKAGE_SOURCE = new string[]
 	};
 
 // Test Runners
-var NUNIT3_CONSOLE = BIN_DIR + "nunit3-console.exe";
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
 
 // Test Assemblies
@@ -69,10 +68,6 @@ var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
 var EXECUTABLE_FRAMEWORK_TESTS = "nunit.framework.tests.exe";
 var NUNITLITE_TESTS = "nunitlite.tests.dll";
 var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
-var ENGINE_TESTS = "nunit.engine.tests.dll";
-var ADDIN_TESTS = "addins/tests/addin-tests.dll";
-var V2_DRIVER_TESTS = "addins/v2-tests/nunit.v2.driver.tests.dll";
-var CONSOLE_TESTS = "nunit3-console.tests.dll";
 
 // Packages
 var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
@@ -113,22 +108,31 @@ Task("InitializeBuild")
 			}
 			else
 			{
-				var buildNumber = AppVeyor.Environment.Build.Number;
+				var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
+				var branch = AppVeyor.Environment.Repository.Branch;
+				var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 
-				var suffix = "-CI-" + buildNumber + dbgSuffix;
-
-				if (AppVeyor.Environment.PullRequest.IsPullRequest)
-					suffix += "-PR-" + AppVeyor.Environment.PullRequest.Number;
-				else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-					suffix += "-PRE-" + buildNumber;
+				if (branch == "master" && !isPullRequest)
+				{
+					packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
+				}
 				else
-					suffix += "-" + AppVeyor.Environment.Repository.Branch;
+				{
+				    var suffix = "-ci-" + buildNumber + dbgSuffix;
 
-				// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-				if (suffix.Length > 21)
-					suffix = suffix.Substring(0, 21);
+					if (isPullRequest)
+						suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
+					else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+						suffix += "-pre-" + buildNumber;
+					else
+						suffix += "-" + branch;
 
-				packageVersion = version + suffix;
+					// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
+					if (suffix.Length > 21)
+						suffix = suffix.Substring(0, 21);
+
+					packageVersion = version + suffix;
+				}
 			}
 
 			AppVeyor.UpdateBuildVersion(packageVersion);
@@ -250,69 +254,6 @@ Task("BuildCF")
     });
 
 //////////////////////////////////////////////////////////////////////
-// BUILD ENGINE
-//////////////////////////////////////////////////////////////////////
-
-Task("BuildEngine")
-    .IsDependentOn("InitializeBuild")
-    .Does(() =>
-    {
-        // Engine Commponents
-        BuildProject("./src/NUnitEngine/nunit.engine.api/nunit.engine.api.csproj", configuration);
-        BuildProject("./src/NUnitEngine/nunit.engine/nunit.engine.csproj", configuration);
-        BuildProject("./src/NUnitEngine/nunit-agent/nunit-agent.csproj", configuration);
-        BuildProject("./src/NUnitEngine/nunit-agent/nunit-agent-x86.csproj", configuration);
-
-        // Engine tests
-        BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration);
-
-        // Addins
-        BuildProject("./src/NUnitEngine/Addins/nunit-project-loader/nunit-project-loader.csproj", configuration);
-        BuildProject("./src/NUnitEngine/Addins/vs-project-loader/vs-project-loader.csproj", configuration);
-        BuildProject("./src/NUnitEngine/Addins/nunit-v2-result-writer/nunit-v2-result-writer.csproj", configuration);
-        BuildProject("./src/NUnitEngine/Addins/nunit.v2.driver/nunit.v2.driver.csproj", configuration);
-
-        // Addin tests
-        BuildProject("./src/NUnitEngine/Addins/addin-tests/addin-tests.csproj", configuration);
-        BuildProject("./src/NUnitEngine/Addins/nunit.v2.driver.tests/nunit.v2.driver.tests.csproj", configuration);
-    });
-
-//////////////////////////////////////////////////////////////////////
-// BUILD CONSOLE
-//////////////////////////////////////////////////////////////////////
-
-Task("BuildConsole")
-    .IsDependentOn("InitializeBuild")
-    .Does(() =>
-    {
-        BuildProject("src/NUnitConsole/nunit3-console/nunit3-console.csproj", configuration);
-        BuildProject("src/NUnitConsole/nunit3-console.tests/nunit3-console.tests.csproj", configuration);
-    });
-
-//////////////////////////////////////////////////////////////////////
-// BUILD C++  TESTS
-//////////////////////////////////////////////////////////////////////
-
-Task("BuildCppTestFiles")
-    .IsDependentOn("InitializeBuild")
-    .WithCriteria(IsRunningOnWindows)
-    .Does(() =>
-    {
-        MSBuild("./src/NUnitEngine/mock-cpp-clr/mock-cpp-clr-x86.vcxproj", new MSBuildSettings()
-            .SetConfiguration(configuration)
-            .WithProperty("Platform", "x86")
-            .SetVerbosity(Verbosity.Minimal)
-            .SetNodeReuse(false)
-        );
-        MSBuild("./src/NUnitEngine/mock-cpp-clr/mock-cpp-clr-x64.vcxproj", new MSBuildSettings()
-            .SetConfiguration(configuration)
-            .WithProperty("Platform", "x64")
-            .SetVerbosity(Verbosity.Minimal)
-            .SetNodeReuse(false)
-        );
-    });
-
-//////////////////////////////////////////////////////////////////////
 // TEST
 //////////////////////////////////////////////////////////////////////
 
@@ -418,46 +359,6 @@ Task("TestCF")
     });
 
 //////////////////////////////////////////////////////////////////////
-// TEST ENGINE
-//////////////////////////////////////////////////////////////////////
-
-Task("TestEngine")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        RunTest(NUNIT3_CONSOLE, BIN_DIR, ENGINE_TESTS, "TestEngine", ref ErrorDetail);
-    });
-
-Task("TestAddins")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .IsDependentOn("Build")
-    .Does(() =>
-    {
-        RunTest(NUNIT3_CONSOLE, BIN_DIR, ADDIN_TESTS,"TestAddins", ref ErrorDetail);
-    });
-
-Task("TestV2Driver")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        RunTest(NUNIT3_CONSOLE, BIN_DIR, V2_DRIVER_TESTS,"TestV2Driver", ref ErrorDetail);
-    });
-
-//////////////////////////////////////////////////////////////////////
-// TEST CONSOLE
-//////////////////////////////////////////////////////////////////////
-
-Task("TestConsole")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        RunTest(NUNIT3_CONSOLE, BIN_DIR, CONSOLE_TESTS, "TestConsole", ref ErrorDetail);
-    });
-
-//////////////////////////////////////////////////////////////////////
 // PACKAGE
 //////////////////////////////////////////////////////////////////////
 
@@ -467,51 +368,6 @@ var RootFiles = new FilePath[]
     "NOTICES.txt",
     "CHANGES.txt",
     "nunit.ico"
-};
-
-var BinFiles = new FilePath[]
-{
-    "ConsoleTests.nunit",
-    "EngineTests.nunit",
-    "mock-assembly.exe",
-    "Mono.Cecil.dll",
-    "nunit-agent-x86.exe",
-    "nunit-agent-x86.exe.config",
-    "nunit-agent.exe",
-    "nunit-agent.exe.config",
-    "nunit.engine.addin.xml",
-    "nunit.engine.addins",
-    "nunit.engine.api.dll",
-    "nunit.engine.api.xml",
-    "nunit.engine.dll",
-    "nunit.engine.tests.dll",
-    "nunit.engine.tests.dll.config",
-    "nunit.framework.dll",
-    "nunit.framework.xml",
-    "NUnit.System.Linq.dll",
-    "NUnit2TestResult.xsd",
-    "nunit3-console.exe",
-    "nunit3-console.exe.config",
-    "nunit3-console.tests.dll",
-    "TestListWithEmptyLine.tst",
-    "nunitlite.dll",
-    "TextSummary.xslt",
-    "addins/nunit-project-loader.dll",
-    "addins/nunit-v2-result-writer.dll",
-    "addins/nunit.core.dll",
-    "addins/nunit.core.interfaces.dll",
-    "addins/nunit.v2.driver.dll",
-    "addins/vs-project-loader.dll",
-    "addins/tests/addin-tests.dll",
-    "addins/tests/nunit-project-loader.dll",
-    "addins/tests/nunit.engine.api.dll",
-    "addins/tests/nunit.engine.api.xml",
-    "addins/tests/nunit.framework.dll",
-    "addins/tests/nunit.framework.xml",
-    "addins/tests/vs-project-loader.dll",
-    "addins/v2-tests/nunit.framework.dll",
-    "addins/v2-tests/nunit.framework.xml",
-    "addins/v2-tests/nunit.v2.driver.tests.dll"
 };
 
 // Not all of these are present in every framework
@@ -562,15 +418,6 @@ Task("CreateImage")
 
         CreateDirectory(imageBinDir);
         Information("Created directory " + imageBinDir);
-
-        foreach(FilePath file in BinFiles)
-        {
-          if (FileExists(BIN_DIR + file))
-          {
-              CreateDirectory(imageBinDir + file.GetDirectory());
-              CopyFile(BIN_DIR + file, imageBinDir + file);
-            }
-        }
 
         foreach (var runtime in AllFrameworks)
         {
@@ -623,113 +470,6 @@ Task("PackageFramework")
         });
     });
 
-Task("PackageEngine")
-    .IsDependentOn("CreateImage")
-    .Does(() =>
-    {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-
-        CreateDirectory(PACKAGE_DIR);
-
-        NuGetPack("nuget/engine/nunit.engine.api.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        NuGetPack("nuget/engine/nunit.engine.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        NuGetPack("nuget/engine/nunit.engine.tool.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-    });
-
-Task("PackageExtensions")
-    .IsDependentOn("CreateImage")
-    .Does(() =>
-    {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-
-        CreateDirectory(PACKAGE_DIR);
-
-        NuGetPack("nuget/extensions/nunit-project-loader.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        NuGetPack("nuget/extensions/vs-project-loader.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        NuGetPack("nuget/extensions/nunit-v2-result-writer.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        NuGetPack("nuget/extensions/nunit.v2.driver.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-    });
-
-Task("PackageConsole")
-    .IsDependentOn("CreateImage")
-    .Does(() =>
-    {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-
-        CreateDirectory(PACKAGE_DIR);
-
-        NuGetPack("nuget/runners/nunit.console-runner.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        NuGetPack("nuget/runners/nunit.console-runner-with-extensions.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-
-        NuGetPack("nuget/runners/nunit.runners.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR,
-            NoPackageAnalysis = true
-        });
-    });
-
 Task("PackageZip")
     .IsDependentOn("CreateImage")
     .Does(() =>
@@ -740,10 +480,6 @@ Task("PackageZip")
 
         var zipFiles =
             GetFiles(currentImageDir + "*.*") +
-            GetFiles(currentImageDir + "bin/*.*") +
-            GetFiles(currentImageDir + "bin/addins/*.*") +
-            GetFiles(currentImageDir + "bin/addins/tests/*.*") +
-            GetFiles(currentImageDir + "bin/addins/v2-tests/*.*") +
             GetFiles(currentImageDir + "bin/net-2.0/*.*") +
             GetFiles(currentImageDir + "bin/net-3.5/*.*") +
             GetFiles(currentImageDir + "bin/net-4.0/*.*") +
@@ -755,23 +491,6 @@ Task("PackageZip")
             GetFiles(currentImageDir + "*.*") +
             GetFiles(currentImageDir + "bin/sl-5.0/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE_SL), zipFiles);
-    });
-
-Task("PackageMsi")
-    .IsDependentOn("CreateImage")
-    .WithCriteria(IsRunningOnWindows)
-    .Does(() =>
-    {
-        MSBuild("install/master/nunit.wixproj", new MSBuildSettings()
-            .WithTarget("Rebuild")
-            .SetConfiguration(configuration)
-            .WithProperty("PackageVersion", packageVersion)
-            .WithProperty("DisplayVersion", version)
-            .WithProperty("OutDir", PACKAGE_DIR)
-            .WithProperty("InstallImage", IMAGE_DIR + "NUnit-" + packageVersion)
-            .SetMSBuildPlatform(MSBuildPlatform.x86)
-            .SetNodeReuse(false)
-        );
     });
 
 Task("PackageCF")
@@ -926,16 +645,11 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
-Task("Build")
-  .IsDependentOn("BuildFramework")
-  .IsDependentOn("BuildEngine")
-  .IsDependentOn("BuildConsole");
-
 Task("Rebuild")
     .IsDependentOn("Clean")
     .IsDependentOn("Build");
 
-Task("BuildFramework")
+Task("Build")
     .IsDependentOn("InitializeBuild")
     .IsDependentOn("Build45")
     .IsDependentOn("Build40")
@@ -946,23 +660,8 @@ Task("BuildFramework")
     .IsDependentOn("BuildSL")
     .IsDependentOn("BuildCF");
 
-Task("TestAll")
-    .IsDependentOn("TestFramework")
-    .IsDependentOn("TestEngine")
-    .IsDependentOn("TestAddins")
-    .IsDependentOn("TestV2Driver")
-    .IsDependentOn("TestConsole");
-
-// NOTE: Test has been changed to now be a synonym of TestAll
 Task("Test")
-    .IsDependentOn("TestFramework")
-    .IsDependentOn("TestEngine")
-    .IsDependentOn("TestAddins")
-    .IsDependentOn("TestV2Driver")
-    .IsDependentOn("TestConsole");
-
-Task("TestFramework")
-    .IsDependentOn("BuildFramework")
+    .IsDependentOn("Build")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
@@ -975,21 +674,16 @@ Task("TestFramework")
 Task("Package")
     .IsDependentOn("CheckForError")
     .IsDependentOn("PackageFramework")
-    .IsDependentOn("PackageEngine")
-    .IsDependentOn("PackageExtensions")
-    .IsDependentOn("PackageConsole")
-    // The following two package  targets include framework, engine and console components
-    .IsDependentOn("PackageZip")
-    .IsDependentOn("PackageMsi");
+    .IsDependentOn("PackageZip");
 
 Task("Appveyor")
     .IsDependentOn("Build")
-    .IsDependentOn("TestAll")
+    .IsDependentOn("Test")
     .IsDependentOn("Package");
 
 Task("Travis")
     .IsDependentOn("Build")
-    .IsDependentOn("TestAll");
+    .IsDependentOn("Test");
 
 Task("Default")
     .IsDependentOn("Build"); // Rebuild?

@@ -33,38 +33,43 @@ namespace NUnit.Tests
     namespace Assemblies
     {
         /// <summary>
-        /// Constant definitions for the mock-assembly dll.
+        /// MockAssembly is intended for those few tests that can only
+        /// be made to work by loading an entire assembly. Please don't
+        /// add any other entries or use it for other purposes.
+        /// 
+        /// Most tests used as data for NUnit's own tests should be
+        /// in the testdata assembly.
         /// </summary>
         public class MockAssembly
         {
+            /// <summary>
+            /// Constant definitions used by tests that both reference the
+            /// mock-assembly and load it in order to verify counts.
+            /// </summary>
             public const string FileName = "mock.nunit.assembly.exe";
 
             public const int Classes = 9;
             public const int NamespaceSuites = 6; // assembly, NUnit, Tests, Assemblies, Singletons, TestAssembly
 
-            public const int Tests = MockTestFixture.Tests 
-                        + Singletons.OneTestCase.Tests 
-                        + TestAssembly.MockTestFixture.Tests 
+            public const int Tests = MockTestFixture.Tests
+                        + Singletons.OneTestCase.Tests
+                        + TestAssembly.MockTestFixture.Tests
                         + IgnoredFixture.Tests
                         + ExplicitFixture.Tests
                         + BadFixture.Tests
                         + FixtureWithTestCases.Tests
                         + ParameterizedFixture.Tests
-                        + GenericFixtureConstants.Tests
-                        + CDataTestFixure.Tests
-                        + TestNameEscaping.Tests;
-            
-            public const int Suites = MockTestFixture.Suites 
+                        + GenericFixtureConstants.Tests;
+
+            public const int Suites = MockTestFixture.Suites
                         + Singletons.OneTestCase.Suites
-                        + TestAssembly.MockTestFixture.Suites 
+                        + TestAssembly.MockTestFixture.Suites
                         + IgnoredFixture.Suites
                         + ExplicitFixture.Suites
                         + BadFixture.Suites
                         + FixtureWithTestCases.Suites
                         + ParameterizedFixture.Suites
                         + GenericFixtureConstants.Suites
-                        + CDataTestFixure.Suites
-                        + TestNameEscaping.Suites
                         + NamespaceSuites;
 
             public const int TestStartedEvents = Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests;
@@ -88,7 +93,7 @@ namespace NUnit.Tests
             public const int ResultCount = Tests - Explicit;
 
             public const int Errors = MockTestFixture.Errors;
-            public const int Failures = MockTestFixture.Failures + CDataTestFixure.Failures;
+            public const int Failures = MockTestFixture.Failures;
             public const int NotRunnable = MockTestFixture.NotRunnable + BadFixture.Tests;
             public const int ErrorsAndFailures = Errors + Failures + NotRunnable;
             public const int Inconclusive = MockTestFixture.Inconclusive;
@@ -294,58 +299,5 @@ namespace NUnit.Tests
         
         [Test]
         public void Test2() { }
-    }
-
-    [TestFixture]
-    public class CDataTestFixure
-    {
-        public const int Tests = 4;
-        public const int Suites = 1;
-        public const int Failures = 2;
-
-        [Test]
-        public void DemonstrateIllegalSequenceInSuccessMessage()
-        {
-            Assert.Pass("Deliberate failure to illustrate ]]> in message ");
-        }
-
-        [Test]
-        public void DemonstrateIllegalSequenceAtEndOfSuccessMessage()
-        {
-            Assert.Pass("The CDATA was: <![CDATA[ My <xml> ]]>");
-        }
-
-        [Test]
-        public void DemonstrateIllegalSequenceInFailureMessage()
-        {
-            Assert.Fail("Deliberate failure to illustrate ]]> in message ");
-        }
-
-        [Test]
-        public void DemonstrateIllegalSequenceAtEndOfFailureMessage()
-        {
-            Assert.Fail("The CDATA was: <![CDATA[ My <xml> ]]>");
-        }
-    }
-
-    [TestFixture]
-    public class TestNameEscaping
-    {
-        public const int Tests = 10;
-        public const int Suites = 2;
-
-        [TestCase("< left bracket")]
-        [TestCase("> right bracket")]
-        [TestCase("'single quote'")]
-        [TestCase("\"double quote\"")]
-        [TestCase("&amp")]
-        public void MustBeEscaped(string str) { }
-
-        [TestCase("< left bracket", TestName = "<")]
-        [TestCase("> right bracket", TestName = ">")]
-        [TestCase("'single quote'", TestName = "'")]
-        [TestCase("double quote", TestName = "\"")]
-        [TestCase("amp", TestName = "&")]
-        public void MustBeEscaped_CustomName(string str) { }
     }
 }
