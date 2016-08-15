@@ -166,7 +166,10 @@ namespace NUnit.Engine.Services
                 }
 
                 if (_unloadException != null)
-                    throw new NUnitEngineException("Exception encountered unloading AppDomain", _unloadException);
+                {
+                    var msg = string.Format("Exception encountered unloading AppDomain '{0}': {1}", _domain.FriendlyName, _unloadException.Message);
+                    throw new NUnitEngineException(msg, _unloadException);
+                }
             }
 
             private void UnloadOnThread()
