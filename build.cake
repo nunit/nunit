@@ -273,6 +273,7 @@ Task("BuildEngine")
         BuildProject("./src/NUnitEngine/nunit-agent/nunit-agent-x86.csproj", configuration);
 
         // Engine tests
+		BuildProject("./src/NUnitEngine/mock-assembly/mock-assembly.csproj", configuration);
         BuildProject("./src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.csproj", configuration);
 
         // Addins
