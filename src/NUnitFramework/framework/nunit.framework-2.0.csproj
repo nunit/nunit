@@ -435,6 +435,8 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
 </Project>

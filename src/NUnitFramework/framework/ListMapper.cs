@@ -24,23 +24,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+
+using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
+    using System.Reflection;
+
     /// <summary>
     /// ListMapper is used to transform a collection used as an actual argument
     /// producing another collection to be used in the assertion.
     /// </summary>
     public class ListMapper
     {
-        ICollection original;
+        /// <summary>
+        /// The original collection
+        /// </summary>
+        private readonly ICollection original;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ListMapper"/> class. 
         /// Construct a ListMapper based on a collection
         /// </summary>
-        /// <param name="original">The collection to be transformed</param>
-        public ListMapper( ICollection original )
+        /// <param name="original">
+        /// The collection to be transformed
+        /// </param>
+        public ListMapper(ICollection original)
         {
             this.original = original;
         }
@@ -49,19 +58,19 @@ namespace NUnit.Framework
         /// Produces a collection containing all the _values of a property
         /// </summary>
         /// <param name="name">The collection of property _values</param>
-        /// <returns></returns>
-        public ICollection Property( string name )
+        /// <returns>The collection</returns>
+        public ICollection Property(string name)
         {
             var propList = new List<object>();
-            foreach( object item in original )
+            foreach (var item in this.original)
             {
-                PropertyInfo property = item.GetType().GetProperty( name, 
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
-                if ( property == null )
-                    throw new ArgumentException( string.Format(
-                        "{0} does not have a {1} property", item, name ) );
+                var property = item.GetType().GetProperty(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (property == null)
+                {
+                    throw new ArgumentException(string.Format("{0} does not have a {1} property", item, name));
+                }
 
-                propList.Add( property.GetValue( item, null ) );
+                propList.Add(property.GetValue(item, null));
             }
 
             return propList;
