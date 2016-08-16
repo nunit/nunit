@@ -28,6 +28,8 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {
+    using NUnit.Framework.Internal;
+
     /// <summary>
     /// Delegate used by tests that execute code and
     /// capture any thrown exception.
@@ -102,7 +104,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Pass(string message, params object[] args)
         {
-            Assert.Pass(BuildExceptionMessage(message, args));
+            Assert.Pass(BuildExceptionMessageFunc(message, args));
         }
 
         /// <summary>
@@ -149,7 +151,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Fail(string message, params object[] args)
         {
-            Assert.Fail(BuildExceptionMessage(message, args));
+            Assert.Fail(BuildExceptionMessageFunc(message, args));
         }
 
         /// <summary>
@@ -193,7 +195,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Ignore(string message, params object[] args)
         {
-            Assert.Ignore(BuildExceptionMessage(message, args));
+            Assert.Ignore(BuildExceptionMessageFunc(message, args));
         }
 
         /// <summary>
@@ -237,7 +239,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Inconclusive(string message, params object[] args)
         {
-            Assert.Inconclusive(BuildExceptionMessage(message, args));
+            Assert.Inconclusive(BuildExceptionMessageFunc(message, args));
         }
 
         /// <summary>
@@ -301,6 +303,17 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The list to be examined</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void Contains(object expected, ICollection actual, Func<string> getExceptionMessage)
+        {
+            Assert.That(actual, new CollectionContainsConstraint(expected), getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Asserts that an object is contained in a list.
+        /// </summary>
+        /// <param name="expected">The expected object</param>
+        /// <param name="actual">The list to be examined</param>
         public static void Contains(object expected, ICollection actual)
         {
             Assert.That(actual, new CollectionContainsConstraint(expected), null, null);
@@ -322,13 +335,15 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Helper Functions
+
         /// <summary>
         /// Helper function that creates a lambda function passed to an Assert method that lazily builds the Exception message.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="Exception"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         /// <returns>A lambda function to lazily build the string</returns>
-        private static Func<string> BuildExceptionMessage(string message, object[] args)
+        public static Func<string> BuildExceptionMessageFunc(string message, object[] args)
         {
             return () =>
             {
@@ -344,5 +359,90 @@ namespace NUnit.Framework
                 return message;
             };
         }
+
+        /// <summary>
+        /// Helper function that creates a lambda function passed to an Assert method that lazily builds the Exception message.  The function returned from this method ignores the <see cref="ConstraintResult"/> object returned from the <see cref="IConstraint.ApplyTo{TActual}(TActual)"/> method.  It is intended to be used when the client wants to pass a message and parameter arguments to the Assert method overload.
+        /// </summary>
+        /// <param name="message">The message to initialize the <see cref="Exception"/> with.</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>A lambda function to lazily build the string</returns>
+        public static Func<ConstraintResult, string> BuildExceptionMessageFuncIgnoringConstraintResult(
+            string message,
+            object[] args)
+        {
+            return result => BuildExceptionMessageFunc(message, args).Invoke();
+        }
+
+        /// <summary>
+        /// Helper function that creates a lambda function passed to an Assert method that lazily builds the Exception message.  The function returned from this method ignores the <see cref="ConstraintResult"/> object returned from the <see cref="IConstraint.ApplyTo{TActual}(TActual)"/> method.  It is intended to be used when the client wants to pass a <see cref="Func{TResult}"/> where TResult is a string to the Assert method overload.
+        /// </summary>
+        /// <param name="getExceptionMessageFunc">A function to build the message included with the Exception</param>
+        /// <returns>A lambda function to lazily build the string</returns>
+        public static Func<ConstraintResult, string> BuildExceptionMessageFuncIgnoringConstraintResult(
+            Func<string> getExceptionMessageFunc)
+        {
+            return result => getExceptionMessageFunc.Invoke();
+        }
+
+        /// <summary>
+        /// Helper method to catch an exception thrown by a <see cref="TestDelegate"/>.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <returns>The <see cref="Exception"/> thrown (if any).</returns>
+        public static Exception CatchException(TestDelegate code)
+        {
+            Exception caughtException = null;
+
+#if NET_4_0 || NET_4_5 || PORTABLE
+            if (AsyncInvocationRegion.IsAsyncOperation(code))
+            {
+                using (var region = AsyncInvocationRegion.Create(code))
+                {
+                    code();
+
+                    try
+                    {
+                        region.WaitForPendingOperationsToComplete(null);
+                    }
+                    catch (Exception e)
+                    {
+                        caughtException = e;
+                    }
+                }
+            }
+            else
+#endif
+            {
+                try
+                {
+                    code();
+                }
+                catch (Exception ex)
+                {
+                    caughtException = ex;
+                }
+            }
+
+            return caughtException;
+        }
+
+        /// <summary>
+        /// Helper function that creates a lambda function passed to an Assert method that lazily builds the Exception message.  The function returned from this method ignores the <see cref="ConstraintResult"/> object returned from the <see cref="IConstraint.ApplyTo{TActual}(TActual)"/> method.  It is intended to be used when the client wants to pass a message and parameter arguments to the Assert method overload.
+        /// </summary>
+        /// <param name="message">The message to initialize the <see cref="Exception"/> with.</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>A lambda function to lazily build the string</returns>
+        public static Func<ConstraintResult, string> BuildDefaultExceptionMessageFunc(string message, object[] args)
+        {
+            return result =>
+            {
+                MessageWriter writer = new TextMessageWriter(message, args);
+                result.WriteMessageTo(writer);
+                var exceptionMessage = writer.ToString();
+                return exceptionMessage;
+            };
+        }
+
+        #endregion
     }
 }

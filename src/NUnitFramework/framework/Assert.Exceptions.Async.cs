@@ -26,7 +26,6 @@ using System;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
-
 namespace NUnit.Framework
 {
     public partial class Assert
@@ -38,26 +37,38 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
         /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            var caughtException = CatchException(code);
+            Assert.That(caughtException, expression, getExceptionMessage);
+            return caughtException;
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expression">A constraint to be satisfied by the exception</param>
+        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code, Func<string> getExceptionMessage)
+        {
+            var caughtException = CatchException(code);
+            Assert.That(caughtException, expression, getExceptionMessage);
+            return caughtException;
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expression">A constraint to be satisfied by the exception</param>
+        /// <param name="code">A TestSnippet delegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code, string message, params object[] args)
         {
-            Exception caughtException = null;
-            using (var region = AsyncInvocationRegion.Create(code))
-            {
-                try
-                {
-                    var task = code();
-                    region.WaitForPendingOperationsToComplete(task);
-                }
-                catch (Exception e)
-                {
-                    caughtException = e;
-                }
-            }
-
+            var caughtException = CatchException(code);
             Assert.That(caughtException, expression, message, args);
-
             return caughtException;
         }
 
@@ -69,6 +80,28 @@ namespace NUnit.Framework
         public static Exception ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code)
         {
             return ThrowsAsync(expression, code, string.Empty, null);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expectedExceptionType">The exception Type expected</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception ThrowsAsync(Type expectedExceptionType, AsyncTestDelegate code, Func<string> getExceptionMessage)
+        {
+            return ThrowsAsync(new ExceptionTypeConstraint(expectedExceptionType), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expectedExceptionType">The exception Type expected</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception ThrowsAsync(Type expectedExceptionType, AsyncTestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            return ThrowsAsync(new ExceptionTypeConstraint(expectedExceptionType), code, getExceptionMessage);
         }
 
         /// <summary>
@@ -93,9 +126,50 @@ namespace NUnit.Framework
             return ThrowsAsync(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
         }
 
+        private static Exception CatchException(AsyncTestDelegate code)
+        {
+            Exception caughtException = null;
+            using (var region = AsyncInvocationRegion.Create(code))
+            {
+                try
+                {
+                    var task = code();
+                    region.WaitForPendingOperationsToComplete(task);
+                }
+                catch (Exception e)
+                {
+                    caughtException = e;
+                }
+            }
+
+            return caughtException;
+        }
+
         #endregion
 
         #region ThrowsAsync<TActual>
+
+        /// <summary>
+        /// Verifies that an async delegate throws a particular exception when called.
+        /// </summary>
+        /// <typeparam name="TActual">Type of the expected exception</typeparam>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static TActual ThrowsAsync<TActual>(AsyncTestDelegate code, Func<ConstraintResult, string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)ThrowsAsync(typeof (TActual), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws a particular exception when called.
+        /// </summary>
+        /// <typeparam name="TActual">Type of the expected exception</typeparam>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static TActual ThrowsAsync<TActual>(AsyncTestDelegate code, Func<string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)ThrowsAsync(typeof (TActual), code, getExceptionMessage);
+        }
 
         /// <summary>
         /// Verifies that an async delegate throws a particular exception when called.
@@ -124,8 +198,27 @@ namespace NUnit.Framework
         #region CatchAsync
 
         /// <summary>
-        /// Verifies that an async delegate throws an exception when called
-        /// and returns it.
+        /// Verifies that an async delegate throws an exception when called and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception CatchAsync(AsyncTestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws an exception when called and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception CatchAsync(AsyncTestDelegate code, Func<string> getExceptionMessage)
+        {
+            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws an exception when called and returns it.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
@@ -143,6 +236,30 @@ namespace NUnit.Framework
         public static Exception CatchAsync(AsyncTestDelegate code)
         {
             return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), code);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception CatchAsync(Type expectedExceptionType, AsyncTestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            return ThrowsAsync(new InstanceOfTypeConstraint(expectedExceptionType), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static Exception CatchAsync(Type expectedExceptionType, AsyncTestDelegate code, Func<string> getExceptionMessage)
+        {
+            return ThrowsAsync(new InstanceOfTypeConstraint(expectedExceptionType), code, getExceptionMessage);
         }
 
         /// <summary>
@@ -178,6 +295,28 @@ namespace NUnit.Framework
         /// or one derived from it when called and returns it.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static TActual CatchAsync<TActual>(AsyncTestDelegate code, Func<ConstraintResult, string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)ThrowsAsync(new InstanceOfTypeConstraint(typeof (TActual)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static TActual CatchAsync<TActual>(AsyncTestDelegate code, Func<string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)ThrowsAsync(new InstanceOfTypeConstraint(typeof (TActual)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static TActual CatchAsync<TActual>(AsyncTestDelegate code, string message, params object[] args) where TActual : Exception
@@ -203,12 +342,33 @@ namespace NUnit.Framework
         /// Verifies that an async delegate does not throw an exception
         /// </summary>
         /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void DoesNotThrowAsync(AsyncTestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            Assert.That(code, new ThrowsNothingConstraint(), getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate does not throw an exception
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void DoesNotThrowAsync(AsyncTestDelegate code, Func<string> getExceptionMessage)
+        {
+            Assert.That(code, new ThrowsNothingConstraint(), getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate does not throw an exception
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotThrowAsync(AsyncTestDelegate code, string message, params object[] args)
         {
             Assert.That(code, new ThrowsNothingConstraint(), message, args);
         }
+
         /// <summary>
         /// Verifies that an async delegate does not throw an exception.
         /// </summary>
