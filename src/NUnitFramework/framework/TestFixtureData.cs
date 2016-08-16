@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -35,7 +34,6 @@ namespace NUnit.Framework
     /// </summary>
     public class TestFixtureData : TestFixtureParameters
     {
-
         #region Constructors
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="args">The arguments.</param>
         public TestFixtureData(params object[] args)
-            : base(args == null ? new object[] { null } : args)
+            : base(args ?? new object[] { null })
         {
         }
 
@@ -52,7 +50,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg">The argument.</param>
         public TestFixtureData(object arg)
-            : base(new object[] { arg })
+            : base(arg)
         {
         }
 
@@ -62,7 +60,7 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         public TestFixtureData(object arg1, object arg2)
-            : base(new object[] { arg1, arg2 })
+            : base(arg1, arg2)
         {
         }
 
@@ -73,7 +71,7 @@ namespace NUnit.Framework
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
         public TestFixtureData(object arg1, object arg2, object arg3)
-            : base( new object[] { arg1, arg2, arg3 })
+            : base(arg1, arg2, arg3)
         {
         }
 
@@ -84,7 +82,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test fixture as explicit.
         /// </summary>
-        public TestFixtureData Explicit()	{
+        /// <returns>The modified <see cref="TestFixtureData"/></returns>
+        public TestFixtureData Explicit()
+        {
             this.RunState = RunState.Explicit;
             return this;
         }
@@ -92,6 +92,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test fixture as explicit, specifying the reason.
         /// </summary>
+        /// <param name="reason">The reason</param>
+        /// <returns>The modified <see cref="TestFixtureData"/></returns>
         public TestFixtureData Explicit(string reason)
         {
             this.RunState = RunState.Explicit;
@@ -103,7 +105,7 @@ namespace NUnit.Framework
         /// Ignores this TestFixture, specifying the reason.
         /// </summary>
         /// <param name="reason">The reason.</param>
-        /// <returns></returns>
+        /// <returns>The modified <see cref="TestFixtureData"/></returns>
         public TestFixtureData Ignore(string reason)
         {
             this.RunState = RunState.Ignored;
