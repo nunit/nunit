@@ -311,46 +311,43 @@ namespace NUnit.Framework.Internal.Execution
 #endif
 
             thread.Start();
+            
+            if (timeout <= 0)
+                timeout = Timeout.Infinite;
 
-            if (!Test.IsAsynchronous || timeout > 0)
+            if (!thread.Join(timeout))
             {
-                if (timeout <= 0)
-                    timeout = Timeout.Infinite;
-
-                if (!thread.Join(timeout))
+                Thread tThread;
+                lock (threadLock)
                 {
-                    Thread tThread;
-                    lock (threadLock)
-                    {
-                        if (thread == null)
-                            return;
-
-                        tThread = thread;
-                        thread = null;
-                    }
-
-                    if (Context.ExecutionStatus == TestExecutionStatus.AbortRequested)
+                    if (thread == null)
                         return;
 
-                    log.Debug("Killing thread {0}, which exceeded timeout", tThread.ManagedThreadId);
-                    ThreadUtility.Kill(tThread);
-
-                    // NOTE: Without the use of Join, there is a race condition here.
-                    // The thread sets the result to Cancelled and our code below sets
-                    // it to Failure. In order for the result to be shown as a failure,
-                    // we need to ensure that the following code executes after the
-                    // thread has terminated. There is a risk here: the test code might
-                    // refuse to terminate. However, it's more important to deal with
-                    // the normal rather than a pathological case.
-                    tThread.Join();
-
-                    log.Debug("Changing result from {0} to Timeout Failure", Result.ResultState);
-
-                    Result.SetResult(ResultState.Failure,
-                        string.Format("Test exceeded Timeout value of {0}ms", timeout));
-
-                    WorkItemComplete();
+                    tThread = thread;
+                    thread = null;
                 }
+
+                if (Context.ExecutionStatus == TestExecutionStatus.AbortRequested)
+                    return;
+
+                log.Debug("Killing thread {0}, which exceeded timeout", tThread.ManagedThreadId);
+                ThreadUtility.Kill(tThread);
+
+                // NOTE: Without the use of Join, there is a race condition here.
+                // The thread sets the result to Cancelled and our code below sets
+                // it to Failure. In order for the result to be shown as a failure,
+                // we need to ensure that the following code executes after the
+                // thread has terminated. There is a risk here: the test code might
+                // refuse to terminate. However, it's more important to deal with
+                // the normal rather than a pathological case.
+                tThread.Join();
+
+                log.Debug("Changing result from {0} to Timeout Failure", Result.ResultState);
+
+                Result.SetResult(ResultState.Failure,
+                    string.Format("Test exceeded Timeout value of {0}ms", timeout));
+
+                WorkItemComplete();
             }
         }
 #endif
