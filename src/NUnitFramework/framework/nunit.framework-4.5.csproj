@@ -80,12 +80,14 @@
     <Compile Include="Assert.Exceptions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Assert.Polarity.cs" />
     <Compile Include="Assert.That.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
     <Compile Include="Assert.Types.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Assert.Zero.cs" />
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />
