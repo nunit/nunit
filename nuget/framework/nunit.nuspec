@@ -10,7 +10,7 @@
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>NUnit is a unit-testing framework for all .Net languages with a strong TDD focus.</summary>
+    <summary>NUnit is a unit-testing framework for all .NET languages with a strong TDD focus.</summary>
     <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.
 
 This package includes the NUnit 3.0 framework assembly, which is referenced by your tests. You will need to install version 3.0 of the nunit3-console program or a third-party runner that supports NUnit 3.0 in order to execute tests. Runners intended for use with NUnit 2.x will not run 3.0 tests correctly.
