@@ -1011,7 +1011,7 @@ namespace NUnit.Framework
         /// <param name="actual">The number to be examined</param>
         public static void Negative(int actual)
         {
-            Assert.That(actual, Is.Positive);
+            Assert.That(actual, Is.Negative);
         }
 
         /// <summary>
@@ -1022,7 +1022,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(int actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.Positive, message, args);
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion
@@ -1036,7 +1036,7 @@ namespace NUnit.Framework
         [CLSCompliant(false)]
         public static void Negative(uint actual)
         {
-            Assert.That(actual, Is.Positive);
+            Assert.That(actual, Is.Negative);
         }
 
         /// <summary>
@@ -1048,7 +1048,7 @@ namespace NUnit.Framework
         [CLSCompliant(false)]
         public static void Negative(uint actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.Positive, message, args);
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion
@@ -1061,7 +1061,7 @@ namespace NUnit.Framework
         /// <param name="actual">The number to be examined</param>
         public static void Negative(long actual)
         {
-            Assert.That(actual, Is.Positive);
+            Assert.That(actual, Is.Negative);
         }
 
         /// <summary>
@@ -1072,7 +1072,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(long actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.Positive, message, args);
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion
@@ -1086,7 +1086,7 @@ namespace NUnit.Framework
         [CLSCompliant(false)]
         public static void Negative(ulong actual)
         {
-            Assert.That(actual, Is.Positive);
+            Assert.That(actual, Is.Negative);
         }
 
         /// <summary>
@@ -1098,7 +1098,7 @@ namespace NUnit.Framework
         [CLSCompliant(false)]
         public static void Negative(ulong actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.Positive, message, args);
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion
@@ -1111,7 +1111,7 @@ namespace NUnit.Framework
         /// <param name="actual">The number to be examined</param>
         public static void Negative(decimal actual)
         {
-            Assert.That(actual, Is.Positive);
+            Assert.That(actual, Is.Negative);
         }
 
         /// <summary>
@@ -1122,7 +1122,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(decimal actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.Positive, message, args);
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion
@@ -1135,7 +1135,7 @@ namespace NUnit.Framework
         /// <param name="actual">The number to be examined</param>
         public static void Negative(double actual)
         {
-            Assert.That(actual, Is.Positive);
+            Assert.That(actual, Is.Negative);
         }
 
         /// <summary>
@@ -1146,7 +1146,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(double actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.Positive, message, args);
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion
@@ -1159,7 +1159,7 @@ namespace NUnit.Framework
         /// <param name="actual">The number to be examined</param>
         public static void Negative(float actual)
         {
-            Assert.That(actual, Is.Positive);
+            Assert.That(actual, Is.Negative);
         }
 
         /// <summary>
@@ -1170,7 +1170,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(float actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.Positive, message, args);
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion

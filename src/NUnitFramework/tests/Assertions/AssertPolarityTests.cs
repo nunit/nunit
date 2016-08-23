@@ -85,7 +85,7 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void IsPositiveWithMessageOverload()
+        public void IsNegativeWithMessageOverload()
         {
             Assert.That(
                 () => Assert.Negative(1, "MESSAGE"),
@@ -93,10 +93,10 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void IsNegativeWithMessageOverload()
+        public void IsPositiveWithMessageOverload()
         {
             Assert.That(
-                () => Assert.Negative(-1, "MESSAGE"),
+                () => Assert.Positive(-1, "MESSAGE"),
                 Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
         }
 
@@ -116,8 +116,8 @@ namespace NUnit.Framework.Assertions
         public void ExpectedFailureMessageExistsForIsPositive()
         {
             var expectedMessage =
-                "  Expected: 0" + Environment.NewLine +
-                "  But was:  1234" + Environment.NewLine;
+                "  Expected: greater than 0" + Environment.NewLine +
+                "  But was:  -1" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.Positive(i2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -126,9 +126,9 @@ namespace NUnit.Framework.Assertions
         public void ExpectedFailureMessageExistsForIsNegative()
         {
             var expectedMessage =
-                "  Expected: 0" + Environment.NewLine +
-                "  But was:  1234" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Negative(i2));
+                "  Expected: less than 0" + Environment.NewLine +
+                "  But was:  1" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.Negative(i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }
