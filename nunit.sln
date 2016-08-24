@@ -117,24 +117,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-portable",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-sl-5.0", "src\NUnitFramework\slow-tests\slow-nunit-tests-sl-5.0.csproj", "{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", "{B538DFF5-4309-497A-8E5D-415BE2FA3F8F}"
-	ProjectSection(SolutionItems) = preProject
-		nuget\extensions\nunit-project-loader.nuspec = nuget\extensions\nunit-project-loader.nuspec
-		nuget\extensions\nunit-v2-result-writer.nuspec = nuget\extensions\nunit-v2-result-writer.nuspec
-		nuget\extensions\nunit.v2.driver.addins = nuget\extensions\nunit.v2.driver.addins
-		nuget\extensions\nunit.v2.driver.nuspec = nuget\extensions\nunit.v2.driver.nuspec
-		nuget\extensions\teamcity-event-listener.nuspec = nuget\extensions\teamcity-event-listener.nuspec
-		nuget\extensions\vs-project-loader.nuspec = nuget\extensions\vs-project-loader.nuspec
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "engine", "engine", "{43A219A8-2995-4884-806F-FDB9CD25D403}"
-	ProjectSection(SolutionItems) = preProject
-		nuget\engine\nunit.engine.api.nuspec = nuget\engine\nunit.engine.api.nuspec
-		nuget\engine\nunit.engine.nuspec = nuget\engine\nunit.engine.nuspec
-		nuget\engine\nunit.engine.tool.nuspec = nuget\engine\nunit.engine.tool.nuspec
-		nuget\engine\nunit.nuget.addins = nuget\engine\nunit.nuget.addins
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{BC87F477-1A7A-45D0-9AC1-9F7315264732}"
 	ProjectSection(SolutionItems) = preProject
 		nuget\framework\nunit.nuspec = nuget\framework\nunit.nuspec
@@ -150,13 +132,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nunitlite", "nunitlite", "{
 		nuget\nunitlite\nunitliteSL.nuspec = nuget\nunitlite\nunitliteSL.nuspec
 		nuget\nunitlite\Program.cs = nuget\nunitlite\Program.cs
 		nuget\nunitlite\Program.vb = nuget\nunitlite\Program.vb
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "runners", "runners", "{F3E87D0F-6F06-4C0B-AE06-42C0834C3C6E}"
-	ProjectSection(SolutionItems) = preProject
-		nuget\runners\nunit.console-runner-with-extensions.nuspec = nuget\runners\nunit.console-runner-with-extensions.nuspec
-		nuget\runners\nunit.console-runner.nuspec = nuget\runners\nunit.console-runner.nuspec
-		nuget\runners\nunit.runners.nuspec = nuget\runners\nunit.runners.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET-3.5", "NET-3.5", "{49BF96D3-3F1B-4553-BE55-296FA7C3F659}"
@@ -426,11 +401,8 @@ Global
 		{901DA110-F30A-4515-880D-E9D59B6ECB4E} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{74CB429E-69D7-4525-BBDF-BBC47DBC7070} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 		{A2B973C4-EA96-4B00-B2BE-04BFD9D5AA39} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
-		{B538DFF5-4309-497A-8E5D-415BE2FA3F8F} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
-		{43A219A8-2995-4884-806F-FDB9CD25D403} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
 		{BC87F477-1A7A-45D0-9AC1-9F7315264732} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
 		{140CDAD6-6E11-4A97-94F3-B23A14391117} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
-		{F3E87D0F-6F06-4C0B-AE06-42C0834C3C6E} = {A972031D-2F61-4183-AF75-99EE1A9F6B32}
 		{49BF96D3-3F1B-4553-BE55-296FA7C3F659} = {5D8A9D62-C11C-45B2-8965-43DE8160B558}
 		{7FA125B4-E377-4D4C-AECB-17B934E3A4B3} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
 		{82F93F6E-5C10-4CC7-BC65-AC0B9CA6D39A} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
