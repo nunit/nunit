@@ -72,7 +72,11 @@ namespace NUnit.Framework.Api
         [Test]
         public void ConstructController()
         {
+#if !NETCF
+            Assert.That(_controller.Builder, Is.TypeOf<RuntimeAssemblyBuilder>());
+#else
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
+#endif
             Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());
 #if SILVERLIGHT || PORTABLE
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_NAME));
