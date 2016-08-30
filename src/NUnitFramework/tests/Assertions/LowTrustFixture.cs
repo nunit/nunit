@@ -61,7 +61,7 @@ namespace NUnit.Framework.Assertions
             });
         }
 
-        [Test]
+        [Test, Platform(Exclude="Mono,MonoTouch", Reason= "Mono does not implement Code Access Security")]
         public void AssertThrowsInLowTrustSandBox()
         {
             _sandBox.Run(() =>
@@ -76,8 +76,6 @@ namespace NUnit.Framework.Assertions
     /// </summary>
     public class TestSandBox : IDisposable
     {
-        private const string PARTIAL_TRUST_APP_DOMAIN_NAME = "Partial Trust AppDomain";
-
         private AppDomain _appDomain;
 
         #region Constructor(s)
@@ -113,7 +111,7 @@ namespace NUnit.Framework.Assertions
             }
 
             _appDomain = AppDomain.CreateDomain(
-                PARTIAL_TRUST_APP_DOMAIN_NAME + ": " + DateTime.Now.Ticks, null, setup,
+                "TestSandBox" + DateTime.Now.Ticks, null, setup,
                 permissions ?? GetLowTrustPermissionSet(),
                 strongNames.ToArray());
         }
