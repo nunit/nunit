@@ -39,7 +39,7 @@ namespace NUnit.Compatibility
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
-        [SecurityCritical]
+        [SecurityCritical]  // Override of security critical method must be security critical itself
         public override object InitializeLifetimeService()
         {
             return null;

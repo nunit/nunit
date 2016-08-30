@@ -157,7 +157,7 @@ namespace NUnit.Framework.Assertions
             var permissions = new PermissionSet(PermissionState.None);
             permissions.AddPermission(new SecurityPermission(
                 SecurityPermissionFlag.Execution |                  // Required to execute test code
-                SecurityPermissionFlag.SerializationFormatter));    // Required to support test result formatting by NUnit TestContext
+                SecurityPermissionFlag.SerializationFormatter));    // Required to support cross-appdomain test result formatting by NUnit TestContext
             permissions.AddPermission(new ReflectionPermission(
                 ReflectionPermissionFlag.MemberAccess));            // Required to instantiate classes that contain test code and to get cross-appdomain communication to work.
             return permissions;
@@ -178,7 +178,7 @@ namespace NUnit.Framework.Assertions
         }
         public object Run(MethodInfo method, params object[] parameters)
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
+            if (method == null) throw new ArgumentNullException("method");
             if (_appDomain == null) throw new ObjectDisposedException(null);
 
             var methodRunnerType = typeof(MethodRunner);

@@ -242,6 +242,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
+            // This getter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
+            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             get
             {
@@ -254,6 +257,9 @@ namespace NUnit.Framework.Internal
 
                 return context;
             }
+            // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
+            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             private set
             {
@@ -267,6 +273,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get the current context or return null if none is found.
         /// </summary>
+        /// <remarks></remarks>
+        // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
+        // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+        // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
         [SecuritySafeCritical]
         public static TestExecutionContext GetTestExecutionContext()
         {
@@ -554,7 +564,7 @@ namespace NUnit.Framework.Internal
         /// Obtain lifetime service object
         /// </summary>
         /// <returns></returns>
-        [SecurityCritical]
+        [SecurityCritical]  // Override of security critical method must be security critical itself
         public override object InitializeLifetimeService()
         {
             return null;

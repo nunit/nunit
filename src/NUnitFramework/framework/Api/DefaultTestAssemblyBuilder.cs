@@ -241,7 +241,11 @@ namespace NUnit.Framework.Api
         }
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
-        [SecuritySafeCritical]
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
+        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
+        [SecuritySafeCritical]  
 #endif
         private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList<Test> fixtures)
         {
