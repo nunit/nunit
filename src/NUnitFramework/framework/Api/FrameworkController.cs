@@ -124,7 +124,9 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
         [SecuritySafeCritical]
+#endif   
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;

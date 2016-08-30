@@ -32,7 +32,9 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// OSPlatform represents a particular operating system platform
     /// </summary>
+#if !SILVERLIGHT && !NETCF
     [SecuritySafeCritical]
+#endif
     public class OSPlatform
     {
         readonly PlatformID _platform;

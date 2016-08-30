@@ -54,4 +54,6 @@ using System.Security;
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
 [assembly: AllowPartiallyTrustedCallers]
+#endif

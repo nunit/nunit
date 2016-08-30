@@ -240,7 +240,9 @@ namespace NUnit.Framework.Api
             return result;
         }
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
         [SecuritySafeCritical]
+#endif
         private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList<Test> fixtures)
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyName);
