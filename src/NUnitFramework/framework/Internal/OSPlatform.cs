@@ -25,12 +25,14 @@
 using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// OSPlatform represents a particular operating system platform
     /// </summary>
+    [SecuritySafeCritical]
     public class OSPlatform
     {
         readonly PlatformID _platform;

@@ -29,6 +29,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -123,6 +124,7 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
+        [SecuritySafeCritical]
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;

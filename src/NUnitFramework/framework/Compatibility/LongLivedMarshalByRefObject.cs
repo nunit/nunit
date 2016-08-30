@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Security;
 
 namespace NUnit.Compatibility
 {
@@ -38,6 +39,7 @@ namespace NUnit.Compatibility
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
+        [SecurityCritical]
         public override object InitializeLifetimeService()
         {
             return null;

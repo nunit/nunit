@@ -33,6 +33,7 @@ using NUnit.Framework.Internal.Execution;
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Runtime.Remoting.Messaging;
+using System.Security;
 using System.Security.Principal;
 using NUnit.Compatibility;
 #endif
@@ -241,6 +242,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
+            [SecuritySafeCritical]
             get
             {
                 var context = GetTestExecutionContext();
@@ -252,6 +254,7 @@ namespace NUnit.Framework.Internal
 
                 return context;
             }
+            [SecuritySafeCritical]
             private set
             {
                 if (value == null)
@@ -264,6 +267,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get the current context or return null if none is found.
         /// </summary>
+        [SecuritySafeCritical]
         public static TestExecutionContext GetTestExecutionContext()
         {
             return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
@@ -550,6 +554,7 @@ namespace NUnit.Framework.Internal
         /// Obtain lifetime service object
         /// </summary>
         /// <returns></returns>
+        [SecurityCritical]
         public override object InitializeLifetimeService()
         {
             return null;

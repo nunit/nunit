@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Diagnostics;
+using System.Security;
 using System.Windows.Forms;
 #endif
 
@@ -384,6 +385,7 @@ namespace NUnit.Framework.Api
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
+        [SecuritySafeCritical]
         private static void PauseBeforeRun()
         {
             var process = Process.GetCurrentProcess();

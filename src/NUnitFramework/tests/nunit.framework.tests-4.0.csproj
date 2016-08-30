@@ -95,6 +95,7 @@
     <Compile Include="Assertions\LessEqualFixture.cs" />
     <Compile Include="Assertions\LessFixture.cs" />
     <Compile Include="Assertions\ListContentsTests.cs" />
+    <Compile Include="Assertions\LowTrustFixture.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\NullableTypesTests.cs" />
