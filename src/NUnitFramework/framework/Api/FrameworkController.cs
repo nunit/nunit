@@ -70,11 +70,12 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
         {
+            Initialize(assemblyNameOrPath, settings);
+
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
             Test.IdPrefix = idPrefix;
-            Initialize(assemblyNameOrPath, settings);
         }
 
         /// <summary>
@@ -101,11 +102,12 @@ namespace NUnit.Framework.Api
         /// <param name="builderType">The Type of the test builder</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
+            Initialize(assemblyNameOrPath, settings);
+
             Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
             Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
 
             Test.IdPrefix = idPrefix ?? "";
-            Initialize(assemblyNameOrPath, settings);
         }
 
         /// <summary>
