@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Diagnostics;
+using System.Security;
 using System.Windows.Forms;
 #endif
 
@@ -384,6 +385,11 @@ namespace NUnit.Framework.Api
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
+        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
+        [SecuritySafeCritical]
         private static void PauseBeforeRun()
         {
             var process = Process.GetCurrentProcess();

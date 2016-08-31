@@ -29,6 +29,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -123,6 +124,13 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
+        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
+        [SecuritySafeCritical]
+#endif   
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;

@@ -25,12 +25,19 @@
 using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// OSPlatform represents a particular operating system platform
     /// </summary>
+#if !SILVERLIGHT && !NETCF
+    // This class invokes security critical P/Invoke and 'System.Runtime.InteropServices.Marshall' methods. 
+    // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+    // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
+    [SecuritySafeCritical]
+#endif
     public class OSPlatform
     {
         readonly PlatformID _platform;

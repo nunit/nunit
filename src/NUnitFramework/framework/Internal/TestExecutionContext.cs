@@ -33,6 +33,7 @@ using NUnit.Framework.Internal.Execution;
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
 using System.Runtime.Remoting.Messaging;
+using System.Security;
 using System.Security.Principal;
 using NUnit.Compatibility;
 #endif
@@ -241,6 +242,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
+            // This getter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
+            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
+            [SecuritySafeCritical]
             get
             {
                 var context = GetTestExecutionContext();
@@ -252,6 +257,10 @@ namespace NUnit.Framework.Internal
 
                 return context;
             }
+            // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
+            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
+            [SecuritySafeCritical]
             private set
             {
                 if (value == null)
@@ -264,6 +273,11 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get the current context or return null if none is found.
         /// </summary>
+        /// <remarks></remarks>
+        // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
+        // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+        // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
+        [SecuritySafeCritical]
         public static TestExecutionContext GetTestExecutionContext()
         {
             return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
@@ -550,6 +564,7 @@ namespace NUnit.Framework.Internal
         /// Obtain lifetime service object
         /// </summary>
         /// <returns></returns>
+        [SecurityCritical]  // Override of security critical method must be security critical itself
         public override object InitializeLifetimeService()
         {
             return null;
