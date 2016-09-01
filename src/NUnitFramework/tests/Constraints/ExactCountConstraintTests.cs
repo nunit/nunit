@@ -82,5 +82,34 @@ namespace NUnit.Framework.Constraints
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(2, Is.EqualTo("Fred"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
+
+        [Test]
+        public void ExactlyFourItemsNoPredicate()
+        {
+            Assert.That(names, new ExactCountConstraint(4));
+            Assert.That(names, Has.Exactly(4));
+        }
+
+        [Test]
+        public void ExactlyFourItemsNoopNoPredicate()
+        {
+            Assert.That(names, Has.Exactly(4).Items);
+        }
+
+        [Test]
+        public void ExactlyOneItemNoPredicateFails()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "exactly one item" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(1)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyTwoItemsNoopMatch()
+        {
+            Assert.That(names, Has.Exactly(2).Items.EqualTo("Charlie"));
+        }
     }
 }

@@ -31,9 +31,19 @@ namespace NUnit.Framework.Constraints
     /// item in a collection, succeeding only if a specified
     /// number of items succeed.
     /// </summary>
-    public class ExactCountConstraint : PrefixConstraint
+    public class ExactCountConstraint : Constraint
     {
-        private int expectedCount;
+        private readonly int _expectedCount;
+        private readonly IConstraint _itemConstraint;
+
+        /// <summary>
+        /// Construct a standalone ExactCountConstraint
+        /// </summary>
+        /// <param name="expectedCount"></param>
+        public ExactCountConstraint(int expectedCount)
+        {
+            _expectedCount = expectedCount;
+        }
 
         /// <summary>
         /// Construct an ExactCountConstraint on top of an existing constraint
@@ -43,12 +53,10 @@ namespace NUnit.Framework.Constraints
         public ExactCountConstraint(int expectedCount, IConstraint itemConstraint)
             : base(itemConstraint)
         {
-            this.expectedCount = expectedCount;
-            this.DescriptionPrefix = expectedCount == 0
-                ? "no item"
-                : expectedCount == 1
-                    ? "exactly one item"
-                    : string.Format("exactly {0} items", expectedCount);
+            Guard.ArgumentNotNull(itemConstraint, "itemConstraint");
+
+            _itemConstraint = itemConstraint.Resolve();
+            _expectedCount = expectedCount;
         }
 
         /// <summary>
@@ -63,11 +71,36 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException("The actual value must be an IEnumerable", "actual");
 
             int count = 0;
-            foreach (object item in (IEnumerable)actual)
-                if (BaseConstraint.ApplyTo(item).IsSuccess)
+            if (_itemConstraint == null)
+            {
+                foreach (object item in (IEnumerable)actual)
                     count++;
+            }
+            else
+            {
+                foreach (object item in (IEnumerable)actual)
+                    if (_itemConstraint.ApplyTo(item).IsSuccess)
+                        count++;
+            }
 
-            return new ConstraintResult(this, actual, count == expectedCount);
+            return new ConstraintResult(this, actual, count == _expectedCount);
+        }
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                var descriptionPrefix =
+                    _expectedCount == 0 ? "no item" :
+                    _expectedCount == 1 ? "exactly one item" :
+                    string.Format("exactly {0} items", _expectedCount);
+
+                return _itemConstraint != null ? PrefixConstraint.FormatDescription(descriptionPrefix, _itemConstraint) : descriptionPrefix;
+            }
         }
     }
 }

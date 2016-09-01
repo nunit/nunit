@@ -192,6 +192,7 @@
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraint.cs" />
     <Compile Include="Constraints\IResolveConstraint.cs" />
+    <Compile Include="Constraints\ItemsConstraintExpression.cs" />
     <Compile Include="Constraints\LessThanConstraint.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraint.cs" />
     <Compile Include="Constraints\MessageWriter.cs" />
