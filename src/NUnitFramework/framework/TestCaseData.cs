@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -34,6 +35,7 @@ namespace NUnit.Framework
     /// </summary>
     public class TestCaseData : TestCaseParameters
     {
+
         #region Constructors
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="args">The arguments.</param>
         public TestCaseData(params object[] args)
-            : base(args ?? new object[] { null })
+            : base(args == null ? new object[] { null } : args)
         {
         }
 
@@ -50,7 +52,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg">The argument.</param>
         public TestCaseData(object arg)
-            : base(new[] { arg })
+            : base(new object[] { arg })
         {
         }
 
@@ -60,7 +62,7 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         public TestCaseData(object arg1, object arg2)
-            : base(new[] { arg1, arg2 })
+            : base(new object[] { arg1, arg2 })
         {
         }
 
@@ -71,7 +73,7 @@ namespace NUnit.Framework
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
         public TestCaseData(object arg1, object arg2, object arg3)
-            : base(new[] { arg1, arg2, arg3 })
+            : base( new object[] { arg1, arg2, arg3 })
         {
         }
 
@@ -93,7 +95,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the name of the test case
         /// </summary>
-        /// <param name="name">The new name</param>
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData SetName(string name)
         {
@@ -116,8 +117,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Applies a category to the test
         /// </summary>
-        /// <param name="category">The new category</param>
-        /// <returns>The modified TestCaseData instance.</returns>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public TestCaseData SetCategory(string category)
         {
             this.Properties.Add(PropertyNames.Category, category);
@@ -127,9 +128,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Applies a named property to the test
         /// </summary>
-        /// <param name="propName">The property name</param>
-        /// <param name="propValue">The property value</param>
-        /// <returns>The modified TestCaseData instance.</returns>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
         public TestCaseData SetProperty(string propName, string propValue)
         {
             this.Properties.Add(propName, propValue);
@@ -139,9 +140,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Applies a named property to the test
         /// </summary>
-        /// <param name="propName">The property name</param>
-        /// <param name="propValue">The property value</param>
-        /// <returns>The modified TestCaseData instance.</returns>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
         public TestCaseData SetProperty(string propName, int propValue)
         {
             this.Properties.Add(propName, propValue);
@@ -151,9 +152,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Applies a named property to the test
         /// </summary>
-        /// <param name="propName">The property name</param>
-        /// <param name="propValue">The property value</param>
-        /// <returns>The modified TestCaseData instance.</returns>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
         public TestCaseData SetProperty(string propName, double propValue)
         {
             this.Properties.Add(propName, propValue);
@@ -163,9 +164,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test case as explicit.
         /// </summary>
-        /// <returns>The modified TestCaseData instance.</returns>
-        public TestCaseData Explicit()
-        {
+        public TestCaseData Explicit()	{
             this.RunState = RunState.Explicit;
             return this;
         }
@@ -173,8 +172,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test case as explicit, specifying the reason.
         /// </summary>
-        /// <param name="reason">The reason</param>
-        /// <returns>The modified TestCaseData instance.</returns>
         public TestCaseData Explicit(string reason)
         {
             this.RunState = RunState.Explicit;
@@ -186,7 +183,7 @@ namespace NUnit.Framework
         /// Ignores this TestCase, specifying the reason.
         /// </summary>
         /// <param name="reason">The reason.</param>
-        /// <returns>The modified TestCaseData instance.</returns>
+        /// <returns></returns>
         public TestCaseData Ignore(string reason)
         {
             this.RunState = RunState.Ignored;

@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-
+using System.Collections;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -202,5 +202,6 @@ namespace NUnit.Framework
         }
 
         #endregion
+
     }
 }

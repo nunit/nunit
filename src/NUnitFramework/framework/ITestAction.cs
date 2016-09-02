@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework
 {
     using Interfaces;
@@ -41,6 +43,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="test">The test that has just been run.</param>
         void AfterTest(ITest test);
+
 
         /// <summary>
         /// Provides the target for the action attribute

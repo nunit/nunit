@@ -1,16 +1,32 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="" file="Throws.cs">
-//   
-// </copyright>
+// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
 // 
-// --------------------------------------------------------------------------------------------------------------------
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
+using System.Collections;
+using NUnit.Framework.Constraints;
+
 namespace NUnit.Framework
 {
-    using System;
-    using System.Reflection;
-
-    using NUnit.Framework.Constraints;
-
     /// <summary>
     /// Helper class with properties and methods that supply
     /// constraints that operate on exceptions.
@@ -20,7 +36,7 @@ namespace NUnit.Framework
         #region Exception
 
         /// <summary>
-        /// Gets a constraint specifying an expected exception
+        /// Creates a constraint specifying an expected exception
         /// </summary>
         public static ResolvableConstraintExpression Exception
         {
@@ -32,7 +48,7 @@ namespace NUnit.Framework
         #region InnerException
 
         /// <summary>
-        /// Gets a constraint specifying an exception with a given InnerException
+        /// Creates a constraint specifying an exception with a given InnerException
         /// </summary>
         public static ResolvableConstraintExpression InnerException
         {
@@ -44,11 +60,11 @@ namespace NUnit.Framework
         #region TargetInvocationException
 
         /// <summary>
-        /// Gets a constraint specifying an expected TargetInvocationException
+        /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
         public static ExactTypeConstraint TargetInvocationException
         {
-            get { return TypeOf(typeof(TargetInvocationException)); }
+            get { return TypeOf(typeof(System.Reflection.TargetInvocationException)); }
         }
 
         #endregion
@@ -56,11 +72,11 @@ namespace NUnit.Framework
         #region ArgumentException
 
         /// <summary>
-        /// Gets a constraint specifying an expected ArgumentException
+        /// Creates a constraint specifying an expected ArgumentException
         /// </summary>
         public static ExactTypeConstraint ArgumentException
         {
-            get { return TypeOf(typeof(ArgumentException)); }
+            get { return TypeOf(typeof(System.ArgumentException)); }
         }
 
         #endregion
@@ -68,14 +84,11 @@ namespace NUnit.Framework
         #region ArgumentNullException
 
         /// <summary>
-        /// Gets a constraint specifying an expected ArgumentNullException
+        /// Creates a constraint specifying an expected ArgumentNUllException
         /// </summary>
         public static ExactTypeConstraint ArgumentNullException
         {
-            get
-            {
-                return TypeOf(typeof(ArgumentNullException));
-            }
+            get { return TypeOf(typeof (System.ArgumentNullException)); }
         }
 
         #endregion
@@ -83,11 +96,11 @@ namespace NUnit.Framework
         #region InvalidOperationException
 
         /// <summary>
-        /// Gets a constraint specifying an expected InvalidOperationException
+        /// Creates a constraint specifying an expected InvalidOperationException
         /// </summary>
         public static ExactTypeConstraint InvalidOperationException
         {
-            get { return TypeOf(typeof(InvalidOperationException)); }
+            get { return TypeOf(typeof(System.InvalidOperationException)); }
         }
 
         #endregion
@@ -95,7 +108,7 @@ namespace NUnit.Framework
         #region Nothing
 
         /// <summary>
-        /// Gets a constraint specifying that no exception is thrown
+        /// Creates a constraint specifying that no exception is thrown
         /// </summary>
         public static ThrowsNothingConstraint Nothing
         {
@@ -109,12 +122,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-        /// <param name="expectedType">
-        /// The expected Type.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ExactTypeConstraint"/>.
-        /// </returns>
         public static ExactTypeConstraint TypeOf(Type expectedType)
         {
             return Exception.TypeOf(expectedType);
@@ -123,10 +130,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-        /// <typeparam name="TExpected">The expected exception type</typeparam>
-        /// <returns>
-        /// The <see cref="ExactTypeConstraint"/>.
-        /// </returns>
         public static ExactTypeConstraint TypeOf<TExpected>()
         {
             return TypeOf(typeof(TExpected));
@@ -139,12 +142,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-        /// <param name="expectedType">
-        /// The expected Type.
-        /// </param>
-        /// <returns>
-        /// The <see cref="InstanceOfTypeConstraint"/>.
-        /// </returns>
         public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
         {
             return Exception.InstanceOf(expectedType);
@@ -153,15 +150,12 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-        /// <typeparam name="TExpected">The expected exception type</typeparam>
-        /// <returns>
-        /// The <see cref="InstanceOfTypeConstraint"/>.
-        /// </returns>
         public static InstanceOfTypeConstraint InstanceOf<TExpected>()
         {
             return InstanceOf(typeof(TExpected));
         }
 
         #endregion
+
     }
 }
