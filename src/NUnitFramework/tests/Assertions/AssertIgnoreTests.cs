@@ -61,6 +61,21 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void ThrowsSuccessExceptionWithMessageStringFunc()
+        {
+            var funcWasCalled = false;
+            Func<string> getExceptionMessage = () =>
+            {
+                funcWasCalled = true;
+                return "message";
+            };
+            Assert.That(
+                () => Assert.Ignore(getExceptionMessage),
+                Throws.TypeOf<IgnoreException>().With.Message.EqualTo("message"));
+            Assert.That(funcWasCalled);
+        }
+
+        [Test]
         public void IgnoreWorksForTestCase()
         {
             Type fixtureType = typeof(IgnoredTestCaseFixture);
