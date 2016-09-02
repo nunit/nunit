@@ -23,7 +23,6 @@
 
 using System;
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -54,6 +53,17 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(bool condition, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            Assert.That(condition, Is.True, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void That(bool condition, Func<string> getExceptionMessage)
         {
             Assert.That(condition, Is.True, getExceptionMessage);
         }
@@ -93,6 +103,17 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(Func<bool> condition, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            Assert.That(condition.Invoke(), Is.True, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void That(Func<bool> condition, Func<string> getExceptionMessage)
         {
             Assert.That(condition.Invoke(), Is.True, getExceptionMessage);
         }
@@ -143,6 +164,19 @@ namespace NUnit.Framework
         /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
         /// <param name="actual">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void That<TActual>(ActualValueDelegate<TActual> actual, IResolveConstraint expression, Func<string> getExceptionMessage)
+        {
+            Assert.That<ActualValueDelegate<TActual>>(actual, expression, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Apply a expression to an actual value, succeeding if the expression
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <param name="actual">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void That<TActual>(ActualValueDelegate<TActual> actual, IResolveConstraint expression, string message, params object[] args)
@@ -173,6 +207,18 @@ namespace NUnit.Framework
         /// <param name="expression">A ThrowsConstraint used in the test</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(TestDelegate actual, IResolveConstraint expression, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            Assert.That<TestDelegate>(actual, expression, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Asserts that the actual represented by a delegate throws an exception
+        /// that satisfies the expression provided.
+        /// </summary>
+        /// <param name="actual">A TestDelegate to be executed</param>
+        /// <param name="expression">A ThrowsConstraint used in the test</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void That(TestDelegate actual, IResolveConstraint expression, Func<string> getExceptionMessage)
         {
             Assert.That<TestDelegate>(actual, expression, getExceptionMessage);
         }
@@ -235,19 +281,24 @@ namespace NUnit.Framework
         /// <typeparam name="TActual">The type of <paramref name="actual"/></typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void That<TActual>(TActual actual, IResolveConstraint expression, Func<string> getExceptionMessage)
+        {
+            Assert.That(actual, expression, BuildExceptionMessageFuncIgnoringConstraintResult(getExceptionMessage));
+        }
+
+        /// <summary>
+        /// Apply a expression to an actual value, succeeding if the expression
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The type of <paramref name="actual"/></typeparam>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
-            Func<ConstraintResult, string> getExceptionMessage =
-                result =>
-                {
-                    MessageWriter writer = new TextMessageWriter(message, args);
-                    result.WriteMessageTo(writer);
-                    var exceptionMessage = writer.ToString();
-                    return exceptionMessage;
-                };
-            Assert.That(actual, expression, getExceptionMessage);
+            Assert.That(actual, expression, BuildDefaultExceptionMessageFunc(message, args));
         }
 
         #endregion
@@ -281,6 +332,24 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void ByVal(object actual, IResolveConstraint expression, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            Assert.That(actual, expression, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Apply a expression to an actual value, succeeding if the expression
+        /// is satisfied and throwing an assertion exception on failure. 
+        /// Used as a synonym for That in rare cases where a private setter 
+        /// causes a Visual Basic compilation error.
+        /// </summary>
+        /// <remarks>
+        /// This method is provided for use by VB developers needing to test
+        /// the value of properties with private setters.
+        /// </remarks>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void ByVal(object actual, IResolveConstraint expression, Func<string> getExceptionMessage)
         {
             Assert.That(actual, expression, getExceptionMessage);
         }
