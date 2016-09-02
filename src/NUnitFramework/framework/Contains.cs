@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -39,6 +37,12 @@ namespace NUnit.Framework
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
+        /// <param name="expected">
+        /// The expected object.
+        /// </param>
+        /// <returns>
+        /// The <see cref="CollectionContainsConstraint"/>.
+        /// </returns>
         public static CollectionContainsConstraint Item(object expected)
         {
             return new CollectionContainsConstraint(expected);
@@ -52,6 +56,12 @@ namespace NUnit.Framework
         /// Returns a new DictionaryContainsKeyConstraint checking for the
         /// presence of a particular key in the dictionary.
         /// </summary>
+        /// <param name="expected">
+        /// The expected object.
+        /// </param>
+        /// <returns>
+        /// The <see cref="DictionaryContainsKeyConstraint"/>.
+        /// </returns>
         public static DictionaryContainsKeyConstraint Key(object expected)
         {
             return new DictionaryContainsKeyConstraint(expected);
@@ -65,6 +75,12 @@ namespace NUnit.Framework
         /// Returns a new DictionaryContainsValueConstraint checking for the
         /// presence of a particular value in the dictionary.
         /// </summary>
+        /// <param name="expected">
+        /// The expected object.
+        /// </param>
+        /// <returns>
+        /// The <see cref="DictionaryContainsValueConstraint"/>.
+        /// </returns>
         public static DictionaryContainsValueConstraint Value(object expected)
         {
             return new DictionaryContainsValueConstraint(expected);
@@ -78,9 +94,15 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
+        /// <param name="expected">
+        /// The expected object.
+        /// </param>
+        /// <returns>
+        /// The <see cref="SubstringConstraint"/>.
+        /// </returns>
         public static SubstringConstraint Substring(string expected)
         {
-            return new SubstringConstraint(expected);;
+            return new SubstringConstraint(expected);
         }
 
         #endregion

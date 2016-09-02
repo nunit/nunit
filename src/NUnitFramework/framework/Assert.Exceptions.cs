@@ -23,54 +23,28 @@
 
 using System;
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
+    /// <summary>
+    /// The Assert class contains a collection of static methods that
+    /// implement the most common assertions used in NUnit.
+    /// </summary>
     public partial class Assert
     {
         #region Throws
+
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
         /// <param name="code">A TestSnippet delegate</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception Throws(IResolveConstraint expression, TestDelegate code, string message, params object[] args)
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Throws(IResolveConstraint expression, TestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
         {
-            Exception caughtException = null;
-
-#if NET_4_0 || NET_4_5 || PORTABLE
-            if (AsyncInvocationRegion.IsAsyncOperation(code))
-            {
-                using (var region = AsyncInvocationRegion.Create(code))
-                {
-                    code();
-
-                    try
-                    {
-                        region.WaitForPendingOperationsToComplete(null);
-                    }
-                    catch (Exception e)
-                    {
-                        caughtException = e;
-                    }
-                }
-            }
-            else
-#endif
-            try
-            {
-                code();
-            }
-            catch (Exception ex)
-            {
-                caughtException = ex;
-            }
-
-            Assert.That(caughtException, expression, message, args);
-
+            var caughtException = CatchException(code);
+            Assert.That(caughtException, expression, getExceptionMessage);
             return caughtException;
         }
 
@@ -79,6 +53,36 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
         /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Throws(IResolveConstraint expression, TestDelegate code, Func<string> getExceptionMessage)
+        {
+            var caughtException = CatchException(code);
+            Assert.That(caughtException, expression, getExceptionMessage);
+            return caughtException;
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expression">A constraint to be satisfied by the exception</param>
+        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Throws(IResolveConstraint expression, TestDelegate code, string message, params object[] args)
+        {
+            var caughtException = CatchException(code);
+            Assert.That(caughtException, expression, message, args);
+            return caughtException;
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expression">A constraint to be satisfied by the exception</param>
+        /// <param name="code">A TestSnippet delegate</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static Exception Throws(IResolveConstraint expression, TestDelegate code)
         {
             return Throws(expression, code, string.Empty, null);
@@ -89,8 +93,33 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
         /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Throws(Type expectedExceptionType, TestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expectedExceptionType">The exception Type expected</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Throws(Type expectedExceptionType, TestDelegate code, Func<string> getExceptionMessage)
+        {
+            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called.
+        /// </summary>
+        /// <param name="expectedExceptionType">The exception Type expected</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code, string message, params object[] args)
         {
             return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
@@ -101,6 +130,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
         /// <param name="code">A TestDelegate</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code)
         {
             return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
@@ -115,8 +145,33 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
         /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static TActual Throws<TActual>(TestDelegate code, Func<ConstraintResult, string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)Throws(typeof(TActual), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called.
+        /// </summary>
+        /// <typeparam name="TActual">Type of the expected exception</typeparam>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static TActual Throws<TActual>(TestDelegate code, Func<string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)Throws(typeof(TActual), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called.
+        /// </summary>
+        /// <typeparam name="TActual">Type of the expected exception</typeparam>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static TActual Throws<TActual>(TestDelegate code, string message, params object[] args) where TActual : Exception
         {
             return (TActual)Throws(typeof(TActual), code, message, args);
@@ -127,6 +182,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
         /// <param name="code">A TestDelegate</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static TActual Throws<TActual>(TestDelegate code) where TActual : Exception
         {
             return Throws<TActual>(code, string.Empty, null);
@@ -135,23 +191,46 @@ namespace NUnit.Framework
         #endregion
 
         #region Catch
+        
         /// <summary>
-        /// Verifies that a delegate throws an exception when called
-        /// and returns it.
+        /// Verifies that a delegate throws an exception when called and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Catch(TestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception when called and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Catch(TestDelegate code, Func<string> getExceptionMessage)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception when called and returns it.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static Exception Catch(TestDelegate code, string message, params object[] args)
         {
             return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
         }
 
         /// <summary>
-        /// Verifies that a delegate throws an exception when called
-        /// and returns it.
+        /// Verifies that a delegate throws an exception when called and returns it.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static Exception Catch(TestDelegate code)
         {
             return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code);
@@ -163,8 +242,35 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Catch(Type expectedExceptionType, TestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static Exception Catch(Type expectedExceptionType, TestDelegate code, Func<string> getExceptionMessage)
+        {
+            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static Exception Catch(Type expectedExceptionType, TestDelegate code, string message, params object[] args)
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
@@ -176,10 +282,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
+        /// <returns>The exception (if any) returned from the code</returns>
         public static Exception Catch(Type expectedExceptionType, TestDelegate code)
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code);
         }
+        
         #endregion
 
         #region Catch<TActual>
@@ -188,10 +296,38 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
+        /// <typeparam name="TActual">The type of the Exception</typeparam>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static TActual Catch<TActual>(TestDelegate code, Func<ConstraintResult, string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <typeparam name="TActual">The type of the Exception</typeparam>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static TActual Catch<TActual>(TestDelegate code, Func<string> getExceptionMessage) where TActual : Exception
+        {
+            return (TActual)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <typeparam name="TActual">The type of the Exception</typeparam>
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual Catch<TActual>(TestDelegate code, string message, params object[] args) where TActual : System.Exception
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static TActual Catch<TActual>(TestDelegate code, string message, params object[] args) where TActual : Exception
         {
             return (TActual)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
         }
@@ -200,8 +336,10 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
+        /// <typeparam name="TActual">The type of the Exception</typeparam>
         /// <param name="code">A TestDelegate</param>
-        public static TActual Catch<TActual>(TestDelegate code) where TActual : System.Exception
+        /// <returns>The exception (if any) returned from the code</returns>
+        public static TActual Catch<TActual>(TestDelegate code) where TActual : Exception
         {
             return (TActual)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code);
         }
@@ -209,6 +347,26 @@ namespace NUnit.Framework
         #endregion
 
         #region DoesNotThrow
+
+        /// <summary>
+        /// Verifies that a delegate does not throw an exception
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void DoesNotThrow(TestDelegate code, Func<ConstraintResult, string> getExceptionMessage)
+        {
+            Assert.That(code, new ThrowsNothingConstraint(), getExceptionMessage);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate does not throw an exception
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void DoesNotThrow(TestDelegate code, Func<string> getExceptionMessage)
+        {
+            Assert.That(code, new ThrowsNothingConstraint(), getExceptionMessage);
+        }
 
         /// <summary>
         /// Verifies that a delegate does not throw an exception
