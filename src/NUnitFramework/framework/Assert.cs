@@ -292,28 +292,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The list to be examined</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Contains(object expected, ICollection actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, new CollectionContainsConstraint(expected), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that an object is contained in a list.
-        /// </summary>
-        /// <param name="expected">The expected object</param>
-        /// <param name="actual">The list to be examined</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Contains(object expected, ICollection actual, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, new CollectionContainsConstraint(expected), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that an object is contained in a list.
-        /// </summary>
-        /// <param name="expected">The expected object</param>
-        /// <param name="actual">The list to be examined</param>
         public static void Contains(object expected, ICollection actual)
         {
             Assert.That(actual, new CollectionContainsConstraint(expected), null, null);
@@ -382,48 +360,6 @@ namespace NUnit.Framework
             Func<string> getExceptionMessageFunc)
         {
             return result => getExceptionMessageFunc.Invoke();
-        }
-
-        /// <summary>
-        /// Helper method to catch an exception thrown by a <see cref="TestDelegate"/>.
-        /// </summary>
-        /// <param name="code">The code.</param>
-        /// <returns>The <see cref="Exception"/> thrown (if any).</returns>
-        public static Exception CatchException(TestDelegate code)
-        {
-            Exception caughtException = null;
-
-#if NET_4_0 || NET_4_5 || PORTABLE
-            if (AsyncInvocationRegion.IsAsyncOperation(code))
-            {
-                using (var region = AsyncInvocationRegion.Create(code))
-                {
-                    code();
-
-                    try
-                    {
-                        region.WaitForPendingOperationsToComplete(null);
-                    }
-                    catch (Exception e)
-                    {
-                        caughtException = e;
-                    }
-                }
-            }
-            else
-#endif
-            {
-                try
-                {
-                    code();
-                }
-                catch (Exception ex)
-                {
-                    caughtException = ex;
-                }
-            }
-
-            return caughtException;
         }
 
         /// <summary>
