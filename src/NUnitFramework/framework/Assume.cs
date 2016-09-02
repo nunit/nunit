@@ -24,6 +24,7 @@
 using System;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -41,8 +42,8 @@ namespace NUnit.Framework
         /// The Equals method throws an InvalidOperationException. This is done 
         /// to make sure there is no mistake by calling this function.
         /// </summary>
-        /// <param name="a">The Left object in the comparison</param>
-        /// <param name="b">The Right object in the comparison</param>
+        /// <param name="a">The left object.</param>
+        /// <param name="b">The right object.</param>
         /// <returns>Not applicable</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
@@ -55,8 +56,8 @@ namespace NUnit.Framework
         /// implementation makes sure there is no mistake in calling this function 
         /// as part of Assert. 
         /// </summary>
-        /// <param name="a">The Left object in the comparison</param>
-        /// <param name="b">The Right object in the comparison</param>
+        /// <param name="a">The left object.</param>
+        /// <param name="b">The right object.</param>
         public static new void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("Assume.ReferenceEquals should not be used for Assertions");
@@ -72,7 +73,7 @@ namespace NUnit.Framework
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
@@ -84,40 +85,66 @@ namespace NUnit.Framework
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
         {
-            Assume.That(del, expr, Assert.BuildDefaultExceptionMessageFunc(message, args));
+            var constraint = expr.Resolve();
+
+            var result = constraint.ApplyTo(del);
+            if (!result.IsSuccess)
+            {
+                MessageWriter writer = new TextMessageWriter(message, args);
+                result.WriteMessageTo(writer);
+                throw new InconclusiveException(writer.ToString());
+            }
         }
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, Func<string> getExceptionMessage)
+        public static void That<TActual>(
+            ActualValueDelegate<TActual> del,
+            IResolveConstraint expr,
+            Func<string> getExceptionMessage)
         {
-            Assume.That(del, expr, Assert.BuildExceptionMessageFuncIgnoringConstraintResult(getExceptionMessage));
+            var constraint = expr.Resolve();
+
+            var result = constraint.ApplyTo(del);
+            if (!result.IsSuccess)
+            {
+                throw new InconclusiveException(getExceptionMessage());
+            }
         }
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, Func<ConstraintResult, string> getExceptionMessage)
+        public static void That<TActual>(
+            ActualValueDelegate<TActual> del,
+            IResolveConstraint expr,
+            Func<ConstraintResult, string> getExceptionMessage)
         {
-            Assume.That<ActualValueDelegate<TActual>>(del, expr, getExceptionMessage);
+            var constraint = expr.Resolve();
+
+            var result = constraint.ApplyTo(del);
+            if (!result.IsSuccess)
+            {
+                throw new InconclusiveException(getExceptionMessage(result));
+            }
         }
 
         #endregion
@@ -173,6 +200,7 @@ namespace NUnit.Framework
         #region Lambda returning Boolean
 
 #if !NET_2_0
+
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
@@ -216,6 +244,7 @@ namespace NUnit.Framework
         {
             Assume.That(condition.Invoke(), Is.True, null, null);
         }
+
 #endif
 
         #endregion
@@ -243,7 +272,7 @@ namespace NUnit.Framework
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint to be applied</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression)
@@ -255,38 +284,58 @@ namespace NUnit.Framework
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
-            Assume.That(actual, expression, Assert.BuildDefaultExceptionMessageFunc(message, args));
+            var constraint = expression.Resolve();
+
+            var result = constraint.ApplyTo(actual);
+            if (!result.IsSuccess)
+            {
+                MessageWriter writer = new TextMessageWriter(message, args);
+                result.WriteMessageTo(writer);
+                throw new InconclusiveException(writer.ToString());
+            }
         }
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="expression">A Constraint to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, Func<string> getExceptionMessage)
+        public static void That<TActual>(
+            TActual actual,
+            IResolveConstraint expression,
+            Func<string> getExceptionMessage)
         {
-            Assume.That(actual, expression, Assert.BuildExceptionMessageFuncIgnoringConstraintResult(getExceptionMessage));
+            var constraint = expression.Resolve();
+
+            var result = constraint.ApplyTo(actual);
+            if (!result.IsSuccess)
+            {
+                throw new InconclusiveException(getExceptionMessage());
+            }
         }
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="expression">A Constraint to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, Func<ConstraintResult, string> getExceptionMessage)
+        public static void That<TActual>(
+            TActual actual,
+            IResolveConstraint expression,
+            Func<ConstraintResult, string> getExceptionMessage)
         {
             var constraint = expression.Resolve();
 
