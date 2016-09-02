@@ -324,7 +324,6 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-    <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>

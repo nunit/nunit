@@ -26,12 +26,6 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {
-    using System;
-
-    /// <summary>
-    /// The Assert class contains a collection of static methods that
-    /// implement the most common assertions used in NUnit.
-    /// </summary>
     public partial class Assert
     {
         #region True
@@ -45,7 +39,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void True(bool? condition, string message, params object[] args)
         {
-            Assert.That(condition, Is.True, message, args);
+            Assert.That(condition, Is.True ,message, args);
         }
 
         /// <summary>
@@ -65,53 +59,9 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void True(bool? condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void True(bool condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-           Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void True(bool? condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void True(bool condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
         public static void True(bool? condition)
         {
-            Assert.That(condition, Is.True, null, null);
+            Assert.That(condition, Is.True ,null, null);
         }
 
         /// <summary>
@@ -121,7 +71,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void True(bool condition)
         {
-            Assert.That(condition, Is.True, null, null);
+            Assert.That(condition, Is.True ,null, null);
         }
 
         /// <summary>
@@ -133,7 +83,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsTrue(bool? condition, string message, params object[] args)
         {
-            Assert.That(condition, Is.True, message, args);
+            Assert.That(condition, Is.True ,message, args);
         }
 
         /// <summary>
@@ -145,51 +95,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsTrue(bool condition, string message, params object[] args)
         {
-            Assert.That(condition, Is.True, message, args);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsTrue(bool? condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsTrue(bool condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsTrue(bool? condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsTrue(bool condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
+            Assert.That(condition, Is.True ,message, args);
         }
 
         /// <summary>
@@ -199,7 +105,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool? condition)
         {
-            Assert.That(condition, Is.True, null, null);
+            Assert.That(condition, Is.True ,null, null);
         }
 
         /// <summary>
@@ -209,7 +115,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool condition)
         {
-            Assert.That(condition, Is.True, null, null);
+            Assert.That(condition, Is.True ,null, null);
         }
 
         #endregion
@@ -225,7 +131,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void False(bool? condition, string message, params object[] args)
         {
-            Assert.That(condition, Is.False, message, args);
+            Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
@@ -237,51 +143,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void False(bool condition, string message, params object[] args)
         {
-            Assert.That(condition, Is.False, message, args);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void False(bool? condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void False(bool condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void False(bool? condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void False(bool condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
+            Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
@@ -291,7 +153,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool? condition)
         {
-            Assert.That(condition, Is.False, null, null);
+            Assert.That(condition, Is.False ,null, null);
         }
 
         /// <summary>
@@ -301,7 +163,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool condition)
         {
-            Assert.That(condition, Is.False, null, null);
+            Assert.That(condition, Is.False ,null, null);
         }
 
         /// <summary>
@@ -313,7 +175,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsFalse(bool? condition, string message, params object[] args)
         {
-            Assert.That(condition, Is.False, message, args);
+            Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
@@ -325,51 +187,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsFalse(bool condition, string message, params object[] args)
         {
-            Assert.That(condition, Is.False, message, args);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsFalse(bool? condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsFalse(bool condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsFalse(bool? condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsFalse(bool condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.False, getExceptionMessage);
+            Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
@@ -379,7 +197,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool? condition)
         {
-            Assert.That(condition, Is.False, null, null);
+            Assert.That(condition, Is.False ,null, null);
         }
 
         /// <summary>
@@ -389,7 +207,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool condition)
         {
-            Assert.That(condition, Is.False, null, null);
+            Assert.That(condition, Is.False ,null, null);
         }
 
         #endregion
@@ -406,31 +224,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void NotNull(object anObject, string message, params object[] args)
         {
-            Assert.That(anObject, Is.Not.Null, message, args);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void NotNull(object anObject, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Not.Null, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void NotNull(object anObject, Func<string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Not.Null, getExceptionMessage);
+            Assert.That(anObject, Is.Not.Null ,message, args);
         }
 
         /// <summary>
@@ -441,7 +235,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         public static void NotNull(object anObject)
         {
-            Assert.That(anObject, Is.Not.Null, null, null);
+            Assert.That(anObject, Is.Not.Null ,null, null);
         }
 
         /// <summary>
@@ -454,31 +248,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotNull(object anObject, string message, params object[] args)
         {
-            Assert.That(anObject, Is.Not.Null, message, args);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNotNull(object anObject, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Not.Null, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNotNull(object anObject, Func<string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Not.Null, getExceptionMessage);
+            Assert.That(anObject, Is.Not.Null ,message, args);
         }
 
         /// <summary>
@@ -489,7 +259,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         public static void IsNotNull(object anObject)
         {
-            Assert.That(anObject, Is.Not.Null, null, null);
+            Assert.That(anObject, Is.Not.Null ,null, null);
         }
 
         #endregion
@@ -506,31 +276,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Null(object anObject, string message, params object[] args)
         {
-            Assert.That(anObject, Is.Null, message, args);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Null(object anObject, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Null, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Null(object anObject, Func<string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Null, getExceptionMessage);
+            Assert.That(anObject, Is.Null ,message, args);
         }
 
         /// <summary>
@@ -541,7 +287,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         public static void Null(object anObject)
         {
-            Assert.That(anObject, Is.Null, null, null);
+            Assert.That(anObject, Is.Null ,null, null);
         }
 
         /// <summary>
@@ -554,31 +300,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNull(object anObject, string message, params object[] args)
         {
-            Assert.That(anObject, Is.Null, message, args);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNull(object anObject, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Null, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNull(object anObject, Func<string> getExceptionMessage)
-        {
-            Assert.That(anObject, Is.Null, getExceptionMessage);
+            Assert.That(anObject, Is.Null ,message, args);
         }
 
         /// <summary>
@@ -589,7 +311,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         public static void IsNull(object anObject)
         {
-            Assert.That(anObject, Is.Null, null, null);
+            Assert.That(anObject, Is.Null ,null, null);
         }
 
         #endregion
@@ -606,31 +328,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNaN(double aDouble, string message, params object[] args)
         {
-            Assert.That(aDouble, Is.NaN, message, args);
-        }
-
-        /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="aDouble">The value that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNaN(double aDouble, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(aDouble, Is.NaN, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="aDouble">The value that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNaN(double aDouble, Func<string> getExceptionMessage)
-        {
-            Assert.That(aDouble, Is.NaN, getExceptionMessage);
+            Assert.That(aDouble, Is.NaN ,message, args);
         }
 
         /// <summary>
@@ -641,7 +339,7 @@ namespace NUnit.Framework
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double aDouble)
         {
-            Assert.That(aDouble, Is.NaN, null, null);
+            Assert.That(aDouble, Is.NaN ,null, null);
         }
 
         /// <summary>
@@ -654,31 +352,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNaN(double? aDouble, string message, params object[] args)
         {
-            Assert.That(aDouble, Is.NaN, message, args);
-        }
-
-        /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="aDouble">The value that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNaN(double? aDouble, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(aDouble, Is.NaN, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
-        /// </summary>
-        /// <param name="aDouble">The value that is to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNaN(double? aDouble, Func<string> getExceptionMessage)
-        {
-            Assert.That(aDouble, Is.NaN, getExceptionMessage);
+            Assert.That(aDouble, Is.NaN ,message, args);
         }
 
         /// <summary>
@@ -689,7 +363,7 @@ namespace NUnit.Framework
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double? aDouble)
         {
-            Assert.That(aDouble, Is.NaN, null, null);
+            Assert.That(aDouble, Is.NaN ,null, null);
         }
 
         #endregion
@@ -706,27 +380,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsEmpty(string aString, string message, params object[] args)
         {
-            Assert.That(aString, new EmptyStringConstraint(), message, args);
-        }
-
-        /// <summary>
-        /// Assert that a string is empty - that is equal to string.Empty
-        /// </summary>
-        /// <param name="aString">The string to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsEmpty(string aString, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(aString, new EmptyStringConstraint(), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Assert that a string is empty - that is equal to string.Empty
-        /// </summary>
-        /// <param name="aString">The string to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsEmpty(string aString, Func<string> getExceptionMessage)
-        {
-            Assert.That(aString, new EmptyStringConstraint(), getExceptionMessage);
+            Assert.That(aString, new EmptyStringConstraint() ,message, args);
         }
 
         /// <summary>
@@ -735,7 +389,7 @@ namespace NUnit.Framework
         /// <param name="aString">The string to be tested</param>
         public static void IsEmpty(string aString)
         {
-            Assert.That(aString, new EmptyStringConstraint(), null, null);
+            Assert.That(aString, new EmptyStringConstraint() ,null, null);
         }
 
         #endregion
@@ -750,27 +404,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsEmpty(IEnumerable collection, string message, params object[] args)
         {
-            Assert.That(collection, new EmptyCollectionConstraint(), message, args);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is empty
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing ICollection</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsEmpty(IEnumerable collection, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(collection, new EmptyCollectionConstraint(), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is empty
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing ICollection</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsEmpty(IEnumerable collection, Func<string> getExceptionMessage)
-        {
-            Assert.That(collection, new EmptyCollectionConstraint(), getExceptionMessage);
+            Assert.That(collection, new EmptyCollectionConstraint() ,message, args);
         }
 
         /// <summary>
@@ -779,7 +413,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsEmpty(IEnumerable collection)
         {
-            Assert.That(collection, new EmptyCollectionConstraint(), null, null);
+            Assert.That(collection, new EmptyCollectionConstraint() ,null, null);
         }
 
         #endregion
@@ -798,27 +432,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotEmpty(string aString, string message, params object[] args)
         {
-            Assert.That(aString, Is.Not.Empty, message, args);
-        }
-
-        /// <summary>
-        /// Assert that a string is not empty - that is not equal to string.Empty
-        /// </summary>
-        /// <param name="aString">The string to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNotEmpty(string aString, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(aString, Is.Not.Empty, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Assert that a string is not empty - that is not equal to string.Empty
-        /// </summary>
-        /// <param name="aString">The string to be tested</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNotEmpty(string aString, Func<string> getExceptionMessage)
-        {
-            Assert.That(aString, Is.Not.Empty, getExceptionMessage);
+            Assert.That(aString, Is.Not.Empty ,message, args);
         }
 
         /// <summary>
@@ -827,7 +441,7 @@ namespace NUnit.Framework
         /// <param name="aString">The string to be tested</param>
         public static void IsNotEmpty(string aString)
         {
-            Assert.That(aString, Is.Not.Empty, null, null);
+            Assert.That(aString, Is.Not.Empty ,null, null);
         }
 
         #endregion
@@ -842,27 +456,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotEmpty(IEnumerable collection, string message, params object[] args)
         {
-            Assert.That(collection, Is.Not.Empty, message, args);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is not empty
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing ICollection</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNotEmpty(IEnumerable collection, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(collection, Is.Not.Empty, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is not empty
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing ICollection</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void IsNotEmpty(IEnumerable collection, Func<string> getExceptionMessage)
-        {
-            Assert.That(collection, Is.Not.Empty, getExceptionMessage);
+            Assert.That(collection, Is.Not.Empty ,message, args);
         }
 
         /// <summary>
@@ -871,7 +465,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsNotEmpty(IEnumerable collection)
         {
-            Assert.That(collection, Is.Not.Empty, null, null);
+            Assert.That(collection, Is.Not.Empty ,null, null);
         }
 
         #endregion

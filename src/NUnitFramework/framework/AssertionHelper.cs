@@ -26,8 +26,6 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {
-    using System;
-
     /// <summary>
     /// AssertionHelper is an optional base class for user tests,
     /// allowing the use of shorter ids for constraints and
@@ -37,89 +35,9 @@ namespace NUnit.Framework
     /// </summary>
     public class AssertionHelper : ConstraintFactory
     {
-        #region Expect<TActual>
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Expect<TActual>(TActual actual, IResolveConstraint expression, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, expression, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Expect<TActual>(TActual actual, IResolveConstraint expression, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, expression, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Expect<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Assert.That(actual, expression, message, args);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        public static void Expect<TActual>(TActual actual, IResolveConstraint expression)
-        {
-            Assert.That(actual, expression, null, null);
-        }
-
-        #endregion
-
         #region Expect
 
         #region Boolean
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>. Works Identically to 
-        /// <see cref="Assert.That(bool, string, object[])"/>.
-        /// </summary> 
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public void Expect(bool condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>. Works Identically to 
-        /// <see cref="Assert.That(bool, string, object[])"/>.
-        /// </summary> 
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public void Expect(bool condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
@@ -147,38 +65,21 @@ namespace NUnit.Framework
         #endregion
 
         #region ActualValueDelegate
-
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, Func<ConstraintResult, string> getExceptionMessage)
+        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
-            Assert.That(del, expr, getExceptionMessage);
+            Assert.That(del, expr.Resolve(), null, null);
         }
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, Func<string> getExceptionMessage)
-        {
-            Assert.That(del, expr, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
@@ -187,19 +88,6 @@ namespace NUnit.Framework
         {
             Assert.That(del, expr, message, args);
         }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The type of the <see cref="ActualValueDelegate{TActual}"/></typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
-        {
-            Assert.That(del, expr.Resolve(), null, null);
-        }
-
         #endregion
 
         #region TestDelegate
@@ -219,18 +107,44 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Map
+        #region Expect<TActual>
 
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        static public void Expect<TActual>(TActual actual, IResolveConstraint expression)
+        {
+            Assert.That(actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void Expect<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Assert.That(actual, expression, message, args);
+        }
+
+        #endregion
+
+        #region Map
         /// <summary>
         /// Returns a ListMapper based on a collection.
         /// </summary>
         /// <param name="original">The original collection</param>
-        /// <returns>The ListMapper</returns>
-        public ListMapper Map(ICollection original)
+        /// <returns></returns>
+        public ListMapper Map( ICollection original )
         {
-            return new ListMapper(original);
+            return new ListMapper( original );
         }
-
         #endregion
     }
 }
