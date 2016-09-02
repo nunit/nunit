@@ -76,32 +76,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreEqual(Stream expected, Stream actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, Is.EqualTo(expected), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that two Streams are equal.  Two Streams are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected Stream</param>
-        /// <param name="actual">The actual Stream</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreEqual(Stream expected, Stream actual, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, Is.EqualTo(expected), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Verifies that two Streams are equal.  Two Streams are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected Stream</param>
-        /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreEqual(Stream expected, Stream actual, string message, params object[] args)
@@ -132,46 +106,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreEqual(FileInfo expected, FileInfo actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            using (var expectedStream = expected.OpenRead())
-            using (var actualStream = actual.OpenRead())
-            {
-                AreEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that two files are equal.  Two files are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A file containing the value that is expected</param>
-        /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreEqual(FileInfo expected, FileInfo actual, Func<string> getExceptionMessage)
-        {
-            using (var expectedStream = expected.OpenRead())
-            using (var actualStream = actual.OpenRead())
-            {
-                AreEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that two files are equal.  Two files are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A file containing the value that is expected</param>
-        /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreEqual(FileInfo expected, FileInfo actual, string message, params object[] args)
         {
-            using (var expectedStream = expected.OpenRead())
-            using (var actualStream = actual.OpenRead())
+            using (FileStream expectedStream = expected.OpenRead())
+            using (FileStream actualStream = actual.OpenRead())
             {
                 AreEqual(expectedStream, actualStream, message, args);
             }
@@ -200,46 +140,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreEqual(string expected, string actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            using (var expectedStream = File.OpenRead(expected))
-            using (var actualStream = File.OpenRead(actual))
-            {
-                AreEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that two files are equal.  Two files are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a file containing the value that is expected</param>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreEqual(string expected, string actual, Func<string> getExceptionMessage)
-        {
-            using (var expectedStream = File.OpenRead(expected))
-            using (var actualStream = File.OpenRead(actual))
-            {
-                AreEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that two files are equal.  Two files are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a file containing the value that is expected</param>
-        /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreEqual(string expected, string actual, string message, params object[] args)
         {
-            using (var expectedStream = File.OpenRead(expected))
-            using (var actualStream = File.OpenRead(actual))
+            using (FileStream expectedStream = File.OpenRead(expected))
+            using (FileStream actualStream = File.OpenRead(actual))
             {
                 AreEqual(expectedStream, actualStream, message, args);
             }
@@ -264,30 +170,6 @@ namespace NUnit.Framework
         #region AreNotEqual
 
         #region Streams
-
-        /// <summary>
-        /// Asserts that two Streams are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected Stream</param>
-        /// <param name="actual">The actual Stream</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreNotEqual(Stream expected, Stream actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, Is.Not.EqualTo(expected), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that two Streams are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected Stream</param>
-        /// <param name="actual">The actual Stream</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreNotEqual(Stream expected, Stream actual, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, Is.Not.EqualTo(expected), getExceptionMessage);
-        }
 
         /// <summary>
         /// Asserts that two Streams are not equal. If they are equal
@@ -323,44 +205,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreNotEqual(FileInfo expected, FileInfo actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            using (var expectedStream = expected.OpenRead())
-            using (var actualStream = actual.OpenRead())
-            {
-                AreNotEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Asserts that two files are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A file containing the value that is expected</param>
-        /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreNotEqual(FileInfo expected, FileInfo actual, Func<string> getExceptionMessage)
-        {
-            using (var expectedStream = expected.OpenRead())
-            using (var actualStream = actual.OpenRead())
-            {
-                AreNotEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Asserts that two files are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A file containing the value that is expected</param>
-        /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreNotEqual(FileInfo expected, FileInfo actual, string message, params object[] args)
         {
-            using (var expectedStream = expected.OpenRead())
-            using (var actualStream = actual.OpenRead())
+            using (FileStream expectedStream = expected.OpenRead())
+            using (FileStream actualStream = actual.OpenRead())
             {
                 AreNotEqual(expectedStream, actualStream, message, args);
             }
@@ -387,44 +237,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreNotEqual(string expected, string actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            using (var expectedStream = File.OpenRead(expected))
-            using (var actualStream = File.OpenRead(actual))
-            {
-                AreNotEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Asserts that two files are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a file containing the value that is expected</param>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void AreNotEqual(string expected, string actual, Func<string> getExceptionMessage)
-        {
-            using (var expectedStream = File.OpenRead(expected))
-            using (var actualStream = File.OpenRead(actual))
-            {
-                AreNotEqual(expectedStream, actualStream, getExceptionMessage);
-            }
-        }
-
-        /// <summary>
-        /// Asserts that two files are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a file containing the value that is expected</param>
-        /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreNotEqual(string expected, string actual, string message, params object[] args)
         {
-            using (var expectedStream = File.OpenRead(expected))
-            using (var actualStream = File.OpenRead(actual))
+            using (FileStream expectedStream = File.OpenRead(expected))
+            using (FileStream actualStream = File.OpenRead(actual))
             {
                 AreNotEqual(expectedStream, actualStream, message, args);
             }
@@ -454,28 +272,6 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Exists(FileInfo actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that the file exists. If it does not exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Exists(FileInfo actual, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that the file exists. If it does not exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Exists(FileInfo actual, string message, params object[] args)
@@ -496,28 +292,6 @@ namespace NUnit.Framework
         #endregion
 
         #region String
-
-        /// <summary>
-        /// Asserts that the file exists. If it does not exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Exists(string actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that the file exists. If it does not exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Exists(string actual, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, getExceptionMessage);
-        }
 
         /// <summary>
         /// Asserts that the file exists. If it does not exist
@@ -554,28 +328,6 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void DoesNotExist(FileInfo actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that the file does not exist. If it does exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">A file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void DoesNotExist(FileInfo actual, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that the file does not exist. If it does exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(FileInfo actual, string message, params object[] args)
@@ -596,28 +348,6 @@ namespace NUnit.Framework
         #endregion
 
         #region String
-
-        /// <summary>
-        /// Asserts that the file does not exist. If it does exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void DoesNotExist(string actual, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that the file does not exist. If it does exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void DoesNotExist(string actual, Func<string> getExceptionMessage)
-        {
-            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), getExceptionMessage);
-        }
 
         /// <summary>
         /// Asserts that the file does not exist. If it does exist
