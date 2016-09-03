@@ -35,31 +35,7 @@ namespace NUnit.Framework
     {
         #region Assert.That
 
-#region Boolean
-
-#if !NET_2_0
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary> 
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(bool condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary> 
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(bool condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition, Is.True, getExceptionMessage);
-        }
-#endif
+        #region Boolean
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
@@ -83,34 +59,24 @@ namespace NUnit.Framework
             Assert.That(condition, Is.True, null, null);
         }
 
-#endregion
+#if !NET_2_0
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void That(bool condition, Func<string> getExceptionMessage)
+        {
+            Assert.That(condition, Is.True, getExceptionMessage);
+        }
+#endif
 
-#region Lambda returning Boolean
+        #endregion
+
+        #region Lambda returning Boolean
 
 #if !NET_2_0
-        
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary> 
-        /// <param name="condition">A lambda that returns a Boolean</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(Func<bool> condition, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That(condition.Invoke(), Is.True, getExceptionMessage);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary> 
-        /// <param name="condition">A lambda that returns a Boolean</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(Func<bool> condition, Func<string> getExceptionMessage)
-        {
-            Assert.That(condition.Invoke(), Is.True, getExceptionMessage);
-        }
-
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -133,10 +99,20 @@ namespace NUnit.Framework
             Assert.That(condition.Invoke(), Is.True, null, null);
         }
 
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void That(Func<bool> condition, Func<string> getExceptionMessage)
+        {
+            Assert.That(condition.Invoke(), Is.True, getExceptionMessage);
+        }
 #endif
-#endregion
+        #endregion
 
-#region ActualValueDelegate
+        #region ActualValueDelegate
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
@@ -196,29 +172,6 @@ namespace NUnit.Framework
                 throw new AssertionException(getExceptionMessage());
             }
         }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That<TActual>(
-            ActualValueDelegate<TActual> del,
-            IResolveConstraint expr,
-            Func<ConstraintResult, string> getExceptionMessage)
-        {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
-            if (!result.IsSuccess)
-            {
-                throw new AssertionException(getExceptionMessage(result));
-            }
-        }
 #endif
 
         #endregion
@@ -261,25 +214,13 @@ namespace NUnit.Framework
         {
             Assert.That((object)code, constraint, getExceptionMessage);
         }
-
-        /// <summary>
-        /// Asserts that the code represented by a delegate throws an exception
-        /// that satisfies the constraint provided.
-        /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(TestDelegate code, IResolveConstraint constraint, Func<ConstraintResult, string> getExceptionMessage)
-        {
-            Assert.That((object)code, constraint, getExceptionMessage);
-        }
 #endif
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region Assert.That<TActual>
+        #region Assert.That<TActual>
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
@@ -339,34 +280,11 @@ namespace NUnit.Framework
                 throw new AssertionException(getExceptionMessage());
             }
         }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That<TActual>(
-            TActual actual,
-            IResolveConstraint expression,
-            Func<ConstraintResult, string> getExceptionMessage)
-        {
-            var constraint = expression.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-            if (!result.IsSuccess)
-            {
-                throw new AssertionException(getExceptionMessage(result));
-            }
-        }
 #endif
 
-#endregion
+        #endregion
 
-#region Assert.ByVal
+        #region Assert.ByVal
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
@@ -400,6 +318,6 @@ namespace NUnit.Framework
             Assert.That(actual, expression, message, args);
         }
 
-#endregion
+        #endregion
     }
 }

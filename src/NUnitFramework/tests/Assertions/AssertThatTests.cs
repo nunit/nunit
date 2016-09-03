@@ -68,13 +68,6 @@ namespace NUnit.Framework.Assertions
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Assert.That(2 + 2 == 4, getExceptionMessage);
         }
-
-        [Test]
-        public void AssertionPasses_BooleanWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => result.ToString();
-            Assert.That(2 + 2 == 4, getExceptionMessage);
-        }
 #endif
 
         [Test]
@@ -104,13 +97,6 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void AssertionPasses_ActualAndConstraintWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => result.ToString();
-            Assert.That(2 + 2, Is.EqualTo(4), getExceptionMessage);
-        }
-
-        [Test]
         public void AssertionPasses_ActualLambdaAndConstraint()
         {
             Assert.That(() => 2 + 2, Is.EqualTo(4));
@@ -132,13 +118,6 @@ namespace NUnit.Framework.Assertions
         public void AssertionPasses_ActualLambdaAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
-            Assert.That(() => 2 + 2, Is.EqualTo(4), getExceptionMessage);
-        }
-
-        [Test]
-        public void AssertionPasses_ActualLambdaAndConstraintWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => result.ToString();
             Assert.That(() => 2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
 #endif
@@ -166,13 +145,6 @@ namespace NUnit.Framework.Assertions
         public void AssertionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
-            Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
-        }
-
-        [Test]
-        public void AssertionPasses_DelegateAndConstraintWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => result.ToString();
             Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
         }
 #endif
@@ -210,14 +182,6 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("Not Equal to 4"));
         }
-
-        [Test]
-        public void FailureThrowsAssertionException_BooleanWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => string.Format("Result was: {0}", result.ToString());
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, getExceptionMessage));
-            Assert.That(ex.Message, Does.Contain("Result was:"));
-        }
 #endif
 
         [Test]
@@ -250,14 +214,6 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void FailureThrowsAssertionException_ActualAndConstraintWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => string.Format("Result was: {0}", result.ToString());
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), getExceptionMessage));
-            Assert.That(ex.Message, Does.Contain("Result was:"));
-        }
-
-        [Test]
         public void FailureThrowsAssertionException_ActualLambdaAndConstraint()
         {
             Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5)));
@@ -283,14 +239,6 @@ namespace NUnit.Framework.Assertions
             Func<string> getExceptionMessage = () => "error";
             var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("error"));
-        }
-
-        [Test]
-        public void FailureThrowsAssertionException_ActualLambdaAndConstraintWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => string.Format("Result was: {0}", result.ToString());
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), getExceptionMessage));
-            Assert.That(ex.Message, Does.Contain("Result was:"));
         }
 #endif
 
@@ -321,14 +269,6 @@ namespace NUnit.Framework.Assertions
             Func<string> getExceptionMessage = () => "error";
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("error"));
-        }
-
-        [Test]
-        public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageConstraintResultFunc()
-        {
-            Func<ConstraintResult, string> getExceptionMessage = result => string.Format("Result was: {0}", result.ToString());
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), getExceptionMessage));
-            Assert.That(ex.Message, Does.Contain("Result was:"));
         }
 #endif
 
@@ -368,24 +308,6 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void PassingAssertion_DoesNotCallExceptionConstraintResultFunc()
-        {
-            // Arrange
-            var funcWasCalled = false;
-            Func<ConstraintResult, string> getExceptionMessage = result =>
-                {
-                    funcWasCalled = true;
-                    return "Func was called";
-                };
-
-            // Act
-            Assert.That(0 + 1 == 1, getExceptionMessage);
-
-            // Assert
-            Assert.That(!funcWasCalled, "The getExceptionMessage function was called when it should not have been.");
-        }
-
-        [Test]
         public void FailingAssertion_CallsExceptionStringFunc()
         {
             // Arrange
@@ -399,25 +321,6 @@ namespace NUnit.Framework.Assertions
             // Act
             var ex = Assert.Throws<AssertionException>(() => Assert.That(1 + 1 == 1, getExceptionMessage));
             
-            // Assert
-            Assert.That(ex.Message, Does.Contain("Func was called"));
-            Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
-        }
-
-        [Test]
-        public void FailingAssertion_CallsExceptionConstraintResultFunc()
-        {
-            // Arrange
-            var funcWasCalled = false;
-            Func<ConstraintResult, string> getExceptionMessage = result =>
-            {
-                funcWasCalled = true;
-                return "Func was called";
-            };
-
-            // Act
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(1 + 1 == 1, getExceptionMessage));
-
             // Assert
             Assert.That(ex.Message, Does.Contain("Func was called"));
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
