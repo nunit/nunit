@@ -55,7 +55,6 @@ important top-level tasks to use are listed here:
  * Build               Builds everything. This is the default if no target is given.
  * Rebuild             Cleans the output directory and builds everything
  * Test                Runs all tests. Dependent on Build.
- * TestAll             Runs all tests. Dependent on Build.
  * TestAllFrameworks   Runs all framework tests. Dependent on Build.
  * Test45              Tests the 4.5 framework without building first.
  * Test40              Tests the 4.0 framework without building first.
@@ -76,7 +75,4 @@ important top-level tasks to use are listed here:
  2. If the compact framework or Silverlight SDK are not installed on a machine, the relevant 
     building and testing tasks are skipped and a warning is issued.
 
- 3. The Test and TestAll targets currently do the same thing. Both are retained for backwards
-    compatibility and the semantics of at least one of them may change in the future.
-
- 4. For additional targets, refer to the build.cake script itself.
+ 3. For additional targets, refer to the build.cake script itself.

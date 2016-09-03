@@ -141,7 +141,6 @@
     <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\BindingFlags.cs" />
     <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
-    <Compile Include="Compatibility\Path.cs" />
     <Compile Include="Compatibility\ReflectionExtensions.cs" />
     <Compile Include="Compatibility\System.Web.UI\ICallbackEventHandler.cs" />
     <Compile Include="Compatibility\System\SerializableAttribute.cs" />

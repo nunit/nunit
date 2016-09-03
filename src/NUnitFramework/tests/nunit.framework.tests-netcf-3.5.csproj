@@ -59,13 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Fakes.cs">
       <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
-      <Link>FrameworkVersion.cs</Link>
+      <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="..\TestBuilder.cs">
       <Link>TestUtilities\TestBuilder.cs</Link>
@@ -85,8 +85,11 @@
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
     <Compile Include="Assertions\AssertionHelperTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
+    <Compile Include="Assertions\AssertPolarityTests.cs" />
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
+    <Compile Include="Assertions\AssertZeroTests.cs" />
+    <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />

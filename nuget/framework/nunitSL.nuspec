@@ -10,7 +10,7 @@
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>NUnit is a unit-testing framework for .Net languages with a strong TDD focus.</summary>
+    <summary>NUnit is a unit-testing framework for .NET languages with a strong TDD focus.</summary>
     <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.&#10;&#13;This package includes the NUnit 3.0 framework assembly for SilverLight 5.0, which is referenced by your tests. You will need to install the NUnitLite.SL50 package in order to run the tests.</description>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory</tags>

@@ -23,6 +23,7 @@
 
 using System.Collections;
 using NUnit.Framework.Constraints;
+using System;
 
 namespace NUnit.Framework
 {
@@ -466,6 +467,710 @@ namespace NUnit.Framework
         public static void IsNotEmpty(IEnumerable collection)
         {
             Assert.That(collection, Is.Not.Empty ,null, null);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Zero
+
+        #region Ints
+
+        /// <summary>
+        /// Asserts that an int is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Zero(int actual)
+        {
+            Assert.That(actual, Is.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that an int is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Zero(int actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Zero, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedInts
+
+        /// <summary>
+        /// Asserts that an unsigned int is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void Zero(uint actual)
+        {
+            Assert.That(actual, Is.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned int is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void Zero(uint actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Longs
+
+        /// <summary>
+        /// Asserts that a Long is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Zero(long actual)
+        {
+            Assert.That(actual, Is.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a Long is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Zero(long actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Zero, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedLongs
+
+        /// <summary>
+        /// Asserts that an unsigned Long is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void Zero(ulong actual)
+        {
+            Assert.That(actual, Is.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned Long is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void Zero(ulong actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Decimals
+
+        /// <summary>
+        /// Asserts that a decimal is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Zero(decimal actual)
+        {
+            Assert.That(actual, Is.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a decimal is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Zero(decimal actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Doubles
+
+        /// <summary>
+        /// Asserts that a double is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Zero(double actual)
+        {
+            Assert.That(actual, Is.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a double is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Zero(double actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Floats
+
+        /// <summary>
+        /// Asserts that a float is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Zero(float actual)
+        {
+            Assert.That(actual, Is.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a float is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Zero(float actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Zero, message, args);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region NotZero
+
+        #region Ints
+
+        /// <summary>
+        /// Asserts that an int is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void NotZero(int actual)
+        {
+            Assert.That(actual, Is.Not.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that an int is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void NotZero(int actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.Zero, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedInts
+
+        /// <summary>
+        /// Asserts that an unsigned int is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void NotZero(uint actual)
+        {
+            Assert.That(actual, Is.Not.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned int is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void NotZero(uint actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Longs
+
+        /// <summary>
+        /// Asserts that a Long is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void NotZero(long actual)
+        {
+            Assert.That(actual, Is.Not.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a Long is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void NotZero(long actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.Zero, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedLongs
+
+        /// <summary>
+        /// Asserts that an unsigned Long is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void NotZero(ulong actual)
+        {
+            Assert.That(actual, Is.Not.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned Long is not zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void NotZero(ulong actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Decimals
+
+        /// <summary>
+        /// Asserts that a decimal is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void NotZero(decimal actual)
+        {
+            Assert.That(actual, Is.Not.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a decimal is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void NotZero(decimal actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Doubles
+
+        /// <summary>
+        /// Asserts that a double is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void NotZero(double actual)
+        {
+            Assert.That(actual, Is.Not.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a double is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void NotZero(double actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.Zero, message, args);
+        }
+
+        #endregion
+
+        #region Floats
+
+        /// <summary>
+        /// Asserts that a float is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void NotZero(float actual)
+        {
+            Assert.That(actual, Is.Not.Zero);
+        }
+
+        /// <summary>
+        /// Asserts that a float is zero.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void NotZero(float actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.Zero, message, args);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Positive
+
+        #region Ints
+
+        /// <summary>
+        /// Asserts that an int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Positive(int actual)
+        {
+            Assert.That(actual, Is.Positive);
+        }
+
+        /// <summary>
+        /// Asserts that an int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Positive(int actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Positive, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedInts
+
+        /// <summary>
+        /// Asserts that an unsigned int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void Positive(uint actual)
+        {
+            Assert.That(actual, Is.Positive);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void Positive(uint actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Positive, message, args);
+        }
+
+        #endregion
+
+        #region Longs
+
+        /// <summary>
+        /// Asserts that a Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Positive(long actual)
+        {
+            Assert.That(actual, Is.Positive);
+        }
+
+        /// <summary>
+        /// Asserts that a Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Positive(long actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Positive, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedLongs
+
+        /// <summary>
+        /// Asserts that an unsigned Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void Positive(ulong actual)
+        {
+            Assert.That(actual, Is.Positive);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void Positive(ulong actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Positive, message, args);
+        }
+
+        #endregion
+
+        #region Decimals
+
+        /// <summary>
+        /// Asserts that a decimal is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Positive(decimal actual)
+        {
+            Assert.That(actual, Is.Positive);
+        }
+
+        /// <summary>
+        /// Asserts that a decimal is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Positive(decimal actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Positive, message, args);
+        }
+
+        #endregion
+
+        #region Doubles
+
+        /// <summary>
+        /// Asserts that a double is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Positive(double actual)
+        {
+            Assert.That(actual, Is.Positive);
+        }
+
+        /// <summary>
+        /// Asserts that a double is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Positive(double actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Positive, message, args);
+        }
+
+        #endregion
+
+        #region Floats
+
+        /// <summary>
+        /// Asserts that a float is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Positive(float actual)
+        {
+            Assert.That(actual, Is.Positive);
+        }
+
+        /// <summary>
+        /// Asserts that a float is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Positive(float actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Positive, message, args);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Negative
+
+        #region Ints
+
+        /// <summary>
+        /// Asserts that an int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Negative(int actual)
+        {
+            Assert.That(actual, Is.Negative);
+        }
+
+        /// <summary>
+        /// Asserts that an int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Negative(int actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Negative, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedInts
+
+        /// <summary>
+        /// Asserts that an unsigned int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void Negative(uint actual)
+        {
+            Assert.That(actual, Is.Negative);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned int is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void Negative(uint actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Negative, message, args);
+        }
+
+        #endregion
+
+        #region Longs
+
+        /// <summary>
+        /// Asserts that a Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Negative(long actual)
+        {
+            Assert.That(actual, Is.Negative);
+        }
+
+        /// <summary>
+        /// Asserts that a Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Negative(long actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Negative, message, args);
+        }
+
+        #endregion
+
+        #region UnsignedLongs
+
+        /// <summary>
+        /// Asserts that an unsigned Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        [CLSCompliant(false)]
+        public static void Negative(ulong actual)
+        {
+            Assert.That(actual, Is.Negative);
+        }
+
+        /// <summary>
+        /// Asserts that an unsigned Long is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        [CLSCompliant(false)]
+        public static void Negative(ulong actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Negative, message, args);
+        }
+
+        #endregion
+
+        #region Decimals
+
+        /// <summary>
+        /// Asserts that a decimal is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Negative(decimal actual)
+        {
+            Assert.That(actual, Is.Negative);
+        }
+
+        /// <summary>
+        /// Asserts that a decimal is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Negative(decimal actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Negative, message, args);
+        }
+
+        #endregion
+
+        #region Doubles
+
+        /// <summary>
+        /// Asserts that a double is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Negative(double actual)
+        {
+            Assert.That(actual, Is.Negative);
+        }
+
+        /// <summary>
+        /// Asserts that a double is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Negative(double actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Negative, message, args);
+        }
+
+        #endregion
+
+        #region Floats
+
+        /// <summary>
+        /// Asserts that a float is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        public static void Negative(float actual)
+        {
+            Assert.That(actual, Is.Negative);
+        }
+
+        /// <summary>
+        /// Asserts that a float is negative.
+        /// </summary>
+        /// <param name="actual">The number to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void Negative(float actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Negative, message, args);
         }
 
         #endregion

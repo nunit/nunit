@@ -44,9 +44,17 @@ namespace NUnit.Framework.Internal.Tests
         }
 
         [TestCase(5, 7, "ABC")]
+        [TestCase(1, 2, "< left bracket")]
+        [TestCase(1, 2, "> right bracket")]
+        [TestCase(1, 2, "' single quote")]
+        [TestCase(1, 2, "\" double quote")]
+        [TestCase(1, 2, "& ampersand")]
         public void ParameterizedTest(int x, int y, string s)
         {
-            CheckNames("ParameterizedTest(5,7,\"ABC\")", "ParameterizedTest", OUTER_CLASS);
+            CheckNames(
+                string.Format("ParameterizedTest({0},{1},\"{2}\")", x, y, s.Replace("\"", "\\\"")),
+                "ParameterizedTest", 
+                OUTER_CLASS);
         }
 
         [TestCase("abcdefghijklmnopqrstuvwxyz")]
