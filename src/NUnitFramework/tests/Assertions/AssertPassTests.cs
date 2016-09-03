@@ -53,6 +53,21 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void ThrowsSuccessExceptionWithMessageStringFunc()
+        {
+            var funcWasCalled = false;
+            Func<string> getExceptionMessage = () =>
+                {
+                    funcWasCalled = true;
+                    return "message";
+                };
+            Assert.That(
+                () => Assert.Pass(getExceptionMessage),
+                Throws.TypeOf<SuccessException>().With.Message.EqualTo("message"));
+            Assert.That(funcWasCalled);
+        }
+
+        [Test]
         public void AssertPassReturnsSuccess()
         {
             Assert.Pass("This test is OK!");

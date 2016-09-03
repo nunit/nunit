@@ -27,6 +27,8 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {
+    using System;
+
     [TestFixture]
     public class AssertFailTests
     {
@@ -61,6 +63,21 @@ namespace NUnit.Framework.Assertions
             Assert.That(
                 () => Assert.Fail("MESSAGE: {0}+{1}={2}", 2, 2, 4),
                 Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
+        }
+
+        [Test]
+        public void ThrowsSuccessExceptionWithMessageStringFunc()
+        {
+            var funcWasCalled = false;
+            Func<string> getExceptionMessage = () =>
+            {
+                funcWasCalled = true;
+                return "message";
+            };
+            Assert.That(
+                () => Assert.Fail(getExceptionMessage),
+                Throws.TypeOf<AssertionException>().With.Message.EqualTo("message"));
+            Assert.That(funcWasCalled);
         }
 
         [Test]

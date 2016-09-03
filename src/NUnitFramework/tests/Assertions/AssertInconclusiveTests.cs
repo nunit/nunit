@@ -51,5 +51,20 @@ namespace NUnit.Framework.Assertions
                 () => Assert.Inconclusive("MESSAGE: {0}+{1}={2}", 2, 2, 4),
                 Throws.TypeOf<InconclusiveException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
         }
+
+        [Test]
+        public void ThrowsInconclusiveExceptionWithMessageStringFunc()
+        {
+            var funcWasCalled = false;
+            Func<string> getExceptionMessage = () =>
+            {
+                funcWasCalled = true;
+                return "message";
+            };
+            Assert.That(
+                () => Assert.Inconclusive(getExceptionMessage),
+                Throws.TypeOf<InconclusiveException>().With.Message.EqualTo("message"));
+            Assert.That(funcWasCalled);
+        }
     }
 }
