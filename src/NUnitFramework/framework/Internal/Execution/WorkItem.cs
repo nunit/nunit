@@ -317,6 +317,16 @@ namespace NUnit.Framework.Internal.Execution
 
             if (!thread.Join(timeout))
             {
+                // Don't enforce timeout when debugger is attached.
+                // We perform this check after the initial timeout has passed to 
+                // give the user additional time to attach a debugger 
+                // after the test has started execution
+                if (Debugger.IsAttached)
+                {
+                    thread.Join();
+                    return;
+                }
+
                 Thread tThread;
                 lock (threadLock)
                 {
