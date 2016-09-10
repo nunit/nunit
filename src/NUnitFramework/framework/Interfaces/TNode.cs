@@ -321,11 +321,12 @@ namespace NUnit.Framework.Interfaces
         private static readonly Regex InvalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])");
         private static string EscapeInvalidXmlCharacters(string str)
         {
-            if (str == null) return null;
+            if (string.IsNullOrEmpty(str)) return str;
 
             // Based on the XML spec http://www.w3.org/TR/xml/#charsets
             // For detailed explanation of the regex see http://mnaoumov.wordpress.com/2014/06/15/escaping-invalid-xml-unicode-characters/
 
+            str = str.Replace("\\", "\\\\");
             return InvalidXmlCharactersRegex.Replace(str, match => CharToUnicodeSequence(match.Value[0]));
         }
 
