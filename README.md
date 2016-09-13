@@ -4,7 +4,7 @@
 
 [![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit)
 
-NUnit is a unit-testing framework for all .Net languages. Initially ported from JUnit, the current production release, version 3.0, has been completely rewritten with many new features and support for a wide range of .NET platforms.
+NUnit is a unit-testing framework for all .NET languages. Initially ported from JUnit, the current production release, version 3.0, has been completely rewritten with many new features and support for a wide range of .NET platforms.
 
 ## License ##
 

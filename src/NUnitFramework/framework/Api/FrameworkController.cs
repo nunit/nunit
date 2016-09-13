@@ -29,6 +29,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -69,11 +70,12 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
         {
+            Initialize(assemblyNameOrPath, settings);
+
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
             Test.IdPrefix = idPrefix;
-            Initialize(assemblyNameOrPath, settings);
         }
 
         /// <summary>
@@ -100,11 +102,12 @@ namespace NUnit.Framework.Api
         /// <param name="builderType">The Type of the test builder</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
+            Initialize(assemblyNameOrPath, settings);
+
             Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
             Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
 
             Test.IdPrefix = idPrefix ?? "";
-            Initialize(assemblyNameOrPath, settings);
         }
 
         /// <summary>
@@ -123,6 +126,13 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
+        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
+        [SecuritySafeCritical]
+#endif   
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;

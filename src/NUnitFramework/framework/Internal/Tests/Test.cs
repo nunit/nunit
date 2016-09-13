@@ -295,9 +295,7 @@ namespace NUnit.Framework.Internal
         #region Internal Properties
 
         internal bool RequiresThread { get; set; }
-
-        internal bool IsAsynchronous { get; set; }
-
+        
         #endregion
 
         #region Other Public Methods
