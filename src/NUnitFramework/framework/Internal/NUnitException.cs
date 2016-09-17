@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     /// Thrown when an assertion failed. Here to preserve the inner
     /// exception and hence its stack trace.
     /// </summary>
-#if !NETCF 
+#if !NETCF && !PORTABLE && ! SILVERLIGHT
     [Serializable]
 #endif
     public class NUnitException : Exception 

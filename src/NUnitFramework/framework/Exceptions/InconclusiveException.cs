@@ -30,7 +30,9 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>
+#if !PORTABLE && !SILVERLIGHT
     [Serializable]
+#endif
     public class InconclusiveException : ResultStateException
     {
         /// <param name="message">The error message that explains 

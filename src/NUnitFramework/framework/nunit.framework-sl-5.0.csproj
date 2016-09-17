@@ -159,7 +159,6 @@
     <Compile Include="Compatibility\ReflectionExtensions.cs" />
     <Compile Include="Compatibility\System.Diagnostics\Stopwatch.cs" />
     <Compile Include="Compatibility\System.Web.UI\ICallbackEventHandler.cs" />
-    <Compile Include="Compatibility\System\SerializableAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
@@ -433,6 +432,9 @@
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
     <Content Include="Interfaces\InterfaceChanges.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Compatibility\System\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
