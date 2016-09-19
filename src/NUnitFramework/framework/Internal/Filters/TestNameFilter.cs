@@ -29,7 +29,9 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// TestName filter selects tests based on their Name
     /// </summary>
+#if !PORTABLE && !SILVERLIGHT
     [Serializable]
+#endif
     public class TestNameFilter : ValueMatchFilter
     {
         /// <summary>

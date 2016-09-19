@@ -32,7 +32,9 @@ namespace NUnit.Framework.Internal.Filters
     /// ValueMatchFilter selects tests based on some value, which
     /// is expected to be contained in the test.
     /// </summary>
+#if !PORTABLE && !SILVERLIGHT
     [Serializable]
+#endif
     public abstract class ValueMatchFilter : TestFilter
     {
         /// <summary>

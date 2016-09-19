@@ -33,7 +33,9 @@ namespace NUnit.Framework.Internal
     /// The filter applies when running the test, after it has been
     /// loaded, since this is the only time an ITest exists.
     /// </summary>
+#if !PORTABLE && !SILVERLIGHT
     [Serializable]
+#endif
     public abstract class TestFilter : ITestFilter
     {
         /// <summary>
@@ -198,7 +200,9 @@ namespace NUnit.Framework.Internal
         /// Nested class provides an empty filter - one that always
         /// returns true when called. It never matches explicitly.
         /// </summary>
+#if !PORTABLE && !SILVERLIGHT
         [Serializable]
+#endif
         private class EmptyFilter : TestFilter
         {
             public override bool Match( ITest test )
@@ -222,7 +226,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #region IXmlNodeBuilder Implementation
+#region IXmlNodeBuilder Implementation
 
         /// <summary>
         /// Adds an XML node
@@ -242,6 +246,6 @@ namespace NUnit.Framework.Internal
         /// <returns>The added XML node</returns>
         public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
-        #endregion
+#endregion
     }
 }
