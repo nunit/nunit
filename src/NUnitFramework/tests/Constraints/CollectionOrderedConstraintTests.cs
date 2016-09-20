@@ -152,13 +152,29 @@ namespace NUnit.Framework.Constraints
         {
             AlwaysEqualComparer comparer = new AlwaysEqualComparer();
             Assert.That(new[] { new object(), new object() }, Is.Ordered.Using(comparer));
-            Assert.That(comparer.Called, "TestComparer was not called");
+            Assert.That(comparer.CallCount, Is.GreaterThan(0), "TestComparer was not called");
         }
 
         [Test]
-        public void ExceptionThrownForMultipleComparers()
+        public void ExceptionThrownForMultipleComparersInStep()
         {
             Assert.That(() => Is.Ordered.Using(new TestComparer()).Using(new AlwaysEqualComparer()), Throws.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void MultipleComparersUsedInDifferentSteps()
+        {
+            var comparer1 = new TestComparer();
+            var comparer2 = new AlwaysEqualComparer();
+            var collection = new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 42), new TestClass3("ABC", 1) };
+
+            Assert.That(collection, Is.Ordered.By("A").Using(comparer1).Then.By("B").Using(comparer2));
+
+            // First comparer is called for every pair of items in the collection
+            Assert.That(comparer1.CallCount, Is.EqualTo(2), "First comparer should be called twice");
+
+            // Second comparer is only called where the first property matches
+            Assert.That(comparer2.CallCount, Is.EqualTo(1), "Second comparer should be called once");
         }
 
         [Test]
@@ -166,7 +182,7 @@ namespace NUnit.Framework.Constraints
         {
             TestComparer comparer = new TestComparer();
             Assert.That(new[] { 2, 1 }, Is.Ordered.Using(comparer));
-            Assert.That(comparer.Called, "TestComparer was not called");
+            Assert.That(comparer.CallCount, Is.GreaterThan(0), "TestComparer was not called");
         }
 
         [Test]

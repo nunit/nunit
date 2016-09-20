@@ -28,11 +28,11 @@ namespace NUnit.TestUtilities.Comparers
 {
     internal class AlwaysEqualComparer : IComparer
     {
-        public bool Called = false;
+        public int CallCount = 0;
 
         int IComparer.Compare(object x, object y)
         {
-            Called = true;
+            CallCount++;
 
             // This comparer ALWAYS returns zero (equal)!
             return 0;
