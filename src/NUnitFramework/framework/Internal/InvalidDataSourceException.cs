@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     /// InvalidTestFixtureException is thrown when an appropriate test
     /// fixture constructor using the provided arguments cannot be found.
     /// </summary>
-#if !NETCF
+#if !NETCF && !PORTABLE && ! SILVERLIGHT
     [Serializable]
 #endif
     public class InvalidDataSourceException : Exception

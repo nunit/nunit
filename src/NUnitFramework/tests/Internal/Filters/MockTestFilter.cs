@@ -36,7 +36,9 @@ namespace NUnit.Framework.Internal.Filters
     /// 
     /// It would be better to use a Mocking-Framework for this.
     /// </summary>
+#if !PORTABLE && !SILVERLIGHT
     [Serializable]
+#endif
     public class MockTestFilter : TestFilter
     {
         public enum MatchFunction

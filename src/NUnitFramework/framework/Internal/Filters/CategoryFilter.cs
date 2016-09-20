@@ -34,7 +34,9 @@ namespace NUnit.Framework.Internal.Filters
     /// based on their categories.
     /// </summary>
     /// 
+#if !PORTABLE && !SILVERLIGHT
     [Serializable]
+#endif
     public class CategoryFilter : ValueMatchFilter
     {
         /// <summary>

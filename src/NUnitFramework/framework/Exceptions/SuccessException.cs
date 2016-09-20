@@ -29,7 +29,9 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when an assertion failed.
     /// </summary>
+#if !PORTABLE && !SILVERLIGHT
     [Serializable]
+#endif
     public class SuccessException : ResultStateException
     {
         /// <param name="message"></param>
