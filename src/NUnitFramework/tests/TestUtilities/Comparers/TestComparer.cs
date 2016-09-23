@@ -24,16 +24,16 @@
 using System;
 using System.Collections;
 
-namespace NUnit.TestUtilities
+namespace NUnit.TestUtilities.Comparers
 {
     internal class TestComparer : IComparer
     {
-        public bool Called = false;
+        public int CallCount = 0;
 
         #region IComparer Members
         public int Compare(object x, object y)
         {
-            Called = true;
+            CallCount++;
 
             if (x == null && y == null)
                 return 0;
