@@ -397,25 +397,25 @@ namespace NUnit.Framework.Attributes
     {
         public static int[][] TestCaseData = { new[] { 1 } };
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBeTransposedToSeparateParameters(int int1)
         {
             Assert.That(new[] { int1 }, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToArrayParameter(int[] ints)
         {
             Assert.That(ints, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToTypedEnumerableParameter(IEnumerable<int> ints)
         {
             Assert.That(ints, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToUntypedEnumerableParameter(IEnumerable ints)
         {
             Assert.That(ints, Is.EqualTo(TestCaseData.ElementAt(0)));
@@ -427,25 +427,25 @@ namespace NUnit.Framework.Attributes
     {
         public static int[][] TestCaseData = { new[] { 1, 2, 3 } };
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBeTransposedToSeparateParameters(int int1, int int2, int int3)
         {
             Assert.That(new[] { int1, int2, int3 }, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToArrayParameter(int[] ints)
         {
             Assert.That(ints, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToTypedEnumerableParameter(IEnumerable<int> ints)
         {
             Assert.That(ints, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToUntypedEnumerableParameter(IEnumerable ints)
         {
             Assert.That(ints, Is.EqualTo(TestCaseData.ElementAt(0)));
@@ -457,25 +457,25 @@ namespace NUnit.Framework.Attributes
     {
         public static string[][] TestCaseData = { new[] { "1" } };
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBeTransposedToSeparateParameters(string string1)
         {
             Assert.That(new[] { string1 }, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToArrayParameter(string[] strings)
         {
             Assert.That(strings, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToTypedEnumerableParameter(IEnumerable<string> strings)
         {
             Assert.That(strings, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToUntypedEnumerableParameter(IEnumerable strings)
         {
             Assert.That(strings, Is.EqualTo(TestCaseData.ElementAt(0)));
@@ -487,25 +487,25 @@ namespace NUnit.Framework.Attributes
     {
         public static string[][] TestCaseData = { new[] { "1", "2", "3" } };
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBeTransposedToSeparateParameters(string string1, string string2, string string3)
         {
             Assert.That(new[] { string1, string2, string3 }, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToArrayParameter(string[] strings)
         {
             Assert.That(strings, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToTypedEnumerableParameter(IEnumerable<string> strings)
         {
             Assert.That(strings, Is.EqualTo(TestCaseData.ElementAt(0)));
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
+        [TestCaseSource("TestCaseData")]
         public void ArrayCanBePassedToUntypedEnumerableParameter(IEnumerable strings)
         {
             Assert.That(strings, Is.EqualTo(TestCaseData.ElementAt(0)));
