@@ -150,6 +150,8 @@ namespace NUnit.Framework
         /// <returns></returns>
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
+            var testName = method.TypeInfo.FullName + "." + method.Name;
+
             List<ITestCaseData> data = new List<ITestCaseData>();
 
             try
@@ -173,65 +175,55 @@ namespace NUnit.Framework
 
                         if (parms == null)
                         {
-                            // 3. An array was passed, it may be an object[]
-                            //    or possibly some other kind of array, which
-                            //    TestCaseSource can accept.
-                            var args = item as object[];
-                            if (args == null && item is Array)
-                            {
-                                Array array = item as Array;
-#if NETCF
-                                bool netcfOpenType = method.IsGenericMethodDefinition;
-#else
-                                bool netcfOpenType = false;
-#endif
-                                int numParameters = netcfOpenType ? array.Length : method.GetParameters().Length;
-                                if (array != null && array.Rank == 1 && array.Length == numParameters)
-                                {
-                                    // Array is something like int[] - convert it to
-                                    // an object[] for use as the argument array.
-                                    args = new object[array.Length];
-                                    for (int i = 0; i < array.Length; i++)
-                                        args[i] = array.GetValue(i);
-                                }
-                            }
+                            var args = new object[0];
 
-                            // Check again if we have an object[]
-                            if (args != null)
+                            var argsArray = item as Array;
+                            if (argsArray != null)
                             {
-#if NETCF
-                                if (method.IsGenericMethodDefinition)
-                                {
-                                    var mi = method.MakeGenericMethodEx(args);
-                                    if (mi == null)
-                                        throw new NotSupportedException("Cannot determine generic Type");
-                                    method = mi;
-                                }
-#endif
-
                                 var parameters = method.GetParameters();
-                                var argsNeeded = parameters.Length;
-                                var argsProvided = args.Length;
-               
-                                // If only one argument is needed, our array may actually
-                                // be the bare argument. If it is, we should wrap it in
-                                // an outer object[] representing the list of arguments.
-                                if (argsNeeded == 1)
+                                var numberOfParameters = 0;
+#if NETCF
+                                if(method.IsGenericMethodDefinition)
                                 {
-                                    var singleParmType = parameters[0].ParameterType;
-                                    
-                                    if (argsProvided == 0 || typeof(object[]).IsAssignableFrom(singleParmType))
+                                    numberOfParameters = argsArray.Length;
+                                    method = method.MakeGenericMethodEx(args);
+                                    if (method == null)
                                     {
-                                        if (argsProvided > 1 || singleParmType.IsAssignableFrom(args.GetType()))
-                                        {
-                                            args = new object[] { item };
-                                        }
+                                        throw new NotSupportedException("Cannot determine generic Type");
+                                    }
+                                }
+#else
+                                numberOfParameters = parameters.Length;
+#endif
+                                var argumentsProvidedForZeroArgumentMethod = numberOfParameters == 0 &&
+                                                                               argsArray.Length > 0;
+
+                                if (argumentsProvidedForZeroArgumentMethod)
+                                {
+                                    // Transpose the array anyway to force an error further downstream
+                                    args = TransposeArray(argsArray);
+                                }
+                                else if (numberOfParameters > 0)
+                                {
+                                    var isCollection = IsCollection(parameters);
+
+                                    if (numberOfParameters == 1 && argsArray.Length == 1 && isCollection)
+                                    {
+                                        args = new object[] { argsArray };
+                                    }
+                                    else if (argsArray.Rank == 1 && argsArray.Length == numberOfParameters)
+                                    {
+                                        args = TransposeArray(argsArray);
+                                    }
+                                    else
+                                    {
+                                        args = new object[] { argsArray };
                                     }
                                 }
                             }
-                            else // It may be a scalar or a multi-dimensioned array. Wrap it in object[]
+                            else
                             {
-                                args = new object[] { item };
+                                args = new object[] {item};
                             }
 
                             parms = new TestCaseParameters(args);
@@ -252,6 +244,16 @@ namespace NUnit.Framework
             }
 
             return data;
+        }
+
+        private static object[] TransposeArray(Array arguments)
+        {
+            var result = new object[arguments.Length];
+            for (var i = 0; i < arguments.Length; i++)
+            {
+                result[i] = arguments.GetValue(i);
+            }
+            return result;
         }
 
         private IEnumerable GetTestCaseSource(IMethodInfo method)
@@ -315,6 +317,27 @@ namespace NUnit.Framework
         private const string NumberOfArgsDoesNotMatch = "You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
                                                         ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
                                                         "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.";
+
+        private static bool IsCollection(IParameterInfo[] parameters)
+        {
+            return IsColletionOfArrays(parameters) || 
+                   (IsCollectionOfEnumerables(parameters) && !IsCollectionOfStrings(parameters));
+        }
+
+        private static bool IsColletionOfArrays(IParameterInfo[] parameters)
+        {
+            return parameters[0].ParameterType.IsArray;
+        }
+
+        private static bool IsCollectionOfEnumerables(IParameterInfo[] parameters)
+        {
+            return typeof(IEnumerable).IsAssignableFrom(parameters[0].ParameterType);
+        }
+
+        private static bool IsCollectionOfStrings(IParameterInfo[] parameters)
+        {
+            return parameters[0].ParameterType == typeof(string);
+        }
 
 #endregion
     }
