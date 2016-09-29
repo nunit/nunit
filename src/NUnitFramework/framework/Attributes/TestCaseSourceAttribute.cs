@@ -139,8 +139,6 @@ namespace NUnit.Framework
         /// <returns></returns>
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
-            var testName = method.TypeInfo.FullName + "." + method.Name;
-
             List<ITestCaseData> data = new List<ITestCaseData>();
 
             try
