@@ -214,7 +214,7 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
 
             if (argsProvided > 0 && maxArgsNeeded == 0)
-                return MarkAsNotRunnable(testMethod, "Arguments provided for method not taking any");
+                return MarkAsNotRunnable(testMethod, "Arguments provided for method with no parameters");
 
             if (argsProvided == 0 && minArgsNeeded > 0)
                 return MarkAsNotRunnable(testMethod, "No arguments were provided");
