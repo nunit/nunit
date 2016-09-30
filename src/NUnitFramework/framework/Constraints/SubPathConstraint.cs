@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            return actual != null & IsSubPath(Canonicalize(expected), Canonicalize(actual));
+            return actual != null && IsSubPath(Canonicalize(expected), Canonicalize(actual));
         }
     }
 }
