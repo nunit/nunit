@@ -12,6 +12,8 @@ use the NUnit NuGet packages for the framework, but a ZIP file with the binaries
 Framework
 
  * Added Assert.Zero and Assert.NotZero methods
+ * You can now pass a Func<string> to Asserts to lazily evaluate exception messages
+ * Added the ability to Assert on the order of multiple properties in a collection
  * Tests with a Timeout will no longer timeout while you are debugging
 
 Issues Resolved
