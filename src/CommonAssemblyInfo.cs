@@ -27,7 +27,7 @@ using System.Reflection;
 // Common Information for the NUnit assemblies
 //
 [assembly: AssemblyCompany("NUnit Software")]
-[assembly: AssemblyProduct("NUnit 3.0")]
+[assembly: AssemblyProduct("NUnit 3")]
 [assembly: AssemblyCopyright("Copyright (C) 2016 Charlie Poole")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
