@@ -185,6 +185,12 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(q, n / d);
         }
 
+        [Test, Category("Top"), TestCaseSource("StaticMethodDataWithParameters", new object[] { 8000, 8, 1000 })]
+        public void SourceCanBeStaticMethodPassingSomeDataToConstructor(int n, int d, int q)
+        {
+            Assert.AreEqual(q, n / d);
+        }
+
         [Test]
         public void SourceInAnotherClassPassingParamsToField()
         {
@@ -319,6 +325,11 @@ namespace NUnit.Framework.Attributes
             new int[] { 12, 3, 4 },
             new int[] { 12, 4, 3 },
             new int[] { 12, 6, 2 } };
+
+        public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
+        {
+            yield return new object[] { inject1, inject2, inject3 };
+        }
 
         static object[] FourArgs = new object[] {
             new TestCaseData( 12, 3, 4, 0 ),

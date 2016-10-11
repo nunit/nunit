@@ -78,6 +78,17 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Construct with a name
+        /// </summary>
+        /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
+        /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method. 
+        ///                     If the source name is a field or property has no effect.</param>
+        public TestCaseSourceAttribute(string sourceName, object[] methodParams)
+        {
+            this.MethodParams = methodParams;
+            this.SourceName = sourceName;
+        }
+        /// <summary>
         /// Construct with a Type
         /// </summary>
         /// <param name="sourceType">The type that will provide data</param>
