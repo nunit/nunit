@@ -186,7 +186,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test, Category("Top"), TestCaseSource("HereIsTheDataWithParametersFor1765", new object[] { 8000, 8, 1000 })]
-        public void SourceInAnotherClassPassingSomeDataToConstructor1765(int n, int d, int q)
+        public void SourceCanBeStaticMethodPassingSomeDataToConstructor(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
         }
@@ -326,7 +326,7 @@ namespace NUnit.Framework.Attributes
             new int[] { 12, 4, 3 },
             new int[] { 12, 6, 2 } };
 
-        public static IEnumerable HereIsTheDataWithParametersFor1765(int inject1, int inject2, int inject3)
+        public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {
             yield return new object[] { inject1, inject2, inject3 };
         }
