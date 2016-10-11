@@ -50,15 +50,15 @@ var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
 var SOLUTION_FILE = IsRunningOnWindows()
-	? "./nunit.sln"
-	: "./nunit.linux.sln";
+    ? "./nunit.sln"
+    : "./nunit.linux.sln";
 
 // Package sources for nuget restore
 var PACKAGE_SOURCE = new string[]
-	{
-		"https://www.nuget.org/api/v2",
-		"https://www.myget.org/F/nunit/api/v2"
-	};
+    {
+        "https://www.nuget.org/api/v2",
+        "https://www.myget.org/F/nunit/api/v2"
+    };
 
 // Test Runners
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
@@ -93,51 +93,51 @@ Task("Clean")
 Task("InitializeBuild")
     .Does(() =>
     {
-		NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
-		{
-			Source = PACKAGE_SOURCE
-		});
+        NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
+        {
+            Source = PACKAGE_SOURCE
+        });
 
-		if (isAppveyor)
-		{
-			var tag = AppVeyor.Environment.Repository.Tag;
+        if (isAppveyor)
+        {
+            var tag = AppVeyor.Environment.Repository.Tag;
 
-			if (tag.IsTag)
-			{
-				packageVersion = tag.Name;
-			}
-			else
-			{
-				var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
-				var branch = AppVeyor.Environment.Repository.Branch;
-				var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
+            if (tag.IsTag)
+            {
+                packageVersion = tag.Name;
+            }
+            else
+            {
+                var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
+                var branch = AppVeyor.Environment.Repository.Branch;
+                var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 
-				if (branch == "master" && !isPullRequest)
-				{
-					packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
-				}
-				else
-				{
-				    var suffix = "-ci-" + buildNumber + dbgSuffix;
+                if (branch == "master" && !isPullRequest)
+                {
+                    packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
+                }
+                else
+                {
+                    var suffix = "-ci-" + buildNumber + dbgSuffix;
 
-					if (isPullRequest)
-						suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
-					else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-						suffix += "-pre-" + buildNumber;
-					else
-						suffix += "-" + branch;
+                    if (isPullRequest)
+                        suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
+                    else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+                        suffix += "-pre-" + buildNumber;
+                    else
+                        suffix += "-" + branch;
 
-					// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-					if (suffix.Length > 21)
-						suffix = suffix.Substring(0, 21);
+                    // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
+                    if (suffix.Length > 21)
+                        suffix = suffix.Substring(0, 21);
 
-					packageVersion = version + suffix;
-				}
-			}
+                    packageVersion = version + suffix;
+                }
+            }
 
-			AppVeyor.UpdateBuildVersion(packageVersion);
-		}
-	});
+            AppVeyor.UpdateBuildVersion(packageVersion);
+        }
+    });
 
 //////////////////////////////////////////////////////////////////////
 // BUILD FRAMEWORKS
@@ -266,7 +266,7 @@ Task("CheckForError")
 
 Task("Test45")
     .IsDependentOn("Build45")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-4.5";
@@ -277,7 +277,7 @@ Task("Test45")
 
 Task("Test40")
     .IsDependentOn("Build40")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-4.0";
@@ -288,7 +288,7 @@ Task("Test40")
 
 Task("Test35")
     .IsDependentOn("Build35")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-3.5";
@@ -299,7 +299,7 @@ Task("Test35")
 
 Task("Test20")
     .IsDependentOn("Build20")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-2.0";
@@ -311,7 +311,7 @@ Task("Test20")
 Task("TestPortable")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildPortable")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "portable";
@@ -323,7 +323,7 @@ Task("TestPortable")
 Task("TestSL")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildSL")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         if(isSilverlightSDKInstalled)
@@ -342,7 +342,7 @@ Task("TestSL")
 Task("TestCF")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildCF")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         if(isCompactFrameworkInstalled)
@@ -380,7 +380,7 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.exe",
     "nunit.framework.dll",
     "nunit.framework.xml",
-	"NUnit.System.Linq.dll",
+    "NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.framework.tests.xap",
     "nunit.framework.tests_TestPage.html",
@@ -525,12 +525,12 @@ Task("PackageCF")
 //////////////////////////////////////////////////////////////////////
 
 Task("UploadArtifacts")
-	.IsDependentOn("Package")
+    .IsDependentOn("Package")
     .Does(() =>
     {
-		UploadArtifacts(PACKAGE_DIR, "*.nupkg");
-		UploadArtifacts(PACKAGE_DIR, "*.zip");
-	});
+        UploadArtifacts(PACKAGE_DIR, "*.nupkg");
+        UploadArtifacts(PACKAGE_DIR, "*.zip");
+    });
 
 //////////////////////////////////////////////////////////////////////
 // SETUP AND TEARDOWN TASKS
@@ -552,8 +552,8 @@ void RunGitCommand(string arguments)
 
 void UploadArtifacts(string packageDir, string searchPattern)
 {
-	foreach(var zip in System.IO.Directory.GetFiles(packageDir, searchPattern))
-		AppVeyor.UploadArtifact(zip);
+    foreach(var zip in System.IO.Directory.GetFiles(packageDir, searchPattern))
+        AppVeyor.UploadArtifact(zip);
 }
 
 void CheckForError(ref List<string> errorDetail)
@@ -661,14 +661,14 @@ Task("Test")
 Task("Package")
     .IsDependentOn("CheckForError")
     .IsDependentOn("PackageFramework")
-	.IsDependentOn("PackageCF")
+    .IsDependentOn("PackageCF")
     .IsDependentOn("PackageZip");
 
 Task("Appveyor")
     .IsDependentOn("Build")
     .IsDependentOn("Test")
     .IsDependentOn("Package")
-	.IsDependentOn("UploadArtifacts");
+    .IsDependentOn("UploadArtifacts");
 
 Task("Travis")
     .IsDependentOn("Build")
