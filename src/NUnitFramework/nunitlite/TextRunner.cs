@@ -260,7 +260,7 @@ namespace NUnitLite
 #endif
         }
 
-#endregion
+        #endregion
 
         #region Helper Methods
 
@@ -358,6 +358,9 @@ namespace NUnitLite
             if (options.DefaultTestNamePattern != null)
                 runSettings[FrameworkPackageSettings.DefaultTestNamePattern] = options.DefaultTestNamePattern;
 
+            if (options.TestParameters != null)
+                runSettings[FrameworkPackageSettings.TestParameters] = options.TestParameters;
+
             return runSettings;
         }
 
@@ -380,7 +383,7 @@ namespace NUnitLite
                     ? new OrFilter(testFilters.ToArray())
                     : testFilters[0];
             }
-                
+
 
             if (options.WhereClauseSpecified)
             {
