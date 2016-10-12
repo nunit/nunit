@@ -39,7 +39,19 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("Hello"));
         }
+        [Test]
+        public void SucceedsWhenKeyIsPresentUsingContainKey()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("Hola"));
+        }
 
+        [Test]
+        public void SucceedsWhenKeyIsNotPresentUsingContainKey()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.Not.ContainKey("NotKey"));
+        }
         [Test]
         public void FailsWhenKeyIsMissing()
         {
