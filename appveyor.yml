@@ -13,9 +13,6 @@ build_script:
 # disable built-in tests.
 test: off
 
-artifacts:
-- path: package\*.nupkg
-
 deploy:
   - provider: NuGet
     server: https://www.myget.org/F/nunit/api/v2

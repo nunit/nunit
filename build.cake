@@ -50,15 +50,15 @@ var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
 var SOLUTION_FILE = IsRunningOnWindows()
-	? "./nunit.sln"
-	: "./nunit.linux.sln";
+    ? "./nunit.sln"
+    : "./nunit.linux.sln";
 
 // Package sources for nuget restore
 var PACKAGE_SOURCE = new string[]
-	{
-		"https://www.nuget.org/api/v2",
-		"https://www.myget.org/F/nunit/api/v2"
-	};
+    {
+        "https://www.nuget.org/api/v2",
+        "https://www.myget.org/F/nunit/api/v2"
+    };
 
 // Test Runners
 var NUNITLITE_RUNNER = "nunitlite-runner.exe";
@@ -93,51 +93,51 @@ Task("Clean")
 Task("InitializeBuild")
     .Does(() =>
     {
-		NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
-		{
-			Source = PACKAGE_SOURCE
-		});
+        NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
+        {
+            Source = PACKAGE_SOURCE
+        });
 
-		if (BuildSystem.IsRunningOnAppVeyor)
-		{
-			var tag = AppVeyor.Environment.Repository.Tag;
+        if (isAppveyor)
+        {
+            var tag = AppVeyor.Environment.Repository.Tag;
 
-			if (tag.IsTag)
-			{
-				packageVersion = tag.Name;
-			}
-			else
-			{
-				var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
-				var branch = AppVeyor.Environment.Repository.Branch;
-				var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
+            if (tag.IsTag)
+            {
+                packageVersion = tag.Name;
+            }
+            else
+            {
+                var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
+                var branch = AppVeyor.Environment.Repository.Branch;
+                var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 
-				if (branch == "master" && !isPullRequest)
-				{
-					packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
-				}
-				else
-				{
-				    var suffix = "-ci-" + buildNumber + dbgSuffix;
+                if (branch == "master" && !isPullRequest)
+                {
+                    packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
+                }
+                else
+                {
+                    var suffix = "-ci-" + buildNumber + dbgSuffix;
 
-					if (isPullRequest)
-						suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
-					else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-						suffix += "-pre-" + buildNumber;
-					else
-						suffix += "-" + branch;
+                    if (isPullRequest)
+                        suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
+                    else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+                        suffix += "-pre-" + buildNumber;
+                    else
+                        suffix += "-" + branch;
 
-					// Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-					if (suffix.Length > 21)
-						suffix = suffix.Substring(0, 21);
+                    // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
+                    if (suffix.Length > 21)
+                        suffix = suffix.Substring(0, 21);
 
-					packageVersion = version + suffix;
-				}
-			}
+                    packageVersion = version + suffix;
+                }
+            }
 
-			AppVeyor.UpdateBuildVersion(packageVersion);
-		}
-	});
+            AppVeyor.UpdateBuildVersion(packageVersion);
+        }
+    });
 
 //////////////////////////////////////////////////////////////////////
 // BUILD FRAMEWORKS
@@ -214,13 +214,13 @@ Task("BuildSL")
     {
         if(isSilverlightSDKInstalled)
         {
-            BuildProject("src/NUnitFramework/framework/nunit.framework-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-            BuildProject("src/NUnitFramework/nunitlite/nunitlite-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-            BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-            BuildProject("src/NUnitFramework/testdata/nunit.testdata-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-            BuildProject("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-            BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
-            BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration, MSBuildPlatform.x86);
+            BuildProjectSL("src/NUnitFramework/framework/nunit.framework-sl-5.0.csproj", configuration);
+            BuildProjectSL("src/NUnitFramework/nunitlite/nunitlite-sl-5.0.csproj", configuration);
+            BuildProjectSL("src/NUnitFramework/mock-assembly/mock-assembly-sl-5.0.csproj", configuration);
+            BuildProjectSL("src/NUnitFramework/testdata/nunit.testdata-sl-5.0.csproj", configuration);
+            BuildProjectSL("src/NUnitFramework/tests/nunit.framework.tests-sl-5.0.csproj", configuration);
+            BuildProjectSL("src/NUnitFramework/nunitlite.tests/nunitlite.tests-sl-5.0.csproj", configuration);
+            BuildProjectSL("src/NUnitFramework/nunitlite-runner/nunitlite-runner-sl-5.0.csproj", configuration);
         }
         else
         {
@@ -266,7 +266,7 @@ Task("CheckForError")
 
 Task("Test45")
     .IsDependentOn("Build45")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-4.5";
@@ -277,7 +277,7 @@ Task("Test45")
 
 Task("Test40")
     .IsDependentOn("Build40")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-4.0";
@@ -288,7 +288,7 @@ Task("Test40")
 
 Task("Test35")
     .IsDependentOn("Build35")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-3.5";
@@ -299,7 +299,7 @@ Task("Test35")
 
 Task("Test20")
     .IsDependentOn("Build20")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "net-2.0";
@@ -311,7 +311,7 @@ Task("Test20")
 Task("TestPortable")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildPortable")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         var runtime = "portable";
@@ -323,7 +323,7 @@ Task("TestPortable")
 Task("TestSL")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildSL")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         if(isSilverlightSDKInstalled)
@@ -342,7 +342,7 @@ Task("TestSL")
 Task("TestCF")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildCF")
-    .OnError(exception => {ErrorDetail.Add(exception.Message); })
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
         if(isCompactFrameworkInstalled)
@@ -366,8 +366,7 @@ var RootFiles = new FilePath[]
 {
     "LICENSE.txt",
     "NOTICES.txt",
-    "CHANGES.txt",
-    "nunit.ico"
+    "CHANGES.txt"
 };
 
 // Not all of these are present in every framework
@@ -381,7 +380,7 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.exe",
     "nunit.framework.dll",
     "nunit.framework.xml",
-	"NUnit.System.Linq.dll",
+    "NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.framework.tests.xap",
     "nunit.framework.tests_TestPage.html",
@@ -522,18 +521,22 @@ Task("PackageCF")
     });
 
 //////////////////////////////////////////////////////////////////////
+// UPLOAD ARTIFACTS
+//////////////////////////////////////////////////////////////////////
+
+Task("UploadArtifacts")
+    .IsDependentOn("Package")
+    .Does(() =>
+    {
+        UploadArtifacts(PACKAGE_DIR, "*.nupkg");
+        UploadArtifacts(PACKAGE_DIR, "*.zip");
+    });
+
+//////////////////////////////////////////////////////////////////////
 // SETUP AND TEARDOWN TASKS
 //////////////////////////////////////////////////////////////////////
-Setup(() =>
-{
-    // Executed BEFORE the first task.
-});
 
-Teardown(() =>
-{
-    // Executed AFTER the last task.
-    CheckForError(ref ErrorDetail);
-});
+Teardown(context => CheckForError(ref ErrorDetail));
 
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS - GENERAL
@@ -545,6 +548,12 @@ void RunGitCommand(string arguments)
     {
         Arguments = arguments
     });
+}
+
+void UploadArtifacts(string packageDir, string searchPattern)
+{
+    foreach(var zip in System.IO.Directory.GetFiles(packageDir, searchPattern))
+        AppVeyor.UploadArtifact(zip);
 }
 
 void CheckForError(ref List<string> errorDetail)
@@ -565,45 +574,33 @@ void CheckForError(ref List<string> errorDetail)
 
 void BuildProject(string projectPath, string configuration)
 {
-    BuildProject(projectPath, configuration, MSBuildPlatform.Automatic);
+    DotNetBuild(projectPath, settings =>
+        settings.SetConfiguration(configuration)
+        .SetVerbosity(Verbosity.Minimal)
+        .WithTarget("Build")
+        .WithProperty("NodeReuse", "false"));
 }
 
 void BuildProjectCF(string projectPath, string configuration)
 {
-    if(IsRunningOnWindows())
-    {
-        // Use MSBuild
-        MSBuild(projectPath, new MSBuildSettings()
-            .SetConfiguration(configuration)
-            .SetMSBuildPlatform(MSBuildPlatform.x86)
-            .SetVerbosity(Verbosity.Minimal)
-            .SetNodeReuse(false)
-            .UseToolVersion(MSBuildToolVersion.VS2008)
-        );
-    }
+    BuildProjectx86(projectPath, configuration, MSBuildToolVersion.VS2008);
 }
 
-void BuildProject(string projectPath, string configuration, MSBuildPlatform buildPlatform)
+void BuildProjectSL(string projectPath, string configuration)
 {
-    if(IsRunningOnWindows())
-    {
-        // Use MSBuild
-        MSBuild(projectPath, new MSBuildSettings()
-            .SetConfiguration(configuration)
-            .SetMSBuildPlatform(buildPlatform)
-            .SetVerbosity(Verbosity.Minimal)
-            .SetNodeReuse(false)
-        );
-    }
-    else
-    {
-        // Use XBuild
-        XBuild(projectPath, new XBuildSettings()
-            .WithTarget("Build")
-            .WithProperty("Configuration", configuration)
-            .SetVerbosity(Verbosity.Minimal)
-        );
-    }
+    BuildProjectx86(projectPath, configuration, MSBuildToolVersion.Default);
+}
+
+void BuildProjectx86(string projectPath, string configuration, MSBuildToolVersion toolVersion)
+{
+    if(!IsRunningOnWindows()) return;
+
+    MSBuild(projectPath, new MSBuildSettings()
+                            .SetConfiguration(configuration)
+                            .SetMSBuildPlatform(MSBuildPlatform.x86)
+                            .UseToolVersion(toolVersion)
+                            .SetVerbosity(Verbosity.Minimal)
+                            .SetNodeReuse(false));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -612,17 +609,7 @@ void BuildProject(string projectPath, string configuration, MSBuildPlatform buil
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
-    int rc = StartProcess(
-        MakeAbsolute(exePath),
-        new ProcessSettings()
-        {
-            WorkingDirectory = workingDir
-        });
-
-    if (rc > 0)
-        errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
-    else if (rc < 0)
-        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+    RunTest(exePath, workingDir, null, framework, ref errorDetail);
 }
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
@@ -636,7 +623,7 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
         });
 
     if (rc > 0)
-        errorDetail.Add(string.Format("{0}: {1} tests failed",framework, rc));
+        errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
     else if (rc < 0)
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
@@ -674,19 +661,21 @@ Task("Test")
 Task("Package")
     .IsDependentOn("CheckForError")
     .IsDependentOn("PackageFramework")
+    .IsDependentOn("PackageCF")
     .IsDependentOn("PackageZip");
 
 Task("Appveyor")
     .IsDependentOn("Build")
     .IsDependentOn("Test")
-    .IsDependentOn("Package");
+    .IsDependentOn("Package")
+    .IsDependentOn("UploadArtifacts");
 
 Task("Travis")
     .IsDependentOn("Build")
     .IsDependentOn("Test");
 
 Task("Default")
-    .IsDependentOn("Build"); // Rebuild?
+    .IsDependentOn("Build");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
