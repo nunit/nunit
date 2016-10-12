@@ -36,7 +36,7 @@ namespace NUnitLite.Tests
     [TestFixture]
     public class CommandLineTests
     {
-        #region General Tests
+#region General Tests
 
         [Test]
         public void NoInputFiles()
@@ -245,9 +245,9 @@ namespace NUnitLite.Tests
             Assert.AreEqual("Invalid argument: -assembly:Tests.dll", options.ErrorMessages[1]);
         }
 
-        #endregion
+#endregion
 
-        #region Timeout Option
+#region Timeout Option
 
         [Test]
         public void TimeoutIsMinusOneIfNoOptionIsProvided()
@@ -279,9 +279,9 @@ namespace NUnitLite.Tests
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
 
-        #endregion
+#endregion
 
-        #region EngineResult Option
+#region EngineResult Option
 
         [Test]
         public void FileNameWithoutResultOptionLooksLikeParameter()
@@ -502,64 +502,6 @@ namespace NUnitLite.Tests
 
         #endregion
 
-        #region Test Parameters
-
-        [Test]
-        public void SingleTestParameter()
-        {
-            var options = new NUnitLiteOptions("--params=X=5");
-            Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5"));
-        }
-
-        [Test]
-        public void TwoTestParametersInOneOption()
-        {
-            var options = new NUnitLiteOptions("--params:X=5;Y=7");
-            Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7"));
-        }
-
-        [Test]
-        public void TwoTestParametersInSeparateOptions()
-        {
-            var options = new NUnitLiteOptions("-p:X=5", "-p:Y=7");
-            Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7"));
-        }
-
-        [Test]
-        public void ThreeTestParametersInTwoOptions()
-        {
-            var options = new NUnitLiteOptions("--params:X=5;Y=7", "-p:Z=3");
-            Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7;Z=3"));
-        }
-
-        [Test]
-        public void ParameterWithoutEqualSignIsInvalid()
-        {
-            var options = new NUnitLiteOptions("--params=X5");
-            Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
-        }
-
-        [Test]
-        public void DisplayTestParameters()
-        {
-            if (TestContext.Parameters.Count == 0)
-            {
-                Console.WriteLine("No Test Parameters were passed");
-                return;
-            }
-
-            Console.WriteLine("Test Parameters---");
-
-            foreach (var name in TestContext.Parameters.Names)
-                Console.WriteLine("   Name: {0} Value: {1}", name, TestContext.Parameters[name]);
-        }
-
-        #endregion
-
         #region Helper Methods
 
         //private static FieldInfo GetFieldInfo(string fieldName)
@@ -576,7 +518,7 @@ namespace NUnitLite.Tests
             return property;
         }
 
-        #endregion
+#endregion
 
         internal sealed class DefaultOptionsProviderStub : IDefaultOptionsProvider
         {
