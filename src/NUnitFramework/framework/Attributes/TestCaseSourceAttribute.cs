@@ -178,21 +178,19 @@ namespace NUnit.Framework
                             var argsArray = item as Array;
                             if (argsArray != null)
                             {
-                                var parameters = method.GetParameters();
-                                var numberOfParameters = 0;
 #if NETCF
                                 if(method.IsGenericMethodDefinition)
                                 {
-                                    numberOfParameters = argsArray.Length;
-                                    method = method.MakeGenericMethodEx(args);
+                                    method = method.MakeGenericMethodEx((object[]) argsArray);
                                     if (method == null)
                                     {
                                         throw new NotSupportedException("Cannot determine generic Type");
                                     }
-                                }
-#else
-                                numberOfParameters = parameters.Length;
+                                }               
 #endif
+                                var parameters = method.GetParameters();
+                                var numberOfParameters = parameters.Length;
+
                                 var argumentsProvidedForZeroArgumentMethod = numberOfParameters == 0 &&
                                                                                argsArray.Length > 0;
 
@@ -221,7 +219,7 @@ namespace NUnit.Framework
                             }
                             else
                             {
-                                args = new object[] {item};
+                                args = new object[] { item };
                             }
 
                             parms = new TestCaseParameters(args);
