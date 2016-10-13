@@ -1,0 +1,1 @@
+taskkill /F /T /FI "IMAGENAME eq notepad*"
