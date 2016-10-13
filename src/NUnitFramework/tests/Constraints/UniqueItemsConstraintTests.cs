@@ -41,17 +41,17 @@ namespace NUnit.Framework.Constraints
         static object[] FailureData = new object[] { new object[] { new int[] { 1, 3, 17, 3, 34 }, "< 1, 3, 17, 3, 34 >" } };
 
         [Test]
-        [TestCaseSource( "IgnoreCaseData" )]
-        public void HonorsIgnoreCase( IEnumerable actual )
+        [TestCaseSource("IgnoreCaseData")]
+        public void HonorsIgnoreCase(IEnumerable actual)
         {
-            Assert.That( new UniqueItemsConstraint().IgnoreCase.ApplyTo( actual ).IsSuccess, Is.False, "{0} should be unique ignoring case", actual );
+            Assert.That(new UniqueItemsConstraint().IgnoreCase.ApplyTo(actual).IsSuccess, Is.False, "{0} should be unique ignoring case", actual);
         }
 
         private static readonly object[] IgnoreCaseData =
         {
-            new object[] {new SimpleObjectCollection("x", "y", "z", "Z")},
-            new object[] {new[] {'A', 'B', 'C', 'c'}},
-            new object[] {new[] {"a", "b", "c", "C"}}
+            new SimpleObjectCollection("x", "y", "z", "Z"),
+            new[] {'A', 'B', 'C', 'c'},
+            new[] {"a", "b", "c", "C"}
         };
     }
 }
