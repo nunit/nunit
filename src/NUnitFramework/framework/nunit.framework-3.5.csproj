@@ -209,7 +209,6 @@
     <Compile Include="Interfaces\IApplyToTest.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
-    <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
