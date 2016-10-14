@@ -79,11 +79,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public static int DefaultLevelOfParallelism
         {
-#if NETCF
-            get { return 2; }
-#else
             get { return Math.Max(Environment.ProcessorCount, 2); }
-#endif
         }
 #endif
 

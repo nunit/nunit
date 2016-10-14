@@ -23,9 +23,7 @@
 
 using System;
 using System.Linq;
-#if !NETCF
 using System.Security.Principal;
-#endif
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;

@@ -382,12 +382,10 @@ namespace NUnit.Framework.Attributes
 
         string GetMyPlatform()
         {
-#if !NETCF
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {
                 return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux"; 
             }
-#endif
             return "Win";
         }
 #endif
@@ -510,7 +508,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
 
         #region SetCultureAttribute
 

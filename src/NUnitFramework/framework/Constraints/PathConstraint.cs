@@ -88,11 +88,7 @@ namespace NUnit.Framework.Constraints
                 else break;
             }
 
-#if !NETCF
             string[] parts = path.Split(DirectorySeparatorChars, StringSplitOptions.RemoveEmptyEntries);
-#else
-            string[] parts = path.Split(DirectorySeparatorChars);
-#endif
 
             int count = 0;
             bool shifting = false;

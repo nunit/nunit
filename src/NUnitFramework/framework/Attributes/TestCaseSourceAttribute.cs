@@ -180,12 +180,7 @@ namespace NUnit.Framework
                             if (args == null && item is Array)
                             {
                                 Array array = item as Array;
-#if NETCF
-                                bool netcfOpenType = method.IsGenericMethodDefinition;
-#else
-                                bool netcfOpenType = false;
-#endif
-                                int numParameters = netcfOpenType ? array.Length : method.GetParameters().Length;
+                                int numParameters = method.GetParameters().Length;
                                 if (array != null && array.Rank == 1 && array.Length == numParameters)
                                 {
                                     // Array is something like int[] - convert it to
@@ -199,16 +194,6 @@ namespace NUnit.Framework
                             // Check again if we have an object[]
                             if (args != null)
                             {
-#if NETCF
-                                if (method.IsGenericMethodDefinition)
-                                {
-                                    var mi = method.MakeGenericMethodEx(args);
-                                    if (mi == null)
-                                        throw new NotSupportedException("Cannot determine generic Type");
-                                    method = mi;
-                                }
-#endif
-
                                 var parameters = method.GetParameters();
                                 var argsNeeded = parameters.Length;
                                 var argsProvided = args.Length;

@@ -291,11 +291,8 @@ namespace NUnit.Framework.Internal.Execution
 #if !PORTABLE
         private void RunThread(int timeout)
         {
-#if !NETCF
             thread.CurrentCulture = Context.CurrentCulture;
             thread.CurrentUICulture = Context.CurrentUICulture;
-#endif
-
             thread.Start();
             
             if (timeout <= 0)

@@ -41,11 +41,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SucceedsWithNonVoidReturningFunction()
         {
-#if NETCF
-            var constraintResult = theConstraint.ApplyTo<int>(TestDelegates.ThrowsInsteadOfReturns);
-#else
             var constraintResult = theConstraint.ApplyTo(TestDelegates.ThrowsInsteadOfReturns);
-#endif
             if (!constraintResult.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter();

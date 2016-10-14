@@ -198,40 +198,6 @@ namespace NUnit.Framework.Internal
                 _currentContext = value;
             }
         }
-#elif NETCF
-        // In the compact framework build, we use a LocalStoreDataSlot
-
-        private static LocalDataStoreSlot contextSlot = Thread.AllocateDataSlot();
-        
-        /// <summary>
-        /// Gets and sets the current context.
-        /// </summary>
-        public static TestExecutionContext CurrentContext
-        {
-            get
-            {
-                var current = GetTestExecutionContext();
-                if (current == null)
-                {
-                    current = new TestExecutionContext();
-                    Thread.SetData(contextSlot, current);
-                }
-
-                return current;
-            }
-            private set
-            {
-                Thread.SetData(contextSlot, value);
-            }
-        }
-
-        /// <summary>
-        /// Get the current context or return null if none is found.
-        /// </summary>
-        public static TestExecutionContext GetTestExecutionContext()
-        {
-            return (TestExecutionContext)Thread.GetData(contextSlot);
-        }
 #else
         // In all other builds, we use the CallContext
 
@@ -444,7 +410,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !NETCF && !PORTABLE
+#if !PORTABLE
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }

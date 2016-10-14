@@ -28,7 +28,7 @@ using System.Collections.Concurrent;
 #endif
 using NUnit.Framework.Interfaces;
 using System.Threading;
-#if NETCF || NET_2_0
+#if NET_2_0
 using NUnit.Compatibility;
 #endif
 

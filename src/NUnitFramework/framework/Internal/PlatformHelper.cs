@@ -47,11 +47,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Comma-delimited list of all supported OS platform constants
         /// </summary>
-#if NETCF
-        public const string OSPlatforms = CommonOSPlatforms;
-#else
         public const string OSPlatforms = CommonOSPlatforms + ",Xbox,MacOSX";
-#endif
 
         /// <summary>
         /// Comma-delimited list of all supported Runtime platform constants

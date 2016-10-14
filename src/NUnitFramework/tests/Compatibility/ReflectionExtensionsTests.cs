@@ -36,15 +36,7 @@ namespace NUnit.Framework.Tests.Compatibility
     public class ReflectionExtensionsTests
     {
         private static bool REALLY_RUNNING_ON_CF = false;
-
-#if NETCF
-        static ReflectionExtensionsTests()
-        {
-            // We may be running on the desktop using assembly unification
-            REALLY_RUNNING_ON_CF = Type.GetType("System.ConsoleColor") == null;
-        }
-#endif
-
+        
         [Test]
         public void CanCallTypeInfoOnAllPlatforms()
         {

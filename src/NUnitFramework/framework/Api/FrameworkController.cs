@@ -406,12 +406,10 @@ namespace NUnit.Framework.Api
             env.AddAttribute("clr-version", Environment.Version.ToString());
             env.AddAttribute("os-version", Environment.OSVersion.ToString());
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
-#if !NETCF
             env.AddAttribute("cwd", Environment.CurrentDirectory);
             env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
-#endif
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
             env.AddAttribute("os-architecture", GetProcessorArchitecture());

@@ -297,7 +297,7 @@ namespace NUnit.Framework.Internal
         {
             Type[] typeParameters = type.GetGenericArguments();
 
-#if NETCF || PORTABLE
+#if PORTABLE
             Type[] argTypes = arglist.Select(a => a == null ? typeof(object) : a.GetType()).ToArray();
             if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.GetTypeInfo().IsGenericType))
                 return false;

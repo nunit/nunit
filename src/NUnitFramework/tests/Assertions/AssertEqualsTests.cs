@@ -182,7 +182,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !NETCF
         [Test]
         public void EqualsThrowsException()
         {
@@ -196,7 +195,6 @@ namespace NUnit.Framework.Assertions
             object o = new object();
             Assert.Throws<InvalidOperationException>(() => Assert.ReferenceEquals(o, o));
         }
-#endif
         
         [Test]
         public void Float() 

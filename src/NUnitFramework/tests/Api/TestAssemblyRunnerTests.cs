@@ -61,15 +61,7 @@ namespace NUnit.Framework.Api
         private int _inconclusiveCount;
 
         private static bool REALLY_RUNNING_ON_CF = false;
-
-#if NETCF
-        static TestAssemblyRunnerTests()
-        {
-            // We may be running on the desktop using assembly unification
-            REALLY_RUNNING_ON_CF = Type.GetType("System.ConsoleColor") == null;
-        }
-#endif
-
+        
         [SetUp]
         public void CreateRunner()
         {

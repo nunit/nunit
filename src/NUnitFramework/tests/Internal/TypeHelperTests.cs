@@ -65,13 +65,11 @@ namespace NUnit.Framework.Internal
         [TestCase(typeof(C<string, long>), ExpectedResult = "TypeHelperTests+C<String,Int64>")]
         [TestCase(typeof(C<List<char[]>, long>), ExpectedResult = "TypeHelperTests+C<List<Char[]>,Int64>")]
         [TestCase(typeof(C<List<char[]>, long>.D<IDictionary<int,byte[]>,string>), ExpectedResult = "TypeHelperTests+C<List<Char[]>,Int64>+D<IDictionary<Int32,Byte[]>,String>")]
-#if !NETCF // No Open Generics in CF
         [TestCase(typeof(List<>), ExpectedResult = "List<T>")]
         [TestCase(typeof(IList<>), ExpectedResult = "IList<T>")]
         [TestCase(typeof(Dictionary<,>), ExpectedResult = "Dictionary<TKey,TValue>")]
         [TestCase(typeof(C<,>), ExpectedResult = "TypeHelperTests+C<T1,T2>")]
         [TestCase(typeof(C<,>.D<,>), ExpectedResult = "TypeHelperTests+C<T1,T2>+D<T3,T4>")]
-#endif
         public string GetDisplayNameTests(Type type)
         {
             return TypeHelper.GetDisplayName(type);

@@ -28,10 +28,7 @@ using System.Globalization;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
-
-#if !NETCF
 using System.Security.Principal;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -77,7 +74,7 @@ namespace NUnit.Framework.Internal
         public void Initialize()
         {
             setupContext = new TestExecutionContext(TestExecutionContext.CurrentContext);
-#if !NETCF && !PORTABLE
+#if !PORTABLE
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
 #endif
@@ -91,7 +88,7 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !NETCF && !PORTABLE
+#if !PORTABLE
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
@@ -220,7 +217,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentCulture and CurrentUICulture
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
         CultureInfo originalCulture;
         CultureInfo originalUICulture;
 

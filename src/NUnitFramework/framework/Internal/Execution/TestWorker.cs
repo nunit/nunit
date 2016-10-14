@@ -51,15 +51,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Event signaled immediately after executing a WorkItem
         /// </summary>
         public event EventHandler Idle;
-
-#if NETCF
-        /// <summary>
-        /// Construct a new TestWorker.
-        /// </summary>
-        /// <param name="queue">The queue from which to pull work items</param>
-        /// <param name="name">The name of this worker</param>
-        public TestWorker(WorkItemQueue queue, string name)
-#else
+        
         /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
@@ -67,15 +59,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="name">The name of this worker</param>
         /// <param name="apartmentState">The apartment state to use for running tests</param>
         public TestWorker(WorkItemQueue queue, string name, ApartmentState apartmentState)
-#endif
         {
             _readyQueue = queue;
 
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = name;
-#if !NETCF
             _workerThread.SetApartmentState(apartmentState);
-#endif
         }
 
         /// <summary>
@@ -91,11 +80,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsAlive
         {
-#if NETCF
-            get { return !_workerThread.Join(0); }
-#else
             get { return _workerThread.IsAlive; }
-#endif
         }
 
         /// <summary>

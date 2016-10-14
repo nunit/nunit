@@ -389,9 +389,6 @@ namespace NUnitLite
             {
                 var logName = GetLogFileName();
 
-#if NETCF // NETCF: Try to encapsulate this
-                InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
-#else
                 StreamWriter streamWriter = null;
                 if (traceLevel > InternalTraceLevel.Off)
                 {
@@ -400,7 +397,6 @@ namespace NUnitLite
                     streamWriter.AutoFlush = true;
                 }
                 InternalTrace.Initialize(streamWriter, traceLevel);
-#endif
             }
         }
 
@@ -410,11 +406,7 @@ namespace NUnitLite
 
             // Some mobiles don't have an Open With menu item,
             // so we use .txt, which is opened easily.
-#if NETCF
-            const string ext = "txt";
-#else
             const string ext = "log";
-#endif
             var baseName = _testAssembly != null
                 ? _testAssembly.GetName().Name
                 : _options.InputFiles.Count > 0

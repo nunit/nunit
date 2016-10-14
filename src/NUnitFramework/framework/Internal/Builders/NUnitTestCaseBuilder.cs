@@ -22,9 +22,6 @@
 // ***********************************************************************
 
 using System;
-#if NETCF
-using System.Linq;
-#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -133,25 +130,6 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "Method is not public");
 
             IParameterInfo[] parameters;
-#if NETCF
-            if (testMethod.Method.IsGenericMethodDefinition)
-            {
-                if (parms != null && parms.Arguments != null)
-                {
-                    var mi = testMethod.Method.MakeGenericMethodEx(parms.Arguments);
-                    if (mi == null)
-                        return MarkAsNotRunnable(testMethod, "Cannot determine generic types by probing");
-                    testMethod.Method = mi;
-                    parameters = testMethod.Method.GetParameters();
-                }
-                else
-                    parameters = new IParameterInfo[0];
-            }
-            else
-                parameters = testMethod.Method.GetParameters();
-
-            int minArgsNeeded = parameters.Length;
-#else
             parameters = testMethod.Method.GetParameters();
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
@@ -160,7 +138,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (!parameter.IsOptional)
                     minArgsNeeded++;
             }
-#endif
+
             int maxArgsNeeded = parameters.Length;
 
             object[] arglist = null;
@@ -180,11 +158,7 @@ namespace NUnit.Framework.Internal.Builders
                     return false;
             }
 
-#if NETCF
-            ITypeInfo returnType = testMethod.Method.IsGenericMethodDefinition && (parms == null || parms.Arguments == null) ? new TypeWrapper(typeof(void)) : testMethod.Method.ReturnType;
-#else
             ITypeInfo returnType = testMethod.Method.ReturnType;
-#endif
 
 #if NET_4_0 || NET_4_5 || PORTABLE
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))

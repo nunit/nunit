@@ -23,9 +23,7 @@
 
 using System;
 using NUnit.Framework;
-#if !NETCF
 using System.Security.Principal;
-#endif
 
 namespace NUnit.TestData.TestFixtureTests
 {

@@ -24,7 +24,6 @@
 #if !PORTABLE
 namespace NUnit.Framework.Syntax
 {
-#if !NETCF
     [TestFixture]
     public class BinarySerializableTest : SyntaxTest
     {
@@ -36,7 +35,6 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().BinarySerializable;
         }
     }
-#endif
 
     [TestFixture]
     public class XmlSerializableTest : SyntaxTest
