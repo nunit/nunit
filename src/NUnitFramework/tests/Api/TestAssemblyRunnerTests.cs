@@ -59,8 +59,6 @@ namespace NUnit.Framework.Api
         private int _failCount;
         private int _skipCount;
         private int _inconclusiveCount;
-
-        private static bool REALLY_RUNNING_ON_CF = false;
         
         [SetUp]
         public void CreateRunner()
@@ -105,7 +103,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
         [Test]
@@ -119,7 +117,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load").And.Contains(BAD_FILE));
+                Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
 
 #endregion
@@ -214,7 +212,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
         [Test]
@@ -229,7 +227,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
 #endregion
@@ -293,7 +291,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(_runner.Result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
         [Test]
@@ -310,7 +308,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(_runner.Result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
 #endregion

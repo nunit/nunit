@@ -32,9 +32,6 @@ namespace NUnit
     /// </summary>
     public class Env
     {
-        // Define NewLine to be used for this system
-        // NOTE: Since this is done at compile time for .NET CF,
-        // these binaries are not yet currently portable.
         /// <summary>
         /// The newline sequence in the current environment.
         /// </summary>

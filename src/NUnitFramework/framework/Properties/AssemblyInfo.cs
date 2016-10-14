@@ -40,10 +40,6 @@ using System.Security;
 [assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
 #elif NET_2_0
 [assembly: AssemblyTitle("NUnit Framework .NET 2.0")]
-#elif SL_5_0
-[assembly: AssemblyTitle("NUnit Framework Silverlight 5.0")]
-#elif NETCF_3_5
-[assembly: AssemblyTitle("NUnit Framework CF 3.5")]
 #elif PORTABLE
 [assembly: AssemblyTitle("NUnit Framework Portable")]
 #else

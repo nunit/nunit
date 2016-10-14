@@ -33,9 +33,7 @@ namespace NUnit.Framework.Internal
         static RuntimeType currentRuntime =
             Type.GetType("Mono.Runtime", false) != null
                 ? RuntimeType.Mono
-                : Environment.OSVersion.Platform == PlatformID.WinCE
-                    ? RuntimeType.NetCF
-                    : RuntimeType.Net;
+                : RuntimeType.Net;
 
         [Test]
         public void CanGetCurrentFramework()
@@ -241,8 +239,6 @@ namespace NUnit.Framework.Internal
             new FrameworkData(RuntimeType.Net, new Version(3,5), new Version(2,0,50727), "net-3.5", "Net 3.5"),
             new FrameworkData(RuntimeType.Net, new Version(4,0), new Version(4,0,30319), "net-4.0", "Net 4.0"),
             new FrameworkData(RuntimeType.Net, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "net", "Net"),
-            new FrameworkData(RuntimeType.NetCF, new Version(3,5), new Version(3,5,7283), "netcf-3.5", "NetCF 3.5"),
-            new FrameworkData(RuntimeType.NetCF, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "netcf", "NetCF"),
             new FrameworkData(RuntimeType.Mono, new Version(1,0), new Version(1,1,4322), "mono-1.0", "Mono 1.0"),
             new FrameworkData(RuntimeType.Mono, new Version(2,0), new Version(2,0,50727), "mono-2.0", "Mono 2.0"),
             // new FrameworkData(RuntimeType.Mono, new Version(2,0,50727), new Version(2,0,50727), "mono-2.0.50727", "Mono 2.0.50727"),

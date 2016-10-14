@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF_2_0
 using System;
 
 namespace NUnit.Framework.Constraints
@@ -55,4 +54,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-#endif

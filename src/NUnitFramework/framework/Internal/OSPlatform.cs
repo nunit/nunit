@@ -82,12 +82,12 @@ namespace NUnit.Framework.Internal
         public static readonly PlatformID UnixPlatformID_Mono = (PlatformID)128;
 
         /// <summary>
-        /// Platform ID for XBox as defined by .NET and Mono, but not CF
+        /// Platform ID for XBox as defined by .NET and Mono
         /// </summary>
         public static readonly PlatformID XBoxPlatformID = (PlatformID)5;
 
         /// <summary>
-        /// Platform ID for MacOSX as defined by .NET and Mono, but not CF
+        /// Platform ID for MacOSX as defined by .NET and Mono
         /// </summary>
         public static readonly PlatformID MacOSXPlatformID = (PlatformID)6;
 
