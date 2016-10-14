@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(expectedMessage, result.Message);
         }
 
-#if NET_4_0 || NET_4_5 || SILVERLIGHT || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE
         [Test]
         public void FailRecordsInnerExceptionsAsPartOfAggregateException()
         {

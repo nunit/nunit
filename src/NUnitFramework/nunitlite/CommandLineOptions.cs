@@ -40,10 +40,8 @@ namespace NUnit.Common
     public class CommandLineOptions : OptionSet
     {
         private static readonly string DEFAULT_WORK_DIRECTORY =
-#if NETCF || PORTABLE
+#if PORTABLE
             @"\My Documents";
-#elif SILVERLIGHT
-            Environment.GetFolderPath(Environment.SpecialFolder.Personal);   
 #else
             Environment.CurrentDirectory;
 #endif

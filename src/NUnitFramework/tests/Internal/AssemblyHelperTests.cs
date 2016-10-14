@@ -29,13 +29,7 @@ namespace NUnit.Framework.Internal.Tests
     [TestFixture]
     public class AssemblyHelperTests
     {
-#if NETCF
-        private static readonly string THIS_ASSEMBLY_PATH = "nunit.framework.tests.exe";
-#elif SILVERLIGHT
-        private static readonly string THIS_ASSEMBLY_PATH = "nunit.framework.tests";
-#else
         private static readonly string THIS_ASSEMBLY_PATH = "nunit.framework.tests.dll";
-#endif
         private static readonly string THIS_ASSEMBLY_NAME = "nunit.framework.tests";
 
         [Test]
@@ -51,12 +45,9 @@ namespace NUnit.Framework.Internal.Tests
             string path = AssemblyHelper.GetAssemblyPath(this.GetType().Assembly);
             Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
 
-#if !NETCF && !SILVERLIGHT
             Assert.That(File.Exists(path));
-#endif
         }
 
-#if !NETCF && !SILVERLIGHT
         // The following tests are only useful to the extent that the test cases
         // match what will actually be provided to the method in production.
         // As currently used, NUnit's codebase can only use the file: schema,
@@ -89,8 +80,6 @@ namespace NUnit.Framework.Internal.Tests
             string localPath = AssemblyHelper.GetAssemblyPathFromCodeBase(uri);
             Assert.That(localPath, Is.SamePath(expectedPath));
         }
-#endif
-
     }
 }
 #endif

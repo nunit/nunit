@@ -44,7 +44,7 @@ namespace NUnit.Framework.Api
         private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
 
-#if SILVERLIGHT || PORTABLE
+#if PORTABLE
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #endif
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
-#if SILVERLIGHT || PORTABLE
+#if PORTABLE
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_NAME));
 #else
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
@@ -192,7 +192,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
-#if !NETCF && !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
 #endif
 
@@ -433,8 +433,6 @@ namespace NUnit.Framework.Api
             return _runner.Load(
                 typeof(MockAssembly).GetTypeInfo().Assembly, 
                 EMPTY_SETTINGS);
-#elif SILVERLIGHT
-            return _runner.Load(MOCK_ASSEMBLY_NAME, EMPTY_SETTINGS);
 #else
             return _runner.Load(
                 Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE), 
@@ -446,8 +444,6 @@ namespace NUnit.Framework.Api
         {
 #if PORTABLE
             return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly, EMPTY_SETTINGS);
-#elif SILVERLIGHT
-            return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly.FullName, EMPTY_SETTINGS);
 #else
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);
 #endif

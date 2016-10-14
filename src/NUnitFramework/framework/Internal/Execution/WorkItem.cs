@@ -75,7 +75,7 @@ namespace NUnit.Framework.Internal.Execution
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
             Actions = new List<ITestAction>();
-#if !PORTABLE && !SILVERLIGHT && !NETCF
+#if !PORTABLE
             TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
                 ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
                 : ApartmentState.Unknown;
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestResult Result { get; protected set; }
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
@@ -251,11 +251,9 @@ namespace NUnit.Framework.Internal.Execution
                 ownThreadReason |= OwnThreadReason.RequiresThread;
             if (timeout > 0 && Test is TestMethod)
                 ownThreadReason |= OwnThreadReason.Timeout;
-#if !SILVERLIGHT && !NETCF
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             if (CurrentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
                 ownThreadReason |= OwnThreadReason.DifferentApartment;
-#endif
 #endif
 
             if (ownThreadReason == OwnThreadReason.NotNeeded)
@@ -270,9 +268,7 @@ namespace NUnit.Framework.Internal.Execution
             else
             {
                 log.Debug("Running test on own thread. " + ownThreadReason);
-#if SILVERLIGHT || NETCF
-                RunTestOnOwnThread(timeout);
-#elif !PORTABLE
+#if !PORTABLE
                 var apartment = (ownThreadReason | OwnThreadReason.DifferentApartment) != 0
                     ? TargetApartment
                     : CurrentApartment;
@@ -281,17 +277,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#if SILVERLIGHT || NETCF
-        private Thread thread;
-
-        private void RunTestOnOwnThread(int timeout)
-        {
-            thread = new Thread(RunTest);
-            RunThread(timeout);
-        }
-#endif
-
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
         private Thread thread;
 
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)

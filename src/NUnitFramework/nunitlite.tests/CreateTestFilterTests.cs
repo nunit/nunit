@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;

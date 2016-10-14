@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
 using System;
 using System.Reflection;
 using System.Globalization;
@@ -54,9 +53,7 @@ namespace NUnitLite.Tests
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
 #endif
-#if !SILVERLIGHT && !NETCF
         [TestCase("TeamCity", "teamcity")]
-#endif
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
             Console.WriteLine("Testing " + propertyName);
@@ -466,7 +463,6 @@ namespace NUnitLite.Tests
 
 #endif
 
-#if !SILVERLIGHT && !NETCF
         [TestCase(true, null, true)]
         [TestCase(false, null, false)]
         [TestCase(true, false, true)]
@@ -498,7 +494,6 @@ namespace NUnitLite.Tests
             // Then
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
         }
-#endif
 
         #endregion
 
@@ -589,4 +584,3 @@ namespace NUnitLite.Tests
         }
     }
 }
-#endif

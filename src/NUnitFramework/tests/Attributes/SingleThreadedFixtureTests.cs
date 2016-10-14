@@ -46,7 +46,6 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeout>("Timeout");
         }
 
-#if !SILVERLIGHT
         [Test]
         public void TestWithRequiresThreadIsInvalid()
         {
@@ -59,7 +58,6 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutAndRequiresThread>("RequiresThread", "Timeout");
         }
 
-#if !NETCF
         [Test]
         public void TestWithDifferentApartmentIsInvalid()
         {
@@ -88,8 +86,6 @@ namespace NUnit.Framework.Attributes
         {
             CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutRequiresThreadAndDifferentApartment>("Timeout", "RequiresThread", "DifferentApartment");
         }
-#endif
-#endif
 
         private void CheckTestIsInvalid<TFixture>(params string[] reasons)
         {
@@ -102,7 +98,6 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if !SILVERLIGHT && !NETCF
     [SingleThreaded, Apartment(ApartmentState.STA)]
     public class SingleThreadedFixtureRunInSTA : ThreadingTests
     {
@@ -120,6 +115,5 @@ namespace NUnit.Framework.Attributes
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
         }
     }
-#endif
 }
 #endif

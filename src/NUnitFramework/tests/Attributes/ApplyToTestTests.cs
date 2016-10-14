@@ -413,7 +413,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
 
         #region RequiresMTAAttribute
 
@@ -461,7 +461,7 @@ namespace NUnit.Framework.Attributes
 
         #region RequiresThreadAttribute
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -478,7 +478,7 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {

@@ -57,7 +57,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
         }
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
         }

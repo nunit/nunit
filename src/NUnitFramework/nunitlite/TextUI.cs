@@ -53,7 +53,7 @@ namespace NUnitLite
             : this(writer, reader, new NUnitLiteOptions()) { }
 
         public TextUI(ExtendedTextWriter writer)
-#if SILVERLIGHT || PORTABLE
+#if PORTABLE
             : this(writer, null, new NUnitLiteOptions()) { }
 #else
             : this(writer, Console.In, new NUnitLiteOptions()) { }
@@ -244,10 +244,8 @@ namespace NUnitLite
 
             var labels = "ON";
 
-#if !SILVERLIGHT
             if (_options.DisplayTestLabels != null)
                 labels = _options.DisplayTestLabels.ToUpperInvariant();
-#endif
 
             if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
             {
@@ -277,10 +275,8 @@ namespace NUnitLite
         {
             var labels = "ON";
 
-#if !SILVERLIGHT
             if (_options.DisplayTestLabels != null)
                 labels = _options.DisplayTestLabels.ToUpperInvariant();
-#endif
 
             if (labels == "ON" || labels == "All")
                 if (output.TestName != null)
@@ -380,13 +376,11 @@ namespace NUnitLite
             DisplayErrorsAndFailures(result);
             Writer.WriteLine();
 
-#if !SILVERLIGHT
             if (_options.StopOnError)
             {
                 Writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
                 Writer.WriteLine();
             }
-#endif
         }
 
         #endregion

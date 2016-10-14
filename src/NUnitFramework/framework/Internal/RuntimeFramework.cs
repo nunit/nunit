@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal
     /// RuntimeFramework represents a particular version
     /// of a common language runtime implementation.
     /// </summary>
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
     [Serializable]
 #endif
     public sealed class RuntimeFramework
@@ -77,11 +77,6 @@ namespace NUnit.Framework.Internal
 
         private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
         {
-#if SILVERLIGHT
-            var currentFramework = new RuntimeFramework(
-                RuntimeType.Silverlight,
-                new Version(Environment.Version.Major, Environment.Version.Minor));
-#else
             Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
             Type monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch");
             bool isMonoTouch = monoTouchType != null;
@@ -152,7 +147,6 @@ namespace NUnit.Framework.Internal
                 if (getDisplayNameMethod != null)
                     currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
             }
-#endif
             return currentFramework;
         });
 

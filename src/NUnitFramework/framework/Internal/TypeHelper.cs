@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if NETCF || PORTABLE
+#if PORTABLE
 using System.Linq;
 #endif
 using System.Reflection;
@@ -353,18 +353,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static Array GetEnumValues(Type enumType)
         {
-#if NETCF || SILVERLIGHT
-            FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
-
-            Array enumValues = Array.CreateInstance(enumType, fields.Length);
-
-            for (int index = 0; index < fields.Length; index++)
-                enumValues.SetValue(fields[index].GetValue(enumType), index);
-
-            return enumValues;
-#else
             return Enum.GetValues(enumType);
-#endif
         }
 
         /// <summary>
@@ -376,18 +365,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static string[] GetEnumNames(Type enumType)
         {
-#if NETCF || SILVERLIGHT
-            FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
-
-            string[] names = new string[fields.Length];
-
-            for (int index = 0; index < fields.Length; index++)
-                names[index] =  fields[index].Name;
-
-            return names;
-#else
             return Enum.GetNames(enumType);
-#endif
         }
     }
 }

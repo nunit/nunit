@@ -79,10 +79,6 @@ namespace NUnitLite
 
         private TextUI _textUI;
 
-#if SILVERLIGHT
-        private List<ITestResult> _results = new List<ITestResult>();
-#endif
-
         #region Constructors
 
         //// <summary>
@@ -111,7 +107,7 @@ namespace NUnitLite
 
         #region Public Methods
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         public int Execute(string[] args)
         {
             var options = new NUnitLiteOptions(args);
@@ -174,18 +170,13 @@ namespace NUnitLite
 
             try
             {
-#if !SILVERLIGHT
 #if !PORTABLE
                 if (!Directory.Exists(_options.WorkDirectory))
                     Directory.CreateDirectory(_options.WorkDirectory);
 #endif
 
-#if !NETCF
                 if (_options.TeamCity)
                     _teamCity = new TeamCityEventListener(_textUI.Writer);
-#endif
-#endif
-
 
                 if (_options.ShowVersion || !_options.NoHeader)
                     _textUI.DisplayHeader();
@@ -251,13 +242,11 @@ namespace NUnitLite
                 _textUI.DisplayError(ex.ToString());
                 return UNEXPECTED_ERROR;
             }
-#if !SILVERLIGHT
             finally
             {
                 if (_options.WaitBeforeExit)
                     _textUI.WaitForUser("Press Enter key to continue . . .");
             }
-#endif
         }
 
         #endregion
@@ -269,16 +258,10 @@ namespace NUnitLite
             var startTime = DateTime.UtcNow;
 
             ITestResult result = _runner.Run(this, filter);
-
-#if SILVERLIGHT
-            // Silverlight can't display results while the test is running
-            // so we do it afterwards.
-            foreach(ITestResult testResult in _results)
-                _textUI.TestFinished(testResult);
-#endif
+            
             ReportResults(result);
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             if (_options.ResultOutputSpecifications.Count > 0)
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
@@ -315,7 +298,7 @@ namespace NUnitLite
 
         private int ExploreTests()
         {
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             ITest testNode = _runner.LoadedTest;
 
             var specs = _options.ExploreOutputSpecifications;
@@ -397,7 +380,7 @@ namespace NUnitLite
             return filter;
         }
 
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
         private void InitializeInternalTrace(NUnitLiteOptions _options)
         {
             var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel ?? "Off", true);
@@ -465,16 +448,7 @@ namespace NUnitLite
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 
-#if !SILVERLIGHT
             _textUI.TestFinished(result);
-#else
-            // For Silverlight, we can't display the results
-            // until the run is completed. We don't save anything
-            // unless there is associated output, since that's 
-            // the only time we display anything in Silverlight.
-            if (result.Output.Length > 0)
-                _results.Add(result);
-#endif
         }
 
         /// <summary>

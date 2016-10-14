@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
         TestExecutionContext fixtureContext;
         TestExecutionContext setupContext;
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         string originalDirectory;
         IPrincipal originalPrincipal;
 #endif
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
             originalUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             originalDirectory = Environment.CurrentDirectory;
             originalPrincipal = Thread.CurrentPrincipal;
 #endif
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Environment.CurrentDirectory = originalDirectory;
             Thread.CurrentPrincipal = originalPrincipal;
 #endif
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
         [Test]
         public void TestHasWorkerIdWhenParallel()
         {
@@ -312,7 +312,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentPrincipal
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [Test]
         public void FixtureSetUpContextReflectsCurrentPrincipal()
         {
@@ -442,7 +442,7 @@ namespace NUnit.Framework.Internal
 
         #region Cross-domain Tests
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
         [Test]
         public void CanCreateObjectInAppDomain()
         {
@@ -467,7 +467,7 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 
-#if !PORTABLE && !SILVERLIGHT && !NETCF
+#if !PORTABLE
     [TestFixture]
     public class TextExecutionContextInAppDomain
     {

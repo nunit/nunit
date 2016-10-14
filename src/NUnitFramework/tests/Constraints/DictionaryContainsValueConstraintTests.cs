@@ -61,7 +61,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
         }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [Test]
         public void WorksWithNonGenericDictionary()
         {

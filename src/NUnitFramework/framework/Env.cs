@@ -38,16 +38,12 @@ namespace NUnit
         /// <summary>
         /// The newline sequence in the current environment.
         /// </summary>
-#if PocketPC || WindowsCE || NETCF
-        public static readonly string NewLine = "\r\n";
-#else
         public static readonly string NewLine = Environment.NewLine;
-#endif
 
         /// <summary>
         /// Path to the 'My Documents' folder
         /// </summary>
-#if PocketPC || WindowsCE || NETCF || PORTABLE
+#if PORTABLE
         public static string DocumentFolder = @"\My Documents";
 #else
         public static string DocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -55,7 +51,7 @@ namespace NUnit
         /// <summary>
         /// Directory used for file output if not specified on commandline.
         /// </summary>
-#if SILVERLIGHT || PocketPC || WindowsCE || NETCF || PORTABLE
+#if PORTABLE
         public static readonly string DefaultWorkDirectory = DocumentFolder;
 #else
         public static readonly string DefaultWorkDirectory = Environment.CurrentDirectory;

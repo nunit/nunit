@@ -408,7 +408,7 @@ namespace NUnit.Framework.Constraints
         // null array reference. Others could be added in the future.
         private void AdjustArgumentIfNeeded<T>(ref T arg)
         {
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             if (arg != null)
             {
                 Type argType = arg.GetType();
