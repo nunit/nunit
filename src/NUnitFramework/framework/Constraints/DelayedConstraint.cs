@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
     {
         // TODO: Needs error message tests
 
-        private readonly int delayInMilliseconds;
+        private int delayInMilliseconds;
         private readonly int pollingInterval;
 
         ///<summary>
@@ -72,6 +72,18 @@ namespace NUnit.Framework.Constraints
         public override string Description
         {
             get { return string.Format("{0} after {1} millisecond delay", BaseConstraint.Description, delayInMilliseconds); }
+        }
+
+        /// <summary>
+        /// Converts delayInMilliseconds input from minutes to milliseconds
+        /// </summary>
+        public DelayedConstraint Minutes
+        {
+            get
+            {
+                delayInMilliseconds = (int)TimeSpan.FromMinutes(delayInMilliseconds).TotalMilliseconds;
+                return this;
+            }
         }
 
         /// <summary>

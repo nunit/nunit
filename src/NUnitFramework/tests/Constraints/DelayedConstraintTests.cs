@@ -103,6 +103,13 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void SimpleMinutesTest()
+        {
+            SetValuesAfterDelay(60000);
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 1).Minutes);
+        }
+
+        [Test]
         public void SimpleTestUsingBoolean()
         {
             SetValuesAfterDelay(DELAY);
