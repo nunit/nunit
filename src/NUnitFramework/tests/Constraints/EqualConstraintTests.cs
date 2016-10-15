@@ -629,5 +629,110 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+
+        #region TypeEqualityMessages
+
+        private static IEnumerable DiffentTypeTestData
+        {
+            get
+            {
+                var sameIsZero = Is.Zero;
+                var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
+                var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
+                yield return new object[] { 0, new System.IntPtr(0) };
+                yield return new object[] { new System.IntPtr(0), sameIsZero };
+                yield return new object[] { '0', "0" };
+                yield return new object[] { clipTestA, clipTestB };
+            }
+        }
+
+        //private static Delegate int retZero;
+        private static IEnumerable DiffentTypeSameValueTestData
+        {
+            get
+            {
+                var ptr = new System.IntPtr(0);
+                var ExampleTestA = new ExampleTest.classA(0);
+                var ExampleTestB = new ExampleTest.classB(0);
+                yield return new object[] { 0, ptr };
+                yield return new object[] { ExampleTestA, ExampleTestB };
+            }
+        }
+        public void SameValueDifferentTypeExactMessageMatch(object expected, object actual)
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(0, new System.IntPtr(0)));
+            Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)\r\n  But was:  0 (IntPtr)\r\n");
+        }
+
+        [Test]
+        public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Is.Zero, Is.Zero));
+            Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>\r\n  But was:  <<equal 0>>\r\n");
+        }
+
+        [Test, TestCaseSource("DiffentTypeSameValueTestData")]
+        public void SameValueDifferentTypeRegexMatch(object expected, object actual)
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));
+            Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*<?.+(?:\..*)*>?\s*\(\w+(?:\.\w*)*\)\r\n\s*But\s*was\s*:\s*<?.+(?:\.\w*)*>?\s*\(\w+(?:\.\w*)*\)\r\n\s*"));
+        }
+
+        [Test, TestCaseSource("DiffentTypeTestData")]
+        public void DifferentTypeRegexMatch(object expected, object actual)
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));
+            Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*<?.+(?:\..*)*>?\s*\(\w+(?:\.\w*)*\)\r\n\s*But\s*was\s*:\s*<?.+(?:\.\w*)*>?\s*\(\w+(?:\.\w*)*\)\r\n\s*"));
+        }
     }
+    namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
+        class ReallyLongClassNameShouldBeHere { }
+
+    }
+    namespace ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
+    {
+        class ReallyLongClassNameShouldBeHere { }
+
+    }
+    namespace ExampleTest {
+        class baseTest {
+            readonly int _value;
+            public baseTest()
+            {
+                _value = 0;
+            }
+            public baseTest(int value) {
+                _value = value;
+            }
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                return _value.Equals(((baseTest)obj)._value);    
+            }
+
+            public override string ToString()
+            {
+                return _value.ToString();
+            }
+
+            public override int GetHashCode()
+            {
+                return _value.GetHashCode();
+            }
+        }
+
+        class classA : baseTest {
+            public classA(int x) : base(x) { }
+
+        }
+
+        class classB : baseTest
+        {
+             public classB(int x) : base(x) { }
+        }
+    }
+    #endregion
 }

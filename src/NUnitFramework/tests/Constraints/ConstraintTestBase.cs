@@ -70,8 +70,8 @@ namespace NUnit.Framework.Constraints
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
             Assert.That( writer.ToString(), Is.EqualTo(
-                TextMessageWriter.Pfx_Expected + expectedDescription + NL +
-                TextMessageWriter.Pfx_Actual + message + NL ));
+                TextMessageWriter.Pfx_Expected + expectedDescription+ writer.ExpectedType + NL +
+                TextMessageWriter.Pfx_Actual + message+ writer.ActualType + NL ));
         }
     }
 }
