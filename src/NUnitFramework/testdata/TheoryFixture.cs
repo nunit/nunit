@@ -64,7 +64,17 @@ namespace NUnit.TestData.TheoryFixture
         }
 
         [Theory]
+        public void TestWithNullableBooleanArguments(bool? a, bool? b)
+        {
+        }
+
+        [Theory]
         public void TestWithEnumAsArgument(System.AttributeTargets targets)
+        {
+        }
+
+        [Theory]
+        public void TestWithNullableEnumAsArgument(System.AttributeTargets? targets)
         {
         }
 
