@@ -132,6 +132,13 @@ namespace NUnit.Framework.Internal.Builders
 
             if (datapoints.Count == 0)
             {
+                var underlyingParameterType = Nullable.GetUnderlyingType(parameterType);
+                if (underlyingParameterType != null)
+                {
+                    datapoints.Add(null);
+                    parameterType = underlyingParameterType;
+                }
+
                 if (parameterType == typeof(bool))
                 {
                     datapoints.Add(true);
