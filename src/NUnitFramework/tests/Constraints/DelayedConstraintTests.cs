@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         {
             theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
             expectedDescription = "True after 500 millisecond delay";
-            stringRepresentation = "<after 500 <equal True>>";
+            stringRepresentation = "<after 500 millisecond <equal True>>";
 
             boolValue = false;
             list = new List<int>();
@@ -103,10 +103,16 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SimpleMinutesTest()
+        public void DifferentDelayTests()
         {
             SetValuesAfterDelay(60000);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 1).Minutes);
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 1).Minutes.Minutes);
+
+            SetValuesAfterDelay(5000);
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 5).Seconds);
+
+            SetValuesAfterDelay(DELAY);
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER).Seconds.MilliSeconds);
         }
 
         [Test]
@@ -276,9 +282,9 @@ namespace NUnit.Framework.Constraints
             statusString = "Finished";
         }
 
-        private void SetValuesAfterDelay(int delay)
+        private void SetValuesAfterDelay(int delayInMilliSeconds)
         {
-            setValuesDelay = delay;
+            setValuesDelay = delayInMilliSeconds;
             Thread thread = new Thread(MethodSetsValues);
             thread.Start();
         }

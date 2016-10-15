@@ -33,7 +33,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 <equal 10>>";
+            parseTree = "<after 1000 millisecond <equal 10>>";
             staticSyntax = Is.EqualTo(10).After(1000);
             builderSyntax = Builder().EqualTo(10).After(1000);
         }
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 <property X <equal 10>>>";
+            parseTree = "<after 1000 millisecond <property X <equal 10>>>";
             staticSyntax = Has.Property("X").EqualTo(10).After(1000);
             builderSyntax = Builder().Property("X").EqualTo(10).After(1000);
         }
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 <and <greaterthan 0> <lessthan 10>>>";
+            parseTree = "<after 1000 millisecond <and <greaterthan 0> <lessthan 10>>>";
             staticSyntax = Is.GreaterThan(0).And.LessThan(10).After(1000);
             builderSyntax = Builder().GreaterThan(0).And.LessThan(10).After(1000);
         }
