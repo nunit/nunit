@@ -48,6 +48,12 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void UnsupportedNullableTypeArgumentWithNoDatapointsAreNotRunnable()
+        {
+            TestAssert.IsNotRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+        }
+
+        [Test]
         public void TheoryWithDatapointsIsRunnable()
         {
             Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TheoryWithArgumentsAndDatapoints");

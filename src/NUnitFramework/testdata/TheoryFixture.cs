@@ -48,6 +48,11 @@ namespace NUnit.TestData.TheoryFixture
         }
 
         [Theory]
+        public void TestWithUnsupportedNullableTypeArgumentWithNoDataPoints(decimal? x)
+        {
+        }
+
+        [Theory]
         public void TheoryWithArgumentsAndDatapoints(int x, int y)
         {
         }
