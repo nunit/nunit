@@ -54,10 +54,14 @@ namespace NUnit.Framework.Internal
         /// Length of a message prefix
         /// </summary>
         public static readonly int PrefixLength = Pfx_Expected.Length;
-        
+
         #endregion
 
+        #region Instance Fields
         private int maxLineLength = DEFAULT_LINE_LENGTH;
+        private bool diffTypes = false;
+        private string _expectedType, _actualType;
+        #endregion
 
         #region Constructors
         /// <summary>
@@ -86,6 +90,21 @@ namespace NUnit.Framework.Internal
         {
             get { return maxLineLength; }
             set { maxLineLength = value; }
+        }
+        /// <summary>
+        /// Gets the expected type for this writer
+        /// </summary>
+        public string ExpectedType
+        {
+            get { return _expectedType; }
+        }
+
+        /// <summary>
+        ///  Gets the actual type for this writer
+        /// </summary>
+        public string ActualType
+        {
+            get { return _actualType; }
         }
         #endregion
 
@@ -124,6 +143,30 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the unique type name between expected and actual.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value causing the failure</param>
+        /// <param name="expectedType">Output of the unique type name for expected</param>
+        /// <param name="actualType">Output of the unique type name for actual</param>
+        private void ResolveTypeNameDifference(object expected, object actual, out string expectedType, out string actualType) {
+            string[] expectedOriginalType = expected.GetType().ToString().Split('.');
+            string[] actualOriginalType = actual.GetType().ToString().Split('.');
+            int actualStart = 0, expectStart = 0;
+            for (int expectLen = expectedOriginalType.Length - 1,actualLen = actualOriginalType.Length - 1;
+                expectLen >= 0 && actualLen >= 0;
+                expectLen--, actualLen--) {
+                if (expectedOriginalType[expectLen] != actualOriginalType[actualLen]) {
+                    actualStart = actualLen;
+                    expectStart = expectLen;
+                    break;
+                }
+            }
+            expectedType = " ("+String.Join(".", expectedOriginalType, expectStart, expectedOriginalType.Length- expectStart)+")";
+            actualType = " (" + String.Join(".", actualOriginalType, actualStart, actualOriginalType.Length- actualStart) + ")";
+        }
+
+        /// <summary>
         /// Display Expected and Actual lines for given _values. This
         /// method may be called by constraints that need more control over
         /// the display of actual and expected _values than is provided
@@ -133,6 +176,11 @@ namespace NUnit.Framework.Internal
         /// <param name="actual">The actual value causing the failure</param>
         public override void DisplayDifferences(object expected, object actual)
         {
+            if (expected != null && actual != null && expected.GetType() != actual.GetType())
+            {
+                diffTypes = true;
+                ResolveTypeNameDifference(expected, actual, out _expectedType, out _actualType);
+            }
             WriteExpectedLine(expected);
             WriteActualLine(actual);
         }
@@ -146,8 +194,13 @@ namespace NUnit.Framework.Internal
         /// <param name="tolerance">The tolerance within which the test was made</param>
         public override void DisplayDifferences(object expected, object actual, Tolerance tolerance)
         {
+            if (expected!=null && actual !=null && expected.GetType() != actual.GetType())
+            {
+                diffTypes = true;
+                ResolveTypeNameDifference(expected, actual, out _expectedType, out _actualType);
+            }
             WriteExpectedLine(expected, tolerance);
-            WriteActualLine(actual);
+            WriteActualLine(actual);    
         }
 
         /// <summary>
@@ -252,7 +305,9 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
-
+            if (diffTypes) {
+                Write(_expectedType);
+            }
             if (tolerance != null && !tolerance.IsUnsetOrDefault)
             {
                 Write(" +/- ");
@@ -284,6 +339,10 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Actual);
             WriteActualValue(actual);
+            if (diffTypes)
+            {
+                Write(_actualType);
+            }
             WriteLine();
         }
 
