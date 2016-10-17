@@ -124,17 +124,26 @@ namespace NUnit.Common
                     continue;
                 }
 
-#if NETCF
                 string contents;
-                using (var sr = new StreamReader (filename))
+                try
                     {
-                    contents = sr.ReadToEnd ();
-                    }
+#if NETCF
+                    using (var sr = new StreamReader (filename))
+                        {
+                        contents = sr.ReadToEnd ();
+                        }
 #else
-                var contents = File.ReadAllText(filename);
+                    contents = File.ReadAllText (filename);
 #endif
+                    }
+                catch (IOException ex)
+                    {
+                    ErrorMessages.Add("Error reading \"" + filename + "\": " + ex.Message);
+                    continue;
+                    }
+
                 var newArgs = GetArgs(contents.Replace("\r", "").Replace('\n', delim));
-                listArgs.AddRange(PreParse(newArgs));
+                    listArgs.AddRange(PreParse(newArgs));
             }
 
             --_nesting;
