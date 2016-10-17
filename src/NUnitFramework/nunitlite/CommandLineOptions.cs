@@ -149,7 +149,7 @@ namespace NUnit.Common
             --_nesting;
             return listArgs;
 #endif
-            }
+        }
 
 #if !PORTABLE
         internal static IEnumerable<string> GetArgs(string commandLine)
