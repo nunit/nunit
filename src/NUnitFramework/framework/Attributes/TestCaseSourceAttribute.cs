@@ -246,7 +246,7 @@ namespace NUnit.Framework
                             foreach (string cat in this.Category.Split(new char[] { ',' }))
                                 parms.Properties.Add(PropertyNames.Category, cat);
 
-                     //   TestCaseAttribute.SpecialArgumentsHandling(parms, method.GetParameters());
+                        TestCaseAttribute.SpecialArgumentsHandling(parms, method.GetParameters());
 
                         data.Add(parms);
                     }
