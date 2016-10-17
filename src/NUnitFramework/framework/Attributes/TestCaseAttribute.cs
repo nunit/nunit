@@ -270,70 +270,11 @@ namespace NUnit.Framework
 
                 IParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
-                int argsProvided = Arguments.Length;
 
                 parms = new TestCaseParameters(this);
 
-                // Special handling for params arguments
-                if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
-                {
-                    IParameterInfo lastParameter = parameters[argsNeeded - 1];
-                    Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType();
-
-                    if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
-                    {
-                        if (argsProvided == argsNeeded)
-                        {
-                            Type lastArgumentType = parms.Arguments[argsProvided - 1].GetType();
-                            if (!lastParameterType.GetTypeInfo().IsAssignableFrom(lastArgumentType.GetTypeInfo()))
-                            {
-                                Array array = Array.CreateInstance(elementType, 1);
-                                array.SetValue(parms.Arguments[argsProvided - 1], 0);
-                                parms.Arguments[argsProvided - 1] = array;
-                            }
-                        }
-                        else
-                        {
-                            object[] newArglist = new object[argsNeeded];
-                            for (int i = 0; i < argsNeeded && i < argsProvided; i++)
-                                newArglist[i] = parms.Arguments[i];
-
-                            int length = argsProvided - argsNeeded + 1;
-                            Array array = Array.CreateInstance(elementType, length);
-                            for (int i = 0; i < length; i++)
-                                array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
-
-                            newArglist[argsNeeded - 1] = array;
-                            parms.Arguments = newArglist;
-                            argsProvided = argsNeeded;
-                        }
-                    }
-                }
-
-#if !NETCF
-                //Special handling for optional parameters
-                if (parms.Arguments.Length < argsNeeded)
-                {
-                    object[] newArgList = new object[parameters.Length];
-                    Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
-
-                    //Fill with Type.Missing for remaining required parameters where optional
-                    for (var i = parms.Arguments.Length; i < parameters.Length; i++)
-                    {
-                        if (parameters[i].IsOptional)
-                            newArgList[i] = Type.Missing;
-                        else
-                        {
-                            if (i < parms.Arguments.Length)
-                                newArgList[i] = parms.Arguments[i];
-                            else
-                                throw new TargetParameterCountException("Incorrect number of parameters specified for TestCase");
-                        }
-                    }
-                    parms.Arguments = newArgList;
-                }
-#endif
+                SpecialArgumentsHandling(parms, parameters);
+                int argsProvided = parms.Arguments.Length;
 
                 //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 //    parms.Arguments = new object[]{parms.Arguments};
@@ -357,6 +298,79 @@ namespace NUnit.Framework
             }
 
             return parms;
+        }
+
+        /// <summary>
+        /// Special handling for params arguments
+        /// Special handling for optional parameters
+        /// </summary>
+        /// <param name="parms">The parameters obtained</param>
+        /// <param name="parameters">The parameters expected by the test method.</param>
+        public static void SpecialArgumentsHandling(TestCaseParameters parms, IParameterInfo[] parameters)
+        {
+           int argsNeeded = parameters.Length;
+           int argsProvided = parms.Arguments.Length;
+
+            // Special handling for params arguments
+            if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
+            {
+                IParameterInfo lastParameter = parameters[argsNeeded - 1];
+                Type lastParameterType = lastParameter.ParameterType;
+                Type elementType = lastParameterType.GetElementType();
+
+                if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
+                {
+                    if (argsProvided == argsNeeded)
+                    {
+                        Type lastArgumentType = parms.Arguments[argsProvided - 1].GetType();
+                        if (!lastParameterType.GetTypeInfo().IsAssignableFrom(lastArgumentType.GetTypeInfo()))
+                        {
+                            Array array = Array.CreateInstance(elementType, 1);
+                            array.SetValue(parms.Arguments[argsProvided - 1], 0);
+                            parms.Arguments[argsProvided - 1] = array;
+                        }
+                    }
+                    else
+                    {
+                        object[] newArglist = new object[argsNeeded];
+                        for (int i = 0; i < argsNeeded && i < argsProvided; i++)
+                            newArglist[i] = parms.Arguments[i];
+
+                        int length = argsProvided - argsNeeded + 1;
+                        Array array = Array.CreateInstance(elementType, length);
+                        for (int i = 0; i < length; i++)
+                            array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
+
+                        newArglist[argsNeeded - 1] = array;
+                        parms.Arguments = newArglist;
+                        argsProvided = argsNeeded;
+                    }
+                }
+            }
+
+#if !NETCF
+            //Special handling for optional parameters
+            if (argsProvided < argsNeeded)
+            {
+                object[] newArgList = new object[parameters.Length];
+                Array.Copy(parms.Arguments, newArgList, argsProvided);
+
+                //Fill with Type.Missing for remaining required parameters where optional
+                for (var i = parms.Arguments.Length; i < parameters.Length; i++)
+                {
+                    if (parameters[i].IsOptional)
+                        newArgList[i] = Type.Missing;
+                    else
+                    {
+                        if (i < parms.Arguments.Length)
+                            newArgList[i] = parms.Arguments[i];
+                        else
+                            throw new TargetParameterCountException("Incorrect number of parameters specified for TestCase");
+                    }
+                }
+                parms.Arguments = newArgList;
+            }
+#endif
         }
 
         /// <summary>

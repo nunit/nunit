@@ -160,16 +160,21 @@ namespace NUnit.Framework
                 {
                     foreach (object item in source)
                     {
+
+                        TestCaseParameters parms = null;
+
                         // First handle two easy cases:
                         // 1. Source is null. This is really an error but if we
                         //    throw an exception we simply get an invalid fixture
                         //    without good info as to what caused it. Passing a
                         //    single null argument will cause an error to be 
                         //    reported at the test level, in most cases.
+                        if (item == null)
+                            parms = new TestCaseParameters(new object[] { null });
+
                         // 2. User provided an ITestCaseData and we just use it.
-                        ITestCaseData parms = item == null
-                            ? new TestCaseParameters(new object[] { null })
-                            : item as ITestCaseData;
+                        if (item is ITestCaseData)
+                            parms = new TestCaseParameters(item as ITestCaseData);
 
                         if (parms == null)
                         {
@@ -240,6 +245,8 @@ namespace NUnit.Framework
                         if (this.Category != null)
                             foreach (string cat in this.Category.Split(new char[] { ',' }))
                                 parms.Properties.Add(PropertyNames.Category, cat);
+
+                     //   TestCaseAttribute.SpecialArgumentsHandling(parms, method.GetParameters());
 
                         data.Add(parms);
                     }
