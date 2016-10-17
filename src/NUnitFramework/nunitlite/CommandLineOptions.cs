@@ -143,7 +143,7 @@ namespace NUnit.Common
                     }
 
                 var newArgs = GetArgs(contents.Replace("\r", "").Replace('\n', delim));
-                    listArgs.AddRange(PreParse(newArgs));
+                listArgs.AddRange(PreParse(newArgs));
             }
 
             --_nesting;
