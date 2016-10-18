@@ -32,6 +32,18 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class CollectionContainsConstraintTests
     {
+        #region TestVariables
+        private static  Dictionary<object, object> dictionaryTest = new Dictionary<object, object> { { "Hello", "World" }, { "Hola", "Mundo" }, { 2, 1 }, { "I", new string[] { "do", "exist" } } };
+
+        private static object[] testValidKVCases = {
+            new TestCaseData(new KeyValuePair<object, object>("Hola", "Mundo")),
+            new TestCaseData(new KeyValuePair<object, object>(2, 1)),
+            new TestCaseData(new KeyValuePair<object, object>("I", new string[] { "do", "exist" }))};
+
+        private static object[] testInvalidKVCases = {
+            new TestCaseData(new KeyValuePair<object, object>("does", new string[] { "not", "exist" }))};
+        #endregion
+
         [Test]
         public void CanTestContentsOfArray()
         {
@@ -49,6 +61,20 @@ namespace NUnit.Framework.Constraints
             list.Add(item);
             list.Add("abc");
             Assert.That(list, new CollectionContainsConstraint(item));
+        }
+
+        [Test, TestCaseSource("testValidKVCases")]
+        public void DictionaryTestValidKeyPair(KeyValuePair<object, object> kvTest)
+        {
+            Assert.That(dictionaryTest, new CollectionContainsConstraint(kvTest));
+            Assert.That(dictionaryTest, Does.Contain(kvTest));
+        }
+        [Test, TestCaseSource("testInvalidKVCases")]
+        public void DictionaryTestInvalidKeyPair(KeyValuePair<object, object> kvTest)
+        {
+            TestDelegate act = () => Assert.That(dictionaryTest, new CollectionContainsConstraint(kvTest));
+            Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
+            Assert.That(dictionaryTest, Does.Not.Contains(kvTest));
         }
 
 #if !SILVERLIGHT && !PORTABLE

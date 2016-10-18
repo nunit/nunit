@@ -132,6 +132,12 @@ namespace NUnit.Framework.Internal.Builders
 
             if (datapoints.Count == 0)
             {
+                var underlyingParameterType = Nullable.GetUnderlyingType(parameterType);
+                if (underlyingParameterType != null)
+                {
+                    parameterType = underlyingParameterType;
+                }
+
                 if (parameterType == typeof(bool))
                 {
                     datapoints.Add(true);
@@ -140,7 +146,14 @@ namespace NUnit.Framework.Internal.Builders
                 else if (parameterType.GetTypeInfo().IsEnum)
                 {
                     foreach (object o in TypeHelper.GetEnumValues(parameterType))
+                    {
                         datapoints.Add(o);
+                    }
+                }
+
+                if (datapoints.Count > 0 && underlyingParameterType != null)
+                {
+                    datapoints.Add(null);
                 }
             }
 
