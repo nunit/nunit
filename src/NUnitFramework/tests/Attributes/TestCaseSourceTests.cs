@@ -414,18 +414,18 @@ namespace NUnit.Framework.Attributes
 
         public static IEnumerable<TestCaseData> GetUrlCases()
         {
-            var yUrl = new Uri("https://www.yahoo.com/news");
-            var mUrl = new Uri("https://www.microsoft.com/linux");
-            var goUrl = new Uri("https://www.google.com/chromium");
-            var readUrl = new Uri("https://www.google.com/reader");
-            var emailUrl = new Uri("https://www.google.com/mail");
-            var docUrl = new Uri("https://www.google.com/doc");
+            var aUrl = new Uri("https://www.aaaa.com/news");
+            var bUrl = new Uri("https://www.bbbb.com/linux");
+            var goUrl = new Uri("https://www.cccc.com/chromium");
+            var readUrl = new Uri("https://www.cccc.com/reader");
+            var emailUrl = new Uri("https://www.cccc.com/mail");
+            var docUrl = new Uri("https://www.cccc.com/doc");
 
             yield return new TestCaseData(false);
-            yield return new TestCaseData(false, yUrl);
-            yield return new TestCaseData(false, yUrl, mUrl, goUrl);
+            yield return new TestCaseData(false, aUrl);
+            yield return new TestCaseData(false, aUrl, bUrl, goUrl);
             yield return new TestCaseData(true, goUrl, readUrl, emailUrl, docUrl);
-            yield return new TestCaseData(false, mUrl, goUrl, yUrl, emailUrl, docUrl);
+            yield return new TestCaseData(false, bUrl, goUrl, aUrl, emailUrl, docUrl);
         }
 
 
