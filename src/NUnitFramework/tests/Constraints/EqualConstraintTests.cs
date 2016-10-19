@@ -631,6 +631,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region TypeEqualityMessages
+        private readonly string NL = NUnit.Env.NewLine;
         private static IEnumerable DiffentTypeSameValueTestData
         {
             get
@@ -649,21 +650,21 @@ namespace NUnit.Framework.Constraints
         public void SameValueDifferentTypeExactMessageMatch()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(0, new System.IntPtr(0)));
-            Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)\r\n  But was:  0 (IntPtr)\r\n");
+            Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL);
         }
 
         [Test]
         public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Is.Zero, Is.Zero));
-            Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>\r\n  But was:  <<equal 0>>\r\n");
+            Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL);
         }
 
         [Test, TestCaseSource("DiffentTypeSameValueTestData")]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));
-            Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
+            Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
         }
     }
     namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
