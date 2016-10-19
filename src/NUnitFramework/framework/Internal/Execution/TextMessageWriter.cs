@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
 
         #region Instance Fields
         private int maxLineLength = DEFAULT_LINE_LENGTH;
-        private bool sameValDiffTypes = false;
+        private bool _sameValDiffTypes = false;
         private string _expectedType, _actualType;
         #endregion
 
@@ -161,13 +161,7 @@ namespace NUnit.Framework.Internal
         /// <param name="actual">The actual value causing the failure</param>
         public override void DisplayDifferences(object expected, object actual)
         {
-            if (expected != null && actual != null && MsgUtils.FormatValue(expected)== MsgUtils.FormatValue(actual) && expected.GetType() != actual.GetType())
-            {
-                sameValDiffTypes = true;
-                ResolveTypeNameDifference(expected, actual, out _expectedType, out _actualType);
-            }
-            WriteExpectedLine(expected);
-            WriteActualLine(actual);
+            DisplayDifferences(expected, actual,null);
         }
 
         /// <summary>
@@ -179,9 +173,9 @@ namespace NUnit.Framework.Internal
         /// <param name="tolerance">The tolerance within which the test was made</param>
         public override void DisplayDifferences(object expected, object actual, Tolerance tolerance)
         {
-            if (expected != null && actual != null && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual) && expected.GetType() != actual.GetType())
+            if (expected != null && actual != null && expected.GetType() != actual.GetType() && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual) )
             {
-                sameValDiffTypes = true;
+                _sameValDiffTypes = true;
                 ResolveTypeNameDifference(expected, actual, out _expectedType, out _actualType);
             }
             WriteExpectedLine(expected, tolerance);
@@ -290,7 +284,7 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
-            if (sameValDiffTypes) {
+            if (_sameValDiffTypes) {
                 Write(_expectedType);
             }
             if (tolerance != null && !tolerance.IsUnsetOrDefault)
@@ -324,7 +318,7 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Actual);
             WriteActualValue(actual);
-            if (sameValDiffTypes)
+            if (_sameValDiffTypes)
             {
                 Write(_actualType);
             }
