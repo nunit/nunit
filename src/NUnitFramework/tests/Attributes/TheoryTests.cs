@@ -48,6 +48,12 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void UnsupportedNullableTypeArgumentWithNoDatapointsAreNotRunnable()
+        {
+            TestAssert.IsNotRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+        }
+
+        [Test]
         public void TheoryWithDatapointsIsRunnable()
         {
             Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TheoryWithArgumentsAndDatapoints");
@@ -61,6 +67,14 @@ namespace NUnit.Framework.Attributes
             Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithBooleanArguments");
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void NullableBooleanArgumentsAreSuppliedAutomatically()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithNullableBooleanArguments");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(9));
         }
 
         [Test]
@@ -81,13 +95,20 @@ namespace NUnit.Framework.Attributes
             Assert.Null(nullObj); // to avoid a warning
         }
 
-
         [Test]
         public void EnumArgumentsAreSuppliedAutomatically()
         {
             Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithEnumAsArgument");
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(16));
+        }
+
+        [Test]
+        public void NullableEnumArgumentsAreSuppliedAutomatically()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithNullableEnumAsArgument");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(17));
         }
 
         [Test]
