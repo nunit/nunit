@@ -83,7 +83,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
-        public abstract void DisplayDifferences(object expected, object actual);
+        /// <param name="clipping">If true, the strings should be clipped to fit the line</param>
+        public abstract void DisplayDifferences(object expected, object actual, bool clipping);
 
         /// <summary>
         /// Display Expected and Actual lines for given _values, including
@@ -110,13 +111,15 @@ namespace NUnit.Framework.Constraints
         /// Writes the text for an actual value.
         /// </summary>
         /// <param name="actual">The actual value.</param>
-        public abstract void WriteActualValue(object actual);
+        /// <param name="clipping">If true, the strings should be clipped to fit the line</param>
+        public abstract void WriteActualValue(object actual, bool clipping);
 
         /// <summary>
         /// Writes the text for a generalized value.
         /// </summary>
         /// <param name="val">The value.</param>
-        public abstract void WriteValue(object val);
+        /// <param name="clipping">If true, the strings should be clipped to fit the line</param>
+        public abstract void WriteValue(object val, bool clipping);
 
         /// <summary>
         /// Writes the text for a collection value,

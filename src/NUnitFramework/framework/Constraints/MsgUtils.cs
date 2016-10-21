@@ -33,8 +33,9 @@ namespace NUnit.Framework.Constraints
     /// Custom value formatter function
     /// </summary>
     /// <param name="val">The value</param>
+	/// <param name="clip">Whether or not to clip values when displaying them</param>
     /// <returns></returns>
-    public delegate string ValueFormatter(object val);
+    public delegate string ValueFormatter(object val, bool clip);
 
     /// <summary>
     /// Custom value formatter factory function
@@ -78,37 +79,37 @@ namespace NUnit.Framework.Constraints
         static MsgUtils()
         {
             // Initialize formatter to default for values of indeterminate type.
-            DefaultValueFormatter = val => string.Format(Fmt_Default, val);
+            DefaultValueFormatter = (val, clip) => string.Format(Fmt_Default, val);
 
-            AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
+            AddFormatter(next => (val, clip) => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val, clip));
 
-            AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
+            AddFormatter(next => (val, clip) => val is DateTime ? FormatDateTime((DateTime)val) : next(val, clip));
 
 #if !NETCF
-			AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset ((DateTimeOffset)val) : next (val));
+			AddFormatter(next => (val, clip) => val is DateTimeOffset ? FormatDateTimeOffset ((DateTimeOffset)val) : next (val, clip));
 #endif
 
-			AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
+			AddFormatter(next => (val, clip) => val is decimal ? FormatDecimal((decimal)val) : next(val, clip));
 
-            AddFormatter(next => val => val is float ? FormatFloat((float)val) : next(val));
+            AddFormatter(next => (val, clip) => val is float ? FormatFloat((float)val) : next(val, clip));
 
-            AddFormatter(next => val => val is double ? FormatDouble((double)val) : next(val));
+            AddFormatter(next => (val, clip) => val is double ? FormatDouble((double)val) : next(val, clip));
 
-            AddFormatter(next => val => val is char ? string.Format(Fmt_Char, val) : next(val));
+            AddFormatter(next => (val, clip) => val is char ? string.Format(Fmt_Char, val) : next(val, clip));
 
-            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val, 0, 10) : next(val));
+            AddFormatter(next => (val, clip) => val is IEnumerable ? FormatCollection((IEnumerable)val, 0, clip ? 10 : Int32.MaxValue) : next(val, clip));
 
-            AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
+            AddFormatter(next => (val, clip) => val is string ? FormatString(clip ? ClipString((string)val, 78, 0) : (string)val) : next(val, clip));
 
-            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
+            AddFormatter(next => (val, clip) => val.GetType().IsArray ? FormatArray((Array)val) : next(val, clip));
 
 #if NETCF
-            AddFormatter(next => val =>
+            AddFormatter(next => (val, clip) =>
             {
                 var vi = val as System.Reflection.MethodInfo;
                 return (vi != null && vi.IsGenericMethodDefinition)
                         ? string.Format(Fmt_Default, vi.Name + "<>") 
-                        : next(val);
+                        : next(val, clip);
             });
 #endif
         }
@@ -123,11 +124,22 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Formats text to represent a generalized value.
+        /// Formats text to represent a generalized value without clipping.
         /// </summary>
         /// <param name="val">The value</param>
         /// <returns>The formatted text</returns>
         public static string FormatValue(object val)
+        {
+            return FormatValue(val, false);
+        }
+
+        /// <summary>
+        /// Formats text to represent a generalized value.
+        /// </summary>
+        /// <param name="val">The value</param>
+        /// <param name="clip">Whether or not to clip values when displaying them</param>
+        /// <returns>The formatted text</returns>
+        public static string FormatValue(object val, bool clip)
         {
             if (val == null)
                 return Fmt_Null;
@@ -135,9 +147,9 @@ namespace NUnit.Framework.Constraints
             var context = TestExecutionContext.CurrentContext;
 
             if (context != null)
-                return context.CurrentValueFormatter(val);
+                return context.CurrentValueFormatter(val, clip);
             else
-                return DefaultValueFormatter(val);
+                return DefaultValueFormatter(val, clip);
         }
 
         /// <summary>
@@ -168,7 +180,7 @@ namespace NUnit.Framework.Constraints
                 return Fmt_EmptyCollection;
 
             if (count > max)
-                sb.Append("...");
+                sb.Append(ELLIPSIS);
 
             sb.Append(" >");
 

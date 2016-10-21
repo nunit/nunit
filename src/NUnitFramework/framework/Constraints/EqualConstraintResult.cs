@@ -37,7 +37,6 @@ namespace NUnit.Framework.Constraints
         private object expectedValue;
         private Tolerance tolerance;
         private bool caseInsensitive;
-        private bool clipStrings;
         private IList<NUnitEqualityComparer.FailurePoint> failurePoints;
 
         #region Message Strings
@@ -68,7 +67,6 @@ namespace NUnit.Framework.Constraints
             this.expectedValue = constraint.Arguments[0];
             this.tolerance = constraint.Tolerance;
             this.caseInsensitive = constraint.CaseInsensitive;
-            this.clipStrings = constraint.ClipStrings;
             this.failurePoints = constraint.FailurePoints;
         }
 
@@ -95,7 +93,7 @@ namespace NUnit.Framework.Constraints
             else if (tolerance != null)
                 writer.DisplayDifferences(expected, actual, tolerance);
             else
-                writer.DisplayDifferences(expected, actual);
+                writer.DisplayDifferences(expected, actual, this.ClipStrings);
         }
 
         #region DisplayStringDifferences
@@ -108,7 +106,7 @@ namespace NUnit.Framework.Constraints
             else
                 writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
 
-            writer.DisplayStringDifferences(expected, actual, mismatch, caseInsensitive, clipStrings);
+            writer.DisplayStringDifferences(expected, actual, mismatch, caseInsensitive, this.ClipStrings);
         }
         #endregion
 
@@ -152,12 +150,12 @@ namespace NUnit.Framework.Constraints
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
-                    writer.WriteCollectionElements(actual, failurePoint.Position, 3);
+                    writer.WriteCollectionElements(actual, failurePoint.Position, this.ClipStrings ? 3 : Int32.MaxValue);
                 }
                 else
                 {
                     writer.Write("  Missing:  ");
-                    writer.WriteCollectionElements(expected, failurePoint.Position, 3);
+                    writer.WriteCollectionElements(expected, failurePoint.Position, this.ClipStrings ? 3: Int32.MaxValue);
                 }
             }
         }

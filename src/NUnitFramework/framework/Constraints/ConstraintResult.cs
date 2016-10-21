@@ -68,6 +68,7 @@ namespace NUnit.Framework.Constraints
         {
             _constraint = constraint;
             ActualValue = actualValue;
+            ClipStrings = constraint.ClipStrings;
         }
 
         /// <summary>
@@ -107,6 +108,11 @@ namespace NUnit.Framework.Constraints
         /// Gets and sets the ResultStatus for this result.
         /// </summary>
         public ConstraintStatus Status { get; set; }
+
+        /// <summary>
+        /// Whether or not to clip strings when displaying this constraint result.
+        /// </summary>
+        public bool ClipStrings { get; private set; }
 
         /// <summary>
         /// True if actual value meets the Constraint criteria otherwise false.
@@ -155,7 +161,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The writer on which the actual value is displayed</param>
         public virtual void WriteActualValueTo(MessageWriter writer)
         {
-            writer.WriteActualValue(ActualValue);
+            writer.WriteActualValue(ActualValue, ClipStrings);
         }
 
         #endregion

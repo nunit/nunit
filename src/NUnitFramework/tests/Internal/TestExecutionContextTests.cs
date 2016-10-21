@@ -366,7 +366,7 @@ namespace NUnit.Framework.Internal
 
             try
             {
-                ValueFormatter f = val => "dummy";
+                ValueFormatter f = (val, clip) => "dummy";
                 context.AddFormatter(next => f);
                 Assert.That(context.CurrentValueFormatter, Is.EqualTo(f));
 

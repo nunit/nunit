@@ -53,6 +53,7 @@ namespace NUnit.Framework.Constraints
         protected Constraint(params object[] args)
         {
             Arguments = args;
+            ClipStrings = true;
 
             _displayName = new Lazy<string>(() =>
             {
@@ -91,9 +92,31 @@ namespace NUnit.Framework.Constraints
         public object[] Arguments { get; private set; }
 
         /// <summary>
+        /// A value indicating whether or not to clip strings.
+        /// </summary>
+        public bool ClipStrings { get; private set; }
+
+        /// <summary>
         /// The ConstraintBuilder holding this constraint
         /// </summary>
         public ConstraintBuilder Builder { get; set; }
+
+        #endregion
+
+        #region Constraint Modifiers
+
+        /// <summary>
+        /// Flag the constraint to suppress string clipping 
+        /// and return self.
+        /// </summary>
+        public IConstraint NoClip
+        {   
+            get
+            {
+                ClipStrings = false;
+                return this;
+            }
+        }
 
         #endregion
 
