@@ -47,8 +47,8 @@ namespace NUnit.Framework.Constraints
         public void SetUp()
         {
             theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
-            expectedDescription = "True after 500 millisecond delay";
-            stringRepresentation = "<after 500 millisecond <equal True>>";
+            expectedDescription = "True after 500 milliseconds delay";
+            stringRepresentation = "<after 500 milliseconds <equal True>>";
 
             boolValue = false;
             list = new List<int>();

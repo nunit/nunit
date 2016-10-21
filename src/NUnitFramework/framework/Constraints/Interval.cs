@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public override string ToString()
         {
-            return String.Format("{0} {1}", _amount, _mode.ToString().ToLower());
+            return string.Format("{0} {1}{2}", _amount, _mode.ToString().ToLower(), _amount > 1 ? "s" : string.Empty);
         }
 
         /// <summary>

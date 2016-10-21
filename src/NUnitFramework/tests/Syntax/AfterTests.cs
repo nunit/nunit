@@ -33,9 +33,42 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 millisecond <equal 10>>";
+            parseTree = "<after 1000 milliseconds <equal 10>>";
             staticSyntax = Is.EqualTo(10).After(1000);
             builderSyntax = Builder().EqualTo(10).After(1000);
+        }
+    }
+
+    public class AfterMinutesTest_SimpleConstraint : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<after 1 minute <equal 10>>";
+            staticSyntax = Is.EqualTo(10).After(1).Minutes;
+            builderSyntax = Builder().EqualTo(10).After(1).Minutes;
+        }
+    }
+
+    public class AfterSecondsTest_SimpleConstraint : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<after 20 seconds <equal 10>>";
+            staticSyntax = Is.EqualTo(10).After(20).Seconds;
+            builderSyntax = Builder().EqualTo(10).After(20).Seconds;
+        }
+    }
+
+    public class AfterMillisecondsTest_SimpleConstraint : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<after 500 milliseconds <equal 10>>";
+            staticSyntax = Is.EqualTo(10).After(500).MilliSeconds;
+            builderSyntax = Builder().EqualTo(10).After(500).MilliSeconds;
         }
     }
 
@@ -44,7 +77,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 millisecond <property X <equal 10>>>";
+            parseTree = "<after 1000 milliseconds <property X <equal 10>>>";
             staticSyntax = Has.Property("X").EqualTo(10).After(1000);
             builderSyntax = Builder().Property("X").EqualTo(10).After(1000);
         }
@@ -55,7 +88,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 millisecond <and <greaterthan 0> <lessthan 10>>>";
+            parseTree = "<after 1000 milliseconds <and <greaterthan 0> <lessthan 10>>>";
             staticSyntax = Is.GreaterThan(0).And.LessThan(10).After(1000);
             builderSyntax = Builder().GreaterThan(0).And.LessThan(10).After(1000);
         }
