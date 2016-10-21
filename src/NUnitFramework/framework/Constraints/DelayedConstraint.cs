@@ -36,9 +36,8 @@ namespace NUnit.Framework.Constraints
     public class DelayedConstraint : PrefixConstraint
     {
         // TODO: Needs error message tests
-
-        private readonly int delayInMilliseconds;
-        private readonly int pollingInterval;
+        private Interval _delayInterval;
+        private readonly int _pollingInterval;
 
         ///<summary>
         /// Creates a new DelayedConstraint
@@ -62,8 +61,8 @@ namespace NUnit.Framework.Constraints
             if (delayInMilliseconds < 0)
                 throw new ArgumentException("Cannot check a condition in the past", "delayInMilliseconds");
 
-            this.delayInMilliseconds = delayInMilliseconds;
-            this.pollingInterval = pollingInterval;
+            _delayInterval = new Interval(delayInMilliseconds).InMilliseconds;
+            _pollingInterval = pollingInterval;
         }
 
         /// <summary>
@@ -71,7 +70,44 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return string.Format("{0} after {1} millisecond delay", BaseConstraint.Description, delayInMilliseconds); }
+            get { return string.Format("{0} after {1} delay", BaseConstraint.Description, _delayInterval); }
+        }
+
+        /// <summary>
+        /// Converts the specified delay interval to minutes
+        /// </summary>
+        public DelayedConstraint Minutes
+        {
+            get
+            {
+                _delayInterval = _delayInterval.InMinutes;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Converts the specified delay interval to seconds
+        /// </summary>
+        public DelayedConstraint Seconds
+        {
+            get
+            {
+                _delayInterval = _delayInterval.InSeconds;
+                return this;
+            }
+        }
+
+
+        /// <summary>
+        /// Converts the specified delay interval to milliseconds
+        /// </summary>
+        public DelayedConstraint MilliSeconds
+        {
+            get
+            {
+                _delayInterval = _delayInterval.InMilliseconds;
+                return this;
+            }
         }
 
         /// <summary>
@@ -82,16 +118,16 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, TimeSpan.FromMilliseconds(delayInMilliseconds));
+            long delayEnd = TimestampOffset(now, _delayInterval.AsTimeSpan);
 
-            if (pollingInterval > 0)
+            if (_pollingInterval > 0)
             {
-                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
                         Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
 
                     ConstraintResult result = BaseConstraint.ApplyTo(actual);
                     if (result.IsSuccess)
@@ -112,17 +148,17 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, TimeSpan.FromMilliseconds(delayInMilliseconds));
+            long delayEnd = TimestampOffset(now, _delayInterval.AsTimeSpan);
 
             object actual;
-            if (pollingInterval > 0)
+            if (_pollingInterval > 0)
             {
-                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
                         Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
 
                     actual = InvokeDelegate(del);
 
@@ -132,7 +168,7 @@ namespace NUnit.Framework.Constraints
                         if (result.IsSuccess)
                             return new ConstraintResult(this, actual, true);
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         // Ignore any exceptions when polling
                     }
@@ -166,16 +202,16 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ref TActual actual)
         {
             long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, TimeSpan.FromMilliseconds(delayInMilliseconds));
+            long delayEnd = TimestampOffset(now, _delayInterval.AsTimeSpan);
 
-            if (pollingInterval > 0)
+            if (_pollingInterval > 0)
             {
-                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
                         Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
 
                     try
                     {
@@ -183,7 +219,7 @@ namespace NUnit.Framework.Constraints
                         if (result.IsSuccess)
                             return new ConstraintResult(this, actual, true);
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         // Ignore any exceptions when polling
                     }
@@ -200,7 +236,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<after {0} {1}>", delayInMilliseconds, BaseConstraint);
+            return string.Format("<after {0} {1}>", _delayInterval, BaseConstraint);
         }
 
         /// <summary>
