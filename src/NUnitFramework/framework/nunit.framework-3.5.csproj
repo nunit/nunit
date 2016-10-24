@@ -60,6 +60,7 @@
     <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
+    <Compile Include="Attributes\BaseTestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
     <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
