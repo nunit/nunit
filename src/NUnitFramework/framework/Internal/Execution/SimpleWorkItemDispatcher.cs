@@ -59,17 +59,17 @@ namespace NUnit.Framework.Internal.Execution
             if (work != null)
                 work.Execute();
 #else
-            if (_topLevelWorkItem != null)
+            if (_topLevelWorkItem != null || work.RunsOnMainThread)
                 work.Execute();
             else
             {
                 _topLevelWorkItem = work;
                 _runnerThread = new Thread(RunnerThreadProc);
 
-#if !NETCF && !SILVERLIGHT
+//#if !NETCF && !SILVERLIGHT
                 if (work.TargetApartment == ApartmentState.STA)
                     _runnerThread.SetApartmentState(ApartmentState.STA);
-#endif
+//#endif
 
                 _runnerThread.Start();
             }

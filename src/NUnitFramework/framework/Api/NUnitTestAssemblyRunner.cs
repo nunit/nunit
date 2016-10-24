@@ -228,6 +228,9 @@ namespace NUnit.Framework.Api
             TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
+            if (Settings.ContainsKey(PackageSettings.NumberOfTestWorkers))
+                TopLevelWorkItem.RunsOnMainThread = (int)Settings[PackageSettings.NumberOfTestWorkers] == 0;
+            
             StartRun(listener);
         }
 
