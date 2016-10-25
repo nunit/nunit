@@ -1,6 +1,6 @@
 # Building NUnit 3.0
 
-NUnit 3.0 consists of three separate layers: the Framework, the Engine and the Console Runner. 
+NUnit 3.0 consists of three separate layers: the Framework, the Engine and the Console Runner.
 The source code is kept in a single GitHub repository at http://github.com/nunit/nunit.git.
 
 Note that assemblies in one layer must not reference those in any other layer, except as follows:
@@ -12,7 +12,7 @@ There are two ways to build NUnit: using the solution file in an IDE or through 
 
 ## Solution Build
 
-All three layers are built together using a single Visual Studio solution (nunit.sln on Windows 
+All three layers are built together using a single Visual Studio solution (nunit.sln on Windows
 and nunit.linux.sln on Linux), which may be built with Visual Studio 2012+, SharpDevelop.
 or MonoDevelop.
 
@@ -27,7 +27,7 @@ builds will cause new subdirectories to be created.
 ## Build Script
 
 We use **Cake** (http://cakebuild.net) to build NUnit for distribution. The primary script that controls
-building, running tests and packaging is build.cake. We modify build.cake when we need to add new 
+building, running tests and packaging is build.cake. We modify build.cake when we need to add new
 targets or change the way the build is done. Normally build.cake is not invoked directly but through
 build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project
 and ensure that Cake is properly installed before trying to run the cake script. This helps the
@@ -46,9 +46,10 @@ it out each time.
 Key arguments to build.cmd / build:
  * -Target, -t <task>                 The task to run - see below.
  * -Configuration, -c [Release|Debug] The configuration to use (default is Release)
+ * -ShowDescription                   Shows all of the build tasks and their descriptions
  * -Experimental, -e                  Use the experimental build of Roslyn
 
-The build.cake script contains a large number of interdependent tasks. The most 
+The build.cake script contains a large number of interdependent tasks. The most
 important top-level tasks to use are listed here:
 
 ```
@@ -58,6 +59,7 @@ important top-level tasks to use are listed here:
  * TestAllFrameworks   Runs all framework tests. Dependent on Build.
  * Test45              Tests the 4.5 framework without building first.
  * Test40              Tests the 4.0 framework without building first.
+ * Test35              Tests the 3.5 framework without building first.
  * Test20              Tests the 2.0 framework without building first.
  * TestPortable        Tests the portable framework without building first.
  * TestSL              Tests the Silverlight framework without building first.
@@ -67,12 +69,14 @@ important top-level tasks to use are listed here:
  * Package             Creates all packages without building first. See Note below.
 ```
 
+For a full list of tasks, run `build.cmd -ShowDescription`.
+
 ### Notes:
  1. By design, the Package target does not depend on Build. This is to allow re-packaging
     when necessary without changing the binaries themselves. Of course, this means that
     you have to be very careful that the build is up to date before packaging.
 
- 2. If the compact framework or Silverlight SDK are not installed on a machine, the relevant 
+ 2. If the compact framework or Silverlight SDK are not installed on a machine, the relevant
     building and testing tasks are skipped and a warning is issued.
 
  3. For additional targets, refer to the build.cake script itself.
