@@ -692,14 +692,14 @@ Task("Package")
     .IsDependentOn("PackageZip");
 
 Task("Appveyor")
-    .Description("Builds and tests all versions of the framework on AppVeyor")
+    .Description("Builds, tests and packages on AppVeyor")
     .IsDependentOn("Build")
     .IsDependentOn("Test")
     .IsDependentOn("Package")
     .IsDependentOn("UploadArtifacts");
 
 Task("Travis")
-    .Description("Builds and tests all versions of the framework on Travis")
+    .Description("Builds and tests on Travis")
     .IsDependentOn("Build")
     .IsDependentOn("Test");
 
