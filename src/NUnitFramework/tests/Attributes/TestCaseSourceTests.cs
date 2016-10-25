@@ -29,6 +29,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;
+using System;
 
 namespace NUnit.Framework.Attributes
 {
@@ -391,6 +392,43 @@ namespace NUnit.Framework.Attributes
                 throw new System.Exception("my message");
             }
         }
+        #endregion
+
+        #region Test Source for method with variable number of arguments
+
+        [TestCaseSource("GetUrlCases")]
+        public void HandlesParamsArrayAsLastArgument(bool mustBeTheSameDomain, /*Uri optionalUrl = null,*/ params Uri[] urls)
+        {
+            Assert.IsNotNull(urls);
+            if (urls.Length > 0)
+            {
+                var domain = urls[0].Host;
+
+                for (int i = 1; i < urls.Length; ++i)
+                    if (mustBeTheSameDomain)
+                        Assert.AreEqual(domain, urls[i].Host);
+                    else
+                        Assert.AreNotEqual(domain, urls[i].Host);
+            }
+        }
+
+        public static IEnumerable<TestCaseData> GetUrlCases()
+        {
+            var aUrl = new Uri("https://www.aaaa.com/news");
+            var bUrl = new Uri("https://www.bbbb.com/linux");
+            var goUrl = new Uri("https://www.cccc.com/chromium");
+            var readUrl = new Uri("https://www.cccc.com/reader");
+            var emailUrl = new Uri("https://www.cccc.com/mail");
+            var docUrl = new Uri("https://www.cccc.com/doc");
+
+            yield return new TestCaseData(false);
+            yield return new TestCaseData(false, aUrl);
+            yield return new TestCaseData(false, aUrl, bUrl, goUrl);
+            yield return new TestCaseData(true, goUrl, readUrl, emailUrl, docUrl);
+            yield return new TestCaseData(false, bUrl, goUrl, aUrl, emailUrl, docUrl);
+        }
+
+
         #endregion
     }
 
