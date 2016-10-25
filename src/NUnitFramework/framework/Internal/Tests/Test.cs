@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -60,6 +61,8 @@ namespace NUnit.Framework.Internal
         /// Method property backing field
         /// </summary>
         private IMethodInfo _method;
+
+        internal List<TestParameterAttribute> TestParameterAttributes;
 
         #endregion
 
@@ -372,6 +375,13 @@ namespace NUnit.Framework.Internal
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
+
+            if (TestParameterAttributes != null)
+            {
+                var tnode = thisNode.AddElement("test-parameters");
+                foreach (var value in TestParameterAttributes)
+                    value.AddToXml(tnode, false);
+            }
         }
 
         #endregion

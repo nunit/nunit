@@ -69,6 +69,7 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="Attributes\TestParameterAttribute.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="ActionTargets.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
@@ -420,12 +421,12 @@
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuntimeTestParameters.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestParameters.cs" />
     <Compile Include="Throws.cs" />
   </ItemGroup>
   <ItemGroup>

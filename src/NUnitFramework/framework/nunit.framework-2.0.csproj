@@ -73,6 +73,7 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
+    <Compile Include="Attributes\TestParameterAttribute.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\LongLivedMarshalByRefObject.cs" />
     <Compile Include="Compatibility\ReaderWriterLockSlim.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Internal\ParameterWrapper.cs" />
     <Compile Include="Internal\TestNameGenerator.cs" />
     <Compile Include="Internal\TypeWrapper.cs" />
+    <Compile Include="RuntimeTestParameters.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
@@ -409,7 +411,6 @@
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
-    <Compile Include="TestParameters.cs" />
     <Compile Include="Throws.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />

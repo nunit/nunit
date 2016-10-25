@@ -82,6 +82,7 @@
     <Compile Include="Attributes\SingleThreadedFixtureTests.cs" />
     <Compile Include="Attributes\TestFixtureSourceTests.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
+    <Compile Include="Attributes\TestParameterAttributeTests.cs" />
     <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />

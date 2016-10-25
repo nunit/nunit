@@ -92,7 +92,16 @@ namespace NUnit.Framework
         /// <summary>
         /// TestParameters object holds parameters for the test run, if any are specified
         /// </summary>
-        public static readonly TestParameters Parameters = new TestParameters();
+        private static RuntimeTestParameters _testParameters;
+
+        /// <summary>
+        /// TestParameters object holds parameters for the test run, if any are specified
+        /// </summary>
+        public static RuntimeTestParameters Parameters
+        {
+            get { return _testParameters ?? (_testParameters = new RuntimeTestParameters()); }
+            internal set { _testParameters = value; }
+        }
 
         /// <summary>
         /// Get a representation of the current test.

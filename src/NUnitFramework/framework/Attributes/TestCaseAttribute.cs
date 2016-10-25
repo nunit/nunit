@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -35,7 +36,7 @@ namespace NUnit.Framework
     /// TestCaseAttribute is used to mark parameterized test cases
     /// and provide them with their arguments.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseAttribute : NUnitAttribute, ITestBuilder, ITestCaseData, IImplyFixture
     {
         #region Constructors
@@ -48,7 +49,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(params object[] arguments)
         {
             RunState = RunState.Runnable;
-            
+
             if (arguments == null)
                 Arguments = new object[] { null };
             else
@@ -63,7 +64,7 @@ namespace NUnit.Framework
         /// <param name="arg"></param>
         public TestCaseAttribute(object arg)
         {
-            RunState = RunState.Runnable;			
+            RunState = RunState.Runnable;
             Arguments = new object[] { arg };
             Properties = new PropertyBag();
         }
@@ -75,7 +76,7 @@ namespace NUnit.Framework
         /// <param name="arg2"></param>
         public TestCaseAttribute(object arg1, object arg2)
         {
-            RunState = RunState.Runnable;			
+            RunState = RunState.Runnable;
             Arguments = new object[] { arg1, arg2 };
             Properties = new PropertyBag();
         }
@@ -88,7 +89,7 @@ namespace NUnit.Framework
         /// <param name="arg3"></param>
         public TestCaseAttribute(object arg1, object arg2, object arg3)
         {
-            RunState = RunState.Runnable;			
+            RunState = RunState.Runnable;
             Arguments = new object[] { arg1, arg2, arg3 };
             Properties = new PropertyBag();
         }
@@ -182,10 +183,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets or sets the reason for ignoring the test
         /// </summary>
-        public string Ignore 
-        { 
+        public string Ignore
+        {
             get { return IgnoreReason; }
-            set { IgnoreReason = value; } 
+            set { IgnoreReason = value; }
         }
 
         /// <summary>
@@ -204,8 +205,8 @@ namespace NUnit.Framework
         /// Gets or sets the reason for not running the test.
         /// </summary>
         /// <value>The reason.</value>
-        public string Reason 
-        { 
+        public string Reason
+        {
             get { return Properties.Get(PropertyNames.SkipReason) as string; }
             set { Properties.Set(PropertyNames.SkipReason, value); }
         }
@@ -224,7 +225,7 @@ namespace NUnit.Framework
                 Reason = value;
             }
         }
-        
+
 #if !PORTABLE
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
@@ -244,13 +245,13 @@ namespace NUnit.Framework
         public string Category
         {
             get { return Properties.Get(PropertyNames.Category) as string; }
-            set 
-            { 
-                foreach (string cat in value.Split(new char[] { ',' }) )
-                    Properties.Add(PropertyNames.Category, cat); 
+            set
+            {
+                foreach (string cat in value.Split(new char[] { ',' }))
+                    Properties.Add(PropertyNames.Category, cat);
             }
         }
- 
+
         #endregion
 
         #region Helper Methods
@@ -271,6 +272,14 @@ namespace NUnit.Framework
                 IParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
+
+                var testParamAttrs = method.GetCustomAttributes<TestParameterAttribute>(true);
+                if (testParamAttrs.Length != 0)
+                {
+                    var mpis = testParamAttrs.Where(tpa => !String.IsNullOrEmpty(tpa.MethodParameterName)).Select(tpa => GetMethodParameterIndex(tpa.MethodParameterName, parameters)).Where(mpi => mpi != -1 && mpi >= argsProvided).OrderBy(mpi => mpi).ToArray();
+                    if (mpis.Length != 0)
+                        argsNeeded = mpis[0];
+                }
 
                 parms = new TestCaseParameters(this);
 
@@ -359,6 +368,16 @@ namespace NUnit.Framework
             return parms;
         }
 
+
+        private static int GetMethodParameterIndex(string paramName, IParameterInfo[] parameters)
+        {
+            for (int ix = 0; ix < parameters.Length; ++ix)
+                if (parameters[ix].ParameterInfo.Name.Equals(paramName))
+                    return ix;
+
+            return -1;
+        }
+
         /// <summary>
         /// Performs several special conversions allowed by NUnit in order to
         /// permit arguments with types that cannot be used in the constructor
@@ -409,7 +428,7 @@ namespace NUnit.Framework
 
                 if (convert)
                 {
-                    Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ? 
+                    Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ?
                         targetType.GetGenericArguments()[0] : targetType;
                     arglist[i] = Convert.ChangeType(arg, convertTo, System.Globalization.CultureInfo.InvariantCulture);
                 }
@@ -435,13 +454,13 @@ namespace NUnit.Framework
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
-            
+
 #if !PORTABLE
             if (test.RunState != RunState.NotRunnable &&
                 test.RunState != RunState.Ignored)
             {
                 PlatformHelper platformHelper = new PlatformHelper();
-                
+
                 if (!platformHelper.IsPlatformSupported(this))
                 {
                     test.RunState = RunState.Skipped;
