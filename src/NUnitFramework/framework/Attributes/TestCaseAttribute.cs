@@ -275,11 +275,11 @@ namespace NUnit.Framework
 
                 var testParamAttrs = method.GetCustomAttributes<TestParameterAttribute>(true);
                 if (testParamAttrs.Length != 0)
-                    {
-                    var mpis = testParamAttrs.Where (tpa => !String.IsNullOrEmpty (tpa.MethodParameterName)).Select (tpa => GetMethodParameterIndex(tpa.MethodParameterName, parameters)).Where (mpi => mpi != -1 && mpi >= argsProvided).OrderBy (mpi => mpi).ToArray ();
+                {
+                    var mpis = testParamAttrs.Where(tpa => !String.IsNullOrEmpty(tpa.MethodParameterName)).Select(tpa => GetMethodParameterIndex(tpa.MethodParameterName, parameters)).Where(mpi => mpi != -1 && mpi >= argsProvided).OrderBy(mpi => mpi).ToArray();
                     if (mpis.Length != 0)
                         argsNeeded = mpis[0];
-                    }
+                }
 
                 parms = new TestCaseParameters(this);
 
