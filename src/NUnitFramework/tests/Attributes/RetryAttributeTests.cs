@@ -51,6 +51,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(RetryErrorOnFirstTryFixture), "Failed(Child)", 1)]
         [TestCase(typeof(RetryErrorOnSecondTryFixture), "Failed(Child)", 2)]
         [TestCase(typeof(RetryErrorOnThirdTryFixture), "Failed(Child)", 3)]
+        [TestCase(typeof(RetryTestCaseFixture), "Failed(Child)", 3)]
         public void RetryWorksAsExpected(Type fixtureType, string outcome, int nTries)
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);

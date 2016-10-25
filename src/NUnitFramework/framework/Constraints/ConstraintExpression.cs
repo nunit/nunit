@@ -750,6 +750,28 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region DictionaryContains
+        /// <summary>
+        /// Returns a new DictionaryContainsKeyConstraint checking for the
+        /// presence of a particular key in the Dictionary key collection.
+        /// </summary>
+        /// <param name="expected">The key to be matched in the Dictionary key collection</param>
+        public DictionaryContainsKeyConstraint ContainKey(object expected)
+        {
+            return (DictionaryContainsKeyConstraint)this.Append(new DictionaryContainsKeyConstraint(expected));
+        }
+
+        /// <summary>
+        /// Returns a new DictionaryContainsValueConstraint checking for the
+        /// presence of a particular value in the Dictionary value collection.
+        /// </summary>
+        /// <param name="expected">The value to be matched in the Dictionary value collection</param>
+        public DictionaryContainsValueConstraint ContainValue(object expected)
+        {
+            return (DictionaryContainsValueConstraint)this.Append(new DictionaryContainsValueConstraint(expected));
+        }
+        #endregion
+
         #region StringContaining
 
         /// <summary>

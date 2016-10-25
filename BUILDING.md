@@ -1,6 +1,6 @@
 # Building NUnit 3.0
 
-NUnit 3.0 consists of three separate layers: the Framework, the Engine and the Console Runner. 
+NUnit 3.0 consists of three separate layers: the Framework, the Engine and the Console Runner.
 The source code is kept in two GitHub repositories at http://github.com/nunit/nunit and
 http://github.com/nunit/nunit-console.
 
@@ -8,7 +8,7 @@ There are two ways to build NUnit: using the solution file in an IDE or through 
 
 ## Solution Build
 
-The framework is built using a single Visual Studio solution (nunit.sln on Windows 
+The framework is built using a single Visual Studio solution (nunit.sln on Windows
 and nunit.linux.sln on Linux), which may be built with Visual Studio 2012+, SharpDevelop.
 or MonoDevelop.
 
@@ -20,7 +20,7 @@ builds will cause new subdirectories to be created.
 ## Build Script
 
 We use **Cake** (http://cakebuild.net) to build NUnit for distribution. The primary script that controls
-building, running tests and packaging is build.cake. We modify build.cake when we need to add new 
+building, running tests and packaging is build.cake. We modify build.cake when we need to add new
 targets or change the way the build is done. Normally build.cake is not invoked directly but through
 build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project
 and ensure that Cake is properly installed before trying to run the cake script. This helps the
@@ -39,9 +39,10 @@ it out each time.
 Key arguments to build.cmd / build:
  * -Target, -t <task>                 The task to run - see below.
  * -Configuration, -c [Release|Debug] The configuration to use (default is Release)
+ * -ShowDescription                   Shows all of the build tasks and their descriptions
  * -Experimental, -e                  Use the experimental build of Roslyn
 
-The build.cake script contains a large number of interdependent tasks. The most 
+The build.cake script contains a large number of interdependent tasks. The most
 important top-level tasks to use are listed here:
 
 ```
@@ -56,6 +57,8 @@ important top-level tasks to use are listed here:
  * TestPortable        Tests the portable framework without building first.
  * Package             Creates all packages without building first. See Note below.
 ```
+
+For a full list of tasks, run `build.cmd -ShowDescription`.
 
 ### Notes:
  1. By design, the Package target does not depend on Build. This is to allow re-packaging

@@ -164,4 +164,15 @@ namespace NUnit.TestData.RepeatingTests
             Assert.IsTrue(true);
         }
     }
+
+    public class RetryTestCaseFixture : RepeatingTestsFixtureBase
+    {
+        [Retry(3)]
+        [TestCase(0)]
+        public void FailsEveryTime(int unused)
+        {
+            count++;
+            Assert.IsTrue(false);
+        }
+    }
 }

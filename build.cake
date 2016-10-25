@@ -72,6 +72,7 @@ var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
 //////////////////////////////////////////////////////////////////////
 
 Task("Clean")
+    .Description("Deletes all files in the BIN directory")
     .Does(() =>
     {
         CleanDirectory(BIN_DIR);
@@ -83,6 +84,7 @@ Task("Clean")
 //////////////////////////////////////////////////////////////////////
 
 Task("InitializeBuild")
+    .Description("Initializes the build")
     .Does(() =>
     {
         NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
@@ -136,6 +138,7 @@ Task("InitializeBuild")
 //////////////////////////////////////////////////////////////////////
 
 Task("Build45")
+    .Description("Builds the .NET 4.5 version of the framework")
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-4.5.csproj", configuration);
@@ -149,6 +152,7 @@ Task("Build45")
     });
 
 Task("Build40")
+    .Description("Builds the .NET 4.0 version of the framework")
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-4.0.csproj", configuration);
@@ -162,6 +166,7 @@ Task("Build40")
     });
 
 Task("Build35")
+    .Description("Builds the .NET 3.5 version of the framework")
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-3.5.csproj", configuration);
@@ -175,6 +180,7 @@ Task("Build35")
     });
 
 Task("Build20")
+    .Description("Builds the .NET 2.0 version of the framework")
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-2.0.csproj", configuration);
@@ -188,6 +194,7 @@ Task("Build20")
     });
 
 Task("BuildPortable")
+    .Description("Builds the PCL version of the framework")
     .WithCriteria(IsRunningOnWindows())
     .Does(() =>
     {
@@ -205,6 +212,7 @@ Task("BuildPortable")
 //////////////////////////////////////////////////////////////////////
 
 Task("CheckForError")
+    .Description("Checks for errors running the test suites")
     .Does(() => CheckForError(ref ErrorDetail));
 
 //////////////////////////////////////////////////////////////////////
@@ -212,6 +220,7 @@ Task("CheckForError")
 //////////////////////////////////////////////////////////////////////
 
 Task("Test45")
+    .Description("Tests the .NET 4.5 version of the framework")
     .IsDependentOn("Build45")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -223,6 +232,7 @@ Task("Test45")
     });
 
 Task("Test40")
+    .Description("Tests the .NET 4.0 version of the framework")
     .IsDependentOn("Build40")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -234,6 +244,7 @@ Task("Test40")
     });
 
 Task("Test35")
+    .Description("Tests the .NET 3.5 version of the framework")
     .IsDependentOn("Build35")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -245,6 +256,7 @@ Task("Test35")
     });
 
 Task("Test20")
+    .Description("Tests the .NET 2.0 version of the framework")
     .IsDependentOn("Build20")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -256,6 +268,7 @@ Task("Test20")
     });
 
 Task("TestPortable")
+    .Description("Tests the PCL version of the framework")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildPortable")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
@@ -305,13 +318,15 @@ var FrameworkFiles = new FilePath[]
 };
 
 Task("PackageSource")
-  .Does(() =>
+    .Description("Creates a ZIP file of the source code")
+    .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
         RunGitCommand(string.Format("archive -o {0} HEAD", SRC_PACKAGE));
     });
 
 Task("CreateImage")
+    .Description("Copies all files into the image directory")
     .Does(() =>
     {
         var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
@@ -339,6 +354,7 @@ Task("CreateImage")
     });
 
 Task("PackageFramework")
+    .Description("Creates NuGet packages of the framework")
     .IsDependentOn("CreateImage")
     .Does(() =>
     {
@@ -362,6 +378,7 @@ Task("PackageFramework")
     });
 
 Task("PackageZip")
+    .Description("Creates a ZIP file of the framework")
     .IsDependentOn("CreateImage")
     .Does(() =>
     {
@@ -384,6 +401,7 @@ Task("PackageZip")
 //////////////////////////////////////////////////////////////////////
 
 Task("UploadArtifacts")
+    .Description("Uploads artifacts to AppVeyor")
     .IsDependentOn("Package")
     .Does(() =>
     {
@@ -470,10 +488,12 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
 //////////////////////////////////////////////////////////////////////
 
 Task("Rebuild")
+    .Description("Rebuilds all versions of the framework")
     .IsDependentOn("Clean")
     .IsDependentOn("Build");
 
 Task("Build")
+    .Description("Builds all versions of the framework")
     .IsDependentOn("InitializeBuild")
     .IsDependentOn("Build45")
     .IsDependentOn("Build40")
@@ -483,6 +503,7 @@ Task("Build")
     .IsDependentOn("BuildPortable");
 
 Task("Test")
+    .Description("Builds and tests all versions of the framework")
     .IsDependentOn("Build")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
@@ -492,21 +513,25 @@ Task("Test")
     .IsDependentOn("TestPortable");
 
 Task("Package")
+    .Description("Packages all versions of the framework")
     .IsDependentOn("CheckForError")
     .IsDependentOn("PackageFramework")
     .IsDependentOn("PackageZip");
 
 Task("Appveyor")
+    .Description("Builds, tests and packages on AppVeyor")
     .IsDependentOn("Build")
     .IsDependentOn("Test")
     .IsDependentOn("Package")
     .IsDependentOn("UploadArtifacts");
 
 Task("Travis")
+    .Description("Builds and tests on Travis")
     .IsDependentOn("Build")
     .IsDependentOn("Test");
 
 Task("Default")
+    .Description("Builds all versions of the framework")
     .IsDependentOn("Build");
 
 //////////////////////////////////////////////////////////////////////
