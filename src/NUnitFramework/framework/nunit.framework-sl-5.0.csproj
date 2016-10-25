@@ -149,6 +149,7 @@
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
     <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
+    <Compile Include="Attributes\TestParameterAttribute.cs" />
     <Compile Include="Attributes\TheoryAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Attributes\ValuesAttribute.cs" />
@@ -417,12 +418,12 @@
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuntimeTestParameters.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestParameters.cs" />
     <Compile Include="Throws.cs" />
   </ItemGroup>
   <ItemGroup>

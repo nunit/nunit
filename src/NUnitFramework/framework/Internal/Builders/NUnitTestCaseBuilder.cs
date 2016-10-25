@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if NETCF
 using System.Linq;
-#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -180,6 +178,41 @@ namespace NUnit.Framework.Internal.Builders
                     return false;
             }
 
+            var testParamAttrs = testMethod.Method.GetCustomAttributes<TestParameterAttribute>(true);
+            if (testParamAttrs.Length != 0)
+            {
+                var testParamArgs = testParamAttrs.Where((tpa, ix) => !String.IsNullOrEmpty(tpa.MethodParameterName) && GetMethodParameterIndex(tpa.MethodParameterName, parameters) >= argsProvided).OrderBy(tpa => GetMethodParameterIndex(tpa.MethodParameterName, parameters));
+                var targlist = testParamArgs.Select(tpa =>
+                {
+                    Type type;
+                    if (tpa.Type != null)
+                        type = tpa.Type;
+                    else if (String.IsNullOrEmpty(tpa.MethodParameterName))
+                        type = typeof(string);
+                    else
+                    {
+                        var par = parameters.FirstOrDefault(p => p.ParameterInfo.Name.Equals(tpa.MethodParameterName));
+                        type = par == null ? typeof(string) : (Type)par.ParameterInfo.ParameterType;
+                    }
+                    return TestContext.Parameters.Get(type, tpa.Name);
+                }).ToArray();
+                if (targlist.Length != 0)
+                {
+                    arglist = arglist == null ? targlist : arglist.Concat(targlist).ToArray();
+
+                    if (parms == null)
+                    {
+                        parms = new TestCaseParameters(arglist);
+                        testMethod.parms = parms;
+                        testMethod.RunState = parms.RunState;
+                    }
+                    else
+                        parms.Arguments = arglist;
+
+                    argsProvided = arglist.Length;
+                }
+            }
+
 #if NETCF
             ITypeInfo returnType = testMethod.Method.IsGenericMethodDefinition && (parms == null || parms.Arguments == null) ? new TypeWrapper(typeof(void)) : testMethod.Method.ReturnType;
 #else
@@ -241,6 +274,15 @@ namespace NUnit.Framework.Internal.Builders
                 TypeHelper.ConvertArgumentList(arglist, parameters);
 
             return true;
+        }
+
+        private static int GetMethodParameterIndex(string paramName, IParameterInfo[] parameters)
+        {
+            for (int ix = 0; ix < parameters.Length; ++ix)
+                if (parameters[ix].ParameterInfo.Name.Equals(paramName))
+                    return ix;
+
+            return -1;
         }
 
         private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)

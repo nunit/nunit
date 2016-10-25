@@ -162,6 +162,7 @@
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
+    <Compile Include="Attributes\TestParameterAttributeTests.cs" />
     <Compile Include="Compatibility\StopwatchTests.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="TestUtilities\AsyncTestDelegates.cs" />

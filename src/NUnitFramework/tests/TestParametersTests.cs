@@ -4,12 +4,12 @@ namespace NUnit.Framework.Tests
 {
     public class TestParametersTests
     {
-        private TestParameters _parameters;
+        private RuntimeTestParameters _parameters;
 
         [SetUp]
         public void CreateTestParameters()
         {
-            _parameters = new TestParameters();
+            _parameters = new RuntimeTestParameters();
         }
 
         #region Initial Conditions
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void GetString_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Get(null, "JUNK"), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Get((string)null, "JUNK"), Throws.ArgumentNullException);
         }
 
         #endregion

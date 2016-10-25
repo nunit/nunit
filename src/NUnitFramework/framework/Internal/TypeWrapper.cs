@@ -155,6 +155,14 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets a value indicating whether this type represents a value type.
+        /// </summary>
+        public bool IsValueType
+        { 
+            get { return Type.GetTypeInfo().IsValueType; }
+        }
+
+        /// <summary>
         /// Get the display name for this type
         /// </summary>
         public string GetDisplayName()
