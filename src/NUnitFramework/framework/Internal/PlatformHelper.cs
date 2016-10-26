@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal
         private string _reason = string.Empty;
 
         const string CommonOSPlatforms =
-            "Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
+            "Win,Win32,Win32S,Win32NT,Win32Windows,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
             "Win2008Server,Win2008ServerR2,Win2012Server,Win2012ServerR2," +
             "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8,"+
             "Win8.1,Windows8.1,Win10,Windows10,WindowsServer10,Unix,Linux";
@@ -47,17 +47,13 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Comma-delimited list of all supported OS platform constants
         /// </summary>
-#if NETCF
-        public const string OSPlatforms = CommonOSPlatforms;
-#else
         public const string OSPlatforms = CommonOSPlatforms + ",Xbox,MacOSX";
-#endif
 
         /// <summary>
         /// Comma-delimited list of all supported Runtime platform constants
         /// </summary>
         public static readonly string RuntimePlatforms =
-            "Net,NetCF,SSCLI,Rotor,Mono,MonoTouch";
+            "Net,SSCLI,Rotor,Mono,MonoTouch";
 
         /// <summary>
         /// Default constructor uses the operating system and
@@ -182,9 +178,6 @@ namespace NUnit.Framework.Internal
                     break;
                 case "WIN32NT":
                     isSupported = _os.IsWin32NT;
-                    break;
-                case "WINCE":
-                    isSupported = _os.IsWinCE;
                     break;
                 case "WIN95":
                     isSupported = _os.IsWin95;
@@ -318,19 +311,12 @@ namespace NUnit.Framework.Internal
                 case "NET":
                     return IsRuntimeSupported(RuntimeType.Net, versionSpecification);
 
-                case "NETCF":
-                    return IsRuntimeSupported(RuntimeType.NetCF, versionSpecification);
-
                 case "SSCLI":
                 case "ROTOR":
                     return IsRuntimeSupported(RuntimeType.SSCLI, versionSpecification);
 
                 case "MONO":
                     return IsRuntimeSupported(RuntimeType.Mono, versionSpecification);
-
-                case "SL":
-                case "SILVERLIGHT":
-                    return IsRuntimeSupported(RuntimeType.Silverlight, versionSpecification);
 
                 case "MONOTOUCH":
                     return IsRuntimeSupported(RuntimeType.MonoTouch, versionSpecification);

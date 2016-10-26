@@ -69,21 +69,7 @@ namespace NUnit.Framework.Internal
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
             List<MethodInfo> list = new List<MethodInfo>();
-
-#if NETCF
-            if (fixtureType.IsGenericTypeDefinition)
-            {
-                var genArgs = fixtureType.GetGenericArguments();
-                Type[] args = new Type[genArgs.Length];
-                for (int ix = 0; ix < genArgs.Length; ++ix)
-                {
-                    args[ix] = typeof(object);
-                }
-
-                fixtureType = fixtureType.MakeGenericType(args);
-            }
-#endif
-
+            
             var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
             foreach (MethodInfo method in fixtureType.GetMethods(flags))
             {
@@ -125,11 +111,6 @@ namespace NUnit.Framework.Internal
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
                 .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
 #else
-
-#if NETCF
-            if (fixtureType.ContainsGenericParameters)
-                return false;
-#endif
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
                 if (method.IsDefined(attributeType, false))

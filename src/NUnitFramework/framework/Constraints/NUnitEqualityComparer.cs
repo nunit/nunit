@@ -114,7 +114,6 @@ namespace NUnit.Framework.Constraints
             get { return failurePoints; }
         }
 
-#if !NETCF
         /// <summary>
         /// Flags the comparer to include <see cref="DateTimeOffset.Offset"/>
         /// property in comparison of two <see cref="DateTimeOffset"/> values.
@@ -124,8 +123,7 @@ namespace NUnit.Framework.Constraints
         /// modifier.
         /// </remarks>
         public bool WithSameOffset { get; set; }
-#endif
-		  #endregion
+		#endregion
 
         #region Public Methods
         /// <summary>
@@ -197,7 +195,6 @@ namespace NUnit.Framework.Constraints
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.AreEqual(x, y, ref tolerance);
 
-#if !NETCF
             if (x is DateTimeOffset && y is DateTimeOffset)
             {
                 bool result;
@@ -222,7 +219,6 @@ namespace NUnit.Framework.Constraints
 
                 return result;
             }
-#endif
 
             if (tolerance != null && tolerance.Value is TimeSpan)
             {

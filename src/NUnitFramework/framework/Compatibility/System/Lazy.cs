@@ -42,10 +42,8 @@ namespace System
     /// <typeparam name="T"></typeparam>
 	[SerializableAttribute]
 	[ComVisibleAttribute(false)]
-#if !NETCF
 	[HostProtectionAttribute(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)]
 	[DebuggerDisplay ("ThreadSafetyMode={mode}, IsValueCreated={IsValueCreated}, IsValueFaulted={exception != null}, Value={value}")]
-#endif
 	public class Lazy<T> 
 	{
 		T value;
@@ -119,9 +117,7 @@ namespace System
         /// 
         /// </summary>
 		// Don't trigger expensive initialization
-#if !NETCF
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
-#endif
 		public T Value {
 			get {
 				if (inited)

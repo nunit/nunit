@@ -35,12 +35,7 @@ namespace System.Threading
 		// The number of step until SpinOnce yield on multicore machine
 		const           int  step = 10;
 		const           int  maxTime = 200;
-#if NETCF
-		static readonly bool isSingleCpu = true;
-#else
 		static readonly bool isSingleCpu = (Environment.ProcessorCount == 1);
-#endif
-
 		int ntime;
 
         /// <summary>
@@ -52,13 +47,12 @@ namespace System.Threading
 
 			if (isSingleCpu) {
                 // On a single-CPU system, spinning does no good
-#if NET_2_0 || NET_3_5 || NETCF
+#if NET_2_0 || NET_3_5
                 Thread.Sleep(ntime % step == 0 ? 1 : 0);
 #else
                 Thread.Yield ();
 #endif
 			} 
-#if !NETCF
 			else {
 				if (ntime % step == 0)
 #if NET_2_0 || NET_3_5
@@ -70,7 +64,6 @@ namespace System.Threading
                     // Multi-CPU system might be hyper-threaded, let other thread run
                     Thread.SpinWait (Math.Min (ntime, maxTime) << 1);
 			}
-#endif
 		}
 
         /// <summary>

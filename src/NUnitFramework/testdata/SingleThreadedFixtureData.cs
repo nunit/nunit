@@ -11,7 +11,6 @@ namespace NUnit.TestData
         public void TestWithTimeout() { }
     }
 
-#if !SILVERLIGHT
     [SingleThreaded]
     public class SingleThreadedFixture_TestWithRequiresThread
     {
@@ -26,7 +25,6 @@ namespace NUnit.TestData
         public void TestWithTimeoutAndRequiresThread() { }
     }
 
-#if !NETCF
     [SingleThreaded]
     public class SingleThreadedFixture_TestWithDifferentApartment
     {
@@ -54,7 +52,5 @@ namespace NUnit.TestData
         [Test, Timeout(100), RequiresThread, Apartment(ApartmentState.STA)]
         public void TestWithTimeoutRequiresThreadAndDifferentApartment() { }
     }
-#endif
-#endif
 }
 #endif

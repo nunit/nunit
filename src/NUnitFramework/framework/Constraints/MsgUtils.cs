@@ -60,13 +60,10 @@ namespace NUnit.Framework.Constraints
         private static readonly string Fmt_Null = "null";
         private static readonly string Fmt_EmptyString = "<string.Empty>";
         private static readonly string Fmt_EmptyCollection = "<empty>";
-
         private static readonly string Fmt_String = "\"{0}\"";
         private static readonly string Fmt_Char = "'{0}'";
         private static readonly string Fmt_DateTime = "yyyy-MM-dd HH:mm:ss.fff";
-#if !NETCF
 		private static readonly string Fmt_DateTimeOffset = "yyyy-MM-dd HH:mm:ss.fffzzz";
-#endif
 		private static readonly string Fmt_ValueType = "{0}";
         private static readonly string Fmt_Default = "<{0}>";
 
@@ -84,9 +81,7 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
 
-#if !NETCF
 			AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset ((DateTimeOffset)val) : next (val));
-#endif
 
 			AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
 
@@ -100,17 +95,7 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
 
-            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
-
-#if NETCF
-            AddFormatter(next => val =>
-            {
-                var vi = val as System.Reflection.MethodInfo;
-                return (vi != null && vi.IsGenericMethodDefinition)
-                        ? string.Format(Fmt_Default, vi.Name + "<>") 
-                        : next(val);
-            });
-#endif
+            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));            
         }
 
         /// <summary>
@@ -263,12 +248,10 @@ namespace NUnit.Framework.Constraints
             return dt.ToString(Fmt_DateTime, CultureInfo.InvariantCulture);
         }
 
-#if !NETCF
 		private static string FormatDateTimeOffset(DateTimeOffset dto)
         {
             return dto.ToString(Fmt_DateTimeOffset, CultureInfo.InvariantCulture);
         }
-#endif
 
 		/// <summary>
 		/// Returns the representation of a type as used in NUnitLite.

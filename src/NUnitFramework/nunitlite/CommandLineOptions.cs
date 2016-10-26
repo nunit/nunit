@@ -40,10 +40,8 @@ namespace NUnit.Common
     public class CommandLineOptions : OptionSet
     {
         private static readonly string DEFAULT_WORK_DIRECTORY =
-#if NETCF || PORTABLE
+#if PORTABLE
             @"\My Documents";
-#elif SILVERLIGHT
-            Environment.GetFolderPath(Environment.SpecialFolder.Personal);   
 #else
             Environment.CurrentDirectory;
 #endif
@@ -255,7 +253,7 @@ namespace NUnit.Common
         {
             if (path == null) return null;
 
-#if NETCF || PORTABLE
+#if PORTABLE
             return Path.Combine(DEFAULT_WORK_DIRECTORY , path);
 #else
             return Path.GetFullPath(path);
@@ -370,10 +368,8 @@ namespace NUnit.Common
             this.Add("test-name-format=", "Non-standard naming pattern to use in generating test names.",
                 v => DefaultTestNamePattern = RequiredValue(v, "--test-name-format"));
 
-#if !NETCF
             this.Add("teamcity", "Turns on use of TeamCity service messages.",
                 v => TeamCity = v != null);
-#endif
 
 #if !PORTABLE
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",

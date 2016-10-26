@@ -82,15 +82,11 @@ namespace NUnitLite
             // Insert elements as first child in reverse order
             if (runSettings != null) // Some platforms don't have settings
                 FrameworkController.InsertSettingsElement(resultNode, runSettings);
-#if !SILVERLIGHT
             FrameworkController.InsertEnvironmentElement(resultNode);
-#endif
 
             TNode testRun = MakeTestRunElement(result);
 
-#if !SILVERLIGHT && !NETCF
             testRun.ChildNodes.Add(MakeCommandLineElement());
-#endif
             testRun.ChildNodes.Add(MakeTestFilterElement(filter));
             testRun.ChildNodes.Add(resultNode);
 
@@ -130,12 +126,10 @@ namespace NUnitLite
             return testRun;
         }
 
-#if !SILVERLIGHT && !NETCF
         private static TNode MakeCommandLineElement()
         {
             return new TNode("command-line", Environment.CommandLine, true);
         }
-#endif
 
         private static TNode MakeTestFilterElement(TestFilter filter)
         {

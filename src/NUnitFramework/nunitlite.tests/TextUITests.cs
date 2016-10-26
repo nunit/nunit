@@ -30,9 +30,7 @@ using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
-#if !SILVERLIGHT
 using NUnit.Tests.Assemblies;
-#endif
 
 namespace NUnitLite.Tests
 {
@@ -42,7 +40,6 @@ namespace NUnitLite.Tests
 
         private TextUI _textUI;
         private StringBuilder _reportBuilder;
-#if !SILVERLIGHT
         private TestResult _result;
 
         private static readonly string[] REPORT_SEQUENCE = new string[] {
@@ -60,19 +57,14 @@ namespace NUnitLite.Tests
             _result.StartTime = _result.EndTime = new DateTime(2014, 12, 2, 12, 34, 56, DateTimeKind.Utc);
             _result.Duration = 0.123;
         }
-#endif
 
         [SetUp]
         public void CreateTextUI()
         {
             _reportBuilder = new StringBuilder();
             var writer = new ExtendedTextWrapper(new StringWriter(_reportBuilder));
-#if !SILVERLIGHT
             var options = new NUnitLiteOptions();
             _textUI = new TextUI(writer, null, options);
-#else
-            _textUI = new TextUI(writer);
-#endif
         }
 
         [Test]
@@ -159,7 +151,6 @@ namespace NUnitLite.Tests
 
         private void MyFakeMethod() { }
 
-#if !SILVERLIGHT
         [Test]
         public void DisplayHelp()
         {
@@ -220,7 +211,7 @@ namespace NUnitLite.Tests
             Assert.That(GetReportLines(), Is.EqualTo(expected));
         }
 
-        [Test, Platform(Exclude = "NETCF", Reason = "Stacktrace not filtered correctly")]
+        [Test]
         public void ErrorsAndFailuresReportTest()
         {
             _textUI.DisplayErrorsAndFailuresReport(_result);
@@ -236,7 +227,6 @@ namespace NUnitLite.Tests
             Assert.That(lines[12], Is.EqualTo("4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
             Assert.That(lines[13], Is.EqualTo("System.Exception : Intentional Exception"));
         }
-#endif
 
 #region Private Properties and Methods
 

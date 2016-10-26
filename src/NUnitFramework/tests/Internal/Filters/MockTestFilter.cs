@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Filters
     /// 
     /// It would be better to use a Mocking-Framework for this.
     /// </summary>
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
     [Serializable]
 #endif
     public class MockTestFilter : TestFilter

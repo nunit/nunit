@@ -194,7 +194,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         private static int[] underlyingArray = new int[] { 1, 2, 3, 4, 5 };
 
         [Test]

@@ -63,7 +63,6 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#if !NETCF
         private readonly Type optionalTestParametersFixtureType = typeof(OptionalTestParametersFixture);
 
         [TestCase("MethodWithOptionalParams0", RunState.NotRunnable)]
@@ -80,6 +79,5 @@ namespace NUnit.Framework.Internal
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }
-#endif
     }
 }
