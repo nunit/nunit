@@ -1,4 +1,27 @@
-﻿#if NET_4_0 || NET_4_5
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -11,7 +34,11 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
-        private static readonly bool ON_LINUX = OSPlatform.CurrentPlatform.IsUnix;
+#if PORTABLE
+        private static readonly bool PLATFORM_IGNORE = true;
+#else
+        private static readonly bool PLATFORM_IGNORE = OSPlatform.CurrentPlatform.IsUnix;
+#endif
 
         private DefaultTestCaseBuilder _builder;
         private object _testObject;
@@ -23,7 +50,7 @@ namespace NUnit.Framework.Internal
             _testObject = new AsyncRealFixture();
         }
 
-        public IEnumerable TestCases
+        public static IEnumerable TestCases
         {
             get
             {
@@ -52,7 +79,7 @@ namespace NUnit.Framework.Internal
                 yield return GetTestCase(Method("AsyncTaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
                 yield return GetTestCase(Method("TaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
                 
-                yield return GetTestCase(Method("NestedAsyncTaskSuccess"), ResultState.Success, 1, false);
+                yield return GetTestCase(Method("NestedAsyncTaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskError"), ResultState.Error, 0, false);
 
@@ -69,17 +96,17 @@ namespace NUnit.Framework.Internal
         /// Private method to return a test case, optionally ignored on the Linux platform.
         /// We use this since the Platform attribute is not supported on TestCaseData.
         /// </summary>
-        private TestCaseData GetTestCase(MethodInfo method, ResultState resultState, int assertionCount, bool ignoreOnLinux)
+        private static TestCaseData GetTestCase(IMethodInfo method, ResultState resultState, int assertionCount, bool ignoreThis)
         {
             var data = new TestCaseData(method, resultState, assertionCount);
-            if (ON_LINUX && ignoreOnLinux)
-                data = data.Ignore("Intermittent failure on Linux");
+            if (PLATFORM_IGNORE && ignoreThis)
+                data = data.Ignore("Intermittent failure on Linux and under Portable build");
             return data;
         }
 
         [Test]
         [TestCaseSource("TestCases")]
-        public void RunTests(MethodInfo method, ResultState resultState, int assertionCount)
+        public void RunTests(IMethodInfo method, ResultState resultState, int assertionCount)
         {
             var test = _builder.BuildFrom(method);
             var result = TestBuilder.RunTest(test, _testObject);
@@ -88,9 +115,9 @@ namespace NUnit.Framework.Internal
             Assert.That(result.AssertCount, Is.EqualTo(assertionCount), "Wrong assertion count");
         }
 
-        private static MethodInfo Method(string name)
+        private static IMethodInfo Method(string name)
         {
-            return typeof(AsyncRealFixture).GetMethod(name);
+            return new MethodWrapper(typeof(AsyncRealFixture), name);
         }
     }
 }

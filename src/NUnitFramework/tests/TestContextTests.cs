@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.IO;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
@@ -32,9 +33,11 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public class TestContextTests
     {
+        private TestContext _setupContext;
+
         private string _name;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         private string _testDirectory;
 #endif
         private string _workDirectory;
@@ -43,17 +46,34 @@ namespace NUnit.Framework.Tests
         {
             _name = TestContext.CurrentContext.Test.Name;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             _testDirectory = TestContext.CurrentContext.TestDirectory;
 #endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
         }
 
-#if !SILVERLIGHT && !PORTABLE
+        [SetUp]
+        public void SaveSetUpContext()
+        {
+            _setupContext = TestContext.CurrentContext;
+        }
+
+#if !PORTABLE
         [Test]
         public void ConstructorCanAccessTestDirectory()
         {
             Assert.That(_testDirectory, Is.Not.Null);
+        }
+
+        [TestCaseSource("MySource")]
+        public void TestCaseSourceCanAccessTestDirectory(string testDirectory)
+        {
+            Assert.That(testDirectory, Is.EqualTo(_testDirectory));
+        }
+
+        static IEnumerable<string> MySource()
+        {
+            yield return TestContext.CurrentContext.TestDirectory;
         }
 #endif
 
@@ -75,10 +95,22 @@ namespace NUnit.Framework.Tests
             Assert.That(_name, Is.EqualTo("TestContextTests"));
         }
 
+        [Test]
+        public void SetUpCanAccessTestName()
+        {
+            Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
+        }
+
         [TestCase(5)]
         public void TestCaseCanAccessItsOwnName(int x)
         {
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
+        }
+
+        [Test]
+        public void SetUpCanAccessTestFullName()
+        {
+            Assert.That(_setupContext.Test.FullName, Is.EqualTo(TestContext.CurrentContext.Test.FullName));
         }
 
         [Test]
@@ -93,6 +125,12 @@ namespace NUnit.Framework.Tests
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
                 Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
+        }
+
+        [Test]
+        public void SetUpCanAccessTestMethodName()
+        {
+            Assert.That(_setupContext.Test.MethodName, Is.EqualTo(TestContext.CurrentContext.Test.MethodName));
         }
 
         [Test]
@@ -114,6 +152,12 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
+        public void SetUpCanAccessTestId()
+        {
+            Assert.That(_setupContext.Test.ID, Is.EqualTo(TestContext.CurrentContext.Test.ID));
+        }
+
+        [Test]
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()
         {
@@ -126,7 +170,7 @@ namespace NUnit.Framework.Tests
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             Assert.NotNull(workDirectory);
             // SL tests may be running on the desktop
-#if !SILVERLIGHT
+#if !PORTABLE
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
 #endif
         }
@@ -164,30 +208,6 @@ namespace NUnit.Framework.Tests
             fixture.setUpIgnore = true;
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
-        }
-
-        private const string SOME_TEXT = "Should go to the result";
-        private static readonly string NL = NUnit.Env.NewLine;
-
-        [Test]
-        public void TestContextOut_WritesToResult()
-        {
-            TestContext.Out.WriteLine(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
-        }
-
-        [Test]
-        public void TestContextWrite_WritesToResult()
-        {
-            TestContext.Write(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT));
-        }
-
-        [Test]
-        public void TestContextWriteLine_WritesToResult()
-        {
-            TestContext.WriteLine(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]
@@ -236,7 +256,7 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             Assert.That(context.TestDirectory, Is.Not.Null);
             Assert.That(context.WorkDirectory, Is.Not.Null);
 #endif
@@ -275,8 +295,7 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(2));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-            // TODO: Should we be counting Explicit?
-            Assert.That(context.Result.SkipCount, Is.EqualTo(0));
+            Assert.That(context.Result.SkipCount, Is.EqualTo(1));
         }
     }
 }

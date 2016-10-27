@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 using System.Reflection;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Tests.Compatibility
 {
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests.Compatibility
         [Test]
         public void CanGetAttributesOnAssemblies()
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = typeof(AttributeHelperTests).GetTypeInfo().Assembly;
             Assert.That(assembly, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(assembly, typeof(AssemblyCompanyAttribute), true);
             Assert.That(attr, Is.Not.Null);

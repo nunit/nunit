@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal.Commands
                 _actions.Add(new TestActionItem(action));
             }
 
-            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method))
+            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method.MethodInfo))
                 if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
                     _actions.Add(new TestActionItem(action));
 
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (Exception ex)
             {
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif

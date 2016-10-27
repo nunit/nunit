@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,11 +22,13 @@
 // ***********************************************************************
 
 using System;
-#if NETCF
+#if PORTABLE
 using System.Linq;
 #endif
 using System.Reflection;
 using System.Text;
+using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -59,7 +61,7 @@ namespace NUnit.Framework.Internal
             if (type.IsGenericParameter)
                 return type.Name;
 
-            if (type.IsGenericType)
+            if (type.GetTypeInfo().IsGenericType)
             {
                 string name = type.FullName;
                 int index = name.IndexOf('[');
@@ -68,19 +70,39 @@ namespace NUnit.Framework.Internal
                 index = name.LastIndexOf('.');
                 if (index >= 0) name = name.Substring(index+1);
 
-                index = name.IndexOf('`');
-                if (index >= 0) name = name.Substring(0, index);
+                var genericArguments = type.GetGenericArguments();
+                var currentArgument = 0;
 
-                StringBuilder sb = new StringBuilder(name);
+                StringBuilder sb = new StringBuilder();
 
-                sb.Append("<");
-                int cnt = 0;
-                foreach (Type t in type.GetGenericArguments())
+                bool firstClassSeen = false;
+                foreach (string nestedClass in name.Split('+'))
                 {
-                    if (cnt++ > 0) sb.Append(",");
-                    sb.Append(GetDisplayName(t));
+                    if (firstClassSeen)
+                        sb.Append("+");
+
+                    firstClassSeen = true;
+
+                    index = nestedClass.IndexOf('`');
+                    if (index >= 0)
+                    {
+                        var nestedClassName = nestedClass.Substring(0, index);
+                        sb.Append(nestedClassName);
+                        sb.Append("<");
+
+                        var argumentCount = Int32.Parse(nestedClass.Substring(index + 1));
+                        for (int i = 0; i < argumentCount; i++)
+                        {
+                            if (i > 0)
+                                sb.Append(",");
+
+                            sb.Append(GetDisplayName(genericArguments[currentArgument++]));
+                        }
+                        sb.Append(">");
+                    }
+                    else
+                        sb.Append(nestedClass);
                 }
-                sb.Append(">");
 
                 return sb.ToString();
             }
@@ -222,7 +244,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="arglist">An array of args to be converted</param>
         /// <param name="parameters">A ParameterInfo[] whose types will be used as targets</param>
-        public static void ConvertArgumentList(object[] arglist, ParameterInfo[] parameters)
+        public static void ConvertArgumentList(object[] arglist, IParameterInfo[] parameters)
         {
             System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);
 
@@ -230,7 +252,11 @@ namespace NUnit.Framework.Internal
             {
                 object arg = arglist[i];
 
+#if PORTABLE
+                if (arg != null)
+#else
                 if (arg != null && arg is IConvertible)
+#endif
                 {
                     Type argType = arg.GetType();
                     Type targetType = parameters[i].ParameterType;
@@ -259,18 +285,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Creates an instance of a generic Type using the supplied Type arguments
-        /// </summary>
-        /// <param name="type">The generic type to be specialized.</param>
-        /// <param name="typeArgs">The type args.</param>
-        /// <returns>An instance of the generic type.</returns>
-        public static Type MakeGenericType(Type type, Type[] typeArgs)
-        {
-            // TODO: Add error handling
-            return type.MakeGenericType(typeArgs);
-        }
-
-        /// <summary>
         /// Determines whether this instance can deduce type args for a generic type from the supplied arguments.
         /// </summary>
         /// <param name="type">The type to be examined.</param>
@@ -283,9 +297,9 @@ namespace NUnit.Framework.Internal
         {
             Type[] typeParameters = type.GetGenericArguments();
 
-#if NETCF
+#if PORTABLE
             Type[] argTypes = arglist.Select(a => a == null ? typeof(object) : a.GetType()).ToArray();
-            if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.IsGenericType))
+            if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.GetTypeInfo().IsGenericType))
                 return false;
             try
             {
@@ -339,18 +353,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static Array GetEnumValues(Type enumType)
         {
-#if NETCF || SILVERLIGHT
-            FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
-
-            Array enumValues = Array.CreateInstance(enumType, fields.Length);
-
-            for (int index = 0; index < fields.Length; index++)
-                enumValues.SetValue(fields[index].GetValue(enumType), index);
-
-            return enumValues;
-#else
             return Enum.GetValues(enumType);
-#endif
         }
 
         /// <summary>
@@ -362,18 +365,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static string[] GetEnumNames(Type enumType)
         {
-#if NETCF || SILVERLIGHT
-            FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
-
-            string[] names = new string[fields.Length];
-
-            for (int index = 0; index < fields.Length; index++)
-                names[index] =  fields[index].Name;
-
-            return names;
-#else
             return Enum.GetNames(enumType);
-#endif
         }
     }
 }

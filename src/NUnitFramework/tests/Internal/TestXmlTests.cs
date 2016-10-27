@@ -1,4 +1,27 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
@@ -14,12 +37,12 @@ namespace NUnit.Framework.Internal
         [SetUp]
         public void SetUp()
         {
-            testMethod = new TestMethod(typeof(DummyFixture).GetMethod("DummyMethod"));
+            testMethod = new TestMethod(new MethodWrapper(typeof(DummyFixture), "DummyMethod"));
             testMethod.Properties.Set(PropertyNames.Description, "Test description");
             testMethod.Properties.Add(PropertyNames.Category, "Dubious");
             testMethod.Properties.Set("Priority", "low");
 
-            testFixture = new TestFixture(typeof(DummyFixture));
+            testFixture = new TestFixture(new TypeWrapper(typeof(DummyFixture)));
             testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
             testFixture.Properties.Add(PropertyNames.Category, "Fast");
             testFixture.Properties.Add("Value", 3);
@@ -41,14 +64,14 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("TestSuite"));
             Assert.That(new TestAssembly("junk").TestType, 
                 Is.EqualTo("Assembly"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "ParameterizedMethod")).TestType,
                 Is.EqualTo("ParameterizedMethod"));
-            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
+            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(typeof(DummyFixture))).TestType,
                 Is.EqualTo("ParameterizedFixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
-            Assert.That(new ParameterizedFixtureSuite(genericType).TestType,
+            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(genericType)).TestType,
                 Is.EqualTo("GenericFixture"));
         }
 
@@ -82,15 +105,23 @@ namespace NUnit.Framework.Internal
             CheckXmlForTest(testSuite, true);
         }
 
+        [Test]
+        public void TestNameWithInvalidCharacter()
+        {
+            testMethod.Name = "\u0001HappyFace";
+            // This throws if the name is not properly escaped
+            Assert.That(testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"\\u0001HappyFace\""));
+        }
+
         #region Helper Methods For Checking XML
 
         private void CheckXmlForTest(Test test, bool recursive)
         {
-            XmlNode topNode = test.ToXml(true);
+            TNode topNode = test.ToXml(true);
             CheckXmlForTest(test, topNode, recursive);
         }
 
-        private void CheckXmlForTest(Test test, XmlNode topNode, bool recursive)
+        private void CheckXmlForTest(Test test, TNode topNode, bool recursive)
         {
             Assert.NotNull(topNode);
 
@@ -108,7 +139,7 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
-            if (test.FixtureType != null)
+            if (test.TypeInfo != null)
             {
                 Assert.NotNull(test.ClassName);
                 Assert.That(topNode.Attributes["classname"], Is.EqualTo(test.ClassName));
@@ -127,11 +158,11 @@ namespace NUnit.Framework.Internal
                     foreach (object value in test.Properties[key])
                         expectedProps.Add(key + "=" + value.ToString());
 
-                XmlNode propsNode = topNode.FindDescendant("properties");
+                TNode propsNode = topNode.SelectSingleNode("properties");
                 Assert.NotNull(propsNode);
 
                 var actualProps = new List<string>();
-                foreach (XmlNode node in propsNode.ChildNodes)
+                foreach (TNode node in propsNode.ChildNodes)
                 {
                     string name = node.Attributes["name"];
                     string value = node.Attributes["value"];
@@ -149,7 +180,7 @@ namespace NUnit.Framework.Internal
                     foreach (Test child in suite.Tests)
                     {
                         string xpathQuery = string.Format("{0}[@id={1}]", child.XmlElementName, child.Id);
-                        XmlNode childNode = topNode.FindDescendant(xpathQuery);
+                        TNode childNode = topNode.SelectSingleNode(xpathQuery);
                         Assert.NotNull(childNode, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
 
                         CheckXmlForTest(child, childNode, recursive);

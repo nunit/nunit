@@ -25,6 +25,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
+
+#if PORTABLE
+using System.Linq;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -63,21 +69,7 @@ namespace NUnit.Framework.Internal
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
             List<MethodInfo> list = new List<MethodInfo>();
-
-#if NETCF
-            if (fixtureType.IsGenericTypeDefinition)
-            {
-                var genArgs = fixtureType.GetGenericArguments();
-                Type[] args = new Type[genArgs.Length];
-                for (int ix = 0; ix < genArgs.Length; ++ix)
-                {
-                    args[ix] = typeof(object);
-                }
-
-                fixtureType = fixtureType.MakeGenericType(args);
-            }
-#endif
-
+            
             var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
             foreach (MethodInfo method in fixtureType.GetMethods(flags))
             {
@@ -115,18 +107,17 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-#if NETCF
-            if (fixtureType.ContainsGenericParameters)
-                return false;
-#endif
-
+#if PORTABLE
+            return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
+                .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
+#else
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
                 if (method.IsDefined(attributeType, false))
                     return true;
             }
-
             return false;
+#endif
         }
 
         #endregion
@@ -158,7 +149,8 @@ namespace NUnit.Framework.Internal
             if (arguments == null) return Construct(type);
 
             Type[] argTypes = GetTypeArray(arguments);
-            ConstructorInfo ctor = type.GetConstructor(argTypes);
+            ITypeInfo typeInfo = new TypeWrapper(type);
+            ConstructorInfo ctor = typeInfo.GetConstructor(argTypes);
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
 
@@ -172,12 +164,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="objects">An array of objects</param>
         /// <returns>An array of Types</returns>
-        private static Type[] GetTypeArray(object[] objects)
+        internal static Type[] GetTypeArray(object[] objects)
         {
             Type[] types = new Type[objects.Length];
             int index = 0;
             foreach (object o in objects)
-                types[index++] = o.GetType();
+            {
+                // NUnitNullType is a marker to indicate null since we can't do typeof(null) or null.GetType()
+                types[index++] = o == null ? typeof(NUnitNullType) : o.GetType();
+            }
             return types;
         }
 
@@ -210,18 +205,20 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
+#if !PORTABLE
+                catch (System.Threading.ThreadAbortException)
+                {
+                    // No need to wrap or rethrow ThreadAbortException
+                    return null;
+                }
+#endif
+                catch (TargetInvocationException e)
+                {
+                    throw new NUnitException("Rethrown", e.InnerException);
+                }
                 catch (Exception e)
                 {
-#if !PORTABLE
-                    // No need to wrap or rethrow ThreadAbortException
-                    if (!(e is System.Threading.ThreadAbortException))
-#endif
-                    {
-                        if (e is TargetInvocationException)
-                            throw new NUnitException("Rethrown", e.InnerException);
-                        else
-                            throw new NUnitException("Rethrown", e);
-                    }
+                    throw new NUnitException("Rethrown", e);
                 }
             }
 

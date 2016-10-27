@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -65,7 +64,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (!gotData)
                     break;
 
-                ParameterSet parms = new ParameterSet(testdata);
+                TestCaseParameters parms = new TestCaseParameters(testdata);
                 testCases.Add(parms);
             }
 

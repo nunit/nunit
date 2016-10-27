@@ -55,6 +55,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ConstraintResult
     {
+        IConstraint _constraint;
+
         #region Constructors
 
         /// <summary>
@@ -64,9 +66,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
         public ConstraintResult(IConstraint constraint, object actualValue)
         {
-            this.Name = constraint.DisplayName;
-            this.Description = constraint.Description;
-            this.ActualValue = actualValue;
+            _constraint = constraint;
+            ActualValue = actualValue;
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace NUnit.Framework.Constraints
         public ConstraintResult(IConstraint constraint, object actualValue, ConstraintStatus status)
             : this(constraint, actualValue)
         {
-            this.Status = status;
+            Status = status;
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace NUnit.Framework.Constraints
         public ConstraintResult(IConstraint constraint, object actualValue, bool isSuccess)
             : this(constraint, actualValue)
         {
-            this.Status = isSuccess ? ConstraintStatus.Success : ConstraintStatus.Failure;
+            Status = isSuccess ? ConstraintStatus.Success : ConstraintStatus.Failure;
         }
 
         #endregion
@@ -112,19 +113,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public virtual bool IsSuccess
         {
-            get { return this.Status == ConstraintStatus.Success; }
+            get { return Status == ConstraintStatus.Success; }
         }
 
         /// <summary>
         /// Display friendly name of the constraint.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get { return _constraint.DisplayName; } }
 
         /// <summary>
         /// Description of the constraint may be affected by the state the constraint had
         /// when <see cref="Constraint.ApplyTo{TActual}(TActual)"/> was performed against the actual value.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get { return _constraint.Description; } }
 
         #endregion
 
@@ -154,7 +155,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The writer on which the actual value is displayed</param>
         public virtual void WriteActualValueTo(MessageWriter writer)
         {
-            writer.WriteActualValue(this.ActualValue);
+            writer.WriteActualValue(ActualValue);
         }
 
         #endregion

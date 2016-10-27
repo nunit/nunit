@@ -130,8 +130,8 @@ namespace NUnit.Framework.Constraints
                     yield return new TestCaseData(new Dictionary<int, char> {{1, 'A'}}, new Dictionary<int, char> {{1, 'a'}});
                     yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"A", 1}, {"b", 2}});
                     yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }}, new Dictionary<char, int> {{'a', 1}});
-                    
-#if !NETCF && !SILVERLIGHT
+
+#if !PORTABLE
                     yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"},{2, "B"}});
                     yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{1, 'a'},{2, 'b'}});
                     yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}, {"b", 2}});
@@ -153,7 +153,16 @@ namespace NUnit.Framework.Constraints
                 .ApplyTo(set2).IsSuccess);
         }
 
-#if NET_4_0 || NET_4_5
+        [Test]
+        public void EquivalentHonorsUsingWhenCollectionsAreOfDifferentTypes()
+        {
+            ICollection strings = new SimpleObjectCollection("1", "2", "3");
+            ICollection ints = new SimpleObjectCollection(1, 2, 3);
+
+            Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
+        }
+
+#if (NET_4_0 || NET_4_5) && !PORTABLE
         [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0,Net-4.5,Mono-4.5")]
         public void WorksWithHashSets()
         {

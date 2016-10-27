@@ -46,7 +46,7 @@ namespace NUnit.Framework
 
         #region Exist
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
@@ -81,6 +81,29 @@ namespace NUnit.Framework
         public static ContainsConstraint Contain(string expected)
         {
             return new ContainsConstraint(expected);
+        }
+
+        #endregion
+
+        #region DictionaryContain
+        /// <summary>
+        /// Returns a new DictionaryContainsKeyConstraint checking for the
+        /// presence of a particular key in the Dictionary key collection.
+        /// </summary>
+        /// <param name="expected">The key to be matched in the Dictionary key collection</param>
+        public static DictionaryContainsKeyConstraint ContainKey(object expected)
+        {
+            return Contains.Key(expected);
+        }
+
+        /// <summary>
+        /// Returns a new DictionaryContainsValueConstraint checking for the
+        /// presence of a particular value in the Dictionary value collection.
+        /// </summary>
+        /// <param name="expected">The value to be matched in the Dictionary value collection</param>
+        public static DictionaryContainsValueConstraint ContainValue(object expected)
+        {
+            return Contains.Value(expected);
         }
 
         #endregion

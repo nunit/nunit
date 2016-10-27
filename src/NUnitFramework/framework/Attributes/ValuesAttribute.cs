@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
@@ -33,7 +35,7 @@ namespace NUnit.Framework
     /// an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public class ValuesAttribute : DataAttribute, Interfaces.IParameterDataSource
+    public class ValuesAttribute : DataAttribute, IParameterDataSource
     {
         /// <summary>
         /// The collection of data to be returned. Must
@@ -96,11 +98,11 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of _values to be used as arguments
         /// </summary>
-        public IEnumerable GetData(ParameterInfo parameter)
+        public IEnumerable GetData(IParameterInfo parameter)
         {
             Type targetType = parameter.ParameterType;
 
-            if (targetType.IsEnum && data.Length == 0)
+            if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
             {
                 return TypeHelper.GetEnumValues(targetType);
             }
@@ -127,7 +129,7 @@ namespace NUnit.Framework
                     continue;
                 }
 
-                if (targetType.IsAssignableFrom(arg.GetType()))
+                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
                     continue;
 
 #if !PORTABLE

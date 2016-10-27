@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
     /// TestFixture is a surrogate for a user test fixture class,
     /// containing one or more tests.
     /// </summary>
-    public class TestFixture : TestSuite
+    public class TestFixture : TestSuite, IDisposableFixture
     {
         #region Constructor
 
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestFixture"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestFixture(Type fixtureType) : base(fixtureType)
+        public TestFixture(ITypeInfo fixtureType) : base(fixtureType)
         {
             CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
             CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));

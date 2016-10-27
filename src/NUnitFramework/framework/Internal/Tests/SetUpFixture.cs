@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
     /// SetUpFixture extends TestSuite and supports
     /// Setup and TearDown methods.
     /// </summary>
-    public class SetUpFixture : TestSuite
+    public class SetUpFixture : TestSuite, IDisposableFixture
     {
         #region Constructor
 
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="SetUpFixture"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-        public SetUpFixture( Type type ) : base( type )
+        public SetUpFixture( ITypeInfo type ) : base( type )
         {
             this.Name = type.Namespace;
             if (this.Name == null)

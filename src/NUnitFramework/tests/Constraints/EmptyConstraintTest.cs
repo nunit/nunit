@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-#if !SILVERLIGHT
+#if !PORTABLE
             new ArrayList(),
 #endif
             new System.Collections.Generic.List<int>()
@@ -63,6 +63,13 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
         }
 
+        [Test]
+        public void NullStringGivesFailureResult()
+        {
+            string actual = null;
+            var result = theConstraint.ApplyTo(actual);
+            Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
+        }
     }
 
     [TestFixture]
@@ -78,16 +85,17 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] 
         {
-            string.Empty,
+            string.Empty
         };
 
         static object[] FailureData = new object[]
         {
             new TestCaseData( "Hello", "\"Hello\"" ),
+            new TestCaseData( null, "null")
         };
     }
 
-#if !SILVERLIGHT
+#if !PORTABLE
     [TestFixture]
     public class EmptyDirectoryConstraintTest
     {
@@ -103,9 +111,12 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void NotEmptyDirectory()
         {
-            var testPath = new DirectoryInfo(NUnit.Env.DefaultWorkDirectory);
-            Assume.That(testPath, Does.Exist);
-            Assert.That(testPath, Is.Not.Empty);
+            using (var testDir = new TestDirectory())
+            {
+                var stream = File.Create(Path.Combine(testDir.Directory.FullName, "DUMMY.FILE"));
+                stream.Close();
+                Assert.That(testDir.Directory, Is.Not.Empty);
+            }
         }
     }
 #endif

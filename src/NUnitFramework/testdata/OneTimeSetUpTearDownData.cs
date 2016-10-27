@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NUnit.TestData.OneTimeSetUpTearDownData
@@ -52,6 +53,73 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
 
         [Test]
         public void EvenMoreSuccess(){}
+    }
+
+    [TestFixture]
+    public class SetUpAndTearDownFixtureWithTestCases
+    {
+        public int setUpCount = 0;
+        public int tearDownCount = 0;
+
+        [OneTimeSetUp]
+        public virtual void Init()
+        {
+            setUpCount++;
+        }
+
+        [OneTimeTearDown]
+        public virtual void Destroy()
+        {
+            tearDownCount++;
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void Success(int i)
+        {
+            Assert.Pass("Passed with test case {0}", i);
+        }
+    }
+
+    [TestFixture]
+    public class SetUpAndTearDownFixtureWithTheories
+    {
+        public int setUpCount = 0;
+        public int tearDownCount = 0;
+
+        [OneTimeSetUp]
+        public virtual void Init()
+        {
+            setUpCount++;
+        }
+
+        [OneTimeTearDown]
+        public virtual void Destroy()
+        {
+            tearDownCount++;
+        }
+
+        public struct Data
+        {
+            public int Id { get; set; }
+        }
+
+        [DatapointSource]
+        public IEnumerable<Data> fetchAllRows()
+        {
+            yield return new Data { Id = 1 };
+            yield return new Data { Id = 2 };
+            yield return new Data { Id = 3 };
+            yield return new Data { Id = 4 };
+        }
+
+        [Theory]
+        public void TheoryTest(Data entry)
+        {
+            Assert.Pass("Passed with theory id {0}", entry.Id);
+        }
     }
 
     [TestFixture,Explicit]
@@ -360,14 +428,31 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     [TestFixture]
     public class DisposableFixture : IDisposable
     {
-        public bool disposeCalled = false;
+        public int disposeCalled = 0;
 
         [Test]
         public void OneTest() { }
 
         public void Dispose()
         {
-            disposeCalled = true;
+            disposeCalled++;
+        }
+    }
+
+    [TestFixture]
+    public class DisposableFixtureWithTestCases : IDisposable
+    {
+        public int disposeCalled = 0;
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void TestCaseTest(int data) { }
+        
+        public void Dispose()
+        {
+            disposeCalled++;
         }
     }
 }

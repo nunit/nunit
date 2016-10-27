@@ -48,6 +48,11 @@ namespace NUnit.TestData.TheoryFixture
         }
 
         [Theory]
+        public void TestWithUnsupportedNullableTypeArgumentWithNoDataPoints(decimal? x)
+        {
+        }
+
+        [Theory]
         public void TheoryWithArgumentsAndDatapoints(int x, int y)
         {
         }
@@ -64,7 +69,31 @@ namespace NUnit.TestData.TheoryFixture
         }
 
         [Theory]
+        public void TestWithNullableBooleanArguments(bool? a, bool? b)
+        {
+        }
+
+        [Theory]
         public void TestWithEnumAsArgument(System.AttributeTargets targets)
+        {
+        }
+
+        [Theory]
+        public void TestWithNullableEnumAsArgument(System.AttributeTargets? targets)
+        {
+        }
+
+        [Theory]
+        public void TestWithBothDatapointAndAttributeData(
+            int i,
+            [Values(0, 5)]decimal d)
+        {
+        }
+
+        [Theory]
+        public void TestWithAllDataSuppliedByAttributes(
+            [Values(1.0, 2.0)]double d1,
+            [Values(3.0, 4.0)]double d2)
         {
         }
 

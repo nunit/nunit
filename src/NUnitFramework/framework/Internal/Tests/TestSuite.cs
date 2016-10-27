@@ -27,7 +27,7 @@ using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
 using System.Threading.Tasks;
 #endif
 
@@ -53,28 +53,40 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite( string name ) 
-            : base( name ) { }
+        public TestSuite(string name) : base(name)
+        {
+            Arguments = new object[0];
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="parentSuiteName">Name of the parent suite.</param>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite( string parentSuiteName, string name ) 
-            : base( parentSuiteName, name ) { }
+        public TestSuite(string parentSuiteName, string name)
+            : base(parentSuiteName, name)
+        {
+            Arguments = new object[0];
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestSuite(Type fixtureType) : base(fixtureType)
+        public TestSuite(ITypeInfo fixtureType)
+            : base(fixtureType)
         {
-            string name = this.Name = TypeHelper.GetDisplayName(fixtureType);
-            string nspace = fixtureType.Namespace;
-            this.FullName = nspace != null && nspace != ""
-                ? nspace + "." + name
-                : name;
+            Arguments = new object[0];
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
+        public TestSuite(Type fixtureType)
+            : base(new TypeWrapper(fixtureType))
+        {
+            Arguments = new object[0];
         }
 
         #endregion
@@ -121,7 +133,7 @@ namespace NUnit.Framework.Internal
         /// Adds a test to the suite.
         /// </summary>
         /// <param name="test">The test.</param>
-        public void Add( Test test ) 
+        public void Add(Test test)
         {
             test.Parent = this;
             tests.Add(test);
@@ -135,7 +147,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>The list of child tests</value>
-        public override IList<ITest> Tests 
+        public override IList<ITest> Tests
         {
             get { return tests; }
         }
@@ -151,7 +163,7 @@ namespace NUnit.Framework.Internal
             {
                 int count = 0;
 
-                foreach(Test test in Tests)
+                foreach (Test test in Tests)
                 {
                     count += test.TestCaseCount;
                 }
@@ -210,9 +222,9 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public override TNode AddToXml(TNode parentNode, bool recursive)
         {
-            XmlNode thisNode = parentNode.AddElement("test-suite");
+            TNode thisNode = parentNode.AddElement("test-suite");
             thisNode.AddAttribute("type", this.TestType);
 
             PopulateTestNode(thisNode, recursive);
@@ -237,12 +249,12 @@ namespace NUnit.Framework.Internal
         /// <param name="attrType">The attribute type to check for</param>
         protected void CheckSetUpTearDownMethods(Type attrType)
         {
-            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(FixtureType, attrType, true))
+            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(TypeInfo.Type, attrType, true))
                 if (method.IsAbstract ||
                      !method.IsPublic && !method.IsFamily ||
                      method.GetParameters().Length > 0 ||
-                     method.ReturnType != typeof(void) 
-#if NET_4_0 || NET_4_5
+                     method.ReturnType != typeof(void)
+#if NET_4_0 || NET_4_5 || PORTABLE
                      &&
                      method.ReturnType != typeof(Task)
 #endif

@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -404,11 +406,11 @@ namespace NUnit.Framework.Constraints
         // null array reference. Others could be added in the future.
         private void AdjustArgumentIfNeeded<T>(ref T arg)
         {
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             if (arg != null)
             {
                 Type argType = arg.GetType();
-                Type genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
+                Type genericTypeDefinition = argType.GetTypeInfo().IsGenericType ? argType.GetGenericTypeDefinition() : null;
 
                 if (genericTypeDefinition == typeof(ArraySegment<>) && argType.GetProperty("Array").GetValue(arg, null) == null)
                 {

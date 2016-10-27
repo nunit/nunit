@@ -1,17 +1,41 @@
-﻿// ****************************************************************
-// Copyright 2009, Charlie Poole
-// This is free software licensed under the NUnit license. You may
-// obtain a copy of the license at http://nunit.org
-// ****************************************************************
+﻿// ***********************************************************************
+// Copyright (c) 2009-2015 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    public class ValueSourceTests
+    public class ValueSourceTests : ValueSourceMayBeInherited
     {
         [Test]
         public void ValueSourceCanBeStaticProperty(
@@ -29,7 +53,20 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void ValueSourceCanBeInstanceProperty(
+        public void ValueSourceCanBeInheritedStaticProperty(
+            [ValueSource("InheritedStaticProperty")] bool source)
+        {
+            Assert.AreEqual(true, source);
+        }
+
+        [Test]
+        public void ValueSourceMayNotBeInstanceProperty()
+        {
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceProperty");
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+        }
+
+        public void MethodWithValueSourceInstanceProperty(
             [ValueSource("InstanceProperty")] string source)
         {
             Assert.AreEqual("InstanceProperty", source);
@@ -53,7 +90,13 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void ValueSourceCanBeInstanceMethod(
+        public void ValueSourceMayNotBeInstanceMethod()
+        {
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceMethod");
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+        }
+
+        public void MethodWithValueSourceInstanceMethod(
             [ValueSource("InstanceMethod")] string source)
         {
             Assert.AreEqual("InstanceMethod", source);
@@ -74,13 +117,19 @@ namespace NUnit.Framework.Attributes
         internal static object[] StaticField = { "StaticField" };
 
         [Test]
-        public void ValueSourceCanBeInstanceField(
+        public void ValueSourceMayNotBeInstanceField()
+        {
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceField");
+            Assert.That(result.Children.ToArray ()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+        }
+
+        public void MethodWithValueSourceInstanceField(
             [ValueSource("InstanceField")] string source)
         {
             Assert.AreEqual("InstanceField", source);
         }
 
-        internal static object[] InstanceField = { "InstanceField" };
+        internal object[] InstanceField = { "InstanceField" };
 
         [Test, Sequential]
         public void MultipleArguments(
@@ -120,7 +169,7 @@ namespace NUnit.Framework.Attributes
 
         public class ValueProvider
         {
-            public IEnumerable<int> IntegerProvider()
+            public static IEnumerable<int> IntegerProvider()
             {
                 List<int> dataList = new List<int>();
 
@@ -131,6 +180,55 @@ namespace NUnit.Framework.Attributes
 
                 return dataList;
             }
+
+            public static IEnumerable<int> ForeignNullResultProvider()
+            {
+                return null;
+            }
+        }
+
+        public static string NullSource = null;
+
+        public static IEnumerable<int> NullDataSourceProvider()
+        {
+            return null;
+        }
+
+        public static IEnumerable<int> NullDataSourceProperty
+        {
+            get { return null; }
+        }
+
+        [Test, Explicit("Null or nonexisting data sources definitions should not prevent other tests from run #1121")]
+        public void ValueSourceMayNotBeNull(
+            [ValueSource("NullSource")] string nullSource,
+            [ValueSource("NullDataSourceProvider")] string nullDataSourceProvided,
+            [ValueSource(typeof(ValueProvider), "ForeignNullResultProvider")] string nullDataSourceProvider,
+            [ValueSource("NullDataSourceProperty")] int nullDataSourceProperty,
+            [ValueSource("SomeNonExistingMemberSource")] int nonExistingMember)
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ValueSourceAttributeShouldThrowInsteadOfReturningNull()
+        {
+            var method = new MethodWrapper(GetType(), "ValueSourceMayNotBeNull");
+            var parameters = method.GetParameters();
+
+            foreach (var parameter in parameters)
+            {
+                var dataSource = parameter.GetCustomAttributes<IParameterDataSource>(false)[0];
+                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(parameter)); 
+            }
+        }
+    }
+
+    public class ValueSourceMayBeInherited
+    {
+        protected static IEnumerable<bool> InheritedStaticProperty
+        {
+            get { yield return true; }
         }
     }
 }

@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
+// Enable these tests if you need to debug unhandled exceptions
+#if !PORTABLE && false
 using System;
 using System.Collections;
 using System.Text;

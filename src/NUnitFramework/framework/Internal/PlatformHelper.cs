@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2014 Charlie Poole
+// Copyright (c) 2007-2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 #if !PORTABLE
 using System;
+using System.Linq;
 
 namespace NUnit.Framework.Internal
 {
@@ -31,14 +32,14 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class PlatformHelper
     {
-        private OSPlatform os;
-        private RuntimeFramework rt;
+        private readonly OSPlatform _os;
+        private readonly RuntimeFramework _rt;
 
         // Set whenever we fail to support a list of platforms
-        private string reason = string.Empty;
+        private string _reason = string.Empty;
 
         const string CommonOSPlatforms =
-            "Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
+            "Win,Win32,Win32S,Win32NT,Win32Windows,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
             "Win2008Server,Win2008ServerR2,Win2012Server,Win2012ServerR2," +
             "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8,"+
             "Win8.1,Windows8.1,Win10,Windows10,WindowsServer10,Unix,Linux";
@@ -46,17 +47,13 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Comma-delimited list of all supported OS platform constants
         /// </summary>
-#if NETCF
-        public const string OSPlatforms = CommonOSPlatforms;
-#else
         public const string OSPlatforms = CommonOSPlatforms + ",Xbox,MacOSX";
-#endif
-        
+
         /// <summary>
         /// Comma-delimited list of all supported Runtime platform constants
         /// </summary>
         public static readonly string RuntimePlatforms =
-            "Net,NetCF,SSCLI,Rotor,Mono,MonoTouch";
+            "Net,SSCLI,Rotor,Mono,MonoTouch";
 
         /// <summary>
         /// Default constructor uses the operating system and
@@ -64,8 +61,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public PlatformHelper()
         {
-            this.os = OSPlatform.CurrentPlatform;
-            this.rt = RuntimeFramework.CurrentFramework;
+            _os = OSPlatform.CurrentPlatform;
+            _rt = RuntimeFramework.CurrentFramework;
         }
 
         /// <summary>
@@ -76,8 +73,8 @@ namespace NUnit.Framework.Internal
         /// <param name="rt">RuntimeFramework to be used</param>
         public PlatformHelper( OSPlatform os, RuntimeFramework rt )
         {
-            this.os = os;
-            this.rt = rt;
+            _os = os;
+            _rt = rt;
         }
 
         /// <summary>
@@ -88,11 +85,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsPlatformSupported( string[] platforms )
         {
-            foreach( string platform in platforms )
-                if ( IsPlatformSupported( platform ) )
-                    return true;
-
-            return false;
+            return platforms.Any( IsPlatformSupported );
         }
 
         /// <summary>
@@ -106,7 +99,7 @@ namespace NUnit.Framework.Internal
             string include = platformAttribute.Include;
             string exclude = platformAttribute.Exclude;
 
-            return IsPlatformSupported(include, exclude);
+            return IsPlatformSupported( include, exclude );
         }
 
         /// <summary>
@@ -129,19 +122,19 @@ namespace NUnit.Framework.Internal
             {
                 if (include != null && !IsPlatformSupported(include))
                 {
-                    reason = string.Format("Only supported on {0}", include);
+                    _reason = string.Format("Only supported on {0}", include);
                     return false;
                 }
 
                 if (exclude != null && IsPlatformSupported(exclude))
                 {
-                    reason = string.Format("Not supported on {0}", exclude);
+                    _reason = string.Format("Not supported on {0}", exclude);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                reason = ex.Message;
+                _reason = ex.Message;
                 return false;
             }
 
@@ -157,10 +150,10 @@ namespace NUnit.Framework.Internal
         public bool IsPlatformSupported( string platform )
         {
             if ( platform.IndexOf( ',' ) >= 0 )
-                return IsPlatformSupported( platform.Split( new char[] { ',' } ) );
+                return IsPlatformSupported( platform.Split(',') );
 
             string platformName = platform.Trim();
-            bool isSupported = false;
+            bool isSupported;
 
 //			string versionSpecification = null;
 //
@@ -175,96 +168,91 @@ namespace NUnit.Framework.Internal
             {
                 case "WIN":
                 case "WIN32":
-                    isSupported = os.IsWindows;
+                    isSupported = _os.IsWindows;
                     break;
                 case "WIN32S":
-                    isSupported = os.IsWin32S;
+                    isSupported = _os.IsWin32S;
                     break;
                 case "WIN32WINDOWS":
-                    isSupported = os.IsWin32Windows;
+                    isSupported = _os.IsWin32Windows;
                     break;
                 case "WIN32NT":
-                    isSupported = os.IsWin32NT;
-                    break;
-                case "WINCE":
-                    isSupported = os.IsWinCE;
+                    isSupported = _os.IsWin32NT;
                     break;
                 case "WIN95":
-                    isSupported = os.IsWin95;
+                    isSupported = _os.IsWin95;
                     break;
                 case "WIN98":
-                    isSupported = os.IsWin98;
+                    isSupported = _os.IsWin98;
                     break;
                 case "WINME":
-                    isSupported = os.IsWinME;
+                    isSupported = _os.IsWinME;
                     break;
                 case "NT3":
-                    isSupported = os.IsNT3;
+                    isSupported = _os.IsNT3;
                     break;
                 case "NT4":
-                    isSupported = os.IsNT4;
+                    isSupported = _os.IsNT4;
                     break;
                 case "NT5":
-                    isSupported = os.IsNT5;
+                    isSupported = _os.IsNT5;
                     break;
                 case "WIN2K":
-                    isSupported = os.IsWin2K;
+                    isSupported = _os.IsWin2K;
                     break;
                 case "WINXP":
-                    isSupported = os.IsWinXP;
+                    isSupported = _os.IsWinXP;
                     break;
                 case "WIN2003SERVER":
-                    isSupported = os.IsWin2003Server;
+                    isSupported = _os.IsWin2003Server;
                     break;
                 case "NT6":
-                    isSupported = os.IsNT6;
+                    isSupported = _os.IsNT6;
                     break;
                 case "VISTA":
-                    isSupported = os.IsVista;
+                    isSupported = _os.IsVista;
                     break;
                 case "WIN2008SERVER":
-                    isSupported = os.IsWin2008Server;
+                    isSupported = _os.IsWin2008Server;
                     break;
                 case "WIN2008SERVERR2":
-                    isSupported = os.IsWin2008ServerR2;
+                    isSupported = _os.IsWin2008ServerR2;
                     break;
                 case "WIN2012SERVER":
-                    isSupported = os.IsWin2012ServerR1 || os.IsWin2012ServerR2;
+                    isSupported = _os.IsWin2012ServerR1 || _os.IsWin2012ServerR2;
                     break;
                 case "WIN2012SERVERR2":
-                    isSupported = os.IsWin2012ServerR2;
+                    isSupported = _os.IsWin2012ServerR2;
                     break;
                 case "WIN7":
                 case "WINDOWS7":
-                    isSupported = os.IsWindows7;
+                    isSupported = _os.IsWindows7;
                     break;
                 case "WINDOWS8":
                 case "WIN8":
-                    isSupported = os.IsWindows8;
+                    isSupported = _os.IsWindows8;
                     break;
                 case "WINDOWS8.1":
                 case "WIN8.1":
-                    isSupported = os.IsWindows81;
+                    isSupported = _os.IsWindows81;
                     break;
                 case "WINDOWS10":
                 case "WIN10":
-                    isSupported = os.IsWindows10;
+                    isSupported = _os.IsWindows10;
                     break;
                 case "WINDOWSSERVER10":
-                    isSupported = os.IsWindowsServer10;
+                    isSupported = _os.IsWindowsServer10;
                     break;
                 case "UNIX":
                 case "LINUX":
-                    isSupported = os.IsUnix;
+                    isSupported = _os.IsUnix;
                     break;
-#if !NETCF
                 case "XBOX":
-                    isSupported = os.IsXbox;
+                    isSupported = _os.IsXbox;
                     break;
                 case "MACOSX":
-                    isSupported = os.IsMacOSX;
+                    isSupported = _os.IsMacOSX;
                     break;
-#endif
                 // These bitness tests relate to the process, not the OS.
                 // We can't use Environment.Is64BitProcess because it's
                 // only supported in NET 4.0 and higher.
@@ -293,7 +281,7 @@ namespace NUnit.Framework.Internal
             }
 
             if (!isSupported)
-                this.reason = "Only supported on " + platform;
+                _reason = "Only supported on " + platform;
 
             return isSupported;
         }
@@ -305,13 +293,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string Reason
         {
-            get { return reason; }
+            get { return _reason; }
         }
 
         private bool IsRuntimeSupported(string platformName)
         {
             string versionSpecification = null;
-            string[] parts = platformName.Split(new char[] { '-' });
+            string[] parts = platformName.Split('-');
             if (parts.Length == 2)
             {
                 platformName = parts[0];
@@ -323,19 +311,12 @@ namespace NUnit.Framework.Internal
                 case "NET":
                     return IsRuntimeSupported(RuntimeType.Net, versionSpecification);
 
-                case "NETCF":
-                    return IsRuntimeSupported(RuntimeType.NetCF, versionSpecification);
-
                 case "SSCLI":
                 case "ROTOR":
                     return IsRuntimeSupported(RuntimeType.SSCLI, versionSpecification);
 
                 case "MONO":
                     return IsRuntimeSupported(RuntimeType.Mono, versionSpecification);
-
-                case "SL":
-                case "SILVERLIGHT":
-                    return IsRuntimeSupported(RuntimeType.Silverlight, versionSpecification);
 
                 case "MONOTOUCH":
                     return IsRuntimeSupported(RuntimeType.MonoTouch, versionSpecification);
@@ -353,7 +334,7 @@ namespace NUnit.Framework.Internal
 
             RuntimeFramework target = new RuntimeFramework(runtime, version);
 
-            return rt.Supports(target);
+            return _rt.Supports(target);
         }
     }
 }

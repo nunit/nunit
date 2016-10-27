@@ -21,34 +21,48 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
+#if !PORTABLE
 using System.Threading;
 
 namespace NUnit.Framework.Attributes
 {
-    // [Platform(Exclude = "Mono", Reason = "Runner hangs at end when these are run")]
     public class ThreadingTests
     {
         protected Thread ParentThread { get; private set; }
-#if !NETCF
+        protected Thread SetupThread { get; private set; }
         protected ApartmentState ParentThreadApartment { get; private set; }
-#endif
 
         [OneTimeSetUp]
         public void GetParentThreadInfo()
         {
             ParentThread = Thread.CurrentThread;
-#if !NETCF
             ParentThreadApartment = GetApartmentState(ParentThread);
-#endif
         }
 
-#if !NETCF
+        [SetUp]
+        public void GetSetUpThreadInfo()
+        {
+            SetupThread = Thread.CurrentThread;
+        }
+
+        [Test]
+        public void TestDefaultsToRunningEverythingOnSameThread()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
+        }
+
+        [TestCase(5)]
+        public void TestCaseDefaultsToRunningEverythingOnSameThread(int x)
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
+        }
+
         protected static ApartmentState GetApartmentState(Thread thread)
         {
             return thread.GetApartmentState();
         }
-#endif
     }
 }
 #endif

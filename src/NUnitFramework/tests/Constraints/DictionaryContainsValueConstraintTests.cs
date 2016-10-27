@@ -49,7 +49,19 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
+        [Test]
+        public void SucceedsWhenValueIsPresentUsingContainKey()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainValue("Mundo"));
+        }
 
+        [Test]
+        public void SucceedsWhenValueIsNotPresentUsingContainKey()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.Not.ContainValue("NotValue"));
+        }
         [Test]
         public void FailsWhenNotUsedAgainstADictionary()
         {
@@ -61,7 +73,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
         }
 
-#if !SILVERLIGHT
+#if !PORTABLE
         [Test]
         public void WorksWithNonGenericDictionary()
         {

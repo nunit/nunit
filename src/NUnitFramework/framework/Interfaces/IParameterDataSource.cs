@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Collections;
-using System.Reflection;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -38,6 +37,6 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="parameter">The parameter for which data is needed</param>
         /// <returns>An enumeration containing individual data items</returns>
-        IEnumerable GetData(ParameterInfo parameter);
+        IEnumerable GetData(IParameterInfo parameter);
     }
 }

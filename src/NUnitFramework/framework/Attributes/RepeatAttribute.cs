@@ -30,6 +30,7 @@
 // #2 requires infrastructure for dynamic test cases first
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework
@@ -62,6 +63,50 @@ namespace NUnit.Framework
         public TestCommand Wrap(TestCommand command)
         {
             return new RepeatedTestCommand(command, _count);
+        }
+
+        #endregion
+
+        #region Nested RepeatedTestCommand Class
+
+        /// <summary>
+        /// The test command for the RepeatAttribute
+        /// </summary>
+        public class RepeatedTestCommand : DelegatingTestCommand
+        {
+            private int repeatCount;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
+            /// </summary>
+            /// <param name="innerCommand">The inner command.</param>
+            /// <param name="repeatCount">The number of repetitions</param>
+            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount)
+                : base(innerCommand)
+            {
+                this.repeatCount = repeatCount;
+            }
+
+            /// <summary>
+            /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
+            /// </summary>
+            /// <param name="context">The context in which the test should run.</param>
+            /// <returns>A TestResult</returns>
+            public override TestResult Execute(TestExecutionContext context)
+            {
+                int count = repeatCount;
+
+                while (count-- > 0)
+                {
+                    context.CurrentResult = innerCommand.Execute(context);
+
+                    // TODO: We may want to change this so that all iterations are run
+                    if (context.CurrentResult.ResultState != ResultState.Success)
+                        break;
+                }
+
+                return context.CurrentResult;
+            }
         }
 
         #endregion

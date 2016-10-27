@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 
-#if !SILVERLIGHT
+#if !PORTABLE
 using System.Data;
 #endif
 
@@ -629,5 +629,23 @@ namespace NUnit.Framework.Assertions
         }
 
         #endregion
+
+        #region Equals
+
+        [Test]
+        public void EqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.Equals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.Equals should not be used for Assertions"));
+        }
+
+        [Test]
+        public void ReferenceEqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.ReferenceEquals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used for Assertions"));
+        }
+        #endregion
+
     }
 }

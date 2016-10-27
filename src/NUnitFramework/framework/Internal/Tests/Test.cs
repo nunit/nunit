@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -50,6 +51,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected MethodInfo[] tearDownMethods;
 
+        /// <summary>
+        /// Used to cache the declaring type for this MethodInfo
+        /// </summary>
+        protected ITypeInfo DeclaringTypeInfo;
+
+        /// <summary>
+        /// Method property backing field
+        /// </summary>
+        private IMethodInfo _method;
+
         #endregion
 
         #region Construction
@@ -60,12 +71,9 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the test</param>
         protected Test( string name )
         {
-            this.FullName = name;
-            this.Name = name;
-            this.Id = GetNextId();
+            Guard.ArgumentNotNullOrEmpty(name, "name");
 
-            this.Properties = new PropertyBag();
-            this.RunState = RunState.Runnable;
+            Initialize(name);
         }
 
         /// <summary>
@@ -75,40 +83,52 @@ namespace NUnit.Framework.Internal
         /// <param name="pathName">The parent tests full name</param>
         /// <param name="name">The name of the test</param>
         protected Test( string pathName, string name ) 
-        { 
-            this.FullName = pathName == null || pathName == string.Empty 
-                ? name : pathName + "." + name;
-            this.Name = name;
-            this.Id = GetNextId();
+        {
+            Guard.ArgumentNotNullOrEmpty(pathName, "pathName");
 
-            this.Properties = new PropertyBag();
-            this.RunState = RunState.Runnable;
+            Initialize(name);
+
+            FullName = pathName + "." + name;
         }
 
         /// <summary>
         ///  TODO: Documentation needed for constructor
         /// </summary>
-        /// <param name="fixtureType"></param>
-        protected Test(Type fixtureType) : this(fixtureType.FullName)
+        /// <param name="typeInfo"></param>
+        protected Test(ITypeInfo typeInfo)
         {
-            this.FixtureType = fixtureType;
+            Initialize(typeInfo.GetDisplayName());
+
+            string nspace = typeInfo.Namespace;
+            if (nspace != null && nspace != "")
+                FullName = nspace + "." + Name;
+            TypeInfo = typeInfo;
         }
 
         /// <summary>
         /// Construct a test from a MethodInfo
         /// </summary>
         /// <param name="method"></param>
-        protected Test(MethodInfo method)
-            : this(method.ReflectedType)
+        protected Test(IMethodInfo method)
         {
-            this.Name = method.Name;
-            this.FullName += "." + this.Name;
-            this.Method = method;
+            Initialize(method.Name);
+
+            Method = method;
+            TypeInfo = method.TypeInfo;
+            FullName = method.TypeInfo.FullName + "." + Name;
+        }
+
+        private void Initialize(string name)
+        {
+            FullName = Name = name;
+            Id = GetNextId();
+            Properties = new PropertyBag();
+            RunState = RunState.Runnable;
         }
 
         private static string GetNextId()
-        {
-            return IdPrefix + unchecked(_nextID++).ToString();
+        {            
+            return IdPrefix + unchecked(_nextID++);
         }
 
         #endregion
@@ -133,22 +153,29 @@ namespace NUnit.Framework.Internal
         public string FullName { get; set; }
 
         /// <summary>
-        /// Gets the name of the class containing this test. Returns
-        /// null if the test is not associated with a class.
+        /// Gets the name of the class where this test was declared.
+        /// Returns null if the test is not associated with a class.
         /// </summary>
         public string ClassName
-        { 
+        {
             get
             {
-                Type type = FixtureType;
+                ITypeInfo typeInfo = TypeInfo;
 
-                if (type == null)
+                if (Method != null)
+                {
+                    if (DeclaringTypeInfo == null)
+                        DeclaringTypeInfo = new TypeWrapper(Method.MethodInfo.DeclaringType);
+
+                    typeInfo = DeclaringTypeInfo;
+                }
+
+                if (typeInfo == null)
                     return null;
 
-                if (type.IsGenericType)
-                    type = type.GetGenericTypeDefinition();
-
-                return type.FullName;
+                return typeInfo.IsGenericType
+                    ? typeInfo.GetGenericTypeDefinition().FullName
+                    : typeInfo.FullName;
             }
         }
 
@@ -162,16 +189,24 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the Type of the fixture used in running this test
+        /// Gets the TypeInfo of the fixture used in running this test
         /// or null if no fixture type is associated with it.
         /// </summary>
-        public Type FixtureType { get; private set; }
+        public ITypeInfo TypeInfo { get; private set; }
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public MethodInfo Method { get; set; } // public setter needed by NUnitTestCaseBuilder
+        public IMethodInfo Method
+        {
+            get { return _method; }
+            set
+            {
+                DeclaringTypeInfo = null;
+                _method = value;
+            }
+        } // public setter needed by NUnitTestCaseBuilder
 
         /// <summary>
         /// Whether or not the test should be run
@@ -260,9 +295,7 @@ namespace NUnit.Framework.Internal
         #region Internal Properties
 
         internal bool RequiresThread { get; set; }
-
-        internal bool IsAsynchronous { get; set; }
-
+        
         #endregion
 
         #region Other Public Methods
@@ -283,6 +316,24 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="provider">An object deriving from MemberInfo</param>
         public void ApplyAttributesToTest(MemberInfo provider)
+        {
+            foreach (IApplyToTest iApply in provider.GetAttributes<IApplyToTest>(true))
+                iApply.ApplyToTest(this);
+        }
+
+        /// <summary>
+        /// Modify a newly constructed test by applying any of NUnit's common
+        /// attributes, based on a supplied ICustomAttributeProvider, which is
+        /// usually the reflection element from which the test was constructed,
+        /// but may not be in some instances. The attributes retrieved are 
+        /// saved for use in subsequent operations.
+        /// </summary>
+        /// <param name="provider">An object deriving from MemberInfo</param>
+        public void ApplyAttributesToTest(Assembly provider)
+        {
+            foreach (IApplyToTest iApply in provider.GetAttributes<IApplyToTest>())
+                iApply.ApplyToTest(this);
+        }
 #else
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
@@ -293,22 +344,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
-#endif
-        {
-            foreach (IApplyToTest iApply in provider.GetCustomAttributes(typeof(IApplyToTest), true))
-                iApply.ApplyToTest(this);
-        }
-
-#if PORTABLE
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied ICustomAttributeProvider, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are 
-        /// saved for use in subsequent operations.
-        /// </summary>
-        /// <param name="provider">An object deriving from MemberInfo</param>
-        public void ApplyAttributesToTest(Assembly provider)
         {
             foreach (IApplyToTest iApply in provider.GetCustomAttributes(typeof(IApplyToTest), true))
                 iApply.ApplyToTest(this);
@@ -324,7 +359,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="thisNode"></param>
         /// <param name="recursive"></param>
-        protected void PopulateTestNode(XmlNode thisNode, bool recursive)
+        protected void PopulateTestNode(TNode thisNode, bool recursive)
         {
             thisNode.AddAttribute("id", this.Id.ToString());
             thisNode.AddAttribute("name", this.Name);
@@ -348,13 +383,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="recursive">If true, include child tests recursively</param>
         /// <returns></returns>
-        public XmlNode ToXml(bool recursive)
+        public TNode ToXml(bool recursive)
         {
-            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
-
-            XmlNode thisNode = AddToXml(topNode, recursive);
-
-            return thisNode;
+            return AddToXml(new TNode("dummy"), recursive);
         }
 
         /// <summary>
@@ -364,7 +395,7 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public abstract XmlNode AddToXml(XmlNode parentNode, bool recursive);
+        public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
         #endregion
 

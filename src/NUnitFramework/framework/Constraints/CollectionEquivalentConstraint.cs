@@ -20,7 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
+using System;
 using System.Collections;
 
 namespace NUnit.Framework.Constraints
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionEquivalentConstraint : CollectionItemsEqualConstraint
     {
-        private readonly IEnumerable expected;
+        private readonly IEnumerable _expected;
 
         /// <summary>
         /// Construct a CollectionEquivalentConstraint
@@ -40,9 +40,16 @@ namespace NUnit.Framework.Constraints
         public CollectionEquivalentConstraint(IEnumerable expected)
             : base(expected)
         {
-            this.expected = expected;
-            this.DisplayName = "Equivalent";
+            _expected = expected;
         }
+
+        /// <summary> 
+        /// The display name of this Constraint for use by ToString().
+        /// The default value is the name of the constraint with
+        /// trailing "Constraint" removed. Derived classes may set
+        /// this to another name in their constructors.
+        /// </summary>
+        public override string DisplayName { get { return "Equivalent"; } }
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -50,7 +57,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "equivalent to " + MsgUtils.FormatValue(expected); }
+            get { return "equivalent to " + MsgUtils.FormatValue(_expected); }
         }
 
         /// <summary>
@@ -61,12 +68,23 @@ namespace NUnit.Framework.Constraints
         protected override bool Matches(IEnumerable actual)
         {
             // This is just an optimization
-            if (expected is ICollection && actual is ICollection)
-                if (((ICollection)actual).Count != ((ICollection)expected).Count)
+            if (_expected is ICollection && actual is ICollection)
+                if (((ICollection)actual).Count != ((ICollection)_expected).Count)
                     return false;
 
-            CollectionTally tally = Tally(expected);
+            CollectionTally tally = Tally(_expected);
             return tally.TryRemove(actual) && tally.Count == 0;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied predicate function
+        /// </summary>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public CollectionEquivalentConstraint Using<TActual, TExpected>(Func<TActual, TExpected, bool> comparison)
+        {
+            base.Using(EqualityAdapter.For(comparison));
+            return this;
         }
     }
 }

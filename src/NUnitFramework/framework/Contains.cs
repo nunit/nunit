@@ -80,7 +80,7 @@ namespace NUnit.Framework
         /// </summary>
         public static SubstringConstraint Substring(string expected)
         {
-            return new SubstringConstraint(expected);;
+            return new SubstringConstraint(expected);
         }
 
         #endregion

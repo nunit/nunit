@@ -26,6 +26,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -122,8 +123,7 @@ namespace NUnit.Framework.Constraints
         /// modifier.
         /// </remarks>
         public bool WithSameOffset { get; set; }
-
-        #endregion
+		#endregion
 
         #region Public Methods
         /// <summary>
@@ -145,8 +145,8 @@ namespace NUnit.Framework.Constraints
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            Type xGenericTypeDefinition = xType.IsGenericType ? xType.GetGenericTypeDefinition() : null;
-            Type yGenericTypeDefinition = yType.IsGenericType ? yType.GetGenericTypeDefinition() : null;
+            Type xGenericTypeDefinition = xType.GetTypeInfo().IsGenericType ? xType.GetGenericTypeDefinition() : null;
+            Type yGenericTypeDefinition = yType.GetTypeInfo().IsGenericType ? yType.GetGenericTypeDefinition() : null;
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
@@ -181,9 +181,6 @@ namespace NUnit.Framework.Constraints
             if (x is string && y is string)
                 return StringsEqual((string)x, (string)y);
 
-            if (x is IEnumerable && y is IEnumerable)
-                return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);
-
             if (x is Stream && y is Stream)
                 return StreamsEqual((Stream)x, (Stream)y);
 
@@ -198,7 +195,6 @@ namespace NUnit.Framework.Constraints
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.AreEqual(x, y, ref tolerance);
 
-#if !NETCF
             if (x is DateTimeOffset && y is DateTimeOffset)
             {
                 bool result;
@@ -223,7 +219,6 @@ namespace NUnit.Framework.Constraints
 
                 return result;
             }
-#endif
 
             if (tolerance != null && tolerance.Value is TimeSpan)
             {
@@ -236,45 +231,51 @@ namespace NUnit.Framework.Constraints
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
             }
 
-            if (FirstImplementsIEquatableOfSecond(xType, yType))
-                return InvokeFirstIEquatableEqualsSecond(x, y);
-            else if (xType != yType && FirstImplementsIEquatableOfSecond(yType, xType))
-                return InvokeFirstIEquatableEqualsSecond(y, x);
-            
+            MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
+            if (equals != null)
+                return InvokeFirstIEquatableEqualsSecond(x, y, equals);
+            if (xType != yType && (equals = FirstImplementsIEquatableOfSecond(yType, xType)) != null)
+                return InvokeFirstIEquatableEqualsSecond(y, x, equals);
+
+            if (x is IEnumerable && y is IEnumerable)
+                return EnumerablesEqual((IEnumerable) x, (IEnumerable) y, ref tolerance);
+
             return x.Equals(y);
         }
 
-        private static bool FirstImplementsIEquatableOfSecond(Type first, Type second)
+        private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
-            foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
-                if (xEquatableArgument.Equals(second))
-                    return true;
+            var pair = new KeyValuePair<Type, MethodInfo>();
 
-            return false;
+            foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
+                if (xEquatableArgument.Key.IsAssignableFrom(second))
+                    if (pair.Key == null || pair.Key.IsAssignableFrom(xEquatableArgument.Key))
+                        pair = xEquatableArgument;
+
+            return pair.Value;
         }
 
-        private static IList<Type> GetEquatableGenericArguments(Type type)
+        private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
         {
             // NOTE: Original implementation used Array.ConvertAll and
             // Array.FindAll, which don't exist in the compact framework.
-            var genericArgs = new List<Type>();
+            var genericArgs = new List<KeyValuePair<Type, MethodInfo>>();
 
             foreach (Type @interface in type.GetInterfaces())
             {
-                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
+                if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
                 {
-                    genericArgs.Add(@interface.GetGenericArguments()[0]);
+                    genericArgs.Add(new KeyValuePair<Type, MethodInfo>(
+                        @interface.GetGenericArguments()[0], @interface.GetMethod("Equals")));
                 }
             }
 
             return genericArgs;
         }
 
-        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second)
+        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
         {
-            MethodInfo equals = typeof(IEquatable<>).MakeGenericType(second.GetType()).GetMethod("Equals");
-
-            return (bool)equals.Invoke(first, new object[] { second });
+            return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
         }
         
         #endregion
@@ -331,32 +332,46 @@ namespace NUnit.Framework.Constraints
 
         private bool CollectionsEqual(ICollection x, ICollection y, ref Tolerance tolerance)
         {
-            IEnumerator expectedEnum = x.GetEnumerator();
-            IEnumerator actualEnum = y.GetEnumerator();
+            IEnumerator expectedEnum = null;
+            IEnumerator actualEnum = null;
 
-            int count;
-            for (count = 0; ; count++)
+            try
             {
-                bool expectedHasData = expectedEnum.MoveNext();
-                bool actualHasData = actualEnum.MoveNext();
-
-                if (!expectedHasData && !actualHasData)
-                    return true;
-
-                if (expectedHasData != actualHasData ||
-                    !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                expectedEnum = x.GetEnumerator();
+                actualEnum = y.GetEnumerator();
+                int count;
+                for (count = 0; ; count++)
                 {
-                    FailurePoint fp = new FailurePoint();
-                    fp.Position = count;
-                    fp.ExpectedHasData = expectedHasData;
-                    if (expectedHasData)
-                        fp.ExpectedValue = expectedEnum.Current;
-                    fp.ActualHasData = actualHasData;
-                    if (actualHasData)
-                        fp.ActualValue = actualEnum.Current;
-                    failurePoints.Insert(0, fp);
-                    return false;
+                    bool expectedHasData = expectedEnum.MoveNext();
+                    bool actualHasData = actualEnum.MoveNext();
+
+                    if (!expectedHasData && !actualHasData)
+                        return true;
+
+                    if (expectedHasData != actualHasData ||
+                        !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                    {
+                        FailurePoint fp = new FailurePoint();
+                        fp.Position = count;
+                        fp.ExpectedHasData = expectedHasData;
+                        if (expectedHasData)
+                            fp.ExpectedValue = expectedEnum.Current;
+                        fp.ActualHasData = actualHasData;
+                        if (actualHasData)
+                            fp.ActualValue = actualEnum.Current;
+                        failurePoints.Insert(0, fp);
+                        return false;
+                    }
                 }
+            }
+            finally
+            {
+                var expectedDisposable = expectedEnum as IDisposable;
+                if (expectedDisposable != null) expectedDisposable.Dispose();
+
+                var actualDisposable = actualEnum as IDisposable;
+                if (actualDisposable != null) actualDisposable.Dispose();
+
             }
         }
 
@@ -378,32 +393,47 @@ namespace NUnit.Framework.Constraints
 
         private bool EnumerablesEqual(IEnumerable x, IEnumerable y, ref Tolerance tolerance)
         {
-            IEnumerator expectedEnum = x.GetEnumerator();
-            IEnumerator actualEnum = y.GetEnumerator();
+            IEnumerator expectedEnum = null;
+            IEnumerator actualEnum = null;
 
-            int count;
-            for (count = 0; ; count++)
+            try
             {
-                bool expectedHasData = expectedEnum.MoveNext();
-                bool actualHasData = actualEnum.MoveNext();
+                expectedEnum = x.GetEnumerator();
+                actualEnum = y.GetEnumerator();
 
-                if (!expectedHasData && !actualHasData)
-                    return true;
-
-                if (expectedHasData != actualHasData ||
-                    !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                int count;
+                for (count = 0; ; count++)
                 {
-                    FailurePoint fp = new FailurePoint();
-                    fp.Position = count;
-                    fp.ExpectedHasData = expectedHasData;
-                    if (expectedHasData)
-                        fp.ExpectedValue = expectedEnum.Current;
-                    fp.ActualHasData = actualHasData;
-                    if (actualHasData)
-                        fp.ActualValue = actualEnum.Current;
-                    failurePoints.Insert(0, fp);
-                    return false;
+                    bool expectedHasData = expectedEnum.MoveNext();
+                    bool actualHasData = actualEnum.MoveNext();
+
+                    if (!expectedHasData && !actualHasData)
+                        return true;
+
+                    if (expectedHasData != actualHasData ||
+                        !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                    {
+                        FailurePoint fp = new FailurePoint();
+                        fp.Position = count;
+                        fp.ExpectedHasData = expectedHasData;
+                        if (expectedHasData)
+                            fp.ExpectedValue = expectedEnum.Current;
+                        fp.ActualHasData = actualHasData;
+                        if (actualHasData)
+                            fp.ActualValue = actualEnum.Current;
+                        failurePoints.Insert(0, fp);
+                        return false;
+                    }
                 }
+            }
+            finally
+            {
+                var expectedDisposable = expectedEnum as IDisposable;
+                if (expectedDisposable != null) expectedDisposable.Dispose();
+
+                var actualDisposable = actualEnum as IDisposable;
+                if (actualDisposable != null) actualDisposable.Dispose();
+
             }
         }
 

@@ -21,6 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Reflection;
+using NUnit.Compatibility;
+
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
@@ -34,9 +37,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
         }
 
-        object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
+        static object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
 
-        object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] { 
             new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" ) };
 
         [Test]

@@ -35,228 +35,277 @@ namespace NUnit.Framework.Constraints
     {
         private readonly string NL = NUnit.Env.NewLine;
 
-        [Test]
-        public void IsOrdered()
-        {
-            var al = new List<string>();
-            al.Add("x");
-            al.Add("y");
-            al.Add("z");
+        #region Ordering Tests
 
-            Assert.That(al, Is.Ordered);
+        [TestCaseSource("OrderedByData")]
+        public void IsOrderedBy(IEnumerable collection, Constraint constraint)
+        {
+            Assert.That(collection, constraint);
         }
 
-        [Test]
-        public void IsOrdered_2()
+        static readonly object[] OrderedByData = new[]
         {
-            var al = new List<int>();
-            al.Add(1);
-            al.Add(2);
-            al.Add(3);
+            // Simple Ordering
+            new TestCaseData(
+                new[] { "x", "y", "z" },
+                Is.Ordered),
+            new TestCaseData(
+                new[] { 1, 2, 3 },
+                Is.Ordered),
+            new TestCaseData(
+                new[] { "x", "y", "z" },
+                Is.Ordered.Ascending),
+            new TestCaseData(
+                new[] { 1, 2, 3 },
+                Is.Ordered.Ascending),
+            new TestCaseData(
+                new[] { "z", "y", "x" },
+                Is.Ordered.Descending),
+            new TestCaseData(
+                new[] { 3, 2, 1 },
+                Is.Ordered.Descending),
+            new TestCaseData(
+                new[] { "x", "x", "z" },
+                Is.Ordered),
+            // Ordered By Single Property
+            new TestCaseData(
+                new[] { new TestClass1(1), new TestClass1(2), new TestClass1(3) },
+                Is.Ordered.By("Value") ),
+            new TestCaseData(
+                new[] { new TestClass1(1), new TestClass1(2), new TestClass1(3) },
+                Is.Ordered.By("Value").Ascending ),
+            new TestCaseData(
+                new[] { new TestClass1(1), new TestClass1(2), new TestClass1(3) },
+                Is.Ordered.Ascending.By("Value") ),
+            new TestCaseData(
+                new[] { new TestClass1(3), new TestClass1(2), new TestClass1(1) },
+                Is.Ordered.By("Value").Descending ),
+            new TestCaseData(
+                new[] { new TestClass1(3), new TestClass1(2), new TestClass1(1) },
+                Is.Ordered.Descending.By("Value") ),
+            new TestCaseData(
+                new[] { new TestClass1(1), new TestClass1(2), new TestClass1(3) },
+                Is.Ordered.By("Value").Using(ObjectComparer.Default) ),
+            new TestCaseData(
+                new object[] { new TestClass1(1), new TestClass2(2) },
+                Is.Ordered.By("Value") ),
+            // Ordered By Two Properties
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                Is.Ordered.By("A").By("B") ),
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                Is.Ordered.By("A").Then.By("B") ),
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                Is.Ordered.Ascending.By("A").Then.Ascending.By("B") ),
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                Is.Ordered.By("A").Ascending.Then.By("B").Ascending ),
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 42), new TestClass3("XYZ", 99), new TestClass3("XYZ", 2) },
+                Is.Not.Ordered.By("A").Then.By("B") ),
+            new TestCaseData(
+                new [] {  new TestClass3("XYZ", 2), new TestClass3("ABC", 1), new TestClass3("ABC", 42) },
+                Is.Ordered.By("A").Descending.Then.By("B") ),
+            new TestCaseData(
+                new [] {  new TestClass3("XYZ", 2), new TestClass3("ABC", 1), new TestClass3("ABC", 42) },
+                Is.Ordered.Descending.By("A").Then.By("B") ),
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
+                Is.Ordered.By("A").Ascending.Then.By("B").Descending ),
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
+                Is.Ordered.Ascending.By("A").Then.Descending.By("B") ),
+            new TestCaseData(
+                new [] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
+                Is.Not.Ordered.By("A").Then.By("B") ),
+            new TestCaseData(
+                new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 42), new TestClass3("ABC", 1) },
+                Is.Ordered.By("A").Descending.Then.By("B").Descending ),
+            new TestCaseData(
+                new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 42), new TestClass3("ABC", 1) },
+                Is.Ordered.Descending.By("A").Then.Descending.By("B") )
+        };
 
-            Assert.That(al, Is.Ordered);
-        }
+        #endregion
 
-        [Test]
-        public void IsOrderedDescending()
-        {
-            var al = new List<string>();
-            al.Add("z");
-            al.Add("y");
-            al.Add("x");
-
-            Assert.That(al, Is.Ordered.Descending);
-        }
-
-        [Test]
-        public void IsOrderedDescending_2()
-        {
-            var al = new List<int>();
-            al.Add(3);
-            al.Add(2);
-            al.Add(1);
-
-            Assert.That(al, Is.Ordered.Descending);
-        }
+        #region Error Message Tests
 
         [Test]
         public void IsOrdered_Fails()
         {
-            var al = new List<string>();
-            al.Add("x");
-            al.Add("z");
-            al.Add("y");
-
             var expectedMessage =
                 "  Expected: collection ordered" + NL +
                 "  But was:  < \"x\", \"z\", \"y\" >" + NL;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(al, Is.Ordered));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new[] { "x", "z", "y" }, Is.Ordered));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test]
-        public void IsOrdered_Allows_adjacent_equal_values()
-        {
-            var al = new List<string>();
-            al.Add("x");
-            al.Add("x");
-            al.Add("z");
+        #endregion
 
-            Assert.That(al, Is.Ordered);
-        }
+        #region Custom Comparer Tests
 
         [Test]
-        public void IsOrdered_Handles_null()
+        public void IsOrdered_HandlesCustomComparison()
         {
-            var al = new List<object>();
-            al.Add("x");
-            al.Add(null);
-            al.Add("z");
-
-            var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(al, Is.Ordered));
-            Assert.That(ex.Message, Does.Contain("index 1"));
-        }
-
-        [Test]
-        public void IsOrdered_TypesMustBeComparable()
-        {
-            var al = new List<object>();
-            al.Add(1);
-            al.Add("x");
-
-            Assert.Throws<ArgumentException>(() => Assert.That(al, Is.Ordered));
-        }
-
-        [Test]
-        public void IsOrdered_AtLeastOneArgMustImplementIComparable()
-        {
-            var al = new List<object>();
-            al.Add(new object());
-            al.Add(new object());
-
-            Assert.Throws<ArgumentException>(() => Assert.That(al, Is.Ordered));
-        }
-
-        [Test]
-        public void IsOrdered_Handles_custom_comparison()
-        {
-            var al = new List<object>();
-            al.Add(new object());
-            al.Add(new object());
-
             AlwaysEqualComparer comparer = new AlwaysEqualComparer();
-            Assert.That(al, Is.Ordered.Using(comparer));
-            Assert.That(comparer.Called, "TestComparer was not called");
+            Assert.That(new[] { new object(), new object() }, Is.Ordered.Using(comparer));
+            Assert.That(comparer.CallCount, Is.GreaterThan(0), "TestComparer was not called");
         }
 
         [Test]
-        public void IsOrdered_Handles_custom_comparison2()
+        public void ExceptionThrownForMultipleComparersInStep()
         {
-            var al = new List<int>();
-            al.Add(2);
-            al.Add(1);
+            Assert.That(() => Is.Ordered.Using(new TestComparer()).Using(new AlwaysEqualComparer()), Throws.TypeOf<InvalidOperationException>());
+        }
 
+        [Test]
+        public void MultipleComparersUsedInDifferentSteps()
+        {
+            var comparer1 = new TestComparer();
+            var comparer2 = new AlwaysEqualComparer();
+            var collection = new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 42), new TestClass3("ABC", 1) };
+
+            Assert.That(collection, Is.Ordered.By("A").Using(comparer1).Then.By("B").Using(comparer2));
+
+            // First comparer is called for every pair of items in the collection
+            Assert.That(comparer1.CallCount, Is.EqualTo(2), "First comparer should be called twice");
+
+            // Second comparer is only called where the first property matches
+            Assert.That(comparer2.CallCount, Is.EqualTo(1), "Second comparer should be called once");
+        }
+
+        [Test]
+        public void IsOrdered_HandlesCustomComparison2()
+        {
             TestComparer comparer = new TestComparer();
-            Assert.That(al, Is.Ordered.Using(comparer));
-            Assert.That(comparer.Called, "TestComparer was not called");
+            Assert.That(new[] { 2, 1 }, Is.Ordered.Using(comparer));
+            Assert.That(comparer.CallCount, Is.GreaterThan(0), "TestComparer was not called");
         }
 
         [Test]
         public void UsesProvidedGenericComparer()
         {
-            var al = new List<int>();
-            al.Add(1);
-            al.Add(2);
-
             var comparer = new GenericComparer<int>();
-            Assert.That(al, Is.Ordered.Using(comparer));
+            Assert.That(new[] { 1, 2 }, Is.Ordered.Using(comparer));
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
         [Test]
         public void UsesProvidedGenericComparison()
         {
-            var al = new List<int>();
-            al.Add(1);
-            al.Add(2);
-
             var comparer = new GenericComparison<int>();
-            Assert.That(al, Is.Ordered.Using(comparer.Delegate));
+            Assert.That(new[] { 1, 2 }, Is.Ordered.Using(comparer.Delegate));
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
         [Test]
         public void UsesProvidedLambda()
         {
-            var al = new List<int>();
-            al.Add(1);
-            al.Add(2);
-
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
-            Assert.That(al, Is.Ordered.Using(comparer));
+            Assert.That(new[] { 1, 2 }, Is.Ordered.Using(comparer));
+        }
+
+        #endregion
+
+        #region Exception Tests
+
+        [Test]
+        public void ExceptionThrownForRepeatedAscending()
+        {
+            Assert.That(() => Is.Ordered.Ascending.Ascending, Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
-        public void IsOrderedBy()
+        public void ExceptionThrownForRepeatedDescending()
         {
-            var al = new List<OrderedByTestClass>();
-            al.Add(new OrderedByTestClass(1));
-            al.Add(new OrderedByTestClass(2));
-
-            Assert.That(al, Is.Ordered.By("Value"));
+            Assert.That(() => Is.Ordered.Descending.Descending, Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
-        public void IsOrderedBy_Comparer()
+        public void ExceptionThrownForAscendingPlusDescending()
         {
-            var al = new List<OrderedByTestClass>();
-            al.Add(new OrderedByTestClass(1));
-            al.Add(new OrderedByTestClass(2));
-
-            Assert.That(al, Is.Ordered.By("Value").Using(ObjectComparer.Default));
+            Assert.That(() => Is.Ordered.Ascending.Descending, Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
-        public void IsOrderedBy_Handles_heterogeneous_classes_as_long_as_the_property_is_of_same_type()
+        public void ExceptionThrownForAscendingByDescending()
         {
-            var al = new List<object>();
-            al.Add(new OrderedByTestClass(1));
-            al.Add(new OrderedByTestClass2(2));
-
-            Assert.That(al, Is.Ordered.By("Value"));
+            Assert.That(() => Is.Ordered.Ascending.By("A").Descending, Throws.TypeOf<InvalidOperationException>());
         }
 
-        // Public to avoid a MethodAccessException under CF 2.0
-        public class OrderedByTestClass
+        [Test]
+        public void IsOrdered_ThrowsOnNull()
         {
-            private int myValue;
+            var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(new[] { "x", null, "z" }, Is.Ordered));
+            Assert.That(ex.Message, Does.Contain("index 1"));
+        }
 
-            public int Value
-            {
-                get { return myValue; }
-                set { myValue = value; }
-            }
+        [Test]
+        public void IsOrdered_TypesMustBeComparable()
+        {
+            Assert.Throws<ArgumentException>(() => Assert.That(new object[] { 1, "x" }, Is.Ordered));
+        }
 
-            public OrderedByTestClass(int value)
+        [Test]
+        public void IsOrdered_AtLeastOneArgMustImplementIComparable()
+        {
+            Assert.Throws<ArgumentException>(() => Assert.That(new [] { new object(), new object() }, Is.Ordered));
+        }
+
+        #endregion
+
+        #region Test Classes
+
+        public class TestClass1
+        {
+            public int Value { get; private set; }
+
+            public TestClass1(int value)
             {
                 Value = value;
             }
+
+            public override string ToString()
+            {
+                return Value.ToString();
+            }
         }
 
-        class OrderedByTestClass2
+        class TestClass2
         {
-            private int myValue;
-            public int Value
-            {
-                get { return myValue; }
-                set { myValue = value; }
-            }
+            public int Value { get; private set; }
 
-            public OrderedByTestClass2(int value)
+            public TestClass2(int value)
             {
                 Value = value;
             }
+
+            public override string ToString()
+            {
+                return Value.ToString();
+            }
         }
+
+        public class TestClass3
+        {
+            public string A { get; private set; }
+            public int B { get; private set; }
+
+            public TestClass3(string a, int b)
+            {
+                A = a;
+                B = b;
+            }
+
+            public override string ToString()
+            {
+                return A.ToString() + "," + B.ToString();
+            }
+        }
+
+        #endregion
     }
 }

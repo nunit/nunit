@@ -34,6 +34,14 @@ namespace NUnit.Framework
     /// </summary>
     public delegate void TestDelegate();
 
+#if NET_4_0 || NET_4_5 || PORTABLE
+    /// <summary>
+    /// Delegate used by tests that execute async code and
+    /// capture any thrown exception.
+    /// </summary>
+    public delegate System.Threading.Tasks.Task AsyncTestDelegate();
+#endif
+
     /// <summary>
     /// The Assert class contains a collection of static methods that
     /// implement the most common assertions used in NUnit.
@@ -54,7 +62,7 @@ namespace NUnit.Framework
         #region Equals and ReferenceEquals
 
         /// <summary>
-        /// The Equals method throws an AssertionException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done 
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -66,7 +74,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// override the default ReferenceEquals to throw an AssertionException. This 
+        /// override the default ReferenceEquals to throw an InvalidOperationException. This 
         /// implementation makes sure there is no mistake in calling this function 
         /// as part of Assert. 
         /// </summary>
@@ -262,15 +270,15 @@ namespace NUnit.Framework
 
         #region Multiple
 
-        /// <summary>
-        /// If an assert fails within this block, execution will continue and 
-        /// the errors will be reported at the end of the block.
-        /// </summary>
-        /// <param name="del">The test delegate</param>
-        public static void Multiple(TestDelegate del)
-        {
-            del();
-        }
+        ///// <summary>
+        ///// If an assert fails within this block, execution will continue and 
+        ///// the errors will be reported at the end of the block.
+        ///// </summary>
+        ///// <param name="del">The test delegate</param>
+        //public static void Multiple(TestDelegate del)
+        //{
+        //    del();
+        //}
 
         #endregion
     }

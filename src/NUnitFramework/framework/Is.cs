@@ -117,7 +117,19 @@ namespace NUnit.Framework
         {
             get { return new LessThanConstraint(0); }
         }
- 
+
+        #endregion
+
+        #region Zero
+
+        /// <summary>
+        /// Returns a constraint that tests for equality with zero
+        /// </summary>
+        public static EqualConstraint Zero
+        {
+            get { return new EqualConstraint(0); }
+        }
+
         #endregion
 
         #region NaN
@@ -159,7 +171,7 @@ namespace NUnit.Framework
 
         #region BinarySerializable
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -173,7 +185,7 @@ namespace NUnit.Framework
 
         #region XmlSerializable
 
-#if !SILVERLIGHT
+#if !PORTABLE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -390,6 +402,19 @@ namespace NUnit.Framework
         public static CollectionSubsetConstraint SubsetOf(IEnumerable expected)
         {
             return new CollectionSubsetConstraint(expected);
+        }
+
+        #endregion
+
+        #region SupersetOf
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// is a superset of the collection supplied as an argument.
+        /// </summary>
+        public static CollectionSupersetConstraint SupersetOf(IEnumerable expected)
+        {
+            return new CollectionSupersetConstraint(expected);
         }
 
         #endregion

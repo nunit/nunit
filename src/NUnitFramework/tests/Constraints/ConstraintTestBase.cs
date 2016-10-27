@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ProvidesProperDescription()
         {
-            Assert.That(expectedDescription, Is.EqualTo(theConstraint.Description));
+            Assert.That(theConstraint.Description, Is.EqualTo(expectedDescription));
         }
 
         [Test]

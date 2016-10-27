@@ -39,8 +39,15 @@ namespace NUnit.Framework.Constraints
         public DictionaryContainsValueConstraint(object expected)
             : base(expected)
         {
-            DisplayName = "ContainsValue";
         }
+
+        /// <summary> 
+        /// The display name of this Constraint for use by ToString().
+        /// The default value is the name of the constraint with
+        /// trailing "Constraint" removed. Derived classes may set
+        /// this to another name in their constructors.
+        /// </summary>
+        public override string DisplayName { get { return "ContainsValue"; } }
 
         /// <summary>
         /// The Description of what this constraint tests, for

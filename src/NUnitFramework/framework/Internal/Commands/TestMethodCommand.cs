@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -57,7 +56,6 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="context">The execution context</param>
         public override TestResult Execute(TestExecutionContext context)
         {
-            var thisThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
             // TODO: Decide if we should handle exceptions here
             object result = RunTestMethod(context);
 
@@ -72,20 +70,20 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunTestMethod(TestExecutionContext context)
         {
-#if NET_4_0 || NET_4_5
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
+#if NET_4_0 || NET_4_5 || PORTABLE
+            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
                 return RunAsyncTestMethod(context);
             else
 #endif
                 return RunNonAsyncTestMethod(context);
         }
 
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
         private object RunAsyncTestMethod(TestExecutionContext context)
         {
-            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method))
+            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method.MethodInfo))
             {
-                object result = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+                object result = Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
 
                 try
                 {
@@ -101,7 +99,8 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunNonAsyncTestMethod(TestExecutionContext context)
         {
-            return Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+            //return Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
+            return testMethod.Method.Invoke(context.TestObject, arguments);
         }
     }
 }

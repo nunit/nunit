@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -38,8 +40,15 @@ namespace NUnit.Framework.Constraints
         public InstanceOfTypeConstraint(Type type)
             : base(type, "instance of ")
         {
-            this.DisplayName = "InstanceOf";
         }
+
+        /// <summary> 
+        /// The display name of this Constraint for use by ToString().
+        /// The default value is the name of the constraint with
+        /// trailing "Constraint" removed. Derived classes may set
+        /// this to another name in their constructors.
+        /// </summary>
+        public override string DisplayName { get { return "InstanceOf"; } }
 
         /// <summary>
         /// Apply the constraint to an actual value, returning true if it succeeds

@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -44,7 +45,7 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             this.name = name;
-            this.descriptionPrefix = "property " + name;
+            this.DescriptionPrefix = "property " + name;
         }
 
         /// <summary>
@@ -62,18 +63,14 @@ namespace NUnit.Framework.Constraints
                 actualType = actual.GetType();
 
             PropertyInfo property = actualType.GetProperty(name,
-#if PORTABLE
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-#else
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
-#endif
 
             // TODO: Use an error result here
             if (property == null)
                 throw new ArgumentException(string.Format("Property {0} was not found", name), "name");
 
             propValue = property.GetValue(actual, null);
-            return new ConstraintResult(this, propValue, baseConstraint.ApplyTo(propValue).IsSuccess);
+            return new ConstraintResult(this, propValue, BaseConstraint.ApplyTo(propValue).IsSuccess);
         }
 
         /// <summary>
@@ -82,7 +79,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<property {0} {1}>", name, baseConstraint);
+            return string.Format("<property {0} {1}>", name, BaseConstraint);
         }
     }
 }

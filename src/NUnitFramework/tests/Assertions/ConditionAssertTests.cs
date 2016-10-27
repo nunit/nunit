@@ -36,12 +36,30 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void IsTrueNullable()
+        {
+            bool? actual = true;
+            Assert.IsTrue(actual);
+        }
+
+        [Test]
         public void IsTrueFails()
         {
             var expectedMessage =
                 "  Expected: True" + Env.NewLine +
                 "  But was:  False" + Env.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.IsTrue(false));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [TestCase(false, "  But was:  False")]
+        [TestCase(null,"  But was:  null")]
+        public void IsTrueFailsForNullable(bool? actual, string expectedButWas)
+        {
+            var expectedMessage =
+                "  Expected: True" + Env.NewLine +
+                expectedButWas + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsTrue(actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -52,12 +70,30 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void IsFalseNullable()
+        {
+            bool? actual = false;
+            Assert.IsFalse(actual);
+        }
+
+        [Test]
         public void IsFalseFails()
         {
             var expectedMessage =
                 "  Expected: False" + Env.NewLine +
                 "  But was:  True" + Env.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.IsFalse(true));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [TestCase(true,"  But was:  True")]
+        [TestCase(null, "  But was:  null")]
+        public void IsFalseFailsForNullable(bool? actual, string expectedButWas)
+        {
+            var expectedMessage =
+                "  Expected: False" + Env.NewLine +
+                expectedButWas + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsFalse(actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     
@@ -118,7 +154,7 @@ namespace NUnit.Framework.Assertions
             Assert.IsEmpty( new int[0], "Failed on empty Array" );
             Assert.IsEmpty((IEnumerable)new int[0], "Failed on empty IEnumerable");
 
-#if !SILVERLIGHT
+#if !PORTABLE
             Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
             Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
 #endif
@@ -173,7 +209,7 @@ namespace NUnit.Framework.Assertions
             Assert.IsNotEmpty( array, "Failed on Array" );
             Assert.IsNotEmpty( (IEnumerable)array, "Failed on IEnumerable" );
 
-#if !SILVERLIGHT
+#if !PORTABLE
             ArrayList list = new ArrayList(array);
             Hashtable hash = new Hashtable();
             hash.Add("array", array);
@@ -213,7 +249,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !SILVERLIGHT
+#if !PORTABLE
         [Test]
         public void IsNotEmptyFailsOnEmptyArrayList()
         {

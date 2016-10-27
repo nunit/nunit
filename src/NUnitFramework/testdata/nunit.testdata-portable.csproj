@@ -12,9 +12,11 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile344</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,6 +26,7 @@
     <DefineConstants>TRACE;DEBUG;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,28 +35,24 @@
     <DefineConstants>TRACE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="system" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\framework\nunit.snk">
-      <Link>nunit.snk</Link>
-    </None>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
-      <Link>FrameworkVersion.cs</Link>
+      <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AssertCountFixture.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="AssertIgnoreData.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
+    <Compile Include="AsyncSetupTearDownFixture.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
     <Compile Include="AuthorFixture.cs" />
     <Compile Include="CategoryAttributeData.cs" />
@@ -74,15 +74,22 @@
     <Compile Include="ParameterizedTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
+    <Compile Include="RandomAttributeFixture.cs" />
     <Compile Include="RepeatedTestFixture.cs" />
+    <Compile Include="RepeatingTestsFixtureBase.cs" />
+    <Compile Include="RetryFixture.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="SetUpFixtureData.cs" />
+    <Compile Include="SingleThreadedFixtureData.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
+    <Compile Include="TestCaseOrderAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
     <Compile Include="TestContextData.cs" />
     <Compile Include="TestFixtureData.cs" />
+    <Compile Include="TestFixtureSourceData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
     <Compile Include="TestOfFixture.cs" />
+    <Compile Include="TextOutputFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
     <Compile Include="TimeoutFixture.cs" />
     <Compile Include="UnexpectedExceptionFixture.cs" />
@@ -93,9 +100,14 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
-      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
       <Name>nunit.framework-portable</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

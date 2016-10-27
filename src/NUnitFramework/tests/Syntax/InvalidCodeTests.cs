@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using System;
 using System.Collections;
 using System.CodeDom.Compiler;
@@ -30,7 +30,7 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework.Syntax
 {
     [TestFixture]
-    public class InvalidCodeTests : AssertionHelper
+    public class InvalidCodeTests
     {
         static readonly string template1 =
 @"using System;

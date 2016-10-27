@@ -30,7 +30,9 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when an assertion failed.
     /// </summary>
+#if !PORTABLE
     [Serializable]
+#endif
     public class AssertionException : ResultStateException
     {
         /// <param name="message">The error message that explains 
@@ -46,7 +48,7 @@ namespace NUnit.Framework
             base(message, inner) 
         {}
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Serialization Constructor
         /// </summary>

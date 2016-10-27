@@ -1,4 +1,27 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2015 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -43,6 +66,10 @@ namespace NUnit.Framework.Internal
         /// <param name="value"></param>
         public void Set(string key, object value)
         {
+            // Guard against mystery exceptions later!
+            Guard.ArgumentNotNull(key, "key");
+            Guard.ArgumentNotNull(value, "value");
+
             IList list = new List<object>();
             list.Add(value);
             inner[key] = list;
@@ -115,13 +142,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="recursive">Not used</param>
         /// <returns>An XmlNode representing the PropertyBag</returns>
-        public XmlNode ToXml(bool recursive)
+        public TNode ToXml(bool recursive)
         {
-            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
-
-            XmlNode thisNode = AddToXml(topNode, recursive);
-
-            return thisNode;
+            return AddToXml(new TNode("dummy"), recursive);
         }
 
         /// <summary>
@@ -131,15 +154,15 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">Not used</param>
         /// <returns></returns>
-        public XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public TNode AddToXml(TNode parentNode, bool recursive)
         {
-            XmlNode properties = parentNode.AddElement("properties");
+            TNode properties = parentNode.AddElement("properties");
 
             foreach (string key in Keys)
             {
                 foreach (object value in this[key])
                 {
-                    XmlNode prop = properties.AddElement("property");
+                    TNode prop = properties.AddElement("property");
 
                     // TODO: Format as string
                     prop.AddAttribute("name", key.ToString());

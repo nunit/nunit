@@ -1,2 +1,2 @@
 #!/bin/bash
-xbuild "$@"
+./build.sh $CAKE_ARGS "$@"

@@ -22,12 +22,10 @@
 // ***********************************************************************
 
 // TODO: Test uses features not available in Silverlight
-#if !SILVERLIGHT
+#if !PORTABLE
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -46,7 +44,7 @@ namespace NUnit.Framework.Tests
         // different runtimes, so we now look only at the relative position
         // of before and after actions with respect to the test.
 
-        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture));
+        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture).Assembly);
         private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
         private ITestResult _result = null;
@@ -59,7 +57,7 @@ namespace NUnit.Framework.Tests
 
             ActionAttributeFixture.ClearResults();
 
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { "NUnit.TestData.ActionAttributeTests" };
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
@@ -167,7 +165,7 @@ namespace NUnit.Framework.Tests
             CheckActionsOnTestCase(testName);
         }
 
-        #region Helper Methods
+#region Helper Methods
 
         private void CheckActionsOnSuite(string suiteName, int firstEvent, int lastEvent, params string[] tags)
         {
@@ -214,9 +212,9 @@ namespace NUnit.Framework.Tests
             Assert.That(event2, Does.EndWith(target1), "Event mismatch");
         }
 
-        #endregion
+#endregion
 
-        #region Expected Attributes and Events
+#region Expected Attributes and Events
 
         private static readonly string[] ExpectedAssemblyActions = new string[] { 
                         "OnAssembly", "OnAssembly", "OnAssembly" };
@@ -413,7 +411,7 @@ namespace NUnit.Framework.Tests
         private static readonly int NumSetUpFixtureActions = ExpectedSetUpFixtureActions.Length;
         private static readonly int NumAssemblyActions = ExpectedAssemblyActions.Length;
 
-        #endregion
+#endregion
     }
 }
 #endif

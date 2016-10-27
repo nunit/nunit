@@ -36,7 +36,7 @@ namespace NUnit.Framework
         #region Equals and ReferenceEquals
 
         /// <summary>
-        /// The Equals method throws an AssertionException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done 
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -44,11 +44,11 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            throw new AssertionException("Assert.Equals should not be used for Assertions");
+            throw new InvalidOperationException("CollectionAssert.Equals should not be used for Assertions");
         }
 
         /// <summary>
-        /// override the default ReferenceEquals to throw an AssertionException. This 
+        /// override the default ReferenceEquals to throw an InvalidOperationException. This 
         /// implementation makes sure there is no mistake in calling this function 
         /// as part of Assert. 
         /// </summary>
@@ -56,7 +56,7 @@ namespace NUnit.Framework
         /// <param name="b"></param>
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");
+            throw new InvalidOperationException("CollectionAssert.ReferenceEquals should not be used for Assertions");
         }
 
         #endregion
@@ -387,6 +387,58 @@ namespace NUnit.Framework
             Assert.That(subset, Is.SubsetOf(superset), message, args);
         }
         #endregion
+
+
+        #region IsNotSupersetOf
+
+        /// <summary>
+        /// Asserts that the subset does not contain the superset
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        public static void IsNotSupersetOf(IEnumerable superset, IEnumerable subset)
+        {
+            IsNotSupersetOf(superset, subset, string.Empty, null);
+        }
+
+        /// <summary>
+        /// Asserts that the subset does not contain the superset
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void IsNotSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object[] args)
+        {
+            Assert.That(superset, Is.Not.SupersetOf(subset), message, args);
+        }
+        #endregion
+
+        #region IsSupersetOf
+
+        /// <summary>
+        /// Asserts that the subset contains the superset.
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        public static void IsSupersetOf(IEnumerable superset, IEnumerable subset)
+        {
+            IsSupersetOf(superset, subset, string.Empty, null);
+        }
+
+        /// <summary>
+        /// Asserts that the subset contains the superset.
+        /// </summary>
+        /// <param name="superset">The IEnumerable superset to be considered</param>
+        /// <param name="subset">The IEnumerable subset to be considered</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void IsSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object[] args)
+        {
+            Assert.That(superset, Is.SupersetOf(subset), message, args);
+        }
+        #endregion
+
 
         #region IsEmpty
         /// <summary>

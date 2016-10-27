@@ -4,10 +4,8 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-// TODO: Figure out how to make test work in SILVERLIGHT, since they support SetUpFixture
-#if !SILVERLIGHT
-using System.Collections;
-using NUnit.Common;
+#if !PORTABLE
+using System.Collections.Generic;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 
@@ -16,12 +14,12 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class SetUpFixtureTests
     {
-        private static readonly string testAssembly = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture));
+        private static readonly string testAssembly = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).Assembly);
 
         ITestAssemblyBuilder builder;
         ITestAssemblyRunner runner;
 
-        #region SetUp
+#region SetUp
         [SetUp]
         public void SetUp()
         {
@@ -30,7 +28,7 @@ namespace NUnit.Framework.Internal
             builder = new DefaultTestAssemblyBuilder();
             runner = new NUnitTestAssemblyRunner(builder);
         }
-        #endregion SetUp
+#endregion SetUp
 
         private ITestResult runTests(string nameSpace)
         {
@@ -39,7 +37,7 @@ namespace NUnit.Framework.Internal
 
         private ITestResult runTests(string nameSpace, TestFilter filter)
         {
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             if (nameSpace != null)
                 options["LOAD"] = new string[] { nameSpace };
             // No need for the overhead of parallel execution here
@@ -51,7 +49,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        #region Builder Tests
+#region Builder Tests
 
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interperets a SetupFixture class as a 'virtual namespace' into which 
@@ -61,7 +59,7 @@ namespace NUnit.Framework.Internal
         public void NamespaceSetUpFixtureReplacesNamespaceNodeInTree()
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { nameSpace };
             ITest suite = builder.Build(testAssembly, options);
 
@@ -95,7 +93,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void AssemblySetUpFixtureReplacesAssemblyNodeInTree()
         {
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             ITest suite = builder.Build(testAssembly, options);
 
             Assert.IsNotNull(suite);
@@ -110,7 +108,7 @@ namespace NUnit.Framework.Internal
         public void InvalidAssemblySetUpFixtureIsLoadedCorrectly()
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace6";
-            IDictionary options = new Hashtable();
+            IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { nameSpace };
             ITest suite = builder.Build(testAssembly, options);
 
@@ -136,9 +134,9 @@ namespace NUnit.Framework.Internal
             Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
         }
 
-        #endregion
+#endregion
 
-        #region Simple
+#region Simple
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfSingleTest()
         {
@@ -151,9 +149,9 @@ namespace NUnit.Framework.Internal
                                                      "NS1.Fixture.TearDown",
                                                      "NS1.OneTimeTearDown");
         }
-        #endregion Simple
+#endregion Simple
 
-        #region Static
+#region Static
         [Test]
         public void NamespaceSetUpMethodsMayBeStatic()
         {
@@ -166,9 +164,9 @@ namespace NUnit.Framework.Internal
                                                      "NS5.Fixture.TearDown",
                                                      "NS5.OneTimeTearDown");
         }
-        #endregion
+#endregion
 
-        #region TwoTestFixtures
+#region TwoTestFixtures
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfTwoTests()
         {
@@ -188,9 +186,9 @@ namespace NUnit.Framework.Internal
                                                      "NS2.Fixture.TearDown",
                                                      "NS2.OneTimeTearDown");
         }
-        #endregion TwoTestFixtures
+#endregion TwoTestFixtures
 
-        #region SubNamespace
+#region SubNamespace
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsNestedNamespaceSetUpFixture()
         {
@@ -210,9 +208,9 @@ namespace NUnit.Framework.Internal
                                                      "NS3.SubNamespace.OneTimeTearDown",
                                                      "NS3.OneTimeTearDown");
         }
-        #endregion SubNamespace
+#endregion SubNamespace
 
-        #region TwoSetUpFixtures
+#region TwoSetUpFixtures
         [NUnit.Framework.Test]
         public void WithTwoSetUpFixturesBothAreUsed()
         {
@@ -226,9 +224,9 @@ namespace NUnit.Framework.Internal
                                              .AndThen("NS4.OneTimeTearDown1", "NS4.OneTimeTearDown2")
                                              .Verify();
         }
-        #endregion TwoSetUpFixtures
+#endregion TwoSetUpFixtures
 
-        #region InvalidSetUpFixture
+#region InvalidSetUpFixture
 
         [Test]
         public void InvalidSetUpFixtureTest()
@@ -237,20 +235,20 @@ namespace NUnit.Framework.Internal
             TestUtilities.SimpleEventRecorder.Verify(new string[0]);
         }
 
-        #endregion
+#endregion
 
-        #region NoNamespaceSetupFixture
+#region NoNamespaceSetupFixture
         [NUnit.Framework.Test]
         public void AssemblySetupFixtureWrapsExecutionOfTest()
         {
-            ITestResult result = runTests(null, new Filters.SimpleNameFilter("SomeFixture"));
+            ITestResult result = runTests(null, new Filters.FullNameFilter("SomeFixture"));
             Assert.AreEqual(1, result.PassCount);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
                                                      "NoNamespaceTest",
                                                      "Assembly.OneTimeTearDown");
         }
-        #endregion NoNamespaceSetupFixture
+#endregion NoNamespaceSetupFixture
     }
 }
 #endif

@@ -1,17 +1,14 @@
-before_install:
-  - sudo add-apt-repository ppa:directhex/monoxide -y
-  - sudo apt-get update -qq -y
-  - sudo apt-get install mono-devel -qq -y
-
-before_script:
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings"
-
-script: 
-  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework /t:$Targets
-  
-env:
-  matrix:
-    - Framework="net-2.0" Targets="Build;Test"
-    - Framework="net-4.0" Targets="Build;TestFramework"
-    - Framework="net-4.5" Targets="Build;TestFramework"
-    
+language: csharp
+sudo: false
+mono:
+  - latest
+  - 4.2.4
+os:
+  - linux
+  - osx
+matrix:
+  allow_failures:
+    - mono: latest
+  fast_finish: true
+script:
+  - ./build.sh --target "Travis"

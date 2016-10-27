@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
@@ -39,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
-        internal ParameterSet parms;
+        internal TestCaseParameters parms;
 
         #endregion
 
@@ -49,31 +48,19 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
-        public TestMethod(MethodInfo method) : this(method, null) { }
+        public TestMethod(IMethodInfo method) : base (method) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
-        public TestMethod(MethodInfo method, Test parentSuite) 
-            : base( method ) 
+        public TestMethod(IMethodInfo method, Test parentSuite) : base(method ) 
         {
-            // Disambiguate call to base class methods
-            // TODO: This should not be here - it's a presentation issue
-            //if( method.DeclaringType != method.ReflectedType)
-            //    this.Name = method.DeclaringType.Name + "." + method.Name;
-
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.
-            string prefix = method.ReflectedType.FullName;
             if (parentSuite != null)
-            {
-                prefix = parentSuite.FullName;
-                this.FullName = prefix + "." + this.Name;
-            }
-
-            //this.method = method;
+                FullName = parentSuite.FullName + "." + Name;
         }
 
         #endregion
@@ -118,15 +105,15 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Returns an XmlNode representing the current result after
+        /// Returns a TNode representing the current result after
         /// adding it as a child of the supplied parent node.
         /// </summary>
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public override TNode AddToXml(TNode parentNode, bool recursive)
         {
-            XmlNode thisNode = parentNode.AddElement(XmlElementName);
+            TNode thisNode = parentNode.AddElement(XmlElementName);
 
             PopulateTestNode(thisNode, recursive);
 

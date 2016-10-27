@@ -24,6 +24,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -44,19 +45,18 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>
         /// True if any data is available, otherwise false.
         /// </returns>
-        public bool HasDataFor(System.Reflection.ParameterInfo parameter)
+        public bool HasDataFor(IParameterInfo parameter)
         {
-            Type parameterType = parameter.ParameterType;
-            MemberInfo method = parameter.Member;
-            Type fixtureType = method.ReflectedType;
-
-            if (!method.IsDefined(typeof(TheoryAttribute), true))
+            var method = parameter.Method;
+            if (!method.IsDefined<TheoryAttribute>(true))
                 return false;
 
-            if (parameterType == typeof(bool) || parameterType.IsEnum)
+            Type parameterType = parameter.ParameterType;
+            if (parameterType == typeof(bool) || parameterType.GetTypeInfo().IsEnum)
                 return true;
 
-            foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
+            Type containingType = method.TypeInfo.Type;
+            foreach (MemberInfo member in containingType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
                     GetTypeFromMemberInfo(member) == parameterType)
@@ -78,14 +78,14 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>
         /// An IEnumerable providing the required data
         /// </returns>
-        public System.Collections.IEnumerable GetDataFor(System.Reflection.ParameterInfo parameter)
+        public System.Collections.IEnumerable GetDataFor(IParameterInfo parameter)
         {
             var datapoints = new List<object>();
 
             Type parameterType = parameter.ParameterType;
-            Type fixtureType = parameter.Member.ReflectedType;
+            Type fixtureType = parameter.Method.TypeInfo.Type;
 
-            foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
+            foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true))
                 {
@@ -132,15 +132,28 @@ namespace NUnit.Framework.Internal.Builders
 
             if (datapoints.Count == 0)
             {
+                var underlyingParameterType = Nullable.GetUnderlyingType(parameterType);
+                if (underlyingParameterType != null)
+                {
+                    parameterType = underlyingParameterType;
+                }
+
                 if (parameterType == typeof(bool))
                 {
                     datapoints.Add(true);
                     datapoints.Add(false);
                 }
-                else if (parameterType.IsEnum)
+                else if (parameterType.GetTypeInfo().IsEnum)
                 {
                     foreach (object o in TypeHelper.GetEnumValues(parameterType))
+                    {
                         datapoints.Add(o);
+                    }
+                }
+
+                if (datapoints.Count > 0 && underlyingParameterType != null)
+                {
+                    datapoints.Add(null);
                 }
             }
 
@@ -174,7 +187,7 @@ namespace NUnit.Framework.Internal.Builders
             if (type.IsArray)
                 return type.GetElementType();
 
-            if (type.IsGenericType && type.Name == "IEnumerable`1")
+            if (type.GetTypeInfo().IsGenericType && type.Name == "IEnumerable`1")
                 return type.GetGenericArguments()[0];
 
             return null;

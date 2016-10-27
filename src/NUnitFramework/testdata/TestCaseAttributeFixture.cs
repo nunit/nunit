@@ -37,10 +37,14 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodHasDescriptionSpecified(int x, int y, int z)
         {}
 
-        [TestCase(2,3,4,TestName="XYZ")]
-        public void MethodHasTestNameSpecified(int x, int y, int z)
-        {}
- 
+        [TestCase(2, 3, 4, TestName = "XYZ")]
+        public void MethodHasTestNameSpecified_FixedText(int x, int y, int z)
+        { }
+
+        [TestCase(2, 3, 4, TestName = "{m}+XYZ")]
+        public void MethodHasTestNameSpecified_WithMethodName(int x, int y, int z)
+        { }
+
         [TestCase(2, 3, 4, Category = "XYZ")]
         public void MethodHasSingleCategory(int x, int y, int z)
         { }
@@ -82,12 +86,16 @@ namespace NUnit.TestData.TestCaseAttributeFixture
 #if !PORTABLE
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
+        [TestCase(3, IncludePlatform = "MacOSX")]
+        [TestCase(4, IncludePlatform = "XBox")]
         public void MethodWithIncludePlatform(int num)
         {
         }
 
         [TestCase(1, ExcludePlatform = "Win")]
         [TestCase(2, ExcludePlatform = "Linux")]
+        [TestCase(3, ExcludePlatform = "MacOSX")]
+        [TestCase(4, ExcludePlatform = "XBox")]
         public void MethodWitExcludePlatform(int num)
         {
         }

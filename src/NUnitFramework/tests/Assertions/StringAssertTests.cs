@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Assertions
@@ -158,6 +159,21 @@ namespace NUnit.Framework.Assertions
             string garbage = System.Text.Encoding.UTF8.GetString( data, 0, data.Length);
 
             Assert.AreNotEqual( input, garbage );
+        }
+
+
+        [Test]
+        public void EqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => StringAssert.Equals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("StringAssert.Equals should not be used for Assertions"));
+        }
+
+        [Test]
+        public void ReferenceEqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => StringAssert.ReferenceEquals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("StringAssert.ReferenceEquals should not be used for Assertions"));
         }
     }
 }

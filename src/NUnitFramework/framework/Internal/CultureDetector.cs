@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 using System.Globalization;
 
 namespace NUnit.Framework.Internal

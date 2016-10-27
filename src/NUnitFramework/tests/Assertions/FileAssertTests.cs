@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
+#if !PORTABLE
 using System;
 using System.IO;
 using System.Reflection;
@@ -38,9 +38,9 @@ namespace NUnit.Framework.Assertions
     {
         private readonly static string BAD_FILE = Path.Combine(Path.GetTempPath(), "garbage.txt");
 
-        #region AreEqual
+#region AreEqual
 
-        #region Success Tests
+#region Success Tests
         [Test]
         public void AreEqualPassesWhenBothAreNull()
         {
@@ -139,9 +139,9 @@ namespace NUnit.Framework.Assertions
                 FileAssert.AreEqual(tf1.File.FullName, tf2.File.FullName);
             }
         }
-        #endregion
+#endregion
 
-        #region Failure Tests
+#region Failure Tests
         [Test]
         public void AreEqualFailsWhenOneIsNull()
         {
@@ -219,13 +219,13 @@ namespace NUnit.Framework.Assertions
                 Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region AreNotEqual
+#region AreNotEqual
 
-        #region Success Tests
+#region Success Tests
         [Test]
         public void AreNotEqualPassesIfOneIsNull()
         {
@@ -279,9 +279,9 @@ namespace NUnit.Framework.Assertions
                 FileAssert.AreNotEqual(tf1.File.FullName, tf2.File.FullName);
             }
         }
-        #endregion
+#endregion
 
-        #region Failure Tests
+#region Failure Tests
         [Test]
         public void AreNotEqualFailsWhenBothAreNull()
         {
@@ -350,11 +350,11 @@ namespace NUnit.Framework.Assertions
                 Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Exists
+#region Exists
 
         [Test]
         public void ExistsPassesWhenFileInfoExists()
@@ -409,9 +409,9 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
-        #endregion
+#endregion
 
-        #region DoesNotExist
+#region DoesNotExist
 
         [Test]
         public void DoesNotExistFailsWhenFileInfoExists()
@@ -464,6 +464,20 @@ namespace NUnit.Framework.Assertions
         {
             var ex = Assert.Throws<ArgumentException>(() => FileAssert.DoesNotExist(string.Empty));
             Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
+        }
+
+        [Test]
+        public void EqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => FileAssert.Equals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("FileAssert.Equals should not be used for Assertions"));
+        }
+
+        [Test]
+        public void ReferenceEqualsFailsWhenUsed()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => FileAssert.ReferenceEquals(string.Empty, string.Empty));
+            Assert.That(ex.Message, Does.StartWith("FileAssert.ReferenceEquals should not be used for Assertions"));
         }
 
         #endregion

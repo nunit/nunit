@@ -22,7 +22,10 @@
 // ***********************************************************************
 
 using NUnit.Framework.Internal;
+using NUnit.Compatibility;
 using System.Collections;
+using System;
+using System.Reflection;
 
 namespace NUnit.Framework.Constraints
 {
@@ -39,6 +42,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class Constraint : IConstraint
     {
+        Lazy<string> _displayName;
+
         #region Constructor
 
         /// <summary>
@@ -49,11 +54,16 @@ namespace NUnit.Framework.Constraints
         {
             Arguments = args;
 
-            DisplayName = this.GetType().Name;
-            if (DisplayName.EndsWith("`1") || DisplayName.EndsWith("`2"))
-                DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
-            if (DisplayName.EndsWith("Constraint"))
-                DisplayName = DisplayName.Substring(0, DisplayName.Length - 10);
+            _displayName = new Lazy<string>(() =>
+            {
+                var type = this.GetType();
+                var displayName = type.Name;
+                if (type.GetTypeInfo().IsGenericType)
+                    displayName = displayName.Substring(0, displayName.Length - 2);
+                if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
+                    displayName = displayName.Substring(0, displayName.Length - 10);
+                return displayName;
+            });
         }
 
         #endregion
@@ -66,7 +76,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public string DisplayName { get; protected set; }
+        public virtual string DisplayName { get { return _displayName.Value; } }
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -106,12 +116,12 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || PORTABLE
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (var region = AsyncInvocationRegion.Create(del))
                     return ApplyTo(region.WaitForPendingOperationsToComplete(del()));
 #endif
-            return ApplyTo(del());
+            return ApplyTo(GetTestObject(del));
         }
 
 #pragma warning disable 3006
@@ -127,6 +137,18 @@ namespace NUnit.Framework.Constraints
             return ApplyTo(actual);
         }
 #pragma warning restore 3006
+
+        /// <summary>
+        /// Retrieves the value to be tested from an ActualValueDelegate.
+        /// The default implementation simply evaluates the delegate but derived
+        /// classes may override it to provide for delayed processing.
+        /// </summary>
+        /// <param name="del">An ActualValueDelegate</param>
+        /// <returns>Delegate evaluation result</returns>
+        protected virtual object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        {
+            return del();
+        }
 
         #endregion
 

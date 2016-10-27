@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{08D0F53A-CD37-4060-B5A2-BCC202F0DE46}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -16,6 +14,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -23,9 +23,8 @@
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <NoWarn>0414</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
@@ -35,12 +34,13 @@
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
     <NoWarn>0414</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\framework\nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -52,19 +52,19 @@
   -->
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
-      <Link>Internal\AssemblyHelperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\DefaultOptionsProviderTests.cs">
-      <Link>Runner\DefaultOptionsProviderTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\tests\ExtendedTextWrapperTests.cs">
-      <Link>Runner\ExtendedTextWrapperTests.cs</Link>
+    <Compile Include="..\Fakes.cs">
+      <Link>TestUtilities\Fakes.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
-      <Link>FrameworkVersion.cs</Link>
+      <Link>Properties\FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\TestBuilder.cs">
+      <Link>TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\TestFile.cs">
+      <Link>TestUtilities\TestFile.cs</Link>
     </Compile>
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
@@ -76,9 +76,14 @@
     <Compile Include="Assertions\AssertFailTests.cs" />
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
+    <Compile Include="Assertions\AssertionHelperTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
+    <Compile Include="Assertions\AssertPolarityTests.cs" />
     <Compile Include="Assertions\AssertThatTests.cs" />
+    <Compile Include="Assertions\AssertThrowsAsyncTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
+    <Compile Include="Assertions\AssertZeroTests.cs" />
+    <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
@@ -90,6 +95,7 @@
     <Compile Include="Assertions\LessEqualFixture.cs" />
     <Compile Include="Assertions\LessFixture.cs" />
     <Compile Include="Assertions\ListContentsTests.cs" />
+    <Compile Include="Assertions\LowTrustFixture.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\NullableTypesTests.cs" />
@@ -113,15 +119,25 @@
     <Compile Include="Attributes\PairwiseTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
-    <Compile Include="Attributes\RepeatedTestTests.cs" />
+    <Compile Include="Attributes\RandomAttributeTests.cs" />
+    <Compile Include="Attributes\RangeAttributeTests.cs" />
+    <Compile Include="Attributes\RepeatAttributeTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
+    <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
     <Compile Include="Attributes\SetUpFixtureAttributeTests.cs" />
+    <Compile Include="Attributes\SingleThreadedFixtureTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestExpectedResult.cs" />
+    <Compile Include="Attributes\TestOrderAttributeTests.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
+    <Compile Include="Internal\Filters\MockTestFilter.cs" />
+    <Compile Include="TestParametersTests.cs" />
+    <Compile Include="TestUtilities\AsyncTestDelegates.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
+    <Compile Include="Attributes\TestFixtureSourceTests.cs" />
     <Compile Include="Attributes\TestMethodBuilderTests.cs" />
     <Compile Include="Attributes\TestOfTests.cs" />
     <Compile Include="Attributes\TheoryTests.cs" />
@@ -131,7 +147,7 @@
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
     <Compile Include="Compatibility\AttributeHelperTests.cs" />
-    <Compile Include="Compatibility\StopwatchTests.cs" />
+    <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />
@@ -144,6 +160,7 @@
     <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
@@ -190,12 +207,24 @@
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
+    <Compile Include="Internal\Filters\AndFilterTests.cs" />
+    <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
+    <Compile Include="Internal\Filters\ClassNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\EmptyFilterTests.cs" />
+    <Compile Include="Internal\Filters\FullNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\IdFilterTests.cs" />
+    <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\NotFilterTests.cs" />
+    <Compile Include="Internal\Filters\OrFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestFilterTests.cs" />
+    <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
+    <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
+    <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
-    <Compile Include="Internal\RandomGeneratorTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
@@ -203,27 +232,22 @@
     <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
-    <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
+    <Compile Include="Internal\TestNameGeneratorTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />
     <Compile Include="Internal\TestResultOutputTests.cs" />
     <Compile Include="Internal\TestResultTests.cs" />
     <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
+    <Compile Include="Internal\TypeHelperTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="Internal\UnexpectedExceptionTests.cs" />
     <Compile Include="Internal\UnhandledExceptionTests.cs" />
     <Compile Include="Internal\WorkItemQueueTests.cs" />
     <Compile Include="Internal\WorkShiftTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\CommandLineTests.cs" />
-    <Compile Include="Runner\CreateTestFilterTests.cs" />
-    <Compile Include="Runner\MakeRunSettingsTests.cs" />
-    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="Runner\TeamCityEventListenerTests.cs" />
-    <Compile Include="Runner\TextUITests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
@@ -250,40 +274,43 @@
     <Compile Include="TestUtilities\Comparers\GenericEqualityComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectEqualityComparer.cs" />
-    <Compile Include="TestUtilities\Fakes.cs" />
+    <Compile Include="TestUtilities\Comparers\TestComparer.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
-    <Compile Include="TestUtilities\TestBuilder.cs" />
-    <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestDirectory.cs" />
-    <Compile Include="TestUtilities\TestFile.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
+    <Compile Include="TextOutputTests.cs" />
+    <Compile Include="ThrowsTests.cs" />
+    <Compile Include="WorkItemTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Runtime">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Threading.Tasks.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.Threading.Tasks">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -297,9 +324,10 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\framework\nunit.snk">
+    <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -307,21 +335,24 @@
       <Project>{6A281C98-B74D-403B-8536-966871B992E3}</Project>
       <Name>nunit.framework-4.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-4.0.csproj">
-      <Project>{DDCE1AE3-AA0D-4E2D-AD1B-8CA322AFA7DD}</Project>
-      <Name>mock-nunit-assembly-4.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-4.0.csproj">
-      <Project>{DBD0C8B0-BE4E-4CBF-AAD4-44BEA2EA830B}</Project>
-      <Name>nunitlite.runner-4.0</Name>
-    </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-4.0.csproj">
       <Project>{A35E6AD6-6D46-41E1-8DB1-A41086793893}</Project>
       <Name>nunit.testdata-4.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-assembly-4.0.csproj">
+      <Project>{DDCE1AE3-AA0D-4E2D-AD1B-8CA322AFA7DD}</Project>
+      <Name>mock-assembly-4.0</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <Import Project="..\..\..\packages\Microsoft.Bcl.Build.1.0.4\tools\Microsoft.Bcl.Build.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+  <Import Project="..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
 </Project>

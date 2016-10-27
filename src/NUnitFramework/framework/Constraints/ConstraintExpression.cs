@@ -384,7 +384,19 @@ namespace NUnit.Framework.Constraints
         {
             get { return (LessThanConstraint)this.Append(new LessThanConstraint(0)); }
         }
- 
+
+        #endregion
+
+        #region Zero
+
+        /// <summary>
+        /// Returns a constraint that tests if item is equal to zero
+        /// </summary>
+        public EqualConstraint Zero
+        {
+            get { return (EqualConstraint)this.Append(new EqualConstraint(0)); }
+        }
+
         #endregion
 
         #region NaN
@@ -426,7 +438,7 @@ namespace NUnit.Framework.Constraints
 
         #region BinarySerializable
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -440,7 +452,7 @@ namespace NUnit.Framework.Constraints
 
         #region XmlSerializable
 
-#if !SILVERLIGHT
+#if !PORTABLE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -661,6 +673,19 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region SupersetOf
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// is a superset of the collection supplied as an argument.
+        /// </summary>
+        public CollectionSupersetConstraint SupersetOf(IEnumerable expected)
+        {
+            return (CollectionSupersetConstraint)this.Append(new CollectionSupersetConstraint(expected));
+        }
+
+        #endregion
+
         #region Ordered
 
         /// <summary>
@@ -723,6 +748,28 @@ namespace NUnit.Framework.Constraints
             return (ContainsConstraint)this.Append(new ContainsConstraint(expected));
         }
 
+        #endregion
+
+        #region DictionaryContains
+        /// <summary>
+        /// Returns a new DictionaryContainsKeyConstraint checking for the
+        /// presence of a particular key in the Dictionary key collection.
+        /// </summary>
+        /// <param name="expected">The key to be matched in the Dictionary key collection</param>
+        public DictionaryContainsKeyConstraint ContainKey(object expected)
+        {
+            return (DictionaryContainsKeyConstraint)this.Append(new DictionaryContainsKeyConstraint(expected));
+        }
+
+        /// <summary>
+        /// Returns a new DictionaryContainsValueConstraint checking for the
+        /// presence of a particular value in the Dictionary value collection.
+        /// </summary>
+        /// <param name="expected">The value to be matched in the Dictionary value collection</param>
+        public DictionaryContainsValueConstraint ContainValue(object expected)
+        {
+            return (DictionaryContainsValueConstraint)this.Append(new DictionaryContainsValueConstraint(expected));
+        }
         #endregion
 
         #region StringContaining
@@ -901,7 +948,7 @@ namespace NUnit.Framework.Constraints
 
         #region Exist
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.

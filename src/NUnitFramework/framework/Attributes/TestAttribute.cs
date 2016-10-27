@@ -21,11 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+
 namespace NUnit.Framework
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using NUnit.Framework.Interfaces;
     using NUnit.Framework.Internal;
     using NUnit.Framework.Internal.Builders;
@@ -52,7 +52,7 @@ namespace NUnit.Framework
     /// </example>
     /// 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
-    public class TestAttribute : TestCaseBuilderAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
+    public class TestAttribute : NUnitAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
         private object _expectedResult;
         private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
@@ -88,7 +88,7 @@ namespace NUnit.Framework
 
             if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
                 test.Properties.Set(PropertyNames.TestOf, TestOf.FullName);
-
+            
         }
 
         #endregion
@@ -119,18 +119,18 @@ namespace NUnit.Framework
         #region ISimpleTestBuilder Members
 
         /// <summary>
-        /// Construct a TestMethod from a given MethodInfo.
+        /// Construct a TestMethod from a given method.
         /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be constructed.</param>
+        /// <param name="method">The method for which a test is to be constructed.</param>
         /// <param name="suite">The suite to which the test will be added.</param>
         /// <returns>A TestMethod</returns>
-        public TestMethod BuildFrom(MethodInfo method, Test suite)
+        public TestMethod BuildFrom(IMethodInfo method, Test suite)
         {
-            ParameterSet parms = null;
+            TestCaseParameters parms = null;
 
             if (this.HasExpectedResult)
             {
-                parms = new ParameterSet();
+                parms = new TestCaseParameters();
                 parms.ExpectedResult = this.ExpectedResult;
             }
 

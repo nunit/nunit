@@ -41,15 +41,15 @@ namespace NUnit.Framework.Interfaces
         /// but label it as non-runnable, ignored, etc., then this
         /// method must return true.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used</param>
+        /// <param name="typeInfo">The type of the fixture to be used</param>
         /// <returns>True if the type can be used to build a TestSuite</returns>
-        bool CanBuildFrom( Type type );
+        bool CanBuildFrom( ITypeInfo typeInfo );
 
         /// <summary>
         /// Build a TestSuite from type provided.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used</param>
+        /// <param name="typeInfo">The type of the fixture to be used</param>
         /// <returns>A TestSuite</returns>
-        Test BuildFrom( Type type );
+        TestSuite BuildFrom( ITypeInfo typeInfo );
     }
 }

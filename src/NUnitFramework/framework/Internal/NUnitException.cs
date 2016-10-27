@@ -24,15 +24,13 @@
 namespace NUnit.Framework.Internal 
 {
     using System;
-#if !NETCF
     using System.Runtime.Serialization;
-#endif
 
     /// <summary>
     /// Thrown when an assertion failed. Here to preserve the inner
     /// exception and hence its stack trace.
     /// </summary>
-#if !NETCF 
+#if !PORTABLE
     [Serializable]
 #endif
     public class NUnitException : Exception 
@@ -62,7 +60,7 @@ namespace NUnit.Framework.Internal
             base(message, inner) 
         { }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Serialization Constructor
         /// </summary>

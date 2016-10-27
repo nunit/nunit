@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace NUnit.Framework.Constraints
 {
@@ -49,9 +50,14 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                return predicate.Method.Name.StartsWith("<")
+#if PORTABLE
+                var name = predicate.GetMethodInfo().Name;
+#else
+                var name = predicate.Method.Name;
+#endif
+                return name.StartsWith("<")
                     ? "value matching lambda expression"
-                    : "value matching " + predicate.Method.Name;
+                    : "value matching " + name;
             }
         }
 

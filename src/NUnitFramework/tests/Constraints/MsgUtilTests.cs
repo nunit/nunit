@@ -32,6 +32,32 @@ namespace NUnit.Framework.Constraints
     public static class MsgUtilTests
     {
         #region FormatValue
+        class CustomFormattableType { }
+
+        [Test]
+        public static void FormatValue_ContextualCustomFormatterInvoked_FactoryArg()
+        {
+            TestContext.AddFormatter(next => val => (val is CustomFormattableType) ? "custom_formatted" : next(val));
+
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted"));
+        }
+
+        [Test]
+        public static void FormatValue_ContextualCustomFormatterNotInvokedForNull()
+        {
+            // If this factory is actually called with null, it will throw
+            TestContext.AddFormatter(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val));
+
+            Assert.That(MsgUtils.FormatValue(null), Is.EqualTo("null"));
+        }
+
+        [Test]
+        public static void FormatValue_ContextualCustomFormatterInvoked_FormatterArg()
+        {
+            TestContext.AddFormatter<CustomFormattableType>(val => "custom_formatted_using_type");
+
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted_using_type"));
+        }
 
         [Test]
         public static void FormatValue_IntegerIsWrittenAsIs()
@@ -100,11 +126,17 @@ namespace NUnit.Framework.Constraints
             Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123)), Is.EqualTo("2007-07-04 09:15:30.123"));
         }
 
-        #endregion
+		[Test]
+        public static void FormatValue_DateTimeOffsetTest()
+        {
+            Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
+        }
 
-        #region EscapeControlChars
+#endregion
 
-        [TestCase("\n", "\\n")]
+		#region EscapeControlChars
+
+		[TestCase ("\n", "\\n")]
         [TestCase("\n\n", "\\n\\n")]
         [TestCase("\n\n\n", "\\n\\n\\n")]
         [TestCase("\r", "\\r")]
@@ -139,7 +171,24 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+        #region EscapeNullChars
+        [TestCase("\n", "\n")]
+        [TestCase("\r", "\r")]
+        [TestCase("\r\n\r", "\r\n\r")]
+        [TestCase("\f", "\f")]
+        [TestCase("\b", "\b")]
+        public static void DoNotEscapeNonNullControlChars(string input, string expected)
+        {
+            Assert.That(MsgUtils.EscapeNullCharacters(input), Is.EqualTo(expected));
+        }
 
+        [Test]
+        public static void EscapesNullControlChars()
+        {
+            Assert.That(MsgUtils.EscapeNullCharacters("\0"), Is.EqualTo("\\0"));
+        }
+
+        #endregion
         #region ClipString
 
         private const string s52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -150,12 +199,14 @@ namespace NUnit.Framework.Constraints
         [TestCase(s52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
         public static void TestClipString(string input, int max, int start, string result)
         {
+#if !PORTABLE
             System.Console.WriteLine("input=  \"{0}\"", input);
             System.Console.WriteLine("result= \"{0}\"", result);
+#endif
             Assert.That(MsgUtils.ClipString(input, max, start), Is.EqualTo(result));
         }
 
-        #endregion
+#endregion
 
         //[TestCase('\0')]
         //[TestCase('\r')]
@@ -163,7 +214,7 @@ namespace NUnit.Framework.Constraints
         //{
         //}
 
-        #region ClipExpectedAndActual
+#region ClipExpectedAndActual
 
         [Test]
         public static void ClipExpectedAndActual_StringsFitInLine()
@@ -206,6 +257,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(s2, Is.EqualTo("...efghijklmno?qrstuvwxyz"));
         }
 
-        #endregion
+#endregion
     }
 }

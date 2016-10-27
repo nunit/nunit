@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.AssertIgnoreData;
@@ -73,7 +74,7 @@ namespace NUnit.Framework.Assertions
         {
             TestSuite suite = new TestSuite("IgnoredTestFixture");
             suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
-            ITestResult fixtureResult = TestBuilder.RunTestSuite(suite, null).Children[0];
+            ITestResult fixtureResult = TestBuilder.RunTest(suite).Children.ToArray ()[0];
 
             Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), fixtureResult.ResultState);
 

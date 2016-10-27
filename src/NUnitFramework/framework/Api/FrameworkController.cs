@@ -21,18 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Xml;
+using System.Security;
 using System.Web.UI;
-using NUnit.Common;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Api
 {
@@ -49,25 +50,43 @@ namespace NUnit.Framework.Api
     /// other actions. The driver may support other actions, such as
     /// reload on run, by combining these calls.
     /// </summary>
-    public class FrameworkController : MarshalByRefObject
+    public class FrameworkController : LongLivedMarshalByRefObject
     {
+#if !PORTABLE
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
+#endif
+
+        // Pre-loaded test assembly, if passed in constructor
+        private Assembly _testAssembly;
 
         #region Constructors
 
         /// <summary>
         /// Construct a FrameworkController using the default builder and runner.
         /// </summary>
-        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="assemblyNameOrPath">The AssemblyName or path to the test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
-        public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings)
+        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
         {
+            Initialize(assemblyNameOrPath, settings);
+
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
             Test.IdPrefix = idPrefix;
-            Initialize(assemblyPath, settings);
+        }
+
+        /// <summary>
+        /// Construct a FrameworkController using the default builder and runner.
+        /// </summary>
+        /// <param name="assembly">The test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
+        public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings)
+            : this(assembly.FullName, idPrefix, settings)
+        {
+            _testAssembly = assembly;
         }
 
         /// <summary>
@@ -75,39 +94,65 @@ namespace NUnit.Framework.Api
         /// for the runner and builder. This constructor is provided for
         /// purposes of development.
         /// </summary>
-        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="assemblyNameOrPath">The full AssemblyName or the path to the test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
+        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
-            Assembly myAssembly = Assembly.GetExecutingAssembly();
-            this.Builder = (ITestAssemblyBuilder)myAssembly.CreateInstance(builderType);
-            this.Runner = (ITestAssemblyRunner)myAssembly.CreateInstance(
-                runnerType, false, 0, null, new object[] { this.Builder }, null, null);
+            Initialize(assemblyNameOrPath, settings);
+
+            Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
+            Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
 
             Test.IdPrefix = idPrefix ?? "";
-            Initialize(assemblyPath, settings);
         }
 
+        /// <summary>
+        /// Construct a FrameworkController, specifying the types to be used
+        /// for the runner and builder. This constructor is provided for
+        /// purposes of development.
+        /// </summary>
+        /// <param name="assembly">The test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
+        /// <param name="runnerType">The Type of the test runner</param>
+        /// <param name="builderType">The Type of the test builder</param>
+        public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings, string runnerType, string builderType)
+            : this(assembly.FullName, idPrefix, settings, runnerType, builderType)
+        {
+            _testAssembly = assembly;
+        }
+
+#if !PORTABLE
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
+        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
+        [SecuritySafeCritical]
+#endif   
         private void Initialize(string assemblyPath, IDictionary settings)
         {
-            AssemblyPath = assemblyPath;
-            Settings = settings;
+            AssemblyNameOrPath = assemblyPath;
 
-            if (settings.Contains(PackageSettings.InternalTraceLevel))
+            var newSettings = settings as IDictionary<string, object>;
+            Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
+
+            if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[PackageSettings.InternalTraceLevel], true);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)Settings[FrameworkPackageSettings.InternalTraceLevel], true);
 
-                if (settings.Contains(PackageSettings.InternalTraceWriter))
-                    InternalTrace.Initialize((TextWriter)settings[PackageSettings.InternalTraceWriter], traceLevel);
+                if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceWriter))
+                    InternalTrace.Initialize((TextWriter)Settings[FrameworkPackageSettings.InternalTraceWriter], traceLevel);
+#if !PORTABLE
                 else
                 {
-                    var workDirectory = settings.Contains(PackageSettings.WorkDirectory) ? (string)settings[PackageSettings.WorkDirectory] : Environment.CurrentDirectory;
+                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory) ? (string)Settings[FrameworkPackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
                     var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
+#endif
             }
         }
 
@@ -128,25 +173,165 @@ namespace NUnit.Framework.Api
         public ITestAssemblyRunner Runner { get; private set; }
 
         /// <summary>
-        /// Gets the path to the assembly for this FrameworkController
+        /// Gets the AssemblyName or the path for which this FrameworkController was created
         /// </summary>
-        public string AssemblyPath { get; private set; }
+        public string AssemblyNameOrPath { get; private set; }
+
+        /// <summary>
+        /// Gets the Assembly for which this
+        /// </summary>
+        public Assembly Assembly { get; private set; }
 
         /// <summary>
         /// Gets a dictionary of settings for the FrameworkController
         /// </summary>
-        public IDictionary Settings { get; private set; }
+        internal IDictionary<string, object> Settings { get; private set; }
 
         #endregion
 
-        #region InitializeLifetimeService
+        #region Public Action methods Used by nunit.driver for running portable tests
 
         /// <summary>
-        /// InitializeLifetimeService returns null, allowing the instance to live indefinitely.
+        /// Loads the tests in the assembly
         /// </summary>
-        public override object InitializeLifetimeService()
+        /// <returns></returns>
+        public string LoadTests()
         {
-            return null;
+            if (_testAssembly != null)
+                Runner.Load(_testAssembly, Settings);
+            else
+                Runner.Load(AssemblyNameOrPath, Settings);
+
+            return Runner.LoadedTest.ToXml(false).OuterXml;
+        }
+
+        /// <summary>
+        /// Returns info about the tests in an assembly
+        /// </summary>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The XML result of exploring the tests</returns>
+        public string ExploreTests(string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            if (Runner.LoadedTest == null)
+                throw new InvalidOperationException("The Explore method was called but no test has been loaded");
+
+            // TODO: Make use of the filter
+            return Runner.LoadedTest.ToXml(true).OuterXml;
+        }
+
+        /// <summary>
+        /// Runs the tests in an assembly
+        /// </summary>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The XML result of the test run</returns>
+        public string RunTests(string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
+
+            // Insert elements as first child in reverse order
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
+#if !PORTABLE
+            InsertEnvironmentElement(result);
+#endif
+
+            // Ensure that the CallContext of the thread is not polluted
+            // by our TestExecutionContext, which is not serializable.
+            TestExecutionContext.ClearCurrentContext();
+
+            return result.OuterXml;
+        }
+
+#if !NET_2_0
+
+        class ActionCallback : ICallbackEventHandler
+        {
+            Action<string> _callback;
+
+            public ActionCallback(Action<string> callback)
+            {
+                _callback = callback;
+            }
+
+            public string GetCallbackResult()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RaiseCallbackEvent(string report)
+            {
+                if(_callback != null)
+                    _callback.Invoke(report);
+            }
+        }
+
+        /// <summary>
+        /// Runs the tests in an assembly syncronously reporting back the test results through the callback
+        /// or through the return value
+        /// </summary>
+        /// <param name="callback">The callback that receives the test results</param>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The XML result of the test run</returns>
+        public string RunTests(Action<string> callback, string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            var handler = new ActionCallback(callback);
+
+            TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
+
+            // Insert elements as first child in reverse order
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
+#if !PORTABLE
+            InsertEnvironmentElement(result);
+#endif
+
+            // Ensure that the CallContext of the thread is not polluted
+            // by our TestExecutionContext, which is not serializable.
+            TestExecutionContext.ClearCurrentContext();
+
+            return result.OuterXml;
+        }
+
+        /// <summary>
+        /// Runs the tests in an assembly asyncronously reporting back the test results through the callback
+        /// </summary>
+        /// <param name="callback">The callback that receives the test results</param>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        private void RunAsync(Action<string> callback, string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            var handler = new ActionCallback(callback);
+
+            Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+        }
+#endif
+
+        /// <summary>
+        /// Stops the test run
+        /// </summary>
+        /// <param name="force">True to force the stop, false for a cooperative stop</param>
+        public void StopRun(bool force)
+        {
+            Runner.StopRun(force);
+        }
+
+        /// <summary>
+        /// Counts the number of test cases in the loaded TestSuite
+        /// </summary>
+        /// <param name="filter">A string containing the XML representation of the filter to use</param>
+        /// <returns>The number of tests</returns>
+        public int CountTests(string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
+
+            return Runner.CountTestCases(TestFilter.FromXml(filter));
         }
 
         #endregion
@@ -155,8 +340,7 @@ namespace NUnit.Framework.Api
 
         private void LoadTests(ICallbackEventHandler handler)
         {
-            Runner.Load(AssemblyPath, Settings);
-            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
+            handler.RaiseCallbackEvent(LoadTests());
         }
 
         private void ExploreTests(ICallbackEventHandler handler, string filter)
@@ -174,13 +358,20 @@ namespace NUnit.Framework.Api
         {
             Guard.ArgumentNotNull(filter, "filter");
 
-            ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+            TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
+
+            // Insert elements as first child in reverse order
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(result, Settings);
+#if !PORTABLE
+            InsertEnvironmentElement(result);
+#endif
 
             // Ensure that the CallContext of the thread is not polluted
             // by our TestExecutionContext, which is not serializable.
             TestExecutionContext.ClearCurrentContext();
 
-            handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
+            handler.RaiseCallbackEvent(result.OuterXml);
         }
 
         private void RunAsync(ICallbackEventHandler handler, string filter)
@@ -192,15 +383,76 @@ namespace NUnit.Framework.Api
 
         private void StopRun(ICallbackEventHandler handler, bool force)
         {
-            Runner.StopRun(force);
+            StopRun(force);
         }
 
         private void CountTests(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
+            handler.RaiseCallbackEvent(CountTests(filter).ToString());
+        }
 
-            var count = Runner.CountTestCases(TestFilter.FromXml(filter));
-            handler.RaiseCallbackEvent(count.ToString());
+#if !PORTABLE
+        /// <summary>
+        /// Inserts environment element
+        /// </summary>
+        /// <param name="targetNode">Target node</param>
+        /// <returns>The new node</returns>
+        public static TNode InsertEnvironmentElement(TNode targetNode)
+        {
+            TNode env = new TNode("environment");
+            targetNode.ChildNodes.Insert(0, env);
+
+            env.AddAttribute("framework-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            env.AddAttribute("clr-version", Environment.Version.ToString());
+            env.AddAttribute("os-version", Environment.OSVersion.ToString());
+            env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
+            env.AddAttribute("cwd", Environment.CurrentDirectory);
+            env.AddAttribute("machine-name", Environment.MachineName);
+            env.AddAttribute("user", Environment.UserName);
+            env.AddAttribute("user-domain", Environment.UserDomainName);
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("os-architecture", GetProcessorArchitecture());
+
+            return env;
+        }
+
+        private static string GetProcessorArchitecture()
+        {
+            return IntPtr.Size == 8 ? "x64" : "x86";
+        }
+#endif
+
+        /// <summary>
+        /// Inserts settings element
+        /// </summary>
+        /// <param name="targetNode">Target node</param>
+        /// <param name="settings">Settings dictionary</param>
+        /// <returns>The new node</returns>
+        public static TNode InsertSettingsElement(TNode targetNode, IDictionary<string, object> settings)
+        {
+            TNode settingsNode = new TNode("settings");
+            targetNode.ChildNodes.Insert(0, settingsNode);
+
+            foreach (string key in settings.Keys)
+                AddSetting(settingsNode, key, settings[key]);
+
+#if PARALLEL
+            // Add default values for display
+            if (!settings.ContainsKey(FrameworkPackageSettings.NumberOfTestWorkers))
+                AddSetting(settingsNode, FrameworkPackageSettings.NumberOfTestWorkers, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
+#endif
+
+                return settingsNode;
+        }
+
+        private static void AddSetting(TNode settingsNode, string name, object value)
+        {
+            TNode setting = new TNode("setting");
+            setting.AddAttribute("name", name);
+            setting.AddAttribute("value", value.ToString());
+
+            settingsNode.ChildNodes.Add(setting);
         }
 
         #endregion
@@ -213,19 +465,8 @@ namespace NUnit.Framework.Api
         /// FrameworkControllerAction is the base class for all actions
         /// performed against a FrameworkController.
         /// </summary>
-        public abstract class FrameworkControllerAction : MarshalByRefObject
+        public abstract class FrameworkControllerAction : LongLivedMarshalByRefObject
         {
-            #region InitializeLifetimeService
-
-            /// <summary>
-            /// Initialize lifetime service to null so that the instance lives indefinitely.
-            /// </summary>
-            public override object InitializeLifetimeService()
-            {
-                return null;
-            }
-
-            #endregion
         }
 
         #endregion
@@ -361,4 +602,3 @@ namespace NUnit.Framework.Api
         #endregion
     }
 }
-#endif

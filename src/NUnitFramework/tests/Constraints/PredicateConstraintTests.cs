@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF_2_0
 using System;
 
 namespace NUnit.Framework.Constraints
@@ -37,13 +36,13 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<predicate>";
         }
 
-        internal object[] SuccessData = new object[] 
+        static object[] SuccessData = new object[] 
         {
             0,
             -5
         };
 
-        internal object[] FailureData = new object[]
+        static object[] FailureData = new object[]
         {
             new TestCaseData(123, "123")
         };
@@ -55,4 +54,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-#endif

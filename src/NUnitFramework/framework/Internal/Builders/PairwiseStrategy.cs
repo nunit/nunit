@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using NUnit.Framework.Interfaces;
 
@@ -642,7 +641,7 @@ namespace NUnit.Framework.Internal.Builders
                     testData[i] = valueSet[i][pairwiseTestCase.Features[i]];
                 }
 
-                ParameterSet parms = new ParameterSet(testData);
+                TestCaseParameters parms = new TestCaseParameters(testData);
                 testCases.Add(parms);
             }
 

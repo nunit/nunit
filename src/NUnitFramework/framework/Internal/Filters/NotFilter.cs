@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,37 +29,37 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// NotFilter negates the operation of another filter
     /// </summary>
+#if !PORTABLE
     [Serializable]
+#endif
     public class NotFilter : TestFilter
     {
-        ITestFilter baseFilter;
-        bool topLevel = false;
-
         /// <summary>
         /// Construct a not filter on another filter
         /// </summary>
         /// <param name="baseFilter">The filter to be negated</param>
-        public NotFilter( ITestFilter baseFilter)
+        public NotFilter( TestFilter baseFilter)
         {
-            this.baseFilter = baseFilter;
-        }
-
-        /// <summary>
-        /// Indicates whether this is a top-level NotFilter,
-        /// requiring special handling of Explicit
-        /// </summary>
-        public bool TopLevel
-        {
-            get { return topLevel; }
-            set { topLevel = value; }
+            BaseFilter = baseFilter;
         }
 
         /// <summary>
         /// Gets the base filter
         /// </summary>
-        public ITestFilter BaseFilter
+        public TestFilter BaseFilter { get; private set; }
+
+        /// <summary>
+        /// Determine if a particular test passes the filter criteria. The default 
+        /// implementation checks the test itself, its parents and any descendants.
+        /// 
+        /// Derived classes may override this method or any of the Match methods
+        /// to change the behavior of the filter.
+        /// </summary>
+        /// <param name="test">The test to which the filter is applied</param>
+        /// <returns>True if the test passes the filter, otherwise false</returns>
+        public override bool Pass(ITest test)
         {
-            get { return baseFilter; }
+            return !BaseFilter.Match (test) && !BaseFilter.MatchParent (test);
         }
 
         /// <summary>
@@ -69,29 +69,51 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if it matches, otherwise false</returns>
         public override bool Match( ITest test )
         {
-            if (topLevel && test.RunState == RunState.Explicit)
-                return false;
-
-            return !baseFilter.Pass( test );
+            return !BaseFilter.Match( test );
         }
 
         /// <summary>
-        /// Determine whether any descendant of the test matches the filter criteria.
+        /// Determine if a test matches the filter expicitly. That is, it must
+        /// be a direct match of the test itself or one of it's children.
         /// </summary>
-        /// <param name="test">The test to be matched</param>
-        /// <returns>True if at least one descendant matches the filter criteria</returns>
-        protected override bool MatchDescendant(ITest test)
+        /// <param name="test">The test to which the filter is applied</param>
+        /// <returns>True if the test matches the filter explicityly, otherwise false</returns>
+        public override bool IsExplicitMatch(ITest test)
         {
-            if (!test.HasChildren || test.Tests == null || topLevel && test.RunState == RunState.Explicit)
-                return false;
-
-            foreach (ITest child in test.Tests)
-            {
-                if (Match(child) || MatchDescendant(child))
-                    return true;
-            }
-
             return false;
-        }	
+        }
+
+        ///// <summary>
+        ///// Determine whether any descendant of the test matches the filter criteria.
+        ///// </summary>
+        ///// <param name="test">The test to be matched</param>
+        ///// <returns>True if at least one descendant matches the filter criteria</returns>
+        //protected override bool MatchDescendant(ITest test)
+        //{
+        //    if (!test.HasChildren || test.Tests == null || TopLevel && test.RunState == RunState.Explicit)
+        //        return false;
+
+        //    foreach (ITest child in test.Tests)
+        //    {
+        //        if (Match(child) || MatchDescendant(child))
+        //            return true;
+        //    }
+
+        //    return false;
+        //}	
+
+        /// <summary>
+        /// Adds an XML node
+        /// </summary>
+        /// <param name="parentNode">Parent node</param>
+        /// <param name="recursive">True if recursive</param>
+        /// <returns>The added XML node</returns>
+        public override TNode AddToXml(TNode parentNode, bool recursive)
+        {
+            TNode result = parentNode.AddElement("not");
+            if (recursive)
+                BaseFilter.AddToXml(result, true);
+            return result;
+        }
     }
 }

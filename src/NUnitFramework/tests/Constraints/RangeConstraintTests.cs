@@ -39,9 +39,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<range 5 42>";
         }
 
-        object[] SuccessData = new object[] { 5, 23, 42 };
+        static object[] SuccessData = new object[] { 5, 23, 42 };
 
-        object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
+        static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
         
         [TestCase(null)]
         [TestCase("xxx")]

@@ -39,6 +39,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SequentialAttribute() : base(new SequentialStrategy()) { }
+        public SequentialAttribute() : base(new SequentialStrategy(), new ParameterDataSourceProvider()) { }
     }
 }

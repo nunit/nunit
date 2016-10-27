@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
 using System;
 using System.Threading;
 
@@ -42,6 +42,26 @@ namespace NUnit.Framework.Attributes
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             if (ParentThreadApartment == ApartmentState.STA)
                 Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+        }
+
+        [Test]
+        [Timeout(10000)]
+        [Apartment(ApartmentState.STA)]
+        public void TestWithTimeoutAndSTARunsInSTA()
+        {
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+        }
+
+        [TestFixture]
+        [Timeout(10000)]
+        [Apartment(ApartmentState.STA)]
+        public class FixtureWithTimeoutRequiresSTA
+        {
+            [Test]
+            public void RequiresSTACanBeSetOnTestFixtureWithTimeout()
+            {
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+            }
         }
 
         [TestFixture, Apartment(ApartmentState.STA)]
@@ -72,6 +92,7 @@ namespace NUnit.Framework.Attributes
         public void TestWithRequiresMTARunsInMTA()
         {
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
+
             if (ParentThreadApartment == ApartmentState.MTA)
                 Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }

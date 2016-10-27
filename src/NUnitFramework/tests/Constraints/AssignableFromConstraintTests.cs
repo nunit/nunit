@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = string.Format("<assignablefrom {0}>", typeof(D1));
         }
 
-        object[] SuccessData = new object[] { new D1(), new B() };
+        static object[] SuccessData = new object[] { new D1(), new B() };
 
-        object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] { 
             new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" ) };
 
         class B { }

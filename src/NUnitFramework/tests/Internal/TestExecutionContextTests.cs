@@ -25,13 +25,10 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Globalization;
-using NUnit.Common;
 using NUnit.Framework;
-#if !NETCF
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal.Execution;
 using System.Security.Principal;
-#endif
-using NUnit.TestData.TestContextData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
@@ -44,7 +41,7 @@ namespace NUnit.Framework.Internal
         TestExecutionContext fixtureContext;
         TestExecutionContext setupContext;
 
-#if !NETCF && !SILVERLIGHT
+#if !PORTABLE
         string originalDirectory;
         IPrincipal originalPrincipal;
 #endif
@@ -77,12 +74,12 @@ namespace NUnit.Framework.Internal
         public void Initialize()
         {
             setupContext = new TestExecutionContext(TestExecutionContext.CurrentContext);
-#if !NETCF
+#if !PORTABLE
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-#if !NETCF && !SILVERLIGHT
+#if !PORTABLE
             originalDirectory = Environment.CurrentDirectory;
             originalPrincipal = Thread.CurrentPrincipal;
 #endif
@@ -91,12 +88,12 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !NETCF
+#if !PORTABLE
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
 
-#if !NETCF && !SILVERLIGHT
+#if !PORTABLE
             Environment.CurrentDirectory = originalDirectory;
             Thread.CurrentPrincipal = originalPrincipal;
 #endif
@@ -123,6 +120,12 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void FixtureSetUpHasNullMethodName()
+        {
+            Assert.That(fixtureContext.CurrentTest.MethodName, Is.Null);
+        }
+
+        [Test]
         public void FixtureSetUpCanAccessFixtureId()
         {
             Assert.That(fixtureContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
@@ -145,6 +148,13 @@ namespace NUnit.Framework.Internal
         {
             Assert.That(setupContext.CurrentTest.FullName,
                 Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
+        }
+
+        [Test]
+        public void SetUpCanAccessTestMethodName()
+        {
+            Assert.That(setupContext.CurrentTest.MethodName,
+                Is.EqualTo("SetUpCanAccessTestMethodName"));
         }
 
         [Test]
@@ -174,10 +184,27 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void TestCanAccessItsOwnMethodName()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.MethodName,
+                Is.EqualTo("TestCanAccessItsOwnMethodName"));
+        }
+
+        [Test]
         public void TestCanAccessItsOwnId()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
+
+#if !PORTABLE
+        [Test]
+        public void TestHasWorkerIdWhenParallel()
+        {
+            var workerId = TestExecutionContext.CurrentContext.WorkerId;
+            var isRunningUnderTestWorker = TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher;
+            Assert.That(workerId != null || !isRunningUnderTestWorker);
+        }
+#endif
 
         [Test]
         [Property("Answer", 42)]
@@ -190,12 +217,12 @@ namespace NUnit.Framework.Internal
 
         #region CurrentCulture and CurrentUICulture
 
-#if !NETCF
+#if !PORTABLE
         CultureInfo originalCulture;
         CultureInfo originalUICulture;
 
         [Test]
-        public void FixtureSetUpontextReflectsCurrentCulture()
+        public void FixtureSetUpContextReflectsCurrentCulture()
         {
             Assert.That(fixtureContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
         }
@@ -282,7 +309,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentPrincipal
 
-#if !NETCF && !SILVERLIGHT
+#if !PORTABLE
         [Test]
         public void FixtureSetUpContextReflectsCurrentPrincipal()
         {
@@ -326,6 +353,52 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region ValueFormatter
+
+        [Test]
+        public void SetAndRestoreValueFormatter()
+        {
+            var context = new TestExecutionContext(setupContext);
+            var originalFormatter = context.CurrentValueFormatter;
+
+            try
+            {
+                ValueFormatter f = val => "dummy";
+                context.AddFormatter(next => f);
+                Assert.That(context.CurrentValueFormatter, Is.EqualTo(f));
+
+                context.EstablishExecutionEnvironment();
+                Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("dummy"));
+            }
+            finally
+            {
+                setupContext.EstablishExecutionEnvironment();
+            }
+
+            Assert.That(TestExecutionContext.CurrentContext.CurrentValueFormatter, Is.EqualTo(originalFormatter));
+            Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
+        }
+
+        #endregion
+
+        #region SingleThreaded
+
+        [Test]
+        public void SingleThreadedDefaultsToFalse()
+        {
+            Assert.False(new TestExecutionContext().IsSingleThreaded);
+        }
+
+        [Test]
+        public void SingleThreadedIsInherited()
+        {
+            var parent = new TestExecutionContext();
+            parent.IsSingleThreaded = true;
+            Assert.True(new TestExecutionContext(parent).IsSingleThreaded);
+        }
+
+        #endregion
+
         #region ExecutionStatus
 
         [Test]
@@ -366,7 +439,7 @@ namespace NUnit.Framework.Internal
 
         #region Cross-domain Tests
 
-#if !SILVERLIGHT && !NETCF
+#if !PORTABLE
         [Test]
         public void CanCreateObjectInAppDomain()
         {
@@ -391,7 +464,7 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 
-#if !PORTABLE && !SILVERLIGHT && !NETCF
+#if !PORTABLE
     [TestFixture]
     public class TextExecutionContextInAppDomain
     {

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
@@ -38,14 +38,14 @@ namespace NUnit.Framework.Internal
         /// Construct from a MethodInfo
         /// </summary>
         /// <param name="method"></param>
-        public ParameterizedMethodSuite(MethodInfo method)
-            : base(method.ReflectedType.FullName, method.Name)
+        public ParameterizedMethodSuite(IMethodInfo method)
+            : base(method.TypeInfo.FullName, method.Name)
         {
             Method = method;
 #if PORTABLE
             _isTheory = false;
 #else
-            _isTheory = method.IsDefined(typeof(TheoryAttribute), true);
+            _isTheory = method.IsDefined<TheoryAttribute>(true);
 #endif
             this.MaintainTestOrder = true;
         }

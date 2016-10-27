@@ -25,9 +25,25 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Globalization;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
+    /// <summary>
+    /// Custom value formatter function
+    /// </summary>
+    /// <param name="val">The value</param>
+    /// <returns></returns>
+    public delegate string ValueFormatter(object val);
+
+    /// <summary>
+    /// Custom value formatter factory function
+    /// </summary>
+    /// <param name="next">The next formatter function</param>
+    /// <returns>ValueFormatter</returns>
+    /// <remarks>If the given formatter is unable to handle a certain format, it must call the next formatter in the chain</remarks>
+    public delegate ValueFormatter ValueFormatterFactory(ValueFormatter next);
+
     /// <summary>
     /// Static methods used in creating messages
     /// </summary>
@@ -44,12 +60,52 @@ namespace NUnit.Framework.Constraints
         private static readonly string Fmt_Null = "null";
         private static readonly string Fmt_EmptyString = "<string.Empty>";
         private static readonly string Fmt_EmptyCollection = "<empty>";
-
         private static readonly string Fmt_String = "\"{0}\"";
         private static readonly string Fmt_Char = "'{0}'";
         private static readonly string Fmt_DateTime = "yyyy-MM-dd HH:mm:ss.fff";
-        private static readonly string Fmt_ValueType = "{0}";
+		private static readonly string Fmt_DateTimeOffset = "yyyy-MM-dd HH:mm:ss.fffzzz";
+		private static readonly string Fmt_ValueType = "{0}";
         private static readonly string Fmt_Default = "<{0}>";
+
+        /// <summary>
+        /// Current head of chain of value formatters. Public for testing.
+        /// </summary>
+        public static ValueFormatter DefaultValueFormatter { get; set; }
+
+        static MsgUtils()
+        {
+            // Initialize formatter to default for values of indeterminate type.
+            DefaultValueFormatter = val => string.Format(Fmt_Default, val);
+
+            AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
+
+            AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
+
+			AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset ((DateTimeOffset)val) : next (val));
+
+			AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
+
+            AddFormatter(next => val => val is float ? FormatFloat((float)val) : next(val));
+
+            AddFormatter(next => val => val is double ? FormatDouble((double)val) : next(val));
+
+            AddFormatter(next => val => val is char ? string.Format(Fmt_Char, val) : next(val));
+
+            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val, 0, 10) : next(val));
+
+            AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
+
+            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));            
+        }
+
+        /// <summary>
+        /// Add a formatter to the chain of responsibility.
+        /// </summary>
+        /// <param name="formatterFactory"></param>
+        public static void AddFormatter(ValueFormatterFactory formatterFactory)
+        {
+            DefaultValueFormatter = formatterFactory(DefaultValueFormatter);
+        }
 
         /// <summary>
         /// Formats text to represent a generalized value.
@@ -61,39 +117,12 @@ namespace NUnit.Framework.Constraints
             if (val == null)
                 return Fmt_Null;
 
-            if (val.GetType().IsArray)
-                return FormatArray((Array)val);
+            var context = TestExecutionContext.CurrentContext;
 
-            if (val is string)
-                return FormatString((string)val);
-
-            if (val is IEnumerable)
-                return FormatCollection((IEnumerable)val, 0, 10);
-
-            if (val is char)
-                return string.Format(Fmt_Char, val);
-
-            if (val is double)
-                return FormatDouble((double)val);
-
-            if (val is float)
-                return FormatFloat((float)val);
-
-            if (val is decimal)
-                return FormatDecimal((decimal)val);
-
-            if (val is DateTime)
-                return FormatDateTime((DateTime)val);
-
-            if (val is ValueType)
-                return string.Format(Fmt_ValueType, val);
-
-#if NETCF
-            var vi = val as System.Reflection.MethodInfo;
-            if (vi != null && vi.IsGenericMethodDefinition)
-                return string.Format(Fmt_Default, vi.Name + "<>");
-#endif
-            return string.Format(Fmt_Default, val);
+            if (context != null)
+                return context.CurrentValueFormatter(val);
+            else
+                return DefaultValueFormatter(val);
         }
 
         /// <summary>
@@ -219,14 +248,19 @@ namespace NUnit.Framework.Constraints
             return dt.ToString(Fmt_DateTime, CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        /// Returns the representation of a type as used in NUnitLite.
-        /// This is the same as Type.ToString() except for arrays,
-        /// which are displayed with their declared sizes.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static string GetTypeRepresentation(object obj)
+		private static string FormatDateTimeOffset(DateTimeOffset dto)
+        {
+            return dto.ToString(Fmt_DateTimeOffset, CultureInfo.InvariantCulture);
+        }
+
+		/// <summary>
+		/// Returns the representation of a type as used in NUnitLite.
+		/// This is the same as Type.ToString() except for arrays,
+		/// which are displayed with their declared sizes.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public static string GetTypeRepresentation(object obj)
         {
             Array array = obj as Array;
             if (array == null)
@@ -317,6 +351,38 @@ namespace NUnit.Framework.Constraints
                 }
 
                 s = sb.ToString();
+            }
+
+            return s;
+        }
+
+        /// <summary>
+        /// Converts any null characters in a string 
+        /// to their escaped representation.
+        /// </summary>
+        /// <param name="s">The string to be converted</param>
+        /// <returns>The converted string</returns>
+        public static string EscapeNullCharacters(string s)
+        {
+            if(s != null)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach(char c in s)
+                {
+                    switch(c)
+                    {
+                        case '\0':
+                            sb.Append("\\0");
+                            break;
+
+                        default:
+                            sb.Append(c);
+                            break;
+                    }
+                }
+
+                s = sb.ToString();               
             }
 
             return s;

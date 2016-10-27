@@ -21,10 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -53,39 +49,15 @@ namespace NUnit.Framework
     /// </example>
     /// 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
-    public class TheoryAttribute : TestCaseBuilderAttribute, ITestBuilder, IImplyFixture
+    public class TheoryAttribute : CombiningStrategyAttribute, ITestBuilder, IImplyFixture
     {
-        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
-        private IParameterDataProvider _dataProvider = new DatapointProvider();
-
-        #region ITestBuilder Members
-
         /// <summary>
-        /// Construct one or more TestMethods from a given MethodInfo,
-        /// using available parameter data.
+        /// Construct the attribute, specifying a combining strategy and source of parameter data.
         /// </summary>
-        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
-        /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Internal.Test suite)
+        public TheoryAttribute() : base(
+            new CombinatorialStrategy(),
+            new ParameterDataProvider(new DatapointProvider(), new ParameterDataSourceProvider()))
         {
-            ParameterInfo[] parameters = method.GetParameters();
-
-            List<TestMethod> tests = new List<TestMethod>();
-
-            if (parameters.Length > 0)
-            {
-                IEnumerable[] sources = new IEnumerable[parameters.Length];
-                for (int i = 0; i < parameters.Length; i++)
-                    sources[i] = _dataProvider.GetDataFor(parameters[i]);
-
-                foreach (var parms in new CombinatorialStrategy().GetTestCases(sources))
-                    tests.Add(_builder.BuildTestMethod(method, suite, (ParameterSet)parms));
-            }
-
-            return tests;
         }
-
-        #endregion
     }
 }

@@ -22,9 +22,13 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework
 {
@@ -73,6 +77,23 @@ namespace NUnit.Framework
             get { return TestExecutionContext.CurrentContext.OutWriter; }
         }
 
+#if !PORTABLE
+        /// <summary>
+        /// Gets a TextWriter that will send output directly to Console.Error
+        /// </summary>
+        public static TextWriter Error = new EventListenerTextWriter("Error", Console.Error);
+
+        /// <summary>
+        /// Gets a TextWriter for use in displaying immediate progress messages
+        /// </summary>
+        public static readonly TextWriter Progress = new EventListenerTextWriter("Progress", Console.Error);
+#endif
+
+        /// <summary>
+        /// TestParameters object holds parameters for the test run, if any are specified
+        /// </summary>
+        public static readonly TestParameters Parameters = new TestParameters();
+
         /// <summary>
         /// Get a representation of the current test.
         /// </summary>
@@ -89,13 +110,30 @@ namespace NUnit.Framework
             get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
         }
 
-#if !SILVERLIGHT && !PORTABLE
+        /// <summary>
+        /// Gets the unique name of the  Worker that is executing this test.
+        /// </summary>
+        public string WorkerId
+        {
+            get { return _testExecutionContext.WorkerId; }
+        }
+
+#if !PORTABLE
         /// <summary>
         /// Gets the directory containing the current test assembly.
         /// </summary>
         public string TestDirectory
         {
-            get { return AssemblyHelper.GetDirectoryName(_testExecutionContext.CurrentTest.FixtureType.Assembly); }
+            get
+            {
+                Test test = _testExecutionContext.CurrentTest;
+                if (test != null)
+                    return AssemblyHelper.GetDirectoryName(test.TypeInfo.Assembly);
+
+                // Test is null, we may be loading tests rather than executing.
+                // Assume that calling assembly is the test assembly.
+                return AssemblyHelper.GetDirectoryName(Assembly.GetCallingAssembly());
+            }
         }
 #endif
 
@@ -114,7 +152,7 @@ namespace NUnit.Framework
         /// <value>
         /// The random generator.
         /// </value>
-        public RandomGenerator Random
+        public Randomizer Random
         {
             get { return _testExecutionContext.RandomGenerator; }
         }
@@ -225,6 +263,31 @@ namespace NUnit.Framework
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
         public static void WriteLine(string format, params object[] args) { Out.WriteLine(format, args); }
+
+        /// <summary>
+        /// This method adds the a new ValueFormatterFactory to the
+        /// chain of responsibility used for fomatting values in messages.
+        /// The scope of the change is the current TestContext.
+        /// </summary>
+        /// <param name="formatterFactory">The factory delegate</param>
+        public static void AddFormatter(ValueFormatterFactory formatterFactory)
+        {
+            TestExecutionContext.CurrentContext.AddFormatter(formatterFactory);
+        }
+
+        /// <summary>
+        /// This method provides a simplified way to add a ValueFormatter
+        /// delegate to the chain of responsibility, creating the factory
+        /// delegate internally. It is useful when the Type of the object
+        /// is the only criterion for selection of the formatter, since
+        /// it can be used without getting involved with a compould function.
+        /// </summary>
+        /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
+        /// <param name="formatter">The ValueFormatter delegate</param>
+        public static void AddFormatter<TSUPPORTED>(ValueFormatter formatter)
+        {
+            AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
+        }
 
         #endregion
 
@@ -401,7 +464,7 @@ namespace NUnit.Framework
 
             #endregion
         }
-        
+
         #endregion
     }
 }

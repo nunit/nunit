@@ -45,6 +45,12 @@ namespace NUnit.Framework.Internal
         public void TestFinished(ITestResult result){}
 
         /// <summary>
+        /// Called when a test produces output for immediate display
+        /// </summary>
+        /// <param name="output">A TestOutput object containing the text to display</param>
+        public void TestOutput(TestOutput output) { }
+
+        /// <summary>
         /// Construct a new TestListener - private so it may not be used.
         /// </summary>
         private TestListener() { }

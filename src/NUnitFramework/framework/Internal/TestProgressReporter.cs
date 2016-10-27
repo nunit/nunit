@@ -21,12 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System;
-using System.IO;
-using System.Text;
 using System.Web.UI;
-using System.Xml;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -53,84 +49,6 @@ namespace NUnit.Framework.Internal
 
         #region ITestListener Members
 
-        ///// <summary>
-        ///// Called when a test run has just started
-        ///// </summary>
-        ///// <param name="test">The test that is starting</param>
-        //public void RunStarted(ITest test)
-        //{
-        //    try
-        //    {
-        //        string report = string.Format(
-        //            "<start-run id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-        //            test.Id,
-        //            XmlHelper.FormatAttributeValue(test.Name),
-        //            XmlHelper.FormatAttributeValue(test.FullName));
-
-        //        handler.RaiseCallbackEvent(report);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Called when a test has finished. Sends a result summary to the callback.
-        ///// to 
-        ///// </summary>
-        ///// <param name="result">The result of the test</param>
-        //public void RunFinished(ITestResult result)
-        //{
-        //    try
-        //    {
-        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Called when a test has just started
-        ///// </summary>
-        ///// <param name="test">The test that is starting</param>
-        //public void SuiteStarted(ITest test)
-        //{
-        //    try
-        //    {
-        //        string report = string.Format(
-        //            "<start-suite id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-        //            test.Id,
-        //            XmlHelper.FormatAttributeValue(test.Name),
-        //            XmlHelper.FormatAttributeValue(test.FullName));
-
-        //        handler.RaiseCallbackEvent(report);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Called when a test has finished. Sends a result summary to the callback.
-        ///// to 
-        ///// </summary>
-        ///// <param name="result">The result of the test</param>
-        //public void SuiteFinished(ITestResult result)
-        //{
-        //    try
-        //    {
-        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
-        //    }
-        //}
-
         /// <summary>
         /// Called when a test has just started
         /// </summary>
@@ -141,12 +59,14 @@ namespace NUnit.Framework.Internal
                 ? "start-suite"
                 : "start-test";
 
+            var parent = GetParent(test);
             try
             {
                 string report = string.Format(
-                    "<{0} id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
+                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\"/>",
                     startElement,
                     test.Id,
+                    parent != null ? parent.Id : string.Empty,
                     FormatAttributeValue(test.Name),
                     FormatAttributeValue(test.FullName));
 
@@ -167,7 +87,10 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
+                var node = result.ToXml(false);
+                var parent = GetParent(result.Test);
+                node.Attributes.Add("parentId", parent != null ? parent.Id : string.Empty);
+                handler.RaiseCallbackEvent(node.OuterXml);                
             }
             catch (Exception ex)
             {
@@ -175,9 +98,40 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Called when a test produces output for immediate display
+        /// </summary>
+        /// <param name="output">A TestOutput object containing the text to display</param>
+        public void TestOutput(TestOutput output)
+        {
+            try
+            {
+                handler.RaiseCallbackEvent(output.ToXml());
+            }
+            catch (Exception ex)
+            {
+                log.Error("Exception processing TestOutput event" + NUnit.Env.NewLine + ex.ToString());
+            }
+        }
+
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Returns the parent test item for the targer test item if it exists
+        /// </summary>
+        /// <param name="test"></param>
+        /// <returns>parent test item</returns>
+        private static ITest GetParent(ITest test)
+        {
+            if (test == null || test.Parent == null)
+            {
+                return null;
+            }
+
+            return test.Parent.IsSuite ? test.Parent : GetParent(test.Parent);
+        }
 
         /// <summary>
         /// Makes a string safe for use as an attribute, replacing
@@ -199,4 +153,3 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 }
-#endif

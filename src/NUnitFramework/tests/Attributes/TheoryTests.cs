@@ -48,6 +48,12 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void UnsupportedNullableTypeArgumentWithNoDatapointsAreNotRunnable()
+        {
+            TestAssert.IsNotRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+        }
+
+        [Test]
         public void TheoryWithDatapointsIsRunnable()
         {
             Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TheoryWithArgumentsAndDatapoints");
@@ -63,6 +69,22 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.TestCaseCount, Is.EqualTo(4));
         }
 
+        [Test]
+        public void NullableBooleanArgumentsAreSuppliedAutomatically()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithNullableBooleanArguments");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(9));
+        }
+
+        [Test]
+        public void DatapointAndAttributeDataMayBeCombined()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithBothDatapointAndAttributeData");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
         [Datapoint]
         object nullObj = null;
 
@@ -73,13 +95,32 @@ namespace NUnit.Framework.Attributes
             Assert.Null(nullObj); // to avoid a warning
         }
 
-
         [Test]
         public void EnumArgumentsAreSuppliedAutomatically()
         {
             Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithEnumAsArgument");
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(16));
+        }
+
+        [Test]
+        public void NullableEnumArgumentsAreSuppliedAutomatically()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithNullableEnumAsArgument");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(17));
+        }
+
+        [Test]
+        public void AllValuesMayBeSuppliedByAttributes()
+        {       
+            // NOTE: This test was failing with a count of 8 because both
+            // TheoryAttribute and CombinatorialAttribute were adding cases.
+            // Solution is to make TheoryAttribute a CombiningAttribute so
+            // that no extra attribute is added to the method.
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithAllDataSuppliedByAttributes");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(4));
         }
 
         [Theory]
@@ -92,13 +133,6 @@ namespace NUnit.Framework.Attributes
         [Theory]
         public void SquareRootWithOneBadValue(
             [Values(12.0, -4.0, 9.0)] double d)
-        {
-            SquareRootTest(d);
-        }
-
-        [Theory, Explicit("Used to demonstrate display of failing Theory")]
-        public void SquareRootWithAllBadValues(
-            [Values(-12.0, -4.0, -9.0)] double d)
         {
             SquareRootTest(d);
         }

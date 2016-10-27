@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 using System;
-using NUnit.Framework.Compatibility;
+using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -45,9 +46,9 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             this.expectedType = type;
-            this.descriptionPrefix = "attribute " + expectedType.FullName;
+            this.DescriptionPrefix = "attribute " + expectedType.FullName;
 
-            if (!typeof(Attribute).IsAssignableFrom(expectedType))
+            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
                 throw new ArgumentException(string.Format(
                     "Type {0} is not an attribute", expectedType), "type");
         }
@@ -65,7 +66,7 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException(string.Format("Attribute {0} was not found", expectedType), "actual");
 
             attrFound = attrs[0];
-            return baseConstraint.ApplyTo(attrFound);
+            return BaseConstraint.ApplyTo(attrFound);
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<attribute {0} {1}>", expectedType, baseConstraint);
+            return string.Format("<attribute {0} {1}>", expectedType, BaseConstraint);
         }
     }
 }

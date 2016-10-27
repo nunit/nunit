@@ -24,8 +24,9 @@
 #if !PORTABLE
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
-using NUnit.Framework.Compatibility;
+using NUnit.Compatibility;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
 namespace NUnit.Framework.Constraints
@@ -46,8 +47,8 @@ namespace NUnit.Framework.Constraints
         public void SetUp()
         {
             theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
-            expectedDescription = "True after 500 millisecond delay";
-            stringRepresentation = "<after 500 <equal True>>";
+            expectedDescription = "True after 500 milliseconds delay";
+            stringRepresentation = "<after 500 milliseconds <equal True>>";
 
             boolValue = false;
             list = new List<int>();
@@ -55,16 +56,31 @@ namespace NUnit.Framework.Constraints
             //SetValueTrueAfterDelay(300);
         }
 
-        object[] SuccessData = new object[] { true };
-        object[] FailureData = new object[] { 
+        static object[] SuccessData = new object[] { true };
+        static object[] FailureData = new object[] { 
             new TestCaseData( false, "False" ),
             new TestCaseData( 0, "0" ),
             new TestCaseData( null, "null" ) };
 
-        object[] InvalidData = new object[] { InvalidDelegate };
+        static ActualValueDelegate DelegateReturningValue;
+        static ActualValueDelegate DelegateReturningFalse;
+        static ActualValueDelegate DelegateReturningZero;
 
-        ActualValueDelegate<object>[] SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
-        ActualValueDelegate<object>[] FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
+        static ActualValueDelegate<object>[] SuccessDelegates;
+        static ActualValueDelegate<object>[] FailureDelegates;
+
+        // Initialize static fields that are sensitive to order of initialization.
+        // Most compilers would probably intialize these in lexical order but it
+        // may not be guaranteed in all cases so we do it directly.
+        static DelayedConstraintTests()
+        {
+            DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
+            DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
+            DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
+
+            SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
+            FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
+        }
 
         [Test, TestCaseSource("SuccessDelegates")]
         public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
@@ -84,6 +100,19 @@ namespace NUnit.Framework.Constraints
         {
             SetValuesAfterDelay(DELAY);
             Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
+        }
+
+        [Test]
+        public void DifferentDelayTests()
+        {
+            SetValuesAfterDelay(60000);
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 1).Minutes.Minutes);
+
+            SetValuesAfterDelay(5000);
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 5).Seconds);
+
+            SetValuesAfterDelay(DELAY);
+            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER).Seconds.MilliSeconds);
         }
 
         [Test]
@@ -227,26 +256,18 @@ namespace NUnit.Framework.Constraints
         private static int setValuesDelay;
 
         private static void MethodReturningVoid() { }
-        private static TestDelegate InvalidDelegate = new TestDelegate(MethodReturningVoid);
 
         private static object MethodReturningValue() { return boolValue; }
-        private static ActualValueDelegate DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
 
         private static object MethodReturningFalse() { return false; }
-        private static ActualValueDelegate DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
 
         private static object MethodReturningZero() { return 0; }
-        private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
 
         private static AutoResetEvent waitEvent = new AutoResetEvent(false);
 
         private static void Delay(int delay)
         {
-#if SILVERLIGHT
-            waitEvent.WaitOne(delay);
-#else
             waitEvent.WaitOne(delay, false);
-#endif
         }
 
         private static void MethodSetsValues()
@@ -257,9 +278,9 @@ namespace NUnit.Framework.Constraints
             statusString = "Finished";
         }
 
-        private void SetValuesAfterDelay(int delay)
+        private void SetValuesAfterDelay(int delayInMilliSeconds)
         {
-            setValuesDelay = delay;
+            setValuesDelay = delayInMilliSeconds;
             Thread thread = new Thread(MethodSetsValues);
             thread.Start();
         }

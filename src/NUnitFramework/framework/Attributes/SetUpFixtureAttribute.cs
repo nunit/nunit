@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 
 namespace NUnit.Framework
 {
@@ -33,7 +33,7 @@ namespace NUnit.Framework
     /// SetUpFixtureAttribute is used to identify a SetUpFixture
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
-    public class SetUpFixtureAttribute : FixtureBuilderAttribute, IFixtureBuilder
+    public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
 
@@ -41,40 +41,40 @@ namespace NUnit.Framework
         /// Build a SetUpFixture from type provided. Normally called for a Type
         /// on which the attribute has been placed.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used.</param>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <returns>A SetUpFixture object as a TestSuite.</returns>
-        public TestSuite BuildFrom(Type type)
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            SetUpFixture fixture = new SetUpFixture(type);
+            SetUpFixture fixture = new SetUpFixture(typeInfo);
 
             if (fixture.RunState != RunState.NotRunnable)
             {
                 string reason = null;
-                if (!IsValidFixtureType(type, ref reason))
+                if (!IsValidFixtureType(typeInfo, ref reason))
                 {
                     fixture.RunState = RunState.NotRunnable;
                     fixture.Properties.Set(PropertyNames.SkipReason, reason);
                 }
             }
 
-            return fixture;
+            return new TestSuite[] { fixture };
         }
 
         #endregion
 
         #region Helper Methods
 
-        private bool IsValidFixtureType(Type fixtureType, ref string reason)
+        private bool IsValidFixtureType(ITypeInfo typeInfo, ref string reason)
         {
-            if (fixtureType.IsAbstract)
+            if (typeInfo.IsAbstract)
             {
-                reason = string.Format("{0} is an abstract class", fixtureType.FullName);
+                reason = string.Format("{0} is an abstract class", typeInfo.FullName);
                 return false;
             }
 
-            if (fixtureType.GetConstructor(new Type[0]) == null)
+            if (!typeInfo.HasConstructor(new Type[0]))
             {
-                reason = string.Format("{0} does not have a valid constructor", fixtureType.FullName);
+                reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
                 return false;
             }
 
@@ -87,7 +87,7 @@ namespace NUnit.Framework
 #pragma warning restore
 
             foreach (Type invalidType in invalidAttributes)
-                if (Reflect.HasMethodWithAttribute(fixtureType, invalidType))
+                if (typeInfo.HasMethodWithAttribute(invalidType))
                 {
                     reason = invalidType.Name + " attribute not allowed in a SetUpFixture";
                     return false;

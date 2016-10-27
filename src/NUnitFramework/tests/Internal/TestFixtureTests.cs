@@ -25,7 +25,7 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
-using NUnit.TestData.TestFixtureData;
+using NUnit.TestData.TestFixtureTests;
 
 namespace NUnit.Framework.Internal
 {
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
             CanConstructFrom(typeof(FixtureWithoutTestFixtureAttributeContainingTestCaseSource));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [Test]
         public void ConstructFromTypeWithoutTestFixtureAttributeContainingTheory()
         {
@@ -112,9 +112,10 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CannotRunBadConstructor()
+        public void BadConstructorRunsWithSetUpError()
         {
-            TestAssert.IsNotRunnable(typeof(BadCtorFixture));
+            var result = TestBuilder.RunTestFixture(typeof(BadCtorFixture));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError));
         }
 
         [Test]
@@ -436,7 +437,7 @@ namespace NUnit.Framework.Internal
             {
                 Assert.That(test, Is.Not.Null, "ITest is null on a " + _location);
                 Assert.That(test.Fixture, Is.Not.Null, "ITest.Fixture is null on a " + _location);
-                Assert.That(test.Fixture.GetType(), Is.EqualTo(test.FixtureType), "ITest.Fixture is not the correct type on a " + _location);
+                Assert.That(test.Fixture.GetType(), Is.EqualTo(test.TypeInfo.Type), "ITest.Fixture is not the correct type on a " + _location);
             }
         }
 

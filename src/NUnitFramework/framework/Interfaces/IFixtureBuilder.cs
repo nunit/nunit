@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -36,15 +37,15 @@ namespace NUnit.Framework.Interfaces
     public interface IFixtureBuilder
     {
         /// <summary>
-        /// Build a TestFixture from type provided. A non-null TestSuite
-        /// must always be returned, since the method is generally called
-        /// because the user has marked the target class as a fixture.
-        /// If something prevents the fixture from being used, it should
-        /// be returned nonetheless, labelled as non-runnable.
+        /// Build one or more TestFixtures from type provided. At least one
+        /// non-null TestSuite must always be returned, since the method is 
+        /// generally called because the user has marked the target class as 
+        /// a fixture. If something prevents the fixture from being used, it
+        /// will be returned nonetheless, labelled as non-runnable.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used.</param>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <returns>A TestSuite object or one derived from TestSuite.</returns>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
-        TestSuite BuildFrom(Type type);
+        IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo);
     }
 }

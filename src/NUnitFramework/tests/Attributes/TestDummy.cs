@@ -54,7 +54,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             throw new NotImplementedException();
         }

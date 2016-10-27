@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014-2015 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,10 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-#if NETCF
-using System.Linq;
-#endif
 
 namespace NUnit.Framework
 {
@@ -41,31 +37,34 @@ namespace NUnit.Framework
     /// attribute is optional.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public abstract class CombiningStrategyAttribute : TestCaseBuilderAttribute, ITestBuilder, IApplyToTest
+    public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest
     {
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
-        private IParameterDataProvider _dataProvider = new ParameterDataProvider();
 
         private ICombiningStrategy _strategy;
+        private IParameterDataProvider _dataProvider;
 
         /// <summary>
-        /// Construct a CombiningStrategyAttribute incorporating an object
-        /// that implements ICombiningStrategy.
+        /// Construct a CombiningStrategyAttribute incorporating an
+        /// ICombiningStrategy and an IParamterDataProvider.
         /// </summary>
-        /// <param name="strategy">Combining strategy to be used</param>
-        protected CombiningStrategyAttribute(ICombiningStrategy strategy)
+        /// <param name="strategy">Combining strategy to be used in combining data</param>
+        /// <param name="provider">An IParameterDataProvider to supply data</param>
+        protected CombiningStrategyAttribute(ICombiningStrategy strategy, IParameterDataProvider provider)
         {
             _strategy = strategy;
+            _dataProvider = provider;
         }
 
         /// <summary>
         /// Construct a CombiningStrategyAttribute incorporating an object
-        /// that implements ICombiningStrategy. This constructor is provided
-        /// for CLS compliance.
+        /// that implements ICombiningStrategy and an IParameterDataProvider.
+        /// This constructor is provided for CLS compliance.
         /// </summary>
-        /// <param name="strategy">Combining strategy to be used</param>
-        protected CombiningStrategyAttribute(object strategy)
-            : this((ICombiningStrategy)strategy)
+        /// <param name="strategy">Combining strategy to be used in combining data</param>
+        /// <param name="provider">An IParameterDataProvider to supply data</param>
+        protected CombiningStrategyAttribute(object strategy, object provider)
+            : this((ICombiningStrategy)strategy, (IParameterDataProvider)provider)
         {
         }
 
@@ -78,55 +77,32 @@ namespace NUnit.Framework
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             List<TestMethod> tests = new List<TestMethod>();
-
-#if NETCF
-            if (method.ContainsGenericParameters)
-            {
-                var genericParams = method.GetGenericArguments();
-                var numGenericParams = genericParams.Length;
-
-                var o = new object();
-                var tryArgs = Enumerable.Repeat(o, numGenericParams).ToArray();
-
-                var mi = method.MakeGenericMethodEx(tryArgs);
-                if (mi == null)
-                    return tests;
-
-                var par = mi.GetParameters();
-                if (par.Length == 0)
-                    return tests;
-
-                var sourceData = par.Select(p => _dataProvider.GetDataFor(p)).ToArray();
-                foreach (var parms in _strategy.GetTestCases(sourceData))
-                {
-                    mi = method.MakeGenericMethodEx(parms.Arguments);
-                    if (mi == null)
-                    {
-                        var tm = new TestMethod(method, suite);
-                        tm.RunState = RunState.NotRunnable;
-                        tm.Properties.Set(PropertyNames.SkipReason, "Incompatible arguments");
-                        tests.Add(tm);
-                    }
-                    else
-                        tests.Add(_builder.BuildTestMethod(mi, suite, (ParameterSet)parms));
-                }
-
-                return tests;
-            }
-#endif
-            ParameterInfo[] parameters = method.GetParameters();
+            
+            IParameterInfo[] parameters = method.GetParameters();
 
             if (parameters.Length > 0)
             {
                 IEnumerable[] sources = new IEnumerable[parameters.Length];
-                for (int i = 0; i < parameters.Length; i++)
-                    sources[i] = _dataProvider.GetDataFor(parameters[i]);
+
+                try
+                {
+                    for (int i = 0; i < parameters.Length; i++)
+                        sources[i] = _dataProvider.GetDataFor(parameters[i]);
+                }
+                catch (InvalidDataSourceException ex)
+                {
+                    var parms = new TestCaseParameters();
+                    parms.RunState = RunState.NotRunnable;
+                    parms.Properties.Set(PropertyNames.SkipReason, ex.Message);
+                    tests.Add(_builder.BuildTestMethod(method, suite, parms));
+                    return tests;
+                }
 
                 foreach (var parms in _strategy.GetTestCases(sources))
-                    tests.Add(_builder.BuildTestMethod(method, suite, (ParameterSet)parms));
+                    tests.Add(_builder.BuildTestMethod(method, suite, (TestCaseParameters)parms));
             }
 
             return tests;

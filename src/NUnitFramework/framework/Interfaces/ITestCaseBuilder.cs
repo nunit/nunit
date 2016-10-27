@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Interfaces
@@ -49,7 +48,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="method">The test method to examine</param>
         /// <param name="suite">The suite being populated</param>
         /// <returns>True is the builder can use this method</returns>
-        bool CanBuildFrom(MethodInfo method, Test suite);
+        bool CanBuildFrom(IMethodInfo method, Test suite);
 
         /// <summary>
         /// Build a TestCase from the provided MethodInfo for
@@ -58,6 +57,6 @@ namespace NUnit.Framework.Interfaces
         /// <param name="method">The method to be used as a test case</param>
         /// <param name="suite">The test suite being populated, or null</param>
         /// <returns>A TestCase or null</returns>
-        Test BuildFrom(MethodInfo method, Test suite);
+        Test BuildFrom(IMethodInfo method, Test suite);
     }
 }

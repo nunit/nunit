@@ -21,10 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 namespace NUnit.Framework.Syntax
 {
-#if !NETCF
     [TestFixture]
     public class BinarySerializableTest : SyntaxTest
     {
@@ -33,11 +32,9 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<binaryserializable>";
             staticSyntax = Is.BinarySerializable;
-            inheritedSyntax = Helper().BinarySerializable;
             builderSyntax = Builder().BinarySerializable;
         }
     }
-#endif
 
     [TestFixture]
     public class XmlSerializableTest : SyntaxTest
@@ -47,7 +44,6 @@ namespace NUnit.Framework.Syntax
         {
             parseTree = "<xmlserializable>";
             staticSyntax = Is.XmlSerializable;
-            inheritedSyntax = Helper().XmlSerializable;
             builderSyntax = Builder().XmlSerializable;
         }
     }

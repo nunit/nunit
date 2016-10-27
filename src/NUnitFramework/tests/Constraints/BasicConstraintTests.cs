@@ -39,9 +39,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<null>";
         }
         
-        object[] SuccessData = new object[] { null };
+        static object[] SuccessData = new object[] { null };
 
-        object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
+        static object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
     }
 
     [TestFixture]
@@ -55,9 +55,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<true>";
         }
         
-        object[] SuccessData = new object[] { true, 2+2==4 };
+        static object[] SuccessData = new object[] { true, 2+2==4 };
         
-        object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] { 
             new object[] { null, "null" }, new object[] { "hello", "\"hello\"" },
             new object[] { false, "False"}, new object[] { 2+2==5, "False" } };
     }
@@ -73,9 +73,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<false>";
         }
 
-        object[] SuccessData = new object[] { false, 2 + 2 == 5 };
+        static object[] SuccessData = new object[] { false, 2 + 2 == 5 };
 
-        object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] { 
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
             new TestCaseData( true, "True" ),
@@ -93,9 +93,9 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<nan>";
         }
         
-        object[] SuccessData = new object[] { double.NaN, float.NaN };
+        static object[] SuccessData = new object[] { double.NaN, float.NaN };
 
-        object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] { 
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
             new TestCaseData( 42, "42" ), 

@@ -51,26 +51,20 @@ namespace NUnit.Framework.Internal.Execution
         /// Event signaled immediately after executing a WorkItem
         /// </summary>
         public event EventHandler Idle;
-
+        
         /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
         /// <param name="queue">The queue from which to pull work items</param>
         /// <param name="name">The name of this worker</param>
         /// <param name="apartmentState">The apartment state to use for running tests</param>
-        public TestWorker(WorkItemQueue queue, string name
-#if !NETCF
-                          , ApartmentState apartmentState
-#endif
-                          )
+        public TestWorker(WorkItemQueue queue, string name, ApartmentState apartmentState)
         {
             _readyQueue = queue;
 
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = name;
-#if !NETCF
             _workerThread.SetApartmentState(apartmentState);
-#endif
         }
 
         /// <summary>
@@ -86,16 +80,14 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsAlive
         {
-#if NETCF
-            get { return !_workerThread.Join(0); }
-#else
             get { return _workerThread.IsAlive; }
-#endif
         }
 
         /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
         /// </summary>
+        private WorkItem _currentWorkItem;
+
         private void TestWorkerThreadProc()
         {
             log.Info("{0} starting ", _workerThread.Name);
@@ -106,15 +98,18 @@ namespace NUnit.Framework.Internal.Execution
             {
                 while (_running)
                 {
-                    var workItem = _readyQueue.Dequeue();
-                    if (workItem == null)
+                    _currentWorkItem = _readyQueue.Dequeue();
+                    if (_currentWorkItem == null)
                         break;
 
-                    log.Info("{0} executing {1}", _workerThread.Name, workItem.Test.Name);
+                    log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Test.Name);
 
                     if (Busy != null)
                         Busy(this, EventArgs.Empty);
-                    workItem.Execute();
+
+                    _currentWorkItem.WorkerId = Name;
+                    _currentWorkItem.Execute();
+
                     if (Idle != null)
                         Idle(this, EventArgs.Empty);
 
@@ -135,19 +130,24 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Start();
         }
 
+        private object cancelLock = new object();
+
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem
         /// </summary>
-        public void Cancel()
+        /// <param name="force">true if the thread should be aborted, false if it should allow the currently running test to complete</param>
+        public void Cancel(bool force)
         {
-            _running = false;
+            if (force)
+                _running = false;
 
-#if NETCF
-            if (_workerThread != null && !_workerThread.Join(0))
-#else
-            if (_workerThread != null && _workerThread.IsAlive)
-#endif
-                ThreadUtility.Kill(_workerThread);
+            lock (cancelLock)
+                if (_workerThread != null && _currentWorkItem != null)
+                {
+                    _currentWorkItem.Cancel(force);
+                    if (force)
+                        _currentWorkItem = null;
+                }
         }
     }
 }
