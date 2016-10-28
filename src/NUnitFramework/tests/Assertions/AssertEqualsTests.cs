@@ -290,7 +290,6 @@ namespace NUnit.Framework.Assertions
             catch (AssertionException x)
             {
                 message = x.Message;
-                Console.WriteLine(message);
             }
             Assert.AreEqual(
                 "  Expected: 1914-06-28 12:00:17.666" + Env.NewLine +
@@ -304,13 +303,11 @@ namespace NUnit.Framework.Assertions
             catch (AssertionException x)
             {
                 message = x.Message;
-                Console.WriteLine(message);
             }
             Assert.AreEqual(
                 "  Expected: 1914-06-28 12:00:17.666 +/- 00:00:00.0000078" + Env.NewLine +
                 "  But was:  1914-06-28 12:00:17.6660079" + Env.NewLine,
                 message);
-
 
             Assert.AreEqual(expected, actual, TimeSpan.FromTicks(80));
         }
