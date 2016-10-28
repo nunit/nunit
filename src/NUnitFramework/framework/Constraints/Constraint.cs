@@ -296,9 +296,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="delayInMilliseconds">The delay in milliseconds.</param>
         /// <returns></returns>
-        public DelayedConstraint After(int delayInMilliseconds)
+        public DelayedConstraint.DelayedConstraint1 After(int delayInMilliseconds)
         {
-            return new DelayedConstraint(
+            return new DelayedConstraint.DelayedConstraint1(
                 Builder == null ? this : Builder.Resolve(),
                 delayInMilliseconds);
         }

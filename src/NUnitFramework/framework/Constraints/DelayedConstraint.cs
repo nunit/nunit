@@ -35,9 +35,129 @@ namespace NUnit.Framework.Constraints
     ///</summary>
     public class DelayedConstraint : PrefixConstraint
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public class DelayedConstraint3 : DelayedConstraint
+        {
+            private DelayedConstraint1 _parent;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="parent"></param>
+            public DelayedConstraint3(DelayedConstraint1 parent)
+                : base(parent.BaseConstraint, parent._delayInMilliseconds, parent._pollingInterval)
+            {
+                _parent = parent; ;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public DelayedConstraint Minute
+            {
+                get
+                {
+                    return _parent;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class DelayedConstraint2 : DelayedConstraint
+        {
+            private readonly DelayedConstraint1 _parent;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="parent"></param>
+            /// <exception cref="NotImplementedException"></exception>
+            public DelayedConstraint2(DelayedConstraint1 parent)
+                : base(parent.BaseConstraint, parent._delayInMilliseconds, parent._pollingInterval)
+            {
+                _parent = parent;
+                _delayInterval = parent._delayInterval;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="milliSeconds"></param>
+            /// <returns></returns>
+            public DelayedConstraint3 PollEvery(int milliSeconds)
+            {
+                _parent._pollingInterval = milliSeconds;
+                return new DelayedConstraint3(_parent);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class DelayedConstraint1 : DelayedConstraint
+        {
+            ///<summary>
+            /// Creates a new DelayedConstraint
+            ///</summary>
+            ///<param name="baseConstraint">The inner constraint to decorate</param>
+            ///<param name="delayInMilliseconds">The time interval after which the match is performed</param>
+            ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
+            public DelayedConstraint1(IConstraint baseConstraint, int delayInMilliseconds) : base(baseConstraint, delayInMilliseconds) { }
+
+            ///<summary>
+            /// Creates a new DelayedConstraint
+            ///</summary>
+            ///<param name="baseConstraint">The inner constraint to decorate</param>
+            ///<param name="delayInMilliseconds">The time interval after which the match is performed, in milliseconds</param>
+            ///<param name="pollingInterval">The time interval used for polling, in milliseconds</param>
+            ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
+            public DelayedConstraint1(IConstraint baseConstraint, int delayInMilliseconds, int pollingInterval) : base(baseConstraint, delayInMilliseconds, pollingInterval) { }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public DelayedConstraint2 Minutes
+            {
+                get
+                {
+                    _delayInterval = _delayInterval.InMinutes;
+                    return new DelayedConstraint2(this);
+                }
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public DelayedConstraint2 Seconds
+            {
+                get
+                {
+                    _delayInterval = _delayInterval.InSeconds;
+                    return new DelayedConstraint2(this);
+                }
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public DelayedConstraint MilliSeconds
+            {
+                get
+                {
+                    _delayInterval = _delayInterval.InMilliseconds;
+                    return new DelayedConstraint2(this);
+                }
+            }
+        }
+
         // TODO: Needs error message tests
         private Interval _delayInterval;
-        private readonly int _pollingInterval;
+        private int _delayInMilliseconds;
+        private int _pollingInterval;
 
         ///<summary>
         /// Creates a new DelayedConstraint
@@ -62,6 +182,7 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException("Cannot check a condition in the past", "delayInMilliseconds");
 
             _delayInterval = new Interval(delayInMilliseconds).InMilliseconds;
+            _delayInMilliseconds = delayInMilliseconds;
             _pollingInterval = pollingInterval;
         }
 
@@ -71,43 +192,6 @@ namespace NUnit.Framework.Constraints
         public override string Description
         {
             get { return string.Format("{0} after {1} delay", BaseConstraint.Description, _delayInterval); }
-        }
-
-        /// <summary>
-        /// Converts the specified delay interval to minutes
-        /// </summary>
-        public DelayedConstraint Minutes
-        {
-            get
-            {
-                _delayInterval = _delayInterval.InMinutes;
-                return this;
-            }
-        }
-
-        /// <summary>
-        /// Converts the specified delay interval to seconds
-        /// </summary>
-        public DelayedConstraint Seconds
-        {
-            get
-            {
-                _delayInterval = _delayInterval.InSeconds;
-                return this;
-            }
-        }
-
-
-        /// <summary>
-        /// Converts the specified delay interval to milliseconds
-        /// </summary>
-        public DelayedConstraint MilliSeconds
-        {
-            get
-            {
-                _delayInterval = _delayInterval.InMilliseconds;
-                return this;
-            }
         }
 
         /// <summary>

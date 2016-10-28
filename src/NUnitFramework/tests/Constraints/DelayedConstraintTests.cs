@@ -106,13 +106,13 @@ namespace NUnit.Framework.Constraints
         public void DifferentDelayTests()
         {
             SetValuesAfterDelay(60000);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 1).Minutes.Minutes);
+            Assert.That(DelegateReturningValue, new DelayedConstraint.DelayedConstraint1(new EqualConstraint(true), 1).Minutes);
 
             SetValuesAfterDelay(5000);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 5).Seconds);
+            Assert.That(DelegateReturningValue, new DelayedConstraint.DelayedConstraint1(new EqualConstraint(true), 5).Seconds);
 
             SetValuesAfterDelay(DELAY);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER).Seconds.MilliSeconds);
+            Assert.That(DelegateReturningValue, new DelayedConstraint.DelayedConstraint1(new EqualConstraint(true), AFTER).MilliSeconds);
         }
 
         [Test]
