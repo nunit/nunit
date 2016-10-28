@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework.Internal;
+using System.Text;
 
 namespace NUnit.Framework
 {
@@ -94,6 +95,54 @@ namespace NUnit.Framework
         public static void AreEqual(double expected, double? actual, double delta)
         {
             AssertDoublesAreEqual(expected, (double)actual, delta, null, null);
+        }
+
+        #endregion
+
+        #region DateTimes
+        
+        /// <summary>Verifies that two date times are equal. Two date times are
+        /// considered equal if both are null, or the difference between the
+        /// date times is smaller then the specified tolerance.
+        /// If they are not equal an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">
+        /// The date time that is expected
+        /// </param>
+        /// <param name="actual">
+        /// The actual date time
+        /// </param>
+        /// <param name="delta">
+        /// The accepted tolerance between the actual and expected date time.
+        /// </param>
+        public static void AreEqual(DateTime expected, DateTime? actual, TimeSpan delta)
+        {
+            AssertDateTimesAreEqual(expected, (DateTime)actual, delta, null, null);
+        }
+        
+        /// <summary>Verifies that two date times are equal. Two date times are
+        /// considered equal if both are null, or the difference between the
+        /// date times is smaller then the specified tolerance.
+        /// If they are not equal an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">
+        /// The date time that is expected
+        /// </param>
+        /// <param name="actual">
+        /// The actual date time
+        /// </param>
+        /// <param name="delta">
+        /// The accepted tolerance between the actual and expected date time.
+        /// </param>
+        /// <param name="message">
+        /// The message to display in case of failure.
+        /// </param>
+        /// <param name="args">
+        /// Array of objects to be used in formatting the message
+        /// </param>
+        public static void AreEqual(DateTime expected, DateTime? actual, TimeSpan delta, string message, params object[] args)
+        {
+            AssertDateTimesAreEqual(expected, (DateTime)actual, delta, message, args);
         }
 
         #endregion
@@ -242,6 +291,21 @@ namespace NUnit.Framework
                 Assert.That(actual, Is.EqualTo(expected), message, args);
             else
                 Assert.That(actual, Is.EqualTo(expected).Within(delta), message, args);
+        }
+
+        /// <summary>
+        /// Helper for Assert.AreEqual(DateTime expected, DateTime actual, ...)
+        /// allowing code generation to work consistently.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="delta">The maximum acceptable difference between the
+        /// the expected and the actual</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        protected static void AssertDateTimesAreEqual(DateTime expected, DateTime actual, TimeSpan delta, string message, params object[] args)
+        {
+            That(actual, Is.EqualTo(expected).Within(delta), message, args);
         }
 
         private static void IncrementAssertCount()
