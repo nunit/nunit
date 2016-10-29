@@ -65,6 +65,11 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+        public bool IsNotZero
+        {
+            get { return _amount != 0; }
+        }
+
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
