@@ -118,6 +118,8 @@
     </Compile>
     <Compile Include="Env.cs" />
     <Compile Include="Guard.cs" />
+    <Compile Include="Interfaces\AssertionResult.cs" />
+    <Compile Include="Interfaces\AssertionStatus.cs" />
     <Compile Include="Interfaces\IDisposableFixture.cs" />
     <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />

@@ -73,6 +73,8 @@ namespace NUnit.Framework.Internal
         private string _message;
         private string _stackTrace;
 
+        private List<AssertionResult> _assertionResults = new List<AssertionResult>();
+
 #if PARALLEL
         /// <summary>
         /// ReaderWriterLock
@@ -307,6 +309,14 @@ namespace NUnit.Framework.Internal
             get { return _output.ToString(); }
         }
 
+        /// <summary>
+        /// Gets a list of assertion results associated with the test.
+        /// </summary>
+        public IList<AssertionResult> AssertionResults
+        {
+            get { return _assertionResults; }
+        }
+
         #endregion
 
         #region IXmlNodeBuilder Members
@@ -369,6 +379,9 @@ namespace NUnit.Framework.Internal
 
             if (Output.Length > 0)
                 AddOutputElement(thisNode);
+
+            if (AssertionResults.Count > 0)
+                AddAssertionsElement(thisNode);
 
 
             if (recursive && HasChildren)
@@ -536,6 +549,30 @@ namespace NUnit.Framework.Internal
             SetResult(resultState, message, stackTrace);
         }
 
+        /// <summary>
+        /// Record an assertion result
+        /// </summary>
+        public void RecordAssertion(AssertionResult assertion)
+        {
+            _assertionResults.Add(assertion);
+        }
+
+        /// <summary>
+        /// Record an assertion result
+        /// </summary>
+        public void RecordAssertion(AssertionStatus status, string message, string stackTrace)
+        {
+            RecordAssertion(new AssertionResult(status, message, stackTrace));
+        }
+
+        /// <summary>
+        /// Record an assertion result
+        /// </summary>
+        public void RecordAssertion(AssertionStatus status, string message)
+        {
+            RecordAssertion(status, message, null);
+        }
+
         #endregion
 
         #region Helper Methods
@@ -572,6 +609,23 @@ namespace NUnit.Framework.Internal
         private TNode AddOutputElement(TNode targetNode)
         {
             return targetNode.AddElementWithCDATA("output", Output);
+        }
+
+        private TNode AddAssertionsElement(TNode targetNode)
+        {
+            var assertionsNode = targetNode.AddElement("assertions");
+
+            foreach (var assertion in AssertionResults)
+            {
+                TNode assertionNode = assertionsNode.AddElement("assertion");
+                assertionNode.AddAttribute("result", assertion.Status.ToString());
+                if (assertion.Message != null)
+                    assertionNode.AddElementWithCDATA("message", assertion.Message);
+                if (assertion.StackTrace != null)
+                    assertionNode.AddElementWithCDATA("stack-trace", assertion.StackTrace);
+            }
+
+            return assertionsNode;
         }
 
         #endregion
