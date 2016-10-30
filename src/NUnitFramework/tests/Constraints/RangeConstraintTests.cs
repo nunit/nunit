@@ -87,5 +87,77 @@ namespace NUnit.Framework.Constraints
         {
             Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
         }
+
+        #if !PORTABLE
+        [Test, TestCaseSource("ObjectsWithNoIComparable")]
+        public void InRangeNoIComparableTest(object testObj, object from, object to,System.Collections.IComparer comparer) {
+           
+            Assert.Throws<ArgumentException>(() =>
+            {
+                Assert.That(testObj, Is.InRange(from, to));
+            });
+            Assert.That(testObj, Is.InRange(from, to).Using(comparer));
+            Assert.Throws<AssertionException>(() =>
+            {
+                Assert.That(from, Is.InRange(testObj, to).Using(comparer));
+            });
+        }
+
+        [Test,TestCaseSource("ObjectsWithNoIComparable")]
+        public void NotInRangeTest(object testObj, object from, object to, System.Collections.IComparer comparer)
+        {
+            Assert.That(to, Is.Not.InRange(testObj, from).Using(comparer));
+        }
+
+        private static System.Collections.IEnumerable ObjectsWithNoIComparable()
+        {
+            var obj1 = new ExampleTest.NoComparer(1);
+            var obj = new ExampleTest.NoComparer(30);
+            var obj46 = new ExampleTest.NoComparer(46);
+            var comparer = new ExampleTest.myObjectComparer();
+            yield return new object[] { obj, obj1, obj46 , comparer };
+        }
+        #endif
     }
+
+    #if !PORTABLE
+    namespace ExampleTest
+    {
+        public class myObjectComparer : System.Collections.IComparer
+        {
+            public readonly System.Collections.IComparer Default = new System.Collections.CaseInsensitiveComparer();
+            int System.Collections.IComparer.Compare(object x, object y)
+            {
+                return Default.Compare(x.ToString(), y.ToString());
+
+            }
+        }
+
+        public class myComparer : NoComparer , IComparable
+        {
+            public myComparer(int value) : base(value){
+            }
+
+            int IComparable.CompareTo(object obj)
+            {
+                if (obj == null) return 1;
+
+                myComparer otherObj = obj as myComparer;
+                if (otherObj != null)
+                    return this._value.CompareTo(otherObj._value);
+                return 0;
+            }
+        }
+        public class NoComparer
+        {
+            public readonly int _value;
+            public NoComparer(int value) {
+                _value = value;
+            }
+            public override string ToString() {
+                return _value.ToString();
+            }
+        }
+    }
+    #endif
 }

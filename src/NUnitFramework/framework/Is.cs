@@ -543,6 +543,18 @@ namespace NUnit.Framework
             return new RangeConstraint(from, to);
         }
 
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value falls
+        /// inclusively within a specified range for objects not implementing IComparable. 
+        /// </summary>
+        /// <remarks>A class implementing IComparable has to be passed through Using. from must be less than or equal to true</remarks> 
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns>A RangeConstraint object</returns>
+        public static RangeConstraint InRange(object from, object to)
+        {
+            return new RangeConstraint(from, to);
+        }
         #endregion
 
     }
