@@ -37,11 +37,7 @@ namespace NUnit.Framework.Internal.Execution
         public void SetUp()
         {
             _queue = new WorkItemQueue("TestQ");
-#if NETCF
-            _worker = new TestWorker(_queue, "TestQ_Worker");
-#else
             _worker = new TestWorker(_queue, "TestQ_Worker", ApartmentState.MTA);
-#endif
         }
 
         [TearDown]

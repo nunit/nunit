@@ -30,7 +30,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
     [Serializable]
 #endif
     public class InconclusiveException : ResultStateException
@@ -50,7 +50,7 @@ namespace NUnit.Framework
             base(message, inner)
         { }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Serialization Constructor
         /// </summary>

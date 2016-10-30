@@ -26,7 +26,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-#if NET_2_0 || NET_3_5 || NETCF
+#if NET_2_0 || NET_3_5
 using ManualResetEventSlim = System.Threading.ManualResetEvent;
 #endif
 
@@ -273,7 +273,7 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 
-#if NET_2_0 || NET_3_5 || NETCF
+#if NET_2_0 || NET_3_5
     internal static class ManualResetEventExtensions
     {
         public static bool Wait (this ManualResetEvent mre, int millisecondsTimeout)

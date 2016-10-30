@@ -302,9 +302,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
                 catch (System.Threading.ThreadAbortException)
                 {
-#if !NETCF
                     Thread.ResetAbort();
-#endif
                 }
                 catch (Exception ex)
                 {

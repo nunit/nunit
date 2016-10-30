@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NET_4_0 && !NET_4_5 || SILVERLIGHT
+#if !NET_4_0 && !NET_4_5
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,6 +39,11 @@ namespace NUnit.TestUtilities
         private long _fileLength;
 
         public TestFile(string fileName, string resourceName)
+            : this(fileName, resourceName, false)
+        {
+        }
+
+        public TestFile(string fileName, string contentSource, bool isContent)
         {
             if (Path.IsPathRooted(fileName))
                 _fileInfo = new FileInfo(fileName);
@@ -48,16 +53,28 @@ namespace NUnit.TestUtilities
                 _fileInfo = new FileInfo(Path.Combine(tempPath, fileName));
             }
 
+            if (isContent)
+            {
+                using (var fs = _fileInfo.CreateText())
+                {
+                    fs.Write(contentSource);
+                }
+
+                _fileLength = contentSource.Length;
+                return;
+            }
+
             // HACK! Only way I can figure out to avoid having two copies of TestFile
             _resourceName = GetType().Assembly.GetName().Name.Contains("nunitlite")
-                ? "NUnitLite.Tests." + resourceName
-                : "NUnit.Framework.Tests." + resourceName;
+                ? "NUnitLite.Tests." + contentSource
+                : "NUnit.Framework.Tests." + contentSource;
             _fileLength = 0L;
 
             Assembly a = typeof(TestFile).GetTypeInfo().Assembly;
             using (Stream s = a.GetManifestResourceStream(_resourceName))
             {
-                if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
+                if (s == null)
+                    throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
 
                 var buffer = new byte[1024];
                 using (FileStream fs = _fileInfo.Create())
@@ -65,7 +82,8 @@ namespace NUnit.TestUtilities
                     while (true)
                     {
                         int count = s.Read(buffer, 0, buffer.Length);
-                        if (count == 0) break;
+                        if (count == 0)
+                            break;
                         fs.Write(buffer, 0, count);
                         _fileLength += count;
                     }
@@ -80,10 +98,14 @@ namespace NUnit.TestUtilities
 
         public long OffsetOf(char target)
         {
+            if (_resourceName == null)
+                return -1L;
+
             Assembly a = typeof(TestFile).GetTypeInfo().Assembly;
             using (Stream s = a.GetManifestResourceStream(_resourceName))
             {
-                if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
+                if (s == null)
+                    throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
 
                 byte[] buffer = new byte[1024];
                 long offset = 0L;
@@ -91,7 +113,8 @@ namespace NUnit.TestUtilities
                 while (true)
                 {
                     int count = s.Read(buffer, 0, buffer.Length);
-                    if (count == 0) break;
+                    if (count == 0)
+                        break;
                     foreach (char c in buffer)
                         if (c == target)
                             return offset;
@@ -126,7 +149,7 @@ namespace NUnit.TestUtilities
             _disposedValue = true;
         }
 
-#region IDisposable Members
+        #region IDisposable Members
 
         public void Dispose()
         {
@@ -135,7 +158,7 @@ namespace NUnit.TestUtilities
             GC.SuppressFinalize(this);
         }
 
-#endregion
+        #endregion
     }
 }
 #endif

@@ -31,15 +31,9 @@ namespace NUnit.Framework.Internal
     public class RuntimeFrameworkTests
     {
         static RuntimeType currentRuntime =
-#if SILVERLIGHT
-            RuntimeType.Silverlight;
-#else
             Type.GetType("Mono.Runtime", false) != null
                 ? RuntimeType.Mono
-                : Environment.OSVersion.Platform == PlatformID.WinCE
-                    ? RuntimeType.NetCF
-                    : RuntimeType.Net;
-#endif
+                : RuntimeType.Net;
 
         [Test]
         public void CanGetCurrentFramework()
@@ -47,17 +41,7 @@ namespace NUnit.Framework.Internal
             RuntimeFramework framework = RuntimeFramework.CurrentFramework;
 
             Assert.That(framework.Runtime, Is.EqualTo(currentRuntime), "#1");
-#if SILVERLIGHT
-            Version silverlightVersion = new Version(Environment.Version.Major, Environment.Version.Minor);
-            Version clrVersion = Environment.Version.Major >= 4
-                ? new Version(4,0,60310)
-                : new Version(2,0,50727);
-
-            Assert.That(framework.FrameworkVersion, Is.EqualTo(silverlightVersion));
-            Assert.That(framework.ClrVersion, Is.EqualTo(clrVersion));
-#else
             Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
-#endif
         }
 
 #if NET_4_5
@@ -255,8 +239,6 @@ namespace NUnit.Framework.Internal
             new FrameworkData(RuntimeType.Net, new Version(3,5), new Version(2,0,50727), "net-3.5", "Net 3.5"),
             new FrameworkData(RuntimeType.Net, new Version(4,0), new Version(4,0,30319), "net-4.0", "Net 4.0"),
             new FrameworkData(RuntimeType.Net, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "net", "Net"),
-            new FrameworkData(RuntimeType.NetCF, new Version(3,5), new Version(3,5,7283), "netcf-3.5", "NetCF 3.5"),
-            new FrameworkData(RuntimeType.NetCF, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "netcf", "NetCF"),
             new FrameworkData(RuntimeType.Mono, new Version(1,0), new Version(1,1,4322), "mono-1.0", "Mono 1.0"),
             new FrameworkData(RuntimeType.Mono, new Version(2,0), new Version(2,0,50727), "mono-2.0", "Mono 2.0"),
             // new FrameworkData(RuntimeType.Mono, new Version(2,0,50727), new Version(2,0,50727), "mono-2.0.50727", "Mono 2.0.50727"),

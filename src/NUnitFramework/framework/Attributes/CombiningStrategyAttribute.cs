@@ -24,9 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if NETCF
-using System.Linq;
-#endif
 
 namespace NUnit.Framework
 {
@@ -83,53 +80,7 @@ namespace NUnit.Framework
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             List<TestMethod> tests = new List<TestMethod>();
-
-#if NETCF
-            if (method.ContainsGenericParameters)
-            {
-                var genericParams = method.GetGenericArguments();
-                var numGenericParams = genericParams.Length;
-
-                var o = new object();
-                var tryArgs = Enumerable.Repeat(o, numGenericParams).ToArray();
-                IMethodInfo mi;
-
-                try
-                {
-                    // This fails if the generic method has constraints
-                    // that are not met by object.
-                    mi = method.MakeGenericMethodEx(tryArgs);
-                    if (mi == null)
-                        return tests;
-                }
-                catch
-                {
-                    return tests;
-                }
-
-                var par = mi.GetParameters();
-
-                if (par.Length == 0)
-                    return tests;
-
-                var sourceData = par.Select(p => _dataProvider.GetDataFor(p)).ToArray();
-                foreach (var parms in _strategy.GetTestCases(sourceData))
-                {
-                    mi = method.MakeGenericMethodEx(parms.Arguments);
-                    if (mi == null)
-                    {
-                        var tm = new TestMethod(method, suite);
-                        tm.RunState = RunState.NotRunnable;
-                        tm.Properties.Set(PropertyNames.SkipReason, "Incompatible arguments");
-                        tests.Add(tm);
-                    }
-                    else
-                        tests.Add(_builder.BuildTestMethod(mi, suite, (TestCaseParameters)parms));
-                }
-
-                return tests;
-            }
-#endif
+            
             IParameterInfo[] parameters = method.GetParameters();
 
             if (parameters.Length > 0)

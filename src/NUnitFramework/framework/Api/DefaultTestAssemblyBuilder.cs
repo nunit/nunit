@@ -79,10 +79,8 @@ namespace NUnit.Framework.Api
 #else
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
 #endif
-
-#if SILVERLIGHT
-            string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).Name;
-#elif PORTABLE
+            
+#if PORTABLE
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).FullName;
 #else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
@@ -240,7 +238,7 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -267,9 +265,7 @@ namespace NUnit.Framework.Api
             testAssembly.ApplyAttributesToTest(assembly);
 
 #if !PORTABLE
-#if !SILVERLIGHT
             testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
-#endif
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 #endif
 

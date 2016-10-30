@@ -40,7 +40,7 @@ namespace NUnit.Framework.Tests
             get { return TestExecutionContext.CurrentContext.CurrentResult.Output; }
         }
 
-#if !SILVERLIGHT && !PORTABLE && !NETCF
+#if !PORTABLE
         [Test]
         public void ConsoleWrite_WritesToResult()
         {

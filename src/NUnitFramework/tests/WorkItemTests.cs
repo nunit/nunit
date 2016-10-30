@@ -70,6 +70,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
+#if !PORTABLE
         Thread _thread;
 
         private void StartExecution()
@@ -82,6 +83,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             _workItem.Execute();
         }
+#endif
 
         // Use static for simplicity
         static class DummyFixture
@@ -90,8 +92,12 @@ namespace NUnit.Framework.Internal.Execution
 
             public static void DummyTest()
             {
+#if !PORTABLE
                 if (Delay > 0)
                     Thread.Sleep(Delay);
+#else
+                System.Threading.Tasks.Task.Delay(Delay);
+#endif
             }
         }
     }

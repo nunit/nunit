@@ -53,7 +53,7 @@ namespace NUnit.Framework.Attributes
             Assert.True(_context.IsSingleThreaded);
         }
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
         [Test]
         public void SetCultureAttribute()
         {

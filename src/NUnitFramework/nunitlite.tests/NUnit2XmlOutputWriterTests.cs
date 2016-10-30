@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using System;
 using System.IO;
 using System.Text;
@@ -127,20 +127,16 @@ namespace NUnitLite.Tests
         public void TestResults_HasValidDateAttribute()
         {
             string dateString = RequiredAttribute(topNode, "date");
-#if !NETCF
             DateTime date;
             Assert.That(DateTime.TryParse(dateString, out date), "Invalid date attribute: {0}", dateString);
-#endif
         }
 
         [Test]
         public void TestResults_HasValidTimeAttribute()
         {
             string timeString = RequiredAttribute(topNode, "time");
-#if !NETCF
             DateTime time;
             Assert.That(DateTime.TryParse(timeString, out time), "Invalid time attribute: {0}", timeString);
-#endif
         }
 
         [Test]
@@ -153,12 +149,10 @@ namespace NUnitLite.Tests
         [TestCase("clr-version")]
         [TestCase("os-version")]
         [TestCase("platform")]
-#if !NETCF
         [TestCase("cwd")]
         [TestCase("machine-name")]
         [TestCase("user")]
         [TestCase("user-domain")]
-#endif
         public void Environment_HasRequiredAttribute(string name)
         {
             RequiredAttribute(envNode, name);
@@ -210,15 +204,11 @@ namespace NUnitLite.Tests
         [Test]
         public void TestSuite_HasValidTimeAttribute()
         {
-#if NETCF
-            RequiredAttribute(suiteNode, "time");
-#else
             double time;
             var timeString = RequiredAttribute(suiteNode, "time");
             // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
             var success = double.TryParse(timeString,System.Globalization.NumberStyles.Float,System.Globalization.NumberFormatInfo.InvariantInfo, out time);
             Assert.That(success, "{0} is an invalid value for time", timeString);
-#endif
         }
 
         [Test]

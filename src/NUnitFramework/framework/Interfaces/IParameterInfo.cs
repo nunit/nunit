@@ -34,12 +34,10 @@ namespace NUnit.Framework.Interfaces
     {
         #region Properties
 
-#if !NETCF
         /// <summary>
         /// Gets a value indicating whether the parameter is optional
         /// </summary>
         bool IsOptional { get; }
-#endif
 
         /// <summary>
         /// Gets an IMethodInfo representing the method for which this is a parameter
