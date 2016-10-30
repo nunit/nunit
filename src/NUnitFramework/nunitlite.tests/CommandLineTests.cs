@@ -31,10 +31,56 @@ using NUnit.Framework;
 namespace NUnitLite.Tests
 {
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using NUnit.TestUtilities;
 
     [TestFixture]
     public class CommandLineTests
     {
+        #region @filename Tests
+
+#if !PORTABLE
+        [Test]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "--filearg1\r\n--filearg2", "--arg1 --filearg1 --filearg2 --arg2", "")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "--filearg1 --filearg2", "--arg1 --filearg1 --filearg2 --arg2", "")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "--filearg1 --filearg2\r\n--filearg3 --filearg4", "--arg1 --filearg1 --filearg2 --filearg3 --filearg4 --arg2", "")]
+        [TestCase("--arg1 @[,]file1.txt --arg2", "file1.txt", "--filearg1:filearg2\r\nfilearg3\r\nfilearg4", "--arg1 --filearg1:filearg2,filearg3,filearg4 --arg2", "")]
+        [TestCase("--arg1 @file1.txt --arg2", "", "", "--arg1 --arg2", "The file \"file1.txt\" was not found")]
+        [TestCase("--arg1 @ --arg2", "", "", "--arg1 --arg2", "The file name should not be empty")]
+        [TestCase("--arg1 @file1.txt --arg2 @file2.txt", "file1.txt|file2.txt", "--filearg1 --filearg2|--filearg3", "--arg1 --filearg1 --filearg2 --arg2 --filearg3", "")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "", "--arg1 --arg2", "")]
+        [TestCase("--arg1 @file1.txt --arg2 @file2.txt", "file1.txt|file2.txt|file3.txt", "--filearg1 --filearg2|--filearg3 @file3.txt|--filearg4", "--arg1 --filearg1 --filearg2 --arg2 --filearg3 --filearg4", "")]
+        public void AtsignFilenameTests(string commandLine, string testFileNames, string testFileContents, string expectedArgs, string expectedErrors)
+        {
+            var ee = expectedErrors.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var tfn = testFileNames.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            var tfc = testFileContents.Split(new[] { '|' });
+            var tfs = new TestFile[tfn.Length];
+
+            for (int ix = 0; ix < tfn.Length; ++ix)
+                tfs[ix] = new TestFile(Path.Combine(TestContext.CurrentContext.TestDirectory, tfn[ix]), tfc[ix], true);
+
+            var options = new NUnitLiteOptions();
+
+            string actualExpectedArgs;
+
+            try
+            {
+                actualExpectedArgs = String.Join(" ", options.PreParse(CommandLineOptions.GetArgs(commandLine)).ToArray());
+            }
+            finally
+            {
+                foreach (var tf in tfs)
+                    tf.Dispose();
+            }
+
+            Assert.AreEqual(expectedArgs, actualExpectedArgs);
+            Assert.AreEqual(options.ErrorMessages, ee);
+        }
+#endif
+        #endregion
+
         #region General Tests
 
         [Test]
