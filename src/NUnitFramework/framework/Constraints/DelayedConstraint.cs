@@ -163,7 +163,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Changes delay interval dimension to milliseconds
             /// </summary>
-            public DelayedConstraint MilliSeconds
+            public WithDimensionedDelayInterval MilliSeconds
             {
                 get
                 {

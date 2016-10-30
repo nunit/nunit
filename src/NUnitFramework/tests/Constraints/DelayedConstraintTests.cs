@@ -269,6 +269,22 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void PollEvery_SetTo_MilliSeconds_ByDefault()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(DELAY);
+                return true;
+            }, Is.True.After(AFTER).PollEvery(POLLING));
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
+        }
+
+        [Test]
         public void PollEvery_SetTo_MilliSeconds()
         {
             var watch = new Stopwatch();
@@ -276,12 +292,12 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(() =>
             {
-                Delay(100);
+                Delay(DELAY);
                 return true;
-            }, Is.True.After(200).PollEvery(10));
+            }, Is.True.After(AFTER).PollEvery(POLLING).MilliSeconds);
 
             watch.Stop();
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(200));
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
         }
 
         [Test]
@@ -314,6 +330,22 @@ namespace NUnit.Framework.Constraints
 
             watch.Stop();
             Assert.That(watch.ElapsedMilliseconds, Is.LessThan(120000));
+        }
+
+        [Test]
+        public void PollyEvery_SetOn_DimensionedDelay()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(DELAY);
+                return true;
+            }, Is.True.After(AFTER).MilliSeconds.PollEvery(POLLING));
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
         }
 
         private static int setValuesDelay;
