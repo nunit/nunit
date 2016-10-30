@@ -189,6 +189,7 @@
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraint.cs" />
+    <Compile Include="Constraints\Interval.cs" />
     <Compile Include="Constraints\IResolveConstraint.cs" />
     <Compile Include="Constraints\LessThanConstraint.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraint.cs" />
@@ -358,7 +359,6 @@
     <Compile Include="Internal\Logging\InternalTraceWriter.cs" />
     <Compile Include="Internal\Logging\Logger.cs" />
     <Compile Include="Internal\MethodWrapper.cs" />
-    <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterWrapper.cs" />

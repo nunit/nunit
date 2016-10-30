@@ -35,13 +35,7 @@ namespace NUnit.TestData
         [Test, MaxTime(1)]
         public void MaxTimeExceeded()
         {
-#if SILVERLIGHT
-            // Silverlight does not have the high resolution StopWatch, so
-            // we need to delay longer than their minimum clock resolution
-            Thread.Sleep(1000);
-#else
             Thread.Sleep(20);
-#endif
         }
     }
 
@@ -51,13 +45,7 @@ namespace NUnit.TestData
         [TestCase(5), MaxTime(1)]
         public void MaxTimeExceeded(int x)
         {
-#if SILVERLIGHT
-            // Silverlight does not have the high resolution StopWatch, so
-            // we need to delay longer than their minimum clock resolution
-            Thread.Sleep(1000);
-#else
             Thread.Sleep(20);
-#endif
         }
     }
 

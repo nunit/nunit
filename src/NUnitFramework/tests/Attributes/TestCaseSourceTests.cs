@@ -44,9 +44,6 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test, TestCaseSource("InheritedStaticProperty")]
-#if !PORTABLE
-        [Platform(Exclude = "netcf", Reason = "Test hangs in CF")]
-#endif
         public void TestSourceCanBeInheritedStaticProperty(bool source)
         {
             Assert.AreEqual(true, source);

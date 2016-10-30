@@ -30,9 +30,7 @@ namespace NUnit.Common
     /// </summary>
     public class ColorConsole : IDisposable
     {
-#if !SILVERLIGHT && !NETCF
         private ConsoleColor _originalColor;
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorConsole"/> class.
@@ -40,13 +38,10 @@ namespace NUnit.Common
         /// <param name="style">The color style to use.</param>
         public ColorConsole(ColorStyle style)
         {
-#if !SILVERLIGHT && !NETCF
             _originalColor = Console.ForegroundColor;
             Console.ForegroundColor = GetColor(style);
-#endif
         }
 
-#if !SILVERLIGHT && !NETCF
         /// <summary>
         /// By using styles, we can keep everything consistent
         /// </summary>
@@ -164,7 +159,6 @@ namespace NUnit.Common
                     }
             }
         }
-#endif
 
         #region Implementation of IDisposable
 
@@ -173,9 +167,7 @@ namespace NUnit.Common
         /// </summary>
         public void Dispose()
         {
-#if !SILVERLIGHT && !NETCF
             Console.ForegroundColor = _originalColor;
-#endif
         }
 
         #endregion

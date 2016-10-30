@@ -200,7 +200,6 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("c", array[0]);
         }
 
-#if !NETCF
         [TestCase("x", ExpectedResult = new []{"x", "b", "c"})]
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y", "c" })]
         [TestCase("x", "y", "z", ExpectedResult = new[] { "x", "y", "z" })]
@@ -216,7 +215,6 @@ namespace NUnit.Framework.Attributes
         {
             return new[] {s1, s2};
         }
-#endif
 
         [TestCase("a", "b", Explicit = true)]
         public void ShouldNotRunAndShouldNotFailInConsoleRunner()

@@ -44,7 +44,7 @@ namespace NUnit.Framework.Api
         private const string EMPTY_FILTER = "<filter/>";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
-#if SILVERLIGHT || PORTABLE
+#if PORTABLE
         private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_NAME;
 #else
         private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_FILE;
@@ -60,8 +60,6 @@ namespace NUnit.Framework.Api
         {
 #if PORTABLE
             _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
-#elif SILVERLIGHT
-            _controller = new FrameworkController(MOCK_ASSEMBLY_NAME, "ID", _settings);
 #else
             _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, "ID", _settings);
 #endif
@@ -74,7 +72,7 @@ namespace NUnit.Framework.Api
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
             Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());
-#if SILVERLIGHT || PORTABLE
+#if PORTABLE
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_NAME));
 #else
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_PATH));
@@ -109,11 +107,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-#if SILVERLIGHT
-            Assert.That(result.Attributes["name"], Is.EqualTo("mock-assembly"));
-#else
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
-#endif
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");

@@ -78,8 +78,6 @@ namespace NUnit.Framework.Constraints
         };
     }
 
-// TODO: Find a different example for use with NETCF - ArgumentException does not have a ParamName member
-#if !NETCF && !SILVERLIGHT
     public class ThrowsConstraintTest_WithConstraint : ThrowsConstraintTestBase
     {
         [SetUp]
@@ -105,7 +103,6 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine )
         };
     }
-#endif
 
     public abstract class ThrowsConstraintTestBase : ConstraintTestBaseNoData
     {

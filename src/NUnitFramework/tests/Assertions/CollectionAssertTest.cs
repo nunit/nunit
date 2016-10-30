@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using System.Data;
 #endif
 

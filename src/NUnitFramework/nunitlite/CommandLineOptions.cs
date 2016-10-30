@@ -24,6 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using NUnit.Options;
 
 namespace NUnit.Common
@@ -40,10 +42,8 @@ namespace NUnit.Common
     public class CommandLineOptions : OptionSet
     {
         private static readonly string DEFAULT_WORK_DIRECTORY =
-#if NETCF || PORTABLE
+#if PORTABLE
             @"\My Documents";
-#elif SILVERLIGHT
-            Environment.GetFolderPath(Environment.SpecialFolder.Personal);   
 #else
             Environment.CurrentDirectory;
 #endif
@@ -53,7 +53,7 @@ namespace NUnit.Common
         private bool noresult;
 #endif
 
-#region Constructor
+        #region Constructor
 
         internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, params string[] args)
         {
@@ -64,18 +64,102 @@ namespace NUnit.Common
             
             ConfigureOptions();            
             if (args != null)
-                Parse(args);
+                Parse(PreParse(args));
         }
 
         public CommandLineOptions(params string[] args)
         {
             ConfigureOptions();
             if (args != null)
-                Parse(args);
+                Parse(PreParse(args));
         }
-        
+
+#if !PORTABLE
+        private int _nesting = 0;
+#endif
+
+        internal IEnumerable<string> PreParse(IEnumerable<string> args)
+        {
+#if PORTABLE
+            return args;
+#else
+            if (++_nesting > 3)
+            {
+                ErrorMessages.Add("@ nesting exceeds maximum depth of 3");
+                --_nesting;
+                return args;
+            }
+
+            var listArgs = new List<string>();
+            var delim = ' ';
+
+            foreach (var arg in args)
+            {
+                if (arg.Length == 0 || arg[0] != '@')
+                {
+                    listArgs.Add(arg);
+                    continue;
+                }
+
+                if (arg.Length == 1)
+                {
+                    ErrorMessages.Add("The file name should not be empty");
+                    continue;
+                }
+
+                var offset = 1;
+                if (arg.Length > 4 && arg[1] == '[' && arg[3] == ']')
+                {
+                    delim = arg[2];
+                    offset = 4;
+                }
+
+                var filename = arg.Substring(offset);
+
+                if (!File.Exists(filename))
+                {
+                    ErrorMessages.Add("The file \"" + filename + "\" was not found");
+                    continue;
+                }
+
+                string contents;
+                try
+                    {
+#if NETCF
+                    using (var sr = new StreamReader (filename))
+                        {
+                        contents = sr.ReadToEnd ();
+                        }
+#else
+                    contents = File.ReadAllText (filename);
+#endif
+                    }
+                catch (IOException ex)
+                    {
+                    ErrorMessages.Add("Error reading \"" + filename + "\": " + ex.Message);
+                    continue;
+                    }
+
+                var newArgs = GetArgs(contents.Replace("\r", "").Replace('\n', delim));
+                listArgs.AddRange(PreParse(newArgs));
+            }
+
+            --_nesting;
+            return listArgs;
+#endif
+        }
+
+#if !PORTABLE
+        internal static IEnumerable<string> GetArgs(string commandLine)
+        {
+            const string re = @"\G(""((""""|[^""])+)""|(\S+)) *";
+            var ms = Regex.Matches(commandLine, re);
+            return ms.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @""""));
+        }
+#endif
+
 #endregion
-        
+
 #region Properties
 
         // Action to Perform
@@ -255,7 +339,7 @@ namespace NUnit.Common
         {
             if (path == null) return null;
 
-#if NETCF || PORTABLE
+#if PORTABLE
             return Path.Combine(DEFAULT_WORK_DIRECTORY , path);
 #else
             return Path.GetFullPath(path);
@@ -370,10 +454,8 @@ namespace NUnit.Common
             this.Add("test-name-format=", "Non-standard naming pattern to use in generating test names.",
                 v => DefaultTestNamePattern = RequiredValue(v, "--test-name-format"));
 
-#if !NETCF
             this.Add("teamcity", "Turns on use of TeamCity service messages.",
                 v => TeamCity = v != null);
-#endif
 
 #if !PORTABLE
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",

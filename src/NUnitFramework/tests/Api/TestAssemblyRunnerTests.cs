@@ -44,7 +44,7 @@ namespace NUnit.Framework.Api
         private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
 
-#if SILVERLIGHT || PORTABLE
+#if PORTABLE
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #endif
 
@@ -59,17 +59,7 @@ namespace NUnit.Framework.Api
         private int _failCount;
         private int _skipCount;
         private int _inconclusiveCount;
-
-        private static bool REALLY_RUNNING_ON_CF = false;
-
-#if NETCF
-        static TestAssemblyRunnerTests()
-        {
-            // We may be running on the desktop using assembly unification
-            REALLY_RUNNING_ON_CF = Type.GetType("System.ConsoleColor") == null;
-        }
-#endif
-
+        
         [SetUp]
         public void CreateRunner()
         {
@@ -93,7 +83,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
-#if SILVERLIGHT || PORTABLE
+#if PORTABLE
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_NAME));
 #else
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
@@ -113,7 +103,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
         [Test]
@@ -127,7 +117,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load").And.Contains(BAD_FILE));
+                Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
 
 #endregion
@@ -192,7 +182,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
-#if !NETCF && !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
 #endif
 
@@ -222,7 +212,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
         [Test]
@@ -237,7 +227,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
 #endregion
@@ -301,7 +291,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(_runner.Result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
         [Test]
@@ -318,7 +308,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(_runner.Result.Message,
-                Does.StartWith(REALLY_RUNNING_ON_CF ? "File or assembly name" : "Could not load"));
+                Does.StartWith("Could not load"));
         }
 
 #endregion
@@ -433,8 +423,6 @@ namespace NUnit.Framework.Api
             return _runner.Load(
                 typeof(MockAssembly).GetTypeInfo().Assembly, 
                 EMPTY_SETTINGS);
-#elif SILVERLIGHT
-            return _runner.Load(MOCK_ASSEMBLY_NAME, EMPTY_SETTINGS);
 #else
             return _runner.Load(
                 Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE), 
@@ -446,8 +434,6 @@ namespace NUnit.Framework.Api
         {
 #if PORTABLE
             return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly, EMPTY_SETTINGS);
-#elif SILVERLIGHT
-            return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly.FullName, EMPTY_SETTINGS);
 #else
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);
 #endif

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF // Doesn't work under CF - But also isn't needed because we construct a closed method
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -139,5 +138,3 @@ namespace NUnit.Framework.Internal
         void MethodWithNestedTypes<T, U, V>(List<Dictionary<T, U>> x, Dictionary<U, List<V>> z) { }
     }
 }
-#endif
-

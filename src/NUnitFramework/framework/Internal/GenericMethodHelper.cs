@@ -112,11 +112,7 @@ namespace NUnit.Framework.Internal
         private void ApplyArgType(Type parmType, Type argType)
         {
             // Note: parmType must be generic parameter type - checked by caller
-#if NETCF
-            var index = Array.IndexOf(TypeParms, parmType);
-#else
             var index = parmType.GenericParameterPosition;
-#endif
             TypeArgs[index] = TypeHelper.BestCommonType(TypeArgs[index], argType);
         }
 

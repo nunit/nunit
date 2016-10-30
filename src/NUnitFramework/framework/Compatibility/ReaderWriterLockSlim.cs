@@ -6,48 +6,6 @@ using System.Threading;
 
 namespace NUnit.Compatibility
 {
-#if NETCF
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ReaderWriterLockSlim
-    {
-        private object _lockObject = new object();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void EnterReadLock()
-        {
-            Monitor.Enter (_lockObject);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void EnterWriteLock()
-        {
-            Monitor.Enter(_lockObject);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void ExitReadLock()
-        {
-            Monitor.Exit(_lockObject);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void ExitWriteLock()
-        {
-            Monitor.Exit(_lockObject);
-        }
-    }
-#endif
-
 #if NET_2_0
     /// <summary>
     /// 

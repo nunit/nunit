@@ -167,7 +167,6 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
-#if !NETCF
         /// <summary>
         /// Flags the constraint to include <see cref="DateTimeOffset.Offset"/>
         /// property in comparison of two <see cref="DateTimeOffset"/> values.
@@ -184,7 +183,6 @@ namespace NUnit.Framework.Constraints
                 return this;
             }
         }
-#endif
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
@@ -408,7 +406,7 @@ namespace NUnit.Framework.Constraints
         // null array reference. Others could be added in the future.
         private void AdjustArgumentIfNeeded<T>(ref T arg)
         {
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             if (arg != null)
             {
                 Type argType = arg.GetType();

@@ -35,16 +35,6 @@ namespace NUnit.Framework.Tests.Compatibility
     [TestFixture]
     public class ReflectionExtensionsTests
     {
-        private static bool REALLY_RUNNING_ON_CF = false;
-
-#if NETCF
-        static ReflectionExtensionsTests()
-        {
-            // We may be running on the desktop using assembly unification
-            REALLY_RUNNING_ON_CF = Type.GetType("System.ConsoleColor") == null;
-        }
-#endif
-
         [Test]
         public void CanCallTypeInfoOnAllPlatforms()
         {
@@ -144,22 +134,6 @@ namespace NUnit.Framework.Tests.Compatibility
             var result = typeof(DerivedTestClass).GetMember("StaticString", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Length, Is.GreaterThan(0));
-        }
-
-        [Test]
-        public void CanGetPrivatePropertiesOnBaseClassOnlyOnCF()
-        {
-            var result = typeof(DerivedTestClass).GetMember("Private", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Length, Is.EqualTo(REALLY_RUNNING_ON_CF ? 1 : 0));
-        }
-
-        [Test]
-        public void CanGetPrivateMethodsOnBaseClassOnlyOnCF()
-        {
-            var result = typeof(DerivedTestClass).GetMember("Goodbye", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Length, Is.EqualTo(REALLY_RUNNING_ON_CF ? 1 : 0));
         }
 
         [Test]

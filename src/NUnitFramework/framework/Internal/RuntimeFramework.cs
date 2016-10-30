@@ -41,14 +41,10 @@ namespace NUnit.Framework.Internal
         Any,
         /// <summary>Microsoft .NET Framework</summary>
         Net,
-        /// <summary>Microsoft .NET Compact Framework</summary>
-        NetCF,
         /// <summary>Microsoft Shared Source CLI</summary>
         SSCLI,
         /// <summary>Mono</summary>
         Mono,
-        /// <summary>Silverlight</summary>
-        Silverlight,
         /// <summary>MonoTouch</summary>
         MonoTouch
     }
@@ -57,7 +53,7 @@ namespace NUnit.Framework.Internal
     /// RuntimeFramework represents a particular version
     /// of a common language runtime implementation.
     /// </summary>
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
     [Serializable]
 #endif
     public sealed class RuntimeFramework
@@ -77,11 +73,6 @@ namespace NUnit.Framework.Internal
 
         private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
         {
-#if SILVERLIGHT
-            var currentFramework = new RuntimeFramework(
-                RuntimeType.Silverlight,
-                new Version(Environment.Version.Major, Environment.Version.Minor));
-#else
             Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
             Type monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch");
             bool isMonoTouch = monoTouchType != null;
@@ -91,9 +82,7 @@ namespace NUnit.Framework.Internal
                 ? RuntimeType.MonoTouch
                 : isMono
                     ? RuntimeType.Mono
-                    : Environment.OSVersion.Platform == PlatformID.WinCE
-                        ? RuntimeType.NetCF
-                        : RuntimeType.Net;
+                    : RuntimeType.Net;
 
             int major = Environment.Version.Major;
             int minor = Environment.Version.Minor;
@@ -152,7 +141,6 @@ namespace NUnit.Framework.Internal
                 if (getDisplayNameMethod != null)
                     currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
             }
-#endif
             return currentFramework;
         });
 
@@ -219,26 +207,6 @@ namespace NUnit.Framework.Internal
                                 break;
                             default:
                                 ThrowInvalidFrameworkVersion(version);
-                                break;
-                        }
-                        break;
-
-                    case RuntimeType.Silverlight:
-                        ClrVersion =  version.Major >= 4
-                            ? new Version(4, 0, 60310)
-                            : new Version(2, 0, 50727);
-                        break;
-
-                    case RuntimeType.NetCF:
-                        switch (version.Major)
-                        {
-                            case 3:
-                                switch (version.Minor)
-                                {
-                                    case 5:
-                                        ClrVersion = new Version(3, 5, 7283);
-                                        break;
-                                }
                                 break;
                         }
                         break;
@@ -386,9 +354,7 @@ namespace NUnit.Framework.Internal
             if (!VersionsMatch(ClrVersion, target.ClrVersion))
                 return false;
 
-            return Runtime == RuntimeType.Silverlight
-                ? FrameworkVersion.Major == target.FrameworkVersion.Major && FrameworkVersion.Minor == target.FrameworkVersion.Minor
-                : FrameworkVersion.Major >= target.FrameworkVersion.Major && FrameworkVersion.Minor >= target.FrameworkVersion.Minor;
+            return FrameworkVersion.Major >= target.FrameworkVersion.Major && FrameworkVersion.Minor >= target.FrameworkVersion.Minor;
         }
 
 #endregion
