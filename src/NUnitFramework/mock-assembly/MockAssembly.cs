@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using NUnitLite;
 #endif
 
@@ -74,7 +74,7 @@ namespace NUnit.Tests
 
             public const int TestStartedEvents = Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests;
             public const int TestFinishedEvents = Tests;
-#if PORTABLE || SILVERLIGHT
+#if PORTABLE
             public const int TestOutputEvents = 0;
 #else
             public const int TestOutputEvents = 1;
@@ -99,7 +99,7 @@ namespace NUnit.Tests
             public const int Inconclusive = MockTestFixture.Inconclusive;
             public const int Success = TestsRun - Errors - Failures - Inconclusive;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 
             public static void Main(string[] args)
@@ -141,7 +141,7 @@ namespace NUnit.Tests
             [Test]
             public void FailingTest()
             {
-#if !PORTABLE && !SILVERLIGHT && !NETCF
+#if !PORTABLE
                 Console.Error.WriteLine("Immediate Error Message");
 #endif
                 Assert.Fail("Intentional failure");

@@ -65,15 +65,9 @@ namespace NUnit.Framework.Internal.Execution
         {
             var workers = new TestWorker[]
             {
-#if NETCF
-                new TestWorker(_queue, "1"),
-                new TestWorker(_queue, "2"),
-                new TestWorker(_queue, "3")
-#else
                 new TestWorker(_queue, "1", ApartmentState.MTA),
                 new TestWorker(_queue, "2", ApartmentState.MTA),
                 new TestWorker(_queue, "3", ApartmentState.MTA)
-#endif
             };
 
             foreach (var worker in workers)

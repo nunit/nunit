@@ -37,7 +37,7 @@ namespace NUnit.Framework.Tests
 
         private string _name;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         private string _testDirectory;
 #endif
         private string _workDirectory;
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Tests
         {
             _name = TestContext.CurrentContext.Test.Name;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             _testDirectory = TestContext.CurrentContext.TestDirectory;
 #endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Tests
             _setupContext = TestContext.CurrentContext;
         }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [Test]
         public void ConstructorCanAccessTestDirectory()
         {
@@ -170,7 +170,7 @@ namespace NUnit.Framework.Tests
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             Assert.NotNull(workDirectory);
             // SL tests may be running on the desktop
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
 #endif
         }
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             Assert.That(context.TestDirectory, Is.Not.Null);
             Assert.That(context.WorkDirectory, Is.Not.Null);
 #endif

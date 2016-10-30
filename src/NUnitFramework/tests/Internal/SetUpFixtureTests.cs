@@ -4,8 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-// TODO: Figure out how to make test work in SILVERLIGHT, since they support SetUpFixture
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using System.Collections.Generic;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;

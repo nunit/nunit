@@ -382,12 +382,10 @@ namespace NUnit.Framework.Attributes
 
         string GetMyPlatform()
         {
-#if !NETCF
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {
                 return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux"; 
             }
-#endif
             return "Win";
         }
 #endif
@@ -413,7 +411,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
 
         #region RequiresMTAAttribute
 
@@ -461,7 +459,7 @@ namespace NUnit.Framework.Attributes
 
         #region RequiresThreadAttribute
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -478,7 +476,7 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -510,7 +508,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
 
         #region SetCultureAttribute
 

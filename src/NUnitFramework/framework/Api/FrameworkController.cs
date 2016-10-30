@@ -52,7 +52,7 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class FrameworkController : LongLivedMarshalByRefObject
     {
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 #endif
 
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+#if !PORTABLE
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Api
 
                 if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)Settings[FrameworkPackageSettings.InternalTraceWriter], traceLevel);
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
                 else
                 {
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory) ? (string)Settings[FrameworkPackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
@@ -235,7 +235,7 @@ namespace NUnit.Framework.Api
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             InsertEnvironmentElement(result);
 #endif
 
@@ -287,7 +287,7 @@ namespace NUnit.Framework.Api
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             InsertEnvironmentElement(result);
 #endif
 
@@ -363,7 +363,7 @@ namespace NUnit.Framework.Api
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
             InsertEnvironmentElement(result);
 #endif
 
@@ -391,7 +391,7 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
         }
 
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE
         /// <summary>
         /// Inserts environment element
         /// </summary>
@@ -406,12 +406,10 @@ namespace NUnit.Framework.Api
             env.AddAttribute("clr-version", Environment.Version.ToString());
             env.AddAttribute("os-version", Environment.OSVersion.ToString());
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
-#if !NETCF
             env.AddAttribute("cwd", Environment.CurrentDirectory);
             env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
-#endif
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
             env.AddAttribute("os-architecture", GetProcessorArchitecture());

@@ -123,8 +123,7 @@
 //      p.Parse (new string[]{"-a-"});  // sets v == null
 //
 // The NUnit version of this file introduces conditional compilation for 
-// building under the Compact Framework (NETCF) and Silverlight (SILVERLIGHT) 
-// as well as for use with a portable class library  (PORTABLE).
+// building under a portable class library  (PORTABLE).
 //
 // 11/5/2015 -
 // Change namespace to avoid conflict with user code use of mono.options 
@@ -375,13 +374,13 @@ namespace Mono.Options
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 #endif
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if NETCF || SILVERLIGHT || PORTABLE
+#if PORTABLE
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -491,7 +490,7 @@ namespace Mono.Options
         }
     }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
     [Serializable]
 #endif
     public class OptionException : Exception
@@ -514,7 +513,7 @@ namespace Mono.Options
             this.option = optionName;
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -526,7 +525,7 @@ namespace Mono.Options
             get {return this.option;}
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {

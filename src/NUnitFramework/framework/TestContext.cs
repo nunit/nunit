@@ -77,7 +77,7 @@ namespace NUnit.Framework
             get { return TestExecutionContext.CurrentContext.OutWriter; }
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Gets a TextWriter that will send output directly to Console.Error
         /// </summary>
@@ -118,7 +118,7 @@ namespace NUnit.Framework
             get { return _testExecutionContext.WorkerId; }
         }
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         /// <summary>
         /// Gets the directory containing the current test assembly.
         /// </summary>

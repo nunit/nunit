@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
             CanConstructFrom(typeof(FixtureWithoutTestFixtureAttributeContainingTestCaseSource));
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
         [Test]
         public void ConstructFromTypeWithoutTestFixtureAttributeContainingTheory()
         {

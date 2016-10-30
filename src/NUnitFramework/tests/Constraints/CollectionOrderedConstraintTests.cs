@@ -259,7 +259,6 @@ namespace NUnit.Framework.Constraints
 
         #region Test Classes
 
-        // Public to avoid a MethodAccessException under CF 2.0
         public class TestClass1
         {
             public int Value { get; private set; }

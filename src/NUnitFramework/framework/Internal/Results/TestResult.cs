@@ -29,7 +29,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Text;
-#if NETCF || NET_2_0
+#if NET_2_0
 using NUnit.Compatibility;
 #endif
 using System.Threading;
@@ -79,8 +79,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
 #if NET_2_0
         protected ReaderWriterLock RwLock = new ReaderWriterLock();
-#elif NETCF
-        protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim();
 #else
         protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 #endif
@@ -99,7 +97,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if PORTABLE || SILVERLIGHT
+#if PORTABLE
             OutWriter = new StringWriter(_output);
 #else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));

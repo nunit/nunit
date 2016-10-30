@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !PORTABLE
+#if !PORTABLE
 using System;
 using System.Threading;
 
@@ -42,7 +42,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
-#if !NETCF
         [Test, RequiresThread( ApartmentState.STA )]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
         {
@@ -56,7 +55,6 @@ namespace NUnit.Framework.Attributes
             Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
             Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
         }
-#endif
 
         [TestFixture, RequiresThread]
         public class FixtureRequiresThread

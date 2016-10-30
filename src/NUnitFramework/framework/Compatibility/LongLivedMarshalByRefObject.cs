@@ -29,7 +29,7 @@ namespace NUnit.Compatibility
     /// <summary>
     /// A MarshalByRefObject that lives forever
     /// </summary>
-#if PORTABLE || SILVERLIGHT || NETCF
+#if PORTABLE
     public class LongLivedMarshalByRefObject
     {
     }

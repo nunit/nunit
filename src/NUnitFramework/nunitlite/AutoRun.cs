@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -98,4 +97,3 @@ namespace NUnitLite
         }
     }
 }
-#endif

@@ -21,14 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Globalization;
-using System.IO;
 using NUnit.TestUtilities;
+using System;
+using System.IO;
 
 namespace NUnit.Framework.Assertions
 {
-    [TestFixture]
+	[TestFixture]
     public class AssertEqualsTests
     {
         [Test]
@@ -182,7 +181,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !NETCF
         [Test]
         public void EqualsThrowsException()
         {
@@ -196,7 +194,6 @@ namespace NUnit.Framework.Assertions
             object o = new object();
             Assert.Throws<InvalidOperationException>(() => Assert.ReferenceEquals(o, o));
         }
-#endif
         
         [Test]
         public void Float() 
@@ -401,13 +398,25 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void DateTimeNotEqual()
+        public void DateTimeNotEqual_DifferenceInHours()
         {
             DateTime dt1 = new DateTime( 2005, 6, 1, 7, 0, 0 );
             DateTime dt2 = new DateTime( 2005, 6, 1, 0, 0, 0 );
             var expectedMessage =
-                "  Expected: 2005-06-01 07:00:00.000" + Env.NewLine +
-                "  But was:  2005-06-01 00:00:00.000" + Env.NewLine;
+                "  Expected: 2005-06-01 07:00:00" + Env.NewLine +
+                "  But was:  2005-06-01 00:00:00" + Env.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dt1, dt2));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+        [Test]
+        public void DateTimeNotEqual_DifferenceInTicks()
+        {
+            DateTime dt1 = new DateTime(1914, 06, 28, 12, 00, 00);
+            DateTime dt2 = dt1.AddTicks(666);
+            var expectedMessage =
+                "  Expected: 1914-06-28 12:00:00" + Env.NewLine +
+                "  But was:  1914-06-28 12:00:00.0000666" + Env.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dt1, dt2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
