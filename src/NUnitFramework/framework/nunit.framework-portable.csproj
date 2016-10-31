@@ -258,6 +258,8 @@
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
+    <Compile Include="Interfaces\AssertionResult.cs" />
+    <Compile Include="Interfaces\AssertionStatus.cs" />
     <Compile Include="Interfaces\IApplyToContext.cs" />
     <Compile Include="Interfaces\IApplyToTest.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />

@@ -134,6 +134,16 @@
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
+    <Compile Include="Internal\Results\AssertionResultTests.cs" />
+    <Compile Include="Internal\Results\TestResultFailureTests.cs" />
+    <Compile Include="Internal\Results\TestResultGeneralTests.cs" />
+    <Compile Include="Internal\Results\TestResultIgnoredTests.cs" />
+    <Compile Include="Internal\Results\TestResultInconclusiveTests.cs" />
+    <Compile Include="Internal\Results\TestResultMixedResultTests.cs" />
+    <Compile Include="Internal\Results\TestResultNotRunnableTests.cs" />
+    <Compile Include="Internal\Results\TestResultOutputTests.cs" />
+    <Compile Include="Internal\Results\TestResultSuccessTests.cs" />
+    <Compile Include="Internal\Results\TestResultTests.cs" />
     <Compile Include="TestParametersTests.cs" />
     <Compile Include="TestUtilities\AsyncTestDelegates.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
@@ -236,8 +246,6 @@
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestNameGeneratorTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />
-    <Compile Include="Internal\TestResultOutputTests.cs" />
-    <Compile Include="Internal\TestResultTests.cs" />
     <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />

@@ -119,11 +119,13 @@
     </Compile>
     <Compile Include="Env.cs" />
     <Compile Include="Guard.cs" />
+    <Compile Include="Interfaces\AssertionResult.cs" />
     <Compile Include="Interfaces\IDisposableFixture.cs" />
     <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
+    <Compile Include="Interfaces\AssertionStatus.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
