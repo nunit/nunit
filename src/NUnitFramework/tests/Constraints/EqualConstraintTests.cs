@@ -629,5 +629,128 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+
+        #region TypeEqualityMessages
+        private readonly string NL = NUnit.Env.NewLine;
+        private static IEnumerable DiffentTypeSameValueTestData
+        {
+            get
+            {
+                var ptr = new System.IntPtr(0);
+                var ExampleTestA = new ExampleTest.classA(0);
+                var ExampleTestB = new ExampleTest.classB(0);
+                var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
+                var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
+                yield return new object[] { 0, ptr };
+                yield return new object[] { ExampleTestA, ExampleTestB };
+                yield return new object[] { clipTestA, clipTestB };
+            }
+        }
+        [Test]
+        public void SameValueDifferentTypeExactMessageMatch()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(0, new System.IntPtr(0)));
+            Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL);
+        }
+
+        [Test]
+        public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Is.Zero, Is.Zero));
+            Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL);
+        }
+
+        [Test, TestCaseSource("DiffentTypeSameValueTestData")]
+        public void SameValueDifferentTypeRegexMatch(object expected, object actual)
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));
+            Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
+        }
     }
+    namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
+        class ReallyLongClassNameShouldBeHere {
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                return obj.ToString() == this.ToString();
+            }
+            public override int GetHashCode()
+            {
+                return "a".GetHashCode();
+            }
+            public override string ToString()
+            {
+                return "a";
+            }
+
+        }
+
+    }
+    namespace ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
+    {
+        class ReallyLongClassNameShouldBeHere {
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                return obj.ToString()==this.ToString();
+            }
+            public override int GetHashCode()
+            {
+                return "a".GetHashCode();
+            }
+
+            public override string ToString()
+            {
+                return "a";
+            }
+        }
+
+    }
+    namespace ExampleTest {
+        class baseTest {
+            readonly int _value;
+            public baseTest()
+            {
+                _value = 0;
+            }
+            public baseTest(int value) {
+                _value = value;
+            }
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                return _value.Equals(((baseTest)obj)._value);    
+            }
+
+            public override string ToString()
+            {
+                return _value.ToString();
+            }
+
+            public override int GetHashCode()
+            {
+                return _value.GetHashCode();
+            }
+        }
+
+        class classA : baseTest {
+            public classA(int x) : base(x) { }
+
+        }
+
+        class classB : baseTest
+        {
+             public classB(int x) : base(x) { }
+        }
+    }
+    #endregion
 }
