@@ -30,7 +30,8 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Failure, "message", "stack trace");
+            var ex = Assert.Catch(() => { throw new AssertionException("message"); });
+            _testResult.RecordException(ex);
             _testResult.AssertCount = 3;
 
             _suiteResult.AddResult(_testResult);
@@ -42,7 +43,17 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual(ResultState.Failure, _testResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, _testResult.ResultState.Status);
             Assert.AreEqual("message", _testResult.Message);
-            Assert.AreEqual("stack trace", _testResult.StackTrace);
+            Assert.That(_testResult.StackTrace, Is.Not.Null.And.Not.Empty);
+        }
+
+        [Test]
+        public void TestResultRecordsFailingAssertion()
+        {
+            Assert.That(_testResult.AssertionResults.Count, Is.EqualTo(1));
+            var ar = _testResult.AssertionResults[0];
+            Assert.That(ar.Status, Is.EqualTo(AssertionStatus.Failed));
+            Assert.That(ar.Message, Is.EqualTo("message"));
+            Assert.That(ar.StackTrace, Is.EqualTo(_testResult.StackTrace));
         }
 
         [Test]
@@ -79,7 +90,22 @@ namespace NUnit.Framework.Internal.Results
 
             TNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
             Assert.NotNull(stacktraceNode, "No <stack-trace> element found");
-            Assert.AreEqual("stack trace", stacktraceNode.Value);
+            Assert.That(stacktraceNode.Value, Is.EqualTo(_testResult.StackTrace));
+        }
+
+        [Test]
+        public void TestResultXmlRecordsFailingAssertion()
+        {
+            var assertions = _testResult.ToXml(false).SelectNodes("assertions/assertion");
+            Assert.That(assertions.Count, Is.EqualTo(1), "There should be a single assertion");
+
+            TNode messageNode = assertions[0].SelectSingleNode("message");
+            Assert.NotNull(messageNode, "No <message> element found");
+            Assert.AreEqual("message", messageNode.Value);
+
+            TNode stacktraceNode = assertions[0].SelectSingleNode("stack-trace");
+            Assert.NotNull(stacktraceNode, "No <stack-trace> element found");
+            Assert.That(stacktraceNode.Value, Is.EqualTo(_testResult.StackTrace));
         }
 
         [Test]

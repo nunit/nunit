@@ -475,9 +475,13 @@ namespace NUnit.Framework.Internal
                 ex = ex.InnerException;
 
             if (ex is ResultStateException)
-                SetResult(((ResultStateException)ex).ResultState,
-                    ex.Message,
-                    StackFilter.Filter(ex.StackTrace));
+            {
+                string message = ex.Message;
+                string stackTrace = StackFilter.Filter(ex.StackTrace);
+
+                RecordAssertion(AssertionStatus.Failed, message, stackTrace);
+                SetResult(((ResultStateException)ex).ResultState, message, stackTrace);
+            }
 #if !PORTABLE
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled,
