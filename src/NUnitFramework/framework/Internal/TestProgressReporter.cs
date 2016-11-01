@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+                log.Error("Exception processing " + test.FullName + Environment.NewLine + ex.ToString());
             }
         }
 
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+                log.Error("Exception processing " + result.FullName + Environment.NewLine + ex.ToString());
             }
         }
 
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing TestOutput event" + NUnit.Env.NewLine + ex.ToString());
+                log.Error("Exception processing TestOutput event" + Environment.NewLine + ex.ToString());
             }
         }
 

@@ -46,9 +46,9 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Environment.NewLine ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine )
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Environment.NewLine )
         };
     }
 
@@ -98,9 +98,9 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Env.NewLine ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Environment.NewLine ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Env.NewLine )
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Environment.NewLine )
         };
     }
 
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("FailureData")]
         public void FailsWithBadValues(object badValue, string message)
         {
-            string NL = Env.NewLine;
+            string NL = Environment.NewLine;
 
             var constraintResult = theConstraint.ApplyTo(badValue);
             Assert.IsFalse(constraintResult.IsSuccess);

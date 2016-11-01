@@ -631,7 +631,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region TypeEqualityMessages
-        private readonly string NL = NUnit.Env.NewLine;
+        private readonly string NL = Environment.NewLine;
         private static IEnumerable DiffentTypeSameValueTestData
         {
             get

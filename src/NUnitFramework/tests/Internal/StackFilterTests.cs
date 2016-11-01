@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Tests
     {
         #region Test Data
 
-        private static readonly string NL = NUnit.Env.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         private static readonly string shortTrace_Assert =
     @"   at NUnit.Framework.Assert.Fail(String message) in D:\Dev\NUnitLite\NUnitLite\Framework\Assert.cs:line 56" + NL +

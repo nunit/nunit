@@ -36,7 +36,7 @@ namespace NUnitLite.Tests
 {
     public class TextUITests
     {
-        private static readonly string NL = NUnit.Env.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         private TextUI _textUI;
         private StringBuilder _reportBuilder;

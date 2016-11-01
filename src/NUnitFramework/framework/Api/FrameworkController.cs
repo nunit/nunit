@@ -148,7 +148,9 @@ namespace NUnit.Framework.Api
 #if !PORTABLE
                 else
                 {
-                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory) ? (string)Settings[FrameworkPackageSettings.WorkDirectory] : Env.DefaultWorkDirectory;
+                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory) 
+                        ? (string)Settings[FrameworkPackageSettings.WorkDirectory] 
+                        : Environment.CurrentDirectory;
                     var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }

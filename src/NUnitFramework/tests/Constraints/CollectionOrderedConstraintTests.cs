@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class CollectionOrderedConstraintTests
     {
-        private readonly string NL = NUnit.Env.NewLine;
+        private readonly string NL = Environment.NewLine;
 
         #region Ordering Tests
 

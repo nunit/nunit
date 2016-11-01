@@ -41,8 +41,8 @@ namespace NUnit.Framework.Assertions
         public void NotSameFails()
         {
             var expectedMessage =
-                "  Expected: not same as \"S1\"" + Env.NewLine +
-                "  But was:  \"S1\"" + Env.NewLine;
+                "  Expected: not same as \"S1\"" + Environment.NewLine +
+                "  But was:  \"S1\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( s1, s1 ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }

@@ -91,7 +91,7 @@ namespace NUnit.Framework.Constraints
 
         public void CheckExceptionMessage(Exception ex)
         {
-            string NL = NUnit.Env.NewLine;
+            string NL = Environment.NewLine;
 
             StringReader rdr = new StringReader(ex.Message);
             /* skip */ rdr.ReadLine();
