@@ -43,8 +43,8 @@ namespace NUnit.Framework.Constraints
         public void ZeroItemsMatchFails()
         {
             var expectedMessage =
-                TextMessageWriter.Pfx_Expected + "no item equal to \"Charlie\"" + Env.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Env.NewLine;
+                TextMessageWriter.Pfx_Expected + "no item equal to \"Charlie\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(0, Is.EqualTo("Charlie"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -60,8 +60,8 @@ namespace NUnit.Framework.Constraints
         public void ExactlyOneItemMatchFails()
         {
             var expectedMessage =
-                TextMessageWriter.Pfx_Expected + "exactly one item equal to \"Charlie\"" + Env.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Env.NewLine;
+                TextMessageWriter.Pfx_Expected + "exactly one item equal to \"Charlie\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(1, Is.EqualTo("Charlie"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -77,8 +77,8 @@ namespace NUnit.Framework.Constraints
         public void ExactlyTwoItemsMatchFails()
         {
             var expectedMessage =
-                TextMessageWriter.Pfx_Expected + "exactly 2 items equal to \"Fred\"" + Env.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Env.NewLine;
+                TextMessageWriter.Pfx_Expected + "exactly 2 items equal to \"Fred\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(2, Is.EqualTo("Fred"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }

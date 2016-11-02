@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TextMessageWriterTests
     {
-        private static readonly string NL = NUnit.Env.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         private TextMessageWriter writer;
 

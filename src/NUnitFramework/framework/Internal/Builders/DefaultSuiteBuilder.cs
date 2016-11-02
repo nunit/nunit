@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 if (ex is System.Reflection.TargetInvocationException)
                     ex = ex.InnerException;
-                var msg = "An exception was thrown while loading the test." + Env.NewLine + ex.ToString();
+                var msg = "An exception was thrown while loading the test." + Environment.NewLine + ex.ToString();
                 fixture.Properties.Add(PropertyNames.SkipReason, msg);
 
                 return fixture;

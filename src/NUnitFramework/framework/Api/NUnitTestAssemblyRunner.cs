@@ -317,7 +317,11 @@ namespace NUnit.Framework.Api
             if (Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory))
                 Context.WorkDirectory = (string)Settings[FrameworkPackageSettings.WorkDirectory];
             else
-                Context.WorkDirectory = Env.DefaultWorkDirectory;
+#if PORTABLE
+                Context.WorkDirectory = @"\My Documents";
+#else
+                Context.WorkDirectory = Environment.CurrentDirectory;
+#endif
 
             // Apply attributes to the context
 
@@ -392,6 +396,6 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

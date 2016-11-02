@@ -158,7 +158,7 @@ namespace NUnit.Framework.Internal
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
             Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
-            string expected = string.Format("{0} : {1}", e1.GetType().FullName, e1.Message) + Env.NewLine
+            string expected = string.Format("{0} : {1}", e1.GetType().FullName, e1.Message) + Environment.NewLine
                 + string.Format("TearDown : {0} : {1}", e2.GetType().FullName, e2.Message);
             Assert.AreEqual(expected, result.Message);
             Assert.That(result.StackTrace, Does.Contain("--TearDown"));

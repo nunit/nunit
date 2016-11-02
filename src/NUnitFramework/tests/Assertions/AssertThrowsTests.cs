@@ -91,8 +91,8 @@ namespace NUnit.Framework.Assertions
         {
             var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
             Assert.That(ex.Message, Is.EqualTo(
-                "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  null" + Env.NewLine));
+                "  Expected: <System.ArgumentException>" + Environment.NewLine +
+                "  But was:  null" + Environment.NewLine));
         }
 
         [Test]
@@ -100,8 +100,8 @@ namespace NUnit.Framework.Assertions
         {
             var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
             Assert.That(ex.Message, Does.StartWith(
-                "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.NullReferenceException: my message" + Env.NewLine ));
+                "  Expected: <System.ArgumentException>" + Environment.NewLine +
+                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine ));
         }
 
         [Test]
@@ -109,8 +109,8 @@ namespace NUnit.Framework.Assertions
         {
             var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
             Assert.That(ex.Message, Does.StartWith(
-                "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.Exception: my message" + Env.NewLine ));
+                "  Expected: <System.ArgumentException>" + Environment.NewLine +
+                "  But was:  <System.Exception: my message" + Environment.NewLine ));
         }
 
         [Test]
@@ -118,8 +118,8 @@ namespace NUnit.Framework.Assertions
         {
             var ex = CatchException(() => Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
             Assert.That(ex.Message, Does.StartWith(
-                "  Expected: <System.Exception>" + Env.NewLine +
-                "  But was:  <System.ArgumentException: myMessage" + Env.NewLine + "Parameter name: myParam" + Env.NewLine ));
+                "  Expected: <System.Exception>" + Environment.NewLine +
+                "  But was:  <System.ArgumentException: myMessage" + Environment.NewLine + "Parameter name: myParam" + Environment.NewLine ));
         }
 
         [Test]

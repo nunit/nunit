@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
-using Env = NUnit.Env;
 
 namespace NUnit.Framework.Constraints
 {
@@ -49,10 +48,10 @@ namespace NUnit.Framework.Constraints
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex.Message, Is.EqualTo(
-                "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Env.NewLine +
-                "  Values differ at index [1]" + Env.NewLine +
-                TextMessageWriter.Pfx_Expected + "2" + Env.NewLine +
-                TextMessageWriter.Pfx_Actual + "5" + Env.NewLine));
+                "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
+                "  Values differ at index [1]" + Environment.NewLine +
+                TextMessageWriter.Pfx_Expected + "2" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
         }
 
         [Test]

@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
-                sb.Append(NUnit.Env.NewLine);
+                sb.Append(Environment.NewLine);
                 sb.AppendFormat(CultureInfo.CurrentCulture, "  ----> {0} : {1}", inner.GetType().ToString(), inner.Message);
             }
 
@@ -101,10 +101,10 @@ namespace NUnit.Framework.Internal
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
-                sb.Append(NUnit.Env.NewLine);
+                sb.Append(Environment.NewLine);
                 sb.Append("--");
                 sb.Append(inner.GetType().Name);
-                sb.Append(NUnit.Env.NewLine);
+                sb.Append(Environment.NewLine);
                 sb.Append(GetStackTrace(inner));
             }
 

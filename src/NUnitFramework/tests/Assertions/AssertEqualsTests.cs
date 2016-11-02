@@ -98,10 +98,10 @@ namespace NUnit.Framework.Assertions
             string expected = "Hello NUnit";
 
             var expectedMessage =
-                "  Expected string length 11 but was 13. Strings differ at index 0." + Env.NewLine +
-                "  Expected: \"Hello NUnit\"" + Env.NewLine +
-                "  But was:  \"Goodbye JUnit\"" + Env.NewLine +
-                "  -----------^" + Env.NewLine;
+                "  Expected string length 11 but was 13. Strings differ at index 0." + Environment.NewLine +
+                "  Expected: \"Hello NUnit\"" + Environment.NewLine +
+                "  But was:  \"Goodbye JUnit\"" + Environment.NewLine +
+                "  -----------^" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, junitString));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -111,8 +111,8 @@ namespace NUnit.Framework.Assertions
         public void EqualsNaNFails() 
         {
             var expectedMessage =
-                "  Expected: 1.234d +/- 0.0d" + Env.NewLine +
-                "  But was:  " + Double.NaN + Env.NewLine;
+                "  Expected: 1.234d +/- 0.0d" + Environment.NewLine +
+                "  But was:  " + Double.NaN + Environment.NewLine;
             
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(1.234, Double.NaN, 0.0));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -123,8 +123,8 @@ namespace NUnit.Framework.Assertions
         public void NanEqualsFails() 
         {
             var expectedMessage =
-                "  Expected: " + Double.NaN + Env.NewLine +
-                "  But was:  1.234d" + Env.NewLine;
+                "  Expected: " + Double.NaN + Environment.NewLine +
+                "  But was:  1.234d" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Double.NaN, 1.234, 0.0));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -152,8 +152,8 @@ namespace NUnit.Framework.Assertions
         public void PosInfinityNotEquals() 
         {
             var expectedMessage =
-                "  Expected: " + Double.PositiveInfinity + Env.NewLine +
-                "  But was:  1.23d" + Env.NewLine;
+                "  Expected: " + Double.PositiveInfinity + Environment.NewLine +
+                "  But was:  1.23d" + Environment.NewLine;
             
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Double.PositiveInfinity, 1.23, 0.0));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -163,8 +163,8 @@ namespace NUnit.Framework.Assertions
         public void PosInfinityNotEqualsNegInfinity() 
         {
             var expectedMessage =
-                "  Expected: " + Double.PositiveInfinity + Env.NewLine +
-                "  But was:  " + Double.NegativeInfinity + Env.NewLine;
+                "  Expected: " + Double.PositiveInfinity + Environment.NewLine +
+                "  But was:  " + Double.NegativeInfinity + Environment.NewLine;
             
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Double.PositiveInfinity, Double.NegativeInfinity, 0.0));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -174,8 +174,8 @@ namespace NUnit.Framework.Assertions
         public void SinglePosInfinityNotEqualsNegInfinity() 
         {
             var expectedMessage =
-                "  Expected: " + Double.PositiveInfinity + Env.NewLine +
-                "  But was:  " + Double.NegativeInfinity + Env.NewLine;
+                "  Expected: " + Double.PositiveInfinity + Environment.NewLine +
+                "  But was:  " + Double.NegativeInfinity + Environment.NewLine;
             
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -382,8 +382,8 @@ namespace NUnit.Framework.Assertions
         {
             MyEnum actual = MyEnum.a;
             var expectedMessage =
-                "  Expected: c" + Env.NewLine +
-                "  But was:  a" + Env.NewLine;
+                "  Expected: c" + Environment.NewLine +
+                "  But was:  a" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual( MyEnum.c, actual ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -403,8 +403,8 @@ namespace NUnit.Framework.Assertions
             DateTime dt1 = new DateTime( 2005, 6, 1, 7, 0, 0 );
             DateTime dt2 = new DateTime( 2005, 6, 1, 0, 0, 0 );
             var expectedMessage =
-                "  Expected: 2005-06-01 07:00:00" + Env.NewLine +
-                "  But was:  2005-06-01 00:00:00" + Env.NewLine;
+                "  Expected: 2005-06-01 07:00:00" + Environment.NewLine +
+                "  But was:  2005-06-01 00:00:00" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dt1, dt2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -415,8 +415,8 @@ namespace NUnit.Framework.Assertions
             DateTime dt1 = new DateTime(1914, 06, 28, 12, 00, 00);
             DateTime dt2 = dt1.AddTicks(666);
             var expectedMessage =
-                "  Expected: 1914-06-28 12:00:00" + Env.NewLine +
-                "  But was:  1914-06-28 12:00:00.0000666" + Env.NewLine;
+                "  Expected: 1914-06-28 12:00:00" + Environment.NewLine +
+                "  But was:  1914-06-28 12:00:00.0000666" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dt1, dt2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));

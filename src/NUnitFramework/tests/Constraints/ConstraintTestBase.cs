@@ -62,7 +62,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("FailureData")]
         public void FailsWithBadValues(object badValue, string message)
         {
-            string NL = Env.NewLine;
+            string NL = Environment.NewLine;
 
             var constraintResult = theConstraint.ApplyTo(badValue);
             Assert.IsFalse(constraintResult.IsSuccess);

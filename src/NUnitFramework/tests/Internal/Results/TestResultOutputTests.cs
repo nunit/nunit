@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal.Results
     public class TestResultOutputTests
     {
         private const string SOME_TEXT = "This text should be part of the result.";
-        private static readonly string NL = NUnit.Env.NewLine;
+        private static readonly string NL = Environment.NewLine;
         private TestResult _result;
 
         [SetUp]

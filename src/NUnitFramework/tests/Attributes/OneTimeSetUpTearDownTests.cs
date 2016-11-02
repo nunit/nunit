@@ -248,7 +248,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
             Assert.AreEqual(1, fixture.tearDownCount, "tearDownCount");
 
-            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE + Env.NewLine + "TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
+            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE + Environment.NewLine + "TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.TearDown));
             Assert.That(result.StackTrace, Does.Contain("--TearDown"));
         }
@@ -266,7 +266,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
             Assert.AreEqual(1, fixture.tearDownCount, "tearDownCount");
 
-            Assert.AreEqual("System.Exception : This was thrown from fixture setup" + Env.NewLine + 
+            Assert.AreEqual("System.Exception : This was thrown from fixture setup" + Environment.NewLine + 
                 "TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
             Assert.That(result.StackTrace, Does.Contain("--TearDown"));
         }

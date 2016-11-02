@@ -544,11 +544,11 @@ namespace NUnit.Framework.Internal
 
             string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
             if (Message != null)
-                message = Message + NUnit.Env.NewLine + message;
+                message = Message + Environment.NewLine + message;
 
-            string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
+            string stackTrace = "--TearDown" + Environment.NewLine + ExceptionHelper.BuildStackTrace(ex);
             if (StackTrace != null)
-                stackTrace = StackTrace + NUnit.Env.NewLine + stackTrace;
+                stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
         }
