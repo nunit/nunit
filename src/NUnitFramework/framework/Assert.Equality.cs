@@ -244,11 +244,6 @@ namespace NUnit.Framework
                 Assert.That(actual, Is.EqualTo(expected).Within(delta), message, args);
         }
 
-        private static void IncrementAssertCount()
-        {
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
-        }
-
         #endregion
     }
 }

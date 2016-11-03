@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
-using Env = NUnit.Env;
 
 namespace NUnit.Framework.Constraints
 {

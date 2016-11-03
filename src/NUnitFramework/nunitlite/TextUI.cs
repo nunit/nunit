@@ -217,7 +217,7 @@ namespace NUnitLite
 #endif
 
 #if !PORTABLE
-            Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? NUnit.Env.DefaultWorkDirectory);
+            Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Environment.CurrentDirectory);
 #endif
 
             Writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");

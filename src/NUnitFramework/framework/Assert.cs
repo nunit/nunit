@@ -25,6 +25,8 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -270,15 +272,89 @@ namespace NUnit.Framework
 
         #region Multiple
 
-        ///// <summary>
-        ///// If an assert fails within this block, execution will continue and 
-        ///// the errors will be reported at the end of the block.
-        ///// </summary>
-        ///// <param name="del">The test delegate</param>
-        //public static void Multiple(TestDelegate del)
-        //{
-        //    del();
-        //}
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
+        public static void Multiple(TestDelegate testDelegate)
+        {
+            TestExecutionContext context = TestExecutionContext.CurrentContext;
+            Guard.OperationValid(context != null, "Assert.Multiple called outside of a valid TestExecutionContext");
+
+            context.MultipleAssertLevel++;
+
+            try
+            {
+                testDelegate();
+            }
+            finally
+            {
+                context.MultipleAssertLevel--;
+            }
+
+            if (context.MultipleAssertLevel == 0)
+            {
+                int count = context.CurrentResult.AssertionResults.Count;
+
+                if (count > 0)
+                {
+                    var writer = new TextMessageWriter("Multiple Assert block had {0} failure(s).", count);
+                    writer.WriteLine();
+
+                    int counter = 0;
+                    foreach (var assertion in context.CurrentResult.AssertionResults)
+                    {
+                        writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
+                        writer.WriteLine();
+                    }
+
+                    writer.Write(' '); // So the last newline doesn't get dropped
+
+                    throw new AssertionException(writer.ToString());
+                }
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private static void ReportFailure(ConstraintResult result, string message)
+        {
+            ReportFailure(result, message, null);
+        }
+
+        private static void ReportFailure(ConstraintResult result, string message, params object[] args)
+        {
+            MessageWriter writer = new TextMessageWriter(message, args);
+            result.WriteMessageTo(writer);
+
+#if PORTABLE
+            try
+            {
+                // Throw to get stack trace
+                throw new AssertionException(message);
+            }
+            catch (AssertionException ex)
+            {
+                TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
+                    AssertionStatus.Failed, message, ex.StackTrace);
+            }
+#else
+            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
+                AssertionStatus.Failed, writer.ToString(), Environment.StackTrace);
+#endif
+
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
+                throw new AssertionException(writer.ToString());
+        }
+
+        private static void IncrementAssertCount()
+        {
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
+        }
 
         #endregion
     }

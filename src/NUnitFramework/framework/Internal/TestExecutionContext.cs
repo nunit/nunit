@@ -388,6 +388,11 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// The current nesting level of multiple assert blocks
+        /// </summary>
+        internal int MultipleAssertLevel { get; set; }
+
+        /// <summary>
         /// Gets or sets the test case timeout value
         /// </summary>
         public int TestCaseTimeout { get; set; }
