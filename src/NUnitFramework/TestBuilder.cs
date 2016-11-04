@@ -32,7 +32,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
 
-#if PORTABLE
+#if PORTABLE && !NETSTANDARD1_6
 using BindingFlags = NUnit.Compatibility.BindingFlags;
 #endif
 

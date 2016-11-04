@@ -339,6 +339,7 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+    <None Include="nunit.framework.tests-2.0.project.json" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>
