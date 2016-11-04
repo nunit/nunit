@@ -127,6 +127,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-3.5", "src\N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-3.5", "src\NUnitFramework\tests\nunit.framework.tests-3.5.csproj", "{B93FC354-D59D-4650-84E4-7FCA7D51689A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetStandard", "NetStandard", "{E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework-netstandard", "src\NUnitFramework\framework\nunit.framework-netstandard.csproj", "{FCF07E6C-335D-4265-B529-B7AF0E1076AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -293,6 +297,10 @@ Global
 		{B93FC354-D59D-4650-84E4-7FCA7D51689A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B93FC354-D59D-4650-84E4-7FCA7D51689A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B93FC354-D59D-4650-84E4-7FCA7D51689A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF07E6C-335D-4265-B529-B7AF0E1076AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF07E6C-335D-4265-B529-B7AF0E1076AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF07E6C-335D-4265-B529-B7AF0E1076AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF07E6C-335D-4265-B529-B7AF0E1076AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -346,6 +354,8 @@ Global
 		{C6156B98-923A-474B-B257-29107476E93C} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
 		{520F4C89-51B6-49D6-9ED7-4523048C0154} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
 		{B93FC354-D59D-4650-84E4-7FCA7D51689A} = {49BF96D3-3F1B-4553-BE55-296FA7C3F659}
+		{E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6} = {5D8A9D62-C11C-45B2-8965-43DE8160B558}
+		{FCF07E6C-335D-4265-B529-B7AF0E1076AB} = {E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj

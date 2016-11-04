@@ -24,7 +24,9 @@
 namespace NUnit.Framework.Internal
 {
     using System;
+#if !NETSTANDARD1_6
     using System.Runtime.Serialization;
+#endif
 
     /// <summary>
     /// InvalidTestFixtureException is thrown when an appropriate test

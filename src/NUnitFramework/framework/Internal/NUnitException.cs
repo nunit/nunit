@@ -24,7 +24,9 @@
 namespace NUnit.Framework.Internal 
 {
     using System;
+#if !NETSTANDARD1_6
     using System.Runtime.Serialization;
+#endif
 
     /// <summary>
     /// Thrown when an assertion failed. Here to preserve the inner
