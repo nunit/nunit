@@ -10,10 +10,8 @@ namespace NUnitLite.Tests
     {
         public static int Main(string[] args)
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_0 || PORTABLE
             return new AutoRun(Assembly.GetEntryAssembly()).Execute(args, new ColorConsoleWriter(), Console.In);
-#elif PORTABLE
-            return new AutoRun(typeof(Program).Assembly).Execute(args, new ColorConsoleWriter(), Console.In);
 #else
             return new AutoRun().Execute(args);
 #endif
