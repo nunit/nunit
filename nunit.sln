@@ -141,6 +141,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-netstandar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-netstandard", "src\NUnitFramework\tests\nunit.framework.tests-netstandard.csproj", "{50312845-30A1-492E-9DC1-C04951931E32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-netstandard", "src\NUnitFramework\nunitlite.tests\nunitlite.tests-netstandard.csproj", "{1A944ABE-6AA9-49B4-89AC-E19CA9444772}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-runner-netstandard", "src\NUnitFramework\nunitlite-runner\nunitlite-runner-netstandard.csproj", "{B7B075B3-75DC-42AA-AB7E-873B2ABC6532}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -331,6 +335,14 @@ Global
 		{50312845-30A1-492E-9DC1-C04951931E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50312845-30A1-492E-9DC1-C04951931E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50312845-30A1-492E-9DC1-C04951931E32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A944ABE-6AA9-49B4-89AC-E19CA9444772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A944ABE-6AA9-49B4-89AC-E19CA9444772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A944ABE-6AA9-49B4-89AC-E19CA9444772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A944ABE-6AA9-49B4-89AC-E19CA9444772}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B075B3-75DC-42AA-AB7E-873B2ABC6532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B075B3-75DC-42AA-AB7E-873B2ABC6532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B075B3-75DC-42AA-AB7E-873B2ABC6532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B075B3-75DC-42AA-AB7E-873B2ABC6532}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -391,6 +403,8 @@ Global
 		{6D8DCE9D-B224-46B5-B7F5-021534907DBA} = {E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6}
 		{4EE0BEEA-D510-4AFD-B840-73F8705A8272} = {E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6}
 		{50312845-30A1-492E-9DC1-C04951931E32} = {E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6}
+		{1A944ABE-6AA9-49B4-89AC-E19CA9444772} = {E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6}
+		{B7B075B3-75DC-42AA-AB7E-873B2ABC6532} = {E51311BB-BCD0-4EDA-8D6A-E457B7D2FEE6}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj

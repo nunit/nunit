@@ -172,7 +172,7 @@ namespace NUnitLite.Tests
 
             foreach (string canonicalValue in canonicalValues)
             {
-                string lowercaseValue = canonicalValue.ToLower(CultureInfo.InvariantCulture);
+                string lowercaseValue = canonicalValue.ToLower();
                 string optionPlusValue = string.Format("--{0}:{1}", optionName, lowercaseValue);
                 var options = new NUnitLiteOptions(optionPlusValue);
                 Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
