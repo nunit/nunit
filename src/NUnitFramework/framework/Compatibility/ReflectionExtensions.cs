@@ -268,7 +268,7 @@ namespace NUnit.Compatibility
                 .Where(m => m.Name == name)
                 .FirstOrDefault();
         }
-        
+
         /// <summary>
         /// Gets the method with the given name and parameter list
         /// </summary>
@@ -469,10 +469,10 @@ namespace NUnit.Compatibility
     }
 #endif
 
-        /// <summary>
-        /// Type extensions that apply to all target frameworks
-        /// </summary>
-        public static class AdditionalTypeExtensions
+    /// <summary>
+    /// Type extensions that apply to all target frameworks
+    /// </summary>
+    public static class AdditionalTypeExtensions
     {
         /// <summary>
         /// Determines if the given <see cref="Type"/> array is castable/matches the <see cref="ParameterInfo"/> array.
