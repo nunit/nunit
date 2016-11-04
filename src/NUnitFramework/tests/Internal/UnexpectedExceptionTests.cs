@@ -66,7 +66,11 @@ namespace NUnit.Framework.Internal
         public void FailRecordsInnerExceptionsAsPartOfAggregateException()
         {
             string expectedMessage =
+#if NETSTANDARD1_6
+                "System.AggregateException : Outer Aggregate Exception (Inner Exception 1 of 2) (Inner Exception 2 of 2)" + Environment.NewLine +
+#else
                 "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
+#endif
                 "  ----> System.Exception : Inner Exception 1 of 2" + Environment.NewLine +
                 "  ----> System.Exception : Inner Exception 2 of 2";
 
@@ -82,7 +86,11 @@ namespace NUnit.Framework.Internal
         public void FailRecordsNestedInnerExceptionAsPartOfAggregateException()
         {
             string expectedMessage =
+#if NETSTANDARD1_6
+                "System.AggregateException : Outer Aggregate Exception (Inner Exception)" + Environment.NewLine +
+#else
                 "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
+#endif
                 "  ----> System.Exception : Inner Exception" + Environment.NewLine +
                 "  ----> System.Exception : Inner Inner Exception";
 

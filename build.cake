@@ -27,10 +27,10 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var WindowsFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "portable" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard", "portable" };
 
 var LinuxFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard" };
 
 var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
 
@@ -193,6 +193,19 @@ Task("Build20")
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-2.0.csproj", configuration);
     });
 
+Task("BuildNetStandard")
+    .Description("Builds the .NET Standard version of the framework")
+    .Does(() =>
+    {
+        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
+    });
+
 Task("BuildPortable")
     .Description("Builds the PCL version of the framework")
     .WithCriteria(IsRunningOnWindows())
@@ -265,6 +278,18 @@ Task("Test20")
         var dir = BIN_DIR + runtime + "/";
         RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+    });
+
+Task("TestNetStandard")
+    .Description("Tests the .NET Standard version of the framework")
+    .IsDependentOn("BuildNetStandard")
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
+    .Does(() =>
+    {
+        var runtime = "netstandard";
+        var dir = BIN_DIR + runtime + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
 Task("TestPortable")
@@ -392,6 +417,7 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net-3.5/*.*") +
             GetFiles(currentImageDir + "bin/net-4.0/*.*") +
             GetFiles(currentImageDir + "bin/net-4.5/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard/*.*") +
             GetFiles(currentImageDir + "bin/portable/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
@@ -483,6 +509,27 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
+void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
+{
+    RunDotnetCoreTests(exePath, workingDir, null, framework, ref errorDetail);
+}
+
+void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
+{
+    int rc = StartProcess(
+        "dotnet.exe",
+        new ProcessSettings()
+        {
+            Arguments = exePath + " " + arguments,
+            WorkingDirectory = workingDir
+        });
+
+    if (rc > 0)
+        errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
+    else if (rc < 0)
+        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+}
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
@@ -499,6 +546,7 @@ Task("Build")
     .IsDependentOn("Build40")
     .IsDependentOn("Build35")
     .IsDependentOn("Build20")
+    .IsDependentOn("BuildNetStandard")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
     .IsDependentOn("BuildPortable");
 
@@ -509,6 +557,7 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
+    .IsDependentOn("TestNetStandard")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
     .IsDependentOn("TestPortable");
 
