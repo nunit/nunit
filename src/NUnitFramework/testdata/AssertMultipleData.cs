@@ -88,6 +88,10 @@ namespace NUnit.TestData.AssertMultipleData
 
     public class AssertMultipleFailureFixture
     {
+        // NOTE: Some of these methods were getting optimized out of
+        // existence in the .NET 2.0 AppVeyor build. For that reason,
+        // we turned optimization off for the testdata assembly.
+
         private static readonly ComplexNumber complex = new ComplexNumber(5.2, 3.9);
 
         [Test]

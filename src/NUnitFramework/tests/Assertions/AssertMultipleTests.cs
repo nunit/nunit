@@ -81,6 +81,9 @@ namespace NUnit.Framework.Assertions.Tests
                     Assert.That(result.Message, Contains.Substring(failure.Message),
                         "Failure message should contain AssertionResult message");
 
+                    // NOTE: This test expects the stack trace to contain the name of the method 
+                    // that actually caused the failure. To ensure it is not optimized away, we
+                    // compile the testdata assembly with optimizations disabled.
                     Assert.That(failure.StackTrace, Is.Not.Null.And.Contains(methodName));
                 }
 

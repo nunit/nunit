@@ -330,25 +330,30 @@ namespace NUnit.Framework
         {
             MessageWriter writer = new TextMessageWriter(message, args);
             result.WriteMessageTo(writer);
+            string formattedMessage = writer.ToString();
+            string stackTrace = null;
 
 #if PORTABLE
             try
             {
-                // Throw to get stack trace
-                throw new AssertionException(message);
+                // Throw to get stack trace for recording the assertion
+                throw new Exception();
             }
-            catch (AssertionException ex)
+            catch (Exception ex)
             {
-                TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
-                    AssertionStatus.Failed, message, ex.StackTrace);
+                stackTrace = ex.StackTrace;
             }
 #else
-            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
-                AssertionStatus.Failed, writer.ToString(), Environment.StackTrace);
+            stackTrace = Environment.StackTrace;
 #endif
 
+            // Failure is recorded in <assertion> element in all cases
+            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
+                AssertionStatus.Failed, formattedMessage, stackTrace);
+
+            // If we are outside any multiple assert block, then throw
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
-                throw new AssertionException(writer.ToString());
+                throw new AssertionException(formattedMessage);
         }
 
         private static void IncrementAssertCount()
@@ -356,6 +361,6 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.IncrementAssertCount();
         }
 
-        #endregion
+#endregion
     }
 }
