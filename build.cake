@@ -65,6 +65,19 @@ var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
 
+bool isDotNetCoreInstalled;
+
+///////////////////////////////////////////////////////////////////////////////
+// SETUP / TEARDOWN
+///////////////////////////////////////////////////////////////////////////////
+
+Setup(context =>
+{
+    Information("Building version {0} of NUnit.", packageVersion);
+
+    isDotNetCoreInstalled = CheckIfDotNetCoreInstalled();
+});
+
 //////////////////////////////////////////////////////////////////////
 // CLEAN
 //////////////////////////////////////////////////////////////////////
@@ -195,6 +208,11 @@ Task("BuildNetStandard")
     .Description("Builds the .NET Standard version of the framework")
     .Does(() =>
     {
+        if(!isDotNetCoreInstalled)
+        {
+            Warning(".NET Standard was not built because .NET Core SDK is not installed");
+            return;
+        }
         BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
@@ -284,6 +302,11 @@ Task("TestNetStandard")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
+        if(!isDotNetCoreInstalled)
+        {
+            Warning(".NET Standard was not tested because .NET Core SDK is not installed");
+            return;
+        }
         var runtime = "netstandard";
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
@@ -443,17 +466,19 @@ Teardown(context => CheckForError(ref ErrorDetail));
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
 
-bool IsDotNetCoreInstalled()
+bool CheckIfDotNetCoreInstalled()
 {
     try
     {
+        Information("Checking if .NET Core SDK is installed");
         StartProcess("dotnet", new ProcessSettings
         {
             Arguments = "--version"
         });
     }
-    catch(Exception ex)
+    catch(System.ComponentModel.Win32Exception)
     {
+        Warning(".NET Core SDK is not installed. It can be installed from https://www.microsoft.com/net/core");
         return false;
     }
     return true;
