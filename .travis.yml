@@ -1,13 +1,4 @@
 language: csharp
-sudo: true
-
-mono:
-  - latest
-  - 4.2.4
-
-os:
-  - linux
-  - osx
 
 addons:
   apt:
@@ -18,6 +9,23 @@ addons:
     - libssl-dev
     - libunwind8
     - zlib1g
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty # Ubuntu 14.04
+      sudo: required
+      mono: latest
+    - os: linux
+      dist: trusty
+      sudo: required
+      mono: 4.2.4
+    - os: osx
+      osx_image: xcode7.2 # macOS 10.11
+      mono: latest
+    - os: osx
+      osx_image: xcode7.2
+      mono: 4.2.4
 
 matrix:
   allow_failures:
