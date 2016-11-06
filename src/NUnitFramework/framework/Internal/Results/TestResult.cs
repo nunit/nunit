@@ -479,7 +479,6 @@ namespace NUnit.Framework.Internal
                 string message = ex.Message;
                 string stackTrace = StackFilter.Filter(ex.StackTrace);
 
-                //RecordAssertion(AssertionStatus.Failed, message, stackTrace);
                 SetResult(((ResultStateException)ex).ResultState, message, stackTrace);
             }
 #if !PORTABLE
