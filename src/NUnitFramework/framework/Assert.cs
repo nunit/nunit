@@ -331,6 +331,22 @@ namespace NUnit.Framework
             MessageWriter writer = new TextMessageWriter(message, args);
             result.WriteMessageTo(writer);
             string formattedMessage = writer.ToString();
+            string stackTrace = GetStackTrace();
+
+            // Failure is recorded in <assertion> element in all cases
+            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
+                AssertionStatus.Failed, formattedMessage, stackTrace);
+
+            // If we are outside any multiple assert block, then throw
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
+                throw new AssertionException(formattedMessage);
+        }
+
+        // System.Envionment.StackTrace puts extra entries on top of the stack, at least in some environments
+        private static StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
+
+        private static string GetStackTrace()
+        {
             string stackTrace = null;
 
 #if PORTABLE
@@ -344,16 +360,10 @@ namespace NUnit.Framework
                 stackTrace = ex.StackTrace;
             }
 #else
-            stackTrace = Environment.StackTrace;
+            stackTrace = SystemEnvironmentFilter.Filter(Environment.StackTrace);
 #endif
 
-            // Failure is recorded in <assertion> element in all cases
-            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
-                AssertionStatus.Failed, formattedMessage, stackTrace);
-
-            // If we are outside any multiple assert block, then throw
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
-                throw new AssertionException(formattedMessage);
+            return StackFilter.DefaultFilter.Filter(stackTrace);
         }
 
         private static void IncrementAssertCount()
