@@ -30,8 +30,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            var ex = Assert.Catch(() => { throw new AssertionException("message"); });
-            _testResult.RecordException(ex);
+            _testResult.SetResult(ResultState.Failure, "message", "stack_trace");
             _testResult.AssertCount = 3;
 
             _suiteResult.AddResult(_testResult);
@@ -43,17 +42,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual(ResultState.Failure, _testResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, _testResult.ResultState.Status);
             Assert.AreEqual("message", _testResult.Message);
-            Assert.That(_testResult.StackTrace, Is.Not.Null.And.Not.Empty);
-        }
-
-        [Test]
-        public void TestResultRecordsFailingAssertion()
-        {
-            Assert.That(_testResult.AssertionResults.Count, Is.EqualTo(1));
-            var ar = _testResult.AssertionResults[0];
-            Assert.That(ar.Status, Is.EqualTo(AssertionStatus.Failed));
-            Assert.That(ar.Message, Is.EqualTo("message"));
-            Assert.That(ar.StackTrace, Is.EqualTo(_testResult.StackTrace));
+            Assert.AreEqual("stack_trace", _testResult.StackTrace);
         }
 
         [Test]
@@ -94,30 +83,15 @@ namespace NUnit.Framework.Internal.Results
         }
 
         [Test]
-        public void TestResultXmlRecordsFailingAssertion()
-        {
-            var assertions = _testResult.ToXml(false).SelectNodes("assertions/assertion");
-            Assert.That(assertions.Count, Is.EqualTo(1), "There should be a single assertion");
-
-            TNode messageNode = assertions[0].SelectSingleNode("message");
-            Assert.NotNull(messageNode, "No <message> element found");
-            Assert.AreEqual("message", messageNode.Value);
-
-            TNode stacktraceNode = assertions[0].SelectSingleNode("stack-trace");
-            Assert.NotNull(stacktraceNode, "No <stack-trace> element found");
-            Assert.That(stacktraceNode.Value, Is.EqualTo(_testResult.StackTrace));
-        }
-
-        [Test]
         public void TestResultXmlNodeEscapesInvalidXmlCharacters()
         {
             _testResult.SetResult( ResultState.Failure, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00" );
             TNode testNode = _testResult.ToXml( true );
-            TNode reasonNode = testNode.SelectSingleNode( "failure" );
+            TNode failureNode = testNode.SelectSingleNode( "failure" );
 
-            Assert.That( reasonNode, Is.Not.Null, "No <failure> element found" );
+            Assert.That( failureNode, Is.Not.Null, "No <failure> element found" );
 
-            TNode messageNode = reasonNode.SelectSingleNode( "message" );
+            TNode messageNode = failureNode.SelectSingleNode( "message" );
 
             Assert.That( messageNode, Is.Not.Null, "No <message> element found" );
             Assert.That( messageNode.Value, Is.EqualTo( "Invalid Characters: \\u0001\\u0008\\u000b\\u001f\\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00" ) );

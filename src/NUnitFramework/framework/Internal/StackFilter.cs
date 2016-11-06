@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class StackFilter
     {
-        private static readonly Regex assertOrAssumeRegex = new Regex(
+        private static readonly Regex topOfStackRegex = new Regex(
             @" NUnit\.Framework\.Ass(ert|ume)\.");
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace NUnit.Framework.Internal
             try
             {
                 string line;
-                // Skip past any Assert or Assume lines
-                while ((line = sr.ReadLine()) != null && assertOrAssumeRegex.IsMatch(line))
+                // First, skip past any Assert, Assume or MultipleAssertBlock lines
+                while ((line = sr.ReadLine()) != null && topOfStackRegex.IsMatch(line))
                     /*Skip*/
                     ;
 
