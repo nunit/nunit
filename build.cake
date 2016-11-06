@@ -443,6 +443,22 @@ Teardown(context => CheckForError(ref ErrorDetail));
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
 
+bool IsDotNetCoreInstalled()
+{
+    try
+    {
+        StartProcess("dotnet", new ProcessSettings
+        {
+            Arguments = "--version"
+        });
+    }
+    catch(Exception ex)
+    {
+        return false;
+    }
+    return true;
+}
+
 void RunGitCommand(string arguments)
 {
     StartProcess("git", new ProcessSettings()

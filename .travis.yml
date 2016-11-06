@@ -1,5 +1,5 @@
 language: csharp
-sudo: false
+sudo: true
 
 mono:
   - latest
@@ -54,59 +54,6 @@ install:
       echo "dotnet.exe not found"
       exit 1;
     fi
-
-  # [WORKAROUND]
-  #
-  # SYNOPSIS:
-  #
-  # dotnet-cli has introduced a bug with .NET Core RTM (wasn't there till RC2);
-  # that is, the dotnet-run command ignores --framework option and therefore
-  # demands mono PCL reference assemblies to be present on Unix systems, even
-  # though when we intend to build for netcoreapp or netstandard TxM.
-  #
-  # See: https://github.com/dotnet/cli/issues/3658
-  #
-  # The workaround is to rewrite the JSON without net451 framework node in the
-  # runnable (or testable) project's JSON file for CI. This work around must be
-  # applied before executing dotnet-restore command.
-  #
-  # Written in JavaScript to be executable with node.js
-  # (JavaScript being the most native langauge for JSON processing)
-  #
-  # Travis CI job when running under different langauge provides nvm (the node.js version manager)
-  # but not node.js itself. So we first run:
-  #
-  # > $HOME/.nvm/nvm.sh
-  #
-  # then install stable node
-  #
-  # > nvm install stable && nvm use stable
-  #
-  # now, we have node.js in PATH. We will run the following program in evaluation
-  # mode as one-liner:
-  #
-  # ```javascript
-  # // the file to manipulate
-  # jsonPath = './test/dotnet-test-nunit.test.runner/project.json';
-  #
-  # // read and parse JSON as object (aka CommonJS magic)
-  # data = require(jsonPath);
-  #
-  # // FileSystem API handle
-  # fs = require('fs');
-  #
-  # // delete framework 451 key from the object
-  # delete data.frameworks.net451;
-  #
-  # // write back to file
-  # fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
-  # ```
-  # Now the actual one-liner (compressed) version:
-  #
-  - if test "$TRAVIS_OS_NAME" == "linux"; then
-      nvm install stable && nvm use stable;
-    fi
-  - node -e "jsonPath='./test/dotnet-test-nunit.test.runner/project.json';data=require(jsonPath);fs=require('fs');delete data.frameworks.net451;fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2))"
 
   # Restore dependencies
   - dotnet restore
