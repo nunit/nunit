@@ -59,8 +59,6 @@ var NUNITLITE_RUNNER = "nunitlite-runner.exe";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var EXECUTABLE_FRAMEWORK_TESTS = "nunit.framework.tests.exe";
-var NUNITLITE_TESTS = "nunitlite.tests.dll";
 var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 
 // Packages
