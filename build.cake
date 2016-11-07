@@ -65,7 +65,7 @@ var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
 
-bool isDotNetCoreInstalled;
+bool isDotNetCoreInstalled = false;
 
 var packages = new string[]{
     "src/NUnitFramework/framework/packages.config",
@@ -498,7 +498,7 @@ bool CheckIfDotNetCoreInstalled()
             Arguments = "--version"
         });
     }
-    catch(System.ComponentModel.Win32Exception)
+    catch(Exception)
     {
         Warning(".NET Core SDK is not installed. It can be installed from https://www.microsoft.com/net/core");
         return false;
