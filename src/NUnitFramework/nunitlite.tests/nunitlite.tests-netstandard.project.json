@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.App": "1.0.0-rc2-3002702",
+    "Microsoft.NETCore.App": "1.0.1",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1"
   },
   "runtimes": {
