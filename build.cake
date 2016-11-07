@@ -226,7 +226,6 @@ Task("Build20")
 
 Task("BuildNetStandard")
     .Description("Builds the .NET Standard version of the framework")
-    .WithCriteria(IsRunningOnWindows())
     .Does(() =>
     {
         if(!isDotNetCoreInstalled)
@@ -234,13 +233,13 @@ Task("BuildNetStandard")
             Warning(".NET Standard was not built because .NET Core SDK is not installed");
             return;
         }
-        BuildDotNetCoreProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
-        BuildDotNetCoreProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
-        BuildDotNetCoreProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
-        BuildDotNetCoreProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
-        BuildDotNetCoreProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
-        BuildDotNetCoreProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
-        BuildDotNetCoreProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
     });
 
 Task("BuildPortable")
@@ -319,7 +318,6 @@ Task("Test20")
 
 Task("TestNetStandard")
     .Description("Tests the .NET Standard version of the framework")
-    .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildNetStandard")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -543,16 +541,6 @@ void BuildProject(string projectPath, string configuration)
         .SetVerbosity(Verbosity.Minimal)
         .WithTarget("Build")
         .WithProperty("NodeReuse", "false"));
-}
-
-void BuildDotNetCoreProject(string projectPath, string configuration)
-{
-    MSBuild(projectPath, new MSBuildSettings {
-        Verbosity = Verbosity.Minimal,
-        ToolVersion = MSBuildToolVersion.VS2015,
-        Configuration = configuration,
-        PlatformTarget = PlatformTarget.MSIL
-    });
 }
 
 //////////////////////////////////////////////////////////////////////

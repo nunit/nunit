@@ -103,6 +103,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        [Explicit("This test takes over a minute to run")]
         public void DifferentDelayTests()
         {
             SetValuesAfterDelay(60000);

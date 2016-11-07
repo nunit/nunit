@@ -64,7 +64,7 @@
       <Name>nunit.framework-netstandard</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunitlite\nunitlite-netstandard.csproj">
-      <Project>{ceb9520e-52f3-44d9-9a1a-1f935bf34400}</Project>
+      <Project>{C28BC2BD-2D6A-4524-996E-45BA87B65B9F}</Project>
       <Name>nunitlite-netstandard</Name>
     </ProjectReference>
   </ItemGroup>
