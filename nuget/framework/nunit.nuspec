@@ -17,7 +17,7 @@ This package includes the NUnit 3.0 framework assembly, which is referenced by y
 
 Supported platforms:
   - .NET 2.0+
-  - .NET Core (Universal Windows Apps 10+, DNX Core 5+)
+  - .NET Standard 1.6
   - Windows 8
   - Windows Phone 8 (Silverlight)
   - Universal (Windows Phone 8.1+, Windows 8.1+)
@@ -41,8 +41,8 @@ Supported platforms:
     <file src="bin/net-4.0/nunit.framework.xml" target="lib/net40" />
     <file src="bin/net-4.5/nunit.framework.dll" target="lib/net45" />
     <file src="bin/net-4.5/nunit.framework.xml" target="lib/net45" />
-    <file src="bin/portable/nunit.framework.dll" target="lib/dotnet" />
-    <file src="bin/portable/nunit.framework.xml" target="lib/dotnet" />
+    <file src="bin/netstandard/nunit.framework.dll" target="lib/netstandard1.6" />
+    <file src="bin/netstandard/nunit.framework.xml" target="lib/netstandard1.6" />
     <file src="bin/portable/nunit.framework.dll" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
     <file src="bin/portable/nunit.framework.xml" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
   </files>

@@ -15,9 +15,9 @@
 
 Supported platforms:
 - .NET 2.0+
-- .NET Core (Universal Windows Apps 10+, DNX Core 5+)
+- .NET Standard 1.6
 - Portable Libraries (supporting Profile259)
-        
+
 How to use this package:
 
 1. Create a console application for your tests and delete the generated class containing Main().
@@ -40,12 +40,13 @@ How to use this package:
     <file src="bin/net-3.5/nunitlite.dll" target="lib/net35" />
     <file src="bin/net-4.0/nunitlite.dll" target="lib/net40" />
     <file src="bin/net-4.5/nunitlite.dll" target="lib/net45" />
-    <file src="bin/portable/nunitlite.dll" target="lib/dotnet" />
+    <file src="bin/netstandard/nunitlite.dll" target="lib/netstandard1.6" />
     <file src="bin/portable/nunitlite.dll" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac" />
     <file src="bin/net-2.0/nunitlite-runner.exe" target="tools/net20" />
     <file src="bin/net-3.5/nunitlite-runner.exe" target="tools/net35" />
     <file src="bin/net-4.0/nunitlite-runner.exe" target="tools/net40" />
     <file src="bin/net-4.5/nunitlite-runner.exe" target="tools/net45" />
+    <file src="bin/netstandard/nunitlite-runner.exe" target="tools/netcore" />
     <file src="bin/portable/nunitlite-runner.exe" target="tools/portable" />
     <file src="..\..\nuget\nunitlite\Program.cs" target="content" />
     <file src="..\..\nuget\nunitlite\Program.vb" target="content" />
