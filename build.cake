@@ -67,6 +67,14 @@ var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
 
 bool isDotNetCoreInstalled;
 
+var packages = new string[]{
+    "src/NUnitFramework/framework/packages.config",
+    "src/NUnitFramework/nunitlite/packages.config",
+    "src/NUnitFramework/nunitlite.tests/packages.config",
+    "src/NUnitFramework/testdata/packages.config",
+    "src/NUnitFramework/tests/packages.config",
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
 ///////////////////////////////////////////////////////////////////////////////
@@ -98,10 +106,22 @@ Task("InitializeBuild")
     .Description("Initializes the build")
     .Does(() =>
     {
-        NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
+        foreach(var package in packages)
         {
-            Source = PACKAGE_SOURCE
-        });
+            NuGetRestore(package, new NuGetRestoreSettings
+            {
+                PackagesDirectory = "./packages/",
+                Source = PACKAGE_SOURCE
+            });
+        }
+
+        if(isDotNetCoreInstalled)
+        {
+            StartProcess("dotnet", new ProcessSettings
+            {
+                Arguments = "restore"
+            });
+        }
 
         if (isAppveyor)
         {
@@ -556,7 +576,7 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string frame
 void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
 {
     int rc = StartProcess(
-        "dotnet.exe",
+        "dotnet",
         new ProcessSettings()
         {
             Arguments = exePath + " " + arguments,
