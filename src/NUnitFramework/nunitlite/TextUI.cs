@@ -486,15 +486,22 @@ namespace NUnitLite
             string fullName = result.FullName;
             string message = result.Message;
             string stackTrace = result.StackTrace;
+            string reportID = (++_reportIndex).ToString();
 
-            if (result.AssertionResults.Count > 0)
-                foreach (var assertion in result.AssertionResults)
-                    DisplayTestResult(resultState, fullName, assertion.Message, assertion.StackTrace);
-            else
-                DisplayTestResult(resultState, fullName, message, stackTrace);
+            //if (result.AssertionResults.Count > 0)
+            //{
+            //    int assertionCounter = 0;
+            //    foreach (var assertion in result.AssertionResults)
+            //    {
+            //        string assertID = string.Format("{0}-{1}", reportID, ++assertionCounter);
+            //        DisplayTestResult(assertID, resultState, fullName, assertion.Message, assertion.StackTrace);
+            //    }
+            //}
+            //else
+                DisplayTestResult(reportID, resultState, fullName, message, stackTrace);
         }
 
-        private void DisplayTestResult(ResultState resultState, string fullName, string message, string stackTrace)
+        private void DisplayTestResult(string prefix, ResultState resultState, string fullName, string message, string stackTrace)
         {
             string status = resultState.Label;
             if (string.IsNullOrEmpty(status))
@@ -523,7 +530,7 @@ namespace NUnitLite
 
             Writer.WriteLine();
             Writer.WriteLine(
-                style, string.Format("{0}) {1} : {2}", ++_reportIndex, status, fullName));
+                style, string.Format("{0}) {1} : {2}", prefix, status, fullName));
 
             if (!string.IsNullOrEmpty(message))
                 Writer.WriteLine(style, message.TrimEnd(TRIM_CHARS));

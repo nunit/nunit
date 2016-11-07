@@ -301,16 +301,10 @@ namespace NUnit.Framework
                 if (count > 0)
                 {
                     var writer = new TextMessageWriter("Multiple Assert block had {0} failure(s).", count);
-                    writer.WriteLine();
 
                     int counter = 0;
                     foreach (var assertion in context.CurrentResult.AssertionResults)
-                    {
                         writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
-                        writer.WriteLine();
-                    }
-
-                    writer.Write(' '); // So the last newline doesn't get dropped
 
                     throw new AssertionException(writer.ToString());
                 }
