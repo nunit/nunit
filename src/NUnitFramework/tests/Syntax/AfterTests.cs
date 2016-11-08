@@ -28,12 +28,16 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Syntax
 {
+    // NOTE: The tests in this file ensure that the various
+    // syntactic elements work together to create a 
+    // DelayedConstraint object with the proper values.
+
     public class AfterTest_SimpleConstraint : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 milliseconds <equal 10>>";
+            parseTree = "<after 1000 <equal 10>>";
             staticSyntax = Is.EqualTo(10).After(1000);
             builderSyntax = Builder().EqualTo(10).After(1000);
         }
@@ -44,7 +48,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1 minute <equal 10>>";
+            parseTree = "<after 60000 <equal 10>>";
             staticSyntax = Is.EqualTo(10).After(1).Minutes;
             builderSyntax = Builder().EqualTo(10).After(1).Minutes;
         }
@@ -55,7 +59,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 20 seconds <equal 10>>";
+            parseTree = "<after 20000 <equal 10>>";
             staticSyntax = Is.EqualTo(10).After(20).Seconds;
             builderSyntax = Builder().EqualTo(10).After(20).Seconds;
         }
@@ -66,7 +70,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 500 milliseconds <equal 10>>";
+            parseTree = "<after 500 <equal 10>>";
             staticSyntax = Is.EqualTo(10).After(500).MilliSeconds;
             builderSyntax = Builder().EqualTo(10).After(500).MilliSeconds;
         }
@@ -77,7 +81,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 milliseconds <property X <equal 10>>>";
+            parseTree = "<after 1000 <property X <equal 10>>>";
             staticSyntax = Has.Property("X").EqualTo(10).After(1000);
             builderSyntax = Builder().Property("X").EqualTo(10).After(1000);
         }
@@ -88,7 +92,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 milliseconds <and <greaterthan 0> <lessthan 10>>>";
+            parseTree = "<after 1000 <and <greaterthan 0> <lessthan 10>>>";
             staticSyntax = Is.GreaterThan(0).And.LessThan(10).After(1000);
             builderSyntax = Builder().GreaterThan(0).And.LessThan(10).After(1000);
         }

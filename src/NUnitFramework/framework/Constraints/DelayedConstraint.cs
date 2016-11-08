@@ -362,7 +362,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<after {0} {1}>", DelayInterval, BaseConstraint);
+            return string.Format("<after {0} {1}>", DelayInterval.AsTimeSpan.TotalMilliseconds, BaseConstraint);
         }
 
         /// <summary>
