@@ -488,16 +488,16 @@ namespace NUnitLite
             string stackTrace = result.StackTrace;
             string reportID = (++_reportIndex).ToString();
 
-            //if (result.AssertionResults.Count > 0)
-            //{
-            //    int assertionCounter = 0;
-            //    foreach (var assertion in result.AssertionResults)
-            //    {
-            //        string assertID = string.Format("{0}-{1}", reportID, ++assertionCounter);
-            //        DisplayTestResult(assertID, resultState, fullName, assertion.Message, assertion.StackTrace);
-            //    }
-            //}
-            //else
+            if (result.AssertionResults.Count > 0)
+            {
+                int assertionCounter = 0;
+                foreach (var assertion in result.AssertionResults)
+                {
+                    string assertID = string.Format("{0}-{1}", reportID, ++assertionCounter);
+                    DisplayTestResult(assertID, resultState, fullName, assertion.Message, assertion.StackTrace);
+                }
+            }
+            else
                 DisplayTestResult(reportID, resultState, fullName, message, stackTrace);
         }
 
