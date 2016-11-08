@@ -25,7 +25,6 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -35,9 +34,166 @@ namespace NUnit.Framework.Constraints
     ///</summary>
     public class DelayedConstraint : PrefixConstraint
     {
+        /// <summary>
+        /// Allows only changing the time dimension of delay interval and setting a polling interval of a DelayedConstraint 
+        /// </summary>
+        public class WithRawDelayInterval : DelayedConstraint
+        {
+            private readonly DelayedConstraint _parent;
+
+            /// <summary>
+            /// Creates a new DelayedConstraint.WithRawDelayInterval
+            /// </summary>
+            /// <param name="parent">Parent DelayedConstraint on which delay interval dimension is required to be set</param>
+            public WithRawDelayInterval(DelayedConstraint parent)
+                : base(parent.BaseConstraint, parent.DelayInterval, parent.PollingInterval)
+            {
+                DelayInterval = parent.DelayInterval;
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Changes delay interval dimension to minutes
+            /// </summary>
+            public WithDimensionedDelayInterval Minutes
+            {
+                get
+                {
+                    _parent.DelayInterval = _parent.DelayInterval.InMinutes;
+                    return new WithDimensionedDelayInterval(_parent);
+                }
+            }
+
+            /// <summary>
+            /// Changes delay interval dimension to seconds
+            /// </summary>
+            public WithDimensionedDelayInterval Seconds
+            {
+                get
+                {
+                    DelayInterval = DelayInterval.InSeconds;
+                    return new WithDimensionedDelayInterval(_parent);
+                }
+            }
+
+            /// <summary>
+            /// Changes delay interval dimension to milliseconds
+            /// </summary>
+            public WithDimensionedDelayInterval MilliSeconds
+            {
+                get
+                {
+                    DelayInterval = DelayInterval.InMilliseconds;
+                    return new WithDimensionedDelayInterval(_parent);
+                }
+            }
+
+            /// <summary>
+            /// Set polling interval, in milliseconds
+            /// </summary>
+            /// <param name="milliSeconds">A time interval, in milliseconds</param>
+            /// <returns></returns>
+            public WithRawPollingInterval PollEvery(int milliSeconds)
+            {
+                _parent.PollingInterval = new Interval(milliSeconds).InMilliseconds;
+                return new WithRawPollingInterval(_parent);
+            }
+        }
+
+        /// <summary>
+        /// Allows only setting the polling interval of a DelayedConstraint
+        /// </summary>
+        public class WithDimensionedDelayInterval : DelayedConstraint
+        {
+            private readonly DelayedConstraint _parent;
+
+            /// <summary>
+            /// Creates a new DelayedConstraint.WithDimensionedDelayInterval
+            /// </summary>
+            /// <param name="parent">Parent DelayedConstraint on which polling interval is required to be set</param>
+            public WithDimensionedDelayInterval(DelayedConstraint parent)
+                : base(parent.BaseConstraint, parent.DelayInterval, parent.PollingInterval)
+            {
+                DelayInterval = parent.DelayInterval;
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Set polling interval, in milliseconds
+            /// </summary>
+            /// <param name="milliSeconds">A time interval, in milliseconds</param>
+            /// <returns></returns>
+            public WithRawPollingInterval PollEvery(int milliSeconds)
+            {
+                _parent.PollingInterval = new Interval(milliSeconds).InMilliseconds;
+                return new WithRawPollingInterval(_parent);
+            }
+        }
+
+        /// <summary>
+        /// Allows only changing the time dimension of the polling interval of a DelayedConstraint
+        /// </summary>
+        public class WithRawPollingInterval : DelayedConstraint
+        {
+            private readonly DelayedConstraint _parent;
+
+            /// <summary>
+            /// Creates a new DelayedConstraint.WithRawPollingInterval
+            /// </summary>
+            /// <param name="parent">Parent DelayedConstraint on which polling dimension is required to be set</param>
+            public WithRawPollingInterval(DelayedConstraint parent)
+                : base(parent.BaseConstraint, parent.DelayInterval, parent.PollingInterval)
+            {
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Changes polling interval dimension to minutes
+            /// </summary>
+            public DelayedConstraint Minutes
+            {
+                get
+                {
+                    _parent.PollingInterval = _parent.PollingInterval.InMinutes;
+                    return _parent;
+                }
+            }
+
+            /// <summary>
+            /// Changes polling interval dimension to seconds
+            /// </summary>
+            public DelayedConstraint Seconds
+            {
+                get
+                {
+                    _parent.PollingInterval = _parent.PollingInterval.InSeconds;
+                    return _parent;
+                }
+            }
+
+            /// <summary>
+            /// Changes polling interval dimension to milliseconds
+            /// </summary>
+            public DelayedConstraint MilliSeconds
+            {
+                get
+                {
+                    _parent.PollingInterval = _parent.PollingInterval.InMilliseconds;
+                    return _parent;
+                }
+            }
+        }
+
         // TODO: Needs error message tests
-        private Interval _delayInterval;
-        private readonly int _pollingInterval;
+        /// <summary>
+        /// Delay value store as an Interval object
+        /// </summary>
+        protected Interval DelayInterval { get; set; }
+
+        /// <summary>
+        /// Polling value stored as an Interval object
+        /// </summary>
+        protected Interval PollingInterval { get; set; }
 
         ///<summary>
         /// Creates a new DelayedConstraint
@@ -53,16 +209,23 @@ namespace NUnit.Framework.Constraints
         ///</summary>
         ///<param name="baseConstraint">The inner constraint to decorate</param>
         ///<param name="delayInMilliseconds">The time interval after which the match is performed, in milliseconds</param>
-        ///<param name="pollingInterval">The time interval used for polling, in milliseconds</param>
+        ///<param name="pollingIntervalInMilliseconds">The time interval used for polling, in milliseconds</param>
         ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
-        public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds, int pollingInterval)
+        public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds, int pollingIntervalInMilliseconds)
             : base(baseConstraint)
         {
             if (delayInMilliseconds < 0)
                 throw new ArgumentException("Cannot check a condition in the past", "delayInMilliseconds");
 
-            _delayInterval = new Interval(delayInMilliseconds).InMilliseconds;
-            _pollingInterval = pollingInterval;
+            DelayInterval = new Interval(delayInMilliseconds).InMilliseconds;
+            PollingInterval = new Interval(pollingIntervalInMilliseconds).InMilliseconds;
+        }
+
+        private DelayedConstraint(IConstraint baseConstraint, Interval delayInterval, Interval pollingInterval)
+            : base(baseConstraint)
+        {
+            DelayInterval = delayInterval;
+            PollingInterval = pollingInterval;
         }
 
         /// <summary>
@@ -70,44 +233,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return string.Format("{0} after {1} delay", BaseConstraint.Description, _delayInterval); }
-        }
-
-        /// <summary>
-        /// Converts the specified delay interval to minutes
-        /// </summary>
-        public DelayedConstraint Minutes
-        {
-            get
-            {
-                _delayInterval = _delayInterval.InMinutes;
-                return this;
-            }
-        }
-
-        /// <summary>
-        /// Converts the specified delay interval to seconds
-        /// </summary>
-        public DelayedConstraint Seconds
-        {
-            get
-            {
-                _delayInterval = _delayInterval.InSeconds;
-                return this;
-            }
-        }
-
-
-        /// <summary>
-        /// Converts the specified delay interval to milliseconds
-        /// </summary>
-        public DelayedConstraint MilliSeconds
-        {
-            get
-            {
-                _delayInterval = _delayInterval.InMilliseconds;
-                return this;
-            }
+            get { return string.Format("{0} after {1} delay", BaseConstraint.Description, DelayInterval); }
         }
 
         /// <summary>
@@ -118,16 +244,16 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, _delayInterval.AsTimeSpan);
+            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
 
-            if (_pollingInterval > 0)
+            if (PollingInterval.IsNotZero)
             {
-                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
+                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
                         Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
+                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     ConstraintResult result = BaseConstraint.ApplyTo(actual);
                     if (result.IsSuccess)
@@ -148,17 +274,17 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, _delayInterval.AsTimeSpan);
+            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
 
             object actual;
-            if (_pollingInterval > 0)
+            if (PollingInterval.IsNotZero)
             {
-                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
+                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
                         Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
+                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     actual = InvokeDelegate(del);
 
@@ -181,17 +307,6 @@ namespace NUnit.Framework.Constraints
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
 
-        private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
-        {
-#if NET_4_0 || NET_4_5
-            if (AsyncInvocationRegion.IsAsyncOperation(del))
-                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
-                    return region.WaitForPendingOperationsToComplete(del());
-#endif
-
-            return del();
-        }
-
         /// <summary>
         /// Test whether the constraint is satisfied by a given reference.
         /// Overridden to wait for the specified delay period before
@@ -202,16 +317,16 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ref TActual actual)
         {
             long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, _delayInterval.AsTimeSpan);
+            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
 
-            if (_pollingInterval > 0)
+            if (PollingInterval.IsNotZero)
             {
-                long nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
+                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
                         Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(_pollingInterval));
+                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     try
                     {
@@ -231,12 +346,23 @@ namespace NUnit.Framework.Constraints
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
 
+        private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
+        {
+#if NET_4_0 || NET_4_5
+            if (AsyncInvocationRegion.IsAsyncOperation(del))
+                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
+                    return region.WaitForPendingOperationsToComplete(del());
+#endif
+
+            return del();
+        }
+
         /// <summary>
         /// Returns the string representation of the constraint.
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<after {0} {1}>", _delayInterval, BaseConstraint);
+            return string.Format("<after {0} {1}>", DelayInterval, BaseConstraint);
         }
 
         /// <summary>

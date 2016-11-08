@@ -318,7 +318,7 @@ namespace NUnit.Framework.Syntax
         public void After()
         {
             var constraint = EqualTo(10).After(1000);
-            Expect(constraint, TypeOf<DelayedConstraint>());
+            Expect(constraint, TypeOf<DelayedConstraint.WithRawDelayInterval>());
             Expect(constraint.ToString(), EqualTo("<after 1000 milliseconds <equal 10>>"));
         }
 
@@ -326,7 +326,7 @@ namespace NUnit.Framework.Syntax
         public void After_Property()
         {
             var constraint = Property("X").EqualTo(10).After(1000);
-            Expect(constraint, TypeOf<DelayedConstraint>());
+            Expect(constraint, TypeOf<DelayedConstraint.WithRawDelayInterval>());
             Expect(constraint.ToString(), EqualTo("<after 1000 milliseconds <property X <equal 10>>>"));
         }
 
@@ -334,7 +334,7 @@ namespace NUnit.Framework.Syntax
         public void After_And()
         {
             var constraint = GreaterThan(0).And.LessThan(10).After(1000);
-            Expect(constraint, TypeOf<DelayedConstraint>());
+            Expect(constraint, TypeOf<DelayedConstraint.WithRawDelayInterval>());
             Expect(constraint.ToString(), EqualTo("<after 1000 milliseconds <and <greaterthan 0> <lessthan 10>>>"));
         }
 #endif

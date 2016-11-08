@@ -106,13 +106,13 @@ namespace NUnit.Framework.Constraints
         public void DifferentDelayTests()
         {
             SetValuesAfterDelay(60000);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 1).Minutes.Minutes);
+            Assert.That(DelegateReturningValue, new DelayedConstraint.WithRawDelayInterval(new DelayedConstraint(new EqualConstraint(true), 1)).Minutes);
 
             SetValuesAfterDelay(5000);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 5).Seconds);
+            Assert.That(DelegateReturningValue, new DelayedConstraint.WithRawDelayInterval(new DelayedConstraint(new EqualConstraint(true), 5)).Seconds);
 
             SetValuesAfterDelay(DELAY);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER).Seconds.MilliSeconds);
+            Assert.That(DelegateReturningValue, new DelayedConstraint.WithRawDelayInterval(new DelayedConstraint(new EqualConstraint(true), AFTER)).MilliSeconds);
         }
 
         [Test]
@@ -185,8 +185,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER, POLLING));
 
             watch.Stop();
-            // TODO: This failed intermittently, esp. on .NET 4.0. Find another way to test or wait till we have warning errors.
-            //Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
+            Assert.That(watch.ElapsedMilliseconds, Is.InRange(DELAY, AFTER));
         }
 
         [Test]
@@ -251,6 +250,102 @@ namespace NUnit.Framework.Constraints
 
             watch.Stop();
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
+        }
+
+        [Test]
+        public void PollEvery_WithoutSetting_TimeDimensions()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(DELAY);
+                return true;
+            }, Is.True.After(AFTER).PollEvery(POLLING));
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
+        }
+
+        [Test]
+        public void PollEvery_SetTo_MilliSeconds_ByDefault()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(DELAY);
+                return true;
+            }, Is.True.After(AFTER).PollEvery(POLLING));
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
+        }
+
+        [Test]
+        public void PollEvery_SetTo_MilliSeconds()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(DELAY);
+                return true;
+            }, Is.True.After(AFTER).PollEvery(POLLING).MilliSeconds);
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
+        }
+
+        [Test]
+        public void PollEvery_SetTo_Seconds()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(2000);
+                return true;
+            }, Is.True.After(5000).PollEvery(1).Seconds);
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(5000));
+        }
+
+        [Test]
+        public void PollEvery_SetTo_Minutes()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(50000);
+                return true;
+            }, Is.True.After(120000).PollEvery(1).Minutes);
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(120000));
+        }
+
+        [Test]
+        public void PollyEvery_SetOn_DimensionedDelay()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            Assert.That(() =>
+            {
+                Delay(DELAY);
+                return true;
+            }, Is.True.After(AFTER).MilliSeconds.PollEvery(POLLING));
+
+            watch.Stop();
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
         }
 
         private static int setValuesDelay;
