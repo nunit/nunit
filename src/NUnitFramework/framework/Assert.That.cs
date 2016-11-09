@@ -142,11 +142,7 @@ namespace NUnit.Framework
             IncrementAssertCount();
             var result = constraint.ApplyTo(del);
             if (!result.IsSuccess)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                result.WriteMessageTo(writer);
-                throw new AssertionException(writer.ToString());
-            }
+                ReportFailure(result, message, args);
         }
 
 #if !NET_2_0
@@ -168,9 +164,7 @@ namespace NUnit.Framework
             IncrementAssertCount();
             var result = constraint.ApplyTo(del);
             if (!result.IsSuccess)
-            {
-                throw new AssertionException(getExceptionMessage());
-            }
+                ReportFailure(result, getExceptionMessage());
         }
 #endif
 
@@ -250,11 +244,7 @@ namespace NUnit.Framework
             IncrementAssertCount();
             var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                result.WriteMessageTo(writer);
-                throw new AssertionException(writer.ToString());
-            }
+                ReportFailure(result, message, args);
         }
 
 #if !NET_2_0
@@ -276,9 +266,7 @@ namespace NUnit.Framework
             IncrementAssertCount();
             var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
-            {
-                throw new AssertionException(getExceptionMessage());
-            }
+                ReportFailure(result, getExceptionMessage());
         }
 #endif
 

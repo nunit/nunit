@@ -28,7 +28,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
     <DefineConstants>TRACE;NET_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -54,6 +54,7 @@
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="ActionAttributeFixture.cs" />
+    <Compile Include="AssertMultipleData.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="TextOutputFixture.cs" />

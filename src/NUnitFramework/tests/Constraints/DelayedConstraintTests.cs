@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,6 +34,12 @@ namespace NUnit.Framework.Constraints
     [TestFixture, Parallelizable(ParallelScope.None)]
     public class DelayedConstraintTests : ConstraintTestBase
     {
+        // NOTE: This class tests the functioning of the DelayConstraint,
+        // not the After syntax. The AfterTests class tests our syntax,
+        // assuring that the proper constraint is generated. Here,we
+        // set up constraints in the simplest way possible, often by
+        // constructing the constraint class, and verify that they work.
+
         private const int DELAY = 100;
         private const int AFTER = 300;
         private const int POLLING = 50;
@@ -48,7 +54,7 @@ namespace NUnit.Framework.Constraints
         {
             theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
             expectedDescription = "True after 500 milliseconds delay";
-            stringRepresentation = "<after 500 milliseconds <equal True>>";
+            stringRepresentation = "<after 500 <equal True>>";
 
             boolValue = false;
             list = new List<int>();
@@ -57,7 +63,7 @@ namespace NUnit.Framework.Constraints
         }
 
         static object[] SuccessData = new object[] { true };
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new TestCaseData( false, "False" ),
             new TestCaseData( 0, "0" ),
             new TestCaseData( null, "null" ) };
@@ -100,20 +106,6 @@ namespace NUnit.Framework.Constraints
         {
             SetValuesAfterDelay(DELAY);
             Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
-        }
-
-        [Test]
-        [Explicit("This test takes over a minute to run")]
-        public void DifferentDelayTests()
-        {
-            SetValuesAfterDelay(60000);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 1).Minutes.Minutes);
-
-            SetValuesAfterDelay(5000);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 5).Seconds);
-
-            SetValuesAfterDelay(DELAY);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER).Seconds.MilliSeconds);
         }
 
         [Test]
@@ -186,8 +178,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER, POLLING));
 
             watch.Stop();
-            // TODO: This failed intermittently, esp. on .NET 4.0. Find another way to test or wait till we have warning errors.
-            //Assert.That(watch.ElapsedMilliseconds, Is.LessThan(AFTER));
+            Assert.That(watch.ElapsedMilliseconds, Is.InRange(DELAY, AFTER));
         }
 
         [Test]

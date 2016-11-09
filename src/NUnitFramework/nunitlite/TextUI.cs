@@ -482,19 +482,43 @@ namespace NUnitLite
 
         private void DisplayTestResult(ITestResult result)
         {
-            string status = result.ResultState.Label;
+            ResultState resultState = result.ResultState;
+            string fullName = result.FullName;
+            string message = result.Message;
+            string stackTrace = result.StackTrace;
+            string reportID = (++_reportIndex).ToString();
+            int numAsserts = result.AssertionResults.Count;
+
+            if (numAsserts > 0)
+            {
+                int assertionCounter = 0;
+                string assertID = reportID;
+                foreach (var assertion in result.AssertionResults)
+                {
+                    if (numAsserts > 1)
+                        assertID = string.Format("{0}-{1}", reportID, ++assertionCounter);
+                    DisplayTestResult(assertID, resultState, fullName, assertion.Message, assertion.StackTrace);
+                }
+            }
+            else
+                DisplayTestResult(reportID, resultState, fullName, message, stackTrace);
+        }
+
+        private void DisplayTestResult(string prefix, ResultState resultState, string fullName, string message, string stackTrace)
+        {
+            string status = resultState.Label;
             if (string.IsNullOrEmpty(status))
-                status = result.ResultState.Status.ToString();
+                status = resultState.Status.ToString();
 
             if (status == "Failed" || status == "Error")
             {
-                var site = result.ResultState.Site.ToString();
+                var site = resultState.Site.ToString();
                 if (site == "SetUp" || site == "TearDown")
                     status = site + " " + status;
             }
 
             ColorStyle style = ColorStyle.Output;
-            switch (result.ResultState.Status)
+            switch (resultState.Status)
             {
                 case TestStatus.Failed:
                     style = ColorStyle.Failure;
@@ -509,13 +533,13 @@ namespace NUnitLite
 
             Writer.WriteLine();
             Writer.WriteLine(
-                style, string.Format("{0}) {1} : {2}", ++_reportIndex, status, result.FullName));
+                style, string.Format("{0}) {1} : {2}", prefix, status, fullName));
 
-            if (!string.IsNullOrEmpty(result.Message))
-                Writer.WriteLine(style, result.Message.TrimEnd(TRIM_CHARS));
+            if (!string.IsNullOrEmpty(message))
+                Writer.WriteLine(style, message.TrimEnd(TRIM_CHARS));
 
-            if (!string.IsNullOrEmpty(result.StackTrace))
-                Writer.WriteLine(style, result.StackTrace.TrimEnd(TRIM_CHARS));
+            if (!string.IsNullOrEmpty(stackTrace))
+                Writer.WriteLine(style, stackTrace.TrimEnd(TRIM_CHARS));
         }
 
 #if FULL

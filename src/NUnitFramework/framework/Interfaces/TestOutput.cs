@@ -74,9 +74,13 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         public string ToXml()
         {
-            return TestName != null
-                ? string.Format("<test-output stream='{0}' testname='{1}'>{2}</test-output>", Stream, TestName, Text)
-                : string.Format("<test-output stream='{0}'>{1}</test-output>", Stream, Text);
+            TNode tnode = new TNode("test-output", Text, true);
+
+            tnode.AddAttribute("stream", Stream);
+            if (TestName != null)
+                tnode.AddAttribute("testname", TestName);
+
+            return tnode.OuterXml;
         }
     }
 }

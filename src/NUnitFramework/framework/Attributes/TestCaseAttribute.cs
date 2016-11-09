@@ -320,7 +320,10 @@ namespace NUnit.Framework
                             if (i < parms.Arguments.Length)
                                 newArgList[i] = parms.Arguments[i];
                             else
-                                throw new TargetParameterCountException("Incorrect number of parameters specified for TestCase");
+                                throw new TargetParameterCountException(string.Format(
+                                    "Method requires {0} arguments but TestCaseAttribute only supplied {1}",
+                                    argsNeeded, 
+                                    argsProvided));
                         }
                     }
                     parms.Arguments = newArgList;

@@ -477,9 +477,8 @@ namespace NUnit.Framework.Internal
             if (ex is ResultStateException)
             {
                 string message = ex.Message;
-                string stackTrace = StackFilter.Filter(ex.StackTrace);
+                string stackTrace = StackFilter.DefaultFilter.Filter(ex.StackTrace);
 
-                RecordAssertion(AssertionStatus.Failed, message, stackTrace);
                 SetResult(((ResultStateException)ex).ResultState, message, stackTrace);
             }
 #if !PORTABLE
@@ -507,7 +506,7 @@ namespace NUnit.Framework.Internal
             if (ex is ResultStateException)
                 SetResult(((ResultStateException)ex).ResultState.WithSite(site),
                     ex.Message,
-                    StackFilter.Filter(ex.StackTrace));
+                    StackFilter.DefaultFilter.Filter(ex.StackTrace));
 #if !PORTABLE
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled.WithSite(site),

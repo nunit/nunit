@@ -70,6 +70,7 @@
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="Assertions\AssertionHelperTests.cs" />
+    <Compile Include="Assertions\AssertMultipleTests.cs" />
     <Compile Include="Assertions\AssertPolarityTests.cs" />
     <Compile Include="Assertions\AssertZeroTests.cs" />
     <Compile Include="Assertions\AssumeEqualsTests.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
+    <Compile Include="Constraints\IntervalTests.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />

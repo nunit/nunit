@@ -292,15 +292,15 @@ namespace NUnit.Framework.Constraints
 
 #if !PORTABLE
         /// <summary>
-        /// Returns a DelayedConstraint with the specified delay time.
+        /// Returns a DelayedConstraint.WithRawDelayInterval with the specified delay time.
         /// </summary>
-        /// <param name="delayInMilliseconds">The delay in milliseconds.</param>
+        /// <param name="delay">The delay, which defaults to milliseconds.</param>
         /// <returns></returns>
-        public DelayedConstraint After(int delayInMilliseconds)
+        public DelayedConstraint.WithRawDelayInterval After(int delay)
         {
-            return new DelayedConstraint(
+            return new DelayedConstraint.WithRawDelayInterval(new DelayedConstraint(
                 Builder == null ? this : Builder.Resolve(),
-                delayInMilliseconds);
+                delay));
         }
 
         /// <summary>

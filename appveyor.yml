@@ -2,11 +2,6 @@ branches:
   except:
     - /travis-.*/
 
-install:
-  ps: |
-        Import-Module '.\appveyor-tool.ps1'
-        Bootstrap
-        
 build_script: 
   - ps: .\build.ps1 -Target "Appveyor"
 

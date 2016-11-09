@@ -30,8 +30,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            var ex = Assert.Catch(() => { throw new InconclusiveException("because"); });
-            _testResult.RecordException(ex);
+            _testResult.SetResult(ResultState.Inconclusive, "because");
             _suiteResult.AddResult(_testResult);
         }
 
@@ -40,16 +39,6 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.AreEqual(ResultState.Inconclusive, _testResult.ResultState);
             Assert.AreEqual("because", _testResult.Message);
-        }
-
-        [Test]
-        public void TestResultRecordsFailingAssumption()
-        {
-            Assert.That(_testResult.AssertionResults.Count, Is.EqualTo(1));
-            var ar = _testResult.AssertionResults[0];
-            Assert.That(ar.Status, Is.EqualTo(AssertionStatus.Failed));
-            Assert.That(ar.Message, Is.EqualTo("because"));
-            Assert.That(ar.StackTrace, Is.EqualTo(_testResult.StackTrace));
         }
 
         [Test]
