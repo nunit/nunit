@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Comparers;
 
@@ -532,6 +533,14 @@ namespace NUnit.Framework.Constraints
             }
 
             [Test]
+            public void CanCompareUncomparableTypes()
+            {
+                Assert.That(2 + 2, Is.Not.EqualTo("4"));
+                var comparer = new ConvertibleComparer();
+                Assert.That(2 + 2, Is.EqualTo("4").Using(comparer));
+            }
+
+            [Test]
             public void UsesProvidedEqualityComparer()
             {
                 var comparer = new ObjectEqualityComparer();
@@ -753,4 +762,21 @@ namespace NUnit.Framework.Constraints
         }
     }
     #endregion
+
+    /// <summary>
+    /// ConvertibleComparer is used in testing to ensure that objects
+    /// of different types can be compared when appropriate.
+    /// </summary>
+    /// <remark>Introduced when testing issue 1897.
+    /// https://github.com/nunit/nunit/issues/1897
+    /// </remark>
+    public class ConvertibleComparer : IComparer<IConvertible>
+    {
+        public int Compare(IConvertible x, IConvertible y)
+        {
+            var str1 = Convert.ToString(x, CultureInfo.InvariantCulture);
+            var str2 = Convert.ToString(y, CultureInfo.InvariantCulture);
+            return string.Compare(str1, str2, StringComparison.Ordinal);
+        }
+    }
 }
