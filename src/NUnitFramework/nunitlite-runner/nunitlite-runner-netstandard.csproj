@@ -15,15 +15,15 @@
     <NoStdLib>true</NoStdLib>
     <NoWarn>$(NoWarn);1701</NoWarn>
     <FileAlignment>512</FileAlignment>
-    <IntermediateOutputPath>obj\$(Configuration)\netstandard\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\netstandard\</OutputPath>
-    <StartArguments>..\..\..\bin\Debug\netstandard\nunitlite-runner.exe nunit.framework.tests.dll</StartArguments>
+    <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
+    <StartArguments>..\..\..\bin\Debug\netstandard16\nunitlite-runner.exe nunit.framework.tests.dll</StartArguments>
     <DefineConstants>TRACE;DEBUG;PORTABLE;NETCOREAPP1_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -35,8 +35,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\netstandard\</OutputPath>
-    <StartArguments>..\..\..\bin\Release\netstandard\nunitlite-runner.exe nunit.framework.tests.dll</StartArguments>
+    <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
+    <StartArguments>..\..\..\bin\Release\netstandard16\nunitlite-runner.exe nunit.framework.tests.dll</StartArguments>
     <DefineConstants>TRACE;PORTABLE;NETCOREAPP1_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

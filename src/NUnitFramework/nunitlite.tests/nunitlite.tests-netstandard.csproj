@@ -13,7 +13,7 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <IntermediateOutputPath>obj\$(Configuration)\netstandard\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
     <TargetFrameworkProfile />
     <TargetFrameworkIdentifier>.NETCoreApp</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
@@ -23,7 +23,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\netstandard\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PORTABLE;NETCOREAPP1_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,7 +33,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE;NETCOREAPP1_0;NUNITLITE</DefineConstants>
-    <OutputPath>..\..\..\bin\Debug\netstandard\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>

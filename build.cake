@@ -27,7 +27,7 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var WindowsFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard", "portable" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard16", "portable" };
 
 var LinuxFrameworks = new string[] {
     "net-4.5", "net-4.0", "net-3.5", "net-2.0" };
@@ -108,6 +108,7 @@ Task("InitializeBuild")
     {
         foreach(var package in packages)
         {
+            Information("Restoring NuGet package " + package);
             NuGetRestore(package, new NuGetRestoreSettings
             {
                 PackagesDirectory = "./packages/",
@@ -117,6 +118,7 @@ Task("InitializeBuild")
 
         if(isDotNetCoreInstalled)
         {
+            Information("Restoring .NET Core packages");
             StartProcess("dotnet", new ProcessSettings
             {
                 Arguments = "restore"
@@ -329,7 +331,7 @@ Task("TestNetStandard")
             Warning(".NET Standard was not tested because .NET Core SDK is not installed");
             return;
         }
-        var runtime = "netstandard";
+        var runtime = "netstandard16";
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -460,7 +462,7 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net-3.5/*.*") +
             GetFiles(currentImageDir + "bin/net-4.0/*.*") +
             GetFiles(currentImageDir + "bin/net-4.5/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard16/*.*") +
             GetFiles(currentImageDir + "bin/portable/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });

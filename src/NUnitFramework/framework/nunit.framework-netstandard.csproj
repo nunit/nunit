@@ -15,29 +15,29 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
-    <IntermediateOutputPath>obj\$(Configuration)\netstandard\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\netstandard\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE;NETSTANDARD1_6</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\..\bin\Debug\netstandard\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\netstandard16\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\netstandard\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PORTABLE;NETSTANDARD1_6</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\..\bin\Release\netstandard\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\netstandard16\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
