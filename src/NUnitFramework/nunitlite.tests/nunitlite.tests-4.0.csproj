@@ -96,6 +96,7 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+    <None Include="nunitlite.tests-4.0.project.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.0.csproj">

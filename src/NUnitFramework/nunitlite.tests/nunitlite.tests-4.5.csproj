@@ -119,6 +119,7 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+    <None Include="nunitlite.tests-4.5.project.json" />
   </ItemGroup>
   <ItemGroup />
 </Project>

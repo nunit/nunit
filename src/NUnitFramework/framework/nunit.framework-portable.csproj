@@ -412,6 +412,7 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+    <None Include="nunit.framework-portable.project.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compatibility\System\" />

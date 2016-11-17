@@ -26,7 +26,7 @@ using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
-#if PORTABLE && !NUNITLITE
+#if PORTABLE && !NUNITLITE && !NETSTANDARD1_6
 using BF = NUnit.Compatibility.BindingFlags;
 #else
 using BF = System.Reflection.BindingFlags;

@@ -339,5 +339,6 @@
     <Content Include="FrameworkTests.nunit">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="nunit.framework.tests-4.5.project.json" />
   </ItemGroup>
 </Project>

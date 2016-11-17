@@ -11,6 +11,26 @@ root = true
 indent_style = space
 indent_size = 4
 
-[*.{proj,csproj,vcxproj,xproj,json,config,nuspec,xml}]
-indent_style = space
+[*.proj]
+indent_size = 2
+
+[*.csproj]
+indent_size = 2
+
+[*.vcxproj]
+indent_size = 2
+
+[*.xproj]
+indent_size = 2
+
+[*.json]
+indent_size = 2
+
+[*.config]
+indent_size = 2
+
+[*.nuspec]
+indent_size = 2
+
+[*.xml]
 indent_size = 2

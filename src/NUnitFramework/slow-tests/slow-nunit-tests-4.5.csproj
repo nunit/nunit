@@ -57,6 +57,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="slow-nunit-tests-4.5.project.json" />
     <None Include="slow-nunit-tests.build" />
   </ItemGroup>
   <ItemGroup>
