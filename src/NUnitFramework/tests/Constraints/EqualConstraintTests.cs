@@ -532,6 +532,7 @@ namespace NUnit.Framework.Constraints
                 Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
+#if !PORTABLE
             [Test]
             public void CanCompareUncomparableTypes()
             {
@@ -539,6 +540,7 @@ namespace NUnit.Framework.Constraints
                 var comparer = new ConvertibleComparer();
                 Assert.That(2 + 2, Is.EqualTo("4").Using(comparer));
             }
+#endif
 
             [Test]
             public void UsesProvidedEqualityComparer()
@@ -763,6 +765,7 @@ namespace NUnit.Framework.Constraints
     }
     #endregion
 
+#if !PORTABLE
     /// <summary>
     /// ConvertibleComparer is used in testing to ensure that objects
     /// of different types can be compared when appropriate.
@@ -779,4 +782,6 @@ namespace NUnit.Framework.Constraints
             return string.Compare(str1, str2, StringComparison.Ordinal);
         }
     }
+#endif
+
 }
