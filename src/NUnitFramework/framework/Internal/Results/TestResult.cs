@@ -488,9 +488,28 @@ namespace NUnit.Framework.Internal
                     ex.StackTrace);
 #endif
             else
-                SetResult(ResultState.Error,
-                    ExceptionHelper.BuildMessage(ex),
-                    ExceptionHelper.BuildStackTrace(ex));
+            {
+                string message = ExceptionHelper.BuildMessage(ex);
+                string stackTrace = ExceptionHelper.BuildStackTrace(ex);
+                SetResult(ResultState.Error, message, stackTrace);
+
+                if (AssertionResults.Count > 0)
+                {
+                    // Add pending failures to the legacy result message
+                    var writer = new StringWriter();
+
+                    writer.WriteLine("\n  Multiple Assert block had {0} failure(s).", AssertionResults.Count);
+
+                    int counter = 0;
+                    foreach (var assertion in AssertionResults)
+                        writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
+
+                    Message += writer.ToString();
+
+                    // Add to the list of assertion errors, so that newer runners will see it
+                    AssertionResults.Add(new AssertionResult(AssertionStatus.Error, message, stackTrace));
+                }
+            }
         }
 
         /// <summary>

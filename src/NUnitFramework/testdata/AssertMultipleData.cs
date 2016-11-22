@@ -104,6 +104,17 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
+        public void MethodCallsFailAfterTwoAssertsFail()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.Fail("Message from Assert.Fail");
+            });
+        }
+
+        [Test]
         public void TwoAsserts_FirstAssertFails()
         {
             Assert.Multiple(() =>
@@ -196,6 +207,29 @@ namespace NUnit.TestData.AssertMultipleData
                     Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
                     Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 });
+            });
+        }
+    }
+
+    public class AssertMultipleErrorFixture
+    {
+        [Test]
+        public void ExceptionThrown()
+        {
+            Assert.Multiple(() =>
+            {
+                throw new Exception("Simulated Error");
+            });
+        }
+
+        [Test]
+        public void ExceptionThrownAfterTwoFailures()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Fail("Failure 1");
+                Assert.Fail("Failure 2");
+                throw new Exception("Simulated Error");
             });
         }
     }

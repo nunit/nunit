@@ -36,6 +36,11 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// The assertion failed
         /// </summary>
-        Failed
+        Failed,
+
+        /// <summary>
+        /// An unexpected exception was thrown
+        /// </summary>
+        Error
     }
 }

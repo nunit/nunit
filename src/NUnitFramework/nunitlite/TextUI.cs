@@ -497,14 +497,52 @@ namespace NUnitLite
                 {
                     if (numAsserts > 1)
                         assertID = string.Format("{0}-{1}", reportID, ++assertionCounter);
-                    DisplayTestResult(assertID, resultState, fullName, assertion.Message, assertion.StackTrace);
+                    ColorStyle style = GetColorStyle(resultState);
+                    string status = assertion.Status.ToString();
+                    DisplayTestResult(style, assertID, status, fullName, assertion.Message, assertion.StackTrace);
                 }
             }
             else
-                DisplayTestResult(reportID, resultState, fullName, message, stackTrace);
+            {
+                ColorStyle style = GetColorStyle(resultState);
+                string status = GetResultStatus(resultState);
+                DisplayTestResult(style, reportID, status, fullName, message, stackTrace);
+            }
         }
 
-        private void DisplayTestResult(string prefix, ResultState resultState, string fullName, string message, string stackTrace)
+        private void DisplayTestResult(ColorStyle style, string prefix, string status, string fullName, string message, string stackTrace)
+        {
+            Writer.WriteLine();
+            Writer.WriteLine(
+                style, string.Format("{0}) {1} : {2}", prefix, status, fullName));
+
+            if (!string.IsNullOrEmpty(message))
+                Writer.WriteLine(style, message.TrimEnd(TRIM_CHARS));
+
+            if (!string.IsNullOrEmpty(stackTrace))
+                Writer.WriteLine(style, stackTrace.TrimEnd(TRIM_CHARS));
+        }
+
+        private static ColorStyle GetColorStyle(ResultState resultState)
+        {
+            ColorStyle style = ColorStyle.Output;
+            switch (resultState.Status)
+            {
+                case TestStatus.Failed:
+                    style = ColorStyle.Failure;
+                    break;
+                case TestStatus.Skipped:
+                    style = resultState.Label == "Ignored" ? ColorStyle.Warning : ColorStyle.Output;
+                    break;
+                case TestStatus.Passed:
+                    style = ColorStyle.Pass;
+                    break;
+            }
+
+            return style;
+        }
+
+        private static string GetResultStatus(ResultState resultState)
         {
             string status = resultState.Label;
             if (string.IsNullOrEmpty(status))
@@ -517,29 +555,7 @@ namespace NUnitLite
                     status = site + " " + status;
             }
 
-            ColorStyle style = ColorStyle.Output;
-            switch (resultState.Status)
-            {
-                case TestStatus.Failed:
-                    style = ColorStyle.Failure;
-                    break;
-                case TestStatus.Skipped:
-                    style = status == "Ignored" ? ColorStyle.Warning : ColorStyle.Output;
-                    break;
-                case TestStatus.Passed:
-                    style = ColorStyle.Pass;
-                    break;
-            }
-
-            Writer.WriteLine();
-            Writer.WriteLine(
-                style, string.Format("{0}) {1} : {2}", prefix, status, fullName));
-
-            if (!string.IsNullOrEmpty(message))
-                Writer.WriteLine(style, message.TrimEnd(TRIM_CHARS));
-
-            if (!string.IsNullOrEmpty(stackTrace))
-                Writer.WriteLine(style, stackTrace.TrimEnd(TRIM_CHARS));
+            return status;
         }
 
 #if FULL
