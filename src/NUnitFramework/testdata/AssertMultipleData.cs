@@ -95,6 +95,15 @@ namespace NUnit.TestData.AssertMultipleData
         private static readonly ComplexNumber complex = new ComplexNumber(5.2, 3.9);
 
         [Test]
+        public void MethodCallsFail()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Fail("Message from Assert.Fail");
+            });
+        }
+
+        [Test]
         public void TwoAsserts_FirstAssertFails()
         {
             Assert.Multiple(() =>

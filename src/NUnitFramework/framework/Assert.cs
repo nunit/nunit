@@ -140,11 +140,13 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Fail(string message, params object[] args)
         {
+            IncrementAssertCount();
+
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
 
-            throw new AssertionException(message);
+            ReportFailure(message);
         }
 
         /// <summary>
@@ -334,6 +336,17 @@ namespace NUnit.Framework
             // If we are outside any multiple assert block, then throw
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
                 throw new AssertionException(formattedMessage);
+        }
+
+        private static void ReportFailure(string message)
+        {
+            // Failure is recorded in <assertion> element in all cases
+            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
+                AssertionStatus.Failed, message, GetStackTrace());
+
+            // If we are outside any multiple assert block, then throw
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
+                throw new AssertionException(message);
         }
 
         // System.Envionment.StackTrace puts extra entries on top of the stack, at least in some environments

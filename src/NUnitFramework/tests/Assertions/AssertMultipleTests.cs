@@ -55,6 +55,7 @@ namespace NUnit.Framework.Assertions.Tests
         [TestCase("NestedBlock_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
         [TestCase("TwoNestedBlocks_FirstAssertFails", 3, "Expected: 5")]
         [TestCase("TwoNestedBlocks_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
+        [TestCase("MethodCallsFail", 1, "Message from Assert.Fail")]
         public void AssertMultipleFails(string methodName, int asserts, params string[] failureMessageRegex)
         {
             var result = TestBuilder.RunTestCase(typeof(AssertMultipleFailureFixture), methodName);
