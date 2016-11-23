@@ -104,6 +104,10 @@ namespace NUnit.Framework
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
 
+            // If we are in a multiple assert block, this is an error
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
+
             throw new SuccessException(message);
         }
 
@@ -181,6 +185,10 @@ namespace NUnit.Framework
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
+
+            // If we are in a multiple assert block, this is an error
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                throw new Exception("Assert.Ignore may not be used in a multiple assertion block.");
 
             throw new IgnoreException(message);
         }

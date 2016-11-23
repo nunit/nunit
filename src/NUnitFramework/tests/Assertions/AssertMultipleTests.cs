@@ -54,30 +54,59 @@ namespace NUnit.Framework.Assertions.Tests
             Assert.IsEmpty(result.AssertionResults);
         }
 
-        [TestCase("TwoAsserts_FirstAssertFails", 2, "RealPart")]
-        [TestCase("TwoAsserts_SecondAssertFails", 2, "ImaginaryPart")]
-        [TestCase("TwoAsserts_BothAssertsFail", 2, "RealPart", "ImaginaryPart")]
-        [TestCase("NestedBlock_FirstAssertFails", 3, "Expected: 5")]
-        [TestCase("NestedBlock_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
-        [TestCase("TwoNestedBlocks_FirstAssertFails", 3, "Expected: 5")]
-        [TestCase("TwoNestedBlocks_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
-        [TestCase("MethodCallsFail", 0, "Message from Assert.Fail")]
-        [TestCase("MethodCallsFailAfterTwoAssertsFail", 2, "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
-        public void AssertMultipleFails(string methodName, int asserts, params string[] failureMessageRegex)
+        [TestCase("TwoAsserts_FirstAssertFails", "RealPart")]
+        [TestCase("TwoAsserts_SecondAssertFails", "ImaginaryPart")]
+        [TestCase("TwoAsserts_BothAssertsFail", "RealPart", "ImaginaryPart")]
+        [TestCase("NestedBlock_FirstAssertFails", "Expected: 5")]
+        [TestCase("NestedBlock_TwoAssertsFail", "Expected: 5", "ImaginaryPart")]
+        [TestCase("TwoNestedBlocks_FirstAssertFails", "Expected: 5")]
+        [TestCase("TwoNestedBlocks_TwoAssertsFail", "Expected: 5", "ImaginaryPart")]
+        [TestCase("MethodCallsFail", "Message from Assert.Fail")]
+        [TestCase("MethodCallsFailAfterTwoAssertsFail", "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
+        public void AssertMultipleFails(string methodName, params string[] assertionMessageRegex)
         {
-            var result = TestBuilder.RunTestCase(typeof(AssertMultipleFailureFixture), methodName);
+            CheckResult(methodName, ResultState.Failure, assertionMessageRegex);
+        }
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.AssertCount, Is.EqualTo(asserts), "AssertCount");
+        [TestCase("ExceptionThrown")]
+        [TestCase("ExceptionThrownAfterTwoFailures", "Failure 1", "Failure 2", "Simulated Error")]
+        public void AssertMultipleErrorTests(string methodName, params string[] assertionMessageRegex)
+        {
+            ITestResult result = CheckResult(methodName, ResultState.Error, assertionMessageRegex);
 
-            int expectedFailures = failureMessageRegex.Length;
-            int actualFailures = result.AssertionResults.Count;
-            Assert.That(actualFailures, Is.EqualTo(expectedFailures), "FailureCount");
+            Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));//
+        }
 
-            if (actualFailures > 0)
+        [Test]
+        public void AssertPassInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssertPassInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assert.Pass may not be used in a multiple assertion block."));
+        }
+
+        [Test]
+        public void AssertIgnoreInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssertIgnoreInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assert.Ignore may not be used in a multiple assertion block."));
+        }
+
+        private ITestResult CheckResult(string methodName, ResultState expectedResultState, params string[] assertionMessageRegex)
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFailureFixture), methodName);
+
+            Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
+            Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
+            Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName));
+
+            if (result.AssertionResults.Count > 0)
             {
+                int numFailures = result.AssertionResults.Count;
+                if (expectedResultState == ResultState.Error)
+                    --numFailures;
+
                 Assert.That(result.Message, Contains.Substring(
-                    string.Format("Multiple Assert block had {0} failure(s)", actualFailures)));
+                    string.Format("Multiple Assert block had {0} failure(s).", numFailures)));//
 
                 int i = 0;
                 foreach (var assertion in result.AssertionResults)
@@ -85,7 +114,7 @@ namespace NUnit.Framework.Assertions.Tests
                     // Since the order of argument evaluation is not guaranteed, we don't
                     // want 'i' to appear more than once in the Assert statement.
                     string errmsg = string.Format("AssertionResult {0}", i + 1);
-                    Assert.That(assertion.Message, Does.Match(failureMessageRegex[i++]), errmsg);
+                    Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
                     Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
 #if !PORTABLE
@@ -95,49 +124,9 @@ namespace NUnit.Framework.Assertions.Tests
                     Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
 #endif
                 }
-
-                Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName));
             }
-        }
 
-        [TestCase("ExceptionThrown", 0)]
-        [TestCase("ExceptionThrownAfterTwoFailures", 2, "Failure 1", "Failure 2", "Simulated Error")]
-        public void AssertMultipleErrorTests(string methodName, int asserts, params string[] messageRegex)
-        {
-            var result = TestBuilder.RunTestCase(typeof(AssertMultipleErrorFixture), methodName);
-
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
-            Assert.That(result.AssertCount, Is.EqualTo(asserts), "AssertCount");
-
-            int expectedAssertions = messageRegex.Length;
-            int actualAssertions = result.AssertionResults.Count;
-            Assert.That(actualAssertions, Is.EqualTo(expectedAssertions), "FailureCount");
-            Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));
-            Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName));
-
-            if (actualAssertions > 0)
-            {
-                Assert.That(result.Message, Contains.Substring(
-                    string.Format("Multiple Assert block had {0} failure(s).", actualAssertions - 1)));
-
-                int i = 0;
-                foreach (var failure in result.AssertionResults)
-                {
-                    // Since the order of argument evaluation is not guaranteed, we don't
-                    // want 'i' to appear more than once in the Assert statement.
-                    string errmsg = string.Format("AssertionResult {0}", i + 1);
-                    Assert.That(failure.Message, Does.Match(messageRegex[i++]), errmsg);
-                    Assert.That(result.Message, Contains.Substring(failure.Message),
-                        "Failure message should contain AssertionResult message");
-
-#if !PORTABLE
-                    // NOTE: This test expects the stack trace to contain the name of the method 
-                    // that actually caused the failure. To ensure it is not optimized away, we
-                    // compile the testdata assembly with optimizations disabled.
-                    Assert.That(failure.StackTrace, Is.Not.Null.And.Contains(methodName));
-#endif
-                }
-            }
+            return result;
         }
     }
 
@@ -147,6 +136,7 @@ namespace NUnit.Framework.Assertions.Tests
         private static readonly ComplexNumber _complex = new ComplexNumber(5.2, 3.9);
 
         [Test]
+        // Shows multiple failures including one from Assert.Fail
         public void MultipleAssertFailureDemo()
         {
             Assert.Multiple(() =>
@@ -158,6 +148,7 @@ namespace NUnit.Framework.Assertions.Tests
         }
 
         [Test]
+        // Shows two failures followed by an exception
         public void MultipleAssertErrorDemo()
         {
             Assert.Multiple(() =>

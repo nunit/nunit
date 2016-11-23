@@ -209,10 +209,7 @@ namespace NUnit.TestData.AssertMultipleData
                 });
             });
         }
-    }
 
-    public class AssertMultipleErrorFixture
-    {
         [Test]
         public void ExceptionThrown()
         {
@@ -230,6 +227,24 @@ namespace NUnit.TestData.AssertMultipleData
                 Assert.AreEqual(5, 2 + 2, "Failure 1");
                 Assert.True(1 == 0, "Failure 2");
                 throw new Exception("Simulated Error");
+            });
+        }
+
+        [Test]
+        public void AssertPassInBlock()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Pass("Message from Assert.Pass");
+            });
+        }
+
+        [Test]
+        public void AssertIgnoreInBlock()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Ignore("Message from Assert.Ignore");
             });
         }
     }
