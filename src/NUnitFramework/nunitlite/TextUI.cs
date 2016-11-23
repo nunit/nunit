@@ -489,6 +489,11 @@ namespace NUnitLite
             string reportID = (++_reportIndex).ToString();
             int numAsserts = result.AssertionResults.Count;
 
+#if PORTABLE
+            ColorStyle style = GetColorStyle(resultState);
+            string status = GetResultStatus(resultState);
+            DisplayTestResult(style, reportID, status, fullName, message, stackTrace);
+#else
             if (numAsserts > 0)
             {
                 int assertionCounter = 0;
@@ -508,6 +513,7 @@ namespace NUnitLite
                 string status = GetResultStatus(resultState);
                 DisplayTestResult(style, reportID, status, fullName, message, stackTrace);
             }
+#endif
         }
 
         private void DisplayTestResult(ColorStyle style, string prefix, string status, string fullName, string message, string stackTrace)
@@ -646,6 +652,6 @@ namespace NUnitLite
             _testCreatedOutput = true;
         }
 
-        #endregion
+#endregion
     }
 }

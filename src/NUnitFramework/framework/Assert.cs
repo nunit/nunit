@@ -140,8 +140,6 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Fail(string message, params object[] args)
         {
-            IncrementAssertCount();
-
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
@@ -357,6 +355,8 @@ namespace NUnit.Framework
             string stackTrace = null;
 
 #if PORTABLE
+            // TODO: This isn't actually working! Since we catch it right here,
+            // the stack trace only has one entry.
             try
             {
                 // Throw to get stack trace for recording the assertion

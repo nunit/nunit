@@ -227,8 +227,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.Fail("Failure 1");
-                Assert.Fail("Failure 2");
+                Assert.AreEqual(5, 2 + 2, "Failure 1");
+                Assert.True(1 == 0, "Failure 2");
                 throw new Exception("Simulated Error");
             });
         }

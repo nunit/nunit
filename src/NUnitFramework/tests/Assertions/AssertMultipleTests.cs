@@ -61,8 +61,8 @@ namespace NUnit.Framework.Assertions.Tests
         [TestCase("NestedBlock_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
         [TestCase("TwoNestedBlocks_FirstAssertFails", 3, "Expected: 5")]
         [TestCase("TwoNestedBlocks_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
-        [TestCase("MethodCallsFail", 1, "Message from Assert.Fail")]
-        [TestCase("MethodCallsFailAfterTwoAssertsFail", 3, "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
+        [TestCase("MethodCallsFail", 0, "Message from Assert.Fail")]
+        [TestCase("MethodCallsFailAfterTwoAssertsFail", 2, "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
         public void AssertMultipleFails(string methodName, int asserts, params string[] failureMessageRegex)
         {
             var result = TestBuilder.RunTestCase(typeof(AssertMultipleFailureFixture), methodName);
@@ -80,19 +80,20 @@ namespace NUnit.Framework.Assertions.Tests
                     string.Format("Multiple Assert block had {0} failure(s)", actualFailures)));
 
                 int i = 0;
-                foreach (var failure in result.AssertionResults)
+                foreach (var assertion in result.AssertionResults)
                 {
                     // Since the order of argument evaluation is not guaranteed, we don't
                     // want 'i' to appear more than once in the Assert statement.
                     string errmsg = string.Format("AssertionResult {0}", i + 1);
-                    Assert.That(failure.Message, Does.Match(failureMessageRegex[i++]), errmsg);
-                    Assert.That(result.Message, Contains.Substring(failure.Message),
-                        "Failure message should contain AssertionResult message");
+                    Assert.That(assertion.Message, Does.Match(failureMessageRegex[i++]), errmsg);
+                    Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
+#if !PORTABLE
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
-                    Assert.That(failure.StackTrace, Is.Not.Null.And.Contains(methodName));
+                    Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
+#endif
                 }
 
                 Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName));
@@ -100,7 +101,7 @@ namespace NUnit.Framework.Assertions.Tests
         }
 
         [TestCase("ExceptionThrown", 0)]
-        [TestCase("ExceptionThrownAfterTwoFailures", 2, "Failure 1", "Failure 2")]
+        [TestCase("ExceptionThrownAfterTwoFailures", 2, "Failure 1", "Failure 2", "Simulated Error")]
         public void AssertMultipleErrorTests(string methodName, int asserts, params string[] messageRegex)
         {
             var result = TestBuilder.RunTestCase(typeof(AssertMultipleErrorFixture), methodName);
@@ -108,16 +109,16 @@ namespace NUnit.Framework.Assertions.Tests
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
             Assert.That(result.AssertCount, Is.EqualTo(asserts), "AssertCount");
 
-            int expectedFailures = messageRegex.Length;
-            int actualFailures = result.AssertionResults.Count;
-            Assert.That(actualFailures, Is.EqualTo(expectedFailures), "FailureCount");
+            int expectedAssertions = messageRegex.Length;
+            int actualAssertions = result.AssertionResults.Count;
+            Assert.That(actualAssertions, Is.EqualTo(expectedAssertions), "FailureCount");
             Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));
             Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName));
 
-            if (actualFailures > 0)
+            if (actualAssertions > 0)
             {
                 Assert.That(result.Message, Contains.Substring(
-                    string.Format("Exception in Multiple Assert block with pending failure(s).", actualFailures)));
+                    string.Format("Multiple Assert block had {0} failure(s).", actualAssertions - 1)));
 
                 int i = 0;
                 foreach (var failure in result.AssertionResults)
@@ -129,10 +130,12 @@ namespace NUnit.Framework.Assertions.Tests
                     Assert.That(result.Message, Contains.Substring(failure.Message),
                         "Failure message should contain AssertionResult message");
 
+#if !PORTABLE
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
                     Assert.That(failure.StackTrace, Is.Not.Null.And.Contains(methodName));
+#endif
                 }
             }
         }
