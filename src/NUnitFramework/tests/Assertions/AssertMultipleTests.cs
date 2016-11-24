@@ -97,6 +97,13 @@ namespace NUnit.Framework.Assertions.Tests
             Assert.That(result.Message, Contains.Substring("Assert.Inconclusive may not be used in a multiple assertion block."));
         }
 
+        [Test]
+        public void AssumptionInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssumptionInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assume.That may not be used in a multiple assertion block."));
+        }
+
         private ITestResult CheckResult(string methodName, ResultState expectedResultState, params string[] assertionMessageRegex)
         {
             ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);

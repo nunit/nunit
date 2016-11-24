@@ -251,6 +251,15 @@ namespace NUnit.TestData.AssertMultipleData
                 Assert.Inconclusive("Message from Assert.Inconclusive");
             });
         }
+
+        [Test]
+        public void AssumptionInBlock()
+        {
+            Assert.Multiple(() =>
+            {
+                Assume.That(2 + 2 == 4);
+            });
+        }
     }
 
     class ComplexNumber
