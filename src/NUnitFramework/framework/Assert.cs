@@ -228,6 +228,10 @@ namespace NUnit.Framework
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
 
+            // If we are in a multiple assert block, this is an error
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                throw new Exception("Assert.Inconclusive may not be used in a multiple assertion block.");
+
             throw new InconclusiveException(message);
         }
 
@@ -332,16 +336,8 @@ namespace NUnit.Framework
         {
             MessageWriter writer = new TextMessageWriter(message, args);
             result.WriteMessageTo(writer);
-            string formattedMessage = writer.ToString();
-            string stackTrace = GetStackTrace();
 
-            // Failure is recorded in <assertion> element in all cases
-            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
-                AssertionStatus.Failed, formattedMessage, stackTrace);
-
-            // If we are outside any multiple assert block, then throw
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
-                throw new AssertionException(formattedMessage);
+            ReportFailure(writer.ToString());
         }
 
         private static void ReportFailure(string message)

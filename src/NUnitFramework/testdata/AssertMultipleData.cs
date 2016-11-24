@@ -5,7 +5,11 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.AssertMultipleData
 {
-    public class AssertMultipleSuccessFixture
+    // NOTE: Some of these methods were getting optimized out of
+    // existence in the .NET 2.0 AppVeyor build. For that reason,
+    // we turned optimization off for the testdata assembly.
+
+    public class AssertMultipleFixture
     {
         private static readonly ComplexNumber complex = new ComplexNumber(5.2, 3.9);
 
@@ -16,7 +20,7 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
-        public void SingleAssert()
+        public void SingleAssertSucceeds()
         {
             Assert.Multiple(() =>
             {
@@ -25,7 +29,7 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
-        public void TwoAsserts()
+        public void TwoAssertsSucceed()
         {
             Assert.Multiple(() =>
             {
@@ -35,7 +39,7 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
-        public void ThreeAsserts()
+        public void ThreeAssertsSucceed()
         {
             Assert.Multiple(() =>
             {
@@ -46,7 +50,7 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
-        public void NestedBlock()
+        public void NestedBlock_ThreeAssertsSucceed()
         {
             Assert.Multiple(() =>
             {
@@ -61,7 +65,7 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
-        public void TwoNestedBlocks()
+        public void TwoNestedBlocks_ThreeAssertsSucceed()
         {
             Assert.Multiple(() =>
             {
@@ -81,18 +85,9 @@ namespace NUnit.TestData.AssertMultipleData
         [Test]
         public void NestedBlocksInMethodCalls()
         {
-            SingleAssert();
-            TwoAsserts();
+            SingleAssertSucceeds();
+            TwoAssertsSucceed();
         }
-    }
-
-    public class AssertMultipleFailureFixture
-    {
-        // NOTE: Some of these methods were getting optimized out of
-        // existence in the .NET 2.0 AppVeyor build. For that reason,
-        // we turned optimization off for the testdata assembly.
-
-        private static readonly ComplexNumber complex = new ComplexNumber(5.2, 3.9);
 
         [Test]
         public void MethodCallsFail()
@@ -245,6 +240,15 @@ namespace NUnit.TestData.AssertMultipleData
             Assert.Multiple(() =>
             {
                 Assert.Ignore("Message from Assert.Ignore");
+            });
+        }
+
+        [Test]
+        public void AssertInconclusiveInBlock()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Inconclusive("Message from Assert.Inconclusive");
             });
         }
     }

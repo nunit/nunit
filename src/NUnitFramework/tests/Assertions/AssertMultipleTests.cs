@@ -39,15 +39,15 @@ namespace NUnit.Framework.Assertions.Tests
         }
 
         [TestCase("EmptyBlock", 0)]
-        [TestCase("SingleAssert", 1)]
-        [TestCase("TwoAsserts", 2)]
-        [TestCase("ThreeAsserts", 3)]
-        [TestCase("NestedBlock", 3)]
-        [TestCase("TwoNestedBlocks", 3)]
+        [TestCase("SingleAssertSucceeds", 1)]
+        [TestCase("TwoAssertsSucceed", 2)]
+        [TestCase("ThreeAssertsSucceed", 3)]
+        [TestCase("NestedBlock_ThreeAssertsSucceed", 3)]
+        [TestCase("TwoNestedBlocks_ThreeAssertsSucceed", 3)]
         [TestCase("NestedBlocksInMethodCalls", 3)]
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
-            var result = TestBuilder.RunTestCase(typeof(AssertMultipleSuccessFixture), methodName);
+            var result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.AssertCount, Is.EqualTo(asserts));
@@ -73,7 +73,6 @@ namespace NUnit.Framework.Assertions.Tests
         public void AssertMultipleErrorTests(string methodName, params string[] assertionMessageRegex)
         {
             ITestResult result = CheckResult(methodName, ResultState.Error, assertionMessageRegex);
-
             Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));//
         }
 
@@ -91,9 +90,16 @@ namespace NUnit.Framework.Assertions.Tests
             Assert.That(result.Message, Contains.Substring("Assert.Ignore may not be used in a multiple assertion block."));
         }
 
+        [Test]
+        public void AssertInconclusiveInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssertInconclusiveInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assert.Inconclusive may not be used in a multiple assertion block."));
+        }
+
         private ITestResult CheckResult(string methodName, ResultState expectedResultState, params string[] assertionMessageRegex)
         {
-            ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFailureFixture), methodName);
+            ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
 
             Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
             Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
