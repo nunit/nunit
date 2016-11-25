@@ -27,7 +27,7 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var WindowsFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "portable" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard16", "portable" };
 
 var LinuxFrameworks = new string[] {
     "net-4.5", "net-4.0", "net-3.5", "net-2.0" };
@@ -59,13 +59,32 @@ var NUNITLITE_RUNNER = "nunitlite-runner.exe";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var EXECUTABLE_FRAMEWORK_TESTS = "nunit.framework.tests.exe";
-var NUNITLITE_TESTS = "nunitlite.tests.dll";
 var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 
 // Packages
 var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
+
+bool isDotNetCoreInstalled = false;
+
+var packages = new string[]{
+    "src/NUnitFramework/framework/packages.config",
+    "src/NUnitFramework/nunitlite/packages.config",
+    "src/NUnitFramework/nunitlite.tests/packages.config",
+    "src/NUnitFramework/testdata/packages.config",
+    "src/NUnitFramework/tests/packages.config",
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// SETUP / TEARDOWN
+///////////////////////////////////////////////////////////////////////////////
+
+Setup(context =>
+{
+    Information("Building version {0} of NUnit.", packageVersion);
+
+    isDotNetCoreInstalled = CheckIfDotNetCoreInstalled();
+});
 
 //////////////////////////////////////////////////////////////////////
 // CLEAN
@@ -87,10 +106,24 @@ Task("InitializeBuild")
     .Description("Initializes the build")
     .Does(() =>
     {
-        NuGetRestore(SOLUTION_FILE, new NuGetRestoreSettings()
+        foreach(var package in packages)
         {
-            Source = PACKAGE_SOURCE
-        });
+            Information("Restoring NuGet package " + package);
+            NuGetRestore(package, new NuGetRestoreSettings
+            {
+                PackagesDirectory = "./packages/",
+                Source = PACKAGE_SOURCE
+            });
+        }
+
+        if(isDotNetCoreInstalled)
+        {
+            Information("Restoring .NET Core packages");
+            StartProcess("dotnet", new ProcessSettings
+            {
+                Arguments = "restore"
+            });
+        }
 
         if (isAppveyor)
         {
@@ -193,6 +226,25 @@ Task("Build20")
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-2.0.csproj", configuration);
     });
 
+Task("BuildNetStandard")
+    .Description("Builds the .NET Standard version of the framework")
+    .WithCriteria(IsRunningOnWindows())
+    .Does(() =>
+    {
+        if(!isDotNetCoreInstalled)
+        {
+            Warning(".NET Standard was not built because .NET Core SDK is not installed");
+            return;
+        }
+        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
+    });
+
 Task("BuildPortable")
     .Description("Builds the PCL version of the framework")
     .WithCriteria(IsRunningOnWindows())
@@ -265,6 +317,24 @@ Task("Test20")
         var dir = BIN_DIR + runtime + "/";
         RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+    });
+
+Task("TestNetStandard")
+    .Description("Tests the .NET Standard version of the framework")
+    .WithCriteria(IsRunningOnWindows())
+    .IsDependentOn("BuildNetStandard")
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
+    .Does(() =>
+    {
+        if(!isDotNetCoreInstalled)
+        {
+            Warning(".NET Standard was not tested because .NET Core SDK is not installed");
+            return;
+        }
+        var runtime = "netstandard16";
+        var dir = BIN_DIR + runtime + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
 Task("TestPortable")
@@ -392,6 +462,7 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net-3.5/*.*") +
             GetFiles(currentImageDir + "bin/net-4.0/*.*") +
             GetFiles(currentImageDir + "bin/net-4.5/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard16/*.*") +
             GetFiles(currentImageDir + "bin/portable/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
@@ -418,6 +489,24 @@ Teardown(context => CheckForError(ref ErrorDetail));
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
+
+bool CheckIfDotNetCoreInstalled()
+{
+    try
+    {
+        Information("Checking if .NET Core SDK is installed");
+        StartProcess("dotnet", new ProcessSettings
+        {
+            Arguments = "--version"
+        });
+    }
+    catch(Exception)
+    {
+        Warning(".NET Core SDK is not installed. It can be installed from https://www.microsoft.com/net/core");
+        return false;
+    }
+    return true;
+}
 
 void RunGitCommand(string arguments)
 {
@@ -483,6 +572,27 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
+void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
+{
+    RunDotnetCoreTests(exePath, workingDir, null, framework, ref errorDetail);
+}
+
+void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
+{
+    int rc = StartProcess(
+        "dotnet",
+        new ProcessSettings()
+        {
+            Arguments = exePath + " " + arguments,
+            WorkingDirectory = workingDir
+        });
+
+    if (rc > 0)
+        errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
+    else if (rc < 0)
+        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+}
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
@@ -499,6 +609,7 @@ Task("Build")
     .IsDependentOn("Build40")
     .IsDependentOn("Build35")
     .IsDependentOn("Build20")
+    .IsDependentOn("BuildNetStandard")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
     .IsDependentOn("BuildPortable");
 
@@ -509,6 +620,7 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
+    .IsDependentOn("TestNetStandard")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
     .IsDependentOn("TestPortable");
 

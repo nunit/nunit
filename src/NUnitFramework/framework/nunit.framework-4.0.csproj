@@ -422,5 +422,6 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
+    <None Include="nunit.framework-4.0.project.json" />
   </ItemGroup>
 </Project>

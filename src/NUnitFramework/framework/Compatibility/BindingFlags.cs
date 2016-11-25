@@ -1,4 +1,4 @@
-﻿#if PORTABLE
+﻿#if PORTABLE && !NETSTANDARD1_6
 using System;
 
 namespace NUnit.Compatibility

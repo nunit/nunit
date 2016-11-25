@@ -337,6 +337,7 @@
       <Link>nunit.snk</Link>
     </None>
     <None Include="app.config" />
+    <None Include="nunit.framework.tests-4.0.project.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

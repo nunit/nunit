@@ -303,6 +303,7 @@
       <Link>nunit.snk</Link>
     </None>
     <None Include="app.config" />
+    <None Include="nunit.framework.tests-portable.project.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
