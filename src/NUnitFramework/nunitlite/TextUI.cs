@@ -489,7 +489,7 @@ namespace NUnitLite
             string reportID = (++_reportIndex).ToString();
             int numAsserts = result.AssertionResults.Count;
 
-#if PORTABLE
+#if PORTABLE && !NETSTANDARD1_6
             ColorStyle style = GetColorStyle(resultState);
             string status = GetResultStatus(resultState);
             DisplayTestResult(style, reportID, status, fullName, message, stackTrace);

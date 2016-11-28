@@ -110,7 +110,7 @@ namespace NUnit.Framework.Assertions.Tests
 
             Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
             Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
-            Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName));
+            Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
 
             if (result.AssertionResults.Count > 0)
             {
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Assertions.Tests
                     Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
                     Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
-#if !PORTABLE
+#if !PORTABLE || NETSTANDARD1_6
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.

@@ -358,7 +358,7 @@ namespace NUnit.Framework
         {
             string stackTrace = null;
 
-#if PORTABLE
+#if PORTABLE && !NETSTANDARD1_6
             // TODO: This isn't actually working! Since we catch it right here,
             // the stack trace only has one entry.
             try
