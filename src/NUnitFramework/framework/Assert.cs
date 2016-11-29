@@ -104,6 +104,10 @@ namespace NUnit.Framework
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
 
+            // If we are in a multiple assert block, this is an error
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
+
             throw new SuccessException(message);
         }
 
@@ -144,7 +148,7 @@ namespace NUnit.Framework
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
 
-            throw new AssertionException(message);
+            ReportFailure(message);
         }
 
         /// <summary>
@@ -181,6 +185,10 @@ namespace NUnit.Framework
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
+
+            // If we are in a multiple assert block, this is an error
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                throw new Exception("Assert.Ignore may not be used in a multiple assertion block.");
 
             throw new IgnoreException(message);
         }
@@ -219,6 +227,10 @@ namespace NUnit.Framework
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
                 message = string.Format(message, args);
+
+            // If we are in a multiple assert block, this is an error
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                throw new Exception("Assert.Inconclusive may not be used in a multiple assertion block.");
 
             throw new InconclusiveException(message);
         }
@@ -324,16 +336,19 @@ namespace NUnit.Framework
         {
             MessageWriter writer = new TextMessageWriter(message, args);
             result.WriteMessageTo(writer);
-            string formattedMessage = writer.ToString();
-            string stackTrace = GetStackTrace();
 
+            ReportFailure(writer.ToString());
+        }
+
+        private static void ReportFailure(string message)
+        {
             // Failure is recorded in <assertion> element in all cases
             TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
-                AssertionStatus.Failed, formattedMessage, stackTrace);
+                AssertionStatus.Failed, message, GetStackTrace());
 
             // If we are outside any multiple assert block, then throw
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
-                throw new AssertionException(formattedMessage);
+                throw new AssertionException(message);
         }
 
         // System.Envionment.StackTrace puts extra entries on top of the stack, at least in some environments
@@ -343,7 +358,9 @@ namespace NUnit.Framework
         {
             string stackTrace = null;
 
-#if PORTABLE
+#if PORTABLE && !NETSTANDARD1_6
+            // TODO: This isn't actually working! Since we catch it right here,
+            // the stack trace only has one entry.
             try
             {
                 // Throw to get stack trace for recording the assertion

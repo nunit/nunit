@@ -30,87 +30,158 @@ namespace NUnit.Framework.Assertions.Tests
 {
     public class AssertMultipleTests
     {
-        private static readonly ComplexNumber number = new ComplexNumber(5.2, 3.9);
+        private static readonly ComplexNumber _complex = new ComplexNumber(5.2, 3.9);
+
+        [OneTimeSetUp]
+        public void CreateSampleFile()
+        {
+
+        }
 
         [TestCase("EmptyBlock", 0)]
-        [TestCase("SingleAssert", 1)]
-        [TestCase("TwoAsserts", 2)]
-        [TestCase("ThreeAsserts", 3)]
-        [TestCase("NestedBlock", 3)]
-        [TestCase("TwoNestedBlocks", 3)]
+        [TestCase("SingleAssertSucceeds", 1)]
+        [TestCase("TwoAssertsSucceed", 2)]
+        [TestCase("ThreeAssertsSucceed", 3)]
+        [TestCase("NestedBlock_ThreeAssertsSucceed", 3)]
+        [TestCase("TwoNestedBlocks_ThreeAssertsSucceed", 3)]
         [TestCase("NestedBlocksInMethodCalls", 3)]
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
-            var result = TestBuilder.RunTestCase(typeof(AssertMultipleSuccessFixture), methodName);
+            var result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.AssertCount, Is.EqualTo(asserts));
             Assert.IsEmpty(result.AssertionResults);
         }
 
-        [TestCase("TwoAsserts_FirstAssertFails", 2, "RealPart")]
-        [TestCase("TwoAsserts_SecondAssertFails", 2, "ImaginaryPart")]
-        [TestCase("TwoAsserts_BothAssertsFail", 2, "RealPart", "ImaginaryPart")]
-        [TestCase("NestedBlock_FirstAssertFails", 3, "Expected: 5")]
-        [TestCase("NestedBlock_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
-        [TestCase("TwoNestedBlocks_FirstAssertFails", 3, "Expected: 5")]
-        [TestCase("TwoNestedBlocks_TwoAssertsFail", 3, "Expected: 5", "ImaginaryPart")]
-        public void AssertMultipleFails(string methodName, int asserts, params string[] failureMessageRegex)
+        [TestCase("TwoAsserts_FirstAssertFails", "RealPart")]
+        [TestCase("TwoAsserts_SecondAssertFails", "ImaginaryPart")]
+        [TestCase("TwoAsserts_BothAssertsFail", "RealPart", "ImaginaryPart")]
+        [TestCase("NestedBlock_FirstAssertFails", "Expected: 5")]
+        [TestCase("NestedBlock_TwoAssertsFail", "Expected: 5", "ImaginaryPart")]
+        [TestCase("TwoNestedBlocks_FirstAssertFails", "Expected: 5")]
+        [TestCase("TwoNestedBlocks_TwoAssertsFail", "Expected: 5", "ImaginaryPart")]
+        [TestCase("MethodCallsFail", "Message from Assert.Fail")]
+        [TestCase("MethodCallsFailAfterTwoAssertsFail", "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
+        public void AssertMultipleFails(string methodName, params string[] assertionMessageRegex)
         {
-            var result = TestBuilder.RunTestCase(typeof(AssertMultipleFailureFixture), methodName);
+            CheckResult(methodName, ResultState.Failure, assertionMessageRegex);
+        }
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.AssertCount, Is.EqualTo(asserts), "AssertCount");
+        [TestCase("ExceptionThrown")]
+        [TestCase("ExceptionThrownAfterTwoFailures", "Failure 1", "Failure 2", "Simulated Error")]
+        public void AssertMultipleErrorTests(string methodName, params string[] assertionMessageRegex)
+        {
+            ITestResult result = CheckResult(methodName, ResultState.Error, assertionMessageRegex);
+            Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));//
+        }
 
-            int expectedFailures = failureMessageRegex.Length;
-            int actualFailures = result.AssertionResults.Count;
-            Assert.That(actualFailures, Is.EqualTo(expectedFailures), "FailureCount");
+        [Test]
+        public void AssertPassInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssertPassInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assert.Pass may not be used in a multiple assertion block."));
+        }
 
-            if (actualFailures > 0)
+        [Test]
+        public void AssertIgnoreInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssertIgnoreInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assert.Ignore may not be used in a multiple assertion block."));
+        }
+
+        [Test]
+        public void AssertInconclusiveInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssertInconclusiveInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assert.Inconclusive may not be used in a multiple assertion block."));
+        }
+
+        [Test]
+        public void AssumptionInBlockThrowsException()
+        {
+            ITestResult result = CheckResult("AssumptionInBlock", ResultState.Error);
+            Assert.That(result.Message, Contains.Substring("Assume.That may not be used in a multiple assertion block."));
+        }
+
+        private ITestResult CheckResult(string methodName, ResultState expectedResultState, params string[] assertionMessageRegex)
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
+
+            Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
+            Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
+            Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
+
+            if (result.AssertionResults.Count > 0)
             {
+                int numFailures = result.AssertionResults.Count;
+                if (expectedResultState == ResultState.Error)
+                    --numFailures;
+
                 Assert.That(result.Message, Contains.Substring(
-                    string.Format("Multiple Assert block had {0} failure(s)", actualFailures)));
+                    string.Format("Multiple Assert block had {0} failure(s).", numFailures)));//
 
                 int i = 0;
-                foreach (var failure in result.AssertionResults)
+                foreach (var assertion in result.AssertionResults)
                 {
                     // Since the order of argument evaluation is not guaranteed, we don't
                     // want 'i' to appear more than once in the Assert statement.
                     string errmsg = string.Format("AssertionResult {0}", i + 1);
-                    Assert.That(failure.Message, Does.Match(failureMessageRegex[i++]), errmsg);
-                    Assert.That(result.Message, Contains.Substring(failure.Message),
-                        "Failure message should contain AssertionResult message");
+                    Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
+                    Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
+#if !PORTABLE || NETSTANDARD1_6
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
-                    Assert.That(failure.StackTrace, Is.Not.Null.And.Contains(methodName));
+                    Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
+#endif
                 }
-
-                Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName));
             }
-        }
 
-        [Test, Explicit("Used to display error message for visual confirmation")]
+            return result;
+        }
+    }
+
+    [Explicit("Used to display error messages for visual confirmation")]
+    public class MultipleAssertDemo
+    {
+        private static readonly ComplexNumber _complex = new ComplexNumber(5.2, 3.9);
+
+        [Test]
+        // Shows multiple failures including one from Assert.Fail
         public void MultipleAssertFailureDemo()
         {
             Assert.Multiple(() =>
             {
-                Assert.That(number.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(number.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(_complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(_complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.Fail("Assert.Fail Called");
             });
         }
 
-        private class ComplexNumber
+        [Test]
+        // Shows two failures followed by an exception
+        public void MultipleAssertErrorDemo()
         {
-            public ComplexNumber(double realPart, double imaginaryPart)
+            Assert.Multiple(() =>
             {
-                RealPart = realPart;
-                ImaginaryPart = imaginaryPart;
-            }
-
-            public double RealPart;
-            public double ImaginaryPart;
+                Assert.That(_complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(_complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                throw new Exception("Simulated Error");
+            });
         }
+    }
+
+    internal class ComplexNumber
+    {
+        public ComplexNumber(double realPart, double imaginaryPart)
+        {
+            RealPart = realPart;
+            ImaginaryPart = imaginaryPart;
+        }
+
+        public double RealPart;
+        public double ImaginaryPart;
     }
 }
