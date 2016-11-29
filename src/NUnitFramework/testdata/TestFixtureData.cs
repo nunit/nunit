@@ -482,7 +482,7 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {
