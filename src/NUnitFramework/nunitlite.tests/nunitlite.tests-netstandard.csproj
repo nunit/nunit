@@ -67,12 +67,6 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
-    <Compile Include="..\nunitlite\ColorConsole.cs">
-      <Link>ColorConsole.cs</Link>
-    </Compile>
-    <Compile Include="..\nunitlite\ColorConsoleWriter.cs">
-      <Link>ColorConsoleWriter.cs</Link>
-    </Compile>
     <Compile Include="..\TestBuilder.cs">
       <Link>TestUtilities\TestBuilder.cs</Link>
     </Compile>

@@ -65,7 +65,7 @@ namespace NUnit.TestUtilities
             }
 
             // HACK! Only way I can figure out to avoid having two copies of TestFile
-            _resourceName = GetType().Assembly.GetName().Name.Contains("nunitlite")
+            _resourceName = GetType().GetTypeInfo().Assembly.GetName().Name.Contains("nunitlite")
                 ? "NUnitLite.Tests." + contentSource
                 : "NUnit.Framework.Tests." + contentSource;
             _fileLength = 0L;

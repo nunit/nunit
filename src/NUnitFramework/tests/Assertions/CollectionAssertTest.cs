@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 using System.Data;
 #endif
 

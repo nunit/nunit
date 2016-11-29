@@ -25,8 +25,10 @@
 #if !PORTABLE
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Compatibility;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -44,7 +46,7 @@ namespace NUnit.Framework.Tests
         // different runtimes, so we now look only at the relative position
         // of before and after actions with respect to the test.
 
-        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture).Assembly);
+        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture).GetTypeInfo().Assembly);
         private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
         private ITestResult _result = null;

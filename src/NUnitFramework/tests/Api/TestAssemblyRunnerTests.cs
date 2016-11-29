@@ -419,7 +419,7 @@ namespace NUnit.Framework.Api
 
         private ITest LoadMockAssembly()
         {
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
             return _runner.Load(
                 typeof(MockAssembly).GetTypeInfo().Assembly, 
                 EMPTY_SETTINGS);
@@ -432,7 +432,7 @@ namespace NUnit.Framework.Api
 
         private ITest LoadSlowTests()
         {
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
             return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly, EMPTY_SETTINGS);
 #else
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);

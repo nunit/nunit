@@ -33,6 +33,14 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
+#if PORTABLE || NETSTANDARD1_6
+        const string UriSchemeFile = "file";
+        const string SchemeDelimiter = "://";
+#else
+        const string UriSchemeFile = Uri.UriSchemeFile;
+        const string SchemeDelimiter = Uri.SchemeDelimiter;
+#endif
+
         #region GetAssemblyPath
 
         /// <summary>
@@ -44,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if PORTABLE || NETSTANDARD1_6
+#if PORTABLE
             return assembly.ManifestModule.FullyQualifiedName;
 #else
             string codeBase = assembly.CodeBase;
@@ -94,7 +102,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if PORTABLE || NETSTANDARD1_6
+#if PORTABLE
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
         /// </summary>
@@ -135,10 +143,9 @@ namespace NUnit.Framework.Internal
 
         #region Helper Methods
 
-#if !PORTABLE && !NETSTANDARD1_6
         private static bool IsFileUri(string uri)
         {
-            return uri.ToLower().StartsWith(Uri.UriSchemeFile);
+            return uri.ToLower().StartsWith(UriSchemeFile);
         }
 
         /// <summary>
@@ -150,7 +157,7 @@ namespace NUnit.Framework.Internal
         public static string GetAssemblyPathFromCodeBase(string codeBase)
         {
             // Skip over the file:// part
-            int start = Uri.UriSchemeFile.Length + Uri.SchemeDelimiter.Length;
+            int start = UriSchemeFile.Length + SchemeDelimiter.Length;
 
             if (codeBase[start] == '/') // third slash means a local path
             {
@@ -167,7 +174,6 @@ namespace NUnit.Framework.Internal
 
             return codeBase.Substring(start);
         }
-#endif
 
         #endregion
     }

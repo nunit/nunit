@@ -37,7 +37,7 @@ namespace NUnit.Framework.Tests
 
         private string _name;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         private string _testDirectory;
 #endif
         private string _workDirectory;
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Tests
         {
             _name = TestContext.CurrentContext.Test.Name;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             _testDirectory = TestContext.CurrentContext.TestDirectory;
 #endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Tests
             _setupContext = TestContext.CurrentContext;
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void ConstructorCanAccessTestDirectory()
         {
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             Assert.That(context.TestDirectory, Is.Not.Null);
             Assert.That(context.WorkDirectory, Is.Not.Null);
 #endif

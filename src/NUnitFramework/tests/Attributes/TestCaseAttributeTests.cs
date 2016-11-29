@@ -301,7 +301,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void CanIncludePlatform()
         {

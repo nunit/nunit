@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
         TestExecutionContext fixtureContext;
         TestExecutionContext setupContext;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         string originalDirectory;
         IPrincipal originalPrincipal;
 #endif
@@ -74,12 +74,12 @@ namespace NUnit.Framework.Internal
         public void Initialize()
         {
             setupContext = new TestExecutionContext(TestExecutionContext.CurrentContext);
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             originalDirectory = Environment.CurrentDirectory;
             originalPrincipal = Thread.CurrentPrincipal;
 #endif
@@ -88,12 +88,12 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             Environment.CurrentDirectory = originalDirectory;
             Thread.CurrentPrincipal = originalPrincipal;
 #endif
@@ -196,7 +196,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void TestHasWorkerIdWhenParallel()
         {
@@ -217,7 +217,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentCulture and CurrentUICulture
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         CultureInfo originalCulture;
         CultureInfo originalUICulture;
 
@@ -309,7 +309,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentPrincipal
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void FixtureSetUpContextReflectsCurrentPrincipal()
         {
@@ -439,7 +439,7 @@ namespace NUnit.Framework.Internal
 
         #region Cross-domain Tests
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void CanCreateObjectInAppDomain()
         {
@@ -464,7 +464,7 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [TestFixture]
     public class TextExecutionContextInAppDomain
     {

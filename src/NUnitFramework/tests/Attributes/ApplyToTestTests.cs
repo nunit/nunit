@@ -353,7 +353,7 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void PlatformAttributeRunsTest()
         {
@@ -411,7 +411,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 
         #region RequiresMTAAttribute
 
@@ -476,7 +476,7 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
