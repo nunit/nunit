@@ -153,8 +153,13 @@ namespace NUnit.Framework.Api
                 {
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory) 
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory] 
-                        : Environment.CurrentDirectory;
-                    var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
+                        : Directory.GetCurrentDirectory();
+#if NETSTANDARD1_6
+                    var id = DateTime.Now.ToString("o");
+#else      
+                    var id = Process.GetCurrentProcess().Id;
+#endif
+                    var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
 #endif
@@ -396,7 +401,7 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
         }
 
-#if !PORTABLE || NETSTANDARD1_6
+#if !PORTABLE
         /// <summary>
         /// Inserts environment element
         /// </summary>

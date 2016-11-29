@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
     /// InvalidTestFixtureException is thrown when an appropriate test
     /// fixture constructor using the provided arguments cannot be found.
     /// </summary>
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [Serializable]
 #endif
     public class InvalidDataSourceException : Exception
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal
         public InvalidDataSourceException(string message, Exception inner) : base(message, inner)
         { }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Serialization Constructor
         /// </summary>

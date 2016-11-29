@@ -31,7 +31,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 using System.Runtime.Remoting.Messaging;
 using System.Security;
 using System.Security.Principal;
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal
     /// are called.
     /// </summary>
     public class TestExecutionContext
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         : LongLivedMarshalByRefObject, ILogicalThreadAffinative
 #endif
     {
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult _currentResult;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// The current Principal.
         /// </summary>
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = other.CurrentCulture;
             _currentUICulture = other.CurrentUICulture;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             _currentPrincipal = other.CurrentPrincipal;
 #endif
 
@@ -174,7 +174,7 @@ namespace NUnit.Framework.Internal
         // We create a new context, which is automatically
         // populated with values taken from the current thread.
 
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
         // In the Silverlight and portable builds, we use a ThreadStatic
         // field to hold the current TestExecutionContext.
 
@@ -197,6 +197,16 @@ namespace NUnit.Framework.Internal
             {
                 _currentContext = value;
             }
+        }
+
+        /// <summary>
+        /// Get the current context or return null if none is found.
+        /// </summary>
+        /// <remarks></remarks>
+        public static TestExecutionContext GetTestExecutionContext()
+        {
+            // TODO: Does this actually work now that there is no threading?
+            return _currentContext;
         }
 #else
         // In all other builds, we use the CallContext
@@ -415,7 +425,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
@@ -430,13 +440,13 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
@@ -475,7 +485,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -487,7 +497,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void EstablishExecutionEnvironment()
         {
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             Thread.CurrentThread.CurrentCulture = _currentCulture;
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             Thread.CurrentPrincipal = _currentPrincipal;
@@ -527,7 +537,7 @@ namespace NUnit.Framework.Internal
 
         #region InitializeLifetimeService
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Obtain lifetime service object
         /// </summary>

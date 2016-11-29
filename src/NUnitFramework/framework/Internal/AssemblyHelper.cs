@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
             return assembly.ManifestModule.FullyQualifiedName;
 #else
             string codeBase = assembly.CodeBase;
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
         /// </summary>
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Internal
 
         #region Helper Methods
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         private static bool IsFileUri(string uri)
         {
             return uri.ToLower().StartsWith(Uri.UriSchemeFile);

@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE;NETSTANDARD1_6</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NETSTANDARD1_6</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -33,7 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;PORTABLE;NETSTANDARD1_6</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NETSTANDARD1_6</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
+    <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraint.cs" />
+    <Compile Include="Constraints\Interval.cs" />
     <Compile Include="Constraints\IResolveConstraint.cs" />
     <Compile Include="Constraints\LessThanConstraint.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraint.cs" />

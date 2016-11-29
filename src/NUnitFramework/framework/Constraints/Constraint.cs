@@ -290,7 +290,7 @@ namespace NUnit.Framework.Constraints
 
         #region After Modifier
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Returns a DelayedConstraint.WithRawDelayInterval with the specified delay time.
         /// </summary>

@@ -41,6 +41,7 @@ namespace NUnit.Framework
         public RequiresThreadAttribute()
             : base(true) { }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Construct a RequiresThreadAttribute, specifying the apartment
         /// </summary>
@@ -49,6 +50,7 @@ namespace NUnit.Framework
         {
             this.Properties.Add(PropertyNames.ApartmentState, apartment);
         }
+#endif
 
         void IApplyToTest.ApplyToTest(Test test)
         {

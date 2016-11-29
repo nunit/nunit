@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal
     /// RuntimeFramework represents a particular version
     /// of a common language runtime implementation.
     /// </summary>
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [Serializable]
 #endif
     public sealed class RuntimeFramework

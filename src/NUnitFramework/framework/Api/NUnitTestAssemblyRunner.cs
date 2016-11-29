@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
 using System.Windows.Forms;
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             return _runComplete.WaitOne(timeout, false);
 #else
             return _runComplete.WaitOne(timeout);
@@ -290,7 +290,7 @@ namespace NUnit.Framework.Api
                 (bool)Settings[FrameworkPackageSettings.DebugTests])
                 System.Diagnostics.Debugger.Launch();
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -320,7 +320,7 @@ namespace NUnit.Framework.Api
 #if PORTABLE
                 Context.WorkDirectory = @"\My Documents";
 #else
-                Context.WorkDirectory = Environment.CurrentDirectory;
+                Context.WorkDirectory = Directory.GetCurrentDirectory();
 #endif
 
             // Apply attributes to the context
@@ -382,7 +382,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -396,6 +396,6 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#endregion
+        #endregion
     }
 }

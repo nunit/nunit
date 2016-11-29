@@ -20,7 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 using System;
 using System.Linq;
 
@@ -69,8 +69,8 @@ namespace NUnit.Framework.Internal
         /// Construct a PlatformHelper for a particular operating
         /// system and common language runtime. Used in testing.
         /// </summary>
-        /// <param name="os">OperatingSystem to be used</param>
         /// <param name="rt">RuntimeFramework to be used</param>
+        /// <param name="os">OperatingSystem to be used</param>
         public PlatformHelper( OSPlatform os, RuntimeFramework rt )
         {
             _os = os;
