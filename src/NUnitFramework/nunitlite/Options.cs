@@ -143,7 +143,7 @@ using System.Text.RegularExpressions;
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
 using NUnit.Compatibility;
 #else
 using System.Security.Permissions;
@@ -362,7 +362,7 @@ namespace Mono.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
             bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType && 
                 !tt.GetTypeInfo().IsGenericTypeDefinition && 
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
@@ -374,13 +374,13 @@ namespace Mono.Options
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 #endif
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -490,7 +490,7 @@ namespace Mono.Options
         }
     }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [Serializable]
 #endif
     public class OptionException : Exception
@@ -513,7 +513,7 @@ namespace Mono.Options
             this.option = optionName;
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -525,7 +525,7 @@ namespace Mono.Options
             get {return this.option;}
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {
@@ -539,23 +539,6 @@ namespace Mono.Options
 
     public class OptionSet : KeyedCollection<string, Option>
     {
-#if !PORTABLE
-        public OptionSet ()
-            : this (delegate (string f) {return f;})
-        {
-        }
-
-        public OptionSet (Converter<string, string> localizer)
-        {
-            this.localizer = localizer;
-        }
-
-        Converter<string, string> localizer;
-
-        public Converter<string, string> MessageLocalizer {
-            get {return localizer;}
-        }
-#else
         string localizer(string msg)
         {
             return msg;
@@ -565,7 +548,6 @@ namespace Mono.Options
         {
             return msg;
         }
-#endif
 
         protected override string GetKeyForItem (Option item)
         {

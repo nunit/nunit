@@ -34,6 +34,9 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+#if NETSTANDARD1_6
+using System.Runtime.InteropServices;
+#endif
 
 namespace NUnit.Framework.Api
 {
@@ -393,12 +396,31 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
         }
 
-#if !PORTABLE
+#if !PORTABLE || NETSTANDARD1_6
         /// <summary>
         /// Inserts environment element
         /// </summary>
         /// <param name="targetNode">Target node</param>
         /// <returns>The new node</returns>
+#if NETSTANDARD1_6
+        public static TNode InsertEnvironmentElement(TNode targetNode)
+        {
+            TNode env = new TNode("environment");
+            targetNode.ChildNodes.Insert(0, env);
+
+            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(FrameworkController).GetTypeInfo().Assembly);
+            env.AddAttribute("framework-version", assemblyName.Version.ToString());
+            env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
+            env.AddAttribute("os-version", RuntimeInformation.OSDescription);
+            env.AddAttribute("cwd", Directory.GetCurrentDirectory());
+            env.AddAttribute("machine-name", Environment.MachineName);
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
+
+            return env;
+        }
+#else
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
@@ -423,6 +445,7 @@ namespace NUnit.Framework.Api
         {
             return IntPtr.Size == 8 ? "x64" : "x86";
         }
+#endif
 #endif
 
         /// <summary>
@@ -457,11 +480,11 @@ namespace NUnit.Framework.Api
             settingsNode.ChildNodes.Add(setting);
         }
 
-        #endregion
+#endregion
 
-        #region Nested Action Classes
+#region Nested Action Classes
 
-        #region TestContollerAction
+#region TestContollerAction
 
         /// <summary>
         /// FrameworkControllerAction is the base class for all actions
@@ -471,9 +494,9 @@ namespace NUnit.Framework.Api
         {
         }
 
-        #endregion
+#endregion
 
-        #region LoadTestsAction
+#region LoadTestsAction
 
         /// <summary>
         /// LoadTestsAction loads a test into the FrameworkController
@@ -491,9 +514,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region ExploreTestsAction
+#region ExploreTestsAction
 
         /// <summary>
         /// ExploreTestsAction returns info about the tests in an assembly
@@ -512,9 +535,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region CountTestsAction
+#region CountTestsAction
 
         /// <summary>
         /// CountTestsAction counts the number of test cases in the loaded TestSuite
@@ -534,9 +557,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region RunTestsAction
+#region RunTestsAction
 
         /// <summary>
         /// RunTestsAction runs the loaded TestSuite held by the FrameworkController.
@@ -555,9 +578,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region RunAsyncAction
+#region RunAsyncAction
 
         /// <summary>
         /// RunAsyncAction initiates an asynchronous test run, returning immediately
@@ -576,9 +599,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region StopRunAction
+#region StopRunAction
 
         /// <summary>
         /// StopRunAction stops an ongoing run.
@@ -599,8 +622,8 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
     }
 }

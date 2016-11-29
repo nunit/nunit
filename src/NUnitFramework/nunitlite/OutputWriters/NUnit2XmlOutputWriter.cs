@@ -31,6 +31,9 @@ using System.IO;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+#if NETSTANDARD1_6
+using System.Runtime.InteropServices;
+#endif
 
 namespace NUnitLite
 {
@@ -61,19 +64,10 @@ namespace NUnitLite
         /// <param name="filter"></param>
         public override void WriteResultFile(ITestResult result, TextWriter writer, IDictionary<string, object> runSettings, TestFilter filter)
         {
-            // NOTE: Under .NET 1.1, XmlTextWriter does not implement IDisposable,
-            // but does implement Close(). Hence we cannot use a 'using' clause.
-            //using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
-            XmlTextWriter xmlWriter = new XmlTextWriter(writer);
-            xmlWriter.Formatting = Formatting.Indented;
-
-            try
+            var settings = new XmlWriterSettings { Indent = true };
+            using (var xmlWriter = XmlWriter.Create(writer, settings))
             {
                 WriteXmlOutput(result, xmlWriter);
-            }
-            finally
-            {
-                writer.Close();
             }
         }
 
@@ -122,6 +116,19 @@ namespace NUnitLite
             xmlWriter.WriteEndElement();
         }
 
+#if NETSTANDARD1_6
+        private void WriteEnvironment()
+        {
+            xmlWriter.WriteStartElement("environment");
+            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).GetTypeInfo().Assembly);
+            xmlWriter.WriteAttributeString("nunit-version", assemblyName.Version.ToString());
+            xmlWriter.WriteAttributeString("clr-version", RuntimeInformation.FrameworkDescription);
+            xmlWriter.WriteAttributeString("os-version", RuntimeInformation.OSDescription);
+            xmlWriter.WriteAttributeString("cwd", Directory.GetCurrentDirectory());
+            xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
+            xmlWriter.WriteEndElement();
+        }
+#else
         private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
@@ -144,6 +151,7 @@ namespace NUnitLite
                                            Environment.UserDomainName);
             xmlWriter.WriteEndElement();
         }
+#endif
 
         private void WriteResultElement(ITestResult result)
         {
@@ -174,11 +182,13 @@ namespace NUnitLite
             xmlWriter.WriteEndElement(); // test-results
             xmlWriter.WriteEndDocument();
             xmlWriter.Flush();
+#if !NETSTANDARD1_6
             xmlWriter.Close();
+#endif
         }
 
 
-        #region Element Creation Helpers
+#region Element Creation Helpers
 
         private void StartTestElement(ITestResult result)
         {
@@ -331,9 +341,9 @@ namespace NUnitLite
             xmlWriter.WriteEndElement();
         }
 
-        #endregion
+#endregion
 
-        #region Output Helpers
+#region Output Helpers
         ///// <summary>
         ///// Makes string safe for xml parsing, replacing control chars with '?'
         ///// </summary>
@@ -387,6 +397,6 @@ namespace NUnitLite
                 xmlWriter.WriteCData(text);
         }
 
-        #endregion
+#endregion
     }
 }

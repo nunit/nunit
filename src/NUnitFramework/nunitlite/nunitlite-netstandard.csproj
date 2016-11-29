@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PORTABLE;NETSTANDARD1_6;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_6;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -34,7 +34,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;PORTABLE;NETSTANDARD1_6;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NETSTANDARD1_6;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -48,15 +48,26 @@
       <Link>Properties\FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="AutoRun.cs" />
+    <Compile Include="ColorConsole.cs" />
+    <Compile Include="ColorConsoleWriter.cs" />
     <Compile Include="ColorStyle.cs" />
     <Compile Include="CommandLineOptions.cs" />
+    <Compile Include="DebugWriter.cs" />
+    <Compile Include="DefaultOptionsProvider.cs" />
     <Compile Include="ExtendedTextWrapper.cs" />
     <Compile Include="ExtendedTextWriter.cs" />
     <Compile Include="IDefaultOptionsProvider.cs" />
     <Compile Include="NUnitLiteOptions.cs" />
     <Compile Include="Options.cs" />
+    <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputSpecification.cs" />
+    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\OutputWriter.cs" />
+    <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultSummary.cs" />
+    <Compile Include="TcpWriter.cs" />
     <Compile Include="TeamCityEventListener.cs" />
     <Compile Include="TestNameParser.cs" />
     <Compile Include="TestSelectionParser.cs" />

@@ -45,7 +45,7 @@ namespace NUnit.Common
 #if PORTABLE
             @"\My Documents";
 #else
-            Environment.CurrentDirectory;
+            Directory.GetCurrentDirectory();
 #endif
 
         private bool validated;
@@ -368,7 +368,12 @@ namespace NUnit.Common
                     {
                         try
                         {
+#if NETSTANDARD1_6
+                            using (var str = new FileStream(fullTestListPath, FileMode.Open))
+                            using (var rdr = new StreamReader(str))
+#else
                             using (var rdr = new StreamReader(fullTestListPath))
+#endif
                             {
                                 while (!rdr.EndOfStream)
                                 {
@@ -387,7 +392,7 @@ namespace NUnit.Common
                 });
 
 #endif
-            this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
+                                this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));
 
             this.Add("params|p=", "Define a test parameter.",
