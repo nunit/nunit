@@ -124,4 +124,4 @@ namespace NUnit.Framework.Constraints
         }
     }
 #endif
-            }
+}

@@ -151,8 +151,8 @@ namespace NUnit.Framework.Api
 #if !PORTABLE
                 else
                 {
-                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory) 
-                        ? (string)Settings[FrameworkPackageSettings.WorkDirectory] 
+                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
+                        ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
 #if NETSTANDARD1_6
                     var id = DateTime.Now.ToString("o");
@@ -274,7 +274,7 @@ namespace NUnit.Framework.Api
 
             public void RaiseCallbackEvent(string report)
             {
-                if(_callback != null)
+                if (_callback != null)
                     _callback.Invoke(report);
             }
         }
@@ -473,7 +473,7 @@ namespace NUnit.Framework.Api
                 AddSetting(settingsNode, FrameworkPackageSettings.NumberOfTestWorkers, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
 #endif
 
-                return settingsNode;
+            return settingsNode;
         }
 
         private static void AddSetting(TNode settingsNode, string name, object value)
@@ -485,11 +485,11 @@ namespace NUnit.Framework.Api
             settingsNode.ChildNodes.Add(setting);
         }
 
-#endregion
+        #endregion
 
-#region Nested Action Classes
+        #region Nested Action Classes
 
-#region TestContollerAction
+        #region TestContollerAction
 
         /// <summary>
         /// FrameworkControllerAction is the base class for all actions
@@ -499,9 +499,9 @@ namespace NUnit.Framework.Api
         {
         }
 
-#endregion
+        #endregion
 
-#region LoadTestsAction
+        #region LoadTestsAction
 
         /// <summary>
         /// LoadTestsAction loads a test into the FrameworkController
@@ -519,9 +519,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region ExploreTestsAction
+        #region ExploreTestsAction
 
         /// <summary>
         /// ExploreTestsAction returns info about the tests in an assembly
@@ -540,9 +540,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region CountTestsAction
+        #region CountTestsAction
 
         /// <summary>
         /// CountTestsAction counts the number of test cases in the loaded TestSuite
@@ -556,15 +556,15 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite whose cases are to be counted</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public CountTestsAction(FrameworkController controller, string filter, object handler) 
+            public CountTestsAction(FrameworkController controller, string filter, object handler)
             {
                 controller.CountTests((ICallbackEventHandler)handler, filter);
             }
         }
 
-#endregion
+        #endregion
 
-#region RunTestsAction
+        #region RunTestsAction
 
         /// <summary>
         /// RunTestsAction runs the loaded TestSuite held by the FrameworkController.
@@ -577,15 +577,15 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public RunTestsAction(FrameworkController controller, string filter, object handler) 
+            public RunTestsAction(FrameworkController controller, string filter, object handler)
             {
                 controller.RunTests((ICallbackEventHandler)handler, filter);
             }
         }
 
-#endregion
+        #endregion
 
-#region RunAsyncAction
+        #region RunAsyncAction
 
         /// <summary>
         /// RunAsyncAction initiates an asynchronous test run, returning immediately
@@ -598,15 +598,15 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public RunAsyncAction(FrameworkController controller, string filter, object handler) 
+            public RunAsyncAction(FrameworkController controller, string filter, object handler)
             {
                 controller.RunAsync((ICallbackEventHandler)handler, filter);
             }
         }
 
-#endregion
+        #endregion
 
-#region StopRunAction
+        #region StopRunAction
 
         /// <summary>
         /// StopRunAction stops an ongoing run.
@@ -627,8 +627,8 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
     }
 }

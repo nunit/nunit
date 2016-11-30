@@ -143,10 +143,10 @@ namespace NUnit.Framework
         }
 #endif
 
-                /// <summary>
-                /// Gets the directory to be used for outputting files created
-                /// by this test run.
-                /// </summary>
+        /// <summary>
+        /// Gets the directory to be used for outputting files created
+        /// by this test run.
+        /// </summary>
         public string WorkDirectory
         {
             get { return _testExecutionContext.WorkDirectory; }

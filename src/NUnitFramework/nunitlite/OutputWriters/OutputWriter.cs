@@ -45,12 +45,8 @@ namespace NUnitLite
         /// <param name="runSettings">A dictionary of settings used for this test run</param>
         public void WriteResultFile(ITestResult result, string outputPath, IDictionary<string, object> runSettings, TestFilter filter)
         {
-#if NETSTANDARD1_6
             using (var stream = new FileStream(outputPath, FileMode.Create))
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
-#else
-            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
-#endif
             {
                 WriteResultFile(result, writer, runSettings, filter);
             }
@@ -63,12 +59,8 @@ namespace NUnitLite
         /// <param name="outputPath">Path to the file to which the test info is written</param>
         public void WriteTestFile(ITest test, string outputPath)
         {
-#if NETSTANDARD1_6
             using (var stream = new FileStream(outputPath, FileMode.Create))
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
-#else
-            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
-#endif
             {
                 WriteTestFile(test, writer);
             }

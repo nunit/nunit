@@ -205,7 +205,7 @@ namespace NUnit.Framework.Internal
         /// <remarks></remarks>
         public static TestExecutionContext GetTestExecutionContext()
         {
-            // TODO: Does this actually work now that there is no threading?
+            // TODO: This will need to be reworked if we re-introduce threading in .NET Standard
             return _currentContext;
         }
 #else

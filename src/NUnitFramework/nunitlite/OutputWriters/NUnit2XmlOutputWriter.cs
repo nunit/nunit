@@ -170,7 +170,7 @@ namespace NUnitLite
                     WriteFailureElement(result.Message, result.StackTrace);
                     break;
             }
-            
+
             if (result.Test is TestSuite)
                 WriteChildResults(result);
 
@@ -188,7 +188,7 @@ namespace NUnitLite
         }
 
 
-#region Element Creation Helpers
+        #region Element Creation Helpers
 
         private void StartTestElement(ITestResult result)
         {
@@ -341,9 +341,9 @@ namespace NUnitLite
             xmlWriter.WriteEndElement();
         }
 
-#endregion
+        #endregion
 
-#region Output Helpers
+        #region Output Helpers
         ///// <summary>
         ///// Makes string safe for xml parsing, replacing control chars with '?'
         ///// </summary>
@@ -397,6 +397,6 @@ namespace NUnitLite
                 xmlWriter.WriteCData(text);
         }
 
-#endregion
+        #endregion
     }
 }
