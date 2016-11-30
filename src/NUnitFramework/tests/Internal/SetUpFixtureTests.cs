@@ -4,7 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;

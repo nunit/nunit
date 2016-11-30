@@ -156,7 +156,7 @@ namespace NUnit.Framework.Constraints
             {
                 var invocationDescriptor = GetInvocationDescriptor(invocation);
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
                 if (AsyncInvocationRegion.IsAsyncOperation(invocationDescriptor.Delegate))
                 {
                     using (var region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))
@@ -201,7 +201,7 @@ namespace NUnit.Framework.Constraints
                         invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
                     }
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
                     else
                     {
                         var asyncTestDelegate = actual as AsyncTestDelegate;

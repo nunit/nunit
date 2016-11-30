@@ -82,8 +82,8 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithExplicitTestCases(int num)
         {
         }
-        
-#if !PORTABLE
+
+#if !PORTABLE && !NETSTANDARD1_6
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
         [TestCase(3, IncludePlatform = "MacOSX")]

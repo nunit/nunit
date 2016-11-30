@@ -36,7 +36,7 @@ namespace NUnit.Framework
     /// </summary>
     public delegate void TestDelegate();
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
     /// <summary>
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.

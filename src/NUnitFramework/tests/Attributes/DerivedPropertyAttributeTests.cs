@@ -48,7 +48,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [TestCase(typeof(RequiresThreadAttribute), PropertyNames.RequiresThread, true)]
 #endif
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)

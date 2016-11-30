@@ -27,6 +27,16 @@ using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
+#if NETSTANDARD1_6
+    internal class AssemblyLoader : System.Runtime.Loader.AssemblyLoadContext
+    {
+        protected override Assembly Load(AssemblyName assemblyName)
+        {
+            return Assembly.Load(assemblyName);
+        }
+    }
+#endif
+
     /// <summary>
     /// AssemblyHelper provides static methods for working
     /// with assemblies.
@@ -37,8 +47,8 @@ namespace NUnit.Framework.Internal
         const string UriSchemeFile = "file";
         const string SchemeDelimiter = "://";
 #else
-        const string UriSchemeFile = Uri.UriSchemeFile;
-        const string SchemeDelimiter = Uri.SchemeDelimiter;
+        static readonly string UriSchemeFile = Uri.UriSchemeFile;
+        static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
 #endif
 
         #region GetAssemblyPath
@@ -116,8 +126,28 @@ namespace NUnit.Framework.Internal
 
             return Assembly.Load(new AssemblyName { Name = name });
         }
-#else
+#elif NETSTANDARD1_6
+        /// <summary>
+        /// Loads an assembly given a string, which may be the 
+        /// path to the assembly or the AssemblyName
+        /// </summary>
+        /// <param name="nameOrPath"></param>
+        /// <returns></returns>
+        public static Assembly Load(string nameOrPath)
+        {
+            var ext = Path.GetExtension(nameOrPath).ToLower();
 
+            // Handle case where this is the path to an assembly
+            if (ext == ".dll" || ext == ".exe")
+            {
+                var loader = new AssemblyLoader();
+                return loader.LoadFromAssemblyPath(Path.GetFullPath(nameOrPath));
+            }
+
+            // Assume it's the string representation of an AssemblyName
+            return Assembly.Load(new AssemblyName { Name = nameOrPath });
+        }
+#else
         /// <summary>
         /// Loads an assembly given a string, which may be the 
         /// path to the assembly or the AssemblyName

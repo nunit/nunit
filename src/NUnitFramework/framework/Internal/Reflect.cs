@@ -28,7 +28,7 @@ using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
 using System.Linq;
 #endif
 
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
                 .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
 #else

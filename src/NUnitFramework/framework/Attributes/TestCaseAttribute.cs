@@ -224,8 +224,8 @@ namespace NUnit.Framework
                 Reason = value;
             }
         }
-        
-#if !PORTABLE
+
+#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>

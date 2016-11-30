@@ -206,7 +206,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsDefined<T>(bool inherit)
         {
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
             return Type.GetTypeInfo().GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
 #else
             return Type.GetTypeInfo().IsDefined(typeof(T), inherit);

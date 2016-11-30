@@ -118,7 +118,7 @@ namespace NUnit.Framework
             get { return _testExecutionContext.WorkerId; }
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !PORTABLE
         /// <summary>
         /// Gets the directory containing the current test assembly.
         /// </summary>
@@ -130,17 +130,23 @@ namespace NUnit.Framework
                 if (test != null)
                     return AssemblyHelper.GetDirectoryName(test.TypeInfo.Assembly);
 
+#if NETSTANDARD1_6
+                // Test is null, we may be loading tests rather than executing.
+                // Assume that the NUnit framework is in the same directory as the tests
+                return AssemblyHelper.GetDirectoryName(typeof(TestContext).GetTypeInfo().Assembly);
+#else
                 // Test is null, we may be loading tests rather than executing.
                 // Assume that calling assembly is the test assembly.
                 return AssemblyHelper.GetDirectoryName(Assembly.GetCallingAssembly());
+#endif
             }
         }
 #endif
 
-        /// <summary>
-        /// Gets the directory to be used for outputting files created
-        /// by this test run.
-        /// </summary>
+                /// <summary>
+                /// Gets the directory to be used for outputting files created
+                /// by this test run.
+                /// </summary>
         public string WorkDirectory
         {
             get { return _testExecutionContext.WorkDirectory; }

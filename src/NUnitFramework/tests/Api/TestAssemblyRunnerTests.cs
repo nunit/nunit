@@ -39,7 +39,13 @@ namespace NUnit.Framework.Api
     // Functional tests of the TestAssemblyRunner and all subordinate classes
     public class TestAssemblyRunnerTests : ITestListener
     {
+#if NETSTANDARD1_6
+        private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
+        private const string COULD_NOT_LOAD_MSG = "The system cannot find the file specified.";
+#else
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
+        private const string COULD_NOT_LOAD_MSG = "Could not load";
+#endif
         private const string BAD_FILE = "mock-assembly.pdb";
         private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
@@ -59,7 +65,7 @@ namespace NUnit.Framework.Api
         private int _failCount;
         private int _skipCount;
         private int _inconclusiveCount;
-        
+
         [SetUp]
         public void CreateRunner()
         {
@@ -103,7 +109,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith("Could not load"));
+                Does.StartWith(COULD_NOT_LOAD_MSG));
         }
 
         [Test]
@@ -120,9 +126,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
 
-#endregion
+        #endregion
 
-#region CountTestCases
+        #region CountTestCases
 
         [Test]
         public void CountTestCases_AfterLoad_ReturnsCorrectCount()
@@ -153,9 +159,9 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
 
-#endregion
+        #endregion
 
-#region Run
+        #region Run
 
         [Test]
         public void Run_AfterLoad_ReturnsRunnableSuite()
@@ -212,7 +218,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message,
-                Does.StartWith("Could not load"));
+                Does.StartWith(COULD_NOT_LOAD_MSG));
         }
 
         [Test]
@@ -230,9 +236,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load"));
         }
 
-#endregion
+        #endregion
 
-#region RunAsync
+        #region RunAsync
 
         [Test]
         public void RunAsync_AfterLoad_ReturnsRunnableSuite()
@@ -291,7 +297,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(_runner.Result.Message,
-                Does.StartWith("Could not load"));
+                Does.StartWith(COULD_NOT_LOAD_MSG));
         }
 
         [Test]
@@ -311,9 +317,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load"));
         }
 
-#endregion
+        #endregion
 
-#region StopRun
+        #region StopRun
 
         [Test]
         public void StopRun_WhenNoTestIsRunning_Succeeds()
@@ -339,9 +345,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region Cancel Run
+        #region Cancel Run
 
         [Test]
         public void CancelRun_WhenNoTestIsRunning_Succeeds()
@@ -370,9 +376,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region ITestListener Implementation
+        #region ITestListener Implementation
 
         void ITestListener.TestStarted(ITest test)
         {
@@ -415,30 +421,30 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private ITest LoadMockAssembly()
         {
-#if PORTABLE || NETSTANDARD1_6
+#if PORTABLE
             return _runner.Load(
                 typeof(MockAssembly).GetTypeInfo().Assembly, 
                 EMPTY_SETTINGS);
 #else
             return _runner.Load(
-                Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE), 
+                Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE),
                 EMPTY_SETTINGS);
 #endif
         }
 
         private ITest LoadSlowTests()
         {
-#if PORTABLE || NETSTANDARD1_6
+#if PORTABLE
             return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly, EMPTY_SETTINGS);
 #else
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);
 #endif
         }
 
-#endregion
+        #endregion
     }
 }

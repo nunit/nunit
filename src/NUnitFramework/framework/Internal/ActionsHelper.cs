@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
 
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
 using System.Linq;
 #endif
 
@@ -60,8 +60,8 @@ namespace NUnit.Framework.Internal
                     action.AfterTest(test);
             }
         }
-        
-#if PORTABLE
+
+#if PORTABLE || NETSTANDARD1_6
         public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
         {
             if (attributeProvider == null)

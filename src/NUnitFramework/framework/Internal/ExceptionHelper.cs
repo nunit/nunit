@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal
         {
             var result = new List<Exception>();
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
             if (exception is AggregateException)
             {
                 var aggregateException = (exception as AggregateException);

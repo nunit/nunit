@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunTestMethod(TestExecutionContext context)
         {
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
                 return RunAsyncTestMethod(context);
             else
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Commands
                 return RunNonAsyncTestMethod(context);
         }
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
         private object RunAsyncTestMethod(TestExecutionContext context)
         {
             using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method.MethodInfo))

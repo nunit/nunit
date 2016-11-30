@@ -459,7 +459,7 @@ namespace NUnit.Framework.Attributes
 
         #region RequiresThreadAttribute
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -508,7 +508,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
 
         #region SetCultureAttribute
 
