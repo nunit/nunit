@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
 using System;
 using System.Threading.Tasks;
 #endif
@@ -332,7 +332,7 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
         [Test]
         public void AssertThatSuccess()
         {
@@ -346,7 +346,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {

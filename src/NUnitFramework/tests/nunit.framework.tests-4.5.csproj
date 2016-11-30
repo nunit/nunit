@@ -20,7 +20,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_5;PARALLEL;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_5;PARALLEL;NUNITLITE;ASYNC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -28,7 +28,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_5;PARALLEL;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_5;PARALLEL;NUNITLITE;ASYNC</DefineConstants>
     <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>

@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Constraints;
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
 using System.Threading.Tasks;
 #endif
 
@@ -363,7 +363,7 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
         [Test]
         public void AssumeThatSuccess()
         {

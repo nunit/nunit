@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
         private static readonly bool PLATFORM_IGNORE = true;
 #else
         private static readonly bool PLATFORM_IGNORE = OSPlatform.CurrentPlatform.IsUnix;

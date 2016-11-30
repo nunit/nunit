@@ -20,14 +20,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE;ASYNC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0414</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_0;PARALLEL;NUNITLITE;ASYNC</DefineConstants>
     <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>

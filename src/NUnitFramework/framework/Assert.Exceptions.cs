@@ -41,7 +41,7 @@ namespace NUnit.Framework
         {
             Exception caughtException = null;
 
-#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
+#if ASYNC
             if (AsyncInvocationRegion.IsAsyncOperation(code))
             {
                 using (var region = AsyncInvocationRegion.Create(code))

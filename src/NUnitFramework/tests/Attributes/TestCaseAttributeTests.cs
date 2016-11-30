@@ -28,7 +28,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
 using System.Threading.Tasks;
 #endif
 
@@ -518,7 +518,7 @@ namespace NUnit.Framework.Attributes
             return arg1;
         }
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
         [TestCase(1, ExpectedResult = 1)]
         public async Task<T> TestWithAsyncGenericReturnType<T>(T arg1)
         {
@@ -526,6 +526,6 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#endregion
+        #endregion
     }
 }

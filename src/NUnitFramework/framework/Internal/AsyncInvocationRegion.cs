@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET_4_0 || NET_4_5 || PORTABLE || NETSTANDARD1_6
+#if ASYNC
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ using System.Reflection;
 using System.Threading;
 using NUnit.Compatibility;
 
-#if NET_4_5 || PORTABLE || NETSTANDARD1_6
+#if !NET_4_0
 using System.Runtime.ExceptionServices;
 #endif
 
