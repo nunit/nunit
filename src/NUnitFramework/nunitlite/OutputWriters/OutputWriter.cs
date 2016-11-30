@@ -46,7 +46,7 @@ namespace NUnitLite
         public void WriteResultFile(ITestResult result, string outputPath, IDictionary<string, object> runSettings, TestFilter filter)
         {
 #if NETSTANDARD1_6
-            using (var stream = new FileStream(outputPath, FileMode.OpenOrCreate | FileMode.Truncate))
+            using (var stream = new FileStream(outputPath, FileMode.Create))
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
 #else
             using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
@@ -64,7 +64,7 @@ namespace NUnitLite
         public void WriteTestFile(ITest test, string outputPath)
         {
 #if NETSTANDARD1_6
-            using (var stream = new FileStream(outputPath, FileMode.OpenOrCreate | FileMode.Truncate))
+            using (var stream = new FileStream(outputPath, FileMode.Create))
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
 #else
             using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
