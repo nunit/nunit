@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
 namespace System.Web.UI
 {
     /// <summary>

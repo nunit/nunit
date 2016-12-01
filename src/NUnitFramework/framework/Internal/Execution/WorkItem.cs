@@ -75,7 +75,7 @@ namespace NUnit.Framework.Internal.Execution
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
             Actions = new List<ITestAction>();
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
                 ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
                 : ApartmentState.Unknown;
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestResult Result { get; protected set; }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
@@ -251,9 +251,11 @@ namespace NUnit.Framework.Internal.Execution
                 ownThreadReason |= OwnThreadReason.RequiresThread;
             if (timeout > 0 && Test is TestMethod)
                 ownThreadReason |= OwnThreadReason.Timeout;
+#if !NETSTANDARD1_6
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             if (CurrentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
                 ownThreadReason |= OwnThreadReason.DifferentApartment;
+#endif
 #endif
 
             if (ownThreadReason == OwnThreadReason.NotNeeded)
@@ -268,7 +270,7 @@ namespace NUnit.Framework.Internal.Execution
             else
             {
                 log.Debug("Running test on own thread. " + ownThreadReason);
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
                 var apartment = (ownThreadReason | OwnThreadReason.DifferentApartment) != 0
                     ? TargetApartment
                     : CurrentApartment;
@@ -277,7 +279,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         private Thread thread;
 
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
@@ -288,7 +290,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         private void RunThread(int timeout)
         {
             thread.CurrentCulture = Context.CurrentCulture;
@@ -374,7 +376,7 @@ namespace NUnit.Framework.Internal.Execution
             if (!force)
                 return;
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
             Thread tThread;
 
             lock (threadLock)
@@ -402,9 +404,9 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Protected Methods
+        #region Protected Methods
 
         /// <summary>
         /// Method that performs actually performs the work. It should

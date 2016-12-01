@@ -112,7 +112,7 @@ namespace NUnit.Framework.Internal
             ExpectFailure( attr, "Not supported under culture fr-FR" );
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         [Test,SetCulture("fr-FR")]
         public void LoadWithFrenchCulture()
         {

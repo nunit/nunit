@@ -34,6 +34,9 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+#if NETSTANDARD1_6
+using System.Runtime.InteropServices;
+#endif
 
 namespace NUnit.Framework.Api
 {
@@ -148,10 +151,15 @@ namespace NUnit.Framework.Api
 #if !PORTABLE
                 else
                 {
-                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory) 
-                        ? (string)Settings[FrameworkPackageSettings.WorkDirectory] 
-                        : Environment.CurrentDirectory;
-                    var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
+                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
+                        ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
+                        : Directory.GetCurrentDirectory();
+#if NETSTANDARD1_6
+                    var id = DateTime.Now.ToString("o");
+#else      
+                    var id = Process.GetCurrentProcess().Id;
+#endif
+                    var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
 #endif
@@ -266,7 +274,7 @@ namespace NUnit.Framework.Api
 
             public void RaiseCallbackEvent(string report)
             {
-                if(_callback != null)
+                if (_callback != null)
                     _callback.Invoke(report);
             }
         }
@@ -399,6 +407,25 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="targetNode">Target node</param>
         /// <returns>The new node</returns>
+#if NETSTANDARD1_6
+        public static TNode InsertEnvironmentElement(TNode targetNode)
+        {
+            TNode env = new TNode("environment");
+            targetNode.ChildNodes.Insert(0, env);
+
+            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(FrameworkController).GetTypeInfo().Assembly);
+            env.AddAttribute("framework-version", assemblyName.Version.ToString());
+            env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
+            env.AddAttribute("os-version", RuntimeInformation.OSDescription);
+            env.AddAttribute("cwd", Directory.GetCurrentDirectory());
+            env.AddAttribute("machine-name", Environment.MachineName);
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
+
+            return env;
+        }
+#else
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
@@ -424,6 +451,7 @@ namespace NUnit.Framework.Api
             return IntPtr.Size == 8 ? "x64" : "x86";
         }
 #endif
+#endif
 
         /// <summary>
         /// Inserts settings element
@@ -445,7 +473,7 @@ namespace NUnit.Framework.Api
                 AddSetting(settingsNode, FrameworkPackageSettings.NumberOfTestWorkers, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
 #endif
 
-                return settingsNode;
+            return settingsNode;
         }
 
         private static void AddSetting(TNode settingsNode, string name, object value)
@@ -528,7 +556,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite whose cases are to be counted</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public CountTestsAction(FrameworkController controller, string filter, object handler) 
+            public CountTestsAction(FrameworkController controller, string filter, object handler)
             {
                 controller.CountTests((ICallbackEventHandler)handler, filter);
             }
@@ -549,7 +577,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public RunTestsAction(FrameworkController controller, string filter, object handler) 
+            public RunTestsAction(FrameworkController controller, string filter, object handler)
             {
                 controller.RunTests((ICallbackEventHandler)handler, filter);
             }
@@ -570,7 +598,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public RunAsyncAction(FrameworkController controller, string filter, object handler) 
+            public RunAsyncAction(FrameworkController controller, string filter, object handler)
             {
                 controller.RunAsync((ICallbackEventHandler)handler, filter);
             }

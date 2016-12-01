@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
         {
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
             if (AsyncInvocationRegion.IsAsyncOperation(method))
                 RunAsyncMethod(method, context);
             else
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal.Commands
                 RunNonAsyncMethod(method, context);
         }
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
         private void RunAsyncMethod(MethodInfo method, TestExecutionContext context)
         {
             using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(method))

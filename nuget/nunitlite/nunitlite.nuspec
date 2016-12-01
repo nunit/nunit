@@ -30,6 +30,10 @@ How to use this package:
       <group>
         <dependency id="NUnit" version="[$version$]" />
       </group>
+      <group targetFramework="netstandard1.6">
+        <dependency id="NETStandard.Library" version="1.6.0" />
+        <dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+      </group>
     </dependencies>
   </metadata>
   <files>

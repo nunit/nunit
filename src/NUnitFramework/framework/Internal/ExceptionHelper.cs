@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if !NET_4_5 && !PORTABLE
+#if !NET_4_5 && !PORTABLE && !NETSTANDARD1_6
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET_4_5 || PORTABLE
+#if NET_4_5 || PORTABLE || NETSTANDARD1_6
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
 #else
             PreserveStackTrace(exception);
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal
         {
             var result = new List<Exception>();
 
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
             if (exception is AggregateException)
             {
                 var aggregateException = (exception as AggregateException);

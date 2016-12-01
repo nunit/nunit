@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 var testAssembly = suite as TestAssembly;
                 if (testAssembly != null)
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_6
                     changes = new List<IApplyToContext>(testAssembly.Assembly.GetAttributes<IApplyToContext>());
 #else
                     changes = (IApplyToContext[])testAssembly.Assembly.GetCustomAttributes(typeof(IApplyToContext), true);

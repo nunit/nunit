@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         Thread _thread;
 
         private void StartExecution()
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Execution
 
             public static void DummyTest()
             {
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
                 if (Delay > 0)
                     Thread.Sleep(Delay);
 #else

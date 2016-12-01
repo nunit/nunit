@@ -45,7 +45,7 @@ namespace NUnit.Common
 #if PORTABLE
             @"\My Documents";
 #else
-            Environment.CurrentDirectory;
+            Directory.GetCurrentDirectory();
 #endif
 
         private bool validated;
@@ -368,7 +368,8 @@ namespace NUnit.Common
                     {
                         try
                         {
-                            using (var rdr = new StreamReader(fullTestListPath))
+                            using (var str = new FileStream(fullTestListPath, FileMode.Open))
+                            using (var rdr = new StreamReader(str))
                             {
                                 while (!rdr.EndOfStream)
                                 {

@@ -117,7 +117,13 @@ namespace NUnitLite
             ExtendedTextWriter outWriter = null;
             if (options.OutFile != null)
             {
-                outWriter = new ExtendedTextWrapper(TextWriter.Synchronized(new StreamWriter(Path.Combine(options.WorkDirectory, options.OutFile))));
+                var outFile = Path.Combine(options.WorkDirectory, options.OutFile);
+#if NETSTANDARD1_6                 
+                var textWriter = File.CreateText(outFile);
+#else
+                var textWriter = TextWriter.Synchronized(new StreamWriter(outFile));
+#endif
+                outWriter = new ExtendedTextWrapper(textWriter);
                 Console.SetOut(outWriter);
             }
             else
@@ -128,7 +134,12 @@ namespace NUnitLite
             TextWriter errWriter = null;
             if (options.ErrFile != null)
             {
-                errWriter = TextWriter.Synchronized(new StreamWriter(Path.Combine(options.WorkDirectory, options.ErrFile)));
+                var errFile = Path.Combine(options.WorkDirectory, options.ErrFile);
+#if NETSTANDARD1_6
+                errWriter = File.CreateText(errFile);
+#else
+                errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
+#endif
                 Console.SetError(errWriter);
             }
 
@@ -139,10 +150,18 @@ namespace NUnitLite
             finally
             {
                 if (options.OutFile != null && outWriter != null)
+#if NETSTANDARD1_6
+                    outWriter.Dispose();
+#else
                     outWriter.Close();
+#endif
 
                 if (options.ErrFile != null && errWriter != null)
+#if NETSTANDARD1_6
+                    errWriter.Dispose();
+#else
                     errWriter.Close();
+#endif
             }
         }
 #endif
@@ -392,7 +411,7 @@ namespace NUnitLite
                 StreamWriter streamWriter = null;
                 if (traceLevel > InternalTraceLevel.Off)
                 {
-                    string logPath = Path.Combine(Environment.CurrentDirectory, logName);
+                    string logPath = Path.Combine(Directory.GetCurrentDirectory(), logName);
                     streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
                     streamWriter.AutoFlush = true;
                 }
@@ -413,7 +432,13 @@ namespace NUnitLite
                     ? Path.GetFileNameWithoutExtension(_options.InputFiles[0])
                     : "NUnitLite";
 
-            return string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, baseName, ext);
+#if NETSTANDARD1_6
+            var id = DateTime.Now.ToString("o");
+#else      
+            var id = Process.GetCurrentProcess().Id;
+#endif
+
+            return string.Format(LOG_FILE_FORMAT, id, baseName, ext);
         }
 #endif
 

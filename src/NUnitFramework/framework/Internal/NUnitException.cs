@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
     /// Thrown when an assertion failed. Here to preserve the inner
     /// exception and hence its stack trace.
     /// </summary>
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [Serializable]
 #endif
     public class NUnitException : Exception 
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
             base(message, inner) 
         { }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Serialization Constructor
         /// </summary>

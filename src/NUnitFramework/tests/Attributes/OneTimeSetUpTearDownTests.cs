@@ -373,7 +373,7 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [TestFixture]
     class ChangesMadeInFixtureSetUp
     {

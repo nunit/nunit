@@ -62,7 +62,7 @@ namespace NUnit.Framework.Constraints
                     caughtException = ex;
                 }
             }
-#if NET_4_0 || NET_4_5 || PORTABLE
+#if ASYNC
             AsyncTestDelegate asyncCode = actual as AsyncTestDelegate;
             if (asyncCode != null)
             {

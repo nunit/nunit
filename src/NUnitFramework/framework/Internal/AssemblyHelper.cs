@@ -27,12 +27,30 @@ using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
+#if NETSTANDARD1_6
+    internal class AssemblyLoader : System.Runtime.Loader.AssemblyLoadContext
+    {
+        protected override Assembly Load(AssemblyName assemblyName)
+        {
+            return Assembly.Load(assemblyName);
+        }
+    }
+#endif
+
     /// <summary>
     /// AssemblyHelper provides static methods for working
     /// with assemblies.
     /// </summary>
     public static class AssemblyHelper
     {
+#if PORTABLE || NETSTANDARD1_6
+        const string UriSchemeFile = "file";
+        const string SchemeDelimiter = "://";
+#else
+        static readonly string UriSchemeFile = Uri.UriSchemeFile;
+        static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
+#endif
+
         #region GetAssemblyPath
 
         /// <summary>
@@ -108,8 +126,28 @@ namespace NUnit.Framework.Internal
 
             return Assembly.Load(new AssemblyName { Name = name });
         }
-#else
+#elif NETSTANDARD1_6
+        /// <summary>
+        /// Loads an assembly given a string, which may be the 
+        /// path to the assembly or the AssemblyName
+        /// </summary>
+        /// <param name="nameOrPath"></param>
+        /// <returns></returns>
+        public static Assembly Load(string nameOrPath)
+        {
+            var ext = Path.GetExtension(nameOrPath).ToLower();
 
+            // Handle case where this is the path to an assembly
+            if (ext == ".dll" || ext == ".exe")
+            {
+                var loader = new AssemblyLoader();
+                return loader.LoadFromAssemblyPath(Path.GetFullPath(nameOrPath));
+            }
+
+            // Assume it's the string representation of an AssemblyName
+            return Assembly.Load(new AssemblyName { Name = nameOrPath });
+        }
+#else
         /// <summary>
         /// Loads an assembly given a string, which may be the 
         /// path to the assembly or the AssemblyName
@@ -135,10 +173,9 @@ namespace NUnit.Framework.Internal
 
         #region Helper Methods
 
-#if !PORTABLE
         private static bool IsFileUri(string uri)
         {
-            return uri.ToLower().StartsWith(Uri.UriSchemeFile);
+            return uri.ToLower().StartsWith(UriSchemeFile);
         }
 
         /// <summary>
@@ -150,7 +187,7 @@ namespace NUnit.Framework.Internal
         public static string GetAssemblyPathFromCodeBase(string codeBase)
         {
             // Skip over the file:// part
-            int start = Uri.UriSchemeFile.Length + Uri.SchemeDelimiter.Length;
+            int start = UriSchemeFile.Length + SchemeDelimiter.Length;
 
             if (codeBase[start] == '/') // third slash means a local path
             {
@@ -167,7 +204,6 @@ namespace NUnit.Framework.Internal
 
             return codeBase.Substring(start);
         }
-#endif
 
         #endregion
     }

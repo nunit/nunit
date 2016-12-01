@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     /// Combines multiple filters so that a test must pass all 
     /// of them in order to pass this filter.
     /// </summary>
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD1_6
     [Serializable]
 #endif
     public class AndFilter : CompositeFilter

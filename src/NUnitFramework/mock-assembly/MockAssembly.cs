@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 #if !PORTABLE
@@ -74,7 +75,7 @@ namespace NUnit.Tests
 
             public const int TestStartedEvents = Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests;
             public const int TestFinishedEvents = Tests;
-#if PORTABLE
+#if PORTABLE && !NETSTANDARD1_6
             public const int TestOutputEvents = 0;
 #else
             public const int TestOutputEvents = 1;
@@ -100,12 +101,22 @@ namespace NUnit.Tests
             public const int Success = TestsRun - Errors - Failures - Inconclusive;
 
 #if !PORTABLE
+#if NETSTANDARD1_6
+            public static readonly Assembly ThisAssembly = typeof(MockAssembly).GetTypeInfo().Assembly;
+            public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(ThisAssembly);
+
+            public static void Main(string[] args)
+            {
+                new AutoRun(ThisAssembly).Execute(args);
+            }
+#else
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 
             public static void Main(string[] args)
             {
                 new AutoRun().Execute(args);
             }
+#endif
 #endif
         }
 

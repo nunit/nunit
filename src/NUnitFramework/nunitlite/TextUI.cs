@@ -30,6 +30,9 @@ using NUnit.Common;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+#if NETSTANDARD1_6
+using System.Runtime.InteropServices;
+#endif
 
 namespace NUnitLite
 {
@@ -170,8 +173,13 @@ namespace NUnitLite
         {
 #if !PORTABLE
             WriteSectionHeader("Runtime Environment");
+#if NETSTANDARD1_6
+            Writer.WriteLabelLine("   OS Version: ", RuntimeInformation.OSDescription);
+            Writer.WriteLabelLine("  CLR Version: ", RuntimeInformation.FrameworkDescription);
+#else
             Writer.WriteLabelLine("   OS Version: ", Environment.OSVersion);
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
+#endif
             Writer.WriteLine();
 #endif
         }
@@ -217,7 +225,7 @@ namespace NUnitLite
 #endif
 
 #if !PORTABLE
-            Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Environment.CurrentDirectory);
+            Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Directory.GetCurrentDirectory());
 #endif
 
             Writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");

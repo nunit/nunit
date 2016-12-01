@@ -27,6 +27,13 @@ Supported platforms:
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
     <copyright>Copyright (c) 2016 Charlie Poole</copyright>
+    <dependencies>
+      <group targetFramework="netstandard1.6">
+        <dependency id="NETStandard.Library" version="1.6.0" />
+        <dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+        <dependency id="System.Runtime.Loader" version="4.0.0" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="LICENSE.txt" />
