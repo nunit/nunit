@@ -260,6 +260,10 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        #endregion
+
+        #region Static Methods
+
         /// <summary>
         /// Clear the current context. This is provided to
         /// prevent "leakage" of the CallContext containing
@@ -548,6 +552,39 @@ namespace NUnit.Framework.Internal
             return null;
         }
 #endif
+
+        #endregion
+
+        #region Nested IsolatedContext Class
+
+        /// <summary>
+        /// Use "using new TestExecutionContext.IsolatedContext()"
+        /// in order to run code in isolation.
+        /// </summary>
+        public class IsolatedContext : IDisposable
+        {
+            /// <summary>
+            /// Push a new context onto the stack of contexts and
+            /// make it current. Clear the result in the new context.
+            /// </summary>
+            public IsolatedContext()
+            {
+                var context = new TestExecutionContext(CurrentContext);
+
+                if (context.CurrentTest != null)
+                    context.CurrentResult = context.CurrentTest.MakeTestResult();
+
+                CurrentContext = context;
+            }
+
+            /// <summary>
+            /// Pop the context stack, making the prior context current.
+            /// </summary>
+            public void Dispose()
+            {
+                CurrentContext = CurrentContext._priorContext;
+            }
+        }
 
         #endregion
     }

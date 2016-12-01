@@ -176,14 +176,17 @@ namespace NUnit.Framework.Constraints
                 else
 #endif
                 {
-                    try
+                    using (new TestExecutionContext.IsolatedContext())
                     {
-                        invocationDescriptor.Invoke();
-                        return null;
-                    }
-                    catch (Exception ex)
-                    {
-                        return ex;
+                        try
+                        {
+                            invocationDescriptor.Invoke();
+                            return null;
+                        }
+                        catch (Exception ex)
+                        {
+                            return ex;
+                        }
                     }
                 }
             }

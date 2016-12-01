@@ -453,157 +453,105 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DoubleNotEqualMessageDisplaysAllDigits()
         {
-            string message = "";
+            double d1 = 36.1;
+            double d2 = 36.099999999999994;
 
-            try
-            {
-                double d1 = 36.1;
-                double d2 = 36.099999999999994;
-                Assert.AreEqual( d1, d2 );
-            }
-            catch(AssertionException ex)
-            {
-                message = ex.Message;
-            }
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2) );
 
-            if ( message == "" )
-                Assert.Fail( "Should have thrown an AssertionException" );
-
+            var message = ex.Message;
             int i = message.IndexOf('3');
             int j = message.IndexOf( 'd', i );
             string expected = message.Substring( i, j - i + 1 );
             i = message.IndexOf( '3', j );
             j = message.IndexOf( 'd', i );
             string actual = message.Substring( i , j - i + 1 );
+
             Assert.AreNotEqual( expected, actual );
         }
 
         [Test]
         public void FloatNotEqualMessageDisplaysAllDigits()
         {
-            string message = "";
+            float f1 = 36.125F;
+            float f2 = 36.125004F;
 
-            try
-            {
-                float f1 = 36.125F;
-                float f2 = 36.125004F;
-                Assert.AreEqual( f1, f2 );
-            }
-            catch(AssertionException ex)
-            {
-                message = ex.Message;
-            }
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(f1, f2));
 
-            if ( message == "" )
-                Assert.Fail( "Should have thrown an AssertionException" );
-
+            var message = ex.Message;
             int i = message.IndexOf( '3' );
             int j = message.IndexOf( 'f', i );
             string expected = message.Substring( i, j - i + 1 );
             i = message.IndexOf( '3', j );
             j = message.IndexOf( 'f', i );
             string actual = message.Substring( i, j - i + 1 );
+
             Assert.AreNotEqual( expected, actual );
         }
 
         [Test]
         public void DoubleNotEqualMessageDisplaysTolerance()
         {
-            string message = "";
+            double d1 = 0.15;
+            double d2 = 0.12;
+            double tol = 0.005;
 
-            try
-            {
-                double d1 = 0.15;
-                double d2 = 0.12;
-                double tol = 0.005;
-                Assert.AreEqual(d1, d2, tol);
-            }
-            catch (AssertionException ex)
-            {
-                message = ex.Message;
-            }
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2, tol));
 
-            if (message == "")
-                Assert.Fail("Should have thrown an AssertionException");
-
-            Assert.That(message, Does.Contain("+/- 0.005"));
+            Assert.That(ex.Message, Does.Contain("+/- 0.005"));
         }
 
         [Test]
         public void FloatNotEqualMessageDisplaysTolerance()
         {
-            string message = "";
+            float f1 = 0.15F;
+            float f2 = 0.12F;
+            float tol = 0.001F;
 
-            try
-            {
-                float f1 = 0.15F;
-                float f2 = 0.12F;
-                float tol = 0.001F;
-                Assert.AreEqual( f1, f2, tol );
-            }
-            catch( AssertionException ex )
-            {
-                message = ex.Message;
-            }
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual( f1, f2, tol ));
 
-            if ( message == "" )
-                Assert.Fail( "Should have thrown an AssertionException" );
-
-            Assert.That(message, Does.Contain( "+/- 0.001"));
+            Assert.That(ex.Message, Does.Contain( "+/- 0.001"));
         }
 
         [Test]
         public void DoubleNotEqualMessageDisplaysDefaultTolerance()
         {
-            string message = "";
-            GlobalSettings.DefaultFloatingPointTolerance = 0.005d;
+            double d1 = 0.15;
+            double d2 = 0.12;
+
+            var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
 
             try
             {
-                double d1 = 0.15;
-                double d2 = 0.12;
-                Assert.AreEqual(d1, d2);
-            }
-            catch (AssertionException ex)
-            {
-                message = ex.Message;
+                // TODO: Figure out a better way than changing this globally
+                GlobalSettings.DefaultFloatingPointTolerance = 0.005d;
+                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
+                Assert.That(ex.Message, Does.Contain("+/- 0.005"));
             }
             finally
             {
-                GlobalSettings.DefaultFloatingPointTolerance = 0.0d;
+                GlobalSettings.DefaultFloatingPointTolerance = savedTolerance;
             }
-
-            if (message == "")
-                Assert.Fail("Should have thrown an AssertionException");
-
-            Assert.That(message, Does.Contain("+/- 0.005"));
         }
 
         [Test]
         public void DoubleNotEqualWithNanDoesNotDisplayDefaultTolerance()
         {
-            string message = "";
-            GlobalSettings.DefaultFloatingPointTolerance = 0.005d;
+            double d1 = double.NaN;
+            double d2 = 0.12;
+
+            var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
 
             try
             {
-                double d1 = double.NaN;
-                double d2 = 0.12;
-                Assert.AreEqual(d1, d2);
-            }
-            catch (AssertionException ex)
-            {
-                message = ex.Message;
+                // TODO: Figure out a better way than changing this globally
+                GlobalSettings.DefaultFloatingPointTolerance = 0.005d;
+                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
+                Assert.That(ex.Message.IndexOf("+/-") == -1);
             }
             finally
             {
-                GlobalSettings.DefaultFloatingPointTolerance = 0.0d;
+                GlobalSettings.DefaultFloatingPointTolerance = savedTolerance;
             }
-
-            if (message == "")
-                Assert.Fail("Should have thrown an AssertionException");
-
-            Assert.That(message.IndexOf("+/-") == -1);
         }
 
         [Test]

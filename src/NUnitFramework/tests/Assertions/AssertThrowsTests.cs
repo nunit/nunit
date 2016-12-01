@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
@@ -30,36 +31,51 @@ namespace NUnit.Framework.Assertions
     public class AssertThrowsTests
     {
         [Test]
-        public void CorrectExceptionThrown()
+        public void ThrowsSucceedsWithDelegate()
         {
-            Assert.Throws(typeof(ArgumentException), TestDelegates.ThrowsArgumentException);
-            Assert.Throws(typeof(ArgumentException),
-                delegate { throw new ArgumentException(); });
-
-            Assert.Throws<ArgumentException>(
-                delegate { throw new ArgumentException(); });
-            Assert.Throws<ArgumentException>(TestDelegates.ThrowsArgumentException);
-
-            // Without cast, delegate is ambiguous before C# 3.0.
-            Assert.That((TestDelegate)delegate { throw new ArgumentException(); },
-                    Throws.Exception.TypeOf<ArgumentException>() );
-            //Assert.Throws( Is.TypeOf(typeof(ArgumentException)),
-            //        delegate { throw new ArgumentException(); } );
+            Assert.Throws(typeof(ArgumentException), delegate { throw new ArgumentException(); });
         }
 
         [Test]
-        public void CorrectExceptionIsReturnedToMethod()
+        public void GenericThrowsSucceedsWithDelegate()
         {
-            ArgumentException ex = Assert.Throws(typeof(ArgumentException),
-                new TestDelegate(TestDelegates.ThrowsArgumentException)) as ArgumentException;
+            Assert.Throws<ArgumentException>(
+                delegate { throw new ArgumentException(); });
+        }
 
-            Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+        [Test]
+        public void ThrowsConstraintSucceedsWithDelegate()
+        {
+            // Without cast, delegate is ambiguous before C# 3.0.
+            Assert.That((TestDelegate)delegate { throw new ArgumentException(); },
+                    Throws.Exception.TypeOf<ArgumentException>());
+        }
+
+#if !NET_2_0
+        [Test]
+        public void ThrowsSucceedsWithLambda()
+        {
+            Assert.Throws(typeof(ArgumentException), () => { throw new ArgumentException(); });
+        }
+
+        [Test]
+        public void GenericThrowsSucceedsWithLambda()
+        {
+            Assert.Throws<ArgumentException>(() => { throw new ArgumentException(); });
+        }
+
+        [Test]
+        public void ThrowsConstraintSucceedsWithLambda()
+        {
+            Assert.That(() => { throw new ArgumentException(); }, 
+                Throws.Exception.TypeOf<ArgumentException>());
+        }
 #endif
 
-            ex = Assert.Throws<ArgumentException>(
+        [Test]
+        public void GenericThrowsReturnsCorrectException()
+        {
+            var ex = Assert.Throws<ArgumentException>(
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
@@ -68,7 +84,13 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
-            ex = Assert.Throws(typeof(ArgumentException), 
+            CheckForSpuriousAssertionResults();
+        }
+
+        [Test]
+        public void ThrowsReturnsCorrectException()
+        { 
+            var ex = Assert.Throws(typeof(ArgumentException), 
                 delegate { throw new ArgumentException("myMessage", "myParam"); } ) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
@@ -77,74 +99,115 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
-            ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsArgumentException) as ArgumentException;
-
-            Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
+            CheckForSpuriousAssertionResults();
         }
 
         [Test]
         public void NoExceptionThrown()
         {
-            var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
+            var ex = CatchException(() => 
+                Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
+
             Assert.That(ex.Message, Is.EqualTo(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine));
+
+            CheckForSpuriousAssertionResults();
         }
 
         [Test]
         public void UnrelatedExceptionThrown()
         {
-            var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
+            var ex = CatchException(() => 
+                Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
+
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine ));
+
+            CheckForSpuriousAssertionResults();
         }
 
         [Test]
         public void BaseExceptionThrown()
         {
-            var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
+            var ex = CatchException(() => 
+                Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
+
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.Exception: my message" + Environment.NewLine ));
+
+            CheckForSpuriousAssertionResults();
         }
 
         [Test]
         public void DerivedExceptionThrown()
         {
-            var ex = CatchException(() => Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
+            var ex = CatchException(() => 
+                Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
+
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: myMessage" + Environment.NewLine + "Parameter name: myParam" + Environment.NewLine ));
+
+            CheckForSpuriousAssertionResults();
         }
 
         [Test]
-        public void DoesNotThrowSuceeds()
+        public void AssertThrowsWrappingAssertFail()
+        {
+            Assert.Throws<AssertionException>(() => Assert.Fail());
+
+            CheckForSpuriousAssertionResults();
+        }
+
+        [Test]
+        public void ThrowsConstraintWrappingAssertFail()
+        {
+            Assert.That(() => { Assert.Fail(); }, 
+                Throws.Exception.TypeOf<AssertionException>());
+
+            CheckForSpuriousAssertionResults();
+        }
+
+        [Test]
+        public void AssertDoesNotThrowSuceeds()
         {
             Assert.DoesNotThrow(TestDelegates.ThrowsNothing);
         }
 
         [Test]
-        public void DoesNotThrowFails()
+        public void AssertDoesNotThrowFails()
         {
-            var ex = CatchException(() => Assert.DoesNotThrow(TestDelegates.ThrowsArgumentException));
+            var ex = CatchException(() => 
+                Assert.DoesNotThrow(TestDelegates.ThrowsArgumentException));
+
             Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
+
+            CheckForSpuriousAssertionResults();
+        }
+
+        private static void CheckForSpuriousAssertionResults()
+        {
+            var result = TestExecutionContext.CurrentContext.CurrentResult;
+            Assert.That(result.AssertionResults.Count, Is.EqualTo(0),
+                "Spurious result left by Assert.Fail()");
         }
 
         private Exception CatchException(TestDelegate del)
         {
-            try
+            using (new TestExecutionContext.IsolatedContext())
             {
-                del();
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex;
+                try
+                {
+                    del();
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
             }
         }
     }
