@@ -537,6 +537,16 @@ namespace NUnit.Framework.Internal
             CurrentValueFormatter = formatterFactory(CurrentValueFormatter);
         }
 
+        private TestExecutionContext CreateIsolatedContext()
+        {
+            var context = new TestExecutionContext(this);
+
+            if (context.CurrentTest != null)
+                context.CurrentResult = context.CurrentTest.MakeTestResult();
+
+            return context;
+        }
+
         #endregion
 
         #region InitializeLifetimeService
@@ -558,31 +568,39 @@ namespace NUnit.Framework.Internal
         #region Nested IsolatedContext Class
 
         /// <summary>
-        /// Use "using new TestExecutionContext.IsolatedContext()"
-        /// in order to run code in isolation.
+        /// An IsolatedContext is used when running code
+        /// that may effect the current result in ways that 
+        /// should not impact the final result of the test.
+        /// A new TestExecutionContext is created with an
+        /// initially clear result, which is discarded on
+        /// exiting the context.
         /// </summary>
+        /// <example>
+        ///     using (new TestExecutionContext.IsolatedContext())
+        ///     {
+        ///         // Code that should not impact the result
+        ///     }
+        /// </example>
         public class IsolatedContext : IDisposable
         {
+            private TestExecutionContext _originalContext;
+
             /// <summary>
-            /// Push a new context onto the stack of contexts and
-            /// make it current. Clear the result in the new context.
+            /// Save the original current TestExecutionContext and
+            /// make a new isolated context current.
             /// </summary>
             public IsolatedContext()
             {
-                var context = new TestExecutionContext(CurrentContext);
-
-                if (context.CurrentTest != null)
-                    context.CurrentResult = context.CurrentTest.MakeTestResult();
-
-                CurrentContext = context;
+                _originalContext = CurrentContext;
+                CurrentContext = _originalContext.CreateIsolatedContext();
             }
 
             /// <summary>
-            /// Pop the context stack, making the prior context current.
+            /// Restore the original TestExecutionContext.
             /// </summary>
             public void Dispose()
             {
-                CurrentContext = CurrentContext._priorContext;
+                CurrentContext = _originalContext;
             }
         }
 
