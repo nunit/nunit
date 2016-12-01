@@ -544,7 +544,8 @@ void BuildProject(string projectPath, string configuration)
         settings.SetConfiguration(configuration)
         .SetVerbosity(Verbosity.Minimal)
         .WithTarget("Build")
-        .WithProperty("NodeReuse", "false"));
+        .WithProperty("NodeReuse", "false")
+		.WithProperty("Platform", "AnyCPU"));
 }
 
 //////////////////////////////////////////////////////////////////////

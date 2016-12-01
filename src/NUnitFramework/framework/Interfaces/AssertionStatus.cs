@@ -24,7 +24,9 @@
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// AssertionStatus enumeration represents the possible outcomes of an assertion
+    /// AssertionStatus enumeration represents the possible outcomes of an assertion.
+    /// The order of definition is significant, higher level values override lower
+    /// ones in determining the overall result of a test.
     /// </summary>
     public enum AssertionStatus
     {
@@ -33,9 +35,20 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         Passed,
 
+
+        /// <summary>
+        /// An assumption failed
+        /// </summary>
+        Inconclusive,
+
         /// <summary>
         /// The assertion failed
         /// </summary>
-        Failed
+        Failed,
+
+        /// <summary>
+        /// An unexpected exception was thrown
+        /// </summary>
+        Error
     }
 }
