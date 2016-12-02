@@ -105,6 +105,11 @@ namespace NUnit.Framework.Interfaces
         public readonly static ResultState Success = new ResultState(TestStatus.Passed);
 
         /// <summary>
+        /// The test issued a warning
+        /// </summary>
+        public readonly static ResultState Warning = new ResultState(TestStatus.Warning);
+
+        /// <summary>
         /// The test failed
         /// </summary>
         public readonly static ResultState Failure = new ResultState(TestStatus.Failed);
