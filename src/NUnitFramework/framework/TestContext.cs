@@ -442,6 +442,15 @@ namespace NUnit.Framework
             }
 
             /// <summary>
+            /// Gets the number of test cases that had warnings
+            /// when running the test and all its children.
+            /// </summary>
+            public int WarningCount
+            {
+                get { return _result.WarningCount; }
+            }
+
+            /// <summary>
             /// Gets the number of test cases that passed
             /// when running the test and all its children.
             /// </summary>

@@ -216,7 +216,7 @@ namespace NUnit.Framework.Attributes
             Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
 
             Assert.AreEqual(1, result.Children.Count(), "Child result count");
-            Assert.AreEqual(1, result.SkipCount, "SkipCount");
+            Assert.AreEqual(1, result.WarningCount, "WarningCount");
         }
 
         [Test]

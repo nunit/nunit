@@ -45,13 +45,12 @@ namespace NUnit.Framework.Internal.Results
         public void SuiteResultIsIgnored()
         {
             Assert.AreEqual(ResultState.Ignored, _suiteResult.ResultState);
-            Assert.AreEqual(TestStatus.Skipped, _suiteResult.ResultState.Status);
-            Assert.AreEqual(TestResult.CHILD_IGNORE_MESSAGE, _suiteResult.Message);
+            Assert.AreEqual(TestResult.CHILD_WARNINGS_MESSAGE, _suiteResult.Message);
 
             Assert.AreEqual(0, _suiteResult.PassCount);
             Assert.AreEqual(0, _suiteResult.FailCount);
-            Assert.AreEqual(0, _suiteResult.WarningCount);
-            Assert.AreEqual(1, _suiteResult.SkipCount);
+            Assert.AreEqual(1, _suiteResult.WarningCount);
+            Assert.AreEqual(0, _suiteResult.SkipCount);
             Assert.AreEqual(0, _suiteResult.InconclusiveCount);
             Assert.AreEqual(0, _suiteResult.AssertCount);
         }
@@ -61,7 +60,7 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.AreEqual("Skipped", testNode.Attributes["result"]);
+            Assert.AreEqual("Warning", testNode.Attributes["result"]);
             Assert.AreEqual("Ignored", testNode.Attributes["label"]);
             Assert.AreEqual(null, testNode.Attributes["site"]);
 
@@ -77,13 +76,13 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual("Skipped", suiteNode.Attributes["result"]);
+            Assert.AreEqual("Warning", suiteNode.Attributes["result"]);
             Assert.AreEqual("Ignored", suiteNode.Attributes["label"]);
             Assert.AreEqual(null, suiteNode.Attributes["site"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
-            Assert.AreEqual("1", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("1", suiteNode.Attributes["warnings"]);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
             Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }

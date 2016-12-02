@@ -207,7 +207,7 @@ namespace NUnit.Framework.Tests
             TestStateRecordingFixture fixture = new TestStateRecordingFixture();
             fixture.setUpIgnore = true;
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
+            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Warning:Ignored"));
         }
 
         [Test]
@@ -227,7 +227,8 @@ namespace NUnit.Framework.Tests
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.PassCount, Is.EqualTo(2));
             Assert.That(fixture.FailCount, Is.EqualTo(1));
-            Assert.That(fixture.SkipCount, Is.EqualTo(3));
+            Assert.That(fixture.WarningCount, Is.EqualTo(3));
+            Assert.That(fixture.SkipCount, Is.EqualTo(0));
             Assert.That(fixture.InconclusiveCount, Is.EqualTo(4));
             Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(fixture.StackTrace, Is.Null);

@@ -111,21 +111,23 @@ namespace NUnit.Framework.Internal.Execution
                                 PerformOneTimeSetUp();
 
                                 if (!CheckForCancellation())
-                                    switch (Result.ResultState.Status)
+                                {
+                                    bool runChildren = Result.ResultState.Status == TestStatus.Passed
+                                                    || Result.ResultState.Status == TestStatus.Warning
+                                                    && !Result.ResultState.Matches(ResultState.Ignored);
+
+                                    if (runChildren)
                                     {
-                                        case TestStatus.Passed:
-                                        case TestStatus.Warning:
-                                            RunChildren();
-                                            return;
+                                        RunChildren();
+                                        return;
                                         // Just return: completion event will take care
                                         // of TestFixtureTearDown when all tests are done.
-
-                                        case TestStatus.Skipped:
-                                        case TestStatus.Inconclusive:
-                                        case TestStatus.Failed:
-                                            SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
-                                            break;
                                     }
+                                    else
+                                    {
+                                        SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                                    }
+                                }
 
                                 // Directly execute the OneTimeFixtureTearDown for tests that
                                 // were skipped, failed or set to inconclusive in one time setup

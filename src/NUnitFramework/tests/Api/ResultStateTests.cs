@@ -23,7 +23,7 @@
 
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Api
 {
     [TestFixture]
     public class ResultStateTests
@@ -233,7 +233,7 @@ namespace NUnit.Framework.Internal
         {
             ResultState resultState = ResultState.Ignored;
 
-            Assert.AreEqual(TestStatus.Skipped, resultState.Status, "Status not correct.");
+            Assert.AreEqual(TestStatus.Warning, resultState.Status, "Status not correct.");
             Assert.AreEqual("Ignored", resultState.Label, "Label not correct.");
             Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
         }

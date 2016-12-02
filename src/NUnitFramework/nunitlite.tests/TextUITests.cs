@@ -181,10 +181,10 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Tests Not Run",
                 "",
-                "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest",
-                "Ignore Message",
-                "",
-                "2) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest",
+                //"1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest",
+                //"Ignore Message",
+                //"",
+                "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest",
                 ""
             };
 
@@ -198,9 +198,9 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Test Run Summary",
                 "  Overall result: Failed",
-                "  Test Count: 8, Passed: 1, Failed: 4, Inconclusive: 1, Skipped: 2",
+                "  Test Count: 8, Passed: 1, Failed: 4, Warnings: 1, Inconclusive: 1, Skipped: 1",
                 "    Failed Tests - Failures: 1, Errors: 1, Invalid: 2",
-                "    Skipped Tests - Ignored: 1, Explicit: 1, Other: 0",
+                "    Skipped Tests - Explicit: 1, Other: 0",
                 "  Start time: 2014-12-02 12:34:56Z",
                 "    End time: 2014-12-02 12:34:56Z",
                 "    Duration: 0.123 seconds",

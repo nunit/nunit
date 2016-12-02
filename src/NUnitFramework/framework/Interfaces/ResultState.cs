@@ -92,7 +92,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// The test has been ignored.
         /// </summary>
-        public readonly static ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
+        public readonly static ResultState Ignored = new ResultState(TestStatus.Warning, "Ignored");
 
         /// <summary>
         /// The test was skipped because it is explicit
@@ -180,6 +180,18 @@ namespace NUnit.Framework.Interfaces
         public ResultState WithSite(FailureSite site)
         {
             return new ResultState(this.Status, this.Label, site);
+        }
+
+        /// <summary>
+        /// Test whether this ResultState has the same Status and Label
+        /// as another one. In other words, the whether two are equal
+        /// ignoring the Site.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Matches(ResultState other)
+        {
+            return Status == other.Status && Label == other.Label;
         }
 
         #endregion
