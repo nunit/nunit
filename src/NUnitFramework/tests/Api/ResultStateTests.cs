@@ -32,6 +32,7 @@ namespace NUnit.Framework.Internal
         [TestCase(TestStatus.Skipped)]
         [TestCase(TestStatus.Inconclusive)]
         [TestCase(TestStatus.Passed)]
+        [TestCase(TestStatus.Warning)]
         public void Status_ConstructorWithOneArguments_ReturnsConstructorArgumentStatus(TestStatus status)
         {
             ResultState resultState = new ResultState(status);
@@ -51,6 +52,7 @@ namespace NUnit.Framework.Internal
         [TestCase(TestStatus.Skipped)]
         [TestCase(TestStatus.Inconclusive)]
         [TestCase(TestStatus.Passed)]
+        [TestCase(TestStatus.Warning)]
         public void Status_ConstructorWithTwoArguments_ReturnsConstructorArgumentStatus(TestStatus status)
         {
             ResultState resultState = new ResultState(status, string.Empty);
@@ -235,13 +237,23 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("Ignored", resultState.Label, "Label not correct.");
             Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
         }
-        
+
         [Test]
         public void Success_ReturnsResultStateWithPropertiesCorrectlySet()
         {
             ResultState resultState = ResultState.Success;
 
             Assert.AreEqual(TestStatus.Passed, resultState.Status, "Status not correct.");
+            Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
+            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+        }
+
+        [Test]
+        public void Warning_ReturnsResultStateWithPropertiesCorrectlySet()
+        {
+            ResultState resultState = ResultState.Warning;
+
+            Assert.AreEqual(TestStatus.Warning, resultState.Status, "Status not correct.");
             Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
             Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
         }

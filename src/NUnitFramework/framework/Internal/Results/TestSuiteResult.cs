@@ -41,6 +41,7 @@ namespace NUnit.Framework.Internal
     {
         private int _passCount = 0;
         private int _failCount = 0;
+        private int _warningCount = 0;
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
 #if PARALLEL
@@ -102,6 +103,30 @@ namespace NUnit.Framework.Internal
                 try
                 {
                     return _passCount;
+                }
+                finally
+                {
+#if PARALLEL
+                    RwLock.ExitReadLock();
+#endif
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that passed
+        /// when running the test and all its children.
+        /// </summary>
+        public override int WarningCount
+        {
+            get
+            {
+#if PARALLEL
+                RwLock.EnterReadLock();
+#endif
+                try
+                {
+                    return _warningCount;
                 }
                 finally
                 {
@@ -226,6 +251,13 @@ namespace NUnit.Framework.Internal
 
                             break;
 
+                        case TestStatus.Warning:
+
+                            if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                                SetResult(ResultState.Warning, CHILD_WARNINGS_MESSAGE);
+
+                            break;
+
                         case TestStatus.Failed:
 
 
@@ -247,6 +279,7 @@ namespace NUnit.Framework.Internal
                 InternalAssertCount += result.AssertCount;
                 _passCount += result.PassCount;
                 _failCount += result.FailCount;
+                _warningCount += result.WarningCount;
                 _skipCount += result.SkipCount;
                 _inconclusiveCount += result.InconclusiveCount;
             }

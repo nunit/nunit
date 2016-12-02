@@ -56,6 +56,7 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.AreEqual(0, _suiteResult.PassCount);
             Assert.AreEqual(1, _suiteResult.FailCount);
+            Assert.AreEqual(0, _suiteResult.WarningCount);
             Assert.AreEqual(0, _suiteResult.SkipCount);
             Assert.AreEqual(0, _suiteResult.InconclusiveCount);
             Assert.AreEqual(3, _suiteResult.AssertCount);
@@ -118,6 +119,7 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("1", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
             Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
             Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("3", suiteNode.Attributes["asserts"]);

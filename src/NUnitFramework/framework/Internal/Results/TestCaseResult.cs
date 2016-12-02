@@ -53,6 +53,15 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the number of test cases that had warnings
+        /// when running the test and all its children.
+        /// </summary>
+        public override int WarningCount
+        {
+            get { return ResultState.Status == TestStatus.Warning ? 1 : 0; }
+        }
+
+        /// <summary>
         /// Gets the number of test cases that passed
         /// when running the test and all its children.
         /// </summary>

@@ -119,6 +119,15 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
+        /// Gets the number of test cases that had warnings
+        /// when running the test and all its children.
+        /// </summary>
+        int WarningCount
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets the number of test cases that passed
         /// when running the test and all its children.
         /// </summary>

@@ -50,6 +50,11 @@ namespace NUnit.Framework.Internal
         internal static readonly string CHILD_ERRORS_MESSAGE = "One or more child tests had errors";
 
         /// <summary>
+        /// Error message for when child tests have warnings
+        /// </summary>
+        internal static readonly string CHILD_WARNINGS_MESSAGE = "One or more child tests had warnings";
+
+        /// <summary>
         /// Error message for when child tests are ignored
         /// </summary>
         internal static readonly string CHILD_IGNORE_MESSAGE = "One or more child tests were ignored";
@@ -269,6 +274,12 @@ namespace NUnit.Framework.Internal
         public abstract int FailCount { get; }
 
         /// <summary>
+        /// Gets the number of test cases that had warnings
+        /// when running the test and all its children.
+        /// </summary>
+        public abstract int WarningCount { get; }
+
+        /// <summary>
         /// Gets the number of test cases that passed
         /// when running the test and all its children.
         /// </summary>
@@ -358,6 +369,7 @@ namespace NUnit.Framework.Internal
                 thisNode.AddAttribute("total", (PassCount + FailCount + SkipCount + InconclusiveCount).ToString());
                 thisNode.AddAttribute("passed", PassCount.ToString());
                 thisNode.AddAttribute("failed", FailCount.ToString());
+                thisNode.AddAttribute("warnings", WarningCount.ToString());
                 thisNode.AddAttribute("inconclusive", InconclusiveCount.ToString());
                 thisNode.AddAttribute("skipped", SkipCount.ToString());
             }
@@ -372,6 +384,7 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Skipped:
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
+                case TestStatus.Warning:
                     if (Message != null)
                         AddReasonElement(thisNode);
                     break;

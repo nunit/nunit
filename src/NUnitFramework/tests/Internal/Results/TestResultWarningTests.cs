@@ -25,64 +25,65 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Results
 {
-    public class InconclusiveResultTests : TestResultTests
+    public class TestResultWarningTests : TestResultTests
     {
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Inconclusive, "because");
+            _testResult.SetResult(ResultState.Warning, "Warning message");
             _suiteResult.AddResult(_testResult);
         }
 
         [Test]
-        public void TestResultIsInconclusive()
+        public void TestResultIsWarning()
         {
-            Assert.AreEqual(ResultState.Inconclusive, _testResult.ResultState);
-            Assert.AreEqual("because", _testResult.Message);
+            Assert.AreEqual(ResultState.Warning, _testResult.ResultState);
+            Assert.AreEqual("Warning message", _testResult.Message);
         }
 
         [Test]
-        public void SuiteResultIsInconclusive()
+        public void SuiteResultIsWarning()
         {
-            Assert.AreEqual(ResultState.Inconclusive, _suiteResult.ResultState);
-            Assert.Null(_suiteResult.Message);
+            Assert.AreEqual(ResultState.Warning, _suiteResult.ResultState);
+            Assert.AreEqual(TestResult.CHILD_WARNINGS_MESSAGE, _suiteResult.Message);
 
             Assert.AreEqual(0, _suiteResult.PassCount);
             Assert.AreEqual(0, _suiteResult.FailCount);
-            Assert.AreEqual(0, _suiteResult.WarningCount);
+            Assert.AreEqual(1, _suiteResult.WarningCount);
             Assert.AreEqual(0, _suiteResult.SkipCount);
-            Assert.AreEqual(1, _suiteResult.InconclusiveCount);
+            Assert.AreEqual(0, _suiteResult.InconclusiveCount);
             Assert.AreEqual(0, _suiteResult.AssertCount);
         }
 
         [Test]
-        public void TestResultXmlNodeIsInconclusive()
+        public void TestResultXmlNodeIsWarning()
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", testNode.Attributes["result"]);
-            Assert.IsNull(testNode.Attributes["label"]);
-            Assert.IsNull(testNode.Attributes["site"]);
+            Assert.AreEqual("Warning", testNode.Attributes["result"]);
+            Assert.AreEqual(null, testNode.Attributes["label"]);
+            Assert.AreEqual(null, testNode.Attributes["site"]);
 
             TNode reason = testNode.SelectSingleNode("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual("because", reason.SelectSingleNode("message").Value);
+            Assert.AreEqual("Warning message", reason.SelectSingleNode("message").Value);
             Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
 
         [Test]
-        public void SuiteResultXmlNodeIsInconclusive()
+        public void SuiteResultXmlNodeIsWarning()
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", suiteNode.Attributes["result"]);
-            Assert.IsNull(suiteNode.Attributes["label"]);
+            Assert.AreEqual("Warning", suiteNode.Attributes["result"]);
+            Assert.AreEqual(null, suiteNode.Attributes["label"]);
+            Assert.AreEqual(null, suiteNode.Attributes["site"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
+            Assert.AreEqual("1", suiteNode.Attributes["warnings"]);
             Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
-            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }
     }
