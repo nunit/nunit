@@ -114,6 +114,7 @@ namespace NUnit.Framework.Internal.Execution
                                     switch (Result.ResultState.Status)
                                     {
                                         case TestStatus.Passed:
+                                        case TestStatus.Warning:
                                             RunChildren();
                                             return;
                                         // Just return: completion event will take care

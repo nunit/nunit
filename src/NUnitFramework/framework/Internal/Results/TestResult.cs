@@ -450,32 +450,6 @@ namespace NUnit.Framework.Internal
                 RwLock.ExitWriteLock();
 #endif
             }
-
-            // Set pseudo-counts for a test case
-            //if (IsTestCase(test))
-            //{
-            //    passCount = 0;
-            //    failCount = 0;
-            //    skipCount = 0;
-            //    inconclusiveCount = 0;
-
-            //    switch (ResultState.Status)
-            //    {
-            //        case TestStatus.Passed:
-            //            passCount++;
-            //            break;
-            //        case TestStatus.Failed:
-            //            failCount++;
-            //            break;
-            //        case TestStatus.Skipped:
-            //            skipCount++;
-            //            break;
-            //        default:
-            //        case TestStatus.Inconclusive:
-            //            inconclusiveCount++;
-            //            break;
-            //    }
-            //}
         }
 
         /// <summary>
