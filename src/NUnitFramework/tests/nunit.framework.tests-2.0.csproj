@@ -72,6 +72,7 @@
     <Compile Include="Assertions\AssertionHelperTests.cs" />
     <Compile Include="Assertions\AssertMultipleTests.cs" />
     <Compile Include="Assertions\AssertPolarityTests.cs" />
+    <Compile Include="Assertions\AssertWarnTests.cs" />
     <Compile Include="Assertions\AssertZeroTests.cs" />
     <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />

@@ -38,7 +38,7 @@ namespace NUnit.Framework.Assertions
                 "CallAssertWarnWithMessage");
 
             Assert.AreEqual(ResultState.Warning, result.ResultState);
-            //Assert.AreEqual("MESSAGE", result.Message);
+            Assert.AreEqual("MESSAGE", result.Message);
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Assertions
                 "CallAssertWarnWithMessageAndArgs");
 
             Assert.AreEqual(ResultState.Warning, result.ResultState);
-            //Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
+            Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
         }
     }
 }

@@ -101,9 +101,11 @@ namespace NUnit.Framework
                     context.CurrentResult = innerCommand.Execute(context);
 
                     if (context.CurrentResult.ResultState != ResultState.Failure)
-                    {
                         break;
-                    }
+
+                    // Clear result for retry
+                    if (count > 0)
+                        context.CurrentResult = context.CurrentTest.MakeTestResult();
                 }
 
                 return context.CurrentResult;

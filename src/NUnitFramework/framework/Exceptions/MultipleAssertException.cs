@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,38 +21,48 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Interfaces
+using System;
+
+namespace NUnit.Framework 
 {
+    using Interfaces;
+
     /// <summary>
-    /// AssertionStatus enumeration represents the possible outcomes of an assertion.
-    /// The order of definition is significant, higher level values override lower
-    /// ones in determining the overall result of a test.
+    /// Thrown when an assertion failed.
     /// </summary>
-    public enum AssertionStatus
+#if !PORTABLE && !NETSTANDARD1_6
+    [Serializable]
+#endif
+    public class MultipleAssertException : ResultStateException
     {
         /// <summary>
-        /// An assumption failed
+        /// Default Constructor (normally used)
         /// </summary>
-        Inconclusive,
+        public MultipleAssertException() : base("One or more failures in Multiple Assert block:") { } 
+
+        /// <param name="message">The error message that explains 
+        /// the reason for the exception</param>
+        /// <param name="inner">The exception that caused the 
+        /// current exception</param>
+        public MultipleAssertException(string message, Exception inner) :
+            base(message, inner) 
+        {}
+
+#if !PORTABLE && !NETSTANDARD1_6
+        /// <summary>
+        /// Serialization Constructor
+        /// </summary>
+        protected MultipleAssertException(System.Runtime.Serialization.SerializationInfo info, 
+            System.Runtime.Serialization.StreamingContext context) : base(info,context)
+        {}
+#endif
 
         /// <summary>
-        /// The assertion succeeded
+        /// Gets the ResultState provided by this exception
         /// </summary>
-        Passed,
-
-        /// <summary>
-        /// A warning message was issued
-        /// </summary>
-        Warning,
-
-        /// <summary>
-        /// The assertion failed
-        /// </summary>
-        Failed,
-
-        /// <summary>
-        /// An unexpected exception was thrown
-        /// </summary>
-        Error
+        public override ResultState ResultState
+        {
+            get { return ResultState.Failure; }
+        }
     }
 }

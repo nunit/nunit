@@ -248,6 +248,7 @@
     <Compile Include="Contains.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
+    <Compile Include="Exceptions\MultipleAssertException.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />
     <Compile Include="Exceptions\InconclusiveException.cs" />

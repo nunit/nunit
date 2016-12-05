@@ -116,6 +116,7 @@
     <Compile Include="Assert.Conditions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Exceptions\MultipleAssertException.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Interfaces\AssertionResult.cs" />
     <Compile Include="Interfaces\AssertionStatus.cs" />
