@@ -181,9 +181,6 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Tests Not Run",
                 "",
-                //"1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest",
-                //"Ignore Message",
-                //"",
                 "1) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest",
                 ""
             };

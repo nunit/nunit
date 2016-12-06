@@ -314,8 +314,6 @@ namespace NUnitLite
             var status = summary.ResultState.Status;
 
             var overallResult = status.ToString();
-            //if (overallResult == "Skipped")
-            //    overallResult = "Warning";
 
             ColorStyle overallStyle = status == TestStatus.Passed
                 ? ColorStyle.Pass
