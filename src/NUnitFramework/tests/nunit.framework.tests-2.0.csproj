@@ -77,6 +77,7 @@
     <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\LowTrustFixture.cs" />
+    <Compile Include="Assertions\WarningTests.cs" />
     <Compile Include="Attributes\CommandWrapperTests.cs" />
     <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />

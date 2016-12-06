@@ -96,6 +96,7 @@
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />
+    <Compile Include="Assertions\WarningTests.cs" />
     <Compile Include="Attributes\ActionAttributeTests.cs" />
     <Compile Include="Attributes\ApartmentAttributeTests.cs" />
     <Compile Include="Attributes\ApplyToContextTests.cs" />

@@ -87,6 +87,7 @@
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
     <Compile Include="AssertionHelper.cs" />
+    <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />

@@ -34,7 +34,7 @@ namespace NUnit.Framework.Assertions
         public void AssertWarnWorksWithMessage()
         {
             ITestResult result = TestBuilder.RunTestCase(
-                typeof(AssertWarnFixture),
+                typeof(WarningFixture),
                 "CallAssertWarnWithMessage");
 
             Assert.AreEqual(ResultState.Warning, result.ResultState);
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Assertions
         public void AssertWarnWorksWithMessageAndArgs()
         {
             ITestResult result = TestBuilder.RunTestCase(
-                typeof(AssertWarnFixture),
+                typeof(WarningFixture),
                 "CallAssertWarnWithMessageAndArgs");
 
             Assert.AreEqual(ResultState.Warning, result.ResultState);

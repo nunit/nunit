@@ -412,6 +412,7 @@
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestParameters.cs" />
     <Compile Include="Throws.cs" />
+    <Compile Include="Warn.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\nunit.snk">

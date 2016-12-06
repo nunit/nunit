@@ -55,7 +55,6 @@
     </Compile>
     <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AssertMultipleData.cs" />
-    <Compile Include="AssertWarnFixture.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="RepeatingTestsFixtureBase.cs" />
@@ -94,6 +93,7 @@
     <Compile Include="UnexpectedExceptionFixture.cs" />
     <Compile Include="UnhandledExceptions.cs" />
     <Compile Include="SetUpFixtureData.cs" />
+    <Compile Include="WarningFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

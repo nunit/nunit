@@ -78,7 +78,6 @@
     <Compile Include="AssertFailFixture.cs" />
     <Compile Include="AssertIgnoreData.cs" />
     <Compile Include="AssertMultipleData.cs" />
-    <Compile Include="AssertWarnFixture.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="AsyncSetupTearDownFixture.cs" />
@@ -115,6 +114,7 @@
     <Compile Include="TimeoutFixture.cs" />
     <Compile Include="UnexpectedExceptionFixture.cs" />
     <Compile Include="UnhandledExceptions.cs" />
+    <Compile Include="WarningFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\nunit.snk">

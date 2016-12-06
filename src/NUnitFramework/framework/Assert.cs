@@ -405,6 +405,6 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.IncrementAssertCount();
         }
 
-#endregion
+        #endregion
     }
 }
