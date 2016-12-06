@@ -38,141 +38,281 @@ namespace NUnit.TestData
     [TestFixture]
     public class WarningFixture
     {
+        #region Passing Tests
+
         [Test]
-        public void WarningPasses_Boolean()
+        public void WarnUnless_Passes_Boolean()
         {
             Warn.Unless(2 + 2 == 4);
         }
 
         [Test]
-        public void WarningPasses_BooleanWithMessage()
+        public void WarnIf_Passes_Boolean()
+        {
+            Warn.If(2 + 2 != 4);
+        }
+
+        [Test]
+        public void WarnUnless_Passes_BooleanWithMessage()
         {
             Warn.Unless(2 + 2 == 4, "Not Equal");
         }
 
         [Test]
-        public void WarningPasses_BooleanWithMessageAndArgs()
+        public void WarnIf_Passes_BooleanWithMessage()
+        {
+            Warn.If(2 + 2 != 4, "Not Equal");
+        }
+
+        [Test]
+        public void WarnUnless_Passes_BooleanWithMessageAndArgs()
         {
             Warn.Unless(2 + 2 == 4, "Not Equal to {0}", 4);
         }
 
+        [Test]
+        public void WarnIf_Passes_BooleanWithMessageAndArgs()
+        {
+            Warn.If(2 + 2 != 4, "Not Equal to {0}", 4);
+        }
+
 #if !NET_2_0
         [Test]
-        public void WarningPasses_BooleanWithMessageStringFunc()
+        public void WarnUnless_Passes_BooleanWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.Unless(2 + 2 == 4, getExceptionMessage);
         }
 
         [Test]
-        public void WarningPasses_BooleanLambda()
+        public void WarnIf_Passes_BooleanWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Warn.If(2 + 2 != 4, getExceptionMessage);
+        }
+
+        [Test]
+        public void WarnUnless_Passes_BooleanLambda()
         {
             Warn.Unless(() => 2 + 2 == 4);
         }
 
         [Test]
-        public void WarningPasses_BooleanLambdaWithMessage()
+        public void WarnIf_Passes_BooleanLambda()
+        {
+            Warn.If(() => 2 + 2 != 4);
+        }
+
+        [Test]
+        public void WarnUnless_Passes_BooleanLambdaWithMessage()
         {
             Warn.Unless(() => 2 + 2 == 4, "Not Equal");
         }
 
         [Test]
-        public void WarningPasses_BooleanLambdaWithMessageAndArgs()
+        public void WarnIf_Passes_BooleanLambdaWithMessage()
+        {
+            Warn.If(() => 2 + 2 != 4, "Not Equal");
+        }
+
+        [Test]
+        public void WarnUnless_Passes_BooleanLambdaWithMessageAndArgs()
         {
             Warn.Unless(() => 2 + 2 == 4, "Not Equal to {0}", 4);
         }
 
         [Test]
-        public void WarningPasses_BooleanLambdaWithWithMessageStringFunc()
+        public void WarnIf_Passes_BooleanLambdaWithMessageAndArgs()
+        {
+            Warn.If(() => 2 + 2 != 4, "Not Equal to {0}", 4);
+        }
+
+        [Test]
+        public void WarnUnless_Passes_BooleanLambdaWithWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.Unless(() => 2 + 2 == 4, getExceptionMessage);
         }
+
+        [Test]
+        public void WarnIf_Passes_BooleanLambdaWithWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Warn.If(() => 2 + 2 != 4, getExceptionMessage);
+        }
 #endif
 
         [Test]
-        public void WarningPasses_ActualAndConstraint()
+        public void WarnUnless_Passes_ActualAndConstraint()
         {
             Warn.Unless(2 + 2, Is.EqualTo(4));
         }
 
         [Test]
-        public void WarningPasses_ActualAndConstraintWithMessage()
+        public void WarnIf_Passes_ActualAndConstraint()
+        {
+            Warn.If(2 + 2, Is.Not.EqualTo(4));
+        }
+
+        [Test]
+        public void WarnUnless_Passes_ActualAndConstraintWithMessage()
         {
             Warn.Unless(2 + 2, Is.EqualTo(4), "Should be 4");
         }
 
         [Test]
-        public void WarningPasses_ActualAndConstraintWithMessageAndArgs()
+        public void WarnIf_Passes_ActualAndConstraintWithMessage()
+        {
+            Warn.If(2 + 2, Is.Not.EqualTo(4), "Should be 4");
+        }
+
+        [Test]
+        public void WarnUnless_Passes_ActualAndConstraintWithMessageAndArgs()
         {
             Warn.Unless(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
 
+        [Test]
+        public void WarnIf_Passes_ActualAndConstraintWithMessageAndArgs()
+        {
+            Warn.If(2 + 2, Is.Not.EqualTo(4), "Should be {0}", 4);
+        }
+
 #if !NET_2_0
         [Test]
-        public void WarningPasses_ActualAndConstraintWithMessageStringFunc()
+        public void WarnUnless_Passes_ActualAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.Unless(2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
 
         [Test]
-        public void WarningPasses_ActualLambdaAndConstraint()
+        public void WarnIf_Passes_ActualAndConstraintWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Warn.If(2 + 2, Is.Not.EqualTo(4), getExceptionMessage);
+        }
+
+        [Test]
+        public void WarnUnless_Passes_ActualLambdaAndConstraint()
         {
             Warn.Unless(() => 2 + 2, Is.EqualTo(4));
         }
 
         [Test]
-        public void WarningPasses_ActualLambdaAndConstraintWithMessage()
+        public void WarnIf_Passes_ActualLambdaAndConstraint()
+        {
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(4));
+        }
+
+        [Test]
+        public void WarnUnless_Passes_ActualLambdaAndConstraintWithMessage()
         {
             Warn.Unless(() => 2 + 2, Is.EqualTo(4), "Should be 4");
         }
 
         [Test]
-        public void WarningPasses_ActualLambdaAndConstraintWithMessageAndArgs()
+        public void WarnIf_Passes_ActualLambdaAndConstraintWithMessage()
+        {
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(4), "Should be 4");
+        }
+
+        [Test]
+        public void WarnUnless_Passes_ActualLambdaAndConstraintWithMessageAndArgs()
         {
             Warn.Unless(() => 2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
 
         [Test]
-        public void WarningPasses_ActualLambdaAndConstraintWithMessageStringFunc()
+        public void WarnIf_Passes_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(4), "Should be {0}", 4);
+        }
+
+        [Test]
+        public void WarnUnless_Passes_ActualLambdaAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.Unless(() => 2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
+
+        [Test]
+        public void WarnIf_Passes_ActualLambdaAndConstraintWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(4), getExceptionMessage);
+        }
 #endif
 
         [Test]
-        public void WarningPasses_DelegateAndConstraint()
+        public void WarnUnless_Passes_DelegateAndConstraint()
         {
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4));
         }
 
         [Test]
-        public void WarningPasses_DelegateAndConstraintWithMessage()
+        public void WarnIf_Passes_DelegateAndConstraint()
+        {
+            Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4));
+        }
+
+        [Test]
+        public void WarnUnless_Passes_DelegateAndConstraintWithMessage()
         {
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Message");
         }
 
         [Test]
-        public void WarningPasses_DelegateAndConstraintWithMessageAndArgs()
+        public void WarnIf_Passes_DelegateAndConstraintWithMessage()
+        {
+            Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), "Message");
+        }
+
+        [Test]
+        public void WarnUnless_Passes_DelegateAndConstraintWithMessageAndArgs()
         {
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
+        [Test]
+        public void WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs()
+        {
+            Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), "Should be {0}", 4);
+        }
+
 #if !NET_2_0
         [Test]
-        public void WarningPasses_DelegateAndConstraintWithMessageStringFunc()
+        public void WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
         }
+
+        [Test]
+        public void WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), getExceptionMessage);
+        }
 #endif
 
-        private int ReturnsFour()
+#if ASYNC
+        [Test]
+        public void WarnUnless_Passes_Async()
         {
-            return 4;
+            Warn.Unless(async () => await One(), Is.EqualTo(1));
         }
+
+        [Test]
+        public void WarnIf_Passes_Async()
+        {
+            Warn.If(async () => await One(), Is.Not.EqualTo(1));
+        }
+#endif
+
+        #endregion
+
+        #region Tests that issue Warnings
 
         [Test]
         public void CallAssertWarnWithMessage()
@@ -187,135 +327,283 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public void WarnUnless_Boolean()
+        public void WarnUnless_Fails_Boolean()
         {
             Warn.Unless(2 + 2 == 5);
         }
 
         [Test]
-        public void WarnUnless_BooleanWithMessage()
+        public void WarnIf_Fails_Boolean()
+        {
+            Warn.If(2 + 2 != 5);
+        }
+
+        [Test]
+        public void WarnUnless_Fails_BooleanWithMessage()
         {
             Warn.Unless(2 + 2 == 5, "message");
         }
 
         [Test]
-        public void WarnUnless_BooleanWithMessageAndArgs()
+        public void WarnIf_Fails_BooleanWithMessage()
+        {
+            Warn.If(2 + 2 != 5, "message");
+        }
+
+        [Test]
+        public void WarnUnless_Fails_BooleanWithMessageAndArgs()
         {
             Warn.Unless(2 + 2 == 5, "got {0}", 5);
         }
 
+        [Test]
+        public void WarnIf_Fails_BooleanWithMessageAndArgs()
+        {
+            Warn.If(2 + 2 != 5, "got {0}", 5);
+        }
+
 #if !NET_2_0
         [Test]
-        public void WarnUnless_BooleanWithMessageStringFunc()
+        public void WarnUnless_Fails_BooleanWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => "got 5";
             Warn.Unless(2 + 2 == 5, getExceptionMessage);
         }
 
         [Test]
-        public void WarnUnless_BooleanLambda()
+        public void WarnIf_Fails_BooleanWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => "got 5";
+            Warn.If(2 + 2 != 5, getExceptionMessage);
+        }
+
+        [Test]
+        public void WarnUnless_Fails_BooleanLambda()
         {
             Warn.Unless(() => 2 + 2 == 5);
         }
 
         [Test]
-        public void WarnUnless_BooleanLambdaWithMessage()
+        public void WarnIf_Fails_BooleanLambda()
+        {
+            Warn.If(() => 2 + 2 != 5);
+        }
+
+        [Test]
+        public void WarnUnless_Fails_BooleanLambdaWithMessage()
         {
             Warn.Unless(() => 2 + 2 == 5, "message");
         }
 
         [Test]
-        public void WarnUnless_BooleanLambdaWithMessageAndArgs()
+        public void WarnIf_Fails_BooleanLambdaWithMessage()
+        {
+            Warn.If(() => 2 + 2 != 5, "message");
+        }
+
+        [Test]
+        public void WarnUnless_Fails_BooleanLambdaWithMessageAndArgs()
         {
             Warn.Unless(() => 2 + 2 == 5, "got {0}", 5);
         }
 
         [Test]
-        public void WarnUnless_BooleanLambdaWithMessageStringFunc()
+        public void WarnIf_Fails_BooleanLambdaWithMessageAndArgs()
+        {
+            Warn.If(() => 2 + 2 != 5, "got {0}", 5);
+        }
+
+        [Test]
+        public void WarnUnless_Fails_BooleanLambdaWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => "got 5";
             Warn.Unless(() => 2 + 2 == 5, getExceptionMessage);
         }
+
+        [Test]
+        public void WarnIf_Fails_BooleanLambdaWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => "got 5";
+            Warn.If(() => 2 + 2 != 5, getExceptionMessage);
+        }
 #endif
 
         [Test]
-        public void WarnUnless_ActualAndConstraint()
+        public void WarnUnless_Fails_ActualAndConstraint()
         {
             Warn.Unless(2 + 2, Is.EqualTo(5));
         }
 
         [Test]
-        public void WarnUnless_ActualAndConstraintWithMessage()
+        public void WarnIf_Fails_ActualAndConstraint()
+        {
+            Warn.If(2 + 2, Is.Not.EqualTo(5));
+        }
+
+        [Test]
+        public void WarnUnless_Fails_ActualAndConstraintWithMessage()
         {
             Warn.Unless(2 + 2, Is.EqualTo(5), "Error");
         }
 
         [Test]
-        public void WarnUnless_ActualAndConstraintWithMessageAndArgs()
+        public void WarnIf_Fails_ActualAndConstraintWithMessage()
+        {
+            Warn.If(2 + 2, Is.Not.EqualTo(5), "Error");
+        }
+
+        [Test]
+        public void WarnUnless_Fails_ActualAndConstraintWithMessageAndArgs()
         {
             Warn.Unless(2 + 2, Is.EqualTo(5), "Should be {0}", 5);
         }
 
+        [Test]
+        public void WarnIf_Fails_ActualAndConstraintWithMessageAndArgs()
+        {
+            Warn.If(2 + 2, Is.Not.EqualTo(5), "Should be {0}", 5);
+        }
+
 #if !NET_2_0
         [Test]
-        public void WarnUnless_ActualAndConstraintWithMessageStringFunc()
+        public void WarnUnless_Fails_ActualAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => "Should be 5";
             Warn.Unless(2 + 2, Is.EqualTo(5), getExceptionMessage);
         }
 
         [Test]
-        public void WarnUnless_ActualLambdaAndConstraint()
+        public void WarnIf_Fails_ActualAndConstraintWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => "Should be 5";
+            Warn.If(2 + 2, Is.Not.EqualTo(5), getExceptionMessage);
+        }
+
+        [Test]
+        public void WarnUnless_Fails_ActualLambdaAndConstraint()
         {
             Warn.Unless(() => 2 + 2, Is.EqualTo(5));
         }
 
         [Test]
-        public void WarnUnless_ActualLambdaAndConstraintWithMessage()
+        public void WarnIf_Fails_ActualLambdaAndConstraint()
+        {
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(5));
+        }
+
+        [Test]
+        public void WarnUnless_Fails_ActualLambdaAndConstraintWithMessage()
         {
             Warn.Unless(() => 2 + 2, Is.EqualTo(5), "Error");
         }
 
         [Test]
-        public void WarnUnless_ActualLambdaAndConstraintWithMessageAndArgs()
+        public void WarnIf_Fails_ActualLambdaAndConstraintWithMessage()
+        {
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(5), "Error");
+        }
+
+        [Test]
+        public void WarnUnless_Fails_ActualLambdaAndConstraintWithMessageAndArgs()
         {
             Warn.Unless(() => 2 + 2, Is.EqualTo(5), "Should be {0}", 5);
         }
 
         [Test]
-        public void WarnUnless_ActualLambdaAndConstraintWithMessageStringFunc()
+        public void WarnIf_Fails_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(5), "Should be {0}", 5);
+        }
+
+        [Test]
+        public void WarnUnless_Fails_ActualLambdaAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => "Should be 5";
             Warn.Unless(() => 2 + 2, Is.EqualTo(5), getExceptionMessage);
         }
+
+        [Test]
+        public void WarnIf_Fails_ActualLambdaAndConstraintWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => "Should be 5";
+            Warn.If(() => 2 + 2, Is.Not.EqualTo(5), getExceptionMessage);
+        }
 #endif
 
         [Test]
-        public void WarnUnless_DelegateAndConstraint()
+        public void WarnUnless_Fails_DelegateAndConstraint()
         {
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4));
         }
 
         [Test]
-        public void WarnUnless_DelegateAndConstraintWithMessage()
+        public void WarnIf_Fails_DelegateAndConstraint()
+        {
+            Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4));
+        }
+
+        [Test]
+        public void WarnUnless_Fails_DelegateAndConstraintWithMessage()
         {
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error");
         }
 
         [Test]
-        public void WarnUnless_DelegateAndConstraintWithMessageAndArgs()
+        public void WarnIf_Fails_DelegateAndConstraintWithMessage()
+        {
+            Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), "Error");
+        }
+
+        [Test]
+        public void WarnUnless_Fails_DelegateAndConstraintWithMessageAndArgs()
         {
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
         }
 
+        [Test]
+        public void WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs()
+        {
+            Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), "Should be {0}", 4);
+        }
+
 #if !NET_2_0
         [Test]
-        public void WarnUnless_DelegateAndConstraintWithMessageStringFunc()
+        public void WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => "Should be 4";
             Warn.Unless(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), getExceptionMessage);
         }
+
+        [Test]
+        public void WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc()
+        {
+            Func<string> getExceptionMessage = () => "Should be 4";
+            Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), getExceptionMessage);
+        }
 #endif
+
+#if ASYNC
+        [Test]
+        public void WarnUnless_Fails_Async()
+        {
+            Warn.Unless(async () => await One(), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void WarnIf_Fails_Async()
+        {
+            Warn.If(async () => await One(), Is.Not.EqualTo(2));
+        }
+#endif
+
+        #endregion
+
+        #region Helper Methods
+
+        private int ReturnsFour()
+        {
+            return 4;
+        }
 
         private int ReturnsFive()
         {
@@ -323,16 +611,12 @@ namespace NUnit.TestData
         }
 
 #if ASYNC
-        [Test]
-        public void WarningFails_Async()
-        {
-            Warn.Unless(async () => await One(), Is.EqualTo(2));
-        }
-
         private static Task<int> One()
         {
             return Task.Run(() => 1);
         }
 #endif
+
+        #endregion
     }
 }

@@ -64,7 +64,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Warn.If
+        #region Warn.Unless
 
         #region ActualValueDelegate
 
@@ -140,8 +140,7 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false a warning is issued.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
@@ -152,8 +151,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the 
-        /// method throws an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false a warning is issued. 
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void Unless(bool condition)
@@ -163,8 +161,7 @@ namespace NUnit.Framework
 
 #if !NET_2_0
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false a warning is issued.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
@@ -228,11 +225,9 @@ namespace NUnit.Framework
             Warn.Unless((object)code, constraint);
         }
 
-#endregion
-
         #endregion
 
-        #region Warn.If<TActual>
+        #region Generic
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
@@ -293,6 +288,219 @@ namespace NUnit.Framework
                 IssueWarning(result, getExceptionMessage(), null);
         }
 #endif
+
+        #endregion
+
+        #endregion
+
+        #region Warn.If
+
+        #region ActualValueDelegate
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// fails and issuing a warning on success.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
+        {
+            Warn.If(del, expr.Resolve(), null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// fails and issuing a warning on success.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
+        {
+            CheckMultipleAssertLevel();
+
+            var constraint = new NotConstraint(expr.Resolve());
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(del);
+
+            if (!result.IsSuccess)
+                IssueWarning(result, message, args);
+        }
+
+        //private static void IssueWarning(ConstraintResult result, string message, object[] args)
+        //{
+        //    MessageWriter writer = new TextMessageWriter(message, args);
+        //    result.WriteMessageTo(writer);
+        //    Assert.Warn(writer.ToString());
+        //}
+
+#if !NET_2_0
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// fails and issuing a warning on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void If<TActual>(
+            ActualValueDelegate<TActual> del,
+            IResolveConstraint expr,
+            Func<string> getExceptionMessage)
+        {
+            CheckMultipleAssertLevel();
+
+            var constraint = new NotConstraint(expr.Resolve());
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(del);
+
+            if (!result.IsSuccess)
+                IssueWarning(result, getExceptionMessage(), null);
+        }
+#endif
+
+        #endregion
+
+        #region Boolean
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void If(bool condition, string message, params object[] args)
+        {
+            Warn.If(condition, Is.True, message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false a warning is issued. 
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        public static void If(bool condition)
+        {
+            Warn.If(condition, Is.True, null, null);
+        }
+
+#if !NET_2_0
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void If(bool condition, Func<string> getExceptionMessage)
+        {
+            Warn.If(condition, Is.True, getExceptionMessage);
+        }
+#endif
+
+        #endregion
+
+        #region Lambda returning Boolean
+
+#if !NET_2_0
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true a warning is issued.
+        /// </summary> 
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="message">The message to display if the condition is true</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void If(Func<bool> condition, string message, params object[] args)
+        {
+            Warn.If(condition.Invoke(), Is.True, message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true a warning is issued.
+        /// </summary>
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        public static void If(Func<bool> condition)
+        {
+            Warn.If(condition.Invoke(), Is.True, null, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true a warning is issued.
+        /// </summary> 
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void If(Func<bool> condition, Func<string> getExceptionMessage)
+        {
+            Warn.If(condition.Invoke(), Is.True, getExceptionMessage);
+        }
+#endif
+
+        #endregion
+
+        #region Generic
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// fails and issuing a warning if it succeeds.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        public static void If<TActual>(TActual actual, IResolveConstraint expression)
+        {
+            Warn.If(actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// fails and issuing a warning if it succeeds.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void If<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            CheckMultipleAssertLevel();
+
+            var constraint = new NotConstraint(expression.Resolve());
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(actual);
+
+            if (!result.IsSuccess)
+                IssueWarning(result, message, args);
+        }
+
+#if !NET_2_0
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and issuing a warning on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        public static void If<TActual>(
+            TActual actual,
+            IResolveConstraint expression,
+            Func<string> getExceptionMessage)
+        {
+            CheckMultipleAssertLevel();
+
+            var constraint = new NotConstraint(expression.Resolve());
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(actual);
+
+            if (!result.IsSuccess)
+                IssueWarning(result, getExceptionMessage(), null);
+        }
+#endif
+
+        #endregion
 
         #endregion
 

@@ -41,31 +41,55 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class WarningTests
     {
-        [TestCase("WarningPasses_Boolean")]
-        [TestCase("WarningPasses_BooleanWithMessage")]
-        [TestCase("WarningPasses_BooleanWithMessageAndArgs")]
+        [TestCase("WarnUnless_Passes_Boolean")]
+        [TestCase("WarnIf_Passes_Boolean")]
+        [TestCase("WarnUnless_Passes_BooleanWithMessage")]
+        [TestCase("WarnIf_Passes_BooleanWithMessage")]
+        [TestCase("WarnUnless_Passes_BooleanWithMessageAndArgs")]
+        [TestCase("WarnIf_Passes_BooleanWithMessageAndArgs")]
 #if !NET_2_0
-        [TestCase("WarningPasses_BooleanWithMessageStringFunc")]
-        [TestCase("WarningPasses_BooleanLambda")]
-        [TestCase("WarningPasses_BooleanLambdaWithMessage")]
-        [TestCase("WarningPasses_BooleanLambdaWithMessageAndArgs")]
-        [TestCase("WarningPasses_BooleanLambdaWithWithMessageStringFunc")]
+        [TestCase("WarnUnless_Passes_BooleanWithMessageStringFunc")]
+        [TestCase("WarnIf_Passes_BooleanWithMessageStringFunc")]
+        [TestCase("WarnUnless_Passes_BooleanLambda")]
+        [TestCase("WarnIf_Passes_BooleanLambda")]
+        [TestCase("WarnUnless_Passes_BooleanLambdaWithMessage")]
+        [TestCase("WarnIf_Passes_BooleanLambdaWithMessage")]
+        [TestCase("WarnUnless_Passes_BooleanLambdaWithMessageAndArgs")]
+        [TestCase("WarnIf_Passes_BooleanLambdaWithMessageAndArgs")]
+        [TestCase("WarnUnless_Passes_BooleanLambdaWithWithMessageStringFunc")]
+        [TestCase("WarnIf_Passes_BooleanLambdaWithWithMessageStringFunc")]
 #endif
-        [TestCase("WarningPasses_ActualAndConstraint")]
-        [TestCase("WarningPasses_ActualAndConstraintWithMessage")]
-        [TestCase("WarningPasses_ActualAndConstraintWithMessageAndArgs")]
+        [TestCase("WarnUnless_Passes_ActualAndConstraint")]
+        [TestCase("WarnIf_Passes_ActualAndConstraint")]
+        [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessage")]
+        [TestCase("WarnIf_Passes_ActualAndConstraintWithMessage")]
+        [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessageAndArgs")]
+        [TestCase("WarnIf_Passes_ActualAndConstraintWithMessageAndArgs")]
 #if !NET_2_0
-        [TestCase("WarningPasses_ActualAndConstraintWithMessageStringFunc")]
-        [TestCase("WarningPasses_ActualLambdaAndConstraint")]
-        [TestCase("WarningPasses_ActualLambdaAndConstraintWithMessage")]
-        [TestCase("WarningPasses_ActualLambdaAndConstraintWithMessageAndArgs")]
-        [TestCase("WarningPasses_ActualLambdaAndConstraintWithMessageStringFunc")]
+        [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessageStringFunc")]
+        [TestCase("WarnIf_Passes_ActualAndConstraintWithMessageStringFunc")]
+        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraint")]
+        [TestCase("WarnIf_Passes_ActualLambdaAndConstraint")]
+        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraintWithMessage")]
+        [TestCase("WarnIf_Passes_ActualLambdaAndConstraintWithMessage")]
+        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraintWithMessageAndArgs")]
+        [TestCase("WarnIf_Passes_ActualLambdaAndConstraintWithMessageAndArgs")]
+        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraintWithMessageStringFunc")]
+        [TestCase("WarnIf_Passes_ActualLambdaAndConstraintWithMessageStringFunc")]
 #endif
-        [TestCase("WarningPasses_DelegateAndConstraint")]
-        [TestCase("WarningPasses_DelegateAndConstraintWithMessage")]
-        [TestCase("WarningPasses_DelegateAndConstraintWithMessageAndArgs")]
+        [TestCase("WarnUnless_Passes_DelegateAndConstraint")]
+        [TestCase("WarnIf_Passes_DelegateAndConstraint")]
+        [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessage")]
+        [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessage")]
+        [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessageAndArgs")]
+        [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs")]
 #if !NET_2_0
-        [TestCase("WarningPasses_DelegateAndConstraintWithMessageStringFunc")]
+        [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc")]
+        [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc")]
+#endif
+#if ASYNC
+        [TestCase("WarnUnless_Passes_Async")]
+        [TestCase("WarnIf_Passes_Async")]
 #endif
         public void WarningPasses(string methodName)
         {
@@ -76,36 +100,57 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertionResults.Count, Is.EqualTo(0), "There should be no AssertionResults");
         }
 
-        [TestCase("WarnUnless_Boolean", null)]
-        [TestCase("WarnUnless_BooleanWithMessage", "message")]
-        [TestCase("WarnUnless_BooleanWithMessageAndArgs", "got 5")]
+        [TestCase("WarnUnless_Fails_Boolean", null)]
+        [TestCase("WarnIf_Fails_Boolean", null)]
+        [TestCase("WarnUnless_Fails_BooleanWithMessage", "message")]
+        [TestCase("WarnIf_Fails_BooleanWithMessage", "message")]
+        [TestCase("WarnUnless_Fails_BooleanWithMessageAndArgs", "got 5")]
+        [TestCase("WarnIf_Fails_BooleanWithMessageAndArgs", "got 5")]
 #if !NET_2_0
-        [TestCase("WarnUnless_BooleanWithMessageStringFunc", "got 5")]
-        [TestCase("WarnUnless_BooleanLambda", null)]
-        [TestCase("WarnUnless_BooleanLambdaWithMessage", "message")]
-        [TestCase("WarnUnless_BooleanLambdaWithMessageAndArgs", "got 5")]
-        [TestCase("WarnUnless_BooleanLambdaWithMessageStringFunc", "got 5")]
+        [TestCase("WarnUnless_Fails_BooleanWithMessageStringFunc", "got 5")]
+        [TestCase("WarnIf_Fails_BooleanWithMessageStringFunc", "got 5")]
+        [TestCase("WarnUnless_Fails_BooleanLambda", null)]
+        [TestCase("WarnIf_Fails_BooleanLambda", null)]
+        [TestCase("WarnUnless_Fails_BooleanLambdaWithMessage", "message")]
+        [TestCase("WarnIf_Fails_BooleanLambdaWithMessage", "message")]
+        [TestCase("WarnUnless_Fails_BooleanLambdaWithMessageAndArgs", "got 5")]
+        [TestCase("WarnIf_Fails_BooleanLambdaWithMessageAndArgs", "got 5")]
+        [TestCase("WarnUnless_Fails_BooleanLambdaWithMessageStringFunc", "got 5")]
+        [TestCase("WarnIf_Fails_BooleanLambdaWithMessageStringFunc", "got 5")]
 #endif
-        [TestCase("WarnUnless_ActualAndConstraint", null)]
-        [TestCase("WarnUnless_ActualAndConstraintWithMessage", "Error")]
-        [TestCase("WarnUnless_ActualAndConstraintWithMessageAndArgs", "Should be 5")]
+        [TestCase("WarnUnless_Fails_ActualAndConstraint", null)]
+        [TestCase("WarnIf_Fails_ActualAndConstraint", null)]
+        [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessage", "Error")]
+        [TestCase("WarnIf_Fails_ActualAndConstraintWithMessage", "Error")]
+        [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessageAndArgs", "Should be 5")]
+        [TestCase("WarnIf_Fails_ActualAndConstraintWithMessageAndArgs", "Should be 5")]
 #if !NET_2_0
-        [TestCase("WarnUnless_ActualAndConstraintWithMessageStringFunc", "Should be 5")]
-        [TestCase("WarnUnless_ActualLambdaAndConstraint", null)]
-        [TestCase("WarnUnless_ActualLambdaAndConstraintWithMessage", "Error")]
-        [TestCase("WarnUnless_ActualLambdaAndConstraintWithMessageAndArgs", "Should be 5")]
-        [TestCase("WarnUnless_ActualLambdaAndConstraintWithMessageStringFunc", "Should be 5")]
+        [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessageStringFunc", "Should be 5")]
+        [TestCase("WarnIf_Fails_ActualAndConstraintWithMessageStringFunc", "Should be 5")]
+        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraint", null)]
+        [TestCase("WarnIf_Fails_ActualLambdaAndConstraint", null)]
+        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraintWithMessage", "Error")]
+        [TestCase("WarnIf_Fails_ActualLambdaAndConstraintWithMessage", "Error")]
+        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraintWithMessageAndArgs", "Should be 5")]
+        [TestCase("WarnIf_Fails_ActualLambdaAndConstraintWithMessageAndArgs", "Should be 5")]
+        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraintWithMessageStringFunc", "Should be 5")]
+        [TestCase("WarnIf_Fails_ActualLambdaAndConstraintWithMessageStringFunc", "Should be 5")]
 #endif
-        [TestCase("WarnUnless_DelegateAndConstraint", null)]
-        [TestCase("WarnUnless_DelegateAndConstraintWithMessage", "Error")]
-        [TestCase("WarnUnless_DelegateAndConstraintWithMessageAndArgs", "Should be 4")]
+        [TestCase("WarnUnless_Fails_DelegateAndConstraint", null)]
+        [TestCase("WarnIf_Fails_DelegateAndConstraint", null)]
+        [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessage", "Error")]
+        [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessage", "Error")]
+        [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessageAndArgs", "Should be 4")]
+        [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs", "Should be 4")]
 #if !NET_2_0
-        [TestCase("WarnUnless_DelegateAndConstraintWithMessageStringFunc", "Should be 4")]
+        [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc", "Should be 4")]
+        [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc", "Should be 4")]
 #endif
 #if ASYNC
-        [TestCase("WarningFails_Async", null)]
+        [TestCase("WarnUnless_Fails_Async", null)]
+        [TestCase("WarnIf_Fails_Async", null)]
 #endif
-        public void FailureIssuesWarning(string methodName, string expectedMessage)
+        public void WarningFails(string methodName, string expectedMessage)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
 
@@ -170,21 +215,29 @@ namespace NUnit.Framework.Assertions
 
 #if ASYNC
         [Test]
-        public void WarnPasses_Async()
+        public void WarnUnless_Async_Error()
         {
-            Warn.Unless(async () => await One(), Is.EqualTo(1));
-        }
-
-        [Test]
-        public void WarnUnless_Error()
-        {
-#if NET_4_5
+#if !NET_4_0
             var exception =
 #endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.Unless(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if NET_4_5
+#if !NET_4_0
+            Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
+#endif
+        }
+
+        [Test]
+        public void WarnIf_Async_Error()
+        {
+#if !NET_4_0
+            var exception =
+#endif
+                Assert.Throws<InvalidOperationException>(() =>
+                    Warn.If(async () => await ThrowExceptionGenericTask(), Is.Not.EqualTo(1)));
+
+#if !NET_4_0
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }
