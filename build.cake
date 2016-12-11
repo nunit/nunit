@@ -558,7 +558,10 @@ void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framewo
     try
     {
         var path = workingDir.CombineWithFilePath(new FilePath(testAssembly));
-        NUnit3(path.ToString());
+        var settings = new NUnit3Settings();
+        if(!IsRunningOnWindows())
+            settings.Process = NUnit3ProcessOption.InProcess;
+        NUnit3(path.ToString(), settings);
     }
     catch(CakeException ce)
     {
