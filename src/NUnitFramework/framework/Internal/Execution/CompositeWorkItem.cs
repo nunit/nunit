@@ -112,20 +112,20 @@ namespace NUnit.Framework.Internal.Execution
 
                                 if (!CheckForCancellation())
                                 {
-                                    bool runChildren = Result.ResultState.Status == TestStatus.Passed
-                                                    || Result.ResultState.Status == TestStatus.Warning
-                                                    && !Result.ResultState.Matches(ResultState.Ignored);
-
-                                    if (runChildren)
+                                    switch (Result.ResultState.Status)
                                     {
-                                        RunChildren();
-                                        return;
+                                        case TestStatus.Passed:
+                                        case TestStatus.Warning:
+                                            RunChildren();
+                                            return;
                                         // Just return: completion event will take care
                                         // of TestFixtureTearDown when all tests are done.
-                                    }
-                                    else
-                                    {
-                                        SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+
+                                        case TestStatus.Skipped:
+                                        case TestStatus.Inconclusive:
+                                        case TestStatus.Failed:
+                                            SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                                            break;
                                     }
                                 }
 

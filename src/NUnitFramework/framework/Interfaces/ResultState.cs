@@ -92,7 +92,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// The test has been ignored.
         /// </summary>
-        public readonly static ResultState Ignored = new ResultState(TestStatus.Warning, "Ignored");
+        public readonly static ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
 
         /// <summary>
         /// The test was skipped because it is explicit

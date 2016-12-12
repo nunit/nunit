@@ -85,11 +85,11 @@ namespace NUnitLite
         }
 
         /// <summary>
-        /// Returns the sum of skipped test cases, including explicit tests
+        /// Returns the sum of skipped test cases, including ignored and explicit tests
         /// </summary>
         public int TotalSkipCount
         {
-            get { return SkipCount + ExplicitCount;  }
+            get { return SkipCount + IgnoreCount + ExplicitCount;  }
         }
 
         /// <summary>
@@ -214,8 +214,6 @@ namespace NUnitLite
                         break;
                     case TestStatus.Warning:
                         WarningCount++; // This is not actually used by the nunit 2 format
-                        if (label == "Ignored")
-                            IgnoreCount++;
                         break;
                     case TestStatus.Failed:
                         if (label == "Invalid")

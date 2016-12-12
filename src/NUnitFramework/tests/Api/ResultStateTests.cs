@@ -233,7 +233,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Ignored;
 
-            Assert.AreEqual(TestStatus.Warning, resultState.Status, "Status not correct.");
+            Assert.AreEqual(TestStatus.Skipped, resultState.Status, "Status not correct.");
             Assert.AreEqual("Ignored", resultState.Label, "Label not correct.");
             Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
         }

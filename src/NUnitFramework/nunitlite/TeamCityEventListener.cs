@@ -91,8 +91,7 @@ namespace NUnitLite
                         TC_TestIgnored(testName, result.Message);
                         break;
                     case TestStatus.Warning:
-                        if (result.ResultState.Matches(ResultState.Ignored))
-                            TC_TestIgnored(testName, result.Message);
+                        // TODO: No action at this time. May need to be added.
                         break;
                     case TestStatus.Failed:
                         TC_TestFailed(testName, result.Message, result.StackTrace);
