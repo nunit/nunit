@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.5.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -279,7 +280,7 @@ Task("Test45")
     {
         var runtime = "net-4.5";
         var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -291,7 +292,7 @@ Task("Test40")
     {
         var runtime = "net-4.0";
         var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -303,7 +304,7 @@ Task("Test35")
     {
         var runtime = "net-3.5";
         var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -315,7 +316,7 @@ Task("Test20")
     {
         var runtime = "net-2.0";
         var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -551,6 +552,22 @@ void BuildProject(string projectPath, string configuration)
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS - TEST
 //////////////////////////////////////////////////////////////////////
+
+void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framework, ref List<string> errorDetail)
+{
+    try
+    {
+        var path = workingDir.CombineWithFilePath(new FilePath(testAssembly));
+        var settings = new NUnit3Settings();
+        if(!IsRunningOnWindows())
+            settings.Process = NUnit3ProcessOption.InProcess;
+        NUnit3(path.ToString(), settings);
+    }
+    catch(CakeException ce)
+    {
+        errorDetail.Add(string.Format("{0}: {1}", framework, ce.Message));
+    }
+}
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
