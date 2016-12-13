@@ -198,7 +198,7 @@ namespace NUnitLite.Tests
             var expected = new string[] {
                 "Test Run Summary",
                 "  Overall result: Failed",
-                "  Test Count: 8, Passed: 1, Failed: 4, Warnings: 0, Inconclusive: 1, Skipped: 2",
+                "  Test Count: 9, Passed: 1, Failed: 4, Warnings: 1, Inconclusive: 1, Skipped: 2",
                 "    Failed Tests - Failures: 1, Errors: 1, Invalid: 2",
                 "    Skipped Tests - Ignored: 1, Explicit: 1, Other: 0",
                 "  Start time: 2014-12-02 12:34:56Z",
@@ -214,18 +214,20 @@ namespace NUnitLite.Tests
         [Test]
         public void ErrorsAndFailuresReportTest()
         {
-            _textUI.DisplayErrorsAndFailuresReport(_result);
+            _textUI.DisplayErrorsFailuresAndWarningsReport(_result);
             var lines = GetReportLines();
 
-            Assert.That(lines[0], Is.EqualTo("Errors and Failures"));
+            Assert.That(lines[0], Is.EqualTo("Errors, Failures and Warnings"));
             Assert.That(lines[2], Is.EqualTo("1) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest"));
             Assert.That(lines[3], Is.EqualTo("Method is not public"));
             Assert.That(lines[5], Is.EqualTo("2) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest"));
             Assert.That(lines[6], Is.EqualTo("Intentional failure"));
-            Assert.That(lines[9], Is.EqualTo("3) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest"));
-            Assert.That(lines[10], Is.EqualTo("No arguments were provided"));
-            Assert.That(lines[12], Is.EqualTo("4) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
-            Assert.That(lines[13], Is.EqualTo("System.Exception : Intentional Exception"));
+            Assert.That(lines[9], Is.EqualTo("3) Warning : NUnit.Tests.Assemblies.MockTestFixture.WarningTest"));
+            Assert.That(lines[10], Is.EqualTo("Warning Message"));
+            Assert.That(lines[13], Is.EqualTo("4) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest"));
+            Assert.That(lines[14], Is.EqualTo("No arguments were provided"));
+            Assert.That(lines[16], Is.EqualTo("5) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
+            Assert.That(lines[17], Is.EqualTo("System.Exception : Intentional Exception"));
         }
 
 #region Private Properties and Methods

@@ -374,11 +374,11 @@ namespace NUnitLite
 
         #region DisplayErrorsAndFailuresReport
 
-        public void DisplayErrorsAndFailuresReport(ITestResult result)
+        public void DisplayErrorsFailuresAndWarningsReport(ITestResult result)
         {
             _reportIndex = 0;
-            WriteSectionHeader("Errors and Failures");
-            DisplayErrorsAndFailures(result);
+            WriteSectionHeader("Errors, Failures and Warnings");
+            DisplayErrorsFailuresAndWarnings(result);
             Writer.WriteLine();
 
             if (_options.StopOnError)
@@ -457,11 +457,15 @@ namespace NUnitLite
 
         #region Helper Methods
 
-        private void DisplayErrorsAndFailures(ITestResult result)
+        private void DisplayErrorsFailuresAndWarnings(ITestResult result)
         {
+            bool display = 
+                result.ResultState.Status == TestStatus.Failed || 
+                result.ResultState.Status == TestStatus.Warning;
+            
             if (result.Test.IsSuite)
             {
-                if (result.ResultState.Status == TestStatus.Failed)
+                if (display)
                 {
                     var suite = result.Test as TestSuite;
                     var site = result.ResultState.Site;
@@ -471,9 +475,9 @@ namespace NUnitLite
                 }
 
                 foreach (ITestResult childResult in result.Children)
-                    DisplayErrorsAndFailures(childResult);
+                    DisplayErrorsFailuresAndWarnings(childResult);
             }
-            else if (result.ResultState.Status == TestStatus.Failed)
+            else if (display)
                 DisplayTestResult(result);
         }
 
@@ -545,6 +549,9 @@ namespace NUnitLite
             {
                 case TestStatus.Failed:
                     style = ColorStyle.Failure;
+                    break;
+                case TestStatus.Warning:
+                    style = ColorStyle.Warning;
                     break;
                 case TestStatus.Skipped:
                     style = resultState.Label == "Ignored" ? ColorStyle.Warning : ColorStyle.Output;

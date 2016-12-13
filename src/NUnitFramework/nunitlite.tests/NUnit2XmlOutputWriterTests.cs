@@ -111,13 +111,13 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("total", MockTestFixture.Tests)]
-        [TestCase("errors", MockTestFixture.Errors)]
-        [TestCase("failures", MockTestFixture.Failures)]
+        [TestCase("errors", MockTestFixture.Failed_Error)]
+        [TestCase("failures", MockTestFixture.Failed_Other)]
         [TestCase("inconclusive", MockTestFixture.Inconclusive)]
-        [TestCase("not-run", MockTestFixture.NotRun+MockTestFixture.NotRunnable-MockTestFixture.Explicit)]
-        [TestCase("ignored", MockTestFixture.Ignored)]
-        [TestCase("skipped", MockTestFixture.NotRun-MockTestFixture.Ignored-MockTestFixture.Explicit)]
-        [TestCase("invalid", MockTestFixture.NotRunnable)]
+        [TestCase("not-run", MockTestFixture.Skipped+MockTestFixture.Failed_NotRunnable-MockTestFixture.Skipped_Explicit)]
+        [TestCase("ignored", MockTestFixture.Skipped_Ignored)]
+        [TestCase("skipped", MockTestFixture.Skipped-MockTestFixture.Skipped_Ignored-MockTestFixture.Skipped_Explicit)]
+        [TestCase("invalid", MockTestFixture.Failed_NotRunnable)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {
             Assert.That(RequiredAttribute(topNode, name), Is.EqualTo(count.ToString()));

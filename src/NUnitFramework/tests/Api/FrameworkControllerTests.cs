@@ -267,8 +267,8 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
-            Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Success.ToString()));
-            Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
+            Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Passed.ToString()));
+            Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.Failed.ToString()));
             Assert.That(result.Attributes["warnings"], Is.EqualTo(MockAssembly.Warnings.ToString()));
             Assert.That(result.Attributes["skipped"], Is.EqualTo(MockAssembly.Skipped.ToString()));
             Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
