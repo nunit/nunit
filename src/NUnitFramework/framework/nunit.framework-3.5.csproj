@@ -116,6 +116,7 @@
     <Compile Include="Assert.Conditions.cs">
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Exceptions\MultipleAssertException.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Interfaces\AssertionResult.cs" />
     <Compile Include="Interfaces\AssertionStatus.cs" />
@@ -415,6 +416,7 @@
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
+    <Compile Include="Warn.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

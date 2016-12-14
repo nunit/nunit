@@ -92,6 +92,7 @@ namespace NUnit.TestData.TestContextData
     {
         public int PassCount { get; private set; }
         public int FailCount { get; private set; }
+        public int WarningCount { get; private set; }
         public int SkipCount { get; private set; }
         public int InconclusiveCount { get; private set; }
         public string Message { get; private set; }
@@ -162,6 +163,7 @@ namespace NUnit.TestData.TestContextData
         {
             PassCount = TestContext.CurrentContext.Result.PassCount;
             FailCount = TestContext.CurrentContext.Result.FailCount;
+            WarningCount = TestContext.CurrentContext.Result.WarningCount;
             SkipCount = TestContext.CurrentContext.Result.SkipCount;
             InconclusiveCount = TestContext.CurrentContext.Result.InconclusiveCount;
             Message = TestContext.CurrentContext.Result.Message;

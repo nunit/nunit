@@ -44,6 +44,11 @@ namespace NUnit.Framework.Interfaces
         Passed,
 
         /// <summary>
+        /// There was a warning
+        /// </summary>
+        Warning,
+
+        /// <summary>
         /// The test failed
         /// </summary>
         Failed

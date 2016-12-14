@@ -251,6 +251,7 @@
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />
     <Compile Include="Exceptions\InconclusiveException.cs" />
+    <Compile Include="Exceptions\MultipleAssertException.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
     <Compile Include="FileAssert.cs" />
@@ -407,6 +408,7 @@
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestParameters.cs" />
     <Compile Include="Throws.cs" />
+    <Compile Include="Warn.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\nunit.snk">

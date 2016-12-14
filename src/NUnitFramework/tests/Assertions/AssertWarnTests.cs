@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,38 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Interfaces
+using NUnit.Framework.Interfaces;
+using NUnit.TestData;
+using NUnit.TestUtilities;
+
+namespace NUnit.Framework.Assertions
 {
-    /// <summary>
-    /// AssertionStatus enumeration represents the possible outcomes of an assertion.
-    /// The order of definition is significant, higher level values override lower
-    /// ones in determining the overall result of a test.
-    /// </summary>
-    public enum AssertionStatus
+    [TestFixture]
+    public class AssertWarnTests
     {
-        /// <summary>
-        /// An assumption failed
-        /// </summary>
-        Inconclusive,
+        [Test]
+        public void AssertWarnWorksWithMessage()
+        {
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(WarningFixture),
+                "CallAssertWarnWithMessage");
 
-        /// <summary>
-        /// The assertion succeeded
-        /// </summary>
-        Passed,
+            Assert.AreEqual(ResultState.Warning, result.ResultState);
+            Assert.AreEqual("MESSAGE", result.Message);
+        }
 
-        /// <summary>
-        /// A warning message was issued
-        /// </summary>
-        Warning,
+        [Test]
+        public void AssertWarnWorksWithMessageAndArgs()
+        {
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(WarningFixture),
+                "CallAssertWarnWithMessageAndArgs");
 
-        /// <summary>
-        /// The assertion failed
-        /// </summary>
-        Failed,
-
-        /// <summary>
-        /// An unexpected exception was thrown
-        /// </summary>
-        Error
+            Assert.AreEqual(ResultState.Warning, result.ResultState);
+            Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
+        }
     }
 }

@@ -87,6 +87,7 @@
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
     <Compile Include="AssertionHelper.cs" />
+    <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Contains.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
+    <Compile Include="Exceptions\MultipleAssertException.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />
     <Compile Include="Exceptions\InconclusiveException.cs" />

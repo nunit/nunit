@@ -64,7 +64,7 @@ namespace NUnitLite
 
     #endregion
 
-    #region Public Methods
+        #region Public Methods
 
         #region DisplayHeader
 
@@ -334,6 +334,7 @@ namespace NUnitLite
             WriteSummaryCount("  Test Count: ", summary.TestCount);
             WriteSummaryCount(", Passed: ", summary.PassCount);
             WriteSummaryCount(", Failed: ", summary.FailedCount, ColorStyle.Failure);
+            WriteSummaryCount(", Warnings: ", summary.WarningCount, ColorStyle.Warning);
             WriteSummaryCount(", Inconclusive: ", summary.InconclusiveCount);
             WriteSummaryCount(", Skipped: ", summary.TotalSkipCount);
             Writer.WriteLine();

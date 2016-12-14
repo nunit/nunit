@@ -85,6 +85,7 @@
     <Compile Include="Assertions\AssertThrowsAsyncTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssertPolarityTests.cs" />
+    <Compile Include="Assertions\AssertWarnTests.cs" />
     <Compile Include="Assertions\AssertZeroTests.cs" />
     <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />
+    <Compile Include="Assertions\WarningTests.cs" />
     <Compile Include="Attributes\ActionAttributeTests.cs" />
     <Compile Include="Attributes\ApartmentAttributeTests.cs" />
     <Compile Include="Attributes\ApplyToContextTests.cs" />

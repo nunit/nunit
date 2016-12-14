@@ -138,6 +138,15 @@ namespace NUnit.TestUtilities
             return RunTest(testMethod, fixture);
         }
 
+#if !PORTABLE && !NETSTANDARD1_6
+        public static ITestResult RunAsTestCase(Action action)
+        {
+            var method = action.Method;
+            var testMethod = MakeTestCase(method.DeclaringType, method.Name);
+            return RunTest(testMethod);
+        }
+#endif
+
         public static ITestResult RunTest(Test test)
         {
             return RunTest(test, null);

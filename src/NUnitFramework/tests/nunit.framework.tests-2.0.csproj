@@ -72,10 +72,12 @@
     <Compile Include="Assertions\AssertionHelperTests.cs" />
     <Compile Include="Assertions\AssertMultipleTests.cs" />
     <Compile Include="Assertions\AssertPolarityTests.cs" />
+    <Compile Include="Assertions\AssertWarnTests.cs" />
     <Compile Include="Assertions\AssertZeroTests.cs" />
     <Compile Include="Assertions\AssumeEqualsTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\LowTrustFixture.cs" />
+    <Compile Include="Assertions\WarningTests.cs" />
     <Compile Include="Attributes\CommandWrapperTests.cs" />
     <Compile Include="Attributes\RetryAttributeTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
+    <Compile Include="Internal\Results\TestResultWarningTests.cs" />
     <Compile Include="Internal\Results\TestResultIgnoredTests.cs" />
     <Compile Include="Internal\Results\TestResultMixedResultTests.cs" />
     <Compile Include="Internal\Results\TestResultSuccessTests.cs" />

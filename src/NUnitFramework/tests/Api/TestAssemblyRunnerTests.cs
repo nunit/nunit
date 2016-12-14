@@ -176,6 +176,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
+            Assert.That(result.WarningCount, Is.EqualTo(MockAssembly.Warnings));
             Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
             Assert.That(result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
         }

@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AssertMultipleData.cs" />
+    <Compile Include="WarningFixture.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="TextOutputFixture.cs" />

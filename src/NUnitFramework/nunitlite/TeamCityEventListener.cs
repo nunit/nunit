@@ -90,6 +90,9 @@ namespace NUnitLite
                     case TestStatus.Skipped:
                         TC_TestIgnored(testName, result.Message);
                         break;
+                    case TestStatus.Warning:
+                        // TODO: No action at this time. May need to be added.
+                        break;
                     case TestStatus.Failed:
                         TC_TestFailed(testName, result.Message, result.StackTrace);
                         TC_TestFinished(testName, result.Duration);

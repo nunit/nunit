@@ -111,9 +111,11 @@ namespace NUnit.Framework.Internal.Execution
                                 PerformOneTimeSetUp();
 
                                 if (!CheckForCancellation())
+                                {
                                     switch (Result.ResultState.Status)
                                     {
                                         case TestStatus.Passed:
+                                        case TestStatus.Warning:
                                             RunChildren();
                                             return;
                                         // Just return: completion event will take care
@@ -125,6 +127,7 @@ namespace NUnit.Framework.Internal.Execution
                                             SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
                                             break;
                                     }
+                                }
 
                                 // Directly execute the OneTimeFixtureTearDown for tests that
                                 // were skipped, failed or set to inconclusive in one time setup

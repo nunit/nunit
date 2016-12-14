@@ -28,6 +28,7 @@ using System.Collections.Concurrent;
 #endif
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 #if NET_2_0
 using NUnit.Compatibility;
@@ -48,6 +49,11 @@ namespace NUnit.Framework.Internal
         /// Error message for when child tests have errors
         /// </summary>
         internal static readonly string CHILD_ERRORS_MESSAGE = "One or more child tests had errors";
+
+        /// <summary>
+        /// Error message for when child tests have warnings
+        /// </summary>
+        internal static readonly string CHILD_WARNINGS_MESSAGE = "One or more child tests had warnings";
 
         /// <summary>
         /// Error message for when child tests are ignored
@@ -269,6 +275,12 @@ namespace NUnit.Framework.Internal
         public abstract int FailCount { get; }
 
         /// <summary>
+        /// Gets the number of test cases that had warnings
+        /// when running the test and all its children.
+        /// </summary>
+        public abstract int WarningCount { get; }
+
+        /// <summary>
         /// Gets the number of test cases that passed
         /// when running the test and all its children.
         /// </summary>
@@ -358,6 +370,7 @@ namespace NUnit.Framework.Internal
                 thisNode.AddAttribute("total", (PassCount + FailCount + SkipCount + InconclusiveCount).ToString());
                 thisNode.AddAttribute("passed", PassCount.ToString());
                 thisNode.AddAttribute("failed", FailCount.ToString());
+                thisNode.AddAttribute("warnings", WarningCount.ToString());
                 thisNode.AddAttribute("inconclusive", InconclusiveCount.ToString());
                 thisNode.AddAttribute("skipped", SkipCount.ToString());
             }
@@ -372,6 +385,7 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Skipped:
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
+                case TestStatus.Warning:
                     if (Message != null)
                         AddReasonElement(thisNode);
                     break;
@@ -389,6 +403,26 @@ namespace NUnit.Framework.Internal
                     child.AddToXml(thisNode, recursive);
 
             return thisNode;
+        }
+
+        #endregion
+
+        #region Other Public Properties
+
+        /// <summary>
+        /// Gets a count of pending failures (from Multiple Assert)
+        /// </summary>
+        public int PendingFailures
+        {
+            get { return AssertionResults.Count(ar => ar.Status == AssertionStatus.Failed); }
+        }
+
+        /// <summary>
+        /// Gets the worst assertion status (highest enum) in all the assertion results
+        /// </summary>
+        public AssertionStatus WorstAssertionStatus
+        {
+            get { return AssertionResults.Aggregate((ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status; }
         }
 
         #endregion
@@ -437,32 +471,6 @@ namespace NUnit.Framework.Internal
                 RwLock.ExitWriteLock();
 #endif
             }
-
-            // Set pseudo-counts for a test case
-            //if (IsTestCase(test))
-            //{
-            //    passCount = 0;
-            //    failCount = 0;
-            //    skipCount = 0;
-            //    inconclusiveCount = 0;
-
-            //    switch (ResultState.Status)
-            //    {
-            //        case TestStatus.Passed:
-            //            passCount++;
-            //            break;
-            //        case TestStatus.Failed:
-            //            failCount++;
-            //            break;
-            //        case TestStatus.Skipped:
-            //            skipCount++;
-            //            break;
-            //        default:
-            //        case TestStatus.Inconclusive:
-            //            inconclusiveCount++;
-            //            break;
-            //    }
-            //}
         }
 
         /// <summary>
@@ -476,7 +484,10 @@ namespace NUnit.Framework.Internal
 
             if (ex is ResultStateException)
             {
-                string message = ex.Message;
+                string message = ex is MultipleAssertException
+                    ? CreateLegacyFailureMessage()
+                    : ex.Message;
+
                 string stackTrace = StackFilter.DefaultFilter.Filter(ex.StackTrace);
 
                 SetResult(((ResultStateException)ex).ResultState, message, stackTrace);
@@ -496,15 +507,7 @@ namespace NUnit.Framework.Internal
                 if (AssertionResults.Count > 0)
                 {
                     // Add pending failures to the legacy result message
-                    var writer = new StringWriter();
-
-                    writer.WriteLine("\n  Multiple Assert block had {0} failure(s).", AssertionResults.Count);
-
-                    int counter = 0;
-                    foreach (var assertion in AssertionResults)
-                        writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
-
-                    Message += writer.ToString();
+                    Message += CreateLegacyFailureMessage();
 
                     // Add to the list of assertion errors, so that newer runners will see it
                     AssertionResults.Add(new AssertionResult(AssertionStatus.Error, message, stackTrace));
@@ -516,7 +519,7 @@ namespace NUnit.Framework.Internal
         /// Set the test result based on the type of exception thrown
         /// </summary>
         /// <param name="ex">The exception that was thrown</param>
-        /// <param name="site">THe FailureSite to use in the result</param>
+        /// <param name="site">The FailureSite to use in the result</param>
         public void RecordException(Exception ex, FailureSite site)
         {
             if (ex is NUnitException)
@@ -569,6 +572,30 @@ namespace NUnit.Framework.Internal
                 stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
+        }
+
+        /// <summary>
+        /// Determine result after test has run to completion.
+        /// </summary>
+        public void RecordTestCompletion()
+        {
+            switch (AssertionResults.Count)
+            {
+                case 0:
+                    SetResult(ResultState.Success);
+                    break;
+                case 1:
+                    SetResult(
+                        AssertionStatusToResultState(AssertionResults[0].Status),
+                        AssertionResults[0].Message,
+                        AssertionResults[0].StackTrace);
+                    break;
+                default:
+                    SetResult(
+                        AssertionStatusToResultState(WorstAssertionStatus),
+                        CreateLegacyFailureMessage());
+                    break;
+            }
         }
 
         /// <summary>
@@ -648,6 +675,43 @@ namespace NUnit.Framework.Internal
             }
 
             return assertionsNode;
+        }
+
+        private ResultState AssertionStatusToResultState(AssertionStatus status)
+        {
+            switch (status)
+            {
+                case AssertionStatus.Inconclusive:
+                    return ResultState.Inconclusive;
+                default:
+                case AssertionStatus.Passed:
+                    return ResultState.Success;
+                case AssertionStatus.Warning:
+                    return ResultState.Warning;
+                case AssertionStatus.Failed:
+                    return ResultState.Failure;
+                case AssertionStatus.Error:
+                    return ResultState.Error;
+            }
+        }
+
+        /// <summary>
+        /// Creates a failure message incorporating failures
+        /// from a Multiple Assert block for use by runners
+        /// that don't know about AssertionResults.
+        /// </summary>
+        /// <returns>Message as a string</returns>
+        private string CreateLegacyFailureMessage()
+        {
+            var writer = new StringWriter();
+
+            writer.WriteLine("\n  One or more failures in Multiple Assert block:");
+
+            int counter = 0;
+            foreach (var assertion in AssertionResults)
+                writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
+
+            return writer.ToString();
         }
 
         #endregion

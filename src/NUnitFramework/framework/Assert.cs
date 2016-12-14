@@ -23,7 +23,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -172,6 +174,33 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Warn
+
+        /// <summary>
+        /// Issues a warning using the message and arguments provided.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void Warn(string message, params object[] args)
+        {
+            if (message == null) message = string.Empty;
+            else if (args != null && args.Length > 0)
+                message = string.Format(message, args);
+
+            IssueWarning(message);
+        }
+
+        /// <summary>
+        /// Issues a warning using the message provided.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        static public void Warn(string message)
+        {
+            IssueWarning(message);
+        }
+
+        #endregion
+
         #region Ignore
 
         /// <summary>
@@ -306,21 +335,8 @@ namespace NUnit.Framework
                 context.MultipleAssertLevel--;
             }
 
-            if (context.MultipleAssertLevel == 0)
-            {
-                int count = context.CurrentResult.AssertionResults.Count;
-
-                if (count > 0)
-                {
-                    var writer = new TextMessageWriter("Multiple Assert block had {0} failure(s).", count);
-
-                    int counter = 0;
-                    foreach (var assertion in context.CurrentResult.AssertionResults)
-                        writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
-
-                    throw new AssertionException(writer.ToString());
-                }
-            }
+            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
+                throw new MultipleAssertException();
         }
 
         #endregion
@@ -349,6 +365,13 @@ namespace NUnit.Framework
             // If we are outside any multiple assert block, then throw
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
                 throw new AssertionException(message);
+        }
+
+        private static void IssueWarning(string message)
+        {
+            var result = TestExecutionContext.CurrentContext.CurrentResult;
+
+            result.RecordAssertion(AssertionStatus.Warning, message, GetStackTrace());
         }
 
         // System.Envionment.StackTrace puts extra entries on top of the stack, at least in some environments
@@ -382,6 +405,6 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.IncrementAssertCount();
         }
 
-#endregion
+        #endregion
     }
 }

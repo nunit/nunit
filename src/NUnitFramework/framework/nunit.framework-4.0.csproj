@@ -247,6 +247,7 @@
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />
     <Compile Include="Exceptions\InconclusiveException.cs" />
+    <Compile Include="Exceptions\MultipleAssertException.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
     <Compile Include="Guard.cs" />
@@ -406,6 +407,7 @@
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
+    <Compile Include="Warn.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

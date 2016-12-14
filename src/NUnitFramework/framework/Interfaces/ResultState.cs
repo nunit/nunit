@@ -105,6 +105,11 @@ namespace NUnit.Framework.Interfaces
         public readonly static ResultState Success = new ResultState(TestStatus.Passed);
 
         /// <summary>
+        /// The test issued a warning
+        /// </summary>
+        public readonly static ResultState Warning = new ResultState(TestStatus.Warning);
+
+        /// <summary>
         /// The test failed
         /// </summary>
         public readonly static ResultState Failure = new ResultState(TestStatus.Failed);
@@ -175,6 +180,18 @@ namespace NUnit.Framework.Interfaces
         public ResultState WithSite(FailureSite site)
         {
             return new ResultState(this.Status, this.Label, site);
+        }
+
+        /// <summary>
+        /// Test whether this ResultState has the same Status and Label
+        /// as another one. In other words, the whether two are equal
+        /// ignoring the Site.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Matches(ResultState other)
+        {
+            return Status == other.Status && Label == other.Label;
         }
 
         #endregion

@@ -118,8 +118,7 @@ namespace NUnit.Framework.Assertions.Tests
                 if (expectedResultState == ResultState.Error)
                     --numFailures;
 
-                Assert.That(result.Message, Contains.Substring(
-                    string.Format("Multiple Assert block had {0} failure(s).", numFailures)));//
+                Assert.That(result.Message, Contains.Substring("One or more failures in Multiple Assert block"));
 
                 int i = 0;
                 foreach (var assertion in result.AssertionResults)

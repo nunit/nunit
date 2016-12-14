@@ -257,6 +257,9 @@ namespace NUnit.Framework.Api
             new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
+            // TODO: Any failure here throws an exception because the call to RunTestsAction
+            // has destroyed the test context. We need to figure out how to execute the run
+            // in a cleaner way, perhaps on another thread or in a process.
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
@@ -266,6 +269,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
             Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Success.ToString()));
             Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
+            Assert.That(result.Attributes["warnings"], Is.EqualTo(MockAssembly.Warnings.ToString()));
             Assert.That(result.Attributes["skipped"], Is.EqualTo(MockAssembly.Skipped.ToString()));
             Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
