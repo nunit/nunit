@@ -277,7 +277,7 @@ namespace NUnitLite
             var startTime = DateTime.UtcNow;
 
             ITestResult result = _runner.Run(this, filter);
-            
+
             ReportResults(result);
 
 #if !PORTABLE
@@ -302,8 +302,8 @@ namespace NUnitLite
             if (Summary.ExplicitCount + Summary.SkipCount + Summary.IgnoreCount > 0)
                 _textUI.DisplayNotRunReport(result);
 
-            if (result.ResultState.Status == TestStatus.Failed)
-                _textUI.DisplayErrorsAndFailuresReport(result);
+            if (result.ResultState.Status == TestStatus.Failed || result.ResultState.Status == TestStatus.Warning)
+                _textUI.DisplayErrorsFailuresAndWarningsReport(result);
 
 #if FULL
             if (_options.Full)
