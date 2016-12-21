@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
@@ -141,7 +142,7 @@ namespace NUnit.Framework.Internal.Builders
                     tests.Add(test);
             }
 
-            return tests.Count > 0
+            return tests.Count > 0 || builders.OfType<TestCaseSourceAttribute>().Any()
                 ? BuildParameterizedMethodSuite(method, tests)
                 : BuildSingleTestMethod(method, parentSuite);
         }
