@@ -63,7 +63,7 @@ var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
 var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 
 // Packages
-var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework." + packageVersion + ".zip";
+var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
 
 bool isDotNetCoreInstalled = false;
 
