@@ -353,6 +353,11 @@ namespace NUnit.Framework
             }
 
             /// <summary>
+            /// The method representing the test, which may be null if test is not implemented as a method.
+            /// </summary>
+            public IMethodInfo Method { get { return _test.Method; } }
+
+            /// <summary>
             /// The FullName of the test
             /// </summary>
             public string FullName
