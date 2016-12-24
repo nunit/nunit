@@ -27,12 +27,12 @@ namespace NUnit.Framework.Internal.Results
 {
     public class TestResultIgnoredTests : TestResultTests
     {
-        private const string ignoreReason = "because";
+        protected string _ignoreReason = "because";
 
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Ignored, ignoreReason);
+            _testResult.SetResult(ResultState.Ignored, _ignoreReason);
             _suiteResult.AddResult(_testResult);
         }
 
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Results
         public void TestResultIsIgnored()
         {
             Assert.AreEqual(ResultState.Ignored, _testResult.ResultState);
-            Assert.AreEqual(ignoreReason, _testResult.Message);
+            Assert.AreEqual(_ignoreReason, _testResult.Message);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal.Results
             TNode reason = testNode.SelectSingleNode("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(ignoreReason, reason.SelectSingleNode("message").Value);
+            Assert.AreEqual(_ignoreReason, reason.SelectSingleNode("message").Value);
             Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
 
