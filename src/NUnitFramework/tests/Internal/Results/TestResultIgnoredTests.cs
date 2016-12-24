@@ -25,9 +25,48 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Results
 {
-    public class TestResultIgnoredTests : TestResultTests
+    public class TestResultIgnoredWithReasonGivenTests : TestResultIgnoredTests
     {
-        protected string _ignoreReason = "because";
+        public TestResultIgnoredWithReasonGivenTests() : base("because")
+        {
+        }
+    }
+
+    public class TestResultIgnoredWithNullReasonGivenTests : TestResultIgnoredTests
+    {
+        public TestResultIgnoredWithNullReasonGivenTests() : base(null)
+        {
+        }
+
+        protected override void ReasonAssertions(TNode testNode)
+        {
+            TNode reason = testNode.SelectSingleNode("reason");
+            Assert.IsNull(reason);
+        }
+    }
+
+    public class TestResultIgnoredWithEmptyReasonGivenTests : TestResultIgnoredTests
+    {
+        public TestResultIgnoredWithEmptyReasonGivenTests() : base(string.Empty)
+        {
+        }
+    }
+
+    public class TestResultIgnoredWithWhitespaceReasonGivenTests : TestResultIgnoredTests
+    {
+        public TestResultIgnoredWithWhitespaceReasonGivenTests() : base(" ")
+        {
+        }
+    }
+
+    public abstract class TestResultIgnoredTests : TestResultTests
+    {
+        protected string _ignoreReason;
+
+        public TestResultIgnoredTests(string ignoreReason)
+        {
+            _ignoreReason = ignoreReason;
+        }
 
         [SetUp]
         public void SimulateTestRun()
@@ -66,11 +105,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual("Ignored", testNode.Attributes["label"]);
             Assert.AreEqual(null, testNode.Attributes["site"]);
 
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(_ignoreReason, reason.SelectSingleNode("message").Value);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            ReasonAssertions(testNode);
         }
 
         [Test]
@@ -87,6 +122,15 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual("1", suiteNode.Attributes["skipped"]);
             Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
+        }
+
+        protected virtual void ReasonAssertions(TNode testNode)
+        {
+            TNode reason = testNode.SelectSingleNode("reason");
+            Assert.NotNull(reason);
+            Assert.NotNull(reason.SelectSingleNode("message"));
+            Assert.AreEqual(_ignoreReason, reason.SelectSingleNode("message").Value);
+            Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
     }
 }
