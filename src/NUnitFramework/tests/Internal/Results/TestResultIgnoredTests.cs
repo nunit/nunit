@@ -32,42 +32,37 @@ namespace NUnit.Framework.Internal.Results
         }
     }
 
-    public class TestResultIgnoredWithNullReasonGivenTests : TestResultIgnoredTests
+    public class TestResultIgnoredWhereNoReasonElementExpectedInXml : TestResultIgnoredTests
+    {
+        public TestResultIgnoredWhereNoReasonElementExpectedInXml(string ignoreReason) : base(ignoreReason)
+        {
+        }
+
+        protected override void ReasonAssertions(TNode testNode)
+        {
+            TNode reason = testNode.SelectSingleNode("reason");
+            Assert.IsNull(reason);
+        }
+    }
+
+    public class TestResultIgnoredWithNullReasonGivenTests : TestResultIgnoredWhereNoReasonElementExpectedInXml
     {
         public TestResultIgnoredWithNullReasonGivenTests() : base(null)
         {
         }
-
-        protected override void ReasonAssertions(TNode testNode)
-        {
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason);
-        }
     }
 
-    public class TestResultIgnoredWithEmptyReasonGivenTests : TestResultIgnoredTests
+    public class TestResultIgnoredWithEmptyReasonGivenTests : TestResultIgnoredWhereNoReasonElementExpectedInXml
     {
         public TestResultIgnoredWithEmptyReasonGivenTests() : base(string.Empty)
         {
         }
-
-        protected override void ReasonAssertions(TNode testNode)
-        {
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason);
-        }
     }
 
-    public class TestResultIgnoredWithWhitespaceReasonGivenTests : TestResultIgnoredTests
+    public class TestResultIgnoredWithWhitespaceReasonGivenTests : TestResultIgnoredWhereNoReasonElementExpectedInXml
     {
         public TestResultIgnoredWithWhitespaceReasonGivenTests() : base(" ")
         {
-        }
-
-        protected override void ReasonAssertions(TNode testNode)
-        {
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason);
         }
     }
 
