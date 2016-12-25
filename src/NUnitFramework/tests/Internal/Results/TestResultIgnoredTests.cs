@@ -50,12 +50,24 @@ namespace NUnit.Framework.Internal.Results
         public TestResultIgnoredWithEmptyReasonGivenTests() : base(string.Empty)
         {
         }
+
+        protected override void ReasonAssertions(TNode testNode)
+        {
+            TNode reason = testNode.SelectSingleNode("reason");
+            Assert.IsNull(reason);
+        }
     }
 
     public class TestResultIgnoredWithWhitespaceReasonGivenTests : TestResultIgnoredTests
     {
         public TestResultIgnoredWithWhitespaceReasonGivenTests() : base(" ")
         {
+        }
+
+        protected override void ReasonAssertions(TNode testNode)
+        {
+            TNode reason = testNode.SelectSingleNode("reason");
+            Assert.IsNull(reason);
         }
     }
 
