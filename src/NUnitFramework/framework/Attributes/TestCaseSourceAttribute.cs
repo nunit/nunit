@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -131,11 +132,11 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The IMethod for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
+        public TestBuilderAction BuildFrom(IMethodInfo method, Test suite)
         {
-            foreach (TestCaseParameters parms in GetTestCasesFor(method))
-                yield return _builder.BuildTestMethod(method, suite, parms);
+            return TestBuilderAction.Suite(
+                from TestCaseParameters parms in GetTestCasesFor(method)
+                select _builder.BuildTestMethod(method, suite, parms));
         }
 
         #endregion

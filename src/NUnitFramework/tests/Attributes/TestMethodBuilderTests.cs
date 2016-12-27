@@ -50,7 +50,7 @@ namespace NUnit.Framework.Attributes
         public void TestCaseAttribute_NoArgs_NotRunnable()
         {
             var method = GetMethod("MethodWithoutArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TestCaseAttribute(5, 42).BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TestCaseAttribute(5, 42).BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(1));
             Assert.That(tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Attributes
         public void TestCaseAttribute_RightArgs_Runnable()
         {
             var method = GetMethod("MethodWithIntArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TestCaseAttribute(5, 42).BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TestCaseAttribute(5, 42).BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(1));
             Assert.That(tests[0].RunState, Is.EqualTo(RunState.Runnable));
         }
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Attributes
         public void TestCaseAttribute_WrongArgs_NotRunnable()
         {
             var method = GetMethod("MethodWithIntArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TestCaseAttribute(5, 42, 99).BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TestCaseAttribute(5, 42, 99).BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(1));
             Assert.That(tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Attributes
         public void TestCaseSourceAttribute_NoArgs_NotRunnable()
         {
             var method = GetMethod("MethodWithoutArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TestCaseSourceAttribute("GoodData").BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TestCaseSourceAttribute("GoodData").BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(3));
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Attributes
         public void TestCaseSourceAttribute_RightArgs_Runnable()
         {
             var method = GetMethod("MethodWithIntArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TestCaseSourceAttribute("GoodData").BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TestCaseSourceAttribute("GoodData").BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(3));
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Attributes
         public void TestCaseSourceAttribute_WrongArgs_NotRunnable()
         {
             var method = GetMethod("MethodWithIntArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TestCaseSourceAttribute("BadData").BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TestCaseSourceAttribute("BadData").BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(3));
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Attributes
         public void TheoryAttribute_NoArgs_NoCases()
         {
             var method = GetMethod("MethodWithoutArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TheoryAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TheoryAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(0));
         }
 
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Attributes
         public void TheoryAttribute_WithArgs_Runnable()
         {
             var method = GetMethod("MethodWithIntArgs");
-            List<TestMethod> tests = new List<TestMethod>(new TheoryAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new TheoryAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(9));
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Attributes
         public void CombinatorialAttribute_NoArgs_NoCases()
         {
             var method = GetMethod("MethodWithoutArgs");
-            List<TestMethod> tests = new List<TestMethod>(new CombinatorialAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new CombinatorialAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(0));
         }
 
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Attributes
         public void CombinatorialAttribute_WithArgs_Runnable()
         {
             var method = GetMethod("MethodWithIntValues");
-            List<TestMethod> tests = new List<TestMethod>(new CombinatorialAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new CombinatorialAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(6));
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Attributes
         public void PairwiseAttribute_NoArgs_NoCases()
         {
             var method = GetMethod("MethodWithoutArgs");
-            List<TestMethod> tests = new List<TestMethod>(new PairwiseAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new PairwiseAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(0));
         }
 
@@ -153,7 +153,7 @@ namespace NUnit.Framework.Attributes
         public void PairwiseAttribute_WithArgs_Runnable()
         {
             var method = GetMethod("MethodWithIntValues");
-            List<TestMethod> tests = new List<TestMethod>(new PairwiseAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new PairwiseAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(6));
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Attributes
         public void SequentialAttribute_NoArgs_NoCases()
         {
             var method = GetMethod("MethodWithoutArgs");
-            List<TestMethod> tests = new List<TestMethod>(new SequentialAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new SequentialAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(0));
         }
 
@@ -171,7 +171,7 @@ namespace NUnit.Framework.Attributes
         public void SequentialAttribute_WithArgs_Runnable()
         {
             var method = GetMethod("MethodWithIntValues");
-            List<TestMethod> tests = new List<TestMethod>(new SequentialAttribute().BuildFrom(method, null));
+            List<TestMethod> tests = new List<TestMethod>(new SequentialAttribute().BuildFrom(method, null).SuiteTests);
             Assert.That(tests.Count, Is.EqualTo(3));
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));

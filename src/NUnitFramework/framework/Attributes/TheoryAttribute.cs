@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -49,7 +50,7 @@ namespace NUnit.Framework
     /// </example>
     /// 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
-    public class TheoryAttribute : CombiningStrategyAttribute, ITestBuilder, IImplyFixture
+    public class TheoryAttribute : CombiningStrategyAttribute, ITestPostProcessor, IImplyFixture
     {
         /// <summary>
         /// Construct the attribute, specifying a combining strategy and source of parameter data.
@@ -58,6 +59,20 @@ namespace NUnit.Framework
             new CombinatorialStrategy(),
             new ParameterDataProvider(new DatapointProvider(), new ParameterDataSourceProvider()))
         {
+        }
+
+        /// <summary>
+        /// Validate or otherwise process a test or suite which has just been built, possibly by multiple builders.
+        /// </summary>
+        /// <param name="test">The test or suite which has just been built.</param>
+        public void AfterBuild(Test test)
+        {
+            var suite = test as TestSuite;
+            if (suite != null && suite.TestCaseCount == 0)
+            {
+                suite.RunState = RunState.NotRunnable;
+                suite.Properties.Add(PropertyNames.SkipReason, "Theory has no test cases");
+            }
         }
     }
 }
