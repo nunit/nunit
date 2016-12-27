@@ -119,33 +119,38 @@ namespace NUnit.Framework.Internal.Builders
             List<ITestBuilder> builders = new List<ITestBuilder>(
                 method.GetCustomAttributes<ITestBuilder>(false));
 
-            // See if we need a CombinatorialAttribute added
-            bool needCombinatorial = true;
+            var isSuite = false;
+
             foreach (var attr in builders)
             {
-                if (attr is CombiningStrategyAttribute)
-                    needCombinatorial = false;
+                var buildAction = attr.BuildFrom(method, parentSuite);
+                if (buildAction.IsSuite)
+                {
+                    isSuite = true;
+                    foreach (var test in buildAction.SuiteTests)
+                        tests.Add(test);
+                }
             }
 
-            // This check must be done before CombinatorialAttribute gets added to the builders collection
-            var hasBuildersSpecified = builders.Count > 0;
-
+            
             // We could check to see if here are any data attributes specified
             // on the parameters but that's what CombinatorialAttribute does
             // and it simply won't return any cases if it finds nothing.
             // TODO: We need to add some other ITestBuilder than a combinatorial attribute
             // because we want the attribute to generate an error if it's present on
             // a generic method.
-            if (needCombinatorial)
-                builders.Add(new CombinatorialAttribute());
-
-            foreach (var attr in builders)
+            if (!builders.OfType<CombiningStrategyAttribute>().Any())
             {
-                foreach (var test in attr.BuildFrom(method, parentSuite))
-                    tests.Add(test);
+                var buildAction = new CombinatorialAttribute().BuildFrom(method, parentSuite);
+                if (buildAction.SuiteTests.Count != 0) // Since this attribute was not specified by the user, only turn into a suite if there is at least one test case
+                {
+                    isSuite = true;
+                    foreach (var test in buildAction.SuiteTests)
+                        tests.Add(test);
+                }
             }
 
-            return hasBuildersSpecified || tests.Count > 0
+            return isSuite
                 ? BuildParameterizedMethodSuite(method, tests)
                 : BuildSingleTestMethod(method, parentSuite);
         }
