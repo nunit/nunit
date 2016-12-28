@@ -106,9 +106,14 @@ namespace NUnit
         public const string DefaultTestNamePattern = "DefaultTestNamePattern";
 
         /// <summary>
-        /// Parameters to be passed on to the test
+        /// Parameters to be passed on to the tests, serialized to a single string which needs parsing. Obsoleted by <see cref="TestParametersDictionary"/>; kept for backward compatibility.
         /// </summary>
         public const string TestParameters = "TestParameters";
+
+        /// <summary>
+        /// Parameters to be passed on to the tests, already parsed into an IDictionary&lt;string, string>. Replaces <see cref="TestParameters"/>.
+        /// </summary>
+        public const string TestParametersDictionary = "TestParametersDictionary";
 
         #endregion
     }
