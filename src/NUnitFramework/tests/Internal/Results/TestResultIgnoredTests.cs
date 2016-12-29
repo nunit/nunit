@@ -22,46 +22,35 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
+using System;
 
 namespace NUnit.Framework.Internal.Results
 {
     public class TestResultIgnoredWithReasonGivenTests : TestResultIgnoredTests
     {
-        public TestResultIgnoredWithReasonGivenTests() : base("because")
+        private const string NonWhitespaceIgnoreReason = "because";
+        public TestResultIgnoredWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, tnode => ReasonNodeExpectedValidation(tnode, NonWhitespaceIgnoreReason))
         {
         }
     }
 
-    public class TestResultIgnoredWhereNoReasonElementExpectedInXml : TestResultIgnoredTests
+    public class TestResultIgnoredWithNullReasonGivenTests : TestResultIgnoredTests
     {
-        public TestResultIgnoredWhereNoReasonElementExpectedInXml(string ignoreReason) : base(ignoreReason)
-        {
-        }
-
-        protected override void ReasonAssertions(TNode testNode)
-        {
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason);
-        }
-    }
-
-    public class TestResultIgnoredWithNullReasonGivenTests : TestResultIgnoredWhereNoReasonElementExpectedInXml
-    {
-        public TestResultIgnoredWithNullReasonGivenTests() : base(null)
+        public TestResultIgnoredWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
         {
         }
     }
 
-    public class TestResultIgnoredWithEmptyReasonGivenTests : TestResultIgnoredWhereNoReasonElementExpectedInXml
+    public class TestResultIgnoredWithEmptyReasonGivenTests : TestResultIgnoredTests
     {
-        public TestResultIgnoredWithEmptyReasonGivenTests() : base(string.Empty)
+        public TestResultIgnoredWithEmptyReasonGivenTests() : base(string.Empty, NoReasonNodeExpectedValidation)
         {
         }
     }
 
-    public class TestResultIgnoredWithWhitespaceReasonGivenTests : TestResultIgnoredWhereNoReasonElementExpectedInXml
+    public class TestResultIgnoredWithWhitespaceReasonGivenTests : TestResultIgnoredTests
     {
-        public TestResultIgnoredWithWhitespaceReasonGivenTests() : base(" ")
+        public TestResultIgnoredWithWhitespaceReasonGivenTests() : base(" ", NoReasonNodeExpectedValidation)
         {
         }
     }
@@ -69,10 +58,12 @@ namespace NUnit.Framework.Internal.Results
     public abstract class TestResultIgnoredTests : TestResultTests
     {
         protected string _ignoreReason;
+        private Action<TNode> _xmlReasonNodeValidation;
 
-        public TestResultIgnoredTests(string ignoreReason)
+        public TestResultIgnoredTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
         {
             _ignoreReason = ignoreReason;
+            _xmlReasonNodeValidation = xmlReasonNodeValidation;
         }
 
         [SetUp]
@@ -112,7 +103,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual("Ignored", testNode.Attributes["label"]);
             Assert.AreEqual(null, testNode.Attributes["site"]);
 
-            ReasonAssertions(testNode);
+            _xmlReasonNodeValidation(testNode);
         }
 
         [Test]
@@ -131,12 +122,18 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }
 
-        protected virtual void ReasonAssertions(TNode testNode)
+        public static void NoReasonNodeExpectedValidation(TNode testNode)
+        {
+            TNode reason = testNode.SelectSingleNode("reason");
+            Assert.IsNull(reason, "This test expects no reason element to be present in the xml representation.");
+        }
+
+        public static void ReasonNodeExpectedValidation(TNode testNode, string ignoreReason)
         {
             TNode reason = testNode.SelectSingleNode("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(_ignoreReason, reason.SelectSingleNode("message").Value);
+            Assert.AreEqual(ignoreReason, reason.SelectSingleNode("message").Value);
             Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
     }
