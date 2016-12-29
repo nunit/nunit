@@ -8,7 +8,7 @@
     <owners>Charlie Poole</owners>
     <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
-    <iconUrl>http://nunit.org/nuget/nunitv3_32x32.png</iconUrl>
+    <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnit is a unit-testing framework for all .NET languages with a strong TDD focus.</summary>
     <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.
