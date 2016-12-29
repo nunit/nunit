@@ -386,8 +386,8 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
                 case TestStatus.Warning:
-                    //if(Message != null)
-                    if (Message != null && Message.Trim().Length > 0)
+                    if(Message != null)
+                    //if (Message != null && Message.Trim().Length > 0)
                         AddReasonElement(thisNode);
                     break;
             }
