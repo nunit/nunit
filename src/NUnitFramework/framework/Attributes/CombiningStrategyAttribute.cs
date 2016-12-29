@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace NUnit.Framework
 {
@@ -76,36 +76,29 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
+        public TestBuilderAction BuildFrom(IMethodInfo method, Test suite)
         {
-            List<TestMethod> tests = new List<TestMethod>();
-            
             IParameterInfo[] parameters = method.GetParameters();
+            if (parameters.Length == 0) return TestBuilderAction.None;
 
-            if (parameters.Length > 0)
+            IEnumerable[] sources = new IEnumerable[parameters.Length];
+
+            try
             {
-                IEnumerable[] sources = new IEnumerable[parameters.Length];
-
-                try
-                {
-                    for (int i = 0; i < parameters.Length; i++)
-                        sources[i] = _dataProvider.GetDataFor(parameters[i]);
-                }
-                catch (InvalidDataSourceException ex)
-                {
-                    var parms = new TestCaseParameters();
-                    parms.RunState = RunState.NotRunnable;
-                    parms.Properties.Set(PropertyNames.SkipReason, ex.Message);
-                    tests.Add(_builder.BuildTestMethod(method, suite, parms));
-                    return tests;
-                }
-
-                foreach (var parms in _strategy.GetTestCases(sources))
-                    tests.Add(_builder.BuildTestMethod(method, suite, (TestCaseParameters)parms));
+                for (int i = 0; i < parameters.Length; i++)
+                    sources[i] = _dataProvider.GetDataFor(parameters[i]);
             }
-
-            return tests;
+            catch (InvalidDataSourceException ex)
+            {
+                var parms = new TestCaseParameters();
+                parms.RunState = RunState.NotRunnable;
+                parms.Properties.Set(PropertyNames.SkipReason, ex.Message);
+                return TestBuilderAction.Suite(new[] { _builder.BuildTestMethod(method, suite, parms) });
+            }
+        
+            return TestBuilderAction.Suite(
+                from TestCaseParameters parms in _strategy.GetTestCases(sources)
+                select _builder.BuildTestMethod(method, suite, parms));
         }
 
         #endregion

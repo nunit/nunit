@@ -26,18 +26,15 @@ using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the inte
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestBuilder interface is exposed by a class that knows how to
-    /// build one or more TestMethods from a MethodInfo. In general, it is exposed
-    /// by an attribute, which has additional information available to provide
-    /// the necessary test parameters to distinguish the test cases built.
+    /// The ITestPostProcessor interface is exposed by a class that needs to validate or
+    /// otherwise process a test or suite after it has been built, possibly by multiple builders.
     /// </summary>
-    public interface ITestBuilder
+    public interface ITestPostProcessor
     {
         /// <summary>
-        /// Build one or more TestMethods from the provided MethodInfo.
+        /// Validate or otherwise process a test or suite which has just been built, possibly by multiple builders.
         /// </summary>
-        /// <param name="method">The method to be used as a test</param>
-        /// <param name="suite">The TestSuite to which the method will be added</param>
-        TestBuilderAction BuildFrom(IMethodInfo method, Test suite);
+        /// <param name="test">The test or suite which has just been built.</param>
+        void AfterBuild(Test test);
     }
 }

@@ -44,13 +44,22 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TheoryWithNoDatapointsIsNotRunnable()
         {
-            TestAssert.IsNotRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TheoryWithArgumentsButNoDatapoints");
+            TestAssert.IsNotRunnable(test);
         }
 
         [Test]
-        public void UnsupportedNullableTypeArgumentWithNoDatapointsAreNotRunnable()
+        public void TheoryWithTestCasesButNoDatapointsIsRunnable()
         {
-            TestAssert.IsNotRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TheoryWithTestCasesButNoDatapoints");
+            TestAssert.IsRunnable(test);
+        }
+
+        [Test]
+        public void UnsupportedNullableTypeArgumentWithNoDatapointsIsNotRunnable()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+            TestAssert.IsNotRunnable(test);
         }
 
         [Test]
@@ -197,6 +206,7 @@ namespace NUnit.Framework.Attributes
                 Assert.That(sqrt * sqrt, Is.EqualTo(num).Within(0.000001));
             }
         }
+
     }
 }
 #endif

@@ -283,11 +283,13 @@
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestFixtureData.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
+    <Compile Include="Interfaces\ITestPostProcessor.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
+    <Compile Include="Interfaces\TestBuilderAction.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\TNode.cs" />
