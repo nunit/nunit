@@ -89,6 +89,7 @@
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
     <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelismAttribute.cs" />
