@@ -25,7 +25,7 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Results
 {
-    public class InconclusiveResultTests : TestResultTests
+    public class TestResultInconclusiveTests : TestResultTests
     {
         [SetUp]
         public void SimulateTestRun()
