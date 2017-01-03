@@ -28,6 +28,7 @@ using System.IO;
 namespace NUnit.Framework.Assertions
 {
 	[TestFixture]
+    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
     public class AssertEqualsTests
     {
         [Test]
