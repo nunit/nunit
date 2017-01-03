@@ -28,7 +28,6 @@ namespace NUnit.Framework.Internal.Results
 {
     public class TestResultIgnoredWithReasonGivenTests : TestResultIgnoredTests
     {
-        private const string NonWhitespaceIgnoreReason = "because";
         public TestResultIgnoredWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, tnode => ReasonNodeExpectedValidation(tnode, NonWhitespaceIgnoreReason))
         {
         }

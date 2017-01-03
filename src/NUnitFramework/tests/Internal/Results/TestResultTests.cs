@@ -35,6 +35,7 @@ namespace NUnit.Framework.Internal.Results
     [TestFixture]
     public abstract class TestResultTests
     {
+        protected const string NonWhitespaceIgnoreReason = "because";
         protected TestMethod _test;
         protected TestResult _testResult;
 
