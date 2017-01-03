@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal.Results
         }
     }
 
-    public abstract class TestResultIgnoredTests : TestResultTests
+    public class TestResultIgnoredTests : TestResultTests
     {
         protected string _ignoreReason;
         private Action<TNode> _xmlReasonNodeValidation;
