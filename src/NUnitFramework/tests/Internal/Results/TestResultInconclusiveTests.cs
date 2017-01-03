@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Inconclusive, "because");
+            _testResult.SetResult(ResultState.Inconclusive, NonWhitespaceIgnoreReason);
             _suiteResult.AddResult(_testResult);
         }
 
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Results
         public void TestResultIsInconclusive()
         {
             Assert.AreEqual(ResultState.Inconclusive, _testResult.ResultState);
-            Assert.AreEqual("because", _testResult.Message);
+            Assert.AreEqual(NonWhitespaceIgnoreReason, _testResult.Message);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Results
             TNode reason = testNode.SelectSingleNode("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual("because", reason.SelectSingleNode("message").Value);
+            Assert.AreEqual(NonWhitespaceIgnoreReason, reason.SelectSingleNode("message").Value);
             Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
 
