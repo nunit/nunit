@@ -63,8 +63,7 @@ var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
 var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 
 // Packages
-var SRC_PACKAGE = PACKAGE_DIR + "NUnit-" + version + modifier + "-src.zip";
-var ZIP_PACKAGE = PACKAGE_DIR + "NUnit-" + packageVersion + ".zip";
+var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
 
 bool isDotNetCoreInstalled = false;
 
@@ -387,14 +386,6 @@ var FrameworkFiles = new FilePath[]
     "System.Runtime.dll",
     "System.Threading.Tasks.dll"
 };
-
-Task("PackageSource")
-    .Description("Creates a ZIP file of the source code")
-    .Does(() =>
-    {
-        CreateDirectory(PACKAGE_DIR);
-        RunGitCommand(string.Format("archive -o {0} HEAD", SRC_PACKAGE));
-    });
 
 Task("CreateImage")
     .Description("Copies all files into the image directory")
