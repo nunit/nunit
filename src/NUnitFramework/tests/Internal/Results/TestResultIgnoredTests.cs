@@ -120,11 +120,5 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }
-
-        public static void NoReasonNodeExpectedValidation(TNode testNode)
-        {
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason, "This test expects no reason element to be present in the xml representation.");
-        }
     }
 }

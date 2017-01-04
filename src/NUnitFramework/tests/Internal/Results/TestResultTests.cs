@@ -61,6 +61,12 @@ namespace NUnit.Framework.Internal.Results
             Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
 
+        protected static void NoReasonNodeExpectedValidation(TNode testNode)
+        {
+            TNode reason = testNode.SelectSingleNode("reason");
+            Assert.IsNull(reason, "This test expects no reason element to be present in the xml representation.");
+        }
+
         #region Nested DummySuite
 
         public class DummySuite

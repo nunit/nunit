@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Results
 
     public class TestResultInconclusiveWithNullReasonGivenTests : TestResultInconclusiveTests
     {
-        public TestResultInconclusiveWithNullReasonGivenTests() : base(null, TestResultIgnoredTests.NoReasonNodeExpectedValidation)
+        public TestResultInconclusiveWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
         {
         }
     }
