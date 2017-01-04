@@ -52,12 +52,12 @@ namespace NUnit.Framework.Internal.Results
             _suiteResult = (TestSuiteResult)_suite.MakeTestResult();
         }
 
-        protected static void ReasonNodeExpectedValidation(TNode testNode, string ignoreReason)
+        protected static void ReasonNodeExpectedValidation(TNode testNode, string reasonMessage)
         {
             TNode reason = testNode.SelectSingleNode("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(ignoreReason, reason.SelectSingleNode("message").Value);
+            Assert.AreEqual(reasonMessage, reason.SelectSingleNode("message").Value);
             Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
 

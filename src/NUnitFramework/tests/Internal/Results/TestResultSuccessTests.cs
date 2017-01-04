@@ -22,15 +22,55 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
+using System;
 
 namespace NUnit.Framework.Internal.Results
 {
-    public class TestResultSuccessTests : TestResultTests
+    public class TestResultSuccessWithReasonGivenTests : TestResultSuccessTests
     {
+        public TestResultSuccessWithReasonGivenTests() : base(TestPassedReason, node => ReasonNodeExpectedValidation(node, TestPassedReason))
+        {
+        }
+    }
+
+    public class TestResultSuccessWithNullReasonGivenTests : TestResultSuccessTests
+    {
+        public TestResultSuccessWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
+        {
+        }
+    }
+
+    public class TestResultSuccessWithEmptyReasonGivenTests : TestResultSuccessTests
+    {
+        public TestResultSuccessWithEmptyReasonGivenTests() : base(string.Empty, NoReasonNodeExpectedValidation)
+        {
+        }
+    }
+
+    public class TestSuccessInconclusiveWithWhitespaceReasonGivenTests : TestResultSuccessTests
+    {
+        public TestSuccessInconclusiveWithWhitespaceReasonGivenTests() : base(" ", NoReasonNodeExpectedValidation)
+        {
+        }
+    }
+
+    public abstract class TestResultSuccessTests : TestResultTests
+    {
+        protected string _successMessage;
+        private Action<TNode> _xmlReasonNodeValidation;
+
+        public const string TestPassedReason = "Test passed!";
+
+        protected TestResultSuccessTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        {
+            _successMessage = ignoreReason;
+            _xmlReasonNodeValidation = xmlReasonNodeValidation;
+        }
+
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Success, "Test passed!");
+            _testResult.SetResult(ResultState.Success, _successMessage);
             _testResult.AssertCount = 2;
 
             _suiteResult.AddResult(_testResult);
@@ -40,7 +80,7 @@ namespace NUnit.Framework.Internal.Results
         public void TestResultIsSuccess()
         {
             Assert.True(_testResult.ResultState == ResultState.Success);
-            Assert.AreEqual("Test passed!", _testResult.Message);
+            Assert.AreEqual(_successMessage, _testResult.Message);
         }
 
         [Test]
@@ -66,11 +106,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual(null, testNode.Attributes["site"]);
             Assert.AreEqual("2", testNode.Attributes["asserts"]);
 
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual("Test passed!", reason.SelectSingleNode("message").Value);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            _xmlReasonNodeValidation(testNode);
         }
 
         [Test]

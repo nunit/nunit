@@ -56,19 +56,19 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultInconclusiveTests : TestResultTests
     {
-        protected string _ignoreReason;
+        protected string _inconclusiveReason;
         private Action<TNode> _xmlReasonNodeValidation;
 
         protected TestResultInconclusiveTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
         {
-            _ignoreReason = ignoreReason;
+            _inconclusiveReason = ignoreReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
         }
 
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Inconclusive, _ignoreReason);
+            _testResult.SetResult(ResultState.Inconclusive, _inconclusiveReason);
             _suiteResult.AddResult(_testResult);
         }
 
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal.Results
         public void TestResultIsInconclusive()
         {
             Assert.AreEqual(ResultState.Inconclusive, _testResult.ResultState);
-            Assert.AreEqual(_ignoreReason, _testResult.Message);
+            Assert.AreEqual(_inconclusiveReason, _testResult.Message);
         }
 
         [Test]
