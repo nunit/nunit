@@ -26,7 +26,14 @@ using System;
 
 namespace NUnit.Framework.Internal.Results
 {
-    public class TestResultInconclusiveTests : TestResultTests
+    public class TestResultInconclusiveWithReasonGivenTests : TestResultInconclusiveTests
+    {
+        public TestResultInconclusiveWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, x => { })
+        {
+        }
+    }
+
+    public abstract class TestResultInconclusiveTests : TestResultTests
     {
         protected string _ignoreReason;
         private Action<TNode> _xmlReasonNodeValidation;
@@ -35,10 +42,6 @@ namespace NUnit.Framework.Internal.Results
         {
             _ignoreReason = ignoreReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
-        }
-
-        public TestResultInconclusiveTests() : this(NonWhitespaceIgnoreReason, x => { })
-        {
         }
 
         [SetUp]
