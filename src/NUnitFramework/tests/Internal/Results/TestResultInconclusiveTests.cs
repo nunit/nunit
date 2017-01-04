@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,15 +22,29 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
+using System;
 
 namespace NUnit.Framework.Internal.Results
 {
     public class TestResultInconclusiveTests : TestResultTests
     {
+        protected string _ignoreReason;
+        private Action<TNode> _xmlReasonNodeValidation;
+
+        protected TestResultInconclusiveTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        {
+            _ignoreReason = ignoreReason;
+            _xmlReasonNodeValidation = xmlReasonNodeValidation;
+        }
+
+        public TestResultInconclusiveTests() : this(NonWhitespaceIgnoreReason, x => { })
+        {
+        }
+
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Inconclusive, NonWhitespaceIgnoreReason);
+            _testResult.SetResult(ResultState.Inconclusive, _ignoreReason);
             _suiteResult.AddResult(_testResult);
         }
 
@@ -38,7 +52,7 @@ namespace NUnit.Framework.Internal.Results
         public void TestResultIsInconclusive()
         {
             Assert.AreEqual(ResultState.Inconclusive, _testResult.ResultState);
-            Assert.AreEqual(NonWhitespaceIgnoreReason, _testResult.Message);
+            Assert.AreEqual(_ignoreReason, _testResult.Message);
         }
 
         [Test]
@@ -67,7 +81,7 @@ namespace NUnit.Framework.Internal.Results
             TNode reason = testNode.SelectSingleNode("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(NonWhitespaceIgnoreReason, reason.SelectSingleNode("message").Value);
+            Assert.AreEqual(_ignoreReason, reason.SelectSingleNode("message").Value);
             Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
 
