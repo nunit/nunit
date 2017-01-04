@@ -40,6 +40,20 @@ namespace NUnit.Framework.Internal.Results
         }
     }
 
+    public class TestResultInconclusiveWithEmptyReasonGivenTests : TestResultInconclusiveTests
+    {
+        public TestResultInconclusiveWithEmptyReasonGivenTests() : base(string.Empty, NoReasonNodeExpectedValidation)
+        {
+        }
+    }
+
+    public class TestResultInconclusiveWithWhitespaceReasonGivenTests : TestResultInconclusiveTests
+    {
+        public TestResultInconclusiveWithWhitespaceReasonGivenTests() : base(" ", NoReasonNodeExpectedValidation)
+        {
+        }
+    }
+
     public abstract class TestResultInconclusiveTests : TestResultTests
     {
         protected string _ignoreReason;
