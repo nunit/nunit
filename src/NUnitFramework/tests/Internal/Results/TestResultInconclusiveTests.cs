@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal.Results
 {
     public class TestResultInconclusiveWithReasonGivenTests : TestResultInconclusiveTests
     {
-        public TestResultInconclusiveWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, node => TestResultIgnoredTests.ReasonNodeExpectedValidation(node, NonWhitespaceIgnoreReason))
+        public TestResultInconclusiveWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, node => ReasonNodeExpectedValidation(node, NonWhitespaceIgnoreReason))
         {
         }
     }
