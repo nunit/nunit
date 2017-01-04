@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal.Results
 {
     public class TestResultInconclusiveWithReasonGivenTests : TestResultInconclusiveTests
     {
-        public TestResultInconclusiveWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, x => { })
+        public TestResultInconclusiveWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, node => TestResultIgnoredTests.ReasonNodeExpectedValidation(node, NonWhitespaceIgnoreReason))
         {
         }
     }
@@ -81,11 +81,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.IsNull(testNode.Attributes["label"]);
             Assert.IsNull(testNode.Attributes["site"]);
 
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(_ignoreReason, reason.SelectSingleNode("message").Value);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            _xmlReasonNodeValidation(testNode);
         }
 
         [Test]
