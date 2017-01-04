@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Syntax
 {
+    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
     public class EqualToTest : SyntaxTest
     {
         [SetUp]
@@ -134,6 +135,7 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void EqualityTestsUsingDefaultFloatingPointTolerance()
         {
+            var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
             GlobalSettings.DefaultFloatingPointTolerance = 0.05d;
 
             try
@@ -144,7 +146,7 @@ namespace NUnit.Framework.Syntax
             }
             finally
             {
-                GlobalSettings.DefaultFloatingPointTolerance = 0.0d;
+                GlobalSettings.DefaultFloatingPointTolerance = savedTolerance;
             }
         }
     }

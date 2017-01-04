@@ -32,14 +32,22 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
+    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
     public class ToleranceTests
     {
         private NUnitEqualityComparer _comparer;
+        private double _savedTolerance;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
+        }
 
         [TearDown]
         public void TearDown()
         {
-            GlobalSettings.DefaultFloatingPointTolerance = 0d;
+            GlobalSettings.DefaultFloatingPointTolerance = _savedTolerance;
             _comparer = new NUnitEqualityComparer();
         }
 
