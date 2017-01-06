@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void MatchesNothihngExplicitly()
+        public void MatchesNothingExplicitly()
         {
             Assert.False(TestFilter.Empty.IsExplicitMatch(_dummyFixture));
             Assert.False(TestFilter.Empty.IsExplicitMatch(_anotherFixture));

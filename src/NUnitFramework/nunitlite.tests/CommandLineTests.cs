@@ -515,7 +515,7 @@ namespace NUnitLite.Tests
         [TestCase(false, false, false)]
         [TestCase(true, true, true)]
         [TestCase(false, true, true)]
-        public void ShouldSetTeamCityFlagAccordingToArgsAndDefauls(bool hasTeamcityInCmd, bool? defaultTeamcity, bool expectedTeamCity)
+        public void ShouldSetTeamCityFlagAccordingToArgsAndDefaults(bool hasTeamcityInCmd, bool? defaultTeamcity, bool expectedTeamCity)
         {
             // Given
             List<string> args = new List<string> { "tests.dll" };

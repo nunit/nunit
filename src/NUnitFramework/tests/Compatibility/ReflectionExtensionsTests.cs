@@ -66,7 +66,7 @@ namespace NUnit.Framework.Tests.Compatibility
         [TestCase(typeof(string))]
         [TestCase(typeof(double))]
         [TestCase(typeof(int))]
-        public void CanGetContructorWithParams(Type paramType)
+        public void CanGetConstructorWithParams(Type paramType)
         {
             var result = typeof(DerivedTestClass).GetConstructor(new[] { paramType });
             Assert.That(result, Is.Not.Null);

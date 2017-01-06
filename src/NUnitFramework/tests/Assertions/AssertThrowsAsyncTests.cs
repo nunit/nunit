@@ -248,7 +248,7 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void DoesNotThrowSuceeds()
+        public void DoesNotThrowSucceeds()
         {
             Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsNothing);
         }
