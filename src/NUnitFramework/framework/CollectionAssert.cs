@@ -49,16 +49,15 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// DO NOT USE! Use CollectionAssert.AreEqual(...) instead.
-        /// override the default ReferenceEquals to throw an InvalidOperationException. This 
-        /// implementation makes sure there is no mistake in calling this function 
-        /// as part of Assert. 
+        /// DO NOT USE!
+        /// The ReferenceEquals method throws an InvalidOperationException. This is done 
+        /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new InvalidOperationException("CollectionAssert.ReferenceEquals should not be used for Assertions, use CollectionAssert.AreEqual(...) instead.");
+            throw new InvalidOperationException("CollectionAssert.ReferenceEquals should not be used for Assertions.");
         }
 
         #endregion
