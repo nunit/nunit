@@ -73,11 +73,11 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         /// <summary>
-        /// Determine if a test matches the filter expicitly. That is, it must
+        /// Determine if a test matches the filter explicitly. That is, it must
         /// be a direct match of the test itself or one of it's children.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
-        /// <returns>True if the test matches the filter explicityly, otherwise false</returns>
+        /// <returns>True if the test matches the filter explicitly, otherwise false</returns>
         public override bool IsExplicitMatch(ITest test)
         {
             return false;

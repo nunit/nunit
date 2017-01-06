@@ -76,7 +76,7 @@ namespace NUnit.Framework.Constraints
         static ActualValueDelegate<object>[] FailureDelegates;
 
         // Initialize static fields that are sensitive to order of initialization.
-        // Most compilers would probably intialize these in lexical order but it
+        // Most compilers would probably initialize these in lexical order but it
         // may not be guaranteed in all cases so we do it directly.
         static DelayedConstraintTests()
         {

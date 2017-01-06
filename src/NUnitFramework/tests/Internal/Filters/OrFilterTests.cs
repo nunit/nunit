@@ -84,9 +84,9 @@ namespace NUnit.Framework.Internal.Filters
         /// 
         /// The input is an array of booleans (<paramref name="inputBooleans"/>). For each boolean
         /// value a <see cref="MockTestFilter"/> is added to the <see cref="OrFilter"/>
-        /// whose match-function (defined through the paramter <paramref name="matchFunction"/>)
+        /// whose match-function (defined through the parameter <paramref name="matchFunction"/>)
         /// evaluates to the boolean value indicated.
-        /// Afterwrards the requested match-function (<paramref name="matchFunction"/>) is called
+        /// Afterwards the requested match-function (<paramref name="matchFunction"/>) is called
         /// on the <see cref="OrFilter"/> and is compared to the expected result
         /// (<paramref name="expectedResult"/>).
         /// This tests also throws an exception if the match-function call from the

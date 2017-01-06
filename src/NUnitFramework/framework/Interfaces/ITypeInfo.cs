@@ -109,7 +109,7 @@ namespace NUnit.Framework.Interfaces
         string GetDisplayName();
 
         /// <summary>
-        /// Get the display name for an oject of this type, constructed with specific arguments
+        /// Get the display name for an object of this type, constructed with specific arguments
         /// </summary>
         string GetDisplayName(object[] args);
 
