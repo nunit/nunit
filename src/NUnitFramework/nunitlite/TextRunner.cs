@@ -25,7 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using NUnit.Common;
 using NUnit;
 using NUnit.Framework.Api;
@@ -360,8 +362,8 @@ namespace NUnitLite
             if (options.DefaultTestNamePattern != null)
                 runSettings[FrameworkPackageSettings.DefaultTestNamePattern] = options.DefaultTestNamePattern;
 
-            if (options.TestParameters != null)
-                runSettings[FrameworkPackageSettings.TestParameters] = options.TestParameters;
+            if (options.TestParameters.Count != 0)
+                runSettings[FrameworkPackageSettings.TestParametersDictionary] = options.TestParameters;
 
             return runSettings;
         }

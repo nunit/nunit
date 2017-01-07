@@ -550,7 +550,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions("--params=X=5");
             Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5"));
+            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { {"X", "5" } }));
         }
 
         [Test]
@@ -558,7 +558,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions("--params:X=5;Y=7");
             Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7"));
+            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" }, { "Y", "7" } }));
         }
 
         [Test]
@@ -566,7 +566,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions("-p:X=5", "-p:Y=7");
             Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7"));
+            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" }, { "Y", "7" } }));
         }
 
         [Test]
@@ -574,7 +574,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions("--params:X=5;Y=7", "-p:Z=3");
             Assert.That(options.errorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo("X=5;Y=7;Z=3"));
+            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" }, { "Y", "7" }, { "Z", "3" } }));
         }
 
         [Test]

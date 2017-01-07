@@ -79,7 +79,7 @@ namespace NUnit.Framework.Api
 #else
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
 #endif
-            
+
 #if PORTABLE
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).FullName;
 #else
@@ -131,26 +131,41 @@ namespace NUnit.Framework.Api
                 if (options.ContainsKey(FrameworkPackageSettings.DefaultTestNamePattern))
                     TestNameGenerator.DefaultTestNamePattern = options[FrameworkPackageSettings.DefaultTestNamePattern] as string;
 
-                if (options.ContainsKey(FrameworkPackageSettings.TestParameters))
+                if (options.ContainsKey(FrameworkPackageSettings.TestParametersDictionary))
                 {
-                    string parameters = options[FrameworkPackageSettings.TestParameters] as string;
-                    if (!string.IsNullOrEmpty(parameters))
-                        foreach (string param in parameters.Split(new[] { ';' }))
-                        {
-                            int eq = param.IndexOf("=");
+                    var testParametersDictionary = options[FrameworkPackageSettings.TestParametersDictionary] as IDictionary<string, string>;
+                    if (testParametersDictionary != null)
+                    {
+                        foreach (var parameter in testParametersDictionary)
+                            TestContext.Parameters.Add(parameter.Key, parameter.Value);
+                    }
+                }
+                else
+                {
+                    // This cannot be changed without breaking backwards compatibility with old runners.
+                    // Deserializes the way old runners understand.
 
-                            if (eq > 0 && eq < param.Length - 1)
+                    if (options.ContainsKey(FrameworkPackageSettings.TestParameters))
+                    {
+                        string parameters = options[FrameworkPackageSettings.TestParameters] as string;
+                        if (!string.IsNullOrEmpty(parameters))
+                            foreach (string param in parameters.Split(new[] { ';' }))
                             {
-                                var name = param.Substring(0, eq);
-                                var val = param.Substring(eq + 1);
+                                int eq = param.IndexOf("=");
 
-                                TestContext.Parameters.Add(name, val);
+                                if (eq > 0 && eq < param.Length - 1)
+                                {
+                                    var name = param.Substring(0, eq);
+                                    var val = param.Substring(eq + 1);
+
+                                    TestContext.Parameters.Add(name, val);
+                                }
                             }
-                        }
+                    }
                 }
 
                 IList fixtureNames = null;
-                if (options.ContainsKey (FrameworkPackageSettings.LOAD))
+                if (options.ContainsKey(FrameworkPackageSettings.LOAD))
                     fixtureNames = options[FrameworkPackageSettings.LOAD] as IList;
                 var fixtures = GetFixtures(assembly, fixtureNames);
 
@@ -243,7 +258,7 @@ namespace NUnit.Framework.Api
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
-        [SecuritySafeCritical]  
+        [SecuritySafeCritical]
 #endif
         private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList<Test> fixtures)
         {
