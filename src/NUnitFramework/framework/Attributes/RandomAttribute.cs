@@ -36,6 +36,7 @@ namespace NUnit.Framework
     /// RandomAttribute is used to supply a set of random _values
     /// to a single parameter of a parameterized test.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class RandomAttribute : DataAttribute, IParameterDataSource
     {
         private RandomDataSource _source;

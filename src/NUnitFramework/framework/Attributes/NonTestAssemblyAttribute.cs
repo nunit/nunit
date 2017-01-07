@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.ComponentModel;
 
 namespace NUnit.Framework
@@ -34,6 +35,7 @@ namespace NUnit.Framework
     /// depends on each individual runner.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class NonTestAssemblyAttribute : NUnitAttribute
     {
     }
