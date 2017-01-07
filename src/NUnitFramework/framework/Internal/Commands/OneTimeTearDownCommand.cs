@@ -64,9 +64,12 @@ namespace NUnit.Framework.Internal.Commands
                 for (int i = _actions.Count; i > 0; )
                     _actions[--i].AfterTest(Test);
 
-                if (_setUpTearDownItems != null)
-                    foreach(var item in _setUpTearDownItems)
-                        item.RunTearDown(context);
+                if (!(suiteResult.Test is TestFixture && !suiteResult.Test.HasChildren))
+                {
+                    if (_setUpTearDownItems != null)
+                        foreach (var item in _setUpTearDownItems)
+                            item.RunTearDown(context);
+                }
 
                 IDisposable disposable = context.TestObject as IDisposable;
                 if (disposable != null && Test is IDisposableFixture)

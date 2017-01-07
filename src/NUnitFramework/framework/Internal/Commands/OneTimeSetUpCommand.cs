@@ -62,6 +62,8 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            TestResult suiteResult = context.CurrentResult;
+
             if (_typeInfo != null)
             {
                 // Use pre-constructed fixture if available, otherwise construct it
@@ -75,15 +77,18 @@ namespace NUnit.Framework.Internal.Commands
                     Test.Fixture = _suite.Fixture;
                 }
 
-                for (int i = _setUpTearDown.Count; i > 0; )
-                    _setUpTearDown[--i].RunSetUp(context);
+                if (!(suiteResult.Test is TestFixture && !suiteResult.Test.HasChildren))
+                {
+                    for (int i = _setUpTearDown.Count; i > 0;)
+                        _setUpTearDown[--i].RunSetUp(context);
+                }
             }
-
+            
 
             for (int i = 0; i < _actions.Count; i++)
                 _actions[i].BeforeTest(Test);
 
-            return context.CurrentResult;
+            return suiteResult;
         }
     }
 }

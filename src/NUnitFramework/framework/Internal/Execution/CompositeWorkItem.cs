@@ -106,10 +106,14 @@ namespace NUnit.Framework.Internal.Execution
 
                             CreateChildWorkItems();
 
+                            // This is important to do even when there are no child tests.
+                            // For example, the teardown command is how theories get an
+                            // opportunity to fail when there are no test cases. To execute
+                            // teardown commands, we must execute setup commands.
+                            PerformOneTimeSetUp();
+
                             if (_children.Count > 0)
                             {
-                                PerformOneTimeSetUp();
-
                                 if (!CheckForCancellation())
                                 {
                                     switch (Result.ResultState.Status)
@@ -128,13 +132,16 @@ namespace NUnit.Framework.Internal.Execution
                                             break;
                                     }
                                 }
-
-                                // Directly execute the OneTimeFixtureTearDown for tests that
-                                // were skipped, failed or set to inconclusive in one time setup
-                                // unless we are aborting.
-                                if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                                    PerformOneTimeTearDown();
                             }
+
+                            // Directly execute the OneTimeFixtureTearDown for tests that
+                            // were skipped, failed or set to inconclusive in one time setup
+                            // unless we are aborting.
+                            // This is important to do even when there are no child tests.
+                            // For example, the teardown command is how theories get an
+                            // opportunity to fail when there are no test cases.
+                            if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                                PerformOneTimeTearDown();
                             break;
 
                         case RunState.Skipped:

@@ -42,15 +42,21 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void TheoryWithNoDatapointsIsNotRunnable()
+        public void TheoryWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsNotRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints");
+            TestAssert.IsRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints", ResultState.Failure);
+        }
+        
+        [Test]
+        public void TheoryWithTestCasesButNoDatapointsIsRunnableAndSucceeds()
+        {
+            TestAssert.IsRunnable(fixtureType, "TheoryWithTestCasesButNoDatapoints", ResultState.Success);
         }
 
         [Test]
-        public void UnsupportedNullableTypeArgumentWithNoDatapointsAreNotRunnable()
+        public void UnsupportedNullableTypeArgumentWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsNotRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+            TestAssert.IsRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints", ResultState.Failure);
         }
 
         [Test]
