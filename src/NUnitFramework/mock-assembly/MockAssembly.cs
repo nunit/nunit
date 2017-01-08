@@ -130,10 +130,10 @@ namespace NUnit.Tests
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
-            public const int Tests = 9;
+            public const int Tests = 10;
             public const int Suites = 1;
 
-            public const int Passed = 1;
+            public const int Passed = 2;
 
             public const int Skipped_Ignored = 1;
             public const int Skipped_Explicit = 1;
@@ -184,6 +184,15 @@ namespace NUnit.Tests
             public void InconclusiveTest()
             {
                 Assert.Inconclusive("No valid data");
+            }
+
+            [Test]
+            public void DisplayRunParameters()
+            {
+#if !PORTABLE
+                foreach (string name in TestContext.Parameters.Names)
+                    Console.WriteLine("Parameter {0} = {1}", name, TestContext.Parameters[name]);
+#endif
             }
 
             [Test]
