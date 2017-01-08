@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
@@ -126,6 +127,9 @@ namespace NUnit.Framework.Internal.Builders
                     needCombinatorial = false;
             }
 
+            // This check must be done before CombinatorialAttribute gets added to the builders collection
+            var hasBuildersSpecified = builders.Count > 0;
+
             // We could check to see if here are any data attributes specified
             // on the parameters but that's what CombinatorialAttribute does
             // and it simply won't return any cases if it finds nothing.
@@ -141,7 +145,7 @@ namespace NUnit.Framework.Internal.Builders
                     tests.Add(test);
             }
 
-            return tests.Count > 0
+            return hasBuildersSpecified || tests.Count > 0
                 ? BuildParameterizedMethodSuite(method, tests)
                 : BuildSingleTestMethod(method, parentSuite);
         }
