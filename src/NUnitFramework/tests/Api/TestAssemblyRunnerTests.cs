@@ -223,6 +223,7 @@ namespace NUnit.Framework.Api
                 Does.StartWith(COULD_NOT_LOAD_MSG));
         }
 
+#if !PORTABLE
         [Test]
         public void Run_WithParameters()
         {
@@ -246,6 +247,7 @@ namespace NUnit.Framework.Api
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
             CheckParameterOutput(result);
         }
+#endif
 
         [Test]
         public void Run_BadFile_ReturnsNonRunnableSuite()
