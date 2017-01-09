@@ -30,7 +30,6 @@ Supported platforms:
     <dependencies>
       <group targetFramework="netstandard1.6">
         <dependency id="NETStandard.Library" version="1.6.0" />
-        <dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
         <dependency id="System.Runtime.Loader" version="4.0.0" />
       </group>
     </dependencies>
@@ -50,7 +49,11 @@ Supported platforms:
     <file src="bin/net-4.5/nunit.framework.xml" target="lib/net45" />
     <file src="bin/netstandard16/nunit.framework.dll" target="lib/netstandard1.6" />
     <file src="bin/netstandard16/nunit.framework.xml" target="lib/netstandard1.6" />
-    <file src="bin/portable/nunit.framework.dll" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
-    <file src="bin/portable/nunit.framework.xml" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
+    <file src="bin/portable/nunit.framework.dll" target="lib/portable-net45+win8+wp8+wpa81" />
+    <file src="bin/portable/nunit.framework.xml" target="lib/portable-net45+win8+wp8+wpa81" />
+    <file src="bin/portable/nunit.framework.dll" target="lib/MonoAndroid" />
+    <file src="bin/portable/nunit.framework.xml" target="lib/MonoAndroid" />
+    <file src="bin/portable/nunit.framework.dll" target="lib/Xamarin.iOS10" />
+    <file src="bin/portable/nunit.framework.xml" target="lib/Xamarin.iOS10" />
   </files>
 </package>
