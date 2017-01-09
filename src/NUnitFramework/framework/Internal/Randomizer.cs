@@ -413,7 +413,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Returns a random bool based on the probablility a true result
+        /// Returns a random bool based on the probability a true result
         /// </summary>
         public bool NextBool(double probability)
         {

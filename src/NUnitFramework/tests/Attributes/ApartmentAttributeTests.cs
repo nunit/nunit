@@ -80,7 +80,7 @@ namespace NUnit.Framework.Attributes
             // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
             // https://github.com/nunit/nunit-framework/issues/36
             [Test]
-            public void RequiresSTAAtributeIsInheritable()
+            public void RequiresSTAAttributeIsInheritable()
             {
                 Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof(ApartmentAttribute), true);
                 Assert.That(attributes, Has.Length.EqualTo(1),
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Attributes
             // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
             // https://github.com/nunit/nunit-framework/issues/36
             [Test]
-            public void RequiresMTAAtributeIsInheritable()
+            public void RequiresMTAAttributeIsInheritable()
             {
                 Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof(ApartmentAttribute), true);
                 Assert.That(attributes, Has.Length.EqualTo(1),

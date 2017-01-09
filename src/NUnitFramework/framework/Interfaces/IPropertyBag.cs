@@ -51,7 +51,7 @@ namespace NUnit.Framework.Interfaces
     ///     Assert.That(bag["Tag"],
     ///       Is.EqualTo(new string[] { "one", "two" })); 
     /// 
-    /// When working with single-valued propeties, client code
+    /// When working with single-valued properties, client code
     /// should use the Set method to set the value and Get to
     /// retrieve the value. The GetSetting methods may also be
     /// used to retrieve the value in a type-safe manner while

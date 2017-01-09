@@ -374,7 +374,7 @@ namespace NUnit.Framework
             result.RecordAssertion(AssertionStatus.Warning, message, GetStackTrace());
         }
 
-        // System.Envionment.StackTrace puts extra entries on top of the stack, at least in some environments
+        // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments
         private static StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
 
         private static string GetStackTrace()

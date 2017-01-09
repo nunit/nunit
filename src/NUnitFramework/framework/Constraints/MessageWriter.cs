@@ -59,7 +59,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Method to write single line  message with optional args, usually
-        /// written to precede the general failure message, at a givel 
+        /// written to precede the general failure message, at a given 
         /// indentation level.
         /// </summary>
         /// <param name="level">The indentation level of the message</param>

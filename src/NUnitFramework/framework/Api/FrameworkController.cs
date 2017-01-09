@@ -280,7 +280,7 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
-        /// Runs the tests in an assembly syncronously reporting back the test results through the callback
+        /// Runs the tests in an assembly synchronously reporting back the test results through the callback
         /// or through the return value
         /// </summary>
         /// <param name="callback">The callback that receives the test results</param>
@@ -309,7 +309,7 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
-        /// Runs the tests in an assembly asyncronously reporting back the test results through the callback
+        /// Runs the tests in an assembly asynchronously reporting back the test results through the callback
         /// </summary>
         /// <param name="callback">The callback that receives the test results</param>
         /// <param name="filter">A string containing the XML representation of the filter to use</param>

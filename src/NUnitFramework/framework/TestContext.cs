@@ -272,7 +272,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// This method adds the a new ValueFormatterFactory to the
-        /// chain of responsibility used for fomatting values in messages.
+        /// chain of responsibility used for formatting values in messages.
         /// The scope of the change is the current TestContext.
         /// </summary>
         /// <param name="formatterFactory">The factory delegate</param>
@@ -286,7 +286,7 @@ namespace NUnit.Framework
         /// delegate to the chain of responsibility, creating the factory
         /// delegate internally. It is useful when the Type of the object
         /// is the only criterion for selection of the formatter, since
-        /// it can be used without getting involved with a compould function.
+        /// it can be used without getting involved with a compound function.
         /// </summary>
         /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
         /// <param name="formatter">The ValueFormatter delegate</param>

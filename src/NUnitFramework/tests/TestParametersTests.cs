@@ -57,7 +57,7 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void Add_AccumlatesNames()
+        public void Add_AccumulatesNames()
         {
             _parameters.Add("Parm1", "5");
             _parameters.Add("Parm2", "five");

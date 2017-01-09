@@ -52,7 +52,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get method is a simple alternative to the indexer
         /// </summary>
-        /// <param name="name">Name of the paramter</param>
+        /// <param name="name">Name of the parameter</param>
         /// <returns>Value of the parameter or null if not present</returns>
         public string Get(string name)
         {

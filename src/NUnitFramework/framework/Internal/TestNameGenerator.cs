@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal
                 if (rcurly < 0)
                     break;
 
-                if (lcurly > start) // Handle fixedixed text before curly brace
+                if (lcurly > start) // Handle fixed text before curly brace
                     fragments.Add(new FixedTextFragment(pattern.Substring(start, lcurly - start)));
 
                 string token = pattern.Substring(lcurly, rcurly - lcurly + 1);

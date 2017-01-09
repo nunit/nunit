@@ -105,7 +105,7 @@ namespace NUnit.Framework
         /// Construct one or more TestFixtures from a given Type,
         /// using available parameter data.
         /// </summary>
-        /// <param name="typeInfo">The TypeInfo for which fixures are to be constructed.</param>
+        /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
         /// <returns>One or more TestFixtures as TestSuite</returns>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
