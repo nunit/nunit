@@ -19,12 +19,16 @@ Framework
 
 Issues Resolved
 
+ * 406 Warning-level Assertions
+ * 890 Allow file references anywhere in the command line.
+ * 1380 Appveyor Failures when branch name is too long
  * 1589 Split the nunit repository into multiple repositories
  * 1599 Move Compact Framework to separate project
  * 1601 Move Silverlight to a separate project
  * 1609 Upgrade Cake build to latest version
  * 1661 Create .NET Standard Framework Build
  * 1668 Need implementation-independent way to test number of items in a collection
+ * 1743 Provide multiple results for a test case in the XML output
  * 1758 No direct inverse for Contains.Key
  * 1765 TestCaseSourceAttribute constructor for method with parameters
  * 1802 Design Multiple Assert syntax as seen by users
@@ -32,6 +36,7 @@ Issues Resolved
  * 1811 Build.ps1 fails if spaces in path
  * 1823 Remove engine nuspecs and old global.json
  * 1827 Remove unused repository paths from repositories.config
+ * 1828 Add Retry for failed tests only
  * 1829 NUnitLite accepts --params option but does not make any use of it.
  * 1836 Support nullable enums in Theories
  * 1837 [Request] AfterContraint to support more readable usage
