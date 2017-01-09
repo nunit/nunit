@@ -198,9 +198,10 @@ namespace NUnit.Framework.Constraints
         /// the following constraint to all members of a collection,
         /// succeeding only if a specified number of them succeed.
         /// </summary>
-        public ConstraintExpression Exactly(int expectedCount)
+        public ItemsConstraintExpression Exactly(int expectedCount)
         {
-            return this.Append(new ExactCountOperator(expectedCount));
+            builder.Append(new ExactCountOperator(expectedCount));
+            return new ItemsConstraintExpression(builder);
         }
         
         #endregion

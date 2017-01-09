@@ -95,7 +95,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding only if a specified number of them succeed.
         /// </summary>
-        public static ConstraintExpression Exactly(int expectedCount)
+        public static ItemsConstraintExpression Exactly(int expectedCount)
         {
             return new ConstraintExpression().Exactly(expectedCount);
         }

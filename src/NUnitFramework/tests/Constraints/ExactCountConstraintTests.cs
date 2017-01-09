@@ -22,9 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Assertions;
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -74,6 +75,26 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void ExactlyAndExactly()
+        {
+            Assert.That(names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(1).EqualTo("Fred"));
+            Assert.That(names, Has.Exactly(4).Items.And.Exactly(2).EqualTo("Charlie"));
+            Assert.That(names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(4).Items);
+        }
+
+        [Test]
+        public void ExactlyOrExactly()
+        {
+            Assert.That(names, Has.Exactly(3).EqualTo("Fred").Or.Exactly(2).EqualTo("Charlie"));
+        }
+
+        [Test]
+        public void ExactlyFollowedByOr()
+        {
+            Assert.That(names, Has.Exactly(3).EqualTo("Fred").Or.EqualTo("Charlie"));
+        }
+
+        [Test]
         public void ExactlyTwoItemsMatchFails()
         {
             var expectedMessage =
@@ -81,6 +102,34 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(2, Is.EqualTo("Fred"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyFourItemsNoPredicate()
+        {
+            Assert.That(names, new ExactCountConstraint(4));
+        }
+
+        [Test]
+        public void ExactlyFourItemsNoopNoPredicate()
+        {
+            Assert.That(names, Has.Exactly(4).Items);
+        }
+
+        [Test]
+        public void ExactlyOneItemNoPredicateFails()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "exactly one item" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(1)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyTwoItemsNoopMatch()
+        {
+            Assert.That(names, Has.Exactly(2).Items.EqualTo("Charlie"));
         }
     }
 }

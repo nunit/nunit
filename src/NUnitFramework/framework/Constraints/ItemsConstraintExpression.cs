@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,50 +24,29 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Abstract base class used for prefixes
+    /// An extension of ResolvableConstraintExpression that adds a no-op Items property for readability.
     /// </summary>
-    public abstract class PrefixConstraint : Constraint
+    public sealed class ItemsConstraintExpression : ConstraintExpression
     {
         /// <summary>
-        /// The base constraint
+        /// Create a new instance of ItemsConstraintExpression
         /// </summary>
-        protected IConstraint BaseConstraint { get; set; }
+        public ItemsConstraintExpression() { }
 
         /// <summary>
-        /// Prefix used in forming the constraint description
+        /// Create a new instance of ResolvableConstraintExpression,
+        /// passing in a pre-populated ConstraintBuilder.
         /// </summary>
-        protected string DescriptionPrefix { get; set; }
+        /// <param name="builder"></param>
+        public ItemsConstraintExpression(ConstraintBuilder builder)
+            : base(builder) { }
 
         /// <summary>
-        /// Construct given a base constraint
+        /// No-op property for readability.
         /// </summary>
-        /// <param name="baseConstraint"></param>
-        protected PrefixConstraint(IResolveConstraint baseConstraint)
-            : base(baseConstraint)
+        public ResolvableConstraintExpression Items
         {
-            Guard.ArgumentNotNull(baseConstraint, "baseConstraint");
-
-            BaseConstraint = baseConstraint.Resolve();
-        }
-
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public override string Description
-        {
-            get { return FormatDescription(DescriptionPrefix, BaseConstraint); }
-        }
-
-        /// <summary>
-        /// Formats a prefix constraint's description.
-        /// </summary>
-        internal static string FormatDescription(string descriptionPrefix, IConstraint baseConstraint)
-        {
-            return string.Format(
-                baseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}",
-                descriptionPrefix,
-                baseConstraint.Description);
+            get { return new ResolvableConstraintExpression(builder); }
         }
     }
 }
