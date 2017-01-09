@@ -46,7 +46,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Construct a CombiningStrategyAttribute incorporating an
-        /// ICombiningStrategy and an IParamterDataProvider.
+        /// ICombiningStrategy and an IParameterDataProvider.
         /// </summary>
         /// <param name="strategy">Combining strategy to be used in combining data</param>
         /// <param name="provider">An IParameterDataProvider to supply data</param>

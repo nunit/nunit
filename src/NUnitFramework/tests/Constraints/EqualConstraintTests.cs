@@ -643,7 +643,7 @@ namespace NUnit.Framework.Constraints
 
         #region TypeEqualityMessages
         private readonly string NL = Environment.NewLine;
-        private static IEnumerable DiffentTypeSameValueTestData
+        private static IEnumerable DifferentTypeSameValueTestData
         {
             get
             {
@@ -671,7 +671,7 @@ namespace NUnit.Framework.Constraints
             Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL);
         }
 
-        [Test, TestCaseSource("DiffentTypeSameValueTestData")]
+        [Test, TestCaseSource("DifferentTypeSameValueTestData")]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));

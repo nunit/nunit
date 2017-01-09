@@ -57,7 +57,7 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void Bug524CharIntComparision()
+        public void Bug524CharIntComparison()
         {
             char c = '\u0000';
             Assert.AreEqual(0, c);
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void CharCharComparision()
+        public void CharCharComparison()
         {
             char c = 'a';
             Assert.That(c, Is.EqualTo('a'));

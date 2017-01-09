@@ -81,7 +81,7 @@ namespace NUnit.TestUtilities
 
         public static void IsNotRunnable(Type type, string name)
         {
-            IsNotRunnable(TestBuilder.MakeTestCase(type, name));
+            IsNotRunnable(TestBuilder.MakeTestFromMethod(type, name));
         }
 
         public static void ChildNotRunnable(Type type, string name)

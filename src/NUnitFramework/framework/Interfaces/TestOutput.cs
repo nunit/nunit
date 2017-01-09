@@ -32,7 +32,7 @@ namespace NUnit.Framework.Interfaces
 	public class TestOutput
 	{
         /// <summary>
-        /// Construct with text, ouput destination type and
+        /// Construct with text, output destination type and
         /// the name of the test that produced the output.
         /// </summary>
         /// <param name="text">Text to be output</param>

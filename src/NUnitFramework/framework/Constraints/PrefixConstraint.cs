@@ -56,13 +56,18 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get
-            {
-                return string.Format(
-                    BaseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}", 
-                    DescriptionPrefix, 
-                    BaseConstraint.Description);
-            }
+            get { return FormatDescription(DescriptionPrefix, BaseConstraint); }
+        }
+
+        /// <summary>
+        /// Formats a prefix constraint's description.
+        /// </summary>
+        internal static string FormatDescription(string descriptionPrefix, IConstraint baseConstraint)
+        {
+            return string.Format(
+                baseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}",
+                descriptionPrefix,
+                baseConstraint.Description);
         }
     }
 }

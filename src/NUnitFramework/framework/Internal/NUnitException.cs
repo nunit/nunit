@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,10 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal 
+namespace NUnit.Framework.Internal
 {
     using System;
+#if !NETSTANDARD1_6
     using System.Runtime.Serialization;
+#endif
 
     /// <summary>
     /// Thrown when an assertion failed. Here to preserve the inner
@@ -33,18 +35,18 @@ namespace NUnit.Framework.Internal
 #if !PORTABLE && !NETSTANDARD1_6
     [Serializable]
 #endif
-    public class NUnitException : Exception 
+    public class NUnitException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
         /// </summary>
-        public NUnitException () : base() 
-        {} 
+        public NUnitException () : base()
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
         /// </summary>
-        /// <param name="message">The error message that explains 
+        /// <param name="message">The error message that explains
         /// the reason for the exception</param>
         public NUnitException(string message) : base (message)
         {}
@@ -52,19 +54,19 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
         /// </summary>
-        /// <param name="message">The error message that explains 
+        /// <param name="message">The error message that explains
         /// the reason for the exception</param>
-        /// <param name="inner">The exception that caused the 
+        /// <param name="inner">The exception that caused the
         /// current exception</param>
         public NUnitException(string message, Exception inner) :
-            base(message, inner) 
+            base(message, inner)
         { }
 
 #if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Serialization Constructor
         /// </summary>
-        protected NUnitException(SerializationInfo info, 
+        protected NUnitException(SerializationInfo info,
             StreamingContext context) : base(info,context){}
 #endif
     }

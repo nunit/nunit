@@ -122,6 +122,52 @@ namespace NUnit.Framework.Syntax
     }
     #endregion
 
+    #region Exactly
+    public class Exactly_WithoutConstraint : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<exactcount>";
+            staticSyntax = Has.Exactly(3).Items;
+            builderSyntax = Builder().Exactly(3).Items;
+        }
+    }
+
+    public class Exactly_WithConstraint : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<exactcount <lessthan 0>>";
+            staticSyntax = Has.Exactly(3).Items.LessThan(0);
+            builderSyntax = Builder().Exactly(3).Items.LessThan(0);
+        }
+    }
+
+    public class Exactly_WithConstraint_BeforeBinaryOperators : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<exactcount <or <lessthan 0> <and <greaterthan 10> <lessthan 20>>>>";
+            staticSyntax = Has.Exactly(3).Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
+            builderSyntax = Builder().Exactly(3).Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
+        }
+    }
+
+    public class Exactly_WithConstraint_BeforeAndAfterBinaryOperators : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<and <exactcount <lessthan 0>> <exactcount <greaterthan 10>>>";
+            staticSyntax = Has.Exactly(3).Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
+            builderSyntax = Builder().Exactly(3).Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
+        }
+    }
+    #endregion
+
     #region And
     public class AndTest : SyntaxTest
     {

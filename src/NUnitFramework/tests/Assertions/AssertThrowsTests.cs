@@ -172,7 +172,7 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void AssertDoesNotThrowSuceeds()
+        public void AssertDoesNotThrowSucceeds()
         {
             Assert.DoesNotThrow(TestDelegates.ThrowsNothing);
         }

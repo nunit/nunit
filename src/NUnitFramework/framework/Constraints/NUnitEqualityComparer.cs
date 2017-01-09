@@ -107,7 +107,7 @@ namespace NUnit.Framework.Constraints
         /// Gets the list of failure points for the last Match performed.
         /// The list consists of objects to be interpreted by the caller.
         /// This generally means that the caller may only make use of
-        /// objects it has placed on the list at a particular depthy.
+        /// objects it has placed on the list at a particular depth.
         /// </summary>
         public IList<FailurePoint> FailurePoints
         {

@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal
         #region IXmlNodeBuilder Members
 
         /// <summary>
-        /// Returns an XmlNode representating the current PropertyBag.
+        /// Returns an XmlNode representing the current PropertyBag.
         /// </summary>
         /// <param name="recursive">Not used</param>
         /// <returns>An XmlNode representing the PropertyBag</returns>

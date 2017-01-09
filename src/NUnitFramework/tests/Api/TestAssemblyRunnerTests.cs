@@ -33,6 +33,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
 {
@@ -221,6 +222,32 @@ namespace NUnit.Framework.Api
             Assert.That(result.Message,
                 Does.StartWith(COULD_NOT_LOAD_MSG));
         }
+
+#if !PORTABLE
+        [Test]
+        public void Run_WithParameters()
+        {
+            var dict = new Dictionary<string, string>();
+            dict.Add("X", "5");
+            dict.Add("Y", "7");
+
+            var settings = new Dictionary<string, object>();
+            settings.Add("TestParametersDictionary", dict);
+            LoadMockAssembly(settings);
+            var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
+            CheckParameterOutput(result);
+        }
+
+        [Test]
+        public void Run_WithLegacyParameters()
+        {
+            var settings = new Dictionary<string, object>();
+            settings.Add("TestParameters", "X=5;Y=7");
+            LoadMockAssembly(settings);
+            var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
+            CheckParameterOutput(result);
+        }
+#endif
 
         [Test]
         public void Run_BadFile_ReturnsNonRunnableSuite()
@@ -426,14 +453,19 @@ namespace NUnit.Framework.Api
 
         private ITest LoadMockAssembly()
         {
+            return LoadMockAssembly(EMPTY_SETTINGS);
+        }
+
+        private ITest LoadMockAssembly(IDictionary<string, object> settings)
+        {
 #if PORTABLE
             return _runner.Load(
                 typeof(MockAssembly).GetTypeInfo().Assembly, 
-                EMPTY_SETTINGS);
+                settings);
 #else
             return _runner.Load(
                 Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE),
-                EMPTY_SETTINGS);
+                settings);
 #endif
         }
 
@@ -444,6 +476,16 @@ namespace NUnit.Framework.Api
 #else
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);
 #endif
+        }
+
+        private void CheckParameterOutput(ITestResult result)
+        {
+            var childResult = TestFinder.Find(
+                "DisplayRunParameters", result, true);
+
+            Assert.That(childResult.Output, Is.EqualTo(
+                "Parameter X = 5" + Environment.NewLine +
+                "Parameter Y = 7" + Environment.NewLine));
         }
 
         #endregion

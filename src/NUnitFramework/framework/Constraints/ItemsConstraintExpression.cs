@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,48 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Constraints
 {
-    using System;
-#if !NETSTANDARD1_6
-    using System.Runtime.Serialization;
-#endif
-
     /// <summary>
-    /// InvalidTestFixtureException is thrown when an appropriate test
-    /// fixture constructor using the provided arguments cannot be found.
+    /// An extension of ResolvableConstraintExpression that adds a no-op Items property for readability.
     /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
-    [Serializable]
-#endif
-    public class InvalidDataSourceException : Exception
+    public sealed class ItemsConstraintExpression : ConstraintExpression
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// Create a new instance of ItemsConstraintExpression
         /// </summary>
-        public InvalidDataSourceException() : base() {}
+        public ItemsConstraintExpression() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// Create a new instance of ResolvableConstraintExpression,
+        /// passing in a pre-populated ConstraintBuilder.
         /// </summary>
-        /// <param name="message">The message.</param>
-        public InvalidDataSourceException(string message) : base(message)
-        {}
+        /// <param name="builder"></param>
+        public ItemsConstraintExpression(ConstraintBuilder builder)
+            : base(builder) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// No-op property for readability.
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="inner">The inner.</param>
-        public InvalidDataSourceException(string message, Exception inner) : base(message, inner)
-        { }
-
-#if !PORTABLE && !NETSTANDARD1_6
-        /// <summary>
-        /// Serialization Constructor
-        /// </summary>
-        protected InvalidDataSourceException(SerializationInfo info,
-            StreamingContext context) : base(info,context){}
-#endif
+        public ResolvableConstraintExpression Items
+        {
+            get { return new ResolvableConstraintExpression(builder); }
+        }
     }
 }

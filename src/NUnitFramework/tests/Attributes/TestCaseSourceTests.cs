@@ -290,6 +290,21 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(lhs, rhs);
         }
 
+
+        private static IEnumerable<TestCaseData> ZeroTestCasesSource() => Enumerable.Empty<TestCaseData>();
+
+        [TestCaseSource("ZeroTestCasesSource")]
+        public void TestWithZeroTestSourceCasesShouldNotBeRun()
+        {
+            Assert.Fail();
+        }
+
+        [TestCaseSource("ZeroTestCasesSource")]
+        public void TestWithZeroTestSourceCasesShouldPassWithoutRequiringArguments(int requiredParameter)
+        {
+        }
+
+
         static object[] testCases =
         {
             new TestCaseData(

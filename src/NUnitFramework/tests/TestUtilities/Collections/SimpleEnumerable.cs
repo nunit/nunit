@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,38 +22,36 @@
 // ***********************************************************************
 
 using System;
-#if !NETSTANDARD1_6
-using System.Runtime.Serialization;
-#endif
+using System.Collections;
+using System.Collections.Generic;
 
-namespace NUnit.Common
+namespace NUnit.TestUtilities.Collections
 {
     /// <summary>
-    /// TestSelectionParserException is thrown when an error
-    /// is found while parsing the selection expression.
+    /// SimpleObjectCollection is used in testing to ensure that only
+    /// methods of the ICollection interface are accessible.
     /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
-    [Serializable]
-#endif
-    public class TestSelectionParserException : Exception
+    class SimpleEnumerable : IEnumerable
     {
-        /// <summary>
-        /// Construct with a message
-        /// </summary>
-        public TestSelectionParserException(string message) : base(message) { }
+        private readonly List<object> contents = new List<object>();
 
-        /// <summary>
-        /// Construct with a message and inner exception
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="innerException"></param>
-        public TestSelectionParserException(string message, Exception innerException) : base(message, innerException) { }
+        public SimpleEnumerable(IEnumerable<object> source)
+        {
+            this.contents = new List<object>(source);
+        }
 
-#if !PORTABLE && !NETSTANDARD1_6
-        /// <summary>
-        /// Serialization constructor
-        /// </summary>
-        public TestSelectionParserException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-#endif
+        public SimpleEnumerable(params object[] source)
+        {
+            this.contents = new List<object>(source);
+        }
+
+        #region IEnumerable Members
+
+        public IEnumerator GetEnumerator()
+        {
+            return contents.GetEnumerator();
+        }
+
+        #endregion
     }
 }

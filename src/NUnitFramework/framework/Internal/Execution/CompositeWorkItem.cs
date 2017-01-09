@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         protected override void PerformWork()
         {
-            // Inititialize actions, setup and teardown
+            // Initialize actions, setup and teardown
             // We can't do this in the constructor because
             // the context is not available at that point.
             InitializeSetUpAndTearDownCommands();

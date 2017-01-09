@@ -267,6 +267,7 @@
     <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="TestParametersTests.cs" />
     <Compile Include="TestUtilities\AsyncTestDelegates.cs" />
+    <Compile Include="TestUtilities\Collections\SimpleEnumerable.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectCollection.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
     <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />

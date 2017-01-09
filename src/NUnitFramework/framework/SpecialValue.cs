@@ -33,7 +33,7 @@ namespace NUnit.Framework
     {
         /// <summary>
         /// Null represents a null value, which cannot be used as an 
-        /// argument to an attriute under .NET 1.x
+        /// argument to an attribute under .NET 1.x
         /// </summary>
         Null
     }
