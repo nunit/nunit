@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -47,7 +47,6 @@ namespace NUnit.Framework.Constraints
             this.expectedCount = expectedCount;
         }
 
-
         /// <summary>
         /// Reduce produces a constraint from the operator and 
         /// any arguments. It takes the arguments from the constraint 
@@ -56,7 +55,10 @@ namespace NUnit.Framework.Constraints
         /// <param name="stack"></param>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            stack.Push(stack.Empty ? new ExactCountConstraint(expectedCount) : new ExactCountConstraint(expectedCount, stack.Pop()));
+            if (RightContext == null || RightContext is BinaryOperator)
+                stack.Push(new ExactCountConstraint(expectedCount));
+            else
+                stack.Push(new ExactCountConstraint(expectedCount, stack.Pop()));
         }
     }
 }

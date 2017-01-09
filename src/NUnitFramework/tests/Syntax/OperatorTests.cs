@@ -161,9 +161,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<exactcount <or <lessthan 0> <and <greaterthan 10> <lessthan 20>>>>";
+            parseTree = "<and <exactcount <lessthan 0>> <exactcount <greaterthan 10>>>";
             staticSyntax = Has.Exactly(3).Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
-            builderSyntax = Builder().Exactly(3).Items.LessThan(0).Or.Exactly(3).Items.GreaterThan(10).And.Exactly(3).Items.LessThan(20);
+            builderSyntax = Builder().Exactly(3).Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
         }
     }
     #endregion

@@ -277,6 +277,7 @@
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestContextTests.cs" />
+    <Compile Include="TestUtilities\Collections\SimpleEnumerable.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectCollection.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
     <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />

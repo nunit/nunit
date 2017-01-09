@@ -22,9 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Assertions;
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -74,6 +75,26 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void ExactlyAndExactly()
+        {
+            Assert.That(names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(1).EqualTo("Fred"));
+            Assert.That(names, Has.Exactly(4).Items.And.Exactly(2).EqualTo("Charlie"));
+            Assert.That(names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(4).Items);
+        }
+
+        [Test]
+        public void ExactlyOrExactly()
+        {
+            Assert.That(names, Has.Exactly(3).EqualTo("Fred").Or.Exactly(2).EqualTo("Charlie"));
+        }
+
+        [Test]
+        public void ExactlyFollowedByOr()
+        {
+            Assert.That(names, Has.Exactly(3).EqualTo("Fred").Or.EqualTo("Charlie"));
+        }
+
+        [Test]
         public void ExactlyTwoItemsMatchFails()
         {
             var expectedMessage =
@@ -87,7 +108,6 @@ namespace NUnit.Framework.Constraints
         public void ExactlyFourItemsNoPredicate()
         {
             Assert.That(names, new ExactCountConstraint(4));
-            Assert.That(names, Has.Exactly(4));
         }
 
         [Test]

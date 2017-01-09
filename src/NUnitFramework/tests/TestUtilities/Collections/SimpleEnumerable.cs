@@ -21,32 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Constraints
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace NUnit.TestUtilities.Collections
 {
     /// <summary>
-    /// An extension of ResolvableConstraintExpression that adds a no-op Items property for readability.
+    /// SimpleObjectCollection is used in testing to ensure that only
+    /// methods of the ICollection interface are accessible.
     /// </summary>
-    public sealed class ItemsConstraintExpression : ConstraintExpression
+    class SimpleEnumerable : IEnumerable
     {
-        /// <summary>
-        /// Create a new instance of ItemsConstraintExpression
-        /// </summary>
-        public ItemsConstraintExpression() { }
+        private readonly List<object> contents = new List<object>();
 
-        /// <summary>
-        /// Create a new instance of ResolvableConstraintExpression,
-        /// passing in a pre-populated ConstraintBuilder.
-        /// </summary>
-        /// <param name="builder"></param>
-        public ItemsConstraintExpression(ConstraintBuilder builder)
-            : base(builder) { }
-
-        /// <summary>
-        /// No-op property for readability.
-        /// </summary>
-        public ResolvableConstraintExpression Items
+        public SimpleEnumerable(IEnumerable<object> source)
         {
-            get { return new ResolvableConstraintExpression(builder); }
+            this.contents = new List<object>(source);
         }
+
+        public SimpleEnumerable(params object[] source)
+        {
+            this.contents = new List<object>(source);
+        }
+
+        #region IEnumerable Members
+
+        public IEnumerator GetEnumerator()
+        {
+            return contents.GetEnumerator();
+        }
+
+        #endregion
     }
 }
