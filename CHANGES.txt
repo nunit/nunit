@@ -25,6 +25,7 @@ Issues Resolved
  * 1609 Upgrade Cake build to latest version
  * 1661 Create .NET Standard Framework Build
  * 1668 Need implementation-independent way to test number of items in a collection
+ * 1758 No direct inverse for Contains.Key
  * 1765 TestCaseSourceAttribute constructor for method with parameters
  * 1802 Design Multiple Assert syntax as seen by users
  * 1808 Disambiguate error messages from EqualConstraint
