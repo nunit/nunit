@@ -26,7 +26,7 @@ Supported platforms:
     <releaseNotes>This package includes the NUnit 3.0 framework assembly, which is referenced by your tests. You will need to install version 3.0 of the nunit3-console program or a third-party runner that supports NUnit 3.0 in order to execute tests. Runners intended for use with NUnit 2.x will not run 3.0 tests correctly.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
-    <copyright>Copyright (c) 2016 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2017 Charlie Poole</copyright>
     <dependencies>
       <group targetFramework="netstandard1.6">
         <dependency id="NETStandard.Library" version="1.6.0" />
