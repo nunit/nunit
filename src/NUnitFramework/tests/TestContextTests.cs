@@ -239,10 +239,10 @@ namespace NUnit.Framework.Tests
 #if ASYNC && !NET_4_0
 
 #if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implmentation")]
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
 #endif
         [Test]
-        public async Task TestContext_Out_should_flow_with_async_execution()
+        public async Task TestContextOut_ShouldFlowWithAsyncExecution()
         {
             var expected = TestContext.Out;
             await Task.Yield();
@@ -250,14 +250,39 @@ namespace NUnit.Framework.Tests
         }
 
 #if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implmentation")]
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
 #endif
         [Test]
-        public async Task TestExecutionContext_CurrentContext_should_flow_with_async_execution()
+        public async Task TestExecutionContextCurrentContext_ShouldFlowWithAsyncExecution()
         {
             var expected = TestExecutionContext.CurrentContext;
             await Task.Yield();
             Assert.AreSame(expected, TestExecutionContext.CurrentContext);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public async Task TestContextWriteLine_ShouldNotThrow_WhenExecutedFromAsyncMethod()
+        {
+            Assert.DoesNotThrow(TestContext.WriteLine);
+            await Task.Yield();
+            Assert.DoesNotThrow(TestContext.WriteLine);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public void TestContextOut_ShouldBeAvailableFromOtherThreads()
+        {
+            var isTestContextOutAvailable = false;
+            Task.Factory.StartNew(() =>
+            {
+                isTestContextOutAvailable = TestContext.Out != null;
+            }).Wait();
+            Assert.True(isTestContextOutAvailable);
         }
 #endif
     }
