@@ -76,7 +76,7 @@ namespace NUnitLite
             Assembly executingAssembly = GetType().GetTypeInfo().Assembly;
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
-            string copyright = "Copyright (C) 2016, Charlie Poole";
+            string copyright = "Copyright (C) 2017, Charlie Poole";
             string build = "";
 
             var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
@@ -459,10 +459,10 @@ namespace NUnitLite
 
         private void DisplayErrorsFailuresAndWarnings(ITestResult result)
         {
-            bool display = 
-                result.ResultState.Status == TestStatus.Failed || 
+            bool display =
+                result.ResultState.Status == TestStatus.Failed ||
                 result.ResultState.Status == TestStatus.Warning;
-            
+
             if (result.Test.IsSuite)
             {
                 if (display)
