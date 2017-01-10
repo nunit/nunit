@@ -23,6 +23,9 @@
 
 using System.IO;
 using System.Collections.Generic;
+#if ASYNC && !NET_4_0
+using System.Threading.Tasks;
+#endif
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
@@ -233,6 +236,30 @@ namespace NUnit.Framework.Tests
             Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(fixture.StackTrace, Is.Null);
         }
+#if ASYNC && !NET_4_0
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implmentation")]
+#endif
+        [Test]
+        public async Task TestContext_Out_should_flow_with_async_execution()
+        {
+            var expected = TestContext.Out;
+            await Task.Yield();
+            Assert.AreSame(expected, TestContext.Out);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implmentation")]
+#endif
+        [Test]
+        public async Task TestExecutionContext_CurrentContext_should_flow_with_async_execution()
+        {
+            var expected = TestExecutionContext.CurrentContext;
+            await Task.Yield();
+            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
+        }
+#endif
     }
 
     [TestFixture]

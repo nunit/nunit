@@ -173,8 +173,32 @@ namespace NUnit.Framework.Internal
         // automatically creates threads for async methods.
         // We create a new context, which is automatically
         // populated with values taken from the current thread.
+#if NETSTANDARD1_6
+        private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
+        /// <summary>
+        /// Gets and sets the current context.
+        /// </summary>
+        public static TestExecutionContext CurrentContext
+        {
+            get
+            {
+                return _currentContext.Value ?? (_currentContext.Value = new TestExecutionContext());
+            }
+            private set
+            {
+                _currentContext.Value = value;
+            }
+        }
 
-#if PORTABLE || NETSTANDARD1_6
+        /// <summary>
+        /// Get the current context or return null if none is found.
+        /// </summary>
+        /// <remarks></remarks>
+        public static TestExecutionContext GetTestExecutionContext()
+        {
+            return _currentContext.Value;
+        }
+#elif PORTABLE
         // In the Silverlight and portable builds, we use a ThreadStatic
         // field to hold the current TestExecutionContext.
 
