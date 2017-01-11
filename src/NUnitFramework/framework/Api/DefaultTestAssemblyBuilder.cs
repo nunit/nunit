@@ -116,7 +116,7 @@ namespace NUnit.Framework.Api
             {
                 testAssembly = new TestAssembly(assemblyName);
                 testAssembly.RunState = RunState.NotRunnable;
-                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
+                testAssembly.Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildFriendlyMessage(ex));
             }
 
             return testAssembly;
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Api
             {
                 testAssembly = new TestAssembly(assemblyPath);
                 testAssembly.RunState = RunState.NotRunnable;
-                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
+                testAssembly.Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildFriendlyMessage(ex));
             }
 
             return testAssembly;
