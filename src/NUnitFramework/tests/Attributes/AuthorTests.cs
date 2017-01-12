@@ -102,11 +102,8 @@ namespace NUnit.Framework.Tests.Attributes
         public void TestMethodMultipleAuthors()
         {
             Test test = TestBuilder.MakeTestFromMethod(FixtureType, "TestMethodMultipleAuthors");
-            var authors = test.Properties[PropertyNames.Author];
-            Assert.That(authors, Has.Exactly(3).Items);
-            Assert.AreEqual(authors[0], "Rob Prouse <rob@prouse.org>");
-            Assert.AreEqual(authors[1], "Charlie Poole <charlie@poole.org>");
-            Assert.AreEqual(authors[2], "NUnit");
+            Assert.That(test.Properties[PropertyNames.Author], Is.EqualTo(
+                new[] { "Rob Prouse <rob@prouse.org>","Charlie Poole <charlie@poole.org>", "NUnit"}));
         }
 
         [Test]
@@ -115,11 +112,8 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("suite");
             suite.Add(TestBuilder.MakeFixture(FixtureType));
             var mockFixtureSuite = (TestSuite)suite.Tests[0];
-            var authors = mockFixtureSuite.Properties[PropertyNames.Author];
-            Assert.That(authors, Has.Exactly(3).Items);
-            Assert.AreEqual(authors[0], "Rob Prouse");
-            Assert.AreEqual(authors[1], "Charlie Poole <charlie@poole.org>");
-            Assert.AreEqual(authors[2], "NUnit");
+            Assert.That(mockFixtureSuite.Properties[PropertyNames.Author], Is.EqualTo(
+                new[] { "Rob Prouse", "Charlie Poole <charlie@poole.org>", "NUnit" }));
         }
 
         #endregion
