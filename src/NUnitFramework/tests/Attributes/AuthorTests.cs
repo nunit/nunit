@@ -95,5 +95,32 @@ namespace NUnit.Framework.Tests.Attributes
             var testCase = (Test)parameterizedMethodSuite.Tests[0];
             Assert.AreEqual("Charlie Poole", testCase.Properties.Get(PropertyNames.Author));
         }
+
+        #region Multiple Authors
+        [Test]
+        public void TestMethodMultipleAuthors()
+        {
+            Test test = TestBuilder.MakeTestFromMethod(FixtureType, "TestMethodMultipleAuthors");
+            var authors = test.Properties[PropertyNames.Author];
+            Assert.That(authors, Has.Exactly(3).Items);
+            Assert.AreEqual(authors[0], "Rob Prouse <rob@prouse.org>");
+            Assert.AreEqual(authors[1], "Charlie Poole <charlie@poole.org>");
+            Assert.AreEqual(authors[2], "NUnit");
+        }
+
+        [Test]
+        public void TestFixtureMultipleAuthors()
+        {
+            var suite = new TestSuite("suite");
+            suite.Add(TestBuilder.MakeFixture(FixtureType));
+            var mockFixtureSuite = (TestSuite)suite.Tests[0];
+            var authors = mockFixtureSuite.Properties[PropertyNames.Author];
+            Assert.That(authors, Has.Exactly(3).Items);
+            Assert.AreEqual(authors[1], "Charlie Poole <charlie@poole.org>");
+            Assert.AreEqual(authors[0], "Rob Prouse");
+            Assert.AreEqual(authors[2], "NUnit");
+        }
+
+        #endregion
     }
 }
