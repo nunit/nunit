@@ -34,8 +34,8 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {
-    [TestFixture]
-    [Author("Rob Prouse", "rob@prouse.org")]
+    [TestFixture(Author = "Rob Prouse <rob@prouse.org>"), Author("Charlie Poole", "Charlie@poole.org")]
+    [Author("NUnit")]
     [TestOf(typeof(AuthorAttribute))]
     public class AuthorTests
     {
@@ -97,7 +97,8 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         #region Multiple Authors
-        [Test]
+        [Test(Author = "Rob Prouse <rob@prouse.org>"),Author("Charlie Poole", "charlie@poole.org")]
+        [Author("NUnit")]
         public void TestMethodMultipleAuthors()
         {
             Test test = TestBuilder.MakeTestFromMethod(FixtureType, "TestMethodMultipleAuthors");
