@@ -116,8 +116,8 @@ namespace NUnit.Framework.Tests.Attributes
             var mockFixtureSuite = (TestSuite)suite.Tests[0];
             var authors = mockFixtureSuite.Properties[PropertyNames.Author];
             Assert.That(authors, Has.Exactly(3).Items);
-            Assert.AreEqual(authors[1], "Charlie Poole <charlie@poole.org>");
             Assert.AreEqual(authors[0], "Rob Prouse");
+            Assert.AreEqual(authors[1], "Charlie Poole <charlie@poole.org>");
             Assert.AreEqual(authors[2], "NUnit");
         }
 
