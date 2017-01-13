@@ -370,12 +370,6 @@ namespace NUnit.Framework
                 if (arg == null)
                     continue;
 
-                if (arg is SpecialValue && (SpecialValue)arg == SpecialValue.Null)
-                {
-                    arglist[i] = null;
-                    continue;
-                }
-
                 if (targetType.IsAssignableFrom(arg.GetType()))
                     continue;
 #if !PORTABLE && !NETSTANDARD1_6
