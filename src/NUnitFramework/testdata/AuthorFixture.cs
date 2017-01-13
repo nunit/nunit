@@ -30,7 +30,8 @@ using NUnit.Framework;
 
 namespace NUnit.TestData
 {
-    [TestFixture(Author = "Rob Prouse")]
+    [TestFixture(Author = "Rob Prouse"), Author("Charlie Poole", "charlie@poole.org")]
+    [Author("NUnit")]
     public class AuthorFixture
     {
         [Test(Author = "Rob Prouse")]
@@ -55,5 +56,11 @@ namespace NUnit.TestData
         [TestCase(5, Author = "Charlie Poole")]
         public void TestCaseWithAuthor(int x)
         { }
+
+        [Test, Author("Rob Prouse", "rob@prouse.org")]
+        [Author("Charlie Poole", "charlie@poole.org"), Author("NUnit")]
+        public void TestMethodMultipleAuthors()
+        { }
+
     }
 }
