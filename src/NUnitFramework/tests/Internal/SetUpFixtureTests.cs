@@ -10,6 +10,7 @@ using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
@@ -96,14 +97,11 @@ namespace NUnit.Framework.Internal
         public void AssemblySetUpFixtureReplacesAssemblyNodeInTree()
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
-            ITest suite = builder.Build(testAssembly, options);
+            var setupFixture = builder.Build(testAssembly, options) as SetUpFixture;
+            Assert.IsNotNull(setupFixture);
 
-            Assert.IsNotNull(suite);
-            Assert.That(suite, Is.InstanceOf<SetUpFixture>());
-
-            suite = suite.Tests[1] as TestSuite;
-            Assert.AreEqual("SomeFixture", suite.Name);
-            Assert.AreEqual(1, suite.Tests.Count);
+            var testFixture = TestFinder.Find("SomeFixture", setupFixture, false);
+            Assert.AreEqual(1, testFixture.Tests.Count);
         }
 
         [Test]

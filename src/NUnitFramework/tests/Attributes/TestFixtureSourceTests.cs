@@ -22,9 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 using NUnit.TestData.TestFixtureSourceData;
 using NUnit.TestUtilities;
 
@@ -93,6 +94,28 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite.Tests.Count, Is.EqualTo(3));
             Assert.That(suite.TestCaseCount, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void NoNamespaceSourceWithTwoValues()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(NoNamespaceTestFixtureSourceWithTwoValues));
+            Assert.That(suite, Is.TypeOf<ParameterizedFixtureSuite>());
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(2));
+            Assert.That(suite.Tests.Count, Is.EqualTo(2));
+            Assert.That(suite.Tests, Is.All.TypeOf<TestFixture>());
+        }
+
+        [Test]
+        public void NoNamespaceSourceWithSingleValue()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(NoNamespaceTestFixtureSourceWithSingleValue));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite, Is.TypeOf<TestFixture>());
+            Assert.That(suite.TestCaseCount, Is.EqualTo(1));
+            Assert.That(suite.Tests.Count, Is.EqualTo(1));
+            Assert.That(suite.Tests[0], Is.TypeOf<TestMethod>());
         }
     }
 }
