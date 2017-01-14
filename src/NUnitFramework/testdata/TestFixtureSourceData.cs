@@ -354,7 +354,9 @@ public class NoNamespaceTestFixtureSourceWithTwoValues
     {
     }
 
+#pragma warning disable 414
     static object[] MyData = { 1, 2 };
+#pragma warning restore 414
 }
 
 [TestFixtureSource("MyData")]
@@ -367,5 +369,7 @@ public class NoNamespaceTestFixtureSourceWithSingleValue
     {
     }
 
+#pragma warning disable 414
     static object[] MyData = { 1 };
+#pragma warning restore 414
 }
