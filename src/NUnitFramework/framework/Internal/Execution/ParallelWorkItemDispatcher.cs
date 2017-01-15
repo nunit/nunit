@@ -120,6 +120,16 @@ namespace NUnit.Framework.Internal.Execution
         #region IWorkItemDispatcher Members
 
         /// <summary>
+        /// Start execution, setting the top level work,
+        /// enqueuing it and starting a shift to execute it.
+        /// </summary>
+        public void Start(WorkItem topLevelWorkItem)
+        {
+            Enqueue(_topLevelWorkItem = topLevelWorkItem);
+            StartNextShift();
+        }
+
+        /// <summary>
         /// Dispatch a single work item for execution. The first
         /// work item dispatched is saved as the top-level
         /// work item and used when stopping the run.
@@ -127,26 +137,31 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            // Special handling of the top-level item
-            if (Interlocked.CompareExchange (ref _topLevelWorkItem, work, null) == null)
-            {
-                Enqueue(work);
-                StartNextShift();
-            }
-            // We run child items directly, rather than enqueuing them...
-            // 1. If the context is single threaded.
-            // 2. If there is no fixture, and so nothing to do but dispatch grandchildren.
-            // 3. For now, if this represents a test case. This avoids issues of
-            // tests that access the fixture state and allows handling ApartmentState
-            // preferences set on the fixture.
-            else if (work.Context.IsSingleThreaded
-                  || work.Test.TypeInfo == null
-                  || work is SimpleWorkItem)
+            if (ShouldExecuteDirectly(work))
                 Execute(work);
             else
                 Enqueue(work);
 
             Interlocked.Increment(ref _itemsDispatched);
+        }
+
+        private static bool ShouldExecuteDirectly(WorkItem work)
+        {
+            // We run child items directly, rather than enqueuing them...
+            // 1. If the context is single-threaded. This is required by the
+            //    definition of the single-threaded feature.
+            // 2. If there is no fixture and so nothing to do but dispatch 
+            //    grandchildren. This is a significant savings in time that
+            //    would otherwise be spent enqueuing and dequeing items.
+            //    TODO: Avoid creating these work items in the first place.
+            // 3. For now, if this represents a test case. This avoids issues
+            //    caused by tests that access the fixture state and allows handling 
+            //    ApartmentState preferences set on the fixture more easily.
+
+            return
+                work.Context.IsSingleThreaded ||
+                work.Test.TypeInfo == null ||
+                work is SimpleWorkItem;
         }
 
         private void Execute(WorkItem work)

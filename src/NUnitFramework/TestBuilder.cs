@@ -209,6 +209,11 @@ namespace NUnit.TestUtilities
         /// </summary>
         class SuperSimpleDispatcher : IWorkItemDispatcher
         {
+            public void Start(WorkItem topLevelWorkItem)
+            {
+                topLevelWorkItem.Execute();
+            }
+
             public void Dispatch(WorkItem work)
             {
                 work.Execute();

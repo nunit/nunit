@@ -297,7 +297,7 @@ namespace NUnit.Framework.Api
 
 #endif
 
-            Context.Dispatcher.Dispatch(TopLevelWorkItem);
+            Context.Dispatcher.Start(TopLevelWorkItem);
         }
 
         /// <summary>
