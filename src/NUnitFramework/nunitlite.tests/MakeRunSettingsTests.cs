@@ -59,6 +59,16 @@ namespace NUnitLite.Tests
             Assert.That(settings.ContainsKey("RandomSeed"));
             Assert.AreEqual(1234, settings["RandomSeed"]);
         }
+
+        [Test]
+        public void WhenWorkersIsSpecified_RunSettingsIncludeIt()
+        {
+            var options = new NUnitLiteOptions("test.dll", "--workers=8");
+            var settings = TextRunner.MakeRunSettings(options);
+
+            Assert.That(settings.ContainsKey("NumberOfTestWorkers"));
+            Assert.AreEqual(8, settings["NumberOfTestWorkers"]);
+        }
     }
 }
 #endif

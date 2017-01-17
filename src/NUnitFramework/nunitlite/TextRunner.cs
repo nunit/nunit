@@ -346,6 +346,9 @@ namespace NUnitLite
             // Transfer command line options to run settings
             var runSettings = new Dictionary<string, object>();
 
+            if (options.NumberOfTestWorkers >= 0)
+                runSettings[FrameworkPackageSettings.NumberOfTestWorkers] = options.NumberOfTestWorkers;
+
             if (options.RandomSeed >= 0)
                 runSettings[FrameworkPackageSettings.RandomSeed] = options.RandomSeed;
 
