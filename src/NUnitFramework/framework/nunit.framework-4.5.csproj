@@ -328,6 +328,7 @@
     <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\Filters\MethodNameFilter.cs" />
+	<Compile Include="Internal\Filters\NamespaceFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
     <Compile Include="Internal\Filters\TestNameFilter.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />

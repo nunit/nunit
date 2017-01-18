@@ -353,6 +353,7 @@
     <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\MethodNameFilter.cs" />
+	<Compile Include="Internal\Filters\NamespaceFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
