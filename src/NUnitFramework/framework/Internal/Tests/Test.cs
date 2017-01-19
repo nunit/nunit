@@ -84,11 +84,10 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the test</param>
         protected Test( string pathName, string name ) 
         {
-            Guard.ArgumentNotNullOrEmpty(pathName, "pathName");
-
             Initialize(name);
 
-            FullName = pathName + "." + name;
+            if (!string.IsNullOrEmpty(pathName))
+                FullName = pathName + "." + name;
         }
 
         /// <summary>
