@@ -146,6 +146,7 @@ namespace NUnit.Common
                 case "class":
                 case "name":
                 case "test":
+                case "namespace":
                     Token op = lhs.Text == "id"
                         ? Expect(EQ_OPS)
                         : Expect(REL_OPS);

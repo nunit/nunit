@@ -54,6 +54,7 @@ namespace NUnit.Framework.Api
 #if PORTABLE
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #endif
+        private const string INVALID_FILTER_ELEMENT_MESSAGE = "Invalid filter element: {0}";
 
         private static readonly IDictionary<string, object> EMPTY_SETTINGS = new Dictionary<string, object>();
 
@@ -221,6 +222,21 @@ namespace NUnit.Framework.Api
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message,
                 Does.StartWith(COULD_NOT_LOAD_MSG));
+        }
+
+        [Test]
+        public void RunTestsAction_WithInvalidFilterElement_ThrowsArgumentException()
+        {
+            LoadMockAssembly();
+
+            var ex = Assert.Catch(() =>
+                {
+                    var invalidFilter = TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>");
+                    _runner.Run(this, invalidFilter);
+                });
+
+            Assert.That(ex, Is.TypeOf<ArgumentException>());
+            Assert.That(ex.Message, Does.StartWith(string.Format(INVALID_FILTER_ELEMENT_MESSAGE, "invalidElement")));
         }
 
 #if !PORTABLE
