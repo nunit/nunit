@@ -343,3 +343,33 @@ namespace NUnit.TestData.TestFixtureSourceData
 
     #endregion
 }
+
+[TestFixtureSource("MyData")]
+public class NoNamespaceTestFixtureSourceWithTwoValues
+{
+    public NoNamespaceTestFixtureSourceWithTwoValues(int i) { }
+
+    [Test]
+    public void Test()
+    {
+    }
+
+#pragma warning disable 414
+    static object[] MyData = { 1, 2 };
+#pragma warning restore 414
+}
+
+[TestFixtureSource("MyData")]
+public class NoNamespaceTestFixtureSourceWithSingleValue
+{
+    public NoNamespaceTestFixtureSourceWithSingleValue(int i) { }
+
+    [Test]
+    public void Test()
+    {
+    }
+
+#pragma warning disable 414
+    static object[] MyData = { 1 };
+#pragma warning restore 414
+}
