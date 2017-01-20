@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -112,15 +112,13 @@ namespace NUnitLite
 #if !PORTABLE
         public int Execute(string[] args)
         {
-            var options = new NUnitLiteOptions(args);
-
-            InitializeInternalTrace(options);
+            _options = new NUnitLiteOptions(args);
 
             ExtendedTextWriter outWriter = null;
-            if (options.OutFile != null)
+            if (_options.OutFile != null)
             {
-                var outFile = Path.Combine(options.WorkDirectory, options.OutFile);
-#if NETSTANDARD1_6                 
+                var outFile = Path.Combine(_options.WorkDirectory, _options.OutFile);
+#if NETSTANDARD1_6
                 var textWriter = File.CreateText(outFile);
 #else
                 var textWriter = TextWriter.Synchronized(new StreamWriter(outFile));
@@ -134,9 +132,9 @@ namespace NUnitLite
             }
 
             TextWriter errWriter = null;
-            if (options.ErrFile != null)
+            if (_options.ErrFile != null)
             {
-                var errFile = Path.Combine(options.WorkDirectory, options.ErrFile);
+                var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
 #if NETSTANDARD1_6
                 errWriter = File.CreateText(errFile);
 #else
@@ -147,18 +145,19 @@ namespace NUnitLite
 
             try
             {
-                return Execute(outWriter, Console.In, options);
+                _textUI = new TextUI(outWriter, Console.In, _options);
+                return Execute();
             }
             finally
             {
-                if (options.OutFile != null && outWriter != null)
+                if (_options.OutFile != null && outWriter != null)
 #if NETSTANDARD1_6
                     outWriter.Dispose();
 #else
                     outWriter.Close();
 #endif
 
-                if (options.ErrFile != null && errWriter != null)
+                if (_options.ErrFile != null && errWriter != null)
 #if NETSTANDARD1_6
                     errWriter.Dispose();
 #else
@@ -168,26 +167,23 @@ namespace NUnitLite
         }
 #endif
 
-        public int Execute(ExtendedTextWriter writer, TextReader reader, string[] args)
-        {
-            return Execute(writer, reader, new NUnitLiteOptions(args));
-        }
-
+        // Entry point called by AutoRun and by the portable nunitlite.runner
         public int Execute(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
         {
-            var textUI = new TextUI(writer, reader, options);
-            return Execute(textUI, options);
+            _textUI = new TextUI(writer, reader, options);
+            _options = options;
+
+            return Execute();
         }
 
-        /// <summary>
-        /// Execute a test run
-        /// </summary>
-        /// <param name="callingAssembly">The assembly from which tests are loaded</param>
-        public int Execute(TextUI textUI, NUnitLiteOptions options)
+        // Internal Execute depends on _textUI and _options having been set already.
+        private int Execute()
         {
-            _textUI = textUI;
-            _options = options;
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+
+#if !PORTABLE
+            InitializeInternalTrace();
+#endif
 
             try
             {
@@ -346,6 +342,12 @@ namespace NUnitLite
             // Transfer command line options to run settings
             var runSettings = new Dictionary<string, object>();
 
+            if (options.NumberOfTestWorkers >= 0)
+                runSettings[FrameworkPackageSettings.NumberOfTestWorkers] = options.NumberOfTestWorkers;
+
+            if (options.InternalTraceLevel != null)
+                runSettings[FrameworkPackageSettings.InternalTraceLevel] = options.InternalTraceLevel;
+
             if (options.RandomSeed >= 0)
                 runSettings[FrameworkPackageSettings.RandomSeed] = options.RandomSeed;
 
@@ -402,7 +404,7 @@ namespace NUnitLite
         }
 
 #if !PORTABLE
-        private void InitializeInternalTrace(NUnitLiteOptions _options)
+        private void InitializeInternalTrace()
         {
             var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel ?? "Off", true);
 
@@ -436,7 +438,7 @@ namespace NUnitLite
 
 #if NETSTANDARD1_6
             var id = DateTime.Now.ToString("o");
-#else      
+#else
             var id = Process.GetCurrentProcess().Id;
 #endif
 
