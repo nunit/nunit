@@ -102,7 +102,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void TestMethodMultipleAuthors()
         {
             Test test = TestBuilder.MakeTestFromMethod(FixtureType, "TestMethodMultipleAuthors");
-            Assert.That(test.Properties[PropertyNames.Author], Is.EqualTo(
+            Assert.That(test.Properties[PropertyNames.Author], Is.EquivalentTo(
                 new[] { "Rob Prouse <rob@prouse.org>","Charlie Poole <charlie@poole.org>", "NUnit"}));
         }
 
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("suite");
             suite.Add(TestBuilder.MakeFixture(FixtureType));
             var mockFixtureSuite = (TestSuite)suite.Tests[0];
-            Assert.That(mockFixtureSuite.Properties[PropertyNames.Author], Is.EqualTo(
+            Assert.That(mockFixtureSuite.Properties[PropertyNames.Author], Is.EquivalentTo(
                 new[] { "Rob Prouse", "Charlie Poole <charlie@poole.org>", "NUnit" }));
         }
 
