@@ -21,8 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.IO;
 using System.Collections.Generic;
+#if ASYNC
+using System.Threading.Tasks;
+#endif
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
@@ -138,7 +142,7 @@ namespace NUnit.Framework.Tests
         {
             Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCanAccessItsOwnMethodName"));
         }
-        
+
         [TestCase(5)]
         public void TestCaseCanAccessItsOwnMethodName(int x)
         {
@@ -233,6 +237,123 @@ namespace NUnit.Framework.Tests
             Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(fixture.StackTrace, Is.Null);
         }
+#if ASYNC
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public async Task TestContextOut_ShouldFlowWithAsyncExecution()
+        {
+            var expected = TestContext.Out;
+            await YieldAsync();
+            Assert.AreSame(expected, TestContext.Out);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public async Task TestExecutionContextCurrentContext_ShouldFlowWithAsyncExecution()
+        {
+            var expected = TestExecutionContext.CurrentContext;
+            await YieldAsync();
+            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public async Task TestExecutionContextCurrentContext_ShouldFlowWithParallelAsyncExecution()
+        {
+            var expected = TestExecutionContext.CurrentContext;
+            var parallelResult = await WhenAllAsync(YieldAndReturnContext(), YieldAndReturnContext());
+
+            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
+            Assert.AreSame(expected, parallelResult[0]);
+            Assert.AreSame(expected, parallelResult[1]);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public async Task TestExecutionContext_ShouldFlowWithAsyncExecution_ExecutedInParallel()
+        {
+            Func<Task<TestExecutionContext>> functionWithSeparateContext = async () =>
+            {
+                await YieldAsync(); //to start both functions
+                TestExecutionContext.ClearCurrentContext(); //establish new context
+                var expected = TestExecutionContext.CurrentContext;
+                await DelayAsync(300);
+                Assert.AreSame(expected, TestExecutionContext.CurrentContext); //ensure that is still the same within given function call
+                return expected;
+            };
+
+            var results = await WhenAllAsync(functionWithSeparateContext(), functionWithSeparateContext());
+            // both calls have to be successful but have different context
+            Assert.AreNotSame(results[0], results[1]);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public async Task TestContextWriteLine_ShouldNotThrow_WhenExecutedFromAsyncMethod()
+        {
+            Assert.DoesNotThrow(TestContext.WriteLine);
+            await YieldAsync();
+            Assert.DoesNotThrow(TestContext.WriteLine);
+        }
+
+#if PORTABLE
+        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
+#endif
+        [Test]
+        public void TestContextOut_ShouldBeAvailableFromOtherThreads()
+        {
+            var isTestContextOutAvailable = false;
+            Task.Factory.StartNew(() =>
+            {
+                isTestContextOutAvailable = TestContext.Out != null;
+            }).Wait();
+            Assert.True(isTestContextOutAvailable);
+        }
+
+        private async Task YieldAsync()
+        {
+#if NET_4_0
+            await TaskEx.Yield();
+#else
+            await Task.Yield();
+#endif
+        }
+
+        private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
+        {
+#if NET_4_0
+            return TaskEx.WhenAll(tasks);
+#else
+            return Task.WhenAll(tasks);
+#endif
+        }
+
+        private Task DelayAsync(int milliseconds)
+        {
+#if NET_4_0
+            return TaskEx.Delay(milliseconds);
+#else
+            return Task.Delay(milliseconds);
+#endif
+        }
+
+        private async Task<TestExecutionContext> YieldAndReturnContext()
+        {
+            await YieldAsync();
+            return TestExecutionContext.CurrentContext;
+        }
+#endif
     }
 
     [TestFixture]

@@ -55,6 +55,7 @@ important top-level tasks to use are listed here:
  * Test35              Tests the 3.5 framework without building first.
  * Test20              Tests the 2.0 framework without building first.
  * TestPortable        Tests the portable framework without building first.
+ * TestNetStandard     Tests the NetStandard framework without building first.
  * Package             Creates all packages without building first. See Note below.
 ```
 
