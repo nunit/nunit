@@ -358,7 +358,7 @@ var RootFiles = new FilePath[]
 {
     "LICENSE.txt",
     "NOTICES.txt",
-    "CHANGES.txt"
+    "CHANGES.md"
 };
 
 // Not all of these are present in every framework
