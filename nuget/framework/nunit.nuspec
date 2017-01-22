@@ -37,7 +37,7 @@ Supported platforms:
   <files>
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
-    <file src="CHANGES.txt" />
+    <file src="CHANGES.md" />
     <file src="bin/net-2.0/nunit.framework.dll" target="lib/net20" />
     <file src="bin/net-2.0/nunit.framework.xml" target="lib/net20" />
     <file src="bin/net-2.0/NUnit.System.Linq.dll" target="lib/net20" />

@@ -38,7 +38,7 @@ How to use this package:
   <files>
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
-    <file src="CHANGES.txt" />
+    <file src="CHANGES.md" />
     <file src="bin/net-2.0/nunitlite.dll" target="lib/net20" />
     <file src="bin/net-3.5/nunitlite.dll" target="lib/net35" />
     <file src="bin/net-4.0/nunitlite.dll" target="lib/net40" />
