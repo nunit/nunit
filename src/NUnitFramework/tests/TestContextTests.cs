@@ -138,7 +138,22 @@ namespace NUnit.Framework.Tests
         {
             Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCanAccessItsOwnMethodName"));
         }
-        
+
+        [Test]
+        public void TestCanAccessItsOwnMethod()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Method, Is.Not.Null);
+            Assert.That(TestContext.CurrentContext.Test.Method.Name, Is.EqualTo("TestCanAccessItsOwnMethod"));
+        }
+
+        [Test]
+        [Description("")]
+        public void TestCanAccessItsOwnMethodAttributes()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Method, Is.Not.Null);
+            Assert.That(TestContext.CurrentContext.Test.Method.GetCustomAttributes<DescriptionAttribute>(false), Is.Not.Empty);
+        }
+
         [TestCase(5)]
         public void TestCaseCanAccessItsOwnMethodName(int x)
         {
