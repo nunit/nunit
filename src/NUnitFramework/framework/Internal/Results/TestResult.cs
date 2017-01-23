@@ -386,7 +386,7 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
                 case TestStatus.Warning:
-                    if (Message != null)
+                    if (Message != null && Message.Trim().Length > 0)
                         AddReasonElement(thisNode);
                     break;
             }
@@ -396,7 +396,6 @@ namespace NUnit.Framework.Internal
 
             if (AssertionResults.Count > 0)
                 AddAssertionsElement(thisNode);
-
 
             if (recursive && HasChildren)
                 foreach (TestResult child in Children)
