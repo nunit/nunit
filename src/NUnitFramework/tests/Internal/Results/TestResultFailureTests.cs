@@ -22,15 +22,110 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
+using System;
 
 namespace NUnit.Framework.Internal.Results
 {
-    public class TestResultFailureTests : TestResultTests
+    public class TestResultFailureWithReasonAndStackGivenTests : TestResultFailureTests
     {
+        public TestResultFailureWithReasonAndStackGivenTests()
+            : base(NonWhitespaceFailureMessage,
+                  NonWhitespaceFailureStackTrace,
+                  FailureNodeExistsAndIsNotNull,
+                  tnode => MessageNodeExistsAndValueAsExpected(tnode, NonWhitespaceFailureMessage),
+                  tnode => StackTraceNodeExistsAndValueAsExpected(tnode, NonWhitespaceFailureStackTrace))
+        {
+        }
+    }
+
+    public class TestResultFailureWithReasonGivenTests : TestResultFailureTests
+    {
+        public TestResultFailureWithReasonGivenTests()
+            : base(NonWhitespaceFailureMessage,
+                  string.Empty,
+                  FailureNodeExistsAndIsNotNull,
+                  tnode => MessageNodeExistsAndValueAsExpected(tnode, NonWhitespaceFailureMessage),
+                  StackTraceNodeDoesNotExist)
+        {
+        }
+    }
+
+    public class TestResultFailureWithStackTraceGivenTests : TestResultFailureTests
+    {
+        public TestResultFailureWithStackTraceGivenTests()
+            : base(string.Empty,
+                  NonWhitespaceFailureStackTrace,
+                  FailureNodeExistsAndIsNotNull,
+                  MessageNodeDoesNotExist,
+                  tnode => StackTraceNodeExistsAndValueAsExpected(tnode, NonWhitespaceFailureStackTrace))
+        {
+        }
+    }
+
+    public class TestResultFailureWithNullReasonAndStackTraceGivenTests : TestResultFailureTests
+    {
+        public TestResultFailureWithNullReasonAndStackTraceGivenTests()
+            : base(null,
+                  null,
+                  FailureNodeExistsAndIsNotNull,
+                  MessageNodeDoesNotExist,
+                  StackTraceNodeDoesNotExist)
+        {
+        }
+    }
+
+    public class TestResultFailureWithEmptyReasonAndStackTraceGivenTests : TestResultFailureTests
+    {
+        public TestResultFailureWithEmptyReasonAndStackTraceGivenTests()
+            : base(string.Empty,
+                  string.Empty,
+                  FailureNodeExistsAndIsNotNull,
+                  MessageNodeDoesNotExist,
+                  StackTraceNodeDoesNotExist)
+        {
+        }
+    }
+
+    public class TestResultFailureWithWhitespaceReasonAndStackTraceGivenTests : TestResultFailureTests
+    {
+        public TestResultFailureWithWhitespaceReasonAndStackTraceGivenTests()
+            : base(" ",
+                  "  ",
+                  FailureNodeExistsAndIsNotNull,
+                  MessageNodeDoesNotExist,
+                  StackTraceNodeDoesNotExist)
+        {
+        }
+    }
+
+    public abstract class TestResultFailureTests : TestResultTests
+    {
+        protected const string NonWhitespaceFailureMessage = "message";
+        protected const string NonWhitespaceFailureStackTrace = "stack_trace";
+
+        protected string _failureReason;
+        protected string _stackTrace;
+        private Func<TNode, TNode> _xmlFailureNodeValidation;
+        private Action<TNode> _xmlMessageNodeValidation;
+        private Action<TNode> _xmlStackTraceNodeValidation;
+
+        protected TestResultFailureTests(string failureReason,
+            string stackTrace,
+            Func<TNode, TNode> xmlFailureNodeValidation,
+            Action<TNode> xmlMessageNodeValidation,
+            Action<TNode> xmlStackTraceNodeValidation)
+        {
+            _failureReason = failureReason;
+            _stackTrace = stackTrace;
+            _xmlFailureNodeValidation = xmlFailureNodeValidation;
+            _xmlMessageNodeValidation = xmlMessageNodeValidation;
+            _xmlStackTraceNodeValidation = xmlStackTraceNodeValidation;
+        }
+
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Failure, "message", "stack_trace");
+            _testResult.SetResult(ResultState.Failure, _failureReason, _stackTrace);
             _testResult.AssertCount = 3;
 
             _suiteResult.AddResult(_testResult);
@@ -41,8 +136,8 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.AreEqual(ResultState.Failure, _testResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, _testResult.ResultState.Status);
-            Assert.AreEqual("message", _testResult.Message);
-            Assert.AreEqual("stack_trace", _testResult.StackTrace);
+            Assert.AreEqual(_failureReason, _testResult.Message);
+            Assert.AreEqual(_stackTrace, _testResult.StackTrace);
         }
 
         [Test]
@@ -52,7 +147,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual(TestStatus.Failed, _suiteResult.ResultState.Status);
             Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, _suiteResult.Message);
             Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-            Assert.Null(_suiteResult.StackTrace);
+            Assert.That(_suiteResult.StackTrace, Is.Null);
 
             Assert.AreEqual(0, _suiteResult.PassCount);
             Assert.AreEqual(1, _suiteResult.FailCount);
@@ -71,16 +166,9 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual(null, testNode.Attributes["label"]);
             Assert.AreEqual(null, testNode.Attributes["site"]);
 
-            TNode failureNode = testNode.SelectSingleNode("failure");
-            Assert.NotNull(failureNode, "No <failure> element found");
-
-            TNode messageNode = failureNode.SelectSingleNode("message");
-            Assert.NotNull(messageNode, "No <message> element found");
-            Assert.AreEqual("message", messageNode.Value);
-
-            TNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
-            Assert.NotNull(stacktraceNode, "No <stack-trace> element found");
-            Assert.That(stacktraceNode.Value, Is.EqualTo(_testResult.StackTrace));
+            var failureNode = _xmlFailureNodeValidation(testNode);
+            _xmlMessageNodeValidation(failureNode);
+            _xmlStackTraceNodeValidation(failureNode);
         }
 
         [Test]
@@ -124,5 +212,39 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("3", suiteNode.Attributes["asserts"]);
         }
+
+        protected static TNode FailureNodeExistsAndIsNotNull(TNode testNode)
+        {
+            TNode failureNode = testNode.SelectSingleNode("failure");
+            Assert.That(failureNode, Is.Not.Null, "No <failure> element found");
+
+            return failureNode;
+        }
+
+        protected static void MessageNodeDoesNotExist(TNode failureNode)
+        {
+            TNode messageNode = failureNode.SelectSingleNode("message");
+            Assert.That(messageNode, Is.Null, "<message> element found but no such node was expected");
+        }
+
+        protected static void MessageNodeExistsAndValueAsExpected(TNode failureNode, string expectedFailureMessage)
+        {
+            TNode messageNode = failureNode.SelectSingleNode("message");
+            Assert.That(messageNode, Is.Not.Null, "No <message> element found");
+            Assert.That(messageNode.Value, Is.EqualTo(expectedFailureMessage));
+        }
+
+        protected static void StackTraceNodeDoesNotExist(TNode failureNode)
+        {
+            TNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
+            Assert.That(stacktraceNode, Is.Null, "<stack-trace> element found but was not expected");
+        }
+
+        protected static void StackTraceNodeExistsAndValueAsExpected(TNode failureNode, string expectedStackTrace)
+        {
+            TNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
+            Assert.That(stacktraceNode, Is.Not.Null, "No <stack-trace> element found");
+            Assert.That(stacktraceNode.Value, Is.EqualTo(expectedStackTrace));
+        }
     }
- }
+}

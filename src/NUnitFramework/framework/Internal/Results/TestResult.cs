@@ -645,10 +645,10 @@ namespace NUnit.Framework.Internal
         {
             TNode failureNode = targetNode.AddElement("failure");
 
-            if (Message != null)
+            if (Message != null && Message.Trim().Length > 0)
                 failureNode.AddElementWithCDATA("message", Message);
 
-            if (StackTrace != null)
+            if (StackTrace != null && StackTrace.Trim().Length > 0)
                 failureNode.AddElementWithCDATA("stack-trace", StackTrace);
 
             return failureNode;
