@@ -87,5 +87,15 @@ namespace NUnit.Framework.Constraints
         {
             Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
         }
+
+        [Test]
+        public void RangeConstraintWithNoComparerFailure()
+        {
+            Assert.Throws<ArgumentException>(() =>Assert.That(
+                new RangeConstraint(new NoComparer(0), new NoComparer(1))
+                .ApplyTo(new NoComparer("Fail"))
+                .IsSuccess));
+        }
     }
+
 }

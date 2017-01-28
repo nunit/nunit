@@ -954,6 +954,15 @@ namespace NUnit.Framework.Constraints
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
         }
 
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value falls 
+        /// within a specified range.
+        /// </summary>
+        public RangeConstraint InRange(object from, object to)
+        {
+            return (RangeConstraint)this.Append(new RangeConstraint(from, to));
+        }
+
         #endregion
 
         #region Exist
