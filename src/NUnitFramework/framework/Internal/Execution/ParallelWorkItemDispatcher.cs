@@ -59,9 +59,6 @@ namespace NUnit.Framework.Internal.Execution
         private readonly Lazy<WorkItemQueue> _parallelSTAQueue;
         private readonly Lazy<WorkItemQueue> _nonParallelSTAQueue;
 
-        // The first WorkItem to be dispatched, assumed to be top-level item
-        private WorkItem _topLevelWorkItem;
-
         #region Constructor
 
         /// <summary>
@@ -140,7 +137,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? ExecutionStrategy.NonParallel
                 : ExecutionStrategy.Parallel;
 
-            Dispatch(_topLevelWorkItem = topLevelWorkItem, strategy);
+            Dispatch(topLevelWorkItem, strategy);
           
             StartNextShift();
         }
