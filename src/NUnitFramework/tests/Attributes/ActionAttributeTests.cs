@@ -35,8 +35,7 @@ using NUnit.TestData.ActionAttributeTests;
 
 namespace NUnit.Framework.Tests
 {
-    [TestFixture]
-    [Parallelizable(ParallelScope.None)]
+    [TestFixture, NonParallelizable]
     public class ActionAttributeTests
     {
         // NOTE: An earlier version of this fixture attempted to test

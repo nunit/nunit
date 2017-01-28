@@ -33,7 +33,7 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
-    [Parallelizable(ParallelScope.None)]
+    [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
         [Test, Timeout(50)]

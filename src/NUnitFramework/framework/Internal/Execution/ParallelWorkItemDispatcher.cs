@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 #if PARALLEL
+
+#define NO_PARALLEL_CASES
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -34,24 +37,32 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class ParallelWorkItemDispatcher : IWorkItemDispatcher
     {
-        private static readonly Logger log = InternalTrace.GetLogger("WorkItemDispatcher");
+        private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
 
         private readonly int _levelOfParallelism;
         private int _itemsDispatched;
 
-        // Non-STA
+        // WorkShifts - Dispatcher processes tests in three non-overlapping shifts.
+        // See comment in Workshift.cs for a more detailed explanation.
         private readonly WorkShift _parallelShift = new WorkShift("Parallel");
         private readonly WorkShift _nonParallelShift = new WorkShift("NonParallel");
+        private readonly WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
+
+        /// <summary>
+        /// Enumerates all the shifts supported by the dispatcher
+        /// </summary>
+        public IEnumerable<WorkShift> Shifts { get; private set; }
+
+        // Queues used by WorkShifts
         private readonly Lazy<WorkItemQueue> _parallelQueue;
         private readonly Lazy<WorkItemQueue> _nonParallelQueue;
-
-        // STA
-        private readonly WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
         private readonly Lazy<WorkItemQueue> _parallelSTAQueue;
         private readonly Lazy<WorkItemQueue> _nonParallelSTAQueue;
 
         // The first WorkItem to be dispatched, assumed to be top-level item
         private WorkItem _topLevelWorkItem;
+
+        #region Constructor
 
         /// <summary>
         /// Construct a ParallelWorkItemDispatcher
@@ -61,15 +72,18 @@ namespace NUnit.Framework.Internal.Execution
         {
             _levelOfParallelism = levelOfParallelism;
 
+            // Initialize WorkShifts
             Shifts = new WorkShift[]
             {
                 _parallelShift,
                 _nonParallelShift,
                 _nonParallelSTAShift
             };
+
             foreach (var shift in Shifts)
                 shift.EndOfShift += OnEndOfShift;
 
+            // Set up queues for lazy initialization
             _parallelQueue = new Lazy<WorkItemQueue>(() =>
             {
                 var parallelQueue = new WorkItemQueue("ParallelQueue");
@@ -112,10 +126,7 @@ namespace NUnit.Framework.Internal.Execution
             });
         }
 
-        /// <summary>
-        /// Enumerates all the shifts supported by the dispatcher
-        /// </summary>
-        public IEnumerable<WorkShift> Shifts { get; private set; }
+        #endregion
 
         #region IWorkItemDispatcher Members
 
@@ -125,7 +136,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-            Enqueue(_topLevelWorkItem = topLevelWorkItem);
+            var strategy = topLevelWorkItem.ParallelScope.HasFlag(ParallelScope.None)
+                ? ExecutionStrategy.NonParallel
+                : ExecutionStrategy.Parallel;
+
+            Dispatch(_topLevelWorkItem = topLevelWorkItem, strategy);
+          
             StartNextShift();
         }
 
@@ -137,54 +153,34 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            if (ShouldExecuteDirectly(work))
-                Execute(work);
-            else
-                Enqueue(work);
+            Dispatch(work, GetExecutionStrategy(work));
+        }
+
+        private void Dispatch(WorkItem work, ExecutionStrategy strategy)
+        {
+            log.Debug("Using {0} strategy for {1}.", strategy, work.Test.Name);
+
+            switch (strategy)
+            {
+                default:
+                case ExecutionStrategy.Direct:
+                    work.Execute();
+                    break;
+                case ExecutionStrategy.Parallel:
+                    if (work.TargetApartment == ApartmentState.STA)
+                        ParallelSTAQueue.Enqueue(work);
+                    else
+                        ParallelQueue.Enqueue(work);
+                    break;
+                case ExecutionStrategy.NonParallel:
+                    if (work.TargetApartment == ApartmentState.STA)
+                        NonParallelSTAQueue.Enqueue(work);
+                    else
+                        NonParallelQueue.Enqueue(work);
+                    break;
+            }
 
             Interlocked.Increment(ref _itemsDispatched);
-        }
-
-        private static bool ShouldExecuteDirectly(WorkItem work)
-        {
-            // We run child items directly, rather than enqueuing them...
-            // 1. If the context is single-threaded. This is required by the
-            //    definition of the single-threaded feature.
-            // 2. If there is no fixture and so nothing to do but dispatch 
-            //    grandchildren. This is a significant savings in time that
-            //    would otherwise be spent enqueuing and dequeing items.
-            //    TODO: Avoid creating these work items in the first place.
-            // 3. For now, if this represents a test case. This avoids issues
-            //    caused by tests that access the fixture state and allows handling 
-            //    ApartmentState preferences set on the fixture more easily.
-
-            return
-                work.Context.IsSingleThreaded ||
-                work.Test.TypeInfo == null ||
-                work is SimpleWorkItem;
-        }
-
-        private void Execute(WorkItem work)
-        {
-            log.Debug("Directly executing {0}", work.Test.Name);
-            work.Execute();
-        }
-
-        private void Enqueue(WorkItem work)
-        {
-            log.Debug("Enqueuing {0}", work.Test.Name);
-
-            if (work.IsParallelizable)
-            {
-                if (work.TargetApartment == ApartmentState.STA)
-                    ParallelSTAQueue.Enqueue(work);
-                else
-                ParallelQueue.Enqueue(work);
-            }
-            else if (work.TargetApartment == ApartmentState.STA)
-                NonParallelSTAQueue.Enqueue(work);
-            else
-                NonParallelQueue.Enqueue(work);
         }
 
         /// <summary>
@@ -262,8 +258,66 @@ namespace NUnit.Framework.Internal.Execution
             return false;
         }
 
-        #endregion
+        private enum ExecutionStrategy
+        {
+            Direct,
+            Parallel,
+            NonParallel,
+        }
+        
+        private static ExecutionStrategy GetExecutionStrategy(WorkItem work)
+        {
+            // If there is no fixture and so nothing to do but dispatch 
+            // grandchildren we run directly. This saves time that would 
+            // otherwise be spent enqueuing and dequeing items.
+            // TODO: It would be even better if we could avoid creating 
+            // these "do-nothing" work items in the first place.
+            if (work.Test.TypeInfo == null)
+                return ExecutionStrategy.Direct;
+
+            // If the context is single-threaded we are required to run
+            // the tests one by one on the same thread as the fixture.
+            if (work.Context.IsSingleThreaded)
+                return ExecutionStrategy.Direct;
+
+#if NO_PARALLEL_CASES
+            // For now, if this represents a test case, run directly. 
+            // This avoids issues caused by tests that access the fixture 
+            // state and allows handling ApartmentState preferences set on 
+            // the fixture more easily.
+            if (work is SimpleWorkItem)
+                return ExecutionStrategy.Direct;
+#endif
+
+            if (work.ParallelScope.HasFlag(ParallelScope.Self) ||
+                work.Context.ParallelScope.HasFlag(ParallelScope.Children) ||
+                work.Test is TestFixture && work.Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
+            {
+                return ExecutionStrategy.Parallel;
+            }
+            else
+            if (work.ParallelScope.HasFlag(ParallelScope.None))
+            {
+                return ExecutionStrategy.NonParallel;
+            }
+            else
+            {
+                return ExecutionStrategy.Direct;
+            }
+        }
+
+#endregion
     }
+
+#if NET_2_0 || NET_3_5
+    static class ParallelScopeHelper
+    {
+        public static bool HasFlag(this ParallelScope scope, ParallelScope value)
+        {
+            return (scope & value) != 0;
+        }
+    }
+#endif
 }
 
 #endif

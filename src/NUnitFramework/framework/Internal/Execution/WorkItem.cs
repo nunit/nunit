@@ -75,6 +75,11 @@ namespace NUnit.Framework.Internal.Execution
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
             Actions = new List<ITestAction>();
+
+            ParallelScope = Test.Properties.ContainsKey(PropertyNames.ParallelScope)
+                ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
+                : ParallelScope.Default;
+
 #if !PORTABLE && !NETSTANDARD1_6
             TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
                 ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
@@ -109,7 +114,7 @@ namespace NUnit.Framework.Internal.Execution
 
         #endregion
 
-        #region Properties and Events
+        #region Properties, Events and Enums
 
         /// <summary>
         /// Event triggered when the item is complete
@@ -141,61 +146,21 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public List<ITestAction> Actions { get; private set; }
 
-#if PARALLEL
-        /// <summary>
-        /// Indicates whether this WorkItem may be run in parallel
-        /// </summary>
-        public bool IsParallelizable
-        {
-            get
-            {
-                ParallelScope scope = ParallelScope.None;
-
-                if (Test.Properties.ContainsKey(PropertyNames.ParallelScope))
-                {
-                    scope = (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope);
-
-                    if ((scope & ParallelScope.Self) != 0)
-                        return true;
-                }
-                else
-                {
-                    scope = Context.ParallelScope;
-
-                    if ((scope & ParallelScope.Children) != 0)
-                        return true;
-                }
-
-                if (Test is TestFixture && (scope & ParallelScope.Fixtures) != 0)
-                    return true;
-
-                // Special handling for the top level TestAssembly.
-                // If it has any scope specified other than None,
-                // we will use the parallel queue. This heuristic
-                // is intended to minimize creation of unneeded
-                // queues and workers, since the assembly and
-                // namespace level tests can easily run in any queue.
-                if (Test is TestAssembly && scope != ParallelScope.None)
-                    return true;
-
-                return false;
-            }
-        }
-#endif
-
         /// <summary>
         /// The test result
         /// </summary>
         public TestResult Result { get; protected set; }
 
+        /// <summary>
+        /// Gets the ParallelScope associated with the test, if any,
+        /// otherwise returning ParallelScope.Default;
+        /// </summary>
+        public ParallelScope ParallelScope { get; private set; }
+
 #if !PORTABLE && !NETSTANDARD1_6
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
-
-        #endregion
-
-        #region OwnThreadReason Enumeration
 
         [Flags]
         private enum OwnThreadReason

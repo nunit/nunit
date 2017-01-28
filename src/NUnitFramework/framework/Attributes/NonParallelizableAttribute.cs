@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,24 +32,14 @@ namespace NUnit.Framework
     /// ParallelizableAttribute is used to mark tests that may be run in parallel.
     /// </summary>
     [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-    public sealed class ParallelizableAttribute : PropertyAttribute, IApplyToContext
+    public sealed class NonParallelizableAttribute : PropertyAttribute
     {
-        private ParallelScope _scope;
-
         /// <summary>
-        /// Construct a ParallelizableAttribute using default ParallelScope.Self.
+        /// Construct a NonParallelizableAttribute.
         /// </summary>
-        public ParallelizableAttribute() : this(ParallelScope.Self) { }
-
-        /// <summary>
-        /// Construct a ParallelizableAttribute with a specified scope.
-        /// </summary>
-        /// <param name="scope">The ParallelScope associated with this attribute.</param>
-        public ParallelizableAttribute(ParallelScope scope) : base()
+        public NonParallelizableAttribute()
         {
-            _scope = scope;
-
-            Properties.Add(PropertyNames.ParallelScope, scope);
+            Properties.Add(PropertyNames.ParallelScope, ParallelScope.None);
         }
 
         /// <summary>
@@ -60,14 +50,8 @@ namespace NUnit.Framework
         {
             base.ApplyToTest(test);
 
-            if (test.RunState == RunState.NotRunnable)
-                return;
-
-            if (_scope.HasFlag(ParallelScope.Self) && _scope.HasFlag(ParallelScope.None))
-                MarkTestInvalid(test, "Test may not be both Parallel and NonParallel");
-
-            if (test is TestMethod && _scope.HasFlag(ParallelScope.ContextMask))
-                MarkTestInvalid(test, "ParallelScope of a test method may not specify Children or Fixtures");
+            if (test.RunState != RunState.NotRunnable && test is TestAssembly)
+                MarkTestInvalid(test, "Assemblies may not be marked as NonParallel");
         }
 
         private void MarkTestInvalid(Test test, string message)
@@ -75,20 +59,5 @@ namespace NUnit.Framework
             test.RunState = RunState.NotRunnable;
             test.Properties.Add(PropertyNames.SkipReason, message);
         }
-
-        #region IApplyToContext Interface
-
-        /// <summary>
-        /// Modify the context to be used for child tests
-        /// </summary>
-        /// <param name="context">The current TestExecutionContext</param>
-        public void ApplyToContext(TestExecutionContext context)
-        {
-            // Don't reflect Self in the context, since it will be
-            // used for descendant tests.
-            context.ParallelScope = _scope & ParallelScope.ContextMask;
-        }
-
-        #endregion
     }
 }
