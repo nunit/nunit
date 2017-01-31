@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.TestUtilities.Comparers;
+using System.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -88,14 +89,20 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
         }
 
-        [Test]
-        public void RangeConstraintWithNoComparerFailure()
+        [TestCaseSource("NoIComparableTestCase")]
+        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object from, object to, System.Collections.IComparer comparer)
         {
-            Assert.Throws<ArgumentException>(() =>Assert.That(
-                new RangeConstraint(new NoComparer(0), new NoComparer(1))
-                .ApplyTo(new NoComparer("Fail"))
-                .IsSuccess));
+            Assert.Throws<ArgumentException>(() => new RangeConstraint(from, to, comparer));
         }
+
+        private static IEnumerable NoIComparableTestCase() {
+            IComparer comparer = new ObjectToStringComparer();
+            yield return new object[] {1, -5, comparer };
+            yield return new object[] { new NoComparer(110), new NoComparer(10), comparer };
+            yield return new object[] { new NoComparer("Z"), new NoComparer("A"), comparer };
+            yield return new object[] { new NoComparer("B"), new NoComparer(-111), comparer };
+        }
+
     }
 
 }

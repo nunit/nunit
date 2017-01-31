@@ -56,13 +56,19 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RangeConstraint"/> class for objects not implementing IComparable. A class implementing IComparable must be passed through Using for a successful test.
+        /// Initializes a new instance of the <see cref="RangeConstraint"/> class for objects that did not implement <see cref="IComparable"/>.
         /// </summary>
-        /// <remarks>A class implementing IComparable must be passed through Using for a successful test. from must be less than or equal to true</remarks> 
+        /// <remarks>from must be less than or equal to true</remarks> 
         /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
         /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
-        public RangeConstraint(object from, object to) : base(from, to)
+        /// <param name="comparer">Class that implements <seealso cref="IComparer"/> used to compare the objects.</param>
+        public RangeConstraint(object from, object to, IComparer comparer) : base(from, to)
         {
+            // from must be less than or equal to to
+            if (comparer.Compare(from, to) > 0)
+                throw new ArgumentException("from must be less than to");
+
+            this.comparer = ComparisonAdapter.For(comparer);
             this.from = from;
             this.to = to;
         }

@@ -550,10 +550,11 @@ namespace NUnit.Framework
         /// <remarks>from must be less than or equal to true</remarks> 
         /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
         /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
+        /// <param name="comparer">Class that implements <seealso cref="IComparer"/> used to compare the objects.</param>
         /// <returns></returns>
-        public static RangeConstraint InRange(object from, object to)
+        public static RangeConstraint InRange(object from, object to, IComparer comparer)
         {
-            return new RangeConstraint(from, to);
+            return new RangeConstraint(from, to, comparer);
         }
 
         #endregion

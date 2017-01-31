@@ -107,14 +107,14 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("InRangeObjectsWithNoIComparable")]
         public void InRangeNoIComparableTest(object testObj, object from, object to, ObjectToStringComparer comparer)
         {
-            Assert.That(testObj, Is.InRange(from, to).Using(comparer));
+            Assert.That(testObj, Is.InRange(from, to,comparer));
             Assert.AreEqual(comparer.WasCalled, true);
         }
 
         [Test, TestCaseSource("NotInRangeObjectsWithNoIComparable")]
         public void NotInRangeNoIComparableTest(object testObj, object from, object to, ObjectToStringComparer comparer)
         {
-            Assert.That(testObj, Is.Not.InRange(from, to).Using(comparer));
+            Assert.That(testObj, Is.Not.InRange(from, to, comparer));
             Assert.AreEqual(comparer.WasCalled, true);
         }
 
