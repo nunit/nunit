@@ -373,11 +373,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ParallelScope ParallelScope { get; set; }
 
+#if PARALLEL
         /// <summary>
-        /// The unique name of the worker that spawned the context.
-        /// For builds with out the parallel feature, it is null.
+        /// The worker that spawned the context.
+        /// For builds without the parallel feature, it is null.
         /// </summary>
-        public string WorkerId {get; internal set;}
+        public TestWorker TestWorker {get; internal set;}
+#endif
 
         /// <summary>
         /// Gets the RandomGenerator specific to this Test

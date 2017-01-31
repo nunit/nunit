@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (Busy != null)
                         Busy(this, EventArgs.Empty);
 
-                    _currentWorkItem.WorkerId = Name;
+                    _currentWorkItem.TestWorker = this;
                     _currentWorkItem.Execute();
 
                     if (Idle != null)

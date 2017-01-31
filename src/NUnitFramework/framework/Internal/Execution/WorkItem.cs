@@ -136,10 +136,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestExecutionContext Context { get; private set; }
 
+#if PARALLEL
         /// <summary>
-        /// The unique id of the worker executing this item.
+        /// The worker executing this item.
         /// </summary>
-        public string WorkerId {get; internal set;}
+        public TestWorker TestWorker {get; internal set;}
+#endif
 
         /// <summary>
         /// The test actions to be performed before and after this test
@@ -319,7 +321,10 @@ namespace NUnit.Framework.Internal.Execution
             Context.Listener.TestStarted(this.Test);
             Context.StartTime = DateTime.UtcNow;
             Context.StartTicks = Stopwatch.GetTimestamp();
-            Context.WorkerId = this.WorkerId;
+#if PARALLEL
+            Context.TestWorker = this.TestWorker;
+#endif
+
             Context.EstablishExecutionEnvironment();
 
             State = WorkItemState.Running;
