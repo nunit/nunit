@@ -97,7 +97,6 @@ namespace NUnitLite.Tests
         [TestCase("WaitBeforeExit", "wait")]
 #if !PORTABLE
         [TestCase("NoHeader", "noheader|noh")]
-        [TestCase("Full", "full")]
 #endif
         [TestCase("TeamCity", "teamcity")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)

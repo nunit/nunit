@@ -232,9 +232,6 @@ namespace NUnit.Common
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
 
-        /// <summary>Indicates whether a full report should be displayed.</summary>
-        public bool Full { get; private set; }
-
 #if !PORTABLE
         private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
@@ -439,9 +436,6 @@ namespace NUnit.Common
 
             this.Add("err=", "File {PATH} to contain error output from the tests.",
                 v => ErrFile = RequiredValue(v, "--err"));
-
-            this.Add("full", "Prints full report of all test results.",
-                v => Full = v != null);
 
             this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.",
                 v => resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--resultxml"))));
