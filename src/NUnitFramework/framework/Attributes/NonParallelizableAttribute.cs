@@ -41,23 +41,5 @@ namespace NUnit.Framework
         {
             Properties.Add(PropertyNames.ParallelScope, ParallelScope.None);
         }
-
-        /// <summary>
-        /// Overridden to check for invalid combinations of settings
-        /// </summary>
-        /// <param name="test"></param>
-        public override void ApplyToTest(Test test)
-        {
-            base.ApplyToTest(test);
-
-            if (test.RunState != RunState.NotRunnable && test is TestAssembly)
-                MarkTestInvalid(test, "Assemblies may not be marked as NonParallel");
-        }
-
-        private void MarkTestInvalid(Test test, string message)
-        {
-            test.RunState = RunState.NotRunnable;
-            test.Properties.Add(PropertyNames.SkipReason, message);
-        }
     }
 }

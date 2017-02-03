@@ -64,16 +64,10 @@ namespace NUnit.Framework
                 return;
 
             if (_scope.HasFlag(ParallelScope.Self) && _scope.HasFlag(ParallelScope.None))
-                MarkTestInvalid(test, "Test may not be both Parallel and NonParallel");
+                test.MakeInvalid("Test may not be both parallel and non-parallel");
 
             if (test is TestMethod && _scope.HasFlag(ParallelScope.ContextMask))
-                MarkTestInvalid(test, "ParallelScope of a test method may not specify Children or Fixtures");
-        }
-
-        private void MarkTestInvalid(Test test, string message)
-        {
-            test.RunState = RunState.NotRunnable;
-            test.Properties.Add(PropertyNames.SkipReason, message);
+                test.MakeInvalid("ParallelScope of a test method may not specify Children or Fixtures");
         }
 
         #region IApplyToContext Interface
