@@ -17,6 +17,7 @@
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
