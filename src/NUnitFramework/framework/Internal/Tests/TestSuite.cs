@@ -260,10 +260,7 @@ namespace NUnit.Framework.Internal
 #endif
                     )
                 {
-                    this.Properties.Set(
-                        PropertyNames.SkipReason,
-                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    this.RunState = RunState.NotRunnable;
+                    this.MakeInvalid(string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
                     break;
                 }
         }

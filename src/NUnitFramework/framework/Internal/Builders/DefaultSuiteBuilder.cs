@@ -96,12 +96,10 @@ namespace NUnit.Framework.Internal.Builders
             catch (Exception ex)
             {
                 var fixture = new TestFixture(typeInfo);
-                fixture.RunState = RunState.NotRunnable;
-
                 if (ex is System.Reflection.TargetInvocationException)
                     ex = ex.InnerException;
-                var msg = "An exception was thrown while loading the test." + Environment.NewLine + ex.ToString();
-                fixture.Properties.Add(PropertyNames.SkipReason, msg);
+
+                fixture.MakeInvalid("An exception was thrown while loading the test." + Environment.NewLine + ex.ToString());
 
                 return fixture;
             }
