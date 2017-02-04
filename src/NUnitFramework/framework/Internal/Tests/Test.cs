@@ -355,6 +355,8 @@ namespace NUnit.Framework.Internal
         /// <param name="reason">The reason the test is not runnable</param>
         public void MakeInvalid(string reason)
         {
+            Guard.ArgumentNotNullOrEmpty(reason, "reason");
+
             RunState = RunState.NotRunnable;
             Properties.Add(PropertyNames.SkipReason, reason);
         }

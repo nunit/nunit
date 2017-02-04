@@ -84,10 +84,7 @@ namespace NUnit.Framework
             test.Properties.Add(PropertyNames.Category, this.Name);
 
             if (this.Name.IndexOfAny(new char[] { ',', '!', '+', '-' }) >= 0)
-            {
-                test.RunState = RunState.NotRunnable;
-                test.Properties.Set(PropertyNames.SkipReason, "Category name must not contain ',', '!', '+' or '-'");
-            }
+                test.MakeInvalid("Category name must not contain ',', '!', '+' or '-'");
         }
 
         #endregion
