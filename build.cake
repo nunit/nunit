@@ -357,12 +357,12 @@ Task("TestPortable")
 Task("UploadToCodeCov")
     .Does(() =>
 {
-    var url = "http://codecov.agodadev.io/upload/v2?commit=$COMMIT&service=teamcity&build=$BUILD_ID&build_url=$BUILD_URL&token=$Token&slug=nunit/nunit";
+    var url = "http://codecov.io/upload/v2?commit=$COMMIT&service=teamcity&build=$BUILD_ID&build_url=$BUILD_URL&token=$Token&slug=nunit/nunit";
     url.Replace("$COMMIT","");
     url.Replace("$BUILD_ID","");
     url.Replace("$BUILD_URL","");
     url.Replace("$Token","");
-    CurlUploadFile("opencovernet-4.5.xml", new Uri(url));
+    //CurlUploadFile("opencovernet-4.5.xml", new Uri(url));
 });
 
 //////////////////////////////////////////////////////////////////////
