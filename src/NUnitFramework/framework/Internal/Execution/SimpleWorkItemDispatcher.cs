@@ -46,32 +46,33 @@ namespace NUnit.Framework.Internal.Execution
         #region IWorkItemDispatcher Members
 
         /// <summary>
-        /// Dispatch a single work item for execution. The first
-        /// work item dispatched is saved as the top-level
-        /// work item and a thread is created on which to
-        /// run it. Subsequent calls come from the top level
-        /// item or its descendants on the proper thread.
+        /// Start execution, creating the execution thread,
+        /// setting the top level work  and dispatching it.
         /// </summary>
-        /// <param name="work">The item to dispatch</param>
-        public void Dispatch(WorkItem work)
+        public void Start(WorkItem topLevelWorkItem)
         {
 #if PORTABLE || NETSTANDARD1_6
+            Dispatch(topLevelWorkItem);
+#else
+            _topLevelWorkItem = topLevelWorkItem;
+            _runnerThread = new Thread(RunnerThreadProc);
+
+            if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
+                _runnerThread.SetApartmentState(ApartmentState.STA);
+
+            _runnerThread.Start();
+#endif
+        }
+
+        /// <summary>
+        /// Dispatch a single work item for execution by
+        /// executing it directly.
+        /// <param name="work">The item to dispatch</param>
+        /// </summary>
+        public void Dispatch(WorkItem work)
+        {
             if (work != null)
                 work.Execute();
-#else
-            if (_topLevelWorkItem != null)
-                work.Execute();
-            else
-            {
-                _topLevelWorkItem = work;
-                _runnerThread = new Thread(RunnerThreadProc);
-
-                if (work.TargetApartment == ApartmentState.STA)
-                    _runnerThread.SetApartmentState(ApartmentState.STA);
-
-                _runnerThread.Start();
-            }
-#endif
         }
 
 #if !PORTABLE && !NETSTANDARD1_6
@@ -104,6 +105,6 @@ namespace NUnit.Framework.Internal.Execution
             }
 #endif
         }
-        #endregion
+#endregion
     }
 }

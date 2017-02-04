@@ -31,8 +31,7 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-    [TestFixture]
-    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
+    [TestFixture, NonParallelizable] // Uses GlobalSettings
     public class ToleranceTests
     {
         private NUnitEqualityComparer _comparer;

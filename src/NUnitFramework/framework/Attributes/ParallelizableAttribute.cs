@@ -24,6 +24,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework
 {
@@ -51,6 +52,24 @@ namespace NUnit.Framework
             Properties.Add(PropertyNames.ParallelScope, scope);
         }
 
+        /// <summary>
+        /// Overridden to check for invalid combinations of settings
+        /// </summary>
+        /// <param name="test"></param>
+        public override void ApplyToTest(Test test)
+        {
+            base.ApplyToTest(test);
+
+            if (test.RunState == RunState.NotRunnable)
+                return;
+
+            if (_scope.HasFlag(ParallelScope.Self) && _scope.HasFlag(ParallelScope.None))
+                test.MakeInvalid("Test may not be both parallel and non-parallel");
+
+            if (test is TestMethod && _scope.HasFlag(ParallelScope.ContextMask))
+                test.MakeInvalid("ParallelScope of a test method may not specify Children or Fixtures");
+        }
+
         #region IApplyToContext Interface
 
         /// <summary>
@@ -61,7 +80,7 @@ namespace NUnit.Framework
         {
             // Don't reflect Self in the context, since it will be
             // used for descendant tests.
-            context.ParallelScope = _scope & ~ParallelScope.Self;
+            context.ParallelScope = _scope & ParallelScope.ContextMask;
         }
 
         #endregion

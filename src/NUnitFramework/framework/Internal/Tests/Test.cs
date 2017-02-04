@@ -349,6 +349,16 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        /// <summary>
+        /// Mark the test as Invalid (not runnable) specifying a reason
+        /// </summary>
+        /// <param name="reason">The reason the test is not runnable</param>
+        public void MakeInvalid(string reason)
+        {
+            RunState = RunState.NotRunnable;
+            Properties.Add(PropertyNames.SkipReason, reason);
+        }
+
         #endregion
 
         #region Protected Methods

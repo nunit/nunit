@@ -26,7 +26,6 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Syntax
 {
-    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
     public class EqualToTest : SyntaxTest
     {
         [SetUp]
@@ -132,7 +131,7 @@ namespace NUnit.Framework.Syntax
                 "ulong actual, int expected, int tolerance");
         }
 
-        [Test]
+        [Test, NonParallelizable]
         public void EqualityTestsUsingDefaultFloatingPointTolerance()
         {
             var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;

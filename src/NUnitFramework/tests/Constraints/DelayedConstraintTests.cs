@@ -31,7 +31,7 @@ using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<obje
 
 namespace NUnit.Framework.Constraints
 {
-    [TestFixture, Parallelizable(ParallelScope.None)]
+    [TestFixture, NonParallelizable]
     public class DelayedConstraintTests : ConstraintTestBase
     {
         // NOTE: This class tests the functioning of the DelayConstraint,
