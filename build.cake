@@ -351,6 +351,21 @@ Task("TestPortable")
     });
 
 //////////////////////////////////////////////////////////////////////
+// CODE COVERAGE REPORTING
+//////////////////////////////////////////////////////////////////////
+
+Task("UploadToCodeCov")
+    .Does(() =>
+{
+    var url = "http://codecov.agodadev.io/upload/v2?commit=$COMMIT&service=teamcity&build=$BUILD_ID&build_url=$BUILD_URL&token=$Token&slug=nunit/nunit";
+    url.Replace("$COMMIT","");
+    url.Replace("$BUILD_ID","");
+    url.Replace("$BUILD_URL","");
+    url.Replace("$Token","");
+    CurlUploadFile("opencovernet-4.5.xml", new Uri(url));
+});
+
+//////////////////////////////////////////////////////////////////////
 // PACKAGE
 //////////////////////////////////////////////////////////////////////
 
@@ -552,7 +567,15 @@ void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framewo
         var settings = new NUnit3Settings();
         if(!IsRunningOnWindows())
             settings.Process = NUnit3ProcessOption.InProcess;
-        NUnit3(path.ToString(), settings);
+        var openCoverSet = new OpenCoverSettings();
+        openCoverSet.ToolPath = "packages\\OpenCover.4.6.519\\tools\\OpenCover.Console.exe";
+        OpenCover(tool => {
+            tool.NUnit3(path.ToString(), settings);
+            },
+            new FilePath("./opencover" + framework + ".xml"),
+            openCoverSet
+        );
+        
     }
     catch(CakeException ce)
     {
