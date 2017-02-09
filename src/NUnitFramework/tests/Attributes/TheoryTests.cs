@@ -42,15 +42,15 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void TheoryWithNoDatapointsIsRunnable()
+        public void TheoryWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints");
+            TestAssert.IsRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints", ResultState.Failure);
         }
 
         [Test]
-        public void UnsupportedNullableTypeArgumentWithNoDatapointsAreRunnable()
+        public void UnsupportedNullableTypeArgumentWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+            TestAssert.IsRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints", ResultState.Failure);
         }
 
         [Test]
@@ -161,7 +161,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.TestCaseCount, Is.EqualTo(2));
         }
 
-        [Theory]
+        [Test]
         public void TheoryFailsIfAllTestsAreInconclusive()
         {
             ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, "TestWithAllBadValues");
