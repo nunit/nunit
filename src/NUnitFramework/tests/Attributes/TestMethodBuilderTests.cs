@@ -30,6 +30,8 @@ namespace NUnit.Framework.Attributes
 {
     public class TestMethodBuilderTests
     {
+        #region TestAttribute
+
         [Test]
         public void TestAttribute_NoArgs_Runnable()
         {
@@ -45,6 +47,10 @@ namespace NUnit.Framework.Attributes
             TestMethod test = new TestAttribute().BuildFrom(method, null);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
+
+        #endregion
+
+        #region TestCaseAttribute
 
         [Test]
         public void TestCaseAttribute_NoArgs_NotRunnable()
@@ -72,6 +78,10 @@ namespace NUnit.Framework.Attributes
             Assert.That(tests.Count, Is.EqualTo(1));
             Assert.That(tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
+
+        #endregion
+
+        #region TestCaseSourceAttribute
 
         [Test]
         public void TestCaseSourceAttribute_NoArgs_NotRunnable()
@@ -112,6 +122,10 @@ namespace NUnit.Framework.Attributes
                 Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
+        #endregion
+
+        #region TheoryAttribute
+
 #if !PORTABLE
         [Test]
         public void TheoryAttribute_NoArgs_NoCases()
@@ -132,6 +146,10 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
+        #endregion
+
+        #region CombinatorialAttribute
+
         [Test]
         public void CombinatorialAttribute_NoArgs_NoCases()
         {
@@ -149,6 +167,10 @@ namespace NUnit.Framework.Attributes
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
+
+        #endregion
+
+        #region PairwiseAttribute
 
         [Test]
         public void PairwiseAttribute_NoArgs_NoCases()
@@ -168,6 +190,10 @@ namespace NUnit.Framework.Attributes
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
+        #endregion
+
+        #region SequentialAttribute
+
         [Test]
         public void SequentialAttribute_NoArgs_NoCases()
         {
@@ -185,6 +211,10 @@ namespace NUnit.Framework.Attributes
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
+
+        #endregion
+
+        #region Helper Methods and Data
 
         private IMethodInfo GetMethod(string methodName)
         {
@@ -211,5 +241,7 @@ namespace NUnit.Framework.Attributes
 
         [DatapointSource]
         int[] ints = new int[] { 1, 2, 3 };
+
+        #endregion
     }
 }
