@@ -84,6 +84,15 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void TestCaseSourceAttribute_NoArgs_NoData_NotRunnable()
+        {
+            var method = GetMethod("MethodWithoutArgs");
+            List<TestMethod> tests = new List<TestMethod>(new TestCaseSourceAttribute("ZeroData").BuildFrom(method, null));
+            Assert.That(tests.Count, Is.EqualTo(1));
+            Assert.That(tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        [Test]
         public void TestCaseSourceAttribute_RightArgs_Runnable()
         {
             var method = GetMethod("MethodWithIntArgs");
@@ -187,6 +196,8 @@ namespace NUnit.Framework.Attributes
         public static void MethodWithIntValues(
             [Values(1, 2, 3)]int x,
             [Values(10, 20)]int y) { }
+
+        static object[] ZeroData = new object[0];
 
         static object[] GoodData = new object[] {
             new object[] { 12, 3 },

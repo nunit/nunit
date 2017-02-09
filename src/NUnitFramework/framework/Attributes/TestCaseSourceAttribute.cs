@@ -134,8 +134,24 @@ namespace NUnit.Framework
         /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
+            int count = 0;
+
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
+            {
+                count++;
                 yield return _builder.BuildTestMethod(method, suite, parms);
+            }
+
+            // If count > 0, error messages will be shown for each case
+            // but if it's 0, we need to add an extra "test" to show the message.
+            if (count == 0 && method.GetParameters().Length == 0)
+            {
+                var parms = new TestCaseParameters();
+                parms.RunState = RunState.NotRunnable;
+                parms.Properties.Set(PropertyNames.SkipReason, "TestCaseSourceAttribute may not be used on a method without parameters");
+                    
+                yield return _builder.BuildTestMethod(method, suite, parms);
+            }
         }
 
         #endregion
