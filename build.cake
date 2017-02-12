@@ -567,15 +567,22 @@ void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framewo
         var settings = new NUnit3Settings();
         if(!IsRunningOnWindows())
             settings.Process = NUnit3ProcessOption.InProcess;
-        var openCoverSet = new OpenCoverSettings();
-        openCoverSet.ToolPath = "packages\\OpenCover.4.6.519\\tools\\OpenCover.Console.exe";
-        OpenCover(tool => {
-            tool.NUnit3(path.ToString(), settings);
-            },
-            new FilePath("./opencover" + framework + ".xml"),
-            openCoverSet
-        );
-        
+
+        if(isAppveyor)
+        {
+            var openCoverSet = new OpenCoverSettings();
+            openCoverSet.ToolPath = "packages\\OpenCover.4.6.519\\tools\\OpenCover.Console.exe";
+            OpenCover(tool => {
+                    tool.NUnit3(path.ToString(), settings);
+                    },
+                    new FilePath("./opencover" + framework + ".xml"),
+                    openCoverSet
+                );
+        }
+        else
+        {
+            NUnit3(path.ToString(), settings);
+        }
     }
     catch(CakeException ce)
     {
