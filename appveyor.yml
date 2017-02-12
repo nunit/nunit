@@ -4,6 +4,7 @@ branches:
 
 build_script: 
   - ps: .\build.ps1 -Target "Appveyor"
+  - ps: .\UploadCodeCov.ps1 -Target "Appveyor"
 
 # disable built-in tests.
 test: off

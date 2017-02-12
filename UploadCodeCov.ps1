@@ -1,0 +1,2 @@
+(New-Object System.Net.WebClient).DownloadFile("https://codecov.io/bash", ".\CodecovUploader.sh")
+get-item opencover*.xml | ForEach-Object {.\CodecovUploader.sh -f $_.Name -t "72811e91-101d-439b-aed1-52f6297b0976" -X gcov}
