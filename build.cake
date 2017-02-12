@@ -279,7 +279,7 @@ Task("Test45")
     {
         var runtime = "net-4.5";
         var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail, isAppveyor);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -291,7 +291,7 @@ Task("Test40")
     {
         var runtime = "net-4.0";
         var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail, isAppveyor);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -303,7 +303,7 @@ Task("Test35")
     {
         var runtime = "net-3.5";
         var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail, isAppveyor);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -315,7 +315,7 @@ Task("Test20")
     {
         var runtime = "net-2.0";
         var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail, isAppveyor);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -349,21 +349,6 @@ Task("TestPortable")
         RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
-
-//////////////////////////////////////////////////////////////////////
-// CODE COVERAGE REPORTING
-//////////////////////////////////////////////////////////////////////
-
-Task("UploadToCodeCov")
-    .Does(() =>
-{
-    var url = "http://codecov.io/upload/v2?commit=$COMMIT&service=teamcity&build=$BUILD_ID&build_url=$BUILD_URL&token=$Token&slug=nunit/nunit";
-    url.Replace("$COMMIT","");
-    url.Replace("$BUILD_ID","");
-    url.Replace("$BUILD_URL","");
-    url.Replace("$Token","");
-    //CurlUploadFile("opencovernet-4.5.xml", new Uri(url));
-});
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
@@ -559,7 +544,7 @@ void BuildProject(string projectPath, string configuration)
 // HELPER METHODS - TEST
 //////////////////////////////////////////////////////////////////////
 
-void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framework, ref List<string> errorDetail)
+void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framework, ref List<string> errorDetail, bool isAppveyor)
 {
     try
     {
