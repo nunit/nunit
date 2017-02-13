@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Execution
             if (work != null)
                 work.Execute();
 #else
-            if (_topLevelWorkItem != null)
+            if (_topLevelWorkItem != null || work.RunsOnMainThread)
                 work.Execute();
             else
             {

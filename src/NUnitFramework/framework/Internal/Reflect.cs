@@ -24,7 +24,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
@@ -197,6 +199,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
+        [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions. 
         public static object InvokeMethod( MethodInfo method, object fixture, params object[] args )
         {
             if(method != null)
@@ -219,6 +222,10 @@ namespace NUnit.Framework.Internal
                 catch (Exception e)
                 {
                     throw new NUnitException("Rethrown", e);
+                }
+                catch
+                {
+                    throw new NUnitException("Rethrown", new Exception("Unknown Native exception thrown."));
                 }
             }
 

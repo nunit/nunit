@@ -141,6 +141,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public List<ITestAction> Actions { get; private set; }
 
+        public bool RunsOnMainThread { get; internal set; }
+
 #if PARALLEL
         /// <summary>
         /// Indicates whether this WorkItem may be run in parallel

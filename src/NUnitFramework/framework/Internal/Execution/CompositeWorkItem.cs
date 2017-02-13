@@ -236,7 +236,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 child.Completed += new EventHandler(OnChildCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
-
+                
                 Context.Dispatcher.Dispatch(child);
                 childCount--;
             }
@@ -263,7 +263,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)
                         child.TargetApartment = TargetApartment;
 #endif
-
+                    child.RunsOnMainThread = RunsOnMainThread;
                     if (test.Properties.ContainsKey(PropertyNames.Order))
                     {
                         _children.Insert(0, child);
