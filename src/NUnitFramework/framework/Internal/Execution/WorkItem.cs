@@ -141,6 +141,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public List<ITestAction> Actions { get; private set; }
 
+        /// <summary>
+        /// Should the test run on the main thread or not. It is true when the number of test workers is 0.
+        /// </summary>
         public bool RunsOnMainThread { get; internal set; }
 
 #if PARALLEL

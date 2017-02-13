@@ -223,7 +223,9 @@ namespace NUnit.Framework.Internal
                 {
                     throw new NUnitException("Rethrown", e);
                 }
+#pragma warning disable 1058
                 catch
+#pragma warning restore 1058
                 {
                     throw new NUnitException("Rethrown", new Exception("Unknown Native exception thrown."));
                 }
