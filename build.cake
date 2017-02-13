@@ -2,6 +2,7 @@
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.5.0
+#addin Cake.Curl
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -349,6 +350,22 @@ Task("TestPortable")
         RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
+
+//////////////////////////////////////////////////////////////////////
+// CODE COVERAGE REPORTING
+//////////////////////////////////////////////////////////////////////
+
+Task("UploadToCodeCov")
+    .Does(() =>
+{
+    var url = "http://codecov.io/upload/v2?commit=$COMMIT&service=teamcity&build=$BUILD_ID&token=$Token&slug=nunit/nunit";
+    //&build_url=$BUILD_URL
+    url.Replace("$COMMIT", AppVeyor.Environment.Repository.Commit.Id);
+    url.Replace("$BUILD_ID", AppVeyor.Environment.Build.Number.ToString());
+    //url.Replace("$BUILD_URL", AppVeyor.Environment.BUILD_URL);
+    url.Replace("$Token","72811e91-101d-439b-aed1-52f6297b0976");
+    CurlUploadFile("opencovernet-4.5.xml", new Uri(url));
+});
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
