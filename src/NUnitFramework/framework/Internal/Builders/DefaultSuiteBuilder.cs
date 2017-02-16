@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal.Builders
             // Only TestFixtureAttribute can be used without arguments
             var temp = attr as TestFixtureAttribute;
 
-            return temp == null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
+            return temp == null || (temp.Arguments != null && temp.Arguments.Length > 0) || (temp.TypeArgs != null && temp.TypeArgs.Length > 0);
         }
 
         #endregion
