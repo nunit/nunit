@@ -48,23 +48,11 @@ namespace NUnit.Framework.Internal.Commands
             TestResult theoryResult = innerCommand.Execute(context);
 
             if (theoryResult.ResultState == ResultState.Inconclusive)
-//            if (theoryResult.ResultState == ResultState.Success)
             {
                 if (!theoryResult.HasChildren)
                     theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
                 else
-                //{
-                //    bool wasInconclusive = true;
-                //    foreach (TestResult childResult in theoryResult.Children)
-                //        if (childResult.ResultState == ResultState.Success)
-                //        {
-                //            wasInconclusive = false;
-                //            break;
-                //        }
-
-                //    if (wasInconclusive)
-                        theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
-                //}
+                    theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
             }
 
             return theoryResult;
