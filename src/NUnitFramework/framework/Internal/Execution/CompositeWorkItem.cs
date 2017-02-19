@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal.Execution
                         case RunState.Runnable:
                         case RunState.Explicit:
                             // Assume success, since the result will otherwise
-                            // edault to inconclusive.
+                            // default to inconclusive.
                             Result.SetResult(ResultState.Success);
 
                             CreateChildWorkItems();
