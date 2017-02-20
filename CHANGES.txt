@@ -6,6 +6,7 @@ the 3.6 release.
 Issues Resolved
 
 * 1962 A Theory with no data passes
+* 1994 NUnitLite runner crashing when --trace is specified
 * 2017 Two NUnit project's tests fail on systems with comma decimal mark settings
 
 NUnit 3.6 - January 9, 2017
