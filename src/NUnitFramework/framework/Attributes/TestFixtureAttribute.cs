@@ -53,7 +53,7 @@ namespace NUnit.Framework
         public TestFixtureAttribute(params object[] arguments)
         {
             RunState = RunState.Runnable;
-            Arguments = arguments;
+            Arguments = arguments ?? new object[] { null };
             TypeArgs = new Type[0];
             Properties = new PropertyBag();
         }

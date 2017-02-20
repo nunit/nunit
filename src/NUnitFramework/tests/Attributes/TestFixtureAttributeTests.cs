@@ -80,5 +80,14 @@ namespace NUnit.Framework.Attributes
             Assert.That(attr.Arguments, Is.EqualTo(combinedArgs));
             Assert.That(attr.TypeArgs.Length, Is.EqualTo(0));
         }
+
+        [Test]
+        public void ConstructWithWeakTypedNullArgument()
+        {
+            TestFixtureAttribute attr = new TestFixtureAttribute(null);
+            Assert.That(attr.Arguments, Is.Not.Null);
+            Assert.That(attr.Arguments[0], Is.Null);
+            Assert.That(attr.TypeArgs, Is.Not.Null);
+        }
     }
 }
