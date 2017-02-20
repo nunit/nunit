@@ -1,4 +1,13 @@
-﻿NUnit 3.6 - January 9, 2015
+﻿NUnit 3.6.1 - February xx, 2017
+
+This is a hotfix release of the framework that addresses critical issues found in
+the 3.6 release.
+
+Issues Resolved
+
+* 1962 A Theory with no data passes
+
+NUnit 3.6 - January 9, 2017
 
 This release of the framework no longer includes builds for Compact Framework or
 for SilverLight, but adds a .NET Standard 1.6 build. If anyone still using
