@@ -99,9 +99,8 @@ namespace NUnit.Framework.Internal.Execution
                         default:
                         case RunState.Runnable:
                         case RunState.Explicit:
-                            // Assume success, since the result will be inconclusive
-                            // if there is no setup method to run or if the
-                            // context initialization fails.
+                            // Assume success, since the result will otherwise
+                            // default to inconclusive.
                             Result.SetResult(ResultState.Success);
 
                             CreateChildWorkItems();
@@ -135,6 +134,8 @@ namespace NUnit.Framework.Internal.Execution
                                 if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
                                     PerformOneTimeTearDown();
                             }
+                            else if (Test.TestType == "Theory")
+                                Result.SetResult(ResultState.Failure, "No test cases were provided");
                             break;
 
                         case RunState.Skipped:
@@ -153,7 +154,6 @@ namespace NUnit.Framework.Internal.Execution
             // Fall through in case nothing was run.
             // Otherwise, this is done in the completion event.
             WorkItemComplete();
-
         }
 
         #region Helper Methods
@@ -223,6 +223,9 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunChildren()
         {
+            if (Test.TestType == "Theory")
+                Result.SetResult(ResultState.Inconclusive);
+
             int childCount = _children.Count;
             if (childCount == 0)
                 throw new InvalidOperationException("RunChildren called but item has no children");
@@ -386,6 +389,9 @@ namespace NUnit.Framework.Internal.Execution
             _childTestCountdown.Signal();
             if (_childTestCountdown.CurrentCount == 0)
             {
+                if (Test.TestType == "Theory" && Result.ResultState == ResultState.Success && Result.PassCount == 0)
+                    Result.SetResult(ResultState.Failure, "No test cases were provided");
+
                 if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
                     PerformOneTimeTearDown();
 
