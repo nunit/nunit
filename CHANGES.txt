@@ -9,6 +9,7 @@ Issues Resolved
  * 1986 NUnitLite ignores --workers option
  * 1994 NUnitLite runner crashing when --trace is specified
  * 2017 Two NUnit project's tests fail on systems with comma decimal mark settings
+ * 2043 Regression in 3.6.0 when catching AssertionException
 
 NUnit 3.6 - January 9, 2017
 
