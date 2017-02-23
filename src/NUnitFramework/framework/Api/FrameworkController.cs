@@ -249,10 +249,6 @@ namespace NUnit.Framework.Api
             InsertEnvironmentElement(result);
 #endif
 
-            // Ensure that the CallContext of the thread is not polluted
-            // by our TestExecutionContext, which is not serializable.
-            TestExecutionContext.ClearCurrentContext();
-
             return result.OuterXml;
         }
 
@@ -300,10 +296,6 @@ namespace NUnit.Framework.Api
 #if !PORTABLE
             InsertEnvironmentElement(result);
 #endif
-
-            // Ensure that the CallContext of the thread is not polluted
-            // by our TestExecutionContext, which is not serializable.
-            TestExecutionContext.ClearCurrentContext();
 
             return result.OuterXml;
         }
@@ -376,10 +368,6 @@ namespace NUnit.Framework.Api
 #if !PORTABLE
             InsertEnvironmentElement(result);
 #endif
-
-            // Ensure that the CallContext of the thread is not polluted
-            // by our TestExecutionContext, which is not serializable.
-            TestExecutionContext.ClearCurrentContext();
 
             handler.RaiseCallbackEvent(result.OuterXml);
         }

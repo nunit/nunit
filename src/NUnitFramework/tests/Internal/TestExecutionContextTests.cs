@@ -22,13 +22,18 @@
 // ***********************************************************************
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Globalization;
-using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using System.Security.Principal;
+using NUnit.Framework.Interfaces;
+
+#if ASYNC
+using System.Threading.Tasks;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -46,6 +51,9 @@ namespace NUnit.Framework.Internal
         IPrincipal originalPrincipal;
 #endif
 
+        DateTime _fixtureStartTime = DateTime.UtcNow;
+        long _fixtureStartTicks = Stopwatch.GetTimestamp();
+        
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
@@ -66,20 +74,15 @@ namespace NUnit.Framework.Internal
             Assert.That(fixtureContext.CurrentTest.Properties.Get("Question"), Is.EqualTo("Why?"));
         }
 
-        /// <summary>
-        /// Since we are testing the mechanism that saves and
-        /// restores contexts, we save manually here
-        /// </summary>
         [SetUp]
         public void Initialize()
         {
-            setupContext = new TestExecutionContext(TestExecutionContext.CurrentContext);
+            setupContext = TestExecutionContext.CurrentContext;
+
 #if !PORTABLE && !NETSTANDARD1_6
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
-#endif
 
-#if !PORTABLE && !NETSTANDARD1_6
             originalDirectory = Environment.CurrentDirectory;
             originalPrincipal = Thread.CurrentPrincipal;
 #endif
@@ -102,7 +105,37 @@ namespace NUnit.Framework.Internal
                 TestExecutionContext.CurrentContext.CurrentTest.FullName,
                 Is.EqualTo(setupContext.CurrentTest.FullName),
                 "Context at TearDown failed to match that saved from SetUp");
+
+            Assert.That(
+                TestExecutionContext.CurrentContext.CurrentResult.Name,
+                Is.EqualTo(setupContext.CurrentResult.Name),
+                "Cannot access CurrentResult in TearDown");
         }
+
+        #region CurrentContext
+
+#if ASYNC
+        [Test]
+        public async Task CurrentContextFlowsWithAsyncExecution()
+        {
+            var context = TestExecutionContext.CurrentContext;
+            await YieldAsync();
+            Assert.AreSame(context, TestExecutionContext.CurrentContext);
+        }
+
+        [Test]
+        public async Task CurrentContextFlowsWithParallelAsyncExecution()
+        {
+            var expected = TestExecutionContext.CurrentContext;
+            var parallelResult = await WhenAllAsync(YieldAndReturnContext(), YieldAndReturnContext());
+
+            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
+            Assert.AreSame(expected, parallelResult[0]);
+            Assert.AreSame(expected, parallelResult[1]);
+        }
+#endif
+
+        #endregion
 
         #region CurrentTest
 
@@ -196,6 +229,60 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
         }
 
+        [Test]
+        [Property("Answer", 42)]
+        public void TestCanAccessItsOwnProperties()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task AsyncTestCanAccessItsOwnName()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Name, Is.EqualTo("AsyncTestCanAccessItsOwnName"));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Name, Is.EqualTo("AsyncTestCanAccessItsOwnName"));
+        }
+
+        [Test]
+        public async Task AsyncTestCanAccessItsOwnFullName()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
+                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
+                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+        }
+
+        [Test]
+        public async Task AsyncTestCanAccessItsOwnMethodName()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.MethodName,
+                Is.EqualTo("AsyncTestCanAccessItsOwnMethodName"));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.MethodName,
+                Is.EqualTo("AsyncTestCanAccessItsOwnMethodName"));
+        }
+
+        [Test]
+        public async Task AsyncTestCanAccessItsOwnId()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
+        }
+
+        [Test]
+        [Property("Answer", 42)]
+        public async Task AsyncTestCanAccessItsOwnProperties()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
+        }
+#endif
+
 #if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void TestHasWorkerWhenParallel()
@@ -206,12 +293,440 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        #endregion
+
+        #region CurrentResult
+
         [Test]
-        [Property("Answer", 42)]
-        public void TestCanAccessItsOwnProperties()
+        public void CanAccessResultName()
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
+            Assert.That(fixtureContext.CurrentResult.Name, Is.EqualTo("TestExecutionContextTests"));
+            Assert.That(setupContext.CurrentResult.Name, Is.EqualTo("CanAccessResultName"));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Name, Is.EqualTo("CanAccessResultName"));
         }
+
+        [Test]
+        public void CanAccessResultFullName()
+        {
+            Assert.That(fixtureContext.CurrentResult.FullName, Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+            Assert.That(setupContext.CurrentResult.FullName, 
+                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName, 
+                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+        }
+
+        [Test]
+        public void CanAccessResultTest()
+        {
+            Assert.That(fixtureContext.CurrentResult.Test, Is.SameAs(fixtureContext.CurrentTest));
+            Assert.That(setupContext.CurrentResult.Test, Is.SameAs(setupContext.CurrentTest));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Test, Is.SameAs(TestExecutionContext.CurrentContext.CurrentTest));
+        }
+
+        [Test]
+        public void CanAccessResultState()
+        {
+            Assert.That(fixtureContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(setupContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessResultName_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Name, Is.EqualTo("CanAccessResultName_Async"));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Name, Is.EqualTo("CanAccessResultName_Async"));
+        }
+
+        [Test]
+        public async Task CanAccessResultFullName_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName, 
+                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName, 
+                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+        }
+
+        [Test]
+        public async Task CanAccessResultTest_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Test, 
+                Is.SameAs(TestExecutionContext.CurrentContext.CurrentTest));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Test, 
+                Is.SameAs(TestExecutionContext.CurrentContext.CurrentTest));
+        }
+
+        [Test]
+        public async Task CanAccessResultState_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
+        }
+#endif
+
+        #endregion
+
+        #region StartTime
+
+        [Test]
+        public void CanAccessStartTime()
+        {
+            Assert.That(fixtureContext.StartTime, Is.EqualTo(_fixtureStartTime).Within(1).Seconds);
+            Assert.That(setupContext.StartTime, Is.GreaterThanOrEqualTo(fixtureContext.StartTime));
+            Assert.That(TestExecutionContext.CurrentContext.StartTime, Is.GreaterThanOrEqualTo(setupContext.StartTime));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessStartTime_Async()
+        {
+            var startTime = TestExecutionContext.CurrentContext.StartTime;
+            Assert.That(startTime, Is.GreaterThanOrEqualTo(setupContext.StartTime));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.StartTime, Is.EqualTo(startTime));
+        }
+#endif
+
+        #endregion
+
+        #region StartTicks
+
+        [Test]
+        public void CanAccessStartTicks()
+        {
+            Assert.That(fixtureContext.StartTicks, Is.EqualTo(_fixtureStartTicks).Within(Stopwatch.Frequency));
+            Assert.That(setupContext.StartTicks, Is.GreaterThanOrEqualTo(fixtureContext.StartTicks));
+            Assert.That(TestExecutionContext.CurrentContext.StartTicks, Is.GreaterThanOrEqualTo(setupContext.StartTicks));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task AsyncTestCanAccessStartTicks()
+        {
+            var startTicks = TestExecutionContext.CurrentContext.StartTicks;
+            Assert.That(startTicks, Is.GreaterThanOrEqualTo(setupContext.StartTicks));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.StartTicks, Is.EqualTo(startTicks));
+        }
+#endif
+
+        #endregion
+
+        #region OutWriter
+
+        [Test]
+        public void CanAccessOutWriter()
+        {
+            Assert.That(fixtureContext.OutWriter, Is.Not.Null);
+            Assert.That(setupContext.OutWriter, Is.Not.Null);
+            Assert.That(TestExecutionContext.CurrentContext.OutWriter, Is.SameAs(setupContext.OutWriter));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task AsyncTestCanAccessOutWriter()
+        {
+            var outWriter = TestExecutionContext.CurrentContext.OutWriter;
+            Assert.That(outWriter, Is.SameAs(setupContext.OutWriter));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.OutWriter, Is.SameAs(outWriter));
+        }
+#endif
+
+        #endregion
+
+        #region TestObject
+
+        [Test]
+        public void CanAccessTestObject()
+        {
+            Assert.That(fixtureContext.TestObject, Is.Not.Null.And.TypeOf(GetType()));
+            Assert.That(setupContext.TestObject, Is.SameAs(fixtureContext.TestObject));
+            Assert.That(TestExecutionContext.CurrentContext.TestObject, Is.SameAs(setupContext.TestObject));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessTestObject_Async()
+        {
+            var testObject = TestExecutionContext.CurrentContext.TestObject;
+            Assert.That(testObject, Is.SameAs(setupContext.TestObject));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.TestObject, Is.SameAs(testObject));
+        }
+#endif
+
+        #endregion
+
+        #region WorkDirectory
+
+        [Test]
+        public void CanAccessWorkDirectory()
+        {
+            Assert.NotNull(fixtureContext.WorkDirectory);
+#if !PORTABLE
+            DirectoryAssert.Exists(fixtureContext.WorkDirectory);
+#endif
+            Assert.That(setupContext.WorkDirectory, Is.EqualTo(fixtureContext.WorkDirectory));
+            Assert.That(TestExecutionContext.CurrentContext.WorkDirectory, Is.EqualTo(setupContext.WorkDirectory));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessWorkDirectory_Async()
+        {
+            var workDir = TestExecutionContext.CurrentContext.WorkDirectory;
+            Assert.That(workDir, Is.EqualTo(setupContext.WorkDirectory));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.WorkDirectory, Is.EqualTo(workDir));
+        }
+#endif
+
+        #endregion
+
+        #region StopOnError
+
+        [Test]
+        public void CanAccessStopOnError()
+        {
+            Assert.That(setupContext.StopOnError, Is.EqualTo(fixtureContext.StopOnError));
+            Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(setupContext.StopOnError));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessStopOnError_Async()
+        {
+            var stop = TestExecutionContext.CurrentContext.StopOnError;
+            Assert.That(stop, Is.EqualTo(setupContext.StopOnError));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(stop));
+        }
+#endif
+
+        #endregion
+
+        #region Listener
+
+        [Test]
+        public void CanAccessListener()
+        {
+            Assert.That(fixtureContext.Listener, Is.Not.Null);
+            Assert.That(setupContext.Listener, Is.SameAs(fixtureContext.Listener));
+            Assert.That(TestExecutionContext.CurrentContext.Listener, Is.SameAs(setupContext.Listener));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessListener_Async()
+        {
+            var listener = TestExecutionContext.CurrentContext.Listener;
+            Assert.That(listener, Is.SameAs(setupContext.Listener));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.Listener, Is.SameAs(listener));
+        }
+#endif
+
+        #endregion
+
+        #region Dispatcher
+
+        [Test]
+        public void CanAccessDispatcher()
+        {
+            Assert.That(fixtureContext.RandomGenerator, Is.Not.Null);
+            Assert.That(setupContext.Dispatcher, Is.SameAs(fixtureContext.Dispatcher));
+            Assert.That(TestExecutionContext.CurrentContext.Dispatcher, Is.SameAs(setupContext.Dispatcher));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessDispatcher_Async()
+        {
+            var dispatcher = TestExecutionContext.CurrentContext.Dispatcher;
+            Assert.That(dispatcher, Is.SameAs(setupContext.Dispatcher));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.Dispatcher, Is.SameAs(dispatcher));
+        }
+#endif
+
+        #endregion
+
+        #region ParallelScope
+
+        [Test]
+        public void CanAccessParallelScope()
+        {
+            var scope = fixtureContext.ParallelScope;
+            Assert.That(setupContext.ParallelScope, Is.EqualTo(scope));
+            Assert.That(TestExecutionContext.CurrentContext.ParallelScope, Is.EqualTo(scope));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessParallelScope_Async()
+        {
+            var scope = TestExecutionContext.CurrentContext.ParallelScope;
+            Assert.That(scope, Is.EqualTo(setupContext.ParallelScope));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.ParallelScope, Is.EqualTo(scope));
+        }
+#endif
+
+        #endregion
+
+        #region TestWorker
+
+#if PARALLEL
+        [Test]
+        public void CanAccessTestWorker()
+        {
+            Assert.That(fixtureContext.TestWorker, Is.Not.Null);
+            Assert.That(setupContext.TestWorker, Is.SameAs(fixtureContext.TestWorker));
+            Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(setupContext.TestWorker));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessTestWorker_Async()
+        {
+            var worker = TestExecutionContext.CurrentContext.TestWorker;
+            Assert.That(worker, Is.SameAs(setupContext.TestWorker));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(worker));
+        }
+#endif
+#endif
+
+        #endregion
+
+        #region RandomGenerator
+
+        [Test]
+        public void CanAccessRandomGenerator()
+        {
+            Assert.That(fixtureContext.RandomGenerator, Is.Not.Null);
+            Assert.That(setupContext.RandomGenerator, Is.Not.Null);
+            Assert.That(TestExecutionContext.CurrentContext.RandomGenerator, Is.SameAs(setupContext.RandomGenerator));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessRandomGenerator_Async()
+        {
+            var random = TestExecutionContext.CurrentContext.RandomGenerator;
+            Assert.That(random, Is.SameAs(setupContext.RandomGenerator));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.RandomGenerator, Is.SameAs(random));
+        }
+#endif
+
+        #endregion
+
+        #region AssertCount
+
+        [Test]
+        public void CanAccessAssertCount()
+        {
+            Assert.That(fixtureContext.AssertCount, Is.EqualTo(0));
+            Assert.That(setupContext.AssertCount, Is.EqualTo(1));
+            Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(2));
+            Assert.That(2 + 2, Is.EqualTo(4));
+            Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(4));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessAssertCount_Async()
+        {
+            Assert.That(2 + 2, Is.EqualTo(4));
+            Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(1));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(2));
+            Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(3));
+        }
+#endif
+
+        #endregion
+
+        #region MultipleAssertLevel
+
+        [Test]
+        public void CanAccessMultipleAssertLevel()
+        {
+            Assert.That(fixtureContext.MultipleAssertLevel, Is.EqualTo(0));
+            Assert.That(setupContext.MultipleAssertLevel, Is.EqualTo(0));
+            Assert.That(TestExecutionContext.CurrentContext.MultipleAssertLevel, Is.EqualTo(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(TestExecutionContext.CurrentContext.MultipleAssertLevel, Is.EqualTo(1));
+            });
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessMultipleAssertLevel_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.MultipleAssertLevel, Is.EqualTo(0));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.MultipleAssertLevel, Is.EqualTo(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(TestExecutionContext.CurrentContext.MultipleAssertLevel, Is.EqualTo(1));
+            });
+        }
+#endif
+
+        #endregion
+
+        #region TestCaseTimeout
+
+        [Test]
+        public void CanAccessTestCaseTimeout()
+        {
+            var timeout = fixtureContext.TestCaseTimeout;
+            Assert.That(setupContext.TestCaseTimeout, Is.EqualTo(timeout));
+            Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessTestCaseTimeout_Async()
+        {
+            var timeout = TestExecutionContext.CurrentContext.TestCaseTimeout;
+            Assert.That(timeout, Is.EqualTo(setupContext.TestCaseTimeout));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
+        }
+#endif
+
+        #endregion
+
+        #region UpstreamActions
+
+        [Test]
+        public void CanAccessUpstreamActions()
+        {
+            var actions = fixtureContext.UpstreamActions;
+            Assert.That(setupContext.UpstreamActions, Is.EqualTo(actions));
+            Assert.That(TestExecutionContext.CurrentContext.UpstreamActions, Is.EqualTo(actions));
+        }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessUpstreamAcxtions_Async()
+        {
+            var actions = TestExecutionContext.CurrentContext.UpstreamActions;
+            Assert.That(actions, Is.SameAs(setupContext.UpstreamActions));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.UpstreamActions, Is.SameAs(actions));
+        }
+#endif
 
         #endregion
 
@@ -222,41 +737,38 @@ namespace NUnit.Framework.Internal
         CultureInfo originalUICulture;
 
         [Test]
-        public void FixtureSetUpContextReflectsCurrentCulture()
+        public void CanAccessCurrentCulture()
         {
             Assert.That(fixtureContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
-        }
-
-        [Test]
-        public void FixtureSetUpContextReflectsCurrentUICulture()
-        {
-            Assert.That(fixtureContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
-        }
-
-        [Test]
-        public void SetUpContextReflectsCurrentCulture()
-        {
             Assert.That(setupContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
-        }
-
-        [Test]
-        public void SetUpContextReflectsCurrentUICulture()
-        {
-            Assert.That(setupContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
-
-        }
-
-        [Test]
-        public void TestContextReflectsCurrentCulture()
-        {
             Assert.That(TestExecutionContext.CurrentContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
         }
 
         [Test]
-        public void TestContextReflectsCurrentUICulture()
+        public void CanAccessCurrentUICulture()
         {
+            Assert.That(fixtureContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
+            Assert.That(setupContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
             Assert.That(TestExecutionContext.CurrentContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
         }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessCurrentCulture_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
+        }
+
+        [Test]
+        public async Task CanAccessCurrentUICulture_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
+        }
+#endif
 
         [Test]
         public void SetAndRestoreCurrentCulture()
@@ -305,28 +817,28 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
         #region CurrentPrincipal
 
 #if !PORTABLE && !NETSTANDARD1_6
         [Test]
-        public void FixtureSetUpContextReflectsCurrentPrincipal()
+        public void CanAccessCurrentPrincipal()
         {
             Assert.That(fixtureContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
-        }
-
-        [Test]
-        public void SetUpContextReflectsCurrentPrincipal()
-        {
             Assert.That(setupContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
-        }
-
-        [Test]
-        public void TestContextReflectsCurrentPrincipal()
-        {
             Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
         }
+
+#if ASYNC
+        [Test]
+        public async Task CanAccessCurrentPrincipal_Async()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
+        }
+#endif
 
         [Test]
         public void SetAndRestoreCurrentPrincipal()
@@ -458,6 +970,36 @@ namespace NUnit.Framework.Internal
         [Serializable]
         private class TestClass
         {
+        }
+#endif
+
+        #endregion
+
+        #region Helper Methods
+
+#if ASYNC
+        private async Task YieldAsync()
+        {
+#if NET_4_0
+            await TaskEx.Yield();
+#else
+            await Task.Yield();
+#endif
+        }
+
+        private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
+        {
+#if NET_4_0
+            return TaskEx.WhenAll(tasks);
+#else
+            return Task.WhenAll(tasks);
+#endif
+        }
+
+        private async Task<TestExecutionContext> YieldAndReturnContext()
+        {
+            await YieldAsync();
+            return TestExecutionContext.CurrentContext;
         }
 #endif
 
