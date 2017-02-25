@@ -137,7 +137,25 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#if !PORTABLE && !NETSTANDARD1_6
+        [Test]
+        public void CurrentContextFlowsToUserCreatedThread()
+        {
+            TestExecutionContext threadContext = null;
+
+            Thread thread = new Thread(() =>
+            {
+                threadContext = TestExecutionContext.CurrentContext;
+            });
+
+            thread.Start();
+            thread.Join();
+
+            Assert.That(threadContext, Is.Not.Null.And.SameAs(TestExecutionContext.CurrentContext));
+        }
+#endif
+
+#endregion
 
         #region CurrentTest
 

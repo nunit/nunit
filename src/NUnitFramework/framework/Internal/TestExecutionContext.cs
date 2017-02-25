@@ -44,10 +44,6 @@ namespace NUnit.Framework.Internal
     /// Helper class used to save and restore certain static or
     /// singleton settings in the environment that affect tests
     /// or which might be changed by the user tests.
-    ///
-    /// An internal class is used to hold settings and a stack
-    /// of these objects is pushed and popped as Save and Restore
-    /// are called.
     /// </summary>
     public class TestExecutionContext
 #if !PORTABLE && !NETSTANDARD1_6
@@ -166,13 +162,8 @@ namespace NUnit.Framework.Internal
 
         #region CurrentContext Instance
 
-        // NOTE: We use different implementations for various platforms
+        // NOTE: We use different implementations for various platforms.
 
-        // If a user creates a thread then the current context
-        // will be null. This also happens when the compiler
-        // automatically creates threads for async methods.
-        // We create a new context, which is automatically
-        // populated with values taken from the current thread.
 #if NETSTANDARD1_6
         private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
         /// <summary>
