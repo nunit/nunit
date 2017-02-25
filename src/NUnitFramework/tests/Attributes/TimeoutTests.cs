@@ -36,13 +36,13 @@ namespace NUnit.Framework.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-        [Test, Timeout(50)]
+        [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSeparateThread()
         {
             Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
         }
 
-        [Test, Timeout(50)]
+        [Test, Timeout(500)]
         public void TestWithTimeoutRunsSetUpAndTestOnSameThread()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
