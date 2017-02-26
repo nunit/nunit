@@ -62,6 +62,8 @@ namespace NUnit.Framework.Tests
             _setupContext = TestContext.CurrentContext;
         }
 
+        #region TestDirectory
+
 #if !PORTABLE
         [Test]
         public void ConstructorCanAccessTestDirectory()
@@ -69,17 +71,21 @@ namespace NUnit.Framework.Tests
             Assert.That(_testDirectory, Is.Not.Null);
         }
 
-        [TestCaseSource("MySource")]
+        [TestCaseSource("TestDirectorySource")]
         public void TestCaseSourceCanAccessTestDirectory(string testDirectory)
         {
             Assert.That(testDirectory, Is.EqualTo(_testDirectory));
         }
 
-        static IEnumerable<string> MySource()
+        static IEnumerable<string> TestDirectorySource()
         {
             yield return TestContext.CurrentContext.TestDirectory;
         }
 #endif
+
+        #endregion
+
+        #region WorkDirectory
 
         [Test]
         public void ConstructorAccessWorkDirectory()
@@ -88,15 +94,42 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void TestCanAccessItsOwnName()
+        public void TestCanAccessWorkDirectory()
         {
-            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
+            string workDirectory = TestContext.CurrentContext.WorkDirectory;
+            Assert.NotNull(workDirectory);
+#if !PORTABLE
+            Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
+#endif
         }
 
-        [Test]
+        [TestCaseSource("WorkDirectorySource")]
+        public void TestCaseSourceCanAccessWorkDirectory(string workDirectory)
+        {
+            Assert.That(workDirectory, Is.EqualTo(_workDirectory));
+        }
+
+        static IEnumerable<string> WorkDirectorySource()
+        {
+            yield return TestContext.CurrentContext.WorkDirectory;
+        }
+
+    #endregion
+
+    #region Test
+
+    #region Name
+
+    [Test]
         public void ConstructorCanAccessFixtureName()
         {
             Assert.That(_name, Is.EqualTo("TestContextTests"));
+        }
+
+        [Test]
+        public void TestCanAccessItsOwnName()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
         }
 
         [Test]
@@ -110,6 +143,10 @@ namespace NUnit.Framework.Tests
         {
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
         }
+
+        #endregion
+
+        #region FullName
 
         [Test]
         public void SetUpCanAccessTestFullName()
@@ -131,6 +168,10 @@ namespace NUnit.Framework.Tests
                 Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
         }
 
+        #endregion
+
+        #region MethodName
+
         [Test]
         public void SetUpCanAccessTestMethodName()
         {
@@ -149,6 +190,10 @@ namespace NUnit.Framework.Tests
             Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCaseCanAccessItsOwnMethodName"));
         }
 
+        #endregion
+
+        #region Id
+
         [Test]
         public void TestCanAccessItsOwnId()
         {
@@ -161,6 +206,10 @@ namespace NUnit.Framework.Tests
             Assert.That(_setupContext.Test.ID, Is.EqualTo(TestContext.CurrentContext.Test.ID));
         }
 
+        #endregion
+
+        #region Properties
+
         [Test]
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()
@@ -168,16 +217,11 @@ namespace NUnit.Framework.Tests
             Assert.That(TestContext.CurrentContext.Test.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
-        [Test]
-        public void TestCanAccessWorkDirectory()
-        {
-            string workDirectory = TestContext.CurrentContext.WorkDirectory;
-            Assert.NotNull(workDirectory);
-            // SL tests may be running on the desktop
-#if !PORTABLE
-            Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
-#endif
-        }
+        #endregion
+
+        #endregion
+
+        #region Result
 
         [Test]
         public void TestCanAccessTestState_PassingTest()
@@ -237,68 +281,20 @@ namespace NUnit.Framework.Tests
             Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(fixture.StackTrace, Is.Null);
         }
-#if ASYNC
 
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
+        #endregion
+
+        #region Out
+
+#if ASYNC
         [Test]
         public async Task TestContextOut_ShouldFlowWithAsyncExecution()
         {
             var expected = TestContext.Out;
             await YieldAsync();
-            Assert.AreSame(expected, TestContext.Out);
+            Assert.AreEqual(expected, TestContext.Out);
         }
 
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
-        [Test]
-        public async Task TestExecutionContextCurrentContext_ShouldFlowWithAsyncExecution()
-        {
-            var expected = TestExecutionContext.CurrentContext;
-            await YieldAsync();
-            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
-        }
-
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
-        [Test]
-        public async Task TestExecutionContextCurrentContext_ShouldFlowWithParallelAsyncExecution()
-        {
-            var expected = TestExecutionContext.CurrentContext;
-            var parallelResult = await WhenAllAsync(YieldAndReturnContext(), YieldAndReturnContext());
-
-            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
-            Assert.AreSame(expected, parallelResult[0]);
-            Assert.AreSame(expected, parallelResult[1]);
-        }
-
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
-        [Test]
-        public async Task TestExecutionContext_ShouldFlowWithAsyncExecution_ExecutedInParallel()
-        {
-            Func<Task<TestExecutionContext>> functionWithSeparateContext = async () =>
-            {
-                await YieldAsync(); //to start both functions
-                TestExecutionContext.ClearCurrentContext(); //establish new context
-                var expected = TestExecutionContext.CurrentContext;
-                await DelayAsync(300);
-                Assert.AreSame(expected, TestExecutionContext.CurrentContext); //ensure that is still the same within given function call
-                return expected;
-            };
-
-            var results = await WhenAllAsync(functionWithSeparateContext(), functionWithSeparateContext());
-            // both calls have to be successful but have different context
-            Assert.AreNotSame(results[0], results[1]);
-        }
-
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
         [Test]
         public async Task TestContextWriteLine_ShouldNotThrow_WhenExecutedFromAsyncMethod()
         {
@@ -307,9 +303,6 @@ namespace NUnit.Framework.Tests
             Assert.DoesNotThrow(TestContext.WriteLine);
         }
 
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
         [Test]
         public void TestContextOut_ShouldBeAvailableFromOtherThreads()
         {
@@ -329,31 +322,9 @@ namespace NUnit.Framework.Tests
             await Task.Yield();
 #endif
         }
-
-        private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
-        {
-#if NET_4_0
-            return TaskEx.WhenAll(tasks);
-#else
-            return Task.WhenAll(tasks);
 #endif
-        }
 
-        private Task DelayAsync(int milliseconds)
-        {
-#if NET_4_0
-            return TaskEx.Delay(milliseconds);
-#else
-            return Task.Delay(milliseconds);
-#endif
-        }
-
-        private async Task<TestExecutionContext> YieldAndReturnContext()
-        {
-            await YieldAsync();
-            return TestExecutionContext.CurrentContext;
-        }
-#endif
+        #endregion
     }
 
     [TestFixture]

@@ -44,10 +44,6 @@ namespace NUnit.Framework.Internal
     /// Helper class used to save and restore certain static or
     /// singleton settings in the environment that affect tests
     /// or which might be changed by the user tests.
-    ///
-    /// An internal class is used to hold settings and a stack
-    /// of these objects is pushed and popped as Save and Restore
-    /// are called.
     /// </summary>
     public class TestExecutionContext
 #if !PORTABLE && !NETSTANDARD1_6
@@ -164,15 +160,10 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Static Singleton Instance
+        #region CurrentContext Instance
 
-        // NOTE: We use different implementations for various platforms
+        // NOTE: We use different implementations for various platforms.
 
-        // If a user creates a thread then the current context
-        // will be null. This also happens when the compiler
-        // automatically creates threads for async methods.
-        // We create a new context, which is automatically
-        // populated with values taken from the current thread.
 #if NETSTANDARD1_6
         private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
         /// <summary>
@@ -182,27 +173,17 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return _currentContext.Value ?? (_currentContext.Value = new TestExecutionContext());
+                return _currentContext.Value;
             }
             private set
             {
                 _currentContext.Value = value;
             }
         }
-
-        /// <summary>
-        /// Get the current context or return null if none is found.
-        /// </summary>
-        /// <remarks></remarks>
-        public static TestExecutionContext GetTestExecutionContext()
-        {
-            return _currentContext.Value;
-        }
 #elif PORTABLE
-        // In the Silverlight and portable builds, we use a ThreadStatic
-        // field to hold the current TestExecutionContext.
-
-        [ThreadStatic]
+        // The portable build only supports a single thread of
+        // execution, so we can use a simple static field to
+        // hold the current TestExecutionContext.
         private static TestExecutionContext _currentContext;
 
         /// <summary>
@@ -210,31 +191,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
-            get
-            {
-               if (_currentContext == null)
-                    _currentContext = new TestExecutionContext();
-
-                return _currentContext;
-            }
-            private set
-            {
-                _currentContext = value;
-            }
-        }
-
-        /// <summary>
-        /// Get the current context or return null if none is found.
-        /// </summary>
-        /// <remarks></remarks>
-        public static TestExecutionContext GetTestExecutionContext()
-        {
-            // TODO: This will need to be reworked if we re-introduce threading in .NET Standard
-            return _currentContext;
+            get { return _currentContext; }
+            private set { _currentContext = value; }
         }
 #else
         // In all other builds, we use the CallContext
-
         private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
 
         /// <summary>
@@ -248,14 +209,7 @@ namespace NUnit.Framework.Internal
             [SecuritySafeCritical]
             get
             {
-                var context = GetTestExecutionContext();
-                if (context == null) // This can happen on Mono
-                {
-                    context = new TestExecutionContext();
-                    CallContext.SetData(CONTEXT_KEY, context);
-                }
-
-                return context;
+                return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
             }
             // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
             // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
@@ -269,34 +223,7 @@ namespace NUnit.Framework.Internal
                     CallContext.SetData(CONTEXT_KEY, value);
             }
         }
-
-        /// <summary>
-        /// Get the current context or return null if none is found.
-        /// </summary>
-        /// <remarks></remarks>
-        // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
-        // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
-        // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
-        [SecuritySafeCritical]
-        public static TestExecutionContext GetTestExecutionContext()
-        {
-            return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
-        }
 #endif
-
-        #endregion
-
-        #region Static Methods
-
-        /// <summary>
-        /// Clear the current context. This is provided to
-        /// prevent "leakage" of the CallContext containing
-        /// the current context back to any runners.
-        /// </summary>
-        public static void ClearCurrentContext()
-        {
-            CurrentContext = null;
-        }
 
         #endregion
 

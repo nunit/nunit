@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="value">The char to write</param>
         public override void Write(char value)
         {
-            var context = TestExecutionContext.GetTestExecutionContext();
+            var context = TestExecutionContext.CurrentContext;
 
             if (context != null && context.CurrentResult != null)
                 context.CurrentResult.OutWriter.Write(value);
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="value">The string to write</param>
         public override void Write(string value)
         {
-            var context = TestExecutionContext.GetTestExecutionContext();
+            var context = TestExecutionContext.CurrentContext;
 
             if (context != null && context.CurrentResult != null)
                 context.CurrentResult.OutWriter.Write(value);
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="value">The string to write</param>
         public override void WriteLine(string value)
         {
-            var context = TestExecutionContext.GetTestExecutionContext();
+            var context = TestExecutionContext.CurrentContext;
 
             if (context != null && context.CurrentResult != null)
                 context.CurrentResult.OutWriter.WriteLine(value);

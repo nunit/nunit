@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private bool TrySendToListener(string text)
         {
-            var context = TestExecutionContext.GetTestExecutionContext();
+            var context = TestExecutionContext.CurrentContext;
             if (context == null || context.Listener == null)
                 return false;
 

@@ -128,7 +128,7 @@ namespace NUnit.Framework
         {
             get
             {
-                Test test = _testExecutionContext.CurrentTest;
+                Test test = _testExecutionContext?.CurrentTest;
                 if (test != null)
                     return AssemblyHelper.GetDirectoryName(test.TypeInfo.Assembly);
 
@@ -151,7 +151,12 @@ namespace NUnit.Framework
         /// </summary>
         public string WorkDirectory
         {
-            get { return _testExecutionContext.WorkDirectory; }
+            get { return _testExecutionContext?.WorkDirectory ??
+#if PORTABLE
+                    @"\My Documents"; }
+#else
+                    Directory.GetCurrentDirectory(); }
+#endif
         }
 
         /// <summary>
@@ -165,9 +170,9 @@ namespace NUnit.Framework
             get { return _testExecutionContext.RandomGenerator; }
         }
 
-        #endregion
+#endregion
 
-        #region Static Methods
+#region Static Methods
 
         /// <summary>Write the string representation of a boolean value to the current result</summary>
         public static void Write(bool value) { Out.Write(value); }
@@ -297,9 +302,9 @@ namespace NUnit.Framework
             AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
         }
 
-        #endregion
+#endregion
 
-        #region Nested TestAdapter Class
+#region Nested TestAdapter Class
 
         /// <summary>
         /// TestAdapter adapts a Test for consumption by
@@ -309,7 +314,7 @@ namespace NUnit.Framework
         {
             private readonly Test _test;
 
-            #region Constructor
+#region Constructor
 
             /// <summary>
             /// Construct a TestAdapter for a Test
@@ -320,9 +325,9 @@ namespace NUnit.Framework
                 _test = test;
             }
 
-            #endregion
+#endregion
 
-            #region Properties
+#region Properties
 
             /// <summary>
             /// Gets the unique Id of a test
@@ -378,12 +383,12 @@ namespace NUnit.Framework
                 get { return _test.Properties; }
             }
 
-            #endregion
+#endregion
         }
 
-        #endregion
+#endregion
 
-        #region Nested ResultAdapter Class
+#region Nested ResultAdapter Class
 
         /// <summary>
         /// ResultAdapter adapts a TestResult for consumption by
@@ -393,7 +398,7 @@ namespace NUnit.Framework
         {
             private readonly TestResult _result;
 
-            #region Constructor
+#region Constructor
 
             /// <summary>
             /// Construct a ResultAdapter for a TestResult
@@ -404,9 +409,9 @@ namespace NUnit.Framework
                 _result = result;
             }
 
-            #endregion
+#endregion
 
-            #region Properties
+#region Properties
 
             /// <summary>
             /// Gets a ResultState representing the outcome of the test.
@@ -479,9 +484,9 @@ namespace NUnit.Framework
                 get { return _result.InconclusiveCount; }
             }
 
-            #endregion
+#endregion
         }
 
-        #endregion
+#endregion
     }
 }
