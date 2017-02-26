@@ -676,7 +676,8 @@ Task("Appveyor")
     .IsDependentOn("Build")
     .IsDependentOn("Test")
     .IsDependentOn("Package")
-    .IsDependentOn("UploadArtifacts");
+    .IsDependentOn("UploadArtifacts")
+    .IsDependentOn("UploadToCodeCov");
 
 Task("Travis")
     .Description("Builds and tests on Travis")
