@@ -2,7 +2,8 @@
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.5.0
-#addin Cake.Curl
+#addin nuget:https://nuget.org/api/v2/?package=Cake.Curl
+
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
