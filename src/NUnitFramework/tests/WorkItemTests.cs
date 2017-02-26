@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Execution
 
             public static void DummyTest()
             {
-#if !PORTABLE && !NETSTANDARD1_6
+#if !PORTABLE
                 if (Delay > 0)
                     Thread.Sleep(Delay);
 #else

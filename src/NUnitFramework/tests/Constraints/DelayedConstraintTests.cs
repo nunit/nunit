@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !PORTABLE
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -259,7 +259,7 @@ namespace NUnit.Framework.Constraints
 
         private static void Delay(int delay)
         {
-            waitEvent.WaitOne(delay, false);
+            waitEvent.WaitOne(delay);
         }
 
         private static void MethodSetsValues()

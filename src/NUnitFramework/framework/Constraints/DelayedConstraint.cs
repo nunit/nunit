@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !PORTABLE
 using System;
 using System.Diagnostics;
 using System.Threading;

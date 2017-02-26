@@ -61,7 +61,7 @@ namespace NUnit.Tests
 
         private static void Delay()
         {
-#if PORTABLE || NETSTANDARD1_6
+#if PORTABLE
             System.Threading.Tasks.Task.Delay(DELAY);
 #else
             System.Threading.Thread.Sleep(DELAY);

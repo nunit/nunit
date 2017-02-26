@@ -232,11 +232,7 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
-#if !PORTABLE && !NETSTANDARD1_6
-            return _runComplete.WaitOne(timeout, false);
-#else
             return _runComplete.WaitOne(timeout);
-#endif
         }
 
         /// <summary>
