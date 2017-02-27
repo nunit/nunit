@@ -197,7 +197,7 @@ namespace NUnit.Compatibility
         {
             var pinfo = info as PropertyInfo;
             if (pinfo != null)
-                return pinfo.GetMethod.IsPrivate == false;
+                return pinfo.GetMethod?.IsPrivate == false;
 
             var finfo = info as FieldInfo;
             if (finfo != null)
