@@ -230,6 +230,11 @@ namespace NUnitLite
                     if (_testAssembly == null)
                         _testAssembly = AssemblyHelper.Load(testFile);
                 }
+                else
+                {
+                    _textUI.DisplayHelp();
+                    return TextRunner.OK;
+                }
 
 
                 if (_options.WaitBeforeExit && _options.OutFile != null)
