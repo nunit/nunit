@@ -31,7 +31,7 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-    [TestFixture, NonParallelizable] // Uses GlobalSettings
+    [TestFixture]
     public class ToleranceTests
     {
         private NUnitEqualityComparer _comparer;
@@ -50,21 +50,21 @@ namespace NUnit.Framework.Tests.Constraints
             _comparer = new NUnitEqualityComparer();
         }
 
-        [Test]
+        [Test, NonParallelizable]
         public void TestGlobalDefaultTolerance_Success()
         {
             GlobalSettings.DefaultFloatingPointTolerance = 0.1d;
             Assert.That(2.05d, Is.EqualTo(2.0d));
         }
 
-        [Test]
+        [Test, NonParallelizable]
         public void TestGlobalDefaultTolerance_Failure()
         {
             GlobalSettings.DefaultFloatingPointTolerance = 0.01d;
             Assert.That(2.05d, Is.Not.EqualTo(2.0d));
         }
 
-        [Test]
+        [Test, NonParallelizable]
         public void TestToleranceDefault()
         {
             GlobalSettings.DefaultFloatingPointTolerance = 0.5d;
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.IsTrue(_comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance ));
         }
 
-        [Test]
+        [Test, NonParallelizable]
         public void TestToleranceExact()
         {
             GlobalSettings.DefaultFloatingPointTolerance = 0.5d;
