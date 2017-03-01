@@ -360,19 +360,18 @@ namespace NUnit.Framework
 
         private static void ReportFailure(string message)
         {
-            // Failure is recorded in <assertion> element in all cases
-            TestExecutionContext.CurrentContext.CurrentResult.RecordAssertion(
-                AssertionStatus.Failed, message, GetStackTrace());
-
             // If we are outside any multiple assert block, then throw
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
                 throw new AssertionException(message);
+
+            // Otherwise, just record the failure in an <assertion> element
+            var result = TestExecutionContext.CurrentContext.CurrentResult;
+            result.RecordAssertion(AssertionStatus.Failed, message, GetStackTrace());
         }
 
         private static void IssueWarning(string message)
         {
             var result = TestExecutionContext.CurrentContext.CurrentResult;
-
             result.RecordAssertion(AssertionStatus.Warning, message, GetStackTrace());
         }
 
