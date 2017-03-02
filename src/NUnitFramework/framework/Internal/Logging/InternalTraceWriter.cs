@@ -95,7 +95,10 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
         public override void WriteLine(string value)
         {
-            writer.WriteLine(value);
+            lock (myLock)
+            {
+                writer.WriteLine(value);
+            }
         }
 
         /// <summary>
