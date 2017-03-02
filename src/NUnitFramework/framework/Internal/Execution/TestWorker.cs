@@ -42,6 +42,8 @@ namespace NUnit.Framework.Internal.Execution
 
         private bool _running;
 
+        #region Events
+
         /// <summary>
         /// Event signaled immediately before executing a WorkItem
         /// </summary>
@@ -51,7 +53,11 @@ namespace NUnit.Framework.Internal.Execution
         /// Event signaled immediately after executing a WorkItem
         /// </summary>
         public event EventHandler Idle;
-        
+
+        #endregion
+
+        #region Constructor
+
         /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
@@ -66,6 +72,10 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Name = name;
             _workerThread.SetApartmentState(apartmentState);
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// The name of this worker - also used for the thread
@@ -82,6 +92,8 @@ namespace NUnit.Framework.Internal.Execution
         {
             get { return _workerThread.IsAlive; }
         }
+
+        #endregion
 
         /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
@@ -102,7 +114,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (_currentWorkItem == null)
                         break;
 
-                    log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Test.Name);
+                    log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Name);
 
                     if (Busy != null)
                         Busy(this, EventArgs.Empty);
