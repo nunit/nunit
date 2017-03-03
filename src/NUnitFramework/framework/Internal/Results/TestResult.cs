@@ -481,6 +481,11 @@ namespace NUnit.Framework.Internal
             if (ex is NUnitException)
                 ex = ex.InnerException;
 
+            if (ex is AssertionException)
+            {
+                AssertionResults.Add(new AssertionResult(AssertionStatus.Failed, ex.Message, StackFilter.DefaultFilter.Filter(ex.StackTrace)));
+            }
+
             if (ex is ResultStateException)
             {
                 string message = ex is MultipleAssertException
