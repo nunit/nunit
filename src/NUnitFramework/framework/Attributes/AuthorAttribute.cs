@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Provides the Author of a test or test fixture. 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true, Inherited=false)]
     public class AuthorAttribute : PropertyAttribute
     {
         /// <summary>

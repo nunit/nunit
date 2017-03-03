@@ -219,8 +219,7 @@ namespace NUnit.Framework.Internal.Builders
 
         private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)
         {
-            testMethod.RunState = RunState.NotRunnable;
-            testMethod.Properties.Set(PropertyNames.SkipReason, reason);
+            testMethod.MakeInvalid(reason);
             return false;
         }
 

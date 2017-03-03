@@ -34,8 +34,8 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {
-    [TestFixture]
-    [Author("Rob Prouse", "rob@prouse.org")]
+    [TestFixture(Author = "Rob Prouse <rob@prouse.org>"), Author("Charlie Poole", "Charlie@poole.org")]
+    [Author("NUnit")]
     [TestOf(typeof(AuthorAttribute))]
     public class AuthorTests
     {
@@ -95,5 +95,27 @@ namespace NUnit.Framework.Tests.Attributes
             var testCase = (Test)parameterizedMethodSuite.Tests[0];
             Assert.AreEqual("Charlie Poole", testCase.Properties.Get(PropertyNames.Author));
         }
+
+        #region Multiple Authors
+        [Test(Author = "Rob Prouse <rob@prouse.org>"),Author("Charlie Poole", "charlie@poole.org")]
+        [Author("NUnit")]
+        public void TestMethodMultipleAuthors()
+        {
+            Test test = TestBuilder.MakeTestFromMethod(FixtureType, "TestMethodMultipleAuthors");
+            Assert.That(test.Properties[PropertyNames.Author], Is.EquivalentTo(
+                new[] { "Rob Prouse <rob@prouse.org>","Charlie Poole <charlie@poole.org>", "NUnit"}));
+        }
+
+        [Test]
+        public void TestFixtureMultipleAuthors()
+        {
+            var suite = new TestSuite("suite");
+            suite.Add(TestBuilder.MakeFixture(FixtureType));
+            var mockFixtureSuite = (TestSuite)suite.Tests[0];
+            Assert.That(mockFixtureSuite.Properties[PropertyNames.Author], Is.EquivalentTo(
+                new[] { "Rob Prouse", "Charlie Poole <charlie@poole.org>", "NUnit" }));
+        }
+
+        #endregion
     }
 }

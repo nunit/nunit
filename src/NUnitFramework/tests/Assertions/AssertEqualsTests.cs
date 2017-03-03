@@ -28,7 +28,6 @@ using System.IO;
 namespace NUnit.Framework.Assertions
 {
 	[TestFixture]
-    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
     public class AssertEqualsTests
     {
         [Test]
@@ -513,7 +512,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain( "+/- 0.001"));
         }
 
-        [Test]
+        [Test, NonParallelizable]
         public void DoubleNotEqualMessageDisplaysDefaultTolerance()
         {
             double d1 = 0.15;
@@ -534,7 +533,7 @@ namespace NUnit.Framework.Assertions
             }
         }
 
-        [Test]
+        [Test, NonParallelizable]
         public void DoubleNotEqualWithNanDoesNotDisplayDefaultTolerance()
         {
             double d1 = double.NaN;

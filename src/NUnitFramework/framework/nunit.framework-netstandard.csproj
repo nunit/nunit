@@ -17,6 +17,7 @@
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -101,6 +102,7 @@
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />
+    <Compile Include="Attributes\NonParallelizableAttribute.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
     <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />

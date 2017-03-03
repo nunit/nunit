@@ -20,6 +20,7 @@
     <BaseNuGetRuntimeIdentifier>win7</BaseNuGetRuntimeIdentifier>
     <NoStdLib>true</NoStdLib>
     <NoWarn>$(NoWarn);1701</NoWarn>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>

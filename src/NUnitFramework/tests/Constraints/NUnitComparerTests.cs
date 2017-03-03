@@ -45,7 +45,6 @@ namespace NUnit.Framework.Constraints
         [TestCase(4.0d, 4.0f)]
         [TestCase(4.0f, 4)]
         [TestCase(4.0f, 4.0d)]
-        [TestCase(SpecialValue.Null, SpecialValue.Null)]
         [TestCase(null, null)]
         public void EqualItems(object x, object y)
         {
@@ -61,7 +60,6 @@ namespace NUnit.Framework.Constraints
         [TestCase(4.0d, 2.0f)]
         [TestCase(4.0f, 2)]
         [TestCase(4.0f, 2.0d)]
-        [TestCase(4, SpecialValue.Null)]
         [TestCase(4, null)]
         public void UnequalItems(object greater, object lesser)
         {

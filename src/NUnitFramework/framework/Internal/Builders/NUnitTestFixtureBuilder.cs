@@ -166,8 +166,7 @@ namespace NUnit.Framework.Internal.Builders
             // TODO: Check this logic added from Neil's build.
             if (fixture.TypeInfo.ContainsGenericParameters)
             {
-                fixture.RunState = RunState.NotRunnable;
-                fixture.Properties.Set(PropertyNames.SkipReason, NO_TYPE_ARGS_MSG);
+                fixture.MakeInvalid(NO_TYPE_ARGS_MSG);
                 return;
             }
 
@@ -210,8 +209,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             if (fixture.TypeInfo.ContainsGenericParameters)
             {
-                fixture.RunState = RunState.NotRunnable;
-                fixture.Properties.Set(PropertyNames.SkipReason, NO_TYPE_ARGS_MSG);
+                fixture.MakeInvalid(NO_TYPE_ARGS_MSG);
             }
             else if (!fixture.TypeInfo.IsStaticClass)
             {
@@ -219,8 +217,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 if (!fixture.TypeInfo.HasConstructor(argTypes))
                 {
-                    fixture.RunState = RunState.NotRunnable;
-                    fixture.Properties.Set(PropertyNames.SkipReason, "No suitable constructor was found");
+                    fixture.MakeInvalid("No suitable constructor was found");
                 }
             }
         }

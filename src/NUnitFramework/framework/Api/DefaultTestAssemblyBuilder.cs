@@ -115,8 +115,7 @@ namespace NUnit.Framework.Api
             catch (Exception ex)
             {
                 testAssembly = new TestAssembly(assemblyName);
-                testAssembly.RunState = RunState.NotRunnable;
-                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
+                testAssembly.MakeInvalid(ExceptionHelper.BuildFriendlyMessage(ex));
             }
 
             return testAssembly;
@@ -174,8 +173,7 @@ namespace NUnit.Framework.Api
             catch (Exception ex)
             {
                 testAssembly = new TestAssembly(assemblyPath);
-                testAssembly.RunState = RunState.NotRunnable;
-                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
+                testAssembly.MakeInvalid(ExceptionHelper.BuildFriendlyMessage(ex));
             }
 
             return testAssembly;
@@ -266,8 +264,7 @@ namespace NUnit.Framework.Api
 
             if (fixtures.Count == 0)
             {
-                testAssembly.RunState = RunState.NotRunnable;
-                testAssembly.Properties.Set(PropertyNames.SkipReason, "Has no TestFixtures");
+                testAssembly.MakeInvalid("Has no TestFixtures");
             }
             else
             {

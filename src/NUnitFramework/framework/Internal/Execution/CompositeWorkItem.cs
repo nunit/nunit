@@ -260,7 +260,9 @@ namespace NUnit.Framework.Internal.Execution
                 if (_childFilter.Pass(test))
                 {
                     var child = WorkItem.CreateWorkItem(test, _childFilter);
-                    child.WorkerId = this.WorkerId;
+#if PARALLEL
+                    child.TestWorker = this.TestWorker;
+#endif
 
 #if !PORTABLE && !NETSTANDARD1_6
                     if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)

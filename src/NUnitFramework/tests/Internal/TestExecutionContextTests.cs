@@ -198,11 +198,11 @@ namespace NUnit.Framework.Internal
 
 #if !PORTABLE && !NETSTANDARD1_6
         [Test]
-        public void TestHasWorkerIdWhenParallel()
+        public void TestHasWorkerWhenParallel()
         {
-            var workerId = TestExecutionContext.CurrentContext.WorkerId;
+            var worker = TestExecutionContext.CurrentContext.TestWorker;
             var isRunningUnderTestWorker = TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher;
-            Assert.That(workerId != null || !isRunningUnderTestWorker);
+            Assert.That(worker != null || !isRunningUnderTestWorker);
         }
 #endif
 

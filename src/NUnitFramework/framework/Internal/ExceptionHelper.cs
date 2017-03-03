@@ -71,22 +71,26 @@ namespace NUnit.Framework.Internal
         // TODO: Move to a utility class
         /// <summary>
         /// Builds up a message, using the Message field of the specified exception
-        /// as well as any InnerExceptions.
+        /// as well as any InnerExceptions. 
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns>A combined message string.</returns>
         public static string BuildMessage(Exception exception)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(CultureInfo.CurrentCulture, "{0} : {1}", exception.GetType().ToString(), exception.Message);
+            const bool isFriendlyMessage = false;
+            return BuildMessage(exception, isFriendlyMessage);
+        }
 
-            foreach (Exception inner in FlattenExceptionHierarchy(exception))
-            {
-                sb.Append(Environment.NewLine);
-                sb.AppendFormat(CultureInfo.CurrentCulture, "  ----> {0} : {1}", inner.GetType().ToString(), inner.Message);
-            }
-
-            return sb.ToString();
+        /// <summary>
+        /// Builds up a message, using the Message field of the specified exception
+        /// as well as any InnerExceptions. Excludes exception names, creating more readable message
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <returns>A combined message string.</returns>
+        public static string BuildFriendlyMessage(Exception exception)
+        {
+            const bool isFriendlyMessage = true;
+            return BuildMessage(exception, isFriendlyMessage);
         }
 
         /// <summary>
@@ -128,10 +132,42 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        private static string BuildMessage(Exception exception, bool isFriendlyMessage)
+        {
+            StringBuilder sb = new StringBuilder();
+            WriteException(sb, exception, isFriendlyMessage);
+
+            foreach (Exception inner in FlattenExceptionHierarchy(exception))
+            {
+                sb.Append(Environment.NewLine);
+                sb.Append("  ----> ");
+                WriteException(sb, inner, isFriendlyMessage);
+            }
+
+            return sb.ToString();
+        }
+
+        private static void WriteException(StringBuilder sb, Exception inner, bool isFriendlyMessage)
+        {
+            if (!isFriendlyMessage)
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0} : ", inner.GetType().ToString());
+            }
+            sb.Append(inner.Message);
+        }
+
         private static List<Exception> FlattenExceptionHierarchy(Exception exception)
         {
             var result = new List<Exception>();
 
+            if (exception is ReflectionTypeLoadException)
+            {
+                var reflectionException = exception as ReflectionTypeLoadException;
+                result.AddRange(reflectionException.LoaderExceptions);
+
+                foreach (var innerException in reflectionException.LoaderExceptions)
+                    result.AddRange(FlattenExceptionHierarchy(innerException));
+            }
 #if ASYNC
             if (exception is AggregateException)
             {

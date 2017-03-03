@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,10 +21,25 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
+using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 
-//
-// Current version for the NUnit Framework
-//
-[assembly: AssemblyVersion("3.7.0.0")]
-[assembly: AssemblyFileVersion("3.7.0.0")]
+namespace NUnit.Framework
+{
+    /// <summary>
+    /// ParallelizableAttribute is used to mark tests that may be run in parallel.
+    /// </summary>
+    [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
+    public sealed class NonParallelizableAttribute : PropertyAttribute
+    {
+        /// <summary>
+        /// Construct a NonParallelizableAttribute.
+        /// </summary>
+        public NonParallelizableAttribute()
+        {
+            Properties.Add(PropertyNames.ParallelScope, ParallelScope.None);
+        }
+    }
+}

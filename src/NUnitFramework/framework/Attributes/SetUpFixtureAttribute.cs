@@ -51,10 +51,7 @@ namespace NUnit.Framework
             {
                 string reason = null;
                 if (!IsValidFixtureType(typeInfo, ref reason))
-                {
-                    fixture.RunState = RunState.NotRunnable;
-                    fixture.Properties.Set(PropertyNames.SkipReason, reason);
-                }
+                    fixture.MakeInvalid(reason);
             }
 
             return new TestSuite[] { fixture };

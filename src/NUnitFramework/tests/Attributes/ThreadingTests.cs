@@ -37,6 +37,8 @@ namespace NUnit.Framework.Attributes
         {
             ParentThread = Thread.CurrentThread;
             ParentThreadApartment = GetApartmentState(ParentThread);
+
+            TestContext.AddFormatter<Thread>((t) => "Thread #" + ((Thread)t).ManagedThreadId);
         }
 
         [SetUp]

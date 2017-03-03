@@ -84,11 +84,10 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the test</param>
         protected Test( string pathName, string name ) 
         {
-            Guard.ArgumentNotNullOrEmpty(pathName, "pathName");
-
             Initialize(name);
 
-            FullName = pathName + "." + name;
+            if (!string.IsNullOrEmpty(pathName))
+                FullName = pathName + "." + name;
         }
 
         /// <summary>
@@ -349,6 +348,18 @@ namespace NUnit.Framework.Internal
                 iApply.ApplyToTest(this);
         }
 #endif
+
+        /// <summary>
+        /// Mark the test as Invalid (not runnable) specifying a reason
+        /// </summary>
+        /// <param name="reason">The reason the test is not runnable</param>
+        public void MakeInvalid(string reason)
+        {
+            Guard.ArgumentNotNullOrEmpty(reason, "reason");
+
+            RunState = RunState.NotRunnable;
+            Properties.Add(PropertyNames.SkipReason, reason);
+        }
 
         #endregion
 

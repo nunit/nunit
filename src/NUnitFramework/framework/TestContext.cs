@@ -110,13 +110,15 @@ namespace NUnit.Framework
             get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
         }
 
+#if PARALLEL
         /// <summary>
         /// Gets the unique name of the  Worker that is executing this test.
         /// </summary>
         public string WorkerId
         {
-            get { return _testExecutionContext.WorkerId; }
+            get { return _testExecutionContext.TestWorker.Name; }
         }
+#endif
 
 #if !PORTABLE
         /// <summary>

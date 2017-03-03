@@ -737,6 +737,15 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Returns a new CollectionContainsConstraint checking for the
+        /// presence of a particular object in the collection.
+        /// </summary>
+        public CollectionContainsConstraint Contain(object expected)
+        {
+            return Contains(expected);
+        }
+
+        /// <summary>
         /// Returns a new ContainsConstraint. This constraint
         /// will, in turn, make use of the appropriate second-level
         /// constraint, depending on the type of the actual argument. 
@@ -746,7 +755,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public ContainsConstraint Contain(string expected)
         {
-            return (ContainsConstraint)this.Append(new ContainsConstraint(expected));
+            return Contains(expected);
         }
 
         #endregion
