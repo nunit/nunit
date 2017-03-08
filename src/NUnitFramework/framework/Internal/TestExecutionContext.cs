@@ -138,7 +138,6 @@ namespace NUnit.Framework.Internal
             CurrentTest = other.CurrentTest;
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
-            WorkDirectory = other.WorkDirectory;
             _listener = other._listener;
             StopOnError = other.StopOnError;
             TestCaseTimeout = other.TestCaseTimeout;
@@ -268,11 +267,6 @@ namespace NUnit.Framework.Internal
         /// object on which tests are being executed.
         /// </summary>
         public object TestObject { get; set; }
-
-        /// <summary>
-        /// Get or set the working directory
-        /// </summary>
-        public string WorkDirectory { get; set; }
 
         /// <summary>
         /// Get or set indicator that run should stop on the first error

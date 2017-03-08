@@ -484,32 +484,6 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region WorkDirectory
-
-        [Test]
-        public void CanAccessWorkDirectory()
-        {
-            Assert.NotNull(_fixtureContext.WorkDirectory);
-#if !PORTABLE
-            DirectoryAssert.Exists(_fixtureContext.WorkDirectory);
-#endif
-            Assert.That(_setupContext.WorkDirectory, Is.EqualTo(_fixtureContext.WorkDirectory));
-            Assert.That(TestExecutionContext.CurrentContext.WorkDirectory, Is.EqualTo(_setupContext.WorkDirectory));
-        }
-
-#if ASYNC
-        [Test]
-        public async Task CanAccessWorkDirectory_Async()
-        {
-            var workDir = TestExecutionContext.CurrentContext.WorkDirectory;
-            Assert.That(workDir, Is.EqualTo(_setupContext.WorkDirectory));
-            await YieldAsync();
-            Assert.That(TestExecutionContext.CurrentContext.WorkDirectory, Is.EqualTo(workDir));
-        }
-#endif
-
-        #endregion
-
         #region StopOnError
 
         [Test]

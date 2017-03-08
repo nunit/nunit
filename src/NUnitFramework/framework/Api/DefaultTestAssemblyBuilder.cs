@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Security;
 using NUnit.Compatibility;
@@ -129,6 +130,16 @@ namespace NUnit.Framework.Api
             {
                 if (options.ContainsKey(FrameworkPackageSettings.DefaultTestNamePattern))
                     TestNameGenerator.DefaultTestNamePattern = options[FrameworkPackageSettings.DefaultTestNamePattern] as string;
+
+                if (options.ContainsKey(FrameworkPackageSettings.WorkDirectory))
+                    TestContext.DefaultWorkDirectory = options[FrameworkPackageSettings.WorkDirectory] as string;
+                else
+                    TestContext.DefaultWorkDirectory =
+#if PORTABLE
+                        @"\My Documents";
+#else
+                        Directory.GetCurrentDirectory();
+#endif
 
                 if (options.ContainsKey(FrameworkPackageSettings.TestParametersDictionary))
                 {
