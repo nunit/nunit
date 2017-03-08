@@ -95,6 +95,13 @@ namespace NUnit.Framework
         public static readonly TestParameters Parameters = new TestParameters();
 
         /// <summary>
+        /// Static DefaultWorkDirectory is now used as the source
+        /// of the public instance property WorkDirectory. This is
+        /// a bit odd but necessary to avoid breaking user tests.
+        /// </summary>
+        internal static string DefaultWorkDirectory;
+
+        /// <summary>
         /// Get a representation of the current test.
         /// </summary>
         public TestAdapter Test
@@ -151,12 +158,10 @@ namespace NUnit.Framework
         /// </summary>
         public string WorkDirectory
         {
-            get { return _testExecutionContext?.WorkDirectory ??
-#if PORTABLE
-                    @"\My Documents"; }
-#else
-                    Directory.GetCurrentDirectory(); }
-#endif
+            get
+            {
+                return DefaultWorkDirectory;
+            }
         }
 
         /// <summary>

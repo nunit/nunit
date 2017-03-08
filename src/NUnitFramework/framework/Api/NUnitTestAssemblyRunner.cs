@@ -310,15 +310,6 @@ namespace NUnit.Framework.Api
             if (Settings.ContainsKey(FrameworkPackageSettings.StopOnError))
                 Context.StopOnError = (bool)Settings[FrameworkPackageSettings.StopOnError];
 
-            if (Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory))
-                Context.WorkDirectory = (string)Settings[FrameworkPackageSettings.WorkDirectory];
-            else
-#if PORTABLE
-                Context.WorkDirectory = @"\My Documents";
-#else
-                Context.WorkDirectory = Directory.GetCurrentDirectory();
-#endif
-
             // Apply attributes to the context
 
             // Set the listener - overriding runners may replace this
