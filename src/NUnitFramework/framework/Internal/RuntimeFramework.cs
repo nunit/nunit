@@ -361,7 +361,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsRuntimeTypeName(string name)
         {
-            return TypeHelper.GetEnumNames( typeof(RuntimeType)).Any( item => item.ToLower() == name.ToLower() );
+            return Enum.GetNames( typeof(RuntimeType)).Any( item => item.ToLower() == name.ToLower() );
         }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)

@@ -487,7 +487,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object NextEnum(Type type)
         {
-            Array enums = TypeHelper.GetEnumValues(type);
+            Array enums = Enum.GetValues(type);
             return enums.GetValue(Next(0, enums.Length));
         }
 

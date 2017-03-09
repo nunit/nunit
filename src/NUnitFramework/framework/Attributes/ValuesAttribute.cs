@@ -104,7 +104,7 @@ namespace NUnit.Framework
 
             if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
             {
-                return TypeHelper.GetEnumValues(targetType);
+                return Enum.GetValues(targetType);
             }
             if (targetType == typeof(bool) && data.Length == 0)
             {
