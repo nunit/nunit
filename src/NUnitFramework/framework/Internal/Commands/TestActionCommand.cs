@@ -22,29 +22,31 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
-    using Interfaces;
-
     /// <summary>
-    /// TestActionCommand runs the BeforeTest actions for a test,
-    /// then runs the test and finally runs the AfterTestActions.
+    /// TestActionCommand handles a single ITestAction applied
+    /// to a test. It runs the BeforeTest method, then runs the
+    /// test and finally runs the AfterTest method.
     /// </summary>
     public class TestActionCommand : DelegatingTestCommand
     {
-        private IList<TestActionItem> _actions = new List<TestActionItem>();
+        private ITestAction _action;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public TestActionCommand(TestCommand innerCommand)
+        /// <param name="action">The TestAction with which to wrap the inner command.</param>
+        public TestActionCommand(TestCommand innerCommand, ITestAction action)
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
+            Guard.ArgumentNotNull(action, nameof(action));
+
+            _action = action;
         }
 
         /// <summary>
@@ -57,26 +59,9 @@ namespace NUnit.Framework.Internal.Commands
             if (Test.Fixture == null)
                 Test.Fixture = context.TestObject;
 
-            // In the current implementation, upstream actions only apply to tests. If that should change in the future,
-            // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
-            // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
-            foreach (ITestAction action in context.UpstreamActions)
-            {
-                System.Diagnostics.Debug.Assert(
-                    action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test,
-                    "Invalid target on upstream action: " + action.Targets.ToString());
-
-                _actions.Add(new TestActionItem(action));
-            }
-
-            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method.MethodInfo))
-                if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
-                    _actions.Add(new TestActionItem(action));
-
             try
             {
-                for (int i = 0; i < _actions.Count; i++)
-                    _actions[i].BeforeTest(Test);
+                _action.BeforeTest(Test);
 
                 context.CurrentResult = innerCommand.Execute(context);
             }
@@ -91,8 +76,7 @@ namespace NUnit.Framework.Internal.Commands
             finally
             {
                 if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                    for (int i = _actions.Count - 1; i >= 0; i--)
-                        _actions[i].AfterTest(Test);
+                    _action.AfterTest(Test);
             }
 
             return context.CurrentResult;

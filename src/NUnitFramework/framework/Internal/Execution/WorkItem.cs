@@ -69,9 +69,11 @@ namespace NUnit.Framework.Internal.Execution
         /// Construct a WorkItem for a particular test.
         /// </summary>
         /// <param name="test">The test that the WorkItem will run</param>
-        public WorkItem(Test test)
+        /// <param name="filter">Filter used to include or exclude child items</param>
+        public WorkItem(Test test, ITestFilter filter)
         {
             Test = test;
+            Filter = filter;
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
             Actions = new List<ITestAction>();
@@ -130,6 +132,11 @@ namespace NUnit.Framework.Internal.Execution
         /// The test being executed by the work item
         /// </summary>
         public Test Test { get; private set; }
+
+        /// <summary>
+        /// Filter used to include or exclude child tests
+        /// </summary>
+        public ITestFilter Filter { get; private set; }
 
         /// <summary>
         /// The execution context

@@ -42,7 +42,6 @@ namespace NUnit.Framework.Internal.Execution
 
         private TestSuite _suite;
         private TestSuiteResult _suiteResult;
-        private ITestFilter _childFilter;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
         private List<WorkItem> _children;
@@ -70,11 +69,10 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="suite">The TestSuite to be executed</param>
         /// <param name="childFilter">A filter used to select child tests</param>
         public CompositeWorkItem(TestSuite suite, ITestFilter childFilter)
-            : base(suite)
+            : base(suite, childFilter)
         {
             _suite = suite;
             _suiteResult = Result as TestSuiteResult;
-            _childFilter = childFilter;
             _countOrder = 0;
         }
 
@@ -91,7 +89,7 @@ namespace NUnit.Framework.Internal.Execution
             InitializeSetUpAndTearDownCommands();
 
             if (!CheckForCancellation())
-                if (Test.RunState == RunState.Explicit && !_childFilter.IsExplicitMatch(Test))
+                if (Test.RunState == RunState.Explicit && !Filter.IsExplicitMatch(Test))
                     SkipFixture(ResultState.Explicit, GetSkipReason(), null);
                 else
                     switch (Test.RunState)
@@ -257,9 +255,9 @@ namespace NUnit.Framework.Internal.Execution
 
             foreach (ITest test in _suite.Tests)
             {
-                if (_childFilter.Pass(test))
+                if (Filter.Pass(test))
                 {
-                    var child = WorkItem.CreateWorkItem(test, _childFilter);
+                    var child = WorkItem.CreateWorkItem(test, Filter);
 #if PARALLEL
                     child.TestWorker = this.TestWorker;
 #endif
@@ -326,7 +324,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (Test child in suite.Tests)
             {
-                if (_childFilter.Pass(child))
+                if (Filter.Pass(child))
                 {
                     TestResult childResult = child.MakeTestResult();
                     childResult.SetResult(resultState, message);

@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             // Handle skipped tests
             if (suite.RunState != RunState.Runnable && suite.RunState != RunState.Explicit)
-                return MakeSkipCommand(suite);
+                return new SkipCommand(suite);
 
             // Build the OneTimeSetUpCommand itself
             TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown, actions);
@@ -95,8 +95,10 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Creates a test command for use in running this test.
         /// </summary>
-        /// <returns></returns>
-        public static TestCommand MakeTestCommand(TestMethod test)
+        /// <param name="test">The test method for which this is a command</param>
+        /// <param name="actions">List of upstream test actions to be taken</param>
+        /// <returns>A TestCommand</returns>
+        public static TestCommand MakeTestCommand(TestMethod test, IList<ITestAction> actions)
         {
             // Command to execute test
             TestCommand command = new TestMethodCommand(test);
@@ -105,8 +107,27 @@ namespace NUnit.Framework.Internal.Execution
             foreach (IWrapTestMethod wrapper in test.Method.GetCustomAttributes<IWrapTestMethod>(true))
                 command = wrapper.Wrap(command);
 
-            // Wrap in TestActionCommand
-            command = new TestActionCommand(command);
+            // Create BeforeAfterCommands using attributes of the method
+            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(test.Method.MethodInfo))
+                if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
+                    command = new TestActionCommand(command, action);
+
+            // In the current implementation, upstream actions only apply to tests. If that should change in the future,
+            // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
+            // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
+            int index = actions.Count;
+            while (--index >= 0)
+            {
+                ITestAction action = actions[index];
+                System.Diagnostics.Debug.Assert(
+                    action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test,
+                    "Invalid target on upstream action: " + action.Targets.ToString());
+
+                command = new TestActionCommand(command, action);
+            }
+
+            //// Wrap in TestActionCommand
+            //command = new TestActionCommand(command);
 
             // Wrap in SetUpTearDownCommand
             command = new SetUpTearDownCommand(command);
@@ -121,15 +142,6 @@ namespace NUnit.Framework.Internal.Execution
                 command = new ApplyChangesToContextCommand(command, changes);
 
             return command;
-        }
-
-        /// <summary>
-        /// Creates a command for skipping a test. The result returned will
-        /// depend on the test RunState.
-        /// </summary>
-        public static SkipCommand MakeSkipCommand(Test test)
-        {
-            return new SkipCommand(test);
         }
 
         /// <summary>

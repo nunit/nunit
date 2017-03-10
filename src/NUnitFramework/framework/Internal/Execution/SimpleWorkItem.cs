@@ -35,28 +35,26 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItem : WorkItem
     {
-        private TestCommand _command;
-
         /// <summary>
         /// Construct a simple work item for a test.
         /// </summary>
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
-        public SimpleWorkItem(TestMethod test, ITestFilter filter) : base(test) 
-        {
-            _command = test.RunState == RunState.Runnable || test.RunState == RunState.Explicit && filter.IsExplicitMatch(test)
-                ? CommandBuilder.MakeTestCommand(test)
-                : CommandBuilder.MakeSkipCommand(test);
-        }
+        public SimpleWorkItem(TestMethod test, ITestFilter filter) 
+            : base(test, filter) { }
 
         /// <summary>
         /// Method that performs actually performs the work.
         /// </summary>
         protected override void PerformWork()
         {
+            var command = Test.RunState == RunState.Runnable || Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test)
+                ? CommandBuilder.MakeTestCommand((TestMethod)Test, Context.UpstreamActions)
+                : new SkipCommand(Test);
+
             try
             {
-                Result = _command.Execute(Context);
+                Result = command.Execute(Context);
             }
             finally
             {
