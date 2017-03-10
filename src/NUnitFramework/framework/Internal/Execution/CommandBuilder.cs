@@ -112,6 +112,9 @@ namespace NUnit.Framework.Internal.Execution
                 if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
                     command = new TestActionCommand(command, action);
 
+            // Wrap in SetUpTearDownCommand
+            command = new SetUpTearDownCommand(command);
+
             // In the current implementation, upstream actions only apply to tests. If that should change in the future,
             // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
             // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
@@ -125,12 +128,6 @@ namespace NUnit.Framework.Internal.Execution
 
                 command = new TestActionCommand(command, action);
             }
-
-            //// Wrap in TestActionCommand
-            //command = new TestActionCommand(command);
-
-            // Wrap in SetUpTearDownCommand
-            command = new SetUpTearDownCommand(command);
 
             // Add wrappers that apply before setup and after teardown
             foreach (ICommandWrapper decorator in test.Method.GetCustomAttributes<IWrapSetUpTearDown>(true))
