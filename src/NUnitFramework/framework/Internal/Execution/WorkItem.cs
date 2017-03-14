@@ -76,7 +76,6 @@ namespace NUnit.Framework.Internal.Execution
             Filter = filter;
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
-            Actions = new List<ITestAction>();
 
             ParallelScope = Test.Properties.ContainsKey(PropertyNames.ParallelScope)
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
@@ -105,13 +104,6 @@ namespace NUnit.Framework.Internal.Execution
             Guard.OperationValid(Context == null, "The context has already been initialized");
 
             Context = context;
-
-            if (Test is TestAssembly)
-                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((TestAssembly)Test).Assembly));
-            else if (Test is ParameterizedMethodSuite)
-                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(Test.Method.MethodInfo));
-            else if (Test.TypeInfo != null)
-                Actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.TypeInfo.Type));
         }
 
         #endregion
@@ -149,11 +141,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestWorker TestWorker {get; internal set;}
 #endif
-
-        /// <summary>
-        /// The test actions to be performed before and after this test
-        /// </summary>
-        public List<ITestAction> Actions { get; private set; }
 
         /// <summary>
         /// The test result

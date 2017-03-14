@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -266,7 +268,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
-        public abstract System.Collections.Generic.IList<ITest> Tests { get; }
+        public abstract IList<ITest> Tests { get; }
 
         /// <summary>
         /// Gets or sets a fixture object for running this test.
@@ -294,6 +296,19 @@ namespace NUnit.Framework.Internal
         #region Internal Properties
 
         internal bool RequiresThread { get; set; }
+
+        private ITestAction[] _actions;
+
+        internal ITestAction[] Actions
+        {
+            get
+            {
+                if (_actions == null)
+                    _actions = GetTestActions();
+
+                return _actions;
+            }
+        }
         
         #endregion
 
@@ -383,6 +398,52 @@ namespace NUnit.Framework.Internal
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
+        }
+
+        /// <summary>
+        /// Get a list of all ITestActions on this test.
+        /// </summary>
+        protected virtual ITestAction[] GetTestActions()
+        {
+            if (Method != null)
+#if PORTABLE || NETSTANDARD1_6
+                return Method.GetCustomAttributes<ITestAction>(false).ToArray();
+#else
+                return (ITestAction[])Method.MethodInfo.GetCustomAttributes(typeof(ITestAction), false);
+#endif
+
+            if (TypeInfo != null)
+                return GetActionsForType(TypeInfo.Type);
+
+            return new ITestAction[0];
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static ITestAction[] GetActionsForType(Type type)
+        {
+            var actions = new List<ITestAction>();
+
+            if (type != null && type != typeof(object))
+            {
+                actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
+
+#if PORTABLE || NETSTANDARD1_6
+                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
+                    actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false).ToArray());
+
+                actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false).ToArray());
+#else
+                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
+                    actions.AddRange((ITestAction[])interfaceType.GetTypeInfo().GetCustomAttributes(typeof(ITestAction), false));
+
+                actions.AddRange((ITestAction[])type.GetTypeInfo().GetCustomAttributes(typeof(ITestAction), false));
+#endif
+            }
+
+            return actions.ToArray();
         }
 
         #endregion

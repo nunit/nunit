@@ -93,55 +93,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Creates a test command for use in running this test.
-        /// </summary>
-        /// <param name="test">The test method for which this is a command</param>
-        /// <param name="actions">List of upstream test actions to be taken</param>
-        /// <returns>A TestCommand</returns>
-        public static TestCommand MakeTestCommand(TestMethod test, IList<ITestAction> actions)
-        {
-            // Command to execute test
-            TestCommand command = new TestMethodCommand(test);
-
-            // Add any wrappers to the TestMethodCommand
-            foreach (IWrapTestMethod wrapper in test.Method.GetCustomAttributes<IWrapTestMethod>(true))
-                command = wrapper.Wrap(command);
-
-            // Create BeforeAfterCommands using attributes of the method
-            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(test.Method.MethodInfo))
-                if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
-                    command = new TestActionCommand(command, action);
-
-            // Wrap in SetUpTearDownCommand
-            command = new SetUpTearDownCommand(command);
-
-            // In the current implementation, upstream actions only apply to tests. If that should change in the future,
-            // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
-            // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
-            int index = actions.Count;
-            while (--index >= 0)
-            {
-                ITestAction action = actions[index];
-                System.Diagnostics.Debug.Assert(
-                    action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test,
-                    "Invalid target on upstream action: " + action.Targets.ToString());
-
-                command = new TestActionCommand(command, action);
-            }
-
-            // Add wrappers that apply before setup and after teardown
-            foreach (ICommandWrapper decorator in test.Method.GetCustomAttributes<IWrapSetUpTearDown>(true))
-                command = decorator.Wrap(command);
-
-            // Add command to set up context using attributes that implement IApplyToContext
-            IApplyToContext[] changes = test.Method.GetCustomAttributes<IApplyToContext>(true);
-            if (changes.Length > 0)
-                command = new ApplyChangesToContextCommand(command, changes);
-
-            return command;
-        }
-
-        /// <summary>
         /// Builds the set up tear down list.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>

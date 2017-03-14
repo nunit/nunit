@@ -295,7 +295,6 @@
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\TNode.cs" />
-    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />

@@ -174,8 +174,12 @@ namespace NUnit.Framework.Internal.Execution
                 : new List<SetUpTearDownItem>();
 
             var actionItems = new List<TestActionItem>();
-            foreach (ITestAction action in Actions)
+            foreach (ITestAction action in Test.Actions)
             {
+                // We need to go through all the actions on the test to determine which ones
+                // will be used immediately and which will go into the context for use by
+                // lower level tests.
+                //
                 // Special handling here for ParameterizedMethodSuite is a bit ugly. However,
                 // it is needed because Tests are not supposed to know anything about Action
                 // Attributes (or any attribute) and Attributes don't know where they were

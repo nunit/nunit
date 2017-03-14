@@ -169,7 +169,6 @@
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
-    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
     <Compile Include="Internal\Commands\TestActionCommand.cs" />

@@ -21,8 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -71,5 +74,20 @@ namespace NUnit.Framework.Internal
                 return "Assembly";
             }
         }
+
+        /// <summary>
+        /// Get all the ITestActions on this assembly
+        /// </summary>
+        protected override ITestAction[] GetTestActions()
+        {
+            return Assembly != null
+#if PORTABLE || NETSTANDARD1_6
+                ? Assembly.GetAttributes<ITestAction>().ToArray()
+#else
+                ? (ITestAction[])Assembly.GetCustomAttributes(typeof(ITestAction), false)
+#endif
+                : new ITestAction[0];
+        }
     }
 }
+

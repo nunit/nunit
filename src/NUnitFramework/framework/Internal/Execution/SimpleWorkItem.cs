@@ -35,22 +35,27 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItem : WorkItem
     {
+        TestMethod _testMethod;
+
         /// <summary>
         /// Construct a simple work item for a test.
         /// </summary>
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
-        public SimpleWorkItem(TestMethod test, ITestFilter filter) 
-            : base(test, filter) { }
+        public SimpleWorkItem(TestMethod test, ITestFilter filter) : base(test, filter)
+        {
+            _testMethod = test;
+        }
 
         /// <summary>
         /// Method that performs actually performs the work.
         /// </summary>
         protected override void PerformWork()
         {
-            var command = Test.RunState == RunState.Runnable || Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test)
-                ? CommandBuilder.MakeTestCommand((TestMethod)Test, Context.UpstreamActions)
-                : new SkipCommand(Test);
+            var command = Test.RunState == RunState.Runnable || 
+                Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test)
+                    ? MakeTestCommand()
+                    : new SkipCommand(Test);
 
             try
             {
@@ -62,5 +67,53 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
+        /// <summary>
+        /// Creates a test command for use in running this test.
+        /// </summary>
+        /// <returns>A TestCommand</returns>
+        private TestCommand MakeTestCommand()
+        {
+            // Command to execute test
+            TestCommand command = new TestMethodCommand(_testMethod);
+
+            var method = _testMethod.Method;
+
+            // Add any wrappers to the TestMethodCommand
+            foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
+                command = wrapper.Wrap(command);
+
+            // Create TestActionCommands using attributes of the method
+            foreach (ITestAction action in Test.Actions)
+                if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
+                    command = new TestActionCommand(command, action);
+
+            // Wrap in SetUpTearDownCommand
+            command = new SetUpTearDownCommand(command);
+
+            // In the current implementation, upstream actions only apply to tests. If that should change in the future,
+            // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
+            // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
+            int index = Context.UpstreamActions.Count;
+            while (--index >= 0)
+            {
+                ITestAction action = Context.UpstreamActions[index];
+                System.Diagnostics.Debug.Assert(
+                    action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test,
+                    "Invalid target on upstream action: " + action.Targets.ToString());
+
+                command = new TestActionCommand(command, action);
+            }
+
+            // Add wrappers that apply before setup and after teardown
+            foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
+                command = decorator.Wrap(command);
+
+            // Add command to set up context using attributes that implement IApplyToContext
+            IApplyToContext[] changes = method.GetCustomAttributes<IApplyToContext>(true);
+            if (changes.Length > 0)
+                command = new ApplyChangesToContextCommand(command, changes);
+
+            return command;
+        }
     }
 }
