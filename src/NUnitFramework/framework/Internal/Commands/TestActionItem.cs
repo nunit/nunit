@@ -25,15 +25,19 @@
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionItem represents a single execution of an
-    /// ITestAction. It is used to track whether the BeforeTest
+    /// TestActionItem wraps a single execution of an ITestAction.
+    /// It's primary purpose is to track whether the BeforeTest
     /// method has been called and suppress calling the
-    /// AfterTest method if it has not.
+    /// AfterTest method if it has not. This is necessary when
+    /// ITestActions are used before and after a CompositeWorkItem,
+    /// since the OneTimeSetUpCommand and OneTimeTearDownCommand
+    /// are separate command chains. By sharing a TestActionItem
+    /// between the setup and teardown chains, the two calls can
+    /// be coordinated.
     /// </summary>
     public class TestActionItem
     {
         private readonly ITestAction _action;
-        private bool _beforeTestWasRun;
 
         /// <summary>
         /// Construct a TestActionItem
@@ -45,12 +49,17 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
+        /// Get flag indicating if the BeforeTest entry was already called.
+        /// </summary>
+        public bool BeforeTestWasRun { get; private set; }
+
+        /// <summary>
         /// Run the BeforeTest method of the action and remember that it has been run.
         /// </summary>
         /// <param name="test">The test to which the action applies</param>
         public void BeforeTest(Interfaces.ITest test)
         {
-            _beforeTestWasRun = true;
+            BeforeTestWasRun = true;
             _action.BeforeTest(test);
         }
 
@@ -61,7 +70,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void AfterTest(Interfaces.ITest test)
         {
-            if (_beforeTestWasRun)
+            if (BeforeTestWasRun)
                 _action.AfterTest(test);
         }
     }

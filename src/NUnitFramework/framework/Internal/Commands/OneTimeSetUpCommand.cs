@@ -31,28 +31,27 @@ namespace NUnit.Framework.Internal.Commands
     /// OneTimeSetUpCommand runs any one-time setup methods for a suite,
     /// constructing the user test object if necessary.
     /// </summary>
-    public class OneTimeSetUpCommand : TestCommand
+    public class OneTimeSetUpCommand : DelegatingTestCommand
     {
         private readonly TestSuite _suite;
         private readonly ITypeInfo _typeInfo;
         private readonly object[] _arguments;
         private readonly List<SetUpTearDownItem> _setUpTearDown;
-        private readonly List<TestActionItem> _actions;
 
         /// <summary>
         /// Constructs a OneTimeSetUpCommand for a suite
         /// </summary>
-        /// <param name="suite">The suite to which the command applies</param>
+        /// <param name="innerCommand">The inner command to which the command applies</param>
         /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
-        /// <param name="actions">A List of TestActionItems to be run after Setup</param>
-        public OneTimeSetUpCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDown, List<TestActionItem> actions)
-            : base(suite) 
+        public OneTimeSetUpCommand(TestCommand innerCommand, List<SetUpTearDownItem> setUpTearDown)
+            : base(innerCommand) 
         {
-            _suite = suite;
-            _typeInfo = suite.TypeInfo;
-            _arguments = suite.Arguments;
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "OneTimeSetUpCommand must reference a TestSuite", "innerCommand");
+
+            _suite = (TestSuite)innerCommand.Test;
+            _typeInfo = _suite.TypeInfo;
+            _arguments = _suite.Arguments;
             _setUpTearDown = setUpTearDown;
-            _actions = actions;
         }
 
         /// <summary>
@@ -79,11 +78,7 @@ namespace NUnit.Framework.Internal.Commands
                     _setUpTearDown[--i].RunSetUp(context);
             }
 
-
-            for (int i = 0; i < _actions.Count; i++)
-                _actions[i].BeforeTest(Test);
-
-            return context.CurrentResult;
+            return innerCommand.Execute(context);
         }
     }
 }

@@ -48,8 +48,14 @@ namespace NUnit.Framework.Internal.Execution
             if (suite.RunState != RunState.Runnable && suite.RunState != RunState.Explicit)
                 return new SkipCommand(suite);
 
+            TestCommand command = new EmptyTestCommand(suite);
+
+            // Add Action Commands 
+            if (actions.Count > 0)
+                command = new TestActionBeforeCommand(command, actions);
+
             // Build the OneTimeSetUpCommand itself
-            TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown, actions);
+            command = new OneTimeSetUpCommand(command, setUpTearDown);
 
             // Prefix with any IApplyToContext items from attributes
             IList<IApplyToContext> changes = null;
@@ -82,8 +88,13 @@ namespace NUnit.Framework.Internal.Execution
         /// <returns>A TestCommand</returns>
         public static TestCommand MakeOneTimeTearDownCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDownItems, List<TestActionItem> actions)
         {
+            //TestCommand command = null;
+
             // Build the OneTimeTearDown command itself
-            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDownItems, actions);
+            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDownItems);
+
+            if (actions.Count > 0)
+                command = new TestActionAfterCommand(command, actions);
 
             // For Theories, follow with TheoryResultCommand to adjust result as needed
             if (suite.TestType == "Theory")

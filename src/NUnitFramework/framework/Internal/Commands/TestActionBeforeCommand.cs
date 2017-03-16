@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,55 +23,56 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
+using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// OneTimeTearDownCommand performs any teardown actions
-    /// specified for a suite and calls Dispose on the user
-    /// test object, if any.
+    /// TestActionBeforeCommand handles the BeforeTest method of a single 
+    /// TestActionItem, relying on the item to remember it has been run.
     /// </summary>
-    public class OneTimeTearDownCommand : TestCommand
+    public class TestActionBeforeCommand : DelegatingTestCommand
     {
-        private List<SetUpTearDownItem> _setUpTearDownItems;
+        private List<TestActionItem> _actions;
 
         /// <summary>
-        /// Construct a OneTimeTearDownCommand
+        /// Initializes a new instance of the <see cref="TestActionBeforeCommand"/> class.
         /// </summary>
-        /// <param name="suite">The test suite to which the command applies</param>
-        /// <param name="setUpTearDownItems">A SetUpTearDownList for use by the command</param>
-        public OneTimeTearDownCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDownItems)
-            : base(suite)
+        /// <param name="innerCommand">The inner command.</param>
+        /// <param name="actions">The TestActionItem to run before the inner command.</param>
+        public TestActionBeforeCommand(TestCommand innerCommand, List<TestActionItem> actions)
+            : base(innerCommand)
         {
-            _setUpTearDownItems = setUpTearDownItems;
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionBeforeCommand may only apply to a TestSuite", "innerCommand");
+            Guard.ArgumentNotNull(actions, nameof(actions));
+
+            _actions = actions;
         }
 
         /// <summary>
-        /// Overridden to run the teardown methods specified on the test.
+        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
         /// </summary>
-        /// <param name="context">The TestExecutionContext to be used.</param>
+        /// <param name="context">The context in which the test should run.</param>
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            TestResult suiteResult = context.CurrentResult;
-
             try
             {
-                if (_setUpTearDownItems != null)
-                    foreach(var item in _setUpTearDownItems)
-                        item.RunTearDown(context);
+                foreach (var action in _actions)
+                    action.BeforeTest(Test);
 
-                IDisposable disposable = context.TestObject as IDisposable;
-                if (disposable != null && Test is IDisposableFixture)
-                    disposable.Dispose();
+                context.CurrentResult = innerCommand.Execute(context);
             }
             catch (Exception ex)
             {
-                suiteResult.RecordTearDownException(ex);
+#if !PORTABLE && !NETSTANDARD1_6
+                if (ex is ThreadAbortException)
+                    Thread.ResetAbort();
+#endif
+                context.CurrentResult.RecordException(ex);
             }
 
-            return suiteResult;
+            return context.CurrentResult;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,26 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// DelegatingTestCommand wraps an inner TestCommand.
-    /// Derived classes may do what they like before or
-    /// after running the inner command.
+    /// EmptyTestCommand is a TestCommand that does nothing. It simply
+    /// returns the current result from the context when executed. We
+    /// use it to avoid testing for null when executing a chain of
+    /// DelegatingTestCommands.
     /// </summary>
-    public abstract class DelegatingTestCommand : TestCommand
+    public class EmptyTestCommand : TestCommand
     {
-        /// <summary>TODO: Documentation needed for field</summary>
-        protected TestCommand innerCommand;
+        /// <summary>
+        /// Construct a NullCommand for a test
+        /// </summary>
+        public EmptyTestCommand(Test test) : base(test) { }
 
         /// <summary>
-        /// TODO: Documentation needed for constructor
+        /// Execute the command
         /// </summary>
-        /// <param name="innerCommand"></param>
-        protected DelegatingTestCommand(TestCommand innerCommand)
-            : base(innerCommand.Test)
+        public override TestResult Execute(TestExecutionContext context)
         {
-            this.innerCommand = innerCommand;
+            return context.CurrentResult;
         }
     }
 }
