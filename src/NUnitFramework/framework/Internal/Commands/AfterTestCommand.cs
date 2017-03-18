@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,32 +22,37 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// ContextSettingsCommand applies specified changes to the
-    /// TestExecutionContext prior to running a test. No special
-    /// action is needed after the test runs, since the prior
-    /// context will be restored automatically.
+    /// AfterCommand is a DelegatingTestCommand that performs some
+    /// specific action after the inner command is run.
     /// </summary>
-    class ApplyChangesToContextCommand : BeforeTestCommand
+    public abstract class AfterTestCommand : DelegatingTestCommand
     {
-        private IEnumerable<IApplyToContext> _changes;
+        /// <summary>
+        /// Construct an AfterCommand
+        /// </summary>
+        public AfterTestCommand(TestCommand innerCommand) : base(innerCommand) { }
 
-        public ApplyChangesToContextCommand(TestCommand innerCommand, IEnumerable<IApplyToContext> changes)
-            : base(innerCommand)
+        /// <summary>
+        /// Execute the command
+        /// </summary>
+        public override TestResult Execute(TestExecutionContext context)
         {
-            _changes = changes;
+            innerCommand.Execute(context);
+
+            AfterTest(context);
+
+            return context.CurrentResult;
         }
 
-        protected override void BeforeTest(TestExecutionContext context)
-        {
-            foreach (IApplyToContext change in _changes)
-                change.ApplyToContext(context);
-        }
+        /// <summary>
+        /// Override to perform action before the inner command.
+        /// </summary>
+        protected abstract void AfterTest(TestExecutionContext context);
     }
 }

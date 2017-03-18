@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Commands
     /// to a test. It runs the BeforeTest method, then runs the
     /// test and finally runs the AfterTest method.
     /// </summary>
-    public class TestActionCommand : DelegatingTestCommand
+    public class TestActionCommand : BeforeAndAfterTestCommand
     {
         private ITestAction _action;
 
@@ -50,36 +50,19 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
-        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
+        /// Overridden to call the BeforeTest method of the test action
         /// </summary>
-        /// <param name="context">The context in which the test should run.</param>
-        /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
+        protected override void BeforeTest(TestExecutionContext context)
         {
-            if (Test.Fixture == null)
-                Test.Fixture = context.TestObject;
+            _action.BeforeTest(Test);
+        }
 
-            try
-            {
-                _action.BeforeTest(Test);
-
-                context.CurrentResult = innerCommand.Execute(context);
-            }
-            catch (Exception ex)
-            {
-#if !PORTABLE && !NETSTANDARD1_6
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-                context.CurrentResult.RecordException(ex);
-            }
-            finally
-            {
-                if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                    _action.AfterTest(Test);
-            }
-
-            return context.CurrentResult;
+        /// <summary>
+        /// Overridden to call the AfterTest method of the test action
+        /// </summary>
+        protected override void AfterTest(TestExecutionContext context)
+        {
+            _action.AfterTest(Test);
         }
     }
 }

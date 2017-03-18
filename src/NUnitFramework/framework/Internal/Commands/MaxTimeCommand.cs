@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+﻿ // ***********************************************************************
 // Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Commands
     /// <summary>
     /// TODO: Documentation needed for class
     /// </summary>
-    public class MaxTimeCommand : DelegatingTestCommand
+    public class MaxTimeCommand : AfterTestCommand
     {
         private int maxTime;
 
@@ -45,38 +45,33 @@ namespace NUnit.Framework.Internal.Commands
         {
             this.maxTime = maxTime;
         }
-
+        
         /// <summary>
-        /// Runs the test, saving a TestResult in the supplied TestExecutionContext
+        /// Override AfterTest to check the duration of the test
         /// </summary>
-        /// <param name="context">The context in which the test should run.</param>
-        /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
+        protected override void AfterTest(TestExecutionContext context)
         {
             // TODO: This command duplicates the calculation of the
             // duration of the test because that calculation is 
             // normally performed at a higher level. Most likely,
             // we should move the maxtime calculation to the
             // higher level eventually.
-            long startTicks = Stopwatch.GetTimestamp();
 
-            TestResult testResult = innerCommand.Execute(context);
-
-            long tickCount = Stopwatch.GetTimestamp() - startTicks;
+            long tickCount = Stopwatch.GetTimestamp() - context.StartTicks;
             double seconds = (double)tickCount / Stopwatch.Frequency;
-            testResult.Duration = seconds;
+            TestResult result = context.CurrentResult;
 
-            if (testResult.ResultState == ResultState.Success)
+            result.Duration = seconds;
+
+            if (result.ResultState == ResultState.Success)
             {
-                double elapsedTime = testResult.Duration * 1000d;
+                double elapsedTime = result.Duration * 1000d;
 
                 if (elapsedTime > maxTime)
-                    testResult.SetResult(ResultState.Failure,
+                    result.SetResult(ResultState.Failure,
                         string.Format("Elapsed time of {0}ms exceeds maximum of {1}ms",
                             elapsedTime, maxTime));
             }
-
-            return testResult;
         }
     }
 }

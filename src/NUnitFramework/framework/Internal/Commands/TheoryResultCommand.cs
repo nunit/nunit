@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal.Commands
     /// TheoryResultCommand adjusts the result of a Theory so that
     /// it fails if all the results were inconclusive.
     /// </summary>
-    public class TheoryResultCommand : DelegatingTestCommand
+    public class TheoryResultCommand : AfterTestCommand
     {
         /// <summary>
         /// Constructs a TheoryResultCommand 
@@ -38,14 +38,12 @@ namespace NUnit.Framework.Internal.Commands
         public TheoryResultCommand(TestCommand command) : base(command) { }
 
         /// <summary>
-        /// Overridden to call the inner command and adjust the result
-        /// in case all chlid results were inconclusive.
+        /// Overridden to adjust the result if all hte child
+        /// results were inconclusive.
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override TestResult Execute(TestExecutionContext context)
+        protected override void AfterTest(TestExecutionContext context)
         {
-            TestResult theoryResult = innerCommand.Execute(context);
+            TestResult theoryResult = context.CurrentResult;
 
             if (theoryResult.ResultState == ResultState.Inconclusive)
             {
@@ -54,8 +52,6 @@ namespace NUnit.Framework.Internal.Commands
                 else
                     theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
             }
-
-            return theoryResult;
         }
     }
 }

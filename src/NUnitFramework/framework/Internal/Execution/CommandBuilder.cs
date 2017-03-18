@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Execution
 
             // Add Action Commands 
             if (actions.Count > 0)
-                command = new TestActionBeforeCommand(command, actions);
+                command = new BeforeTestActionCommand(command, actions);
 
             // Build the OneTimeSetUpCommand itself
             command = new OneTimeSetUpCommand(command, setUpTearDown);
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal.Execution
             TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDownItems);
 
             if (actions.Count > 0)
-                command = new TestActionAfterCommand(command, actions);
+                command = new AfterTestActionCommand(command, actions);
 
             // For Theories, follow with TheoryResultCommand to adjust result as needed
             if (suite.TestType == "Theory")

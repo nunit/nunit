@@ -132,9 +132,12 @@
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
+    <Compile Include="Internal\Commands\AfterTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\AfterTestCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeAndAfterTestCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
     <Compile Include="Internal\Commands\EmptyTestCommand.cs" />
-    <Compile Include="Internal\Commands\TestActionAfterCommand.cs" />
-    <Compile Include="Internal\Commands\TestActionBeforeCommand.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />

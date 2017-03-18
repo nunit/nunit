@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,30 +24,39 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// ContextSettingsCommand applies specified changes to the
-    /// TestExecutionContext prior to running a test. No special
-    /// action is needed after the test runs, since the prior
-    /// context will be restored automatically.
+    /// TestActionAfterCommand handles the AfterTest method of a single 
+    /// TestActionItem, provided the items BeforeTest has been run.
     /// </summary>
-    class ApplyChangesToContextCommand : BeforeTestCommand
+    public class AfterTestActionCommand : AfterTestCommand
     {
-        private IEnumerable<IApplyToContext> _changes;
+        private List<TestActionItem> _actions;
 
-        public ApplyChangesToContextCommand(TestCommand innerCommand, IEnumerable<IApplyToContext> changes)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AfterTestActionCommand"/> class.
+        /// </summary>
+        /// <param name="innerCommand">The inner command.</param>
+        /// <param name="actions">The TestActionItem to run before the inner command.</param>
+        public AfterTestActionCommand(TestCommand innerCommand, List<TestActionItem> actions)
             : base(innerCommand)
         {
-            _changes = changes;
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionActionCommand may only apply to a TestSuite", "innerCommand");
+            Guard.ArgumentNotNull(actions, nameof(actions));
+
+            _actions = actions;
         }
 
-        protected override void BeforeTest(TestExecutionContext context)
+        /// <summary>
+        /// Run After Test actions
+        /// </summary>
+        protected override void AfterTest(TestExecutionContext context)
         {
-            foreach (IApplyToContext change in _changes)
-                change.ApplyToContext(context);
+            int index = _actions.Count;
+            while (--index >= 0 && _actions[index].BeforeTestWasRun)
+                _actions[index].AfterTest(Test);
         }
     }
 }

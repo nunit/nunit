@@ -313,7 +313,12 @@
     <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
+    <Compile Include="Internal\Commands\AfterTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\AfterTestCommand.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeAndAfterTestCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\EmptyTestCommand.cs" />
@@ -323,8 +328,6 @@
     <Compile Include="Internal\Commands\SetUpTearDownCommand.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
     <Compile Include="Internal\Commands\SkipCommand.cs" />
-    <Compile Include="Internal\Commands\TestActionAfterCommand.cs" />
-    <Compile Include="Internal\Commands\TestActionBeforeCommand.cs" />
     <Compile Include="Internal\Commands\TestActionCommand.cs" />
     <Compile Include="Internal\Commands\TestActionItem.cs" />
     <Compile Include="Internal\Commands\TestCommand.cs" />

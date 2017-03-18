@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,32 +22,22 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionAfterCommand handles the AfterTest method of a single 
-    /// TestActionItem, provided the items BeforeTest has been run.
+    /// TestActionCommand handles a single ITestAction applied
+    /// to a test. It runs the BeforeTest method, then runs the
+    /// test and finally runs the AfterTest method.
     /// </summary>
-    public class TestActionAfterCommand : DelegatingTestCommand
+    public abstract class BeforeAndAfterTestCommand : DelegatingTestCommand
     {
-        private List<TestActionItem> _actions;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestActionAfterCommand"/> class.
+        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="actions">The TestActionItem to run before the inner command.</param>
-        public TestActionAfterCommand(TestCommand innerCommand, List<TestActionItem> actions)
-            : base(innerCommand)
-        {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionActionCommand may only apply to a TestSuite", "innerCommand");
-            Guard.ArgumentNotNull(actions, nameof(actions));
-
-            _actions = actions;
-        }
+        public BeforeAndAfterTestCommand(TestCommand innerCommand) : base(innerCommand) { }
 
         /// <summary>
         /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
@@ -56,13 +46,14 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            if (Test.Fixture == null)
+                Test.Fixture = context.TestObject;
+
             try
             {
-                context.CurrentResult = innerCommand.Execute(context);
+                BeforeTest(context);
 
-                int index = _actions.Count;
-                while (--index >= 0 && _actions[index].BeforeTestWasRun)
-                    _actions[index].AfterTest(Test);
+                context.CurrentResult = innerCommand.Execute(context);
             }
             catch (Exception ex)
             {
@@ -72,8 +63,23 @@ namespace NUnit.Framework.Internal.Commands
 #endif
                 context.CurrentResult.RecordException(ex);
             }
+            finally
+            {
+                if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                    AfterTest(context);
+            }
 
             return context.CurrentResult;
         }
+        
+        /// <summary>
+        /// Perform the before test action
+        /// </summary>
+        protected abstract void BeforeTest(TestExecutionContext context);
+
+        /// <summary>
+        /// Perform the after test action
+        /// </summary>
+        protected abstract void AfterTest(TestExecutionContext context);
     }
 }
