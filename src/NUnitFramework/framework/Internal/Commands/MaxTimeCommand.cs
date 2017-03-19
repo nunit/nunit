@@ -33,8 +33,6 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class MaxTimeCommand : AfterTestCommand
     {
-        private int maxTime;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MaxTimeCommand"/> class.
         /// </summary>
@@ -43,7 +41,6 @@ namespace NUnit.Framework.Internal.Commands
         public MaxTimeCommand(TestCommand innerCommand, int maxTime)
             : base(innerCommand)
         {
-            this.maxTime = maxTime;
             AfterTest = (context) =>
             {
                 // TODO: This command duplicates the calculation of the
