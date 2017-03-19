@@ -380,7 +380,6 @@
     <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
-    <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Interfaces\ICommandWrapper.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />

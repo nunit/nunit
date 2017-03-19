@@ -69,24 +69,7 @@ namespace NUnit.Framework.Internal.Execution
 
             // Prefix with any IApplyToContext items from attributes
             var changes = suite.GetCustomAttributes<IApplyToContext>(true);
-//            IList<IApplyToContext> changes = null;
-
-//            if (suite.TypeInfo != null)
-//                changes = suite.TypeInfo.GetCustomAttributes<IApplyToContext>(true);
-//            else if (suite.Method != null)
-//                changes = suite.Method.GetCustomAttributes<IApplyToContext>(true);
-//            else
-//            {
-//                var testAssembly = suite as TestAssembly;
-//                if (testAssembly != null)
-//#if PORTABLE || NETSTANDARD1_6
-//                    changes = new List<IApplyToContext>(testAssembly.Assembly.GetAttributes<IApplyToContext>());
-//#else
-//                    changes = (IApplyToContext[])testAssembly.Assembly.GetCustomAttributes(typeof(IApplyToContext), true);
-//#endif
-//            }
-
-            if (changes != null && changes.Length > 0)
+            if (changes.Length > 0)
                 command = new ApplyChangesToContextCommand(command, changes);
 
             return command;

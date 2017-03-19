@@ -321,7 +321,6 @@
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
-    <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownCommand.cs" />
