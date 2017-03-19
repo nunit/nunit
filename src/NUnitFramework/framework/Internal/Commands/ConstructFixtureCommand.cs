@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,31 +23,40 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionBeforeCommand handles the BeforeTest method of a single 
-    /// TestActionItem, relying on the item to remember it has been run.
+    /// ConstructFixtureCommand constructs the user test object if necessary.
     /// </summary>
-    public class BeforeTestActionCommand : BeforeTestCommand
+    public class ConstructFixtureCommand : BeforeTestCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BeforeTestActionCommand"/> class.
+        /// Constructs a OneTimeSetUpCommand for a suite
         /// </summary>
-        /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestActionItem to run before the inner command.</param>
-        public BeforeTestActionCommand(TestCommand innerCommand, TestActionItem action)
-            : base(innerCommand)
+        /// <param name="innerCommand">The inner command to which the command applies</param>
+        public ConstructFixtureCommand(TestCommand innerCommand)
+            : base(innerCommand) 
         {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionBeforeCommand may only apply to a TestSuite", "innerCommand");
-            Guard.ArgumentNotNull(action, nameof(action));
+            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", "innerCommand");
 
             BeforeTest = (context) =>
             {
-                action.BeforeTest(Test);
+                ITypeInfo typeInfo = Test.TypeInfo;
+
+                if (typeInfo != null)
+                {
+                    // Use pre-constructed fixture if available, otherwise construct it
+                    if (!typeInfo.IsStaticClass)
+                    {
+                        context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
+                        if (Test.Fixture == null)
+                            Test.Fixture = context.TestObject;
+                    }
+                }
             };
         }
     }
 }
+

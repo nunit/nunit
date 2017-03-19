@@ -304,7 +304,13 @@ namespace NUnit.Framework.Internal
             get
             {
                 if (_actions == null)
-                    _actions = GetTestActions();
+                {
+                    // For fixtures, we use special rules to get actions
+                    // Otherwise we just get the attributes
+                    _actions = Method == null && TypeInfo != null
+                        ? GetActionsForType(TypeInfo.Type)
+                        : GetCustomAttributes<ITestAction>(false);
+                }
 
                 return _actions;
             }
@@ -376,6 +382,24 @@ namespace NUnit.Framework.Internal
             Properties.Add(PropertyNames.SkipReason, reason);
         }
 
+        /// <summary>
+        /// Get custom attributes applied to a test
+        /// </summary>
+        public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
+        {
+            if (Method != null)
+#if PORTABLE || NETSTANDARD1_6
+                return Method.GetCustomAttributes<TAttr>(inherit).ToArray();
+#else
+                return (TAttr[])Method.MethodInfo.GetCustomAttributes(typeof(TAttr), inherit);
+#endif
+
+            if (TypeInfo != null)
+                return TypeInfo.GetCustomAttributes<TAttr>(inherit).ToArray();
+
+            return new TAttr[0];
+        }
+
         #endregion
 
         #region Protected Methods
@@ -398,24 +422,6 @@ namespace NUnit.Framework.Internal
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
-        }
-
-        /// <summary>
-        /// Get a list of all ITestActions on this test.
-        /// </summary>
-        protected virtual ITestAction[] GetTestActions()
-        {
-            if (Method != null)
-#if PORTABLE || NETSTANDARD1_6
-                return Method.GetCustomAttributes<ITestAction>(false).ToArray();
-#else
-                return (ITestAction[])Method.MethodInfo.GetCustomAttributes(typeof(ITestAction), false);
-#endif
-
-            if (TypeInfo != null)
-                return GetActionsForType(TypeInfo.Type);
-
-            return new ITestAction[0];
         }
 
         #endregion

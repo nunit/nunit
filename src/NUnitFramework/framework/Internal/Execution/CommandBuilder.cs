@@ -42,6 +42,7 @@ namespace NUnit.Framework.Internal.Execution
         /// the child tests are run.
         /// </summary>
         /// <returns>A TestCommand</returns>
+        /// 
         public static TestCommand MakeOneTimeSetUpCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDown, List<TestActionItem> actions)
         {
             // Handle skipped tests
@@ -51,31 +52,41 @@ namespace NUnit.Framework.Internal.Execution
             TestCommand command = new EmptyTestCommand(suite);
 
             // Add Action Commands 
-            if (actions.Count > 0)
-                command = new BeforeTestActionCommand(command, actions);
-
-            // Build the OneTimeSetUpCommand itself
-            command = new OneTimeSetUpCommand(command, setUpTearDown);
-
-            // Prefix with any IApplyToContext items from attributes
-            IList<IApplyToContext> changes = null;
+            int index = actions.Count;
+            while (--index >= 0)
+                command = new BeforeTestActionCommand(command, actions[index]);
 
             if (suite.TypeInfo != null)
-                changes = suite.TypeInfo.GetCustomAttributes<IApplyToContext>(true);
-            else if (suite.Method != null)
-                changes = suite.Method.GetCustomAttributes<IApplyToContext>(true);
-            else
             {
-                var testAssembly = suite as TestAssembly;
-                if (testAssembly != null)
-#if PORTABLE || NETSTANDARD1_6
-                    changes = new List<IApplyToContext>(testAssembly.Assembly.GetAttributes<IApplyToContext>());
-#else
-                    changes = (IApplyToContext[])testAssembly.Assembly.GetCustomAttributes(typeof(IApplyToContext), true);
-#endif
+                // Build the OneTimeSetUpCommands
+                foreach (SetUpTearDownItem item in setUpTearDown)
+                    command = new OneTimeSetUpCommand(command, item);
+
+                // Construct the fixture if necessary
+                if (!suite.TypeInfo.IsStaticClass)
+                    command = new ConstructFixtureCommand(command);
             }
 
-            if (changes != null && changes.Count > 0)
+            // Prefix with any IApplyToContext items from attributes
+            var changes = suite.GetCustomAttributes<IApplyToContext>(true);
+//            IList<IApplyToContext> changes = null;
+
+//            if (suite.TypeInfo != null)
+//                changes = suite.TypeInfo.GetCustomAttributes<IApplyToContext>(true);
+//            else if (suite.Method != null)
+//                changes = suite.Method.GetCustomAttributes<IApplyToContext>(true);
+//            else
+//            {
+//                var testAssembly = suite as TestAssembly;
+//                if (testAssembly != null)
+//#if PORTABLE || NETSTANDARD1_6
+//                    changes = new List<IApplyToContext>(testAssembly.Assembly.GetAttributes<IApplyToContext>());
+//#else
+//                    changes = (IApplyToContext[])testAssembly.Assembly.GetCustomAttributes(typeof(IApplyToContext), true);
+//#endif
+//            }
+
+            if (changes != null && changes.Length > 0)
                 command = new ApplyChangesToContextCommand(command, changes);
 
             return command;
@@ -88,13 +99,20 @@ namespace NUnit.Framework.Internal.Execution
         /// <returns>A TestCommand</returns>
         public static TestCommand MakeOneTimeTearDownCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDownItems, List<TestActionItem> actions)
         {
-            //TestCommand command = null;
+            TestCommand command = new EmptyTestCommand(suite);
 
-            // Build the OneTimeTearDown command itself
-            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDownItems);
+            // Dispose of fixture if necessary
+            if (suite is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(suite.TypeInfo.Type))
+                command = new DisposeFixtureCommand(command);
 
-            if (actions.Count > 0)
-                command = new AfterTestActionCommand(command, actions);
+            // Create the OneTimeTearDown commands
+            foreach (SetUpTearDownItem item in setUpTearDownItems)
+                command = new OneTimeTearDownCommand(command, item);
+      
+            // Create the AfterTestAction commands
+            int index = actions.Count;
+            while (--index >= 0)
+                command = new AfterTestActionCommand(command, actions[index]);
 
             // For Theories, follow with TheoryResultCommand to adjust result as needed
             if (suite.TestType == "Theory")

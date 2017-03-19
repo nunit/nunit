@@ -316,7 +316,9 @@
     <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
     <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
+    <Compile Include="Internal\Commands\ConstructFixtureCommand.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
+    <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
     <Compile Include="Internal\Commands\EmptyTestCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />

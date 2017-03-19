@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,30 +23,38 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionBeforeCommand handles the BeforeTest method of a single 
-    /// TestActionItem, relying on the item to remember it has been run.
+    /// OneTimeTearDownCommand performs any teardown actions
+    /// specified for a suite and calls Dispose on the user
+    /// test object, if any.
     /// </summary>
-    public class BeforeTestActionCommand : BeforeTestCommand
+    public class DisposeFixtureCommand : AfterTestCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BeforeTestActionCommand"/> class.
+        /// Construct a OneTimeTearDownCommand
         /// </summary>
-        /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestActionItem to run before the inner command.</param>
-        public BeforeTestActionCommand(TestCommand innerCommand, TestActionItem action)
+        /// <param name="innerCommand">The command wrapped by this command</param>
+        public DisposeFixtureCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionBeforeCommand may only apply to a TestSuite", "innerCommand");
-            Guard.ArgumentNotNull(action, nameof(action));
+            Guard.OperationValid(Test is IDisposableFixture, "DisposeFixtureCommand does not apply to a " + Test.GetType().Name);
 
-            BeforeTest = (context) =>
+            AfterTest = (context) =>
             {
-                action.BeforeTest(Test);
+                try
+                {
+                    IDisposable disposable = context.TestObject as IDisposable;
+                    if (disposable != null)
+                        disposable.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    context.CurrentResult.RecordTearDownException(ex);
+                }
             };
         }
     }

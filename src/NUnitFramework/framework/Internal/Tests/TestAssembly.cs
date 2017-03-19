@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010-2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -76,17 +76,17 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Get all the ITestActions on this assembly
+        /// Get custom attributes specified on the assembly
         /// </summary>
-        protected override ITestAction[] GetTestActions()
+        public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
         {
             return Assembly != null
 #if PORTABLE || NETSTANDARD1_6
-                ? Assembly.GetAttributes<ITestAction>().ToArray()
+                ? Assembly.GetAttributes<TAttr>().ToArray()
 #else
-                ? (ITestAction[])Assembly.GetCustomAttributes(typeof(ITestAction), false)
+                ? (TAttr[])Assembly.GetCustomAttributes(typeof(TAttr), false)
 #endif
-                : new ITestAction[0];
+                : new TAttr[0];
         }
     }
 }

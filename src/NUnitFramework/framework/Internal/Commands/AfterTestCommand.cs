@@ -43,6 +43,8 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         public override TestResult Execute(TestExecutionContext context)
         {
+            Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
+
             innerCommand.Execute(context);
 
             AfterTest(context);
@@ -51,8 +53,8 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
-        /// Override to perform action before the inner command.
+        /// Set this to perform action after the inner command.
         /// </summary>
-        protected abstract void AfterTest(TestExecutionContext context);
+        protected Action<TestExecutionContext> AfterTest;
     }
 }

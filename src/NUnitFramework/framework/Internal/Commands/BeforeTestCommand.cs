@@ -43,27 +43,16 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         public override TestResult Execute(TestExecutionContext context)
         {
-            try
-            {
-                BeforeTest(context);
+            Guard.OperationValid(BeforeTest != null, "BeforeTest was not set by the derived class constructor");
 
-                context.CurrentResult = innerCommand.Execute(context);
-            }
-            catch (Exception ex)
-            {
-#if !PORTABLE && !NETSTANDARD1_6
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-                context.CurrentResult.RecordException(ex);
-            }
+            BeforeTest(context);
 
-            return context.CurrentResult;
+            return context.CurrentResult = innerCommand.Execute(context);
         }
 
         /// <summary>
         /// Action to perform before the inner command.
         /// </summary>
-        protected abstract void BeforeTest(TestExecutionContext context);
+        protected Action<TestExecutionContext> BeforeTest;
     }
 }

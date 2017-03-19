@@ -31,54 +31,24 @@ namespace NUnit.Framework.Internal.Commands
     /// OneTimeSetUpCommand runs any one-time setup methods for a suite,
     /// constructing the user test object if necessary.
     /// </summary>
-    public class OneTimeSetUpCommand : DelegatingTestCommand
+    public class OneTimeSetUpCommand : BeforeTestCommand
     {
-        private readonly TestSuite _suite;
-        private readonly ITypeInfo _typeInfo;
-        private readonly object[] _arguments;
-        private readonly List<SetUpTearDownItem> _setUpTearDown;
-
         /// <summary>
         /// Constructs a OneTimeSetUpCommand for a suite
         /// </summary>
         /// <param name="innerCommand">The inner command to which the command applies</param>
         /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
-        public OneTimeSetUpCommand(TestCommand innerCommand, List<SetUpTearDownItem> setUpTearDown)
+        public OneTimeSetUpCommand(TestCommand innerCommand, SetUpTearDownItem setUpTearDown)
             : base(innerCommand) 
         {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "OneTimeSetUpCommand must reference a TestSuite", "innerCommand");
+            Guard.ArgumentValid(Test is TestSuite && Test.TypeInfo != null, 
+                "OneTimeSetUpCommand must reference a TestFixture or SetUpFixture", "innerCommand");
 
-            _suite = (TestSuite)innerCommand.Test;
-            _typeInfo = _suite.TypeInfo;
-            _arguments = _suite.Arguments;
-            _setUpTearDown = setUpTearDown;
-        }
-
-        /// <summary>
-        /// Overridden to run the one-time setup for a suite.
-        /// </summary>
-        /// <param name="context">The TestExecutionContext to be used.</param>
-        /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
-        {
-            if (_typeInfo != null)
+            BeforeTest = (context) =>
             {
-                // Use pre-constructed fixture if available, otherwise construct it
-                if (!_typeInfo.IsStaticClass)
-                {
-                    context.TestObject = _suite.Fixture ?? _typeInfo.Construct(_arguments);
-                    if (_suite.Fixture == null)
-                    {
-                        _suite.Fixture = context.TestObject;
-                    }
-                    Test.Fixture = _suite.Fixture;
-                }
-
-                for (int i = _setUpTearDown.Count; i > 0; )
-                    _setUpTearDown[--i].RunSetUp(context);
-            }
-
-            return innerCommand.Execute(context);
+                setUpTearDown.RunSetUp(context);
+            };
         }
     }
 }
+

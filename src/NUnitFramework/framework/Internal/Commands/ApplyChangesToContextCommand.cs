@@ -36,18 +36,14 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     class ApplyChangesToContextCommand : BeforeTestCommand
     {
-        private IEnumerable<IApplyToContext> _changes;
-
         public ApplyChangesToContextCommand(TestCommand innerCommand, IEnumerable<IApplyToContext> changes)
             : base(innerCommand)
         {
-            _changes = changes;
-        }
-
-        protected override void BeforeTest(TestExecutionContext context)
-        {
-            foreach (IApplyToContext change in _changes)
-                change.ApplyToContext(context);
+            BeforeTest = (context) =>
+            {
+                foreach (IApplyToContext change in changes)
+                    change.ApplyToContext(context);
+            };
         }
     }
 }

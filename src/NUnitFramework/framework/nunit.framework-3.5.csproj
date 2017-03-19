@@ -137,6 +137,8 @@
     <Compile Include="Internal\Commands\BeforeAndAfterTestCommand.cs" />
     <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
     <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
+    <Compile Include="Internal\Commands\ConstructFixtureCommand.cs" />
+    <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
     <Compile Include="Internal\Commands\EmptyTestCommand.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Filters\CompositeFilter.cs" />

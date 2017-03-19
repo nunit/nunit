@@ -35,23 +35,20 @@ namespace NUnit.Framework.Internal.Commands
         /// Constructs a TheoryResultCommand 
         /// </summary>
         /// <param name="command">The command to be wrapped by this one</param>
-        public TheoryResultCommand(TestCommand command) : base(command) { }
-
-        /// <summary>
-        /// Overridden to adjust the result if all hte child
-        /// results were inconclusive.
-        /// </summary>
-        protected override void AfterTest(TestExecutionContext context)
+        public TheoryResultCommand(TestCommand command) : base(command)
         {
-            TestResult theoryResult = context.CurrentResult;
-
-            if (theoryResult.ResultState == ResultState.Inconclusive)
+            AfterTest = (context) =>
             {
-                if (!theoryResult.HasChildren)
-                    theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
-                else
-                    theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
-            }
+                TestResult theoryResult = context.CurrentResult;
+
+                if (theoryResult.ResultState == ResultState.Inconclusive)
+                {
+                    if (!theoryResult.HasChildren)
+                        theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
+                    else
+                        theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
+                }
+            };
         }
     }
 }

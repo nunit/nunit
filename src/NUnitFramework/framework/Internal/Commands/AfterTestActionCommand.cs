@@ -33,30 +33,22 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class AfterTestActionCommand : AfterTestCommand
     {
-        private List<TestActionItem> _actions;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AfterTestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="actions">The TestActionItem to run before the inner command.</param>
-        public AfterTestActionCommand(TestCommand innerCommand, List<TestActionItem> actions)
+        /// <param name="action">The TestActionItem to run before the inner command.</param>
+        public AfterTestActionCommand(TestCommand innerCommand, TestActionItem action)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionActionCommand may only apply to a TestSuite", "innerCommand");
-            Guard.ArgumentNotNull(actions, nameof(actions));
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "BeforeTestActionCommand may only apply to a TestSuite", "innerCommand");
+            Guard.ArgumentNotNull(action, nameof(action));
 
-            _actions = actions;
-        }
-
-        /// <summary>
-        /// Run After Test actions
-        /// </summary>
-        protected override void AfterTest(TestExecutionContext context)
-        {
-            int index = _actions.Count;
-            while (--index >= 0 && _actions[index].BeforeTestWasRun)
-                _actions[index].AfterTest(Test);
+            AfterTest = (context) =>
+            {
+                if (action.BeforeTestWasRun)
+                    action.AfterTest(Test);
+            };
         }
     }
 }
