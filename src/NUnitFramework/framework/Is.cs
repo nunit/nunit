@@ -393,6 +393,19 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region IntersectsWith
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// intersects with the collection supplied as an argument.
+        /// </summary>
+        public static CollectionIntersectConstraint IntersectsWith(IEnumerable expected)
+        {
+            return new CollectionIntersectConstraint(expected);
+        }
+
+        #endregion
+
         #region SubsetOf
 
         /// <summary>
