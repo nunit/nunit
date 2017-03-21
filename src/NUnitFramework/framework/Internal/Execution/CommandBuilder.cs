@@ -68,9 +68,8 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             // Prefix with any IApplyToContext items from attributes
-            var changes = suite.GetCustomAttributes<IApplyToContext>(true);
-            if (changes.Length > 0)
-                command = new ApplyChangesToContextCommand(command, changes);
+            foreach (var attr in suite.GetCustomAttributes<IApplyToContext>(true))
+                command = new ApplyChangesToContextCommand(command, attr);
 
             return command;
         }

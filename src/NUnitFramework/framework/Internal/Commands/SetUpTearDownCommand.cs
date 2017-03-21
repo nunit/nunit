@@ -31,42 +31,32 @@ namespace NUnit.Framework.Internal.Commands
     using Interfaces;
 
     /// <summary>
-    /// SetUpTearDownCommand runs any SetUp methods for a suite,
-    /// runs the test and then runs any TearDown methods.
+    /// SetUpTearDownCommand runs SetUp methods for a suite,
+    /// runs the test and then runs TearDown methods.
     /// </summary>
     public class SetUpTearDownCommand : BeforeAndAfterTestCommand
     {
-        private IList<SetUpTearDownItem> _setUpTearDownItems;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public SetUpTearDownCommand(TestCommand innerCommand)
+        /// <param name="setUpTearDown">List of setup/teardown items</param>
+        public SetUpTearDownCommand(TestCommand innerCommand, SetUpTearDownItem setUpTearDown)
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
             Guard.OperationValid(Test.TypeInfo != null, "TestMethod must have a non-null TypeInfo");
+            Guard.ArgumentNotNull(setUpTearDown, nameof(setUpTearDown));
 
-            _setUpTearDownItems = CommandBuilder.BuildSetUpTearDownList(Test.TypeInfo.Type, typeof(SetUpAttribute), typeof(TearDownAttribute));
-        }
+            BeforeTest = (context) =>
+            {
+                setUpTearDown.RunSetUp(context);
+            };
 
-        /// <summary>
-        /// Overridden to call RunSetUp on all items
-        /// </summary>
-        protected override void BeforeTest(TestExecutionContext context)
-        {
-            for (int i = _setUpTearDownItems.Count; i > 0;)
-                _setUpTearDownItems[--i].RunSetUp(context);
-        }
-
-        /// <summary>
-        /// Overridden to call RunTearDown on all items
-        /// </summary>
-        protected override void AfterTest(TestExecutionContext context)
-        {
-            for (int i = 0; i < _setUpTearDownItems.Count; i++)
-                _setUpTearDownItems[i].RunTearDown(context);
+            AfterTest = (context) =>
+            {
+                setUpTearDown.RunTearDown(context);
+            };
         }
     }
 }

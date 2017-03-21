@@ -33,8 +33,6 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TestActionCommand : BeforeAndAfterTestCommand
     {
-        private ITestAction _action;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
         /// </summary>
@@ -46,23 +44,15 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
             Guard.ArgumentNotNull(action, nameof(action));
 
-            _action = action;
-        }
+            BeforeTest = (context) =>
+            {
+                action.BeforeTest(Test);
+            };
 
-        /// <summary>
-        /// Overridden to call the BeforeTest method of the test action
-        /// </summary>
-        protected override void BeforeTest(TestExecutionContext context)
-        {
-            _action.BeforeTest(Test);
-        }
-
-        /// <summary>
-        /// Overridden to call the AfterTest method of the test action
-        /// </summary>
-        protected override void AfterTest(TestExecutionContext context)
-        {
-            _action.AfterTest(Test);
+            AfterTest = (context) =>
+            {
+                action.AfterTest(Test);
+            };
         }
     }
 }

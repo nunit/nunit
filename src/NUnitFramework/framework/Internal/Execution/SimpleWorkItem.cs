@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
@@ -61,6 +62,15 @@ namespace NUnit.Framework.Internal.Execution
             {
                 Result = command.Execute(Context);
             }
+            catch(Exception ex)
+            {
+                // Currently, if there are no command wrappers, test 
+                // actions, setup or teardown, we have to catch any
+                // exception from the test here. In addition, since
+                // users may create their own command wrappers, etc.
+                // we have to protect against unhandled exceptions.
+                Context.CurrentResult.RecordException(ex);
+            }
             finally
             {
                 WorkItemComplete();
@@ -88,7 +98,9 @@ namespace NUnit.Framework.Internal.Execution
                     command = new TestActionCommand(command, action);
 
             // Wrap in SetUpTearDownCommand
-            command = new SetUpTearDownCommand(command);
+            var setUpTearDownList = CommandBuilder.BuildSetUpTearDownList(Test.TypeInfo.Type, typeof(SetUpAttribute), typeof(TearDownAttribute));
+            foreach (var item in setUpTearDownList)
+                command = new SetUpTearDownCommand(command, item);
 
             // In the current implementation, upstream actions only apply to tests. If that should change in the future,
             // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
@@ -109,9 +121,8 @@ namespace NUnit.Framework.Internal.Execution
                 command = decorator.Wrap(command);
 
             // Add command to set up context using attributes that implement IApplyToContext
-            IApplyToContext[] changes = method.GetCustomAttributes<IApplyToContext>(true);
-            if (changes.Length > 0)
-                command = new ApplyChangesToContextCommand(command, changes);
+            foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
+                command = new ApplyChangesToContextCommand(command, attr);
 
             return command;
         }

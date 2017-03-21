@@ -46,6 +46,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            Guard.OperationValid(BeforeTest != null, "BeforeTest was not set by the derived class constructor");
+            Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
+
             if (Test.Fixture == null)
                 Test.Fixture = context.TestObject;
 
@@ -75,11 +78,11 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Perform the before test action
         /// </summary>
-        protected abstract void BeforeTest(TestExecutionContext context);
+        protected Action<TestExecutionContext> BeforeTest;
 
         /// <summary>
         /// Perform the after test action
         /// </summary>
-        protected abstract void AfterTest(TestExecutionContext context);
+        protected Action<TestExecutionContext> AfterTest;
     }
 }
