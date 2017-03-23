@@ -43,25 +43,19 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestWithTimeoutIsInvalid()
         {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeout>("Timeout");
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeout>("TimeoutAttribute may not be specified");
         }
 
         [Test]
         public void TestWithRequiresThreadIsInvalid()
         {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThread");
-        }
-
-        [Test]
-        public void TestWithTimeoutAndRequiresThreadIsInvalid()
-        {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutAndRequiresThread>("RequiresThread", "Timeout");
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThreadAttribute may not be specified");
         }
 
         [Test]
         public void TestWithDifferentApartmentIsInvalid()
         {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("DifferentApartment");
+            CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("may not specify a different apartment");
         }
 
         [Test, Apartment(ApartmentState.MTA)]
@@ -71,30 +65,12 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
         }
 
-        [Test]
-        public void TestWithTimeoutAndDifferentApartmentIsInvalid()
-        {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutAndDifferentApartment>("Timeout", "DifferentApartment");
-        }
-        [Test]
-        public void TestWithRequiresTheadAndDifferentApartmentSTAIsInvalid()
-        {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThreadAndDifferentApartment>("RequiresThread", "DifferentApartment");
-        }
-        [Test]
-        public void TestWithTimeoutRequiresThreadAndDifferentApartmentSTAIsInvalid()
-        {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeoutRequiresThreadAndDifferentApartment>("Timeout", "RequiresThread", "DifferentApartment");
-        }
-
-        private void CheckTestIsInvalid<TFixture>(params string[] reasons)
+        private void CheckTestIsInvalid<TFixture>(string reason)
         {
             var result = TestBuilder.RunTestFixture(typeof(TFixture));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure.WithSite(FailureSite.Child)));
             Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
-
-            foreach (string reason in reasons)
-                Assert.That(result.Children.ToArray()[0].Message, Does.Contain(reason));
+            Assert.That(result.Children.ToArray()[0].Message, Does.Contain(reason));
         }
     }
 
