@@ -164,15 +164,6 @@ namespace NUnit.Framework.Internal.Execution
         private ApartmentState CurrentApartment { get; set; }
 #endif
 
-        [Flags]
-        private enum OwnThreadReason
-        {
-            NotNeeded = 0,
-            RequiresThread = 1,
-            Timeout = 2,
-            DifferentApartment = 4
-        }
-
         #endregion
 
         #region Public Methods
@@ -183,12 +174,25 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-            // Timeout set at a higher level
-            int timeout = Context.TestCaseTimeout;
+#if PORTABLE || NETSTANDARD1_6
+            RunTest();
+        }
+#else
+            int timeout = 0;
 
-            // Timeout set on this test
-            if (Test.Properties.ContainsKey(PropertyNames.Timeout))
-                timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+            // Only applies to test methods
+            if (Test is TestMethod)
+            {
+                // Timeout set at a higher level
+                timeout = Context.TestCaseTimeout;
+
+                // Timeout set on this test
+                if (Test.Properties.ContainsKey(PropertyNames.Timeout))
+                    timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+            }
+
+            CurrentApartment = Thread.CurrentThread.GetApartmentState();
+            var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
 
             // Unless the context is single threaded, a supplementary thread 
             // is created on the various platforms...
@@ -211,42 +215,27 @@ namespace NUnit.Framework.Internal.Execution
             // execution. Currently, test cases are always run sequentially,
             // so this continues to apply fairly generally.
 
-            var ownThreadReason = OwnThreadReason.NotNeeded;
-
-#if !PORTABLE
-            if (Test.RequiresThread)
-                ownThreadReason |= OwnThreadReason.RequiresThread;
-            if (timeout > 0 && Test is TestMethod)
-                ownThreadReason |= OwnThreadReason.Timeout;
-#if !NETSTANDARD1_6
-            CurrentApartment = Thread.CurrentThread.GetApartmentState();
-            if (CurrentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
-                ownThreadReason |= OwnThreadReason.DifferentApartment;
-#endif
-#endif
-
-            if (ownThreadReason == OwnThreadReason.NotNeeded)
-                RunTest();
-            else if (Context.IsSingleThreaded)
+            if (Test.RequiresThread || timeout > 0 || targetApartment != CurrentApartment)
             {
-                var msg = "Test is not runnable in single-threaded context. " + ownThreadReason;
-                log.Error(msg);
-                Result.SetResult(ResultState.NotRunnable, msg);
-                WorkItemComplete();
+                if (!Context.IsSingleThreaded)
+                    RunTestOnOwnThread(timeout, targetApartment);
+                else
+                {
+                    var msg = timeout > 0
+                        ? "TimeoutAttribute may not be specified on a test within a single-threaded fixture."
+                        : Test.RequiresThread
+                            ? "RequiresThreadAttribute may not be specified on a test withihn a single-SingleThreadedAttribute fixture."
+                            : "Tests in a single-threaded fixture may not specify a different apartment";
+
+                    log.Error(msg);
+                    Result.SetResult(ResultState.NotRunnable, msg);
+                    WorkItemComplete();
+                }
             }
             else
-            {
-                log.Debug("Running test on own thread. " + ownThreadReason);
-#if !PORTABLE && !NETSTANDARD1_6
-                var apartment = (ownThreadReason | OwnThreadReason.DifferentApartment) != 0
-                    ? TargetApartment
-                    : CurrentApartment;
-                RunTestOnOwnThread(timeout, apartment);
-#endif
-            }
+                RunTest();
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
         private Thread thread;
 
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
@@ -255,9 +244,7 @@ namespace NUnit.Framework.Internal.Execution
             thread.SetApartmentState(apartment);
             RunThread(timeout);
         }
-#endif
 
-#if !PORTABLE && !NETSTANDARD1_6
         private void RunThread(int timeout)
         {
             thread.CurrentCulture = Context.CurrentCulture;
