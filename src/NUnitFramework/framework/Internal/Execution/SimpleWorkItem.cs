@@ -43,7 +43,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
-        public SimpleWorkItem(TestMethod test, ITestFilter filter) : base(test, filter)
+        public SimpleWorkItem(TestMethod test, ITestFilter filter) 
+            : base(test, filter)
         {
             _testMethod = test;
         }
@@ -53,14 +54,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         protected override void PerformWork()
         {
-            var command = Test.RunState == RunState.Runnable || 
-                Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test)
-                    ? MakeTestCommand()
-                    : new SkipCommand(Test);
-
             try
             {
-                Result = command.Execute(Context);
+                Result = MakeTestCommand().Execute(Context);
             }
             catch(Exception ex)
             {
@@ -83,48 +79,56 @@ namespace NUnit.Framework.Internal.Execution
         /// <returns>A TestCommand</returns>
         private TestCommand MakeTestCommand()
         {
-            // Command to execute test
-            TestCommand command = new TestMethodCommand(_testMethod);
-
-            var method = _testMethod.Method;
-
-            // Add any wrappers to the TestMethodCommand
-            foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
-                command = wrapper.Wrap(command);
-
-            // Create TestActionCommands using attributes of the method
-            foreach (ITestAction action in Test.Actions)
-                if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
-                    command = new TestActionCommand(command, action);
-
-            // Wrap in SetUpTearDownCommand
-            var setUpTearDownList = CommandBuilder.BuildSetUpTearDownList(Test.TypeInfo.Type, typeof(SetUpAttribute), typeof(TearDownAttribute));
-            foreach (var item in setUpTearDownList)
-                command = new SetUpTearDownCommand(command, item);
-
-            // In the current implementation, upstream actions only apply to tests. If that should change in the future,
-            // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
-            // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
-            int index = Context.UpstreamActions.Count;
-            while (--index >= 0)
+            if (Test.RunState == RunState.Runnable ||
+                Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test))
             {
-                ITestAction action = Context.UpstreamActions[index];
-                System.Diagnostics.Debug.Assert(
-                    action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test,
-                    "Invalid target on upstream action: " + action.Targets.ToString());
+                // Command to execute test
+                TestCommand command = new TestMethodCommand(_testMethod);
 
-                command = new TestActionCommand(command, action);
+                var method = _testMethod.Method;
+
+                // Add any wrappers to the TestMethodCommand
+                foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
+                    command = wrapper.Wrap(command);
+
+                // Create TestActionCommands using attributes of the method
+                foreach (ITestAction action in Test.Actions)
+                    if (action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test))
+                        command = new TestActionCommand(command, action);
+
+                // Wrap in SetUpTearDownCommand
+                var setUpTearDownList = BuildSetUpTearDownList(typeof(SetUpAttribute), typeof(TearDownAttribute));
+                foreach (var item in setUpTearDownList)
+                    command = new SetUpTearDownCommand(command, item);
+
+                // In the current implementation, upstream actions only apply to tests. If that should change in the future,
+                // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
+                // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
+                int index = Context.UpstreamActions.Count;
+                while (--index >= 0)
+                {
+                    ITestAction action = Context.UpstreamActions[index];
+                    System.Diagnostics.Debug.Assert(
+                        action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test),
+                        "Invalid target on upstream action: " + action.Targets.ToString());
+
+                    command = new TestActionCommand(command, action);
+                }
+
+                // Add wrappers that apply before setup and after teardown
+                foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
+                    command = decorator.Wrap(command);
+
+                // Add command to set up context using attributes that implement IApplyToContext
+                foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
+                    command = new ApplyChangesToContextCommand(command, attr);
+
+                return command;
             }
-
-            // Add wrappers that apply before setup and after teardown
-            foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
-                command = decorator.Wrap(command);
-
-            // Add command to set up context using attributes that implement IApplyToContext
-            foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
-                command = new ApplyChangesToContextCommand(command, attr);
-
-            return command;
+            else
+            {
+                return new SkipCommand(_testMethod);
+            }
         }
     }
 }

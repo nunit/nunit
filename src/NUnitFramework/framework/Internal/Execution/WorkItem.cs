@@ -24,11 +24,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    using Commands;
+
     /// <summary>
     /// A WorkItem may be an individual test case, a fixture or
     /// a higher level grouping of tests. All WorkItems inherit
@@ -412,6 +416,79 @@ namespace NUnit.Framework.Internal.Execution
             Test.Fixture = null;
         }
 
-#endregion
+        /// <summary>
+        /// Builds the set up tear down list.
+        /// </summary>
+        /// <param name="setUpType">Type of the set up attribute.</param>
+        /// <param name="tearDownType">Type of the tear down attribute.</param>
+        /// <returns>A list of SetUpTearDownItems</returns>
+        protected List<SetUpTearDownItem> BuildSetUpTearDownList(Type setUpType, Type tearDownType)
+        {
+            Type fixtureType = Test.TypeInfo?.Type;
+            if (fixtureType == null)
+                return new List<SetUpTearDownItem>();
+
+            var setUpMethods = Reflect.GetMethodsWithAttribute(fixtureType, setUpType, true);
+            var tearDownMethods = Reflect.GetMethodsWithAttribute(fixtureType, tearDownType, true);
+
+            var list = new List<SetUpTearDownItem>();
+
+            while (fixtureType != null && !fixtureType.Equals(typeof(object)))
+            {
+                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
+                if (node.HasMethods)
+                    list.Add(node);
+
+                fixtureType = fixtureType.GetTypeInfo().BaseType;
+            }
+
+            return list;
+        }
+
+        // This method builds a list of nodes that can be used to 
+        // run setup and teardown according to the NUnit specs.
+        // We need to execute setup and teardown methods one level
+        // at a time. However, we can't discover them by reflection
+        // one level at a time, because that would cause overridden
+        // methods to be called twice, once on the base class and
+        // once on the derived class.
+        // 
+        // For that reason, we start with a list of all setup and
+        // teardown methods, found using a single reflection call,
+        // and then descend through the inheritance hierarchy,
+        // adding each method to the appropriate level as we go.
+        private static SetUpTearDownItem BuildNode(Type fixtureType, IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        {
+            // Create lists of methods for this level only.
+            // Note that FindAll can't be used because it's not
+            // available on all the platforms we support.
+            var mySetUpMethods = SelectMethodsByDeclaringType(fixtureType, setUpMethods);
+            var myTearDownMethods = SelectMethodsByDeclaringType(fixtureType, tearDownMethods);
+
+            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods);
+        }
+
+        private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<MethodInfo> methods)
+        {
+            var list = new List<MethodInfo>();
+
+            foreach (var method in methods)
+                if (method.DeclaringType == type)
+                    list.Add(method);
+
+            return list;
+        }
+        
+        #endregion
     }
+
+#if NET_2_0 || NET_3_5
+    static class ActionTargetsExtensions
+    {
+        public static bool HasFlag(this ActionTargets targets, ActionTargets value)
+        {
+            return (targets & value) != 0;
+        }
+    }
+#endif
 }

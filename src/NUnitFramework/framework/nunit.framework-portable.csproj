@@ -332,7 +332,6 @@
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
-    <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />

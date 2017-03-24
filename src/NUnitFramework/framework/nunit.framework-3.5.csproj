@@ -180,7 +180,6 @@
     <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
     <Compile Include="Internal\Commands\TestActionCommand.cs" />
     <Compile Include="Internal\Commands\TestActionItem.cs" />
-    <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
