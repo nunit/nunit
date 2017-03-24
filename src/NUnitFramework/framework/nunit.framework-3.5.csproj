@@ -85,6 +85,7 @@
     <Compile Include="Compatibility\System.Threading\LazyThreadSafetyMode.cs" />
     <Compile Include="Compatibility\System.Threading\SpinWait.cs" />
     <Compile Include="Compatibility\System\Lazy.cs" />
+    <Compile Include="Constraints\CollectionIntersectConstraint.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />

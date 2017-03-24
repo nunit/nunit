@@ -90,6 +90,7 @@
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\NonParallelizableAttribute.cs" />
+    <Compile Include="Constraints\CollectionIntersectConstraint.cs" />
     <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />

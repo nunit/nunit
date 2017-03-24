@@ -162,6 +162,7 @@
     <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionIntersectConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />

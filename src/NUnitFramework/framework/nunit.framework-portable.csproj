@@ -157,6 +157,7 @@
     <Compile Include="Constraints\CollectionConstraint.cs" />
     <Compile Include="Constraints\CollectionContainsConstraint.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraint.cs" />
+    <Compile Include="Constraints\CollectionIntersectConstraint.cs" />
     <Compile Include="Constraints\CollectionItemsEqualConstraint.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraint.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraint.cs" />
