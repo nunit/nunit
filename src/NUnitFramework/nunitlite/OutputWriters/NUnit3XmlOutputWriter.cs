@@ -46,7 +46,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="test">The test to be written</param>
         /// <param name="writer">A TextWriter to which the test info is written</param>
-        public override void WriteTestFile(ITest test, TextWriter writer)
+        public override void WriteTestFile(ITest test, ITestFilter filter, TextWriter writer)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;

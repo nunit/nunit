@@ -93,7 +93,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="test">The top-level test</param>
         /// <param name="spec">An OutputSpecification</param>
-        public void WriteTestFile(ITest test, OutputSpecification spec)
+        public void WriteTestFile(ITest test, ITestFilter filter, OutputSpecification spec)
         {
             string outputPath = Path.Combine(_workDirectory, spec.OutputPath);
             OutputWriter outputWriter = null;
@@ -120,7 +120,7 @@ namespace NUnitLite
                         "spec");
             }
 
-            outputWriter.WriteTestFile(test, outputPath);
+            outputWriter.WriteTestFile(test, filter, outputPath);
             Console.WriteLine("Tests ({0}) saved as {1}", spec.Format, outputPath);
         }
     }

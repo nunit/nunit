@@ -252,7 +252,7 @@ namespace NUnitLite
                 TestFilter filter = CreateTestFilter(_options);
 
                 _runner.Load(_testAssembly, runSettings);
-                return _options.Explore ? ExploreTests() : RunTests(filter, runSettings);
+                return _options.Explore ? ExploreTests(filter) : RunTests(filter, runSettings);
             }
             catch (FileNotFoundException ex)
             {
@@ -318,7 +318,7 @@ namespace NUnitLite
             _textUI.DisplaySummaryReport(Summary);
         }
 
-        private int ExploreTests()
+        private int ExploreTests(ITestFilter filter)
         {
 #if !PORTABLE
             ITest testNode = _runner.LoadedTest;
@@ -326,13 +326,13 @@ namespace NUnitLite
             var specs = _options.ExploreOutputSpecifications;
 
             if (specs.Count == 0)
-                new TestCaseOutputWriter().WriteTestFile(testNode, Console.Out);
+                new TestCaseOutputWriter().WriteTestFile(testNode, filter, Console.Out);
             else
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
 
                 foreach (var spec in _options.ExploreOutputSpecifications)
-                    outputManager.WriteTestFile(testNode, spec);
+                    outputManager.WriteTestFile(testNode, filter, spec);
             }
 #endif
 

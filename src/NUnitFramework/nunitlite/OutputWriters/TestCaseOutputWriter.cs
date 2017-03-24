@@ -39,13 +39,22 @@ namespace NUnitLite
         /// </summary>
         /// <param name="test"></param>
         /// <param name="writer"></param>
-        public override void WriteTestFile(ITest test, TextWriter writer)
+        public override void WriteTestFile(ITest test, ITestFilter filter, TextWriter writer)
         {
             if (test.IsSuite)
-                foreach (var child in test.Tests)
-                    WriteTestFile(child, writer);
+            {
+                foreach(var child in test.Tests)
+                {
+                    if(filter.Pass(test))
+                    {
+                        WriteTestFile(child, filter, writer);
+                    }
+                }
+            }
             else
+            {
                 writer.WriteLine(test.FullName);
+            }
         }
 
         /// <summary>
@@ -57,7 +66,7 @@ namespace NUnitLite
         /// <param name="filter"></param>
         public override void WriteResultFile(ITestResult result, TextWriter writer, IDictionary<string, object> runSettings, TestFilter filter)
         {
-            WriteTestFile(result.Test, writer);
+            WriteTestFile(result.Test, filter, writer);
         }
     }
 }
