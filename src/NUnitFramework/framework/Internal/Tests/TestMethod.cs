@@ -76,15 +76,17 @@ namespace NUnit.Framework.Internal
         {
             get { return parms != null ? parms.ExpectedResult : null; }
         }
-
-        internal object[] Arguments
-        {
-            get { return parms != null ? parms.Arguments : null; }
-        }
-
         #endregion
 
         #region Test Overrides
+
+        /// <summary>
+        /// The arguments to use in executing the test method.
+        /// </summary>
+        public override object[] Arguments
+        {
+            get { return parms != null ? parms.Arguments : null; }
+        }
 
         /// <summary>
         /// Overridden to return a TestCaseResult.

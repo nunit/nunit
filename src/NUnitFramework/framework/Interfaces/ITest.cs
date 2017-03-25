@@ -114,6 +114,11 @@ namespace NUnit.Framework.Interfaces
         /// Gets a fixture object for running this test.
         /// </summary>
         object Fixture { get; }
+
+        /// <summary>
+        /// The arguments to use in creating the test or null if none are required.
+        /// </summary>
+        object[] Arguments { get; }
     }
 }
 

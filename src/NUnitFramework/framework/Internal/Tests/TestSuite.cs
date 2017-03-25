@@ -45,6 +45,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private List<ITest> tests = new List<ITest>();
 
+        private object[] arguments;
+
         #endregion
 
         #region Constructors
@@ -55,7 +57,7 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the suite.</param>
         public TestSuite(string name) : base(name)
         {
-            Arguments = new object[0];
+            arguments = new object[0];
         }
 
         /// <summary>
@@ -66,7 +68,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(string parentSuiteName, string name)
             : base(parentSuiteName, name)
         {
-            Arguments = new object[0];
+            arguments = new object[0];
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(ITypeInfo fixtureType)
             : base(fixtureType)
         {
-            Arguments = new object[0];
+            arguments = new object[0];
         }
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(Type fixtureType)
             : base(new TypeWrapper(fixtureType))
         {
-            Arguments = new object[0];
+            arguments = new object[0];
         }
 
         #endregion
@@ -174,7 +176,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in creating the fixture
         /// </summary>
-        public object[] Arguments { get; internal set; }
+        public override object[] Arguments { get { return arguments; } }
 
         /// <summary>
         /// Set to true to suppress sorting this suite's contents
@@ -265,6 +267,10 @@ namespace NUnit.Framework.Internal
                 }
         }
 
+        internal void SetArguments(object[] arguments)
+        {
+            this.arguments = arguments;
+        }
         #endregion
     }
 }

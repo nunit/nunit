@@ -133,7 +133,7 @@ namespace NUnit.Framework.Internal.Builders
                 fixture.FullName = nspace != null && nspace != ""
                     ? nspace + "." + name
                     : name;
-                fixture.Arguments = arguments;
+                fixture.SetArguments(arguments);
             }
 
             if (fixture.RunState != RunState.NotRunnable)
