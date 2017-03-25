@@ -44,16 +44,6 @@ namespace NUnit.Framework.Internal
         private static int _nextID = 1000;
 
         /// <summary>
-        /// The SetUp methods.
-        /// </summary>
-        protected MethodInfo[] setUpMethods;
-
-        /// <summary>
-        /// The teardown methods
-        /// </summary>
-        protected MethodInfo[] tearDownMethods;
-
-        /// <summary>
         /// Used to cache the declaring type for this MethodInfo
         /// </summary>
         protected ITypeInfo DeclaringTypeInfo;
@@ -125,6 +115,8 @@ namespace NUnit.Framework.Internal
             Id = GetNextId();
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
+            SetUpMethods = new MethodInfo[0];
+            TearDownMethods = new MethodInfo[0];
         }
 
         private static string GetNextId()
@@ -291,7 +283,17 @@ namespace NUnit.Framework.Internal
         /// <value></value>
         public int Seed { get; set; }
 
-        #endregion
+        /// <summary>
+        /// The SetUp methods.
+        /// </summary>
+        public MethodInfo[] SetUpMethods { get; protected set; }
+
+        /// <summary>
+        /// The teardown methods
+        /// </summary>
+        public MethodInfo[] TearDownMethods { get; protected set; }
+
+        #endregion 
 
         #region Internal Properties
 

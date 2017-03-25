@@ -94,10 +94,22 @@ namespace NUnit.Framework.Internal.Execution
                 // Create TestActionCommands using attributes of the method
                 foreach (ITestAction action in Test.Actions)
                     if (action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test))
-                        command = new TestActionCommand(command, action);
+                        command = new TestActionCommand(command, action); ;
 
-                // Wrap in SetUpTearDownCommand
-                var setUpTearDownList = BuildSetUpTearDownList(typeof(SetUpAttribute), typeof(TearDownAttribute));
+                // Try to locate the parent fixture. In current implementations, the test method 
+                // is either one or two levels levels below the TestFixture - if this changes, 
+                // so should the following code.
+                TestFixture parentFixture = 
+                    parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
+
+                // In normal operation we should always get the methods from the parent fixture.
+                // However, some of NUnit's own tests can create a TestMethod without a parent 
+                // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
+                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(SetUpAttribute), true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(TearDownAttribute), true);
+
+                // Wrap in SetUpTearDownCommands
+                var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
                 foreach (var item in setUpTearDownList)
                     command = new SetUpTearDownCommand(command, item);
 

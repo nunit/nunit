@@ -419,19 +419,19 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Builds the set up tear down list.
         /// </summary>
-        /// <param name="setUpType">Type of the set up attribute.</param>
-        /// <param name="tearDownType">Type of the tear down attribute.</param>
+        /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
+        /// <param name="tearDownMethods">Unsorted array of teardown MethodInfos.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
-        protected List<SetUpTearDownItem> BuildSetUpTearDownList(Type setUpType, Type tearDownType)
+        protected List<SetUpTearDownItem> BuildSetUpTearDownList(MethodInfo[] setUpMethods, MethodInfo[] tearDownMethods)
         {
-            Type fixtureType = Test.TypeInfo?.Type;
-            if (fixtureType == null)
-                return new List<SetUpTearDownItem>();
-
-            var setUpMethods = Reflect.GetMethodsWithAttribute(fixtureType, setUpType, true);
-            var tearDownMethods = Reflect.GetMethodsWithAttribute(fixtureType, tearDownType, true);
+            Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
+            Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
 
             var list = new List<SetUpTearDownItem>();
+
+            Type fixtureType = Test.TypeInfo?.Type;
+            if (fixtureType == null)
+                return list;
 
             while (fixtureType != null && !fixtureType.Equals(typeof(object)))
             {

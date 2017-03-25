@@ -39,10 +39,15 @@ namespace NUnit.Framework.Internal
         /// <param name="fixtureType">Type of the fixture.</param>
         public TestFixture(ITypeInfo fixtureType) : base(fixtureType)
         {
-            CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
-            CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));
-            CheckSetUpTearDownMethods(typeof(SetUpAttribute));
-            CheckSetUpTearDownMethods(typeof(TearDownAttribute));
+            SetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(SetUpAttribute), true);
+            TearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(TearDownAttribute), true); 
+            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeSetUpAttribute), true);
+            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeTearDownAttribute), true);
+            
+            CheckSetUpTearDownMethods(OneTimeSetUpMethods);
+            CheckSetUpTearDownMethods(OneTimeTearDownMethods);
+            CheckSetUpTearDownMethods(SetUpMethods);
+            CheckSetUpTearDownMethods(TearDownMethods);
         }
 
         #endregion

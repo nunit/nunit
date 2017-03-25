@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal.Execution
         private void InitializeSetUpAndTearDownCommands()
         {
             List<SetUpTearDownItem> setUpTearDownItems = 
-                BuildSetUpTearDownList(typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute));
+                BuildSetUpTearDownList(_suite.OneTimeSetUpMethods, _suite.OneTimeTearDownMethods);
 
             var actionItems = new List<TestActionItem>();
             foreach (ITestAction action in Test.Actions)
