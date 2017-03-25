@@ -99,8 +99,7 @@ namespace NUnit.Framework.Internal.Execution
                 // Try to locate the parent fixture. In current implementations, the test method 
                 // is either one or two levels levels below the TestFixture - if this changes, 
                 // so should the following code.
-                TestFixture parentFixture = 
-                    parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
+                TestFixture parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
 
                 // In normal operation we should always get the methods from the parent fixture.
                 // However, some of NUnit's own tests can create a TestMethod without a parent 
