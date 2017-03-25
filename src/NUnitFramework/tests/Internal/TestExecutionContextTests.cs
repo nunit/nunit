@@ -256,6 +256,13 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
+        [Test]
+        [TestCase(123, "abc")]
+        public void TestCanAccessItsOwnArguments(int i, string s)
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+        }
+
 #if ASYNC
         [Test]
         public async Task AsyncTestCanAccessItsOwnName()
@@ -300,6 +307,15 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
+        }
+
+        [Test]
+        [TestCase(123, "abc")]
+        public async Task AsyncTestCanAccessItsOwnArguments(int i, string s)
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
         }
 #endif
 
