@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
@@ -34,6 +35,7 @@ namespace NUnit.Framework.Internal
     public class TestMethod : Test
     {
         #region Fields
+        private static readonly object[] NoArguments = new object[0];
 
         /// <summary>
         /// The ParameterSet used to create this test method
@@ -85,7 +87,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override object[] Arguments
         {
-            get { return parms != null ? parms.Arguments : null; }
+            get { return parms != null ? parms.Arguments : NoArguments; }
         }
 
         /// <summary>

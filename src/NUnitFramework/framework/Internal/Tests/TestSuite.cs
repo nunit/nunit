@@ -45,8 +45,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private List<ITest> tests = new List<ITest>();
 
-        private object[] arguments;
-
         #endregion
 
         #region Constructors
@@ -57,7 +55,7 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the suite.</param>
         public TestSuite(string name) : base(name)
         {
-            arguments = new object[0];
+            Arguments = new object[0];
         }
 
         /// <summary>
@@ -68,17 +66,18 @@ namespace NUnit.Framework.Internal
         public TestSuite(string parentSuiteName, string name)
             : base(parentSuiteName, name)
         {
-            arguments = new object[0];
+            Arguments = new object[0];
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestSuite(ITypeInfo fixtureType)
+        /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
+        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
             : base(fixtureType)
         {
-            arguments = new object[0];
+            Arguments = arguments??new object[0];
         }
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(Type fixtureType)
             : base(new TypeWrapper(fixtureType))
         {
-            arguments = new object[0];
+            Arguments = new object[0];
         }
 
         #endregion
@@ -176,7 +175,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in creating the fixture
         /// </summary>
-        public override object[] Arguments { get { return arguments; } }
+        public override object[] Arguments { get; }
 
         /// <summary>
         /// Set to true to suppress sorting this suite's contents
@@ -265,11 +264,6 @@ namespace NUnit.Framework.Internal
                     this.MakeInvalid(string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
                     break;
                 }
-        }
-
-        internal void SetArguments(object[] arguments)
-        {
-            this.arguments = arguments;
         }
         #endregion
     }

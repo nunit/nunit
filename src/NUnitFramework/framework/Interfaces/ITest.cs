@@ -116,7 +116,7 @@ namespace NUnit.Framework.Interfaces
         object Fixture { get; }
 
         /// <summary>
-        /// The arguments to use in creating the test or null if none are required.
+        /// The arguments to use in creating the test or empty array if none are required.
         /// </summary>
         object[] Arguments { get; }
     }

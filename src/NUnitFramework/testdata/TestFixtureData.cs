@@ -32,6 +32,15 @@ namespace NUnit.TestData.TestFixtureTests
     /// </summary>
 
     [TestFixture]
+    public class RegularFixtureWithOneTest
+    {
+        [Test]
+        public void OneTest()
+        {
+        }
+    }
+
+    [TestFixture]
     public class NoDefaultCtorFixture
     {
         public NoDefaultCtorFixture(int index)
@@ -48,6 +57,20 @@ namespace NUnit.TestData.TestFixtureTests
     public class FixtureWithArgsSupplied
     {
         public FixtureWithArgsSupplied(int x, int y)
+        {
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+    }
+
+    [TestFixture(7, 3)]
+    [TestFixture(8, 4)]
+    public class FixtureWithMultipleArgsSupplied
+    {
+        public FixtureWithMultipleArgsSupplied(int x, int y)
         {
         }
 
@@ -91,6 +114,25 @@ namespace NUnit.TestData.TestFixtureTests
     {
         [TestCase(42)]
         public void SomeTest(int x)
+        {
+        }
+    }
+
+    [TestFixture]
+    public class FixtureWithParameterizedTestAndArgsSupplied
+    {
+        [TestCase(42, "abc")]
+        public void SomeTest(int x, string y)
+        {
+        }
+    }
+
+    [TestFixture]
+    public class FixtureWithParameterizedTestAndMultipleArgsSupplied
+    {
+        [TestCase(42, "abc")]
+        [TestCase(24, "cba")]
+        public void SomeTest(int x, string y)
         {
         }
     }

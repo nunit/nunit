@@ -121,6 +121,7 @@
     <Compile Include="Internal\Results\TestResultGeneralTests.cs" />
     <Compile Include="Internal\Results\TestResultFailureTests.cs" />
     <Compile Include="Internal\Results\TestResultTests.cs" />
+    <Compile Include="Internal\TestMethodTests.cs" />
     <Compile Include="Internal\TestNameGeneratorTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />
     <Compile Include="Internal\TypeHelperTests.cs" />

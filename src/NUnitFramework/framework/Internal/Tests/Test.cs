@@ -188,12 +188,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// The arguments to use in creating the test or null if none required.
+        /// The arguments to use in creating the test or empty array if none required.
         /// </summary>
-        public virtual object[] Arguments
-        {
-            get { return null; }
-        }
+        public abstract object[] Arguments { get; }
 
         /// <summary>
         /// Gets the TypeInfo of the fixture used in running this test
