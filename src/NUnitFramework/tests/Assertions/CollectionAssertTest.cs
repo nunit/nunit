@@ -47,14 +47,14 @@ namespace NUnit.Framework.Assertions
         [Test()]
         public void ItemsOfType()
         {
-            var collection = new SimpleObjectCollection("x", "y", "z");
+            var collection = new SimpleEnumerable("x", "y", "z");
             CollectionAssert.AllItemsAreInstancesOfType(collection,typeof(string));
         }
 
         [Test]
         public void ItemsOfTypeFailure()
         {
-            var collection = new SimpleObjectCollection("x", "y", new object());
+            var collection = new SimpleEnumerable("x", "y", new object());
 
             var expectedMessage =
                 "  Expected: all items instance of <System.String>" + Environment.NewLine +
@@ -69,14 +69,14 @@ namespace NUnit.Framework.Assertions
         [Test()]
         public void ItemsNotNull()
         {
-            var collection = new SimpleObjectCollection("x", "y", "z");
+            var collection = new SimpleEnumerable("x", "y", "z");
             CollectionAssert.AllItemsAreNotNull(collection);
         }
 
         [Test]
         public void ItemsNotNullFailure()
         {
-            var collection = new SimpleObjectCollection("x", null, "z");
+            var collection = new SimpleEnumerable("x", null, "z");
 
             var expectedMessage =
                 "  Expected: all items not null" + Environment.NewLine +
@@ -93,19 +93,19 @@ namespace NUnit.Framework.Assertions
         public void Unique_WithObjects()
         {
             CollectionAssert.AllItemsAreUnique(
-                new SimpleObjectCollection(new object(), new object(), new object()));
+                new SimpleEnumerable(new object(), new object(), new object()));
         }
 
         [Test]
         public void Unique_WithStrings()
         {
-            CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", "z"));
+            CollectionAssert.AllItemsAreUnique(new SimpleEnumerable("x", "y", "z"));
         }
 
         [Test]
         public void Unique_WithNull()
         {
-            CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", null, "z"));
+            CollectionAssert.AllItemsAreUnique(new SimpleEnumerable("x", "y", null, "z"));
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Assertions
                 "  Expected: all items unique" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", "x")));
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(new SimpleEnumerable("x", "y", "x")));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Assertions
         public void UniqueFailure_WithTwoNulls()
         {
             Assert.Throws<AssertionException>(
-                () => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z")));
+                () => CollectionAssert.AllItemsAreUnique(new SimpleEnumerable("x", null, "y", null, "z")));
         }
 
         #endregion
@@ -133,8 +133,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqual()
         {
-            var set1 = new SimpleObjectCollection("x", "y", "z");
-            var set2 = new SimpleObjectCollection("x", "y", "z");
+            var set1 = new SimpleEnumerable("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "y", "z");
 
             CollectionAssert.AreEqual(set1,set2);
             CollectionAssert.AreEqual(set1,set2,new TestComparer());
@@ -259,8 +259,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void Equivalent()
         {
-            ICollection set1 = new SimpleObjectCollection("x", "y", "z");
-            ICollection set2 = new SimpleObjectCollection("z", "y", "x");
+            IEnumerable set1 = new SimpleEnumerable("x", "y", "z");
+            IEnumerable set2 = new SimpleEnumerable("z", "y", "x");
 
             CollectionAssert.AreEquivalent(set1,set2);
         }
@@ -268,8 +268,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void EquivalentFailOne()
         {
-            ICollection set1 = new SimpleObjectCollection("x", "y", "z");
-            ICollection set2 = new SimpleObjectCollection("x", "y", "x");
+            IEnumerable set1 = new SimpleEnumerable("x", "y", "z");
+            IEnumerable set2 = new SimpleEnumerable("x", "y", "x");
 
             var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
@@ -282,8 +282,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void EquivalentFailTwo()
         {
-            ICollection set1 = new SimpleObjectCollection("x", "y", "x");
-            ICollection set2 = new SimpleObjectCollection("x", "y", "z");
+            IEnumerable set1 = new SimpleEnumerable("x", "y", "x");
+            IEnumerable set2 = new SimpleEnumerable("x", "y", "z");
             
             var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"x\" >" + Environment.NewLine +
@@ -296,8 +296,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEquivalentHandlesNull()
         {
-            ICollection set1 = new SimpleObjectCollection(null, "x", null, "z");
-            ICollection set2 = new SimpleObjectCollection("z", null, "x", null);
+            IEnumerable set1 = new SimpleEnumerable(null, "x", null, "z");
+            IEnumerable set2 = new SimpleEnumerable("z", null, "x", null);
             
             CollectionAssert.AreEquivalent(set1,set2);
         }
@@ -308,8 +308,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqual()
         {
-            var set1 = new SimpleObjectCollection("x", "y", "z");
-            var set2 = new SimpleObjectCollection("x", "y", "x");
+            var set1 = new SimpleEnumerable("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "y", "x");
 
             CollectionAssert.AreNotEqual(set1,set2);
             CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
@@ -322,8 +322,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqual_Fails()
         {
-            var set1 = new SimpleObjectCollection("x", "y", "z");
-            var set2 = new SimpleObjectCollection("x", "y", "z");
+            var set1 = new SimpleEnumerable("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "y", "z");
 
             var expectedMessage = 
                 "  Expected: not equal to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
@@ -337,7 +337,7 @@ namespace NUnit.Framework.Assertions
         public void AreNotEqual_HandlesNull()
         {
             object[] set1 = new object[3];
-            var set2 = new SimpleObjectCollection("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "y", "z");
 
             CollectionAssert.AreNotEqual(set1,set2);
             CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
@@ -350,8 +350,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void NotEquivalent()
         {
-            var set1 = new SimpleObjectCollection("x", "y", "z");
-            var set2 = new SimpleObjectCollection("x", "y", "x");
+            var set1 = new SimpleEnumerable("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "y", "x");
 
             CollectionAssert.AreNotEquivalent(set1,set2);
         }
@@ -359,8 +359,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void NotEquivalent_Fails()
         {
-            var set1 = new SimpleObjectCollection("x", "y", "z");
-            var set2 = new SimpleObjectCollection("x", "z", "y");
+            var set1 = new SimpleEnumerable("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "z", "y");
 
             var expectedMessage =
                 "  Expected: not equivalent to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
@@ -373,8 +373,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void NotEquivalentHandlesNull()
         {
-            var set1 = new SimpleObjectCollection("x", null, "z");
-            var set2 = new SimpleObjectCollection("x", null, "x");
+            var set1 = new SimpleEnumerable("x", null, "z");
+            var set2 = new SimpleEnumerable("x", null, "x");
 
             CollectionAssert.AreNotEquivalent(set1,set2);
         }
@@ -391,7 +391,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void Contains_ICollection()
         {
-            var collection = new SimpleObjectCollection("x", "y", "z");
+            var collection = new SimpleEnumerable("x", "y", "z");
             CollectionAssert.Contains(collection,"x");
         }
 
@@ -411,7 +411,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ContainsFails_ICollection()
         {
-            var collection = new SimpleObjectCollection("x", "y", "z");
+            var collection = new SimpleEnumerable("x", "y", "z");
 
             var expectedMessage =
                 "  Expected: collection containing \"a\"" + Environment.NewLine +
@@ -437,7 +437,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ContainsFails_EmptyICollection()
         {
-            var ca = new SimpleObjectCollection(new object[0]);
+            var ca = new SimpleEnumerable(new object[0]);
 
             var expectedMessage =
                 "  Expected: collection containing \"x\"" + Environment.NewLine +
@@ -457,7 +457,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ContainsNull_ICollection()
         {
-            var ca = new SimpleObjectCollection(new object[] { 1, 2, 3, null, 4, 5 });
+            var ca = new SimpleEnumerable(new object[] { 1, 2, 3, null, 4, 5 });
             CollectionAssert.Contains( ca, null );
         }
         #endregion
