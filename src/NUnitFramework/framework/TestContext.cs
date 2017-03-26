@@ -388,7 +388,15 @@ namespace NUnit.Framework
                 get { return _test.Properties; }
             }
 
-#endregion
+            /// <summary>
+            /// The arguments to use in creating the test or empty array if none are required.
+            /// </summary>
+            public object[] Arguments
+            {
+                get { return _test.Arguments; }
+            }
+
+            #endregion
         }
 
 #endregion
