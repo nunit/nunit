@@ -256,7 +256,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
-        [Test]
         [TestCase(123, "abc")]
         public void TestCanAccessItsOwnArguments(int i, string s)
         {
@@ -309,7 +308,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
-        [Test]
         [TestCase(123, "abc")]
         public async Task AsyncTestCanAccessItsOwnArguments(int i, string s)
         {

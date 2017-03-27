@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
             : base(fixtureType)
         {
-            Arguments = arguments??new object[0];
+            Arguments = arguments ?? new object[0];
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// The arguments to use in creating the fixture
+        /// The arguments to use in creating the fixture, or empty array if none are provided.
         /// </summary>
         public override object[] Arguments { get; }
 

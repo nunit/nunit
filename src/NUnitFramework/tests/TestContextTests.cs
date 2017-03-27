@@ -221,7 +221,6 @@ namespace NUnit.Framework.Tests
 
         #region Arguments
 
-        [Test]
         [TestCase(24, "abc")]
         public void TestCanAccessItsOwnArguments(int x, string s)
         {

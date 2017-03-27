@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal
         #region Test Overrides
 
         /// <summary>
-        /// The arguments to use in executing the test method.
+        /// The arguments to use in executing the test method, or empty array if none are provided.
         /// </summary>
         public override object[] Arguments
         {

@@ -121,7 +121,6 @@ namespace NUnit.TestData.TestFixtureTests
     [TestFixture]
     public class FixtureWithParameterizedTestAndArgsSupplied
     {
-        [Test]
         [TestCase(42, "abc")]
         public void SomeTest(int x, string y)
         {
@@ -131,7 +130,6 @@ namespace NUnit.TestData.TestFixtureTests
     [TestFixture]
     public class FixtureWithParameterizedTestAndMultipleArgsSupplied
     {
-        [Test]
         [TestCase(42, "abc")]
         [TestCase(24, "cba")]
         public void SomeTest(int x, string y)
