@@ -175,9 +175,6 @@ namespace NUnit.Framework.Constraints
                 return AreEqual(xKey, yKey, ref keyTolerance) && AreEqual(xValue, yValue, ref tolerance);
             }
 
-            //if (x is ICollection && y is ICollection)
-            //    return CollectionsEqual((ICollection)x, (ICollection)y, ref tolerance);
-
             if (x is string && y is string)
                 return StringsEqual((string)x, (string)y);
 
@@ -328,51 +325,6 @@ namespace NUnit.Framework.Constraints
         {
             var keyTolerance = Tolerance.Exact;
             return AreEqual(x.Key, y.Key, ref keyTolerance) && AreEqual(x.Value, y.Value, ref tolerance);
-        }
-
-        private bool CollectionsEqual(ICollection x, ICollection y, ref Tolerance tolerance)
-        {
-            IEnumerator expectedEnum = null;
-            IEnumerator actualEnum = null;
-
-            try
-            {
-                expectedEnum = x.GetEnumerator();
-                actualEnum = y.GetEnumerator();
-                int count;
-                for (count = 0; ; count++)
-                {
-                    bool expectedHasData = expectedEnum.MoveNext();
-                    bool actualHasData = actualEnum.MoveNext();
-
-                    if (!expectedHasData && !actualHasData)
-                        return true;
-
-                    if (expectedHasData != actualHasData ||
-                        !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
-                    {
-                        FailurePoint fp = new FailurePoint();
-                        fp.Position = count;
-                        fp.ExpectedHasData = expectedHasData;
-                        if (expectedHasData)
-                            fp.ExpectedValue = expectedEnum.Current;
-                        fp.ActualHasData = actualHasData;
-                        if (actualHasData)
-                            fp.ActualValue = actualEnum.Current;
-                        failurePoints.Insert(0, fp);
-                        return false;
-                    }
-                }
-            }
-            finally
-            {
-                var expectedDisposable = expectedEnum as IDisposable;
-                if (expectedDisposable != null) expectedDisposable.Dispose();
-
-                var actualDisposable = actualEnum as IDisposable;
-                if (actualDisposable != null) actualDisposable.Dispose();
-
-            }
         }
 
         private bool StringsEqual(string x, string y)
