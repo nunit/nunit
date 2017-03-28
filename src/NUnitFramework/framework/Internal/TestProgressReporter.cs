@@ -63,12 +63,13 @@ namespace NUnit.Framework.Internal
             try
             {
                 string report = string.Format(
-                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\"/>",
+                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\" type=\"{5}\"/>",
                     startElement,
                     test.Id,
                     parent != null ? parent.Id : string.Empty,
                     FormatAttributeValue(test.Name),
-                    FormatAttributeValue(test.FullName));
+                    FormatAttributeValue(test.FullName),
+                    test.TestType);
 
                 handler.RaiseCallbackEvent(report);
             }
