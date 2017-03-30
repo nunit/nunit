@@ -303,31 +303,6 @@ namespace NUnit.Framework
                     }
                 }
 
-                //Special handling for optional parameters
-                if (parms.Arguments.Length < argsNeeded)
-                {
-                    object[] newArgList = new object[parameters.Length];
-                    Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
-
-                    //Fill with Type.Missing for remaining required parameters where optional
-                    for (var i = parms.Arguments.Length; i < parameters.Length; i++)
-                    {
-                        if (parameters[i].IsOptional)
-                            newArgList[i] = Type.Missing;
-                        else
-                        {
-                            if (i < parms.Arguments.Length)
-                                newArgList[i] = parms.Arguments[i];
-                            else
-                                throw new TargetParameterCountException(string.Format(
-                                    "Method requires {0} arguments but TestCaseAttribute only supplied {1}",
-                                    argsNeeded, 
-                                    argsProvided));
-                        }
-                    }
-                    parms.Arguments = newArgList;
-                }
-
                 //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 //    parms.Arguments = new object[]{parms.Arguments};
 

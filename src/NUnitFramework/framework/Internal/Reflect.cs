@@ -55,6 +55,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class Reflect
     {
+        private const bool DefaultArgsAlignment = true;
         private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
         // A zero-length Type array - not provided by System.Type for all CLR versions we support.
@@ -182,6 +183,60 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region Manage arguments
+        /// <summary>
+        /// The number of paramaters accepted by <paramref name="method"/> may differs from
+        /// number of provided <paramref name="args">arguments</paramref> if there are
+        /// some optional parameters. By default using reflection to invoke such methods
+        /// results in <see cref="TargetParameterCountException"/> that is not an expected
+        /// behavior when we execute the <paramref name="method"/> in a natural way.
+        /// To fix this misbehaviour we replace missing values for optional parameters
+        /// with <see cref="Type.Missing"/> value.
+        /// </summary>
+        /// <param name="method">A MethodInfo for the method to get parameters from</param>
+        /// <param name="args">The argument list for the method</param>
+        /// <returns>
+        /// Returns aligned array of arguments if required or throws a
+        /// <see cref="TargetParameterCountException"/> if it can't be aligned.
+        /// </returns>
+        public static object[] AlignOptionalArguments(MethodInfo method, params object[] args)
+        {
+            var parms = method.GetParameters();
+            var tempArgs = args ?? new object[0];
+
+            if (tempArgs.Length == parms.Length) return args;
+
+            var exception = new TargetParameterCountException(string.Format(
+                "Method requires {0} arguments but TestCaseAttribute only supplied {1}",
+                parms.Length,
+                tempArgs.Length));
+
+            if (tempArgs.Length < parms.Length)
+            {
+                var result = new object[parms.Length];
+                Array.Copy(tempArgs, result, tempArgs.Length);
+
+                // Fill with Type.Missing for remaining required parameters where optional
+                for (var i = tempArgs.Length; i < parms.Length; i++)
+                {
+                    if (parms[i].IsOptional)
+                        result[i] = Type.Missing;
+                    else
+                    {
+                        if (i < tempArgs.Length)
+                            result[i] = tempArgs[i];
+                        else
+                            throw exception;
+                    }
+                }
+
+                return result;
+            }
+
+            throw exception;
+        }
+        #endregion
+
         #region Invoke Methods
 
         /// <summary>
@@ -191,7 +246,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         public static object InvokeMethod( MethodInfo method, object fixture )
         {
-            return InvokeMethod(method, fixture, null);
+            return InvokeMethod(method, fixture, true, null);
         }
 
         /// <summary>
@@ -199,15 +254,18 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="method">A MethodInfo for the method to be invoked</param>
         /// <param name="fixture">The object on which to invoke the method</param>
+        /// <param name="align">True if arguments should be <see cref="AlignOptionalArguments">aligned</see></param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
 #if !NET20 && !NET35 && !NETSTANDARD1_6
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
-        public static object InvokeMethod( MethodInfo method, object fixture, params object[] args )
+        public static object InvokeMethod( MethodInfo method, object fixture, bool align, params object[] args )
         {
             if(method != null)
             {
+                args = align ? AlignOptionalArguments(method, args) : args;
+
                 try
                 {
                     return method.Invoke(fixture, args);
@@ -232,6 +290,17 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
+        /// <summary>
+        /// Invoke a method with default <see cref="AlignOptionalArguments">aligning</see>.
+        /// </summary>
+        /// <param name="method">A MethodInfo for the method to be invoked</param>
+        /// <param name="fixture">The object on which to invoke the method</param>
+        /// <param name="args">The argument list for the method</param>
+        /// <returns>The return value from the invoked method</returns>
+        public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
+        {
+            return InvokeMethod(method, fixture, DefaultArgsAlignment, args);
+        }
         #endregion
 
 #if NETSTANDARD1_6
