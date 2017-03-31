@@ -74,6 +74,18 @@ namespace NUnit.TestData.ActionAttributeTests
             Events.Clear();
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            Events.Add(string.Format("{0}.SetUpTearDown.Before.Test", TestContext.CurrentContext.Test.Name));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Events.Add(string.Format("{0}.SetUpTearDown.After.Test", TestContext.CurrentContext.Test.Name));
+        }
+
         [TestCase("One", TestName="CaseOne")]
         [TestCase("Two", TestName="CaseTwo")]
         [TaggedAction("OnMethod", ActionTargets.Suite | ActionTargets.Test)] // Applies to both suite and test

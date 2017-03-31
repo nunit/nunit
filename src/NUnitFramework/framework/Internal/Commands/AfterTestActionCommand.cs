@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,36 +22,32 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionCommand handles a single ITestAction applied
-    /// to a test. It runs the BeforeTest method, then runs the
-    /// test and finally runs the AfterTest method.
+    /// TestActionAfterCommand handles the AfterTest method of a single 
+    /// TestActionItem, provided the items BeforeTest has been run.
     /// </summary>
-    public class TestActionCommand : BeforeAndAfterTestCommand
+    public class AfterTestActionCommand : AfterTestCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
+        /// Initializes a new instance of the <see cref="AfterTestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestAction with which to wrap the inner command.</param>
-        public TestActionCommand(TestCommand innerCommand, ITestAction action)
+        /// <param name="action">The TestActionItem to run before the inner command.</param>
+        public AfterTestActionCommand(TestCommand innerCommand, TestActionItem action)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "BeforeTestActionCommand may only apply to a TestSuite", "innerCommand");
             Guard.ArgumentNotNull(action, nameof(action));
-
-            BeforeTest = (context) =>
-            {
-                action.BeforeTest(Test);
-            };
 
             AfterTest = (context) =>
             {
-                action.AfterTest(Test);
+                if (action.BeforeTestWasRun)
+                    action.AfterTest(Test);
             };
         }
     }

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 #if PORTABLE
 using System.Linq;
 #endif
@@ -346,26 +347,27 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the _values for an enumeration, using Enum.GetTypes
-        /// where available, otherwise through reflection.
+        /// Return the interfaces implemented by a Type.
         /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns></returns>
-        public static Array GetEnumValues(Type enumType)
+        /// <param name="type">The Type to be examined.</param>
+        /// <returns>An array of Types for the interfaces.</returns>
+        public static Type[] GetDeclaredInterfaces(Type type)
         {
-            return Enum.GetValues(enumType);
-        }
+            List<Type> interfaces = new List<Type>(type.GetInterfaces());
 
-        /// <summary>
-        /// Gets the ids of the _values for an enumeration, 
-        /// using Enum.GetNames where available, otherwise
-        /// through reflection.
-        /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns></returns>
-        public static string[] GetEnumNames(Type enumType)
-        {
-            return Enum.GetNames(enumType);
+            if (type.GetTypeInfo().BaseType == typeof(object))
+                return interfaces.ToArray();
+
+            List<Type> baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
+            List<Type> declaredInterfaces = new List<Type>();
+
+            foreach (Type interfaceType in interfaces)
+            {
+                if (!baseInterfaces.Contains(interfaceType))
+                    declaredInterfaces.Add(interfaceType);
+            }
+
+            return declaredInterfaces.ToArray();
         }
     }
 }

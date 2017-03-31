@@ -291,7 +291,6 @@
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\TNode.cs" />
-    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
@@ -306,9 +305,16 @@
     <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
+    <Compile Include="Internal\Commands\AfterTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\AfterTestCommand.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
-    <Compile Include="Internal\Commands\CommandStage.cs" />
+    <Compile Include="Internal\Commands\BeforeAndAfterTestCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
+    <Compile Include="Internal\Commands\ConstructFixtureCommand.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
+    <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
+    <Compile Include="Internal\Commands\EmptyTestCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
@@ -322,7 +328,6 @@
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
-    <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
