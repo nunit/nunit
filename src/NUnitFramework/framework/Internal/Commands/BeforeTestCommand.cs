@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,36 +23,36 @@
 
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionCommand handles a single ITestAction applied
-    /// to a test. It runs the BeforeTest method, then runs the
-    /// test and finally runs the AfterTest method.
+    /// BeforeTestCommand is a DelegatingTestCommand that performs some
+    /// specific action before the inner command is run.
     /// </summary>
-    public class TestActionCommand : BeforeAndAfterTestCommand
+    public abstract class BeforeTestCommand : DelegatingTestCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
+        /// Construct a BeforeCommand
         /// </summary>
-        /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestAction with which to wrap the inner command.</param>
-        public TestActionCommand(TestCommand innerCommand, ITestAction action)
-            : base(innerCommand)
+        public BeforeTestCommand(TestCommand innerCommand) : base(innerCommand) { }
+
+        /// <summary>
+        /// Execute the command
+        /// </summary>
+        public override TestResult Execute(TestExecutionContext context)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
-            Guard.ArgumentNotNull(action, nameof(action));
+            Guard.OperationValid(BeforeTest != null, "BeforeTest was not set by the derived class constructor");
 
-            BeforeTest = (context) =>
-            {
-                action.BeforeTest(Test);
-            };
+            BeforeTest(context);
 
-            AfterTest = (context) =>
-            {
-                action.AfterTest(Test);
-            };
+            return context.CurrentResult = innerCommand.Execute(context);
         }
+
+        /// <summary>
+        /// Action to perform before the inner command.
+        /// </summary>
+        protected Action<TestExecutionContext> BeforeTest;
     }
 }

@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+﻿ // ***********************************************************************
+// Copyright (c) 2010-2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -31,10 +31,8 @@ namespace NUnit.Framework.Internal.Commands
     /// <summary>
     /// TODO: Documentation needed for class
     /// </summary>
-    public class MaxTimeCommand : DelegatingTestCommand
+    public class MaxTimeCommand : AfterTestCommand
     {
-        private int maxTime;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MaxTimeCommand"/> class.
         /// </summary>
@@ -43,40 +41,30 @@ namespace NUnit.Framework.Internal.Commands
         public MaxTimeCommand(TestCommand innerCommand, int maxTime)
             : base(innerCommand)
         {
-            this.maxTime = maxTime;
-        }
-
-        /// <summary>
-        /// Runs the test, saving a TestResult in the supplied TestExecutionContext
-        /// </summary>
-        /// <param name="context">The context in which the test should run.</param>
-        /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
-        {
-            // TODO: This command duplicates the calculation of the
-            // duration of the test because that calculation is 
-            // normally performed at a higher level. Most likely,
-            // we should move the maxtime calculation to the
-            // higher level eventually.
-            long startTicks = Stopwatch.GetTimestamp();
-
-            TestResult testResult = innerCommand.Execute(context);
-
-            long tickCount = Stopwatch.GetTimestamp() - startTicks;
-            double seconds = (double)tickCount / Stopwatch.Frequency;
-            testResult.Duration = seconds;
-
-            if (testResult.ResultState == ResultState.Success)
+            AfterTest = (context) =>
             {
-                double elapsedTime = testResult.Duration * 1000d;
+                // TODO: This command duplicates the calculation of the
+                // duration of the test because that calculation is 
+                // normally performed at a higher level. Most likely,
+                // we should move the maxtime calculation to the
+                // higher level eventually.
 
-                if (elapsedTime > maxTime)
-                    testResult.SetResult(ResultState.Failure,
-                        string.Format("Elapsed time of {0}ms exceeds maximum of {1}ms",
-                            elapsedTime, maxTime));
-            }
+                long tickCount = Stopwatch.GetTimestamp() - context.StartTicks;
+                double seconds = (double)tickCount / Stopwatch.Frequency;
+                TestResult result = context.CurrentResult;
 
-            return testResult;
+                result.Duration = seconds;
+
+                if (result.ResultState == ResultState.Success)
+                {
+                    double elapsedTime = result.Duration * 1000d;
+
+                    if (elapsedTime > maxTime)
+                        result.SetResult(ResultState.Failure,
+                            string.Format("Elapsed time of {0}ms exceeds maximum of {1}ms",
+                                elapsedTime, maxTime));
+                }
+            };
         }
     }
 }

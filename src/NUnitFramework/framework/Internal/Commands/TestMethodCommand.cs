@@ -56,7 +56,11 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="context">The execution context</param>
         public override TestResult Execute(TestExecutionContext context)
         {
-            // TODO: Decide if we should handle exceptions here
+            // NOTE: Things would be cleaner if we could handle
+            // exceptions in this command. However, that would
+            // make it impossible to write a wrapper command to
+            // implement ExpectedException, among other things.
+
             object result = RunTestMethod(context);
 
             if (testMethod.HasExpectedResult)

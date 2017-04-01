@@ -29,33 +29,26 @@ namespace NUnit.Framework.Internal.Commands
     /// TheoryResultCommand adjusts the result of a Theory so that
     /// it fails if all the results were inconclusive.
     /// </summary>
-    public class TheoryResultCommand : DelegatingTestCommand
+    public class TheoryResultCommand : AfterTestCommand
     {
         /// <summary>
         /// Constructs a TheoryResultCommand 
         /// </summary>
         /// <param name="command">The command to be wrapped by this one</param>
-        public TheoryResultCommand(TestCommand command) : base(command) { }
-
-        /// <summary>
-        /// Overridden to call the inner command and adjust the result
-        /// in case all chlid results were inconclusive.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override TestResult Execute(TestExecutionContext context)
+        public TheoryResultCommand(TestCommand command) : base(command)
         {
-            TestResult theoryResult = innerCommand.Execute(context);
-
-            if (theoryResult.ResultState == ResultState.Inconclusive)
+            AfterTest = (context) =>
             {
-                if (!theoryResult.HasChildren)
-                    theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
-                else
-                    theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
-            }
+                TestResult theoryResult = context.CurrentResult;
 
-            return theoryResult;
+                if (theoryResult.ResultState == ResultState.Inconclusive)
+                {
+                    if (!theoryResult.HasChildren)
+                        theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
+                    else
+                        theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
+                }
+            };
         }
     }
 }

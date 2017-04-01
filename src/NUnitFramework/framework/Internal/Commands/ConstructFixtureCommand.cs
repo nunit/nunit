@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,37 +22,41 @@
 // ***********************************************************************
 
 using System;
-using System.Threading;
+using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionCommand handles a single ITestAction applied
-    /// to a test. It runs the BeforeTest method, then runs the
-    /// test and finally runs the AfterTest method.
+    /// ConstructFixtureCommand constructs the user test object if necessary.
     /// </summary>
-    public class TestActionCommand : BeforeAndAfterTestCommand
+    public class ConstructFixtureCommand : BeforeTestCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
+        /// Constructs a OneTimeSetUpCommand for a suite
         /// </summary>
-        /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestAction with which to wrap the inner command.</param>
-        public TestActionCommand(TestCommand innerCommand, ITestAction action)
-            : base(innerCommand)
+        /// <param name="innerCommand">The inner command to which the command applies</param>
+        public ConstructFixtureCommand(TestCommand innerCommand)
+            : base(innerCommand) 
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
-            Guard.ArgumentNotNull(action, nameof(action));
+            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", "innerCommand");
 
             BeforeTest = (context) =>
             {
-                action.BeforeTest(Test);
-            };
+                ITypeInfo typeInfo = Test.TypeInfo;
 
-            AfterTest = (context) =>
-            {
-                action.AfterTest(Test);
+                if (typeInfo != null)
+                {
+                    // Use pre-constructed fixture if available, otherwise construct it
+                    if (!typeInfo.IsStaticClass)
+                    {
+                        context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
+                        if (Test.Fixture == null)
+                            Test.Fixture = context.TestObject;
+                    }
+                }
             };
         }
     }
 }
+

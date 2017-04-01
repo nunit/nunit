@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,37 +22,28 @@
 // ***********************************************************************
 
 using System;
-using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionCommand handles a single ITestAction applied
-    /// to a test. It runs the BeforeTest method, then runs the
-    /// test and finally runs the AfterTest method.
+    /// EmptyTestCommand is a TestCommand that does nothing. It simply
+    /// returns the current result from the context when executed. We
+    /// use it to avoid testing for null when executing a chain of
+    /// DelegatingTestCommands.
     /// </summary>
-    public class TestActionCommand : BeforeAndAfterTestCommand
+    public class EmptyTestCommand : TestCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
+        /// Construct a NullCommand for a test
         /// </summary>
-        /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestAction with which to wrap the inner command.</param>
-        public TestActionCommand(TestCommand innerCommand, ITestAction action)
-            : base(innerCommand)
+        public EmptyTestCommand(Test test) : base(test) { }
+
+        /// <summary>
+        /// Execute the command
+        /// </summary>
+        public override TestResult Execute(TestExecutionContext context)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
-            Guard.ArgumentNotNull(action, nameof(action));
-
-            BeforeTest = (context) =>
-            {
-                action.BeforeTest(Test);
-            };
-
-            AfterTest = (context) =>
-            {
-                action.AfterTest(Test);
-            };
+            return context.CurrentResult;
         }
     }
 }
