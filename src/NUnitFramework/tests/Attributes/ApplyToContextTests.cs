@@ -38,14 +38,6 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void ParallelizableAttribute()
-        {
-            var attr = new ParallelizableAttribute(ParallelScope.Fixtures);
-            attr.ApplyToContext(_context);
-            Assert.That(_context.ParallelScope, Is.EqualTo(ParallelScope.Fixtures));
-        }
-
-        [Test]
         public void SingleThreadedAttribute()
         {
             var attr = new SingleThreadedAttribute();

@@ -78,8 +78,8 @@ namespace NUnit.Framework.Internal.Execution
 
         /// <summary>
         /// Method that actually performs the work. Overridden
-        /// in CompositeWorkItem to do setup, run all child
-        /// items and then do teardown.
+        /// in CompositeWorkItem to do one-time setup, run all child
+        /// items and then dispatch the one-time teardown work item.
         /// </summary>
         protected override void PerformWork()
         {
@@ -287,18 +287,22 @@ namespace NUnit.Framework.Internal.Execution
                 if (CheckForCancellation())
                     break;
 
-                child.Completed += new EventHandler(OnChildCompleted);
+                child.Completed += new EventHandler(OnChildItemCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
 
                 Context.Dispatcher.Dispatch(child);
                 childCount--;
             }
 
+            // If run was cancelled, reduce countdown by number of
+            // child items not yet staged and check if we are done.
             if (childCount > 0)
-            {
-                while (childCount-- > 0)
-                    CountDownChildTest();
-            }
+                lock(_childCompletionLock)
+                {
+                    _childTestCountdown.Signal(childCount);
+                    if (_childTestCountdown.CurrentCount == 0)
+                        OnAllChildItemsCompleted();
+                }
         }
 
         private void CreateChildWorkItems()
@@ -331,7 +335,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
             }
 
-            if (_countOrder !=0) SortChildren();
+            if (_countOrder != 0) SortChildren();
         }
 
         private class WorkItemOrderComparer : IComparer<WorkItem>
@@ -349,10 +353,10 @@ namespace NUnit.Framework.Internal.Execution
                 var yKey = int.MaxValue;
 
                 if (x.Test.Properties.ContainsKey(PropertyNames.Order))
-                    xKey =(int)x.Test.Properties[PropertyNames.Order][0];
+                    xKey = (int)x.Test.Properties[PropertyNames.Order][0];
 
                 if (y.Test.Properties.ContainsKey(PropertyNames.Order))
-                    yKey =(int)y.Test.Properties[PropertyNames.Order][0];
+                    yKey = (int)y.Test.Properties[PropertyNames.Order][0];
 
                 return xKey.CompareTo(yKey);
             }
@@ -413,47 +417,40 @@ namespace NUnit.Framework.Internal.Execution
             return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
 
-        private object _completionLock = new object();
+        private object _childCompletionLock = new object();
 
-        private void OnChildCompleted(object sender, EventArgs e)
+        private void OnChildItemCompleted(object sender, EventArgs e)
         {
-            lock (_completionLock)
+            // Since child tests may be run on various threads, this
+            // method may be called simultaneously by different children.
+            // The lock is a member of the parent item and thereore
+            // only blocks its own children.
+            lock (_childCompletionLock)
             {
                 WorkItem childTask = sender as WorkItem;
                 if (childTask != null)
                 {
-                    childTask.Completed -= new EventHandler(OnChildCompleted);
+                    childTask.Completed -= new EventHandler(OnChildItemCompleted);
                     _suiteResult.AddResult(childTask.Result);
 
                     if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
                         Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
                     // Check to see if all children completed
-                    CountDownChildTest();
+                    _childTestCountdown.Signal();
+                    if (_childTestCountdown.CurrentCount == 0)
+                        OnAllChildItemsCompleted();
                 }
             }
         }
 
-        private void CountDownChildTest()
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnAllChildItemsCompleted()
         {
-            _childTestCountdown.Signal();
-            if (_childTestCountdown.CurrentCount == 0)
-            {
-                if (Test.TestType == "Theory" && Result.ResultState == ResultState.Success && Result.PassCount == 0)
-                    Result.SetResult(ResultState.Failure, "No test cases were provided");
-
-                if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                    PerformOneTimeTearDown();
-
-                foreach (var childResult in _suiteResult.Children)
-                    if (childResult.ResultState == ResultState.Cancelled)
-                    {
-                        this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
-                        break;
-                    }
-
-                WorkItemComplete();
-            }
+            var teardown = new OneTimeTearDownWorkItem(this);
+            Context.Dispatcher.Dispatch(teardown);
         }
 
         private static bool IsStaticClass(Type type)
@@ -487,5 +484,71 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         #endregion
+
+        #region Nested OneTimeTearDownWorkItem Class
+
+        /// <summary>
+        /// OneTimeTearDownWorkItem represents the cleanup
+        /// and one-time teardown phase of a CompositeWorkItem
+        /// </summary>
+        public class OneTimeTearDownWorkItem : WorkItem
+        {
+            private CompositeWorkItem _originalWorkItem;
+
+            private object _teardownLock = new object();
+
+            /// <summary>
+            /// Construct a OneTimeTearDownWOrkItem wrapping a CompositeWorkItem
+            /// </summary>
+            /// <param name="originalItem">The CompositeWorkItem being wrapped</param>
+            public OneTimeTearDownWorkItem(CompositeWorkItem originalItem)
+                : base(originalItem)
+            {
+                _originalWorkItem = originalItem;
+            }
+
+            /// <summary>
+            /// The WorkItem name, overridden to indicate this is the teardown.
+            /// </summary>
+            public override string Name
+            {
+                get { return string.Format("{0} OneTimeTearDown", base.Name); }
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public override void Execute()
+            {
+                lock (_teardownLock)
+                {
+                    //if (Test.Parent != null && Test.Parent.Name.EndsWith("nunit.framework.tests.dll"))
+                    //    System.Diagnostics.Debugger.Launch();
+
+                    if (Test.TestType == "Theory" && Result.ResultState == ResultState.Success && Result.PassCount == 0)
+                        Result.SetResult(ResultState.Failure, "No test cases were provided");
+
+                    if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                        _originalWorkItem.PerformOneTimeTearDown();
+
+                    foreach (var childResult in Result.Children)
+                        if (childResult.ResultState == ResultState.Cancelled)
+                        {
+                            this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                            break;
+                        }
+
+                    _originalWorkItem.WorkItemComplete();
+                }
+            }
+
+            /// <summary>
+            /// PerformWork is not used in CompositeWorkItem
+            /// </summary>
+            protected override void PerformWork() { }
+        }
+
+        #endregion
     }
 }
+

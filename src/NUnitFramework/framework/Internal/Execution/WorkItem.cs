@@ -90,6 +90,31 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
                 : ApartmentState.Unknown;
 #endif
+
+            State = WorkItemState.Ready;
+        }
+
+        /// <summary>
+        /// Construct a work Item that wraps another work Item.
+        /// Wrapper items are used to represent independently
+        /// dispatched tasks, which form part of the execution
+        /// of a single test, such as OneTimeTearDown.
+        /// </summary>
+        /// <param name="wrappedItem">The WorkItem being wrapped</param>
+        public WorkItem(WorkItem wrappedItem)
+        {
+            // Use the same Test, Result, Actions, Context, ParallelScope
+            // and TargetApartment as the item being wrapped.
+            Test = wrappedItem.Test;
+            Result = wrappedItem.Result;
+            Context = wrappedItem.Context;
+            ParallelScope = wrappedItem.ParallelScope;
+#if !PORTABLE && !NETSTANDARD1_6
+            TargetApartment = wrappedItem.TargetApartment;
+#endif
+
+            // State is independent of the wrapped item
+            State = WorkItemState.Ready;
         }
 
         /// <summary>
@@ -128,6 +153,14 @@ namespace NUnit.Framework.Internal.Execution
         /// The test being executed by the work item
         /// </summary>
         public Test Test { get; private set; }
+
+        /// <summary>
+        /// The name of the work item - defaults to the Test name.
+        /// </summary>
+        public virtual string Name
+        {
+            get { return Test.Name; }
+        }
 
         /// <summary>
         /// Filter used to include or exclude child tests

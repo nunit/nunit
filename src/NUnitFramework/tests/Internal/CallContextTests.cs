@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
 //			CallContext.FreeNamedDataSlot(CONTEXT_DATA);
 //		}
 
-        [OneTimeTearDown]
+        [TearDown]
         public void FreeCallContextDataSlot()
         {
             // NOTE: We don't want possible side effects on other cross context tests.

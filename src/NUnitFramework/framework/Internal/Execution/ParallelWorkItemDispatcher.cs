@@ -23,7 +23,7 @@
 
 #if PARALLEL
 
-#define NO_PARALLEL_CASES
+//#define NO_PARALLEL_CASES
 
 using System;
 using System.Collections.Generic;
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void Dispatch(WorkItem work, ExecutionStrategy strategy)
         {
-            log.Debug("Using {0} strategy for {1}.", strategy, work.Test.Name);
+            log.Debug("Using {0} strategy for {1}", strategy, work.Name);
 
             switch (strategy)
             {
@@ -316,5 +316,4 @@ namespace NUnit.Framework.Internal.Execution
     }
 #endif
 }
-
 #endif
