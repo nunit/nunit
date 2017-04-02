@@ -98,6 +98,8 @@
     <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
     <Compile Include="Internal\Commands\BeforeAndAfterTestCommand.cs" />
     <Compile Include="Internal\Commands\ConstructFixtureCommand.cs" />
+    <Compile Include="Internal\Commands\TimeoutCommand.cs" />
+    <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Internal.Execution
 
         #endregion
 
-        #region Properties, Events and Enums
+        #region Properties and Events
 
         /// <summary>
         /// Event triggered when the item is complete
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The worker executing this item.
         /// </summary>
-        public TestWorker TestWorker {get; internal set;}
+        public TestWorker TestWorker { get; internal set; }
 #endif
 
         /// <summary>
@@ -205,149 +205,49 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if PORTABLE || NETSTANDARD1_6
-            RunTest();
-        }
-#else
-            int timeout = 0;
-
-            // Only applies to test methods
-            if (Test is TestMethod)
-            {
-                // Timeout set at a higher level
-                timeout = Context.TestCaseTimeout;
-
-                // Timeout set on this test
-                if (Test.Properties.ContainsKey(PropertyNames.Timeout))
-                    timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
-            }
+#if !PORTABLE && !NETSTANDARD1_6
+            // A supplementary thread is required in two conditions...
+            //
+            // 1. If the test used the RequiresThreadAttribute. This
+            // is at the discretion of the user.
+            //
+            // 2. If the test needs to run in a different apartment.
+            // This should not normally occur when using the parallel
+            // dispatcher because tests are dispatches to a queue that
+            // matches the requested apartment. Under the SimpleDispatcher
+            // (--workers=0 option) it occurs routinely whenever a
+            // different apartment is requested.
 
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
 
-            // Unless the context is single threaded, a supplementary thread 
-            // is created on the various platforms...
-            // 1. If the test used the RequiresThreadAttribute.
-            // 2. If a test method has a timeout.
-            // 3. If the test needs to run in a different apartment.
-            //
-            // NOTE: We want to eliminate or significantly reduce 
-            //       cases 2 and 3 in the future.
-            //
-            // Case 2 requires the ability to stop and start test workers
-            // dynamically. We would cancel the worker thread, dispose of
-            // the worker and start a new worker on a new thread.
-            //
-            // Case 3 occurs when using either dispatcher whenever a
-            // child test calls for a different apartment from the one
-            // used by it's parent. It routinely occurs under the simple
-            // dispatcher (--workers=0 option). Under the parallel dispatcher
-            // it is needed when test cases are not enabled for parallel
-            // execution. Currently, test cases are always run sequentially,
-            // so this continues to apply fairly generally.
-
-            if (Test.RequiresThread || timeout > 0 || targetApartment != CurrentApartment)
+            if (Test.RequiresThread || targetApartment != CurrentApartment)
             {
-                if (!Context.IsSingleThreaded)
-                    RunTestOnOwnThread(timeout, targetApartment);
-                else
+                // Handle error conditions in a single threaded fixture
+                if (Context.IsSingleThreaded)
                 {
-                    var msg = timeout > 0
-                        ? "TimeoutAttribute may not be specified on a test within a single-threaded fixture."
-                        : Test.RequiresThread
-                            ? "RequiresThreadAttribute may not be specified on a test withihn a single-SingleThreadedAttribute fixture."
-                            : "Tests in a single-threaded fixture may not specify a different apartment";
+                    string msg = Test.RequiresThread
+                        ? "RequiresThreadAttribute may not be specified on a test within a single-SingleThreadedAttribute fixture."
+                        : "Tests in a single-threaded fixture may not specify a different apartment";
 
                     log.Error(msg);
                     Result.SetResult(ResultState.NotRunnable, msg);
                     WorkItemComplete();
+                    return;
                 }
+
+#if DEBUG
+                log.Debug("Running on separate thread because {0} is specified.", 
+                    Test.RequiresThread ? "RequiresThread" : "different Apartment");
+#endif
+
+                RunOnSeparateThread(targetApartment);
             }
             else
-                RunTest();
-        }
-
-        private Thread thread;
-
-        private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
-        {
-            thread = new Thread(new ThreadStart(RunTest));
-            thread.SetApartmentState(apartment);
-            RunThread(timeout);
-        }
-
-        private void RunThread(int timeout)
-        {
-            thread.CurrentCulture = Context.CurrentCulture;
-            thread.CurrentUICulture = Context.CurrentUICulture;
-            thread.Start();
-            
-            if (timeout <= 0)
-                timeout = Timeout.Infinite;
-
-            if (!thread.Join(timeout))
-            {
-                // Don't enforce timeout when debugger is attached.
-                // We perform this check after the initial timeout has passed to 
-                // give the user additional time to attach a debugger 
-                // after the test has started execution
-                if (Debugger.IsAttached)
-                {
-                    thread.Join();
-                    return;
-                }
-
-                Thread tThread;
-                lock (threadLock)
-                {
-                    if (thread == null)
-                        return;
-
-                    tThread = thread;
-                    thread = null;
-                }
-
-                if (Context.ExecutionStatus == TestExecutionStatus.AbortRequested)
-                    return;
-
-                log.Debug("Killing thread {0}, which exceeded timeout", tThread.ManagedThreadId);
-                ThreadUtility.Kill(tThread);
-
-                // NOTE: Without the use of Join, there is a race condition here.
-                // The thread sets the result to Cancelled and our code below sets
-                // it to Failure. In order for the result to be shown as a failure,
-                // we need to ensure that the following code executes after the
-                // thread has terminated. There is a risk here: the test code might
-                // refuse to terminate. However, it's more important to deal with
-                // the normal rather than a pathological case.
-                tThread.Join();
-
-                log.Debug("Changing result from {0} to Timeout Failure", Result.ResultState);
-
-                Result.SetResult(ResultState.Failure,
-                    string.Format("Test exceeded Timeout value of {0}ms", timeout));
-
-                WorkItemComplete();
-            }
-        }
+                RunOnCurrentThread();
+#else
+            RunOnCurrentThread();
 #endif
-
-        private void RunTest()
-        {
-            Context.CurrentTest = this.Test;
-            Context.CurrentResult = this.Result;
-            Context.Listener.TestStarted(this.Test);
-            Context.StartTime = DateTime.UtcNow;
-            Context.StartTicks = Stopwatch.GetTimestamp();
-#if PARALLEL
-            Context.TestWorker = this.TestWorker;
-#endif
-
-            Context.EstablishExecutionEnvironment();
-
-            State = WorkItemState.Running;
-
-            PerformWork();
         }
 
         private object threadLock = new object();
@@ -361,33 +261,31 @@ namespace NUnit.Framework.Internal.Execution
             if (Context != null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
-            if (!force)
-                return;
-
 #if !PORTABLE && !NETSTANDARD1_6
-            Thread tThread;
-
-            lock (threadLock)
+            if (force)
             {
-                if (thread == null)
-                    return;
+                Thread tThread;
 
-                tThread = thread;
-                thread = null;
-            }
+                lock (threadLock)
+                {
+                    if (thread == null)
+                        return;
 
-            if (!tThread.Join(0))
-            {
-                log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
-                ThreadUtility.Kill(tThread);
+                    tThread = thread;
+                    thread = null;
+                }
 
-                tThread.Join();
+                if (!tThread.Join(0))
+                {
+                    log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
+                    ThreadUtility.Kill(tThread);
 
-                log.Debug("Changing result from {0} to Cancelled", Result.ResultState);
+                    tThread.Join();
 
-                Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                    ChangeResult(ResultState.Cancelled, "Cancelled by user");
 
-                WorkItemComplete();
+                    WorkItemComplete();
+                }
             }
 #endif
         }
@@ -498,9 +396,57 @@ namespace NUnit.Framework.Internal.Execution
 
             return list;
         }
-        
+
+        /// <summary>
+        /// Changes the result of the test, logging the old and new states
+        /// </summary>
+        /// <param name="resultState">The new ResultState</param>
+        /// <param name="message">The new message</param>
+        protected void ChangeResult(ResultState resultState, string message)
+        {
+            log.Debug("Changing result from {0} to {1}", Result.ResultState, resultState);
+
+            Result.SetResult(resultState, message);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+#if !PORTABLE && !NETSTANDARD1_6
+        private Thread thread;
+
+        private void RunOnSeparateThread(ApartmentState apartment)
+        {
+            thread = new Thread(new ThreadStart(() => RunOnCurrentThread()));
+            thread.SetApartmentState(apartment);
+            thread.CurrentCulture = Context.CurrentCulture;
+            thread.CurrentUICulture = Context.CurrentUICulture;
+            thread.Start();
+            thread.Join();
+        }
+#endif
+
+        private void RunOnCurrentThread()
+        {
+            Context.CurrentTest = this.Test;
+            Context.CurrentResult = this.Result;
+            Context.Listener.TestStarted(this.Test);
+            Context.StartTime = DateTime.UtcNow;
+            Context.StartTicks = Stopwatch.GetTimestamp();
+#if PARALLEL
+            Context.TestWorker = this.TestWorker;
+#endif
+
+            Context.EstablishExecutionEnvironment();
+
+            State = WorkItemState.Running;
+
+            PerformWork();
+        }
         #endregion
     }
+
 
 #if NET_2_0 || NET_3_5
     static class ActionTargetsExtensions

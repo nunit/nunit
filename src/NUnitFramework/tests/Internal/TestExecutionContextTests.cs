@@ -581,9 +581,12 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CanAccessTestWorker()
         {
-            Assert.That(_fixtureContext.TestWorker, Is.Not.Null);
-            Assert.That(_setupContext.TestWorker, Is.SameAs(_fixtureContext.TestWorker));
-            Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(_setupContext.TestWorker));
+            if (TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher)
+            {
+                Assert.That(_fixtureContext.TestWorker, Is.Not.Null);
+                Assert.That(_setupContext.TestWorker, Is.SameAs(_fixtureContext.TestWorker));
+                Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(_setupContext.TestWorker));
+            }
         }
 
 #if ASYNC
