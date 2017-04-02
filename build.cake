@@ -2,7 +2,7 @@
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.5.0
-#addin nuget:https://nuget.org/api/v2/?package=Cake.Curl
+#addin nuget:https://www.nuget.org/api/v2/package/Cake.Curl/1.0.0
 
 
 var target = Argument("target", "Default");
