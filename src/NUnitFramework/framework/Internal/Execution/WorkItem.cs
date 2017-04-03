@@ -236,10 +236,8 @@ namespace NUnit.Framework.Internal.Execution
                     return;
                 }
 
-#if DEBUG
                 log.Debug("Running on separate thread because {0} is specified.", 
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
-#endif
 
                 RunOnSeparateThread(targetApartment);
             }

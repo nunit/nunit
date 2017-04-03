@@ -31,8 +31,9 @@ namespace NUnit.Framework.Internal.Commands
     using Interfaces;
 
     /// <summary>
-    /// SetUpTearDownCommand runs SetUp methods for a suite,
-    /// runs the test and then runs TearDown methods.
+    /// TimeoutCommand creates a timer in order to cancel
+    /// a test if it exceeds a specified time and adjusts
+    /// the test result if it did time out.
     /// </summary>
     public class TimeoutCommand : BeforeAndAfterTestCommand
     {
@@ -40,14 +41,14 @@ namespace NUnit.Framework.Internal.Commands
         private bool _commandTimedOut = false;
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
+        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
         public TimeoutCommand(TestCommand innerCommand, int timeout)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
+            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", "innerCommand");
             Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", "timeout");
 
             BeforeTest = (context) =>

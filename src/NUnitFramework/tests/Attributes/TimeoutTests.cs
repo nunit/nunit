@@ -37,7 +37,7 @@ namespace NUnit.Framework.Attributes
     public class TimeoutTests : ThreadingTests
     {
         [Test, Timeout(500)]
-        public void TestWithTimeoutRunsOnSameThread()//SeparateThread()
+        public void TestWithTimeoutRunsOnSameThread()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
