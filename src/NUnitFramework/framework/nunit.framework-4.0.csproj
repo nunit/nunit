@@ -326,6 +326,7 @@
     <Compile Include="Internal\Commands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
+    <Compile Include="Internal\Commands\TimeoutCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
@@ -379,6 +380,7 @@
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\TestCaseParameters.cs" />
+    <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestExecutionStatus.cs" />
     <Compile Include="Internal\TestFilter.cs" />

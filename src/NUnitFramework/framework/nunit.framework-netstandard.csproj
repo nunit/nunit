@@ -389,6 +389,7 @@
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\TestCaseParameters.cs" />
+    <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestExecutionStatus.cs" />
     <Compile Include="Internal\TestFilter.cs" />

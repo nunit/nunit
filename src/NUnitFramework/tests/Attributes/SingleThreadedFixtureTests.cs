@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2016 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,10 +40,10 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
-        [Test]
-        public void TestWithTimeoutIsInvalid()
+        [Test, Timeout(100)]
+        public void TestWithTimeoutIsValid()
         {
-            CheckTestIsInvalid<SingleThreadedFixture_TestWithTimeout>("TimeoutAttribute may not be specified");
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
         [Test]

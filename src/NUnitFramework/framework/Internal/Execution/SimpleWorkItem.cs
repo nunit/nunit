@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -58,13 +58,19 @@ namespace NUnit.Framework.Internal.Execution
             {
                 Result = MakeTestCommand().Execute(Context);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // Currently, if there are no command wrappers, test 
                 // actions, setup or teardown, we have to catch any
                 // exception from the test here. In addition, since
                 // users may create their own command wrappers, etc.
                 // we have to protect against unhandled exceptions.
+
+#if !PORTABLE && !NETSTANDARD1_6
+                if (ex is ThreadAbortException)
+                    Thread.ResetAbort();
+#endif
+
                 Context.CurrentResult.RecordException(ex);
             }
             finally
@@ -133,6 +139,19 @@ namespace NUnit.Framework.Internal.Execution
                 // Add command to set up context using attributes that implement IApplyToContext
                 foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
                     command = new ApplyChangesToContextCommand(command, attr);
+
+                // If a timeout is specified, create a TimeoutCommand
+#if !PORTABLE && !NETSTANDARD1_6
+                // Timeout set at a higher level
+                int timeout = Context.TestCaseTimeout;
+
+                // Timeout set on this test
+                if (Test.Properties.ContainsKey(PropertyNames.Timeout))
+                    timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+
+                if (timeout > 0)
+                    command = new TimeoutCommand(command, timeout);
+#endif
 
                 return command;
             }
