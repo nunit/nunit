@@ -46,8 +46,11 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
 
-            CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
-            CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));
+            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeSetUpAttribute), true);
+            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeTearDownAttribute), true);
+
+            CheckSetUpTearDownMethods(OneTimeSetUpMethods);
+            CheckSetUpTearDownMethods(OneTimeTearDownMethods);
         }
 
         #endregion

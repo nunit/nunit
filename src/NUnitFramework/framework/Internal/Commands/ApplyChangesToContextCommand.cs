@@ -34,35 +34,15 @@ namespace NUnit.Framework.Internal.Commands
     /// action is needed after the test runs, since the prior
     /// context will be restored automatically.
     /// </summary>
-    class ApplyChangesToContextCommand : DelegatingTestCommand
+    class ApplyChangesToContextCommand : BeforeTestCommand
     {
-        private IEnumerable<IApplyToContext> _changes;
-
-        public ApplyChangesToContextCommand(TestCommand innerCommand, IEnumerable<IApplyToContext> changes)
+        public ApplyChangesToContextCommand(TestCommand innerCommand, IApplyToContext change)
             : base(innerCommand)
         {
-            _changes = changes;
-        }
-
-        public override TestResult Execute(TestExecutionContext context)
-        {
-            try
+            BeforeTest = (context) =>
             {
-                foreach (IApplyToContext change in _changes)
-                    change.ApplyToContext(context);
-
-                context.CurrentResult = innerCommand.Execute(context);
-            }
-            catch (Exception ex)
-            {
-#if !PORTABLE && !NETSTANDARD1_6
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-                context.CurrentResult.RecordException(ex);
-            }
-
-            return context.CurrentResult;
+                change.ApplyToContext(context);
+            };
         }
     }
 }

@@ -133,6 +133,14 @@
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
+    <Compile Include="Internal\Commands\AfterTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\AfterTestCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeAndAfterTestCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
+    <Compile Include="Internal\Commands\ConstructFixtureCommand.cs" />
+    <Compile Include="Internal\Commands\EmptyTestCommand.cs" />
+    <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
@@ -169,12 +177,10 @@
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
-    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
     <Compile Include="Internal\Commands\TestActionCommand.cs" />
     <Compile Include="Internal\Commands\TestActionItem.cs" />
-    <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
@@ -373,7 +379,6 @@
     <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
-    <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Interfaces\ICommandWrapper.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />

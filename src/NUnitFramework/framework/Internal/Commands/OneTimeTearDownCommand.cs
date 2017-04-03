@@ -32,52 +32,32 @@ namespace NUnit.Framework.Internal.Commands
     /// specified for a suite and calls Dispose on the user
     /// test object, if any.
     /// </summary>
-    public class OneTimeTearDownCommand : TestCommand
+    public class OneTimeTearDownCommand : AfterTestCommand
     {
-        private List<SetUpTearDownItem> _setUpTearDownItems;
-        private List<TestActionItem> _actions;
-
         /// <summary>
         /// Construct a OneTimeTearDownCommand
         /// </summary>
-        /// <param name="suite">The test suite to which the command applies</param>
-        /// <param name="setUpTearDownItems">A SetUpTearDownList for use by the command</param>
-        /// <param name="actions">A List of TestActionItems to be run before teardown.</param>
-        public OneTimeTearDownCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDownItems, List<TestActionItem> actions)
-            : base(suite)
+        /// <param name="innerCommand">The command wrapped by this command</param>
+        /// <param name="setUpTearDownItem">A SetUpTearDownList for use by the command</param>
+        public OneTimeTearDownCommand(TestCommand innerCommand, SetUpTearDownItem setUpTearDownItem)
+            : base(innerCommand)
         {
-            _setUpTearDownItems = setUpTearDownItems;
-            _actions = actions;
-        }
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "OneTimeTearDownCommand may only apply to a TestSuite", "innerCommand");
+            Guard.ArgumentNotNull(setUpTearDownItem, nameof(setUpTearDownItem));
 
-        /// <summary>
-        /// Overridden to run the teardown methods specified on the test.
-        /// </summary>
-        /// <param name="context">The TestExecutionContext to be used.</param>
-        /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
-        {
-            TestResult suiteResult = context.CurrentResult;
-
-            try
+            AfterTest = (context) =>
             {
-                for (int i = _actions.Count; i > 0; )
-                    _actions[--i].AfterTest(Test);
+                TestResult suiteResult = context.CurrentResult;
 
-                if (_setUpTearDownItems != null)
-                    foreach(var item in _setUpTearDownItems)
-                        item.RunTearDown(context);
-
-                IDisposable disposable = context.TestObject as IDisposable;
-                if (disposable != null && Test is IDisposableFixture)
-                    disposable.Dispose();
-            }
-            catch (Exception ex)
-            {
-                suiteResult.RecordTearDownException(ex);
-            }
-
-            return suiteResult;
+                try
+                {
+                    setUpTearDownItem.RunTearDown(context);
+                }
+                catch (Exception ex)
+                {
+                    suiteResult.RecordTearDownException(ex);
+                }
+            };
         }
     }
 }

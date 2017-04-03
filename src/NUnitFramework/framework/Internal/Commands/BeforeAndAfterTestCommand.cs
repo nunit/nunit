@@ -31,28 +31,58 @@ namespace NUnit.Framework.Internal.Commands
     /// to a test. It runs the BeforeTest method, then runs the
     /// test and finally runs the AfterTest method.
     /// </summary>
-    public class TestActionCommand : BeforeAndAfterTestCommand
+    public abstract class BeforeAndAfterTestCommand : DelegatingTestCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestAction with which to wrap the inner command.</param>
-        public TestActionCommand(TestCommand innerCommand, ITestAction action)
-            : base(innerCommand)
+        public BeforeAndAfterTestCommand(TestCommand innerCommand) : base(innerCommand) { }
+
+        /// <summary>
+        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
+        /// </summary>
+        /// <param name="context">The context in which the test should run.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(TestExecutionContext context)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
-            Guard.ArgumentNotNull(action, nameof(action));
+            Guard.OperationValid(BeforeTest != null, "BeforeTest was not set by the derived class constructor");
+            Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
 
-            BeforeTest = (context) =>
-            {
-                action.BeforeTest(Test);
-            };
+            if (Test.Fixture == null)
+                Test.Fixture = context.TestObject;
 
-            AfterTest = (context) =>
+            try
             {
-                action.AfterTest(Test);
-            };
+                BeforeTest(context);
+
+                context.CurrentResult = innerCommand.Execute(context);
+            }
+            catch (Exception ex)
+            {
+#if !PORTABLE && !NETSTANDARD1_6
+                if (ex is ThreadAbortException)
+                    Thread.ResetAbort();
+#endif
+                context.CurrentResult.RecordException(ex);
+            }
+            finally
+            {
+                if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                    AfterTest(context);
+            }
+
+            return context.CurrentResult;
         }
+        
+        /// <summary>
+        /// Perform the before test action
+        /// </summary>
+        protected Action<TestExecutionContext> BeforeTest;
+
+        /// <summary>
+        /// Perform the after test action
+        /// </summary>
+        protected Action<TestExecutionContext> AfterTest;
     }
 }

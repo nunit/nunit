@@ -56,6 +56,8 @@ namespace NUnit.Framework.Internal
         public TestSuite(string name) : base(name)
         {
             Arguments = new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
         }
 
         /// <summary>
@@ -67,6 +69,8 @@ namespace NUnit.Framework.Internal
             : base(parentSuiteName, name)
         {
             Arguments = new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
         }
 
         /// <summary>
@@ -78,6 +82,8 @@ namespace NUnit.Framework.Internal
             : base(fixtureType)
         {
             Arguments = arguments ?? new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
         }
 
         /// <summary>
@@ -88,6 +94,8 @@ namespace NUnit.Framework.Internal
             : base(new TypeWrapper(fixtureType))
         {
             Arguments = new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
         }
 
         #endregion
@@ -182,6 +190,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected bool MaintainTestOrder { get; set; }
 
+        /// <summary>
+        /// OneTimeSetUp methods for this suite
+        /// </summary>
+        public MethodInfo[] OneTimeSetUpMethods { get; protected set; }
+
+        /// <summary>
+        /// OneTimeTearDown methods for this suite
+        /// </summary>
+        public MethodInfo[] OneTimeTearDownMethods { get; protected set; }
+
         #endregion
 
         #region Test Overrides
@@ -247,10 +265,10 @@ namespace NUnit.Framework.Internal
         /// Check that setup and teardown methods marked by certain attributes
         /// meet NUnit's requirements and mark the tests not runnable otherwise.
         /// </summary>
-        /// <param name="attrType">The attribute type to check for</param>
-        protected void CheckSetUpTearDownMethods(Type attrType)
+        /// <param name="methods">A list of methodinfos to check</param>
+        protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
         {
-            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(TypeInfo.Type, attrType, true))
+            foreach (MethodInfo method in methods)
                 if (method.IsAbstract ||
                      !method.IsPublic && !method.IsFamily ||
                      method.GetParameters().Length > 0 ||

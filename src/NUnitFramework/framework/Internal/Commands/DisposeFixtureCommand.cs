@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,36 +22,39 @@
 // ***********************************************************************
 
 using System;
-using System.Threading;
+using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionCommand handles a single ITestAction applied
-    /// to a test. It runs the BeforeTest method, then runs the
-    /// test and finally runs the AfterTest method.
+    /// OneTimeTearDownCommand performs any teardown actions
+    /// specified for a suite and calls Dispose on the user
+    /// test object, if any.
     /// </summary>
-    public class TestActionCommand : BeforeAndAfterTestCommand
+    public class DisposeFixtureCommand : AfterTestCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
+        /// Construct a OneTimeTearDownCommand
         /// </summary>
-        /// <param name="innerCommand">The inner command.</param>
-        /// <param name="action">The TestAction with which to wrap the inner command.</param>
-        public TestActionCommand(TestCommand innerCommand, ITestAction action)
+        /// <param name="innerCommand">The command wrapped by this command</param>
+        public DisposeFixtureCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
-            Guard.ArgumentNotNull(action, nameof(action));
-
-            BeforeTest = (context) =>
-            {
-                action.BeforeTest(Test);
-            };
+            Guard.OperationValid(Test is IDisposableFixture, "DisposeFixtureCommand does not apply to a " + Test.GetType().Name);
 
             AfterTest = (context) =>
             {
-                action.AfterTest(Test);
+                try
+                {
+                    IDisposable disposable = context.TestObject as IDisposable;
+                    if (disposable != null)
+                        disposable.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    context.CurrentResult.RecordTearDownException(ex);
+                }
             };
         }
     }

@@ -24,11 +24,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    using Commands;
+
     /// <summary>
     /// A WorkItem may be an individual test case, a fixture or
     /// a higher level grouping of tests. All WorkItems inherit
@@ -69,12 +73,13 @@ namespace NUnit.Framework.Internal.Execution
         /// Construct a WorkItem for a particular test.
         /// </summary>
         /// <param name="test">The test that the WorkItem will run</param>
-        public WorkItem(Test test)
+        /// <param name="filter">Filter used to include or exclude child items</param>
+        public WorkItem(Test test, ITestFilter filter)
         {
             Test = test;
+            Filter = filter;
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
-            Actions = new List<ITestAction>();
 
             ParallelScope = Test.Properties.ContainsKey(PropertyNames.ParallelScope)
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
@@ -85,6 +90,31 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
                 : ApartmentState.Unknown;
 #endif
+
+            State = WorkItemState.Ready;
+        }
+
+        /// <summary>
+        /// Construct a work Item that wraps another work Item.
+        /// Wrapper items are used to represent independently
+        /// dispatched tasks, which form part of the execution
+        /// of a single test, such as OneTimeTearDown.
+        /// </summary>
+        /// <param name="wrappedItem">The WorkItem being wrapped</param>
+        public WorkItem(WorkItem wrappedItem)
+        {
+            // Use the same Test, Result, Actions, Context, ParallelScope
+            // and TargetApartment as the item being wrapped.
+            Test = wrappedItem.Test;
+            Result = wrappedItem.Result;
+            Context = wrappedItem.Context;
+            ParallelScope = wrappedItem.ParallelScope;
+#if !PORTABLE && !NETSTANDARD1_6
+            TargetApartment = wrappedItem.TargetApartment;
+#endif
+
+            // State is independent of the wrapped item
+            State = WorkItemState.Ready;
         }
 
         /// <summary>
@@ -103,13 +133,6 @@ namespace NUnit.Framework.Internal.Execution
             Guard.OperationValid(Context == null, "The context has already been initialized");
 
             Context = context;
-
-            if (Test is TestAssembly)
-                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((TestAssembly)Test).Assembly));
-            else if (Test is ParameterizedMethodSuite)
-                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(Test.Method.MethodInfo));
-            else if (Test.TypeInfo != null)
-                Actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.TypeInfo.Type));
         }
 
         #endregion
@@ -132,6 +155,19 @@ namespace NUnit.Framework.Internal.Execution
         public Test Test { get; private set; }
 
         /// <summary>
+        /// The name of the work item - defaults to the Test name.
+        /// </summary>
+        public virtual string Name
+        {
+            get { return Test.Name; }
+        }
+
+        /// <summary>
+        /// Filter used to include or exclude child tests
+        /// </summary>
+        public ITestFilter Filter { get; private set; }
+
+        /// <summary>
         /// The execution context
         /// </summary>
         public TestExecutionContext Context { get; private set; }
@@ -142,11 +178,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestWorker TestWorker {get; internal set;}
 #endif
-
-        /// <summary>
-        /// The test actions to be performed before and after this test
-        /// </summary>
-        public List<ITestAction> Actions { get; private set; }
 
         /// <summary>
         /// The test result
@@ -405,6 +436,79 @@ namespace NUnit.Framework.Internal.Execution
             Test.Fixture = null;
         }
 
-#endregion
+        /// <summary>
+        /// Builds the set up tear down list.
+        /// </summary>
+        /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
+        /// <param name="tearDownMethods">Unsorted array of teardown MethodInfos.</param>
+        /// <returns>A list of SetUpTearDownItems</returns>
+        protected List<SetUpTearDownItem> BuildSetUpTearDownList(MethodInfo[] setUpMethods, MethodInfo[] tearDownMethods)
+        {
+            Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
+            Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
+
+            var list = new List<SetUpTearDownItem>();
+
+            Type fixtureType = Test.TypeInfo?.Type;
+            if (fixtureType == null)
+                return list;
+
+            while (fixtureType != null && !fixtureType.Equals(typeof(object)))
+            {
+                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
+                if (node.HasMethods)
+                    list.Add(node);
+
+                fixtureType = fixtureType.GetTypeInfo().BaseType;
+            }
+
+            return list;
+        }
+
+        // This method builds a list of nodes that can be used to 
+        // run setup and teardown according to the NUnit specs.
+        // We need to execute setup and teardown methods one level
+        // at a time. However, we can't discover them by reflection
+        // one level at a time, because that would cause overridden
+        // methods to be called twice, once on the base class and
+        // once on the derived class.
+        // 
+        // For that reason, we start with a list of all setup and
+        // teardown methods, found using a single reflection call,
+        // and then descend through the inheritance hierarchy,
+        // adding each method to the appropriate level as we go.
+        private static SetUpTearDownItem BuildNode(Type fixtureType, IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        {
+            // Create lists of methods for this level only.
+            // Note that FindAll can't be used because it's not
+            // available on all the platforms we support.
+            var mySetUpMethods = SelectMethodsByDeclaringType(fixtureType, setUpMethods);
+            var myTearDownMethods = SelectMethodsByDeclaringType(fixtureType, tearDownMethods);
+
+            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods);
+        }
+
+        private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<MethodInfo> methods)
+        {
+            var list = new List<MethodInfo>();
+
+            foreach (var method in methods)
+                if (method.DeclaringType == type)
+                    list.Add(method);
+
+            return list;
+        }
+        
+        #endregion
     }
+
+#if NET_2_0 || NET_3_5
+    static class ActionTargetsExtensions
+    {
+        public static bool HasFlag(this ActionTargets targets, ActionTargets value)
+        {
+            return (targets & value) != 0;
+        }
+    }
+#endif
 }

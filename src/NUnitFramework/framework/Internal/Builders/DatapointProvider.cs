@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal.Builders
                 }
                 else if (parameterType.GetTypeInfo().IsEnum)
                 {
-                    foreach (object o in TypeHelper.GetEnumValues(parameterType))
+                    foreach (object o in Enum.GetValues(parameterType))
                     {
                         datapoints.Add(o);
                     }

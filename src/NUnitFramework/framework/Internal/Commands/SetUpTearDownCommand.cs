@@ -31,58 +31,32 @@ namespace NUnit.Framework.Internal.Commands
     using Interfaces;
 
     /// <summary>
-    /// SetUpTearDownCommand runs any SetUp methods for a suite,
-    /// runs the test and then runs any TearDown methods.
+    /// SetUpTearDownCommand runs SetUp methods for a suite,
+    /// runs the test and then runs TearDown methods.
     /// </summary>
-    public class SetUpTearDownCommand : DelegatingTestCommand
+    public class SetUpTearDownCommand : BeforeAndAfterTestCommand
     {
-        private IList<SetUpTearDownItem> _setUpTearDownItems;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public SetUpTearDownCommand(TestCommand innerCommand)
+        /// <param name="setUpTearDown">List of setup/teardown items</param>
+        public SetUpTearDownCommand(TestCommand innerCommand, SetUpTearDownItem setUpTearDown)
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
             Guard.OperationValid(Test.TypeInfo != null, "TestMethod must have a non-null TypeInfo");
+            Guard.ArgumentNotNull(setUpTearDown, nameof(setUpTearDown));
 
-            _setUpTearDownItems = CommandBuilder.BuildSetUpTearDownList(Test.TypeInfo.Type, typeof(SetUpAttribute), typeof(TearDownAttribute));
-        }
-
-        /// <summary>
-        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
-        /// </summary>
-        /// <param name="context">The context in which the test should run.</param>
-        /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
-        {
-            try
+            BeforeTest = (context) =>
             {
-                for (int i = _setUpTearDownItems.Count; i > 0;)
-                    _setUpTearDownItems[--i].RunSetUp(context);
+                setUpTearDown.RunSetUp(context);
+            };
 
-                context.CurrentResult = innerCommand.Execute(context);
-            }
-            catch (Exception ex)
+            AfterTest = (context) =>
             {
-#if !PORTABLE && !NETSTANDARD1_6
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-                context.CurrentResult.RecordException(ex);
-            }
-            finally
-            {
-                if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                {
-                    for(int i = 0; i < _setUpTearDownItems.Count; i++)
-                        _setUpTearDownItems[i].RunTearDown(context);
-                }
-            }
-
-            return context.CurrentResult;
+                setUpTearDown.RunTearDown(context);
+            };
         }
     }
 }

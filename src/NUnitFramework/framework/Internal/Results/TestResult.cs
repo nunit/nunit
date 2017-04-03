@@ -29,6 +29,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 #if NET_2_0
 using NUnit.Compatibility;
@@ -478,7 +479,7 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
-            if (ex is NUnitException)
+            if (ex is NUnitException || ex is TargetInvocationException)
                 ex = ex.InnerException;
 
             if (ex is AssertionException)

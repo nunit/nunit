@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010-2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,8 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -71,5 +74,20 @@ namespace NUnit.Framework.Internal
                 return "Assembly";
             }
         }
+
+        /// <summary>
+        /// Get custom attributes specified on the assembly
+        /// </summary>
+        public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
+        {
+            return Assembly != null
+#if PORTABLE || NETSTANDARD1_6
+                ? Assembly.GetAttributes<TAttr>().ToArray()
+#else
+                ? (TAttr[])Assembly.GetCustomAttributes(typeof(TAttr), false)
+#endif
+                : new TAttr[0];
+        }
     }
 }
+
