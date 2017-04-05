@@ -44,7 +44,7 @@ namespace System
 	[ComVisibleAttribute(false)]
 	[HostProtectionAttribute(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)]
 	[DebuggerDisplay ("ThreadSafetyMode={mode}, IsValueCreated={IsValueCreated}, IsValueFaulted={exception != null}, Value={value}")]
-	public class Lazy<T> 
+	internal class Lazy<T>
 	{
 		T value;
 		Func<T> factory;
