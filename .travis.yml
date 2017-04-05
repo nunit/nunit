@@ -9,6 +9,7 @@ os:
 matrix:
   allow_failures:
     - mono: latest
+    - os: osx
   fast_finish: true
 script:
   - ./build.sh --target "Travis"
