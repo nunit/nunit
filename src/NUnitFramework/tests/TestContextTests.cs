@@ -219,6 +219,22 @@ namespace NUnit.Framework.Tests
 
         #endregion
 
+        #region Arguments
+
+        [TestCase(24, "abc")]
+        public void TestCanAccessItsOwnArguments(int x, string s)
+        {
+            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(new object[] { 24, "abc" }));
+        }
+
+        [Test]
+        public void TestCanAccessEmptyArgumentsArrayWhenDoesNotHaveArguments()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(new object[0]));
+        }
+
+        #endregion
+
         #endregion
 
         #region Result

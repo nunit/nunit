@@ -182,6 +182,11 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// The arguments to use in creating the test or empty array if none required.
+        /// </summary>
+        public abstract object[] Arguments { get; }
+
+        /// <summary>
         /// Gets the TypeInfo of the fixture used in running this test
         /// or null if no fixture type is associated with it.
         /// </summary>

@@ -112,6 +112,29 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void CapturesArgumentsForConstructorWithArgsSupplied()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(FixtureWithArgsSupplied));
+            Assert.That(fixture.Arguments, Is.EqualTo(new[] { 7, 3 }));
+        }
+
+        [Test]
+        public void CapturesNoArgumentsForConstructorWithoutArgsSupplied()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(RegularFixtureWithOneTest));
+            Assert.That(fixture.Arguments, Is.EqualTo(new object[0]));
+        }
+
+        [Test]
+        public void CapturesArgumentsForConstructorWithMultipleArgsSupplied()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(FixtureWithMultipleArgsSupplied));
+            Assert.True(fixture.HasChildren);
+            Assert.That(fixture.Tests[0].Arguments, Is.EqualTo(new[] { 7, 3 }));
+            Assert.That(fixture.Tests[1].Arguments, Is.EqualTo(new[] { 8, 4 }));
+        }
+
+        [Test]
         public void BadConstructorRunsWithSetUpError()
         {
             var result = TestBuilder.RunTestFixture(typeof(BadCtorFixture));

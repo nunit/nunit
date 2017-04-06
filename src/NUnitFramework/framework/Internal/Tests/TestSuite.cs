@@ -77,10 +77,11 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestSuite(ITypeInfo fixtureType)
+        /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
+        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
             : base(fixtureType)
         {
-            Arguments = new object[0];
+            Arguments = arguments ?? new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -180,9 +181,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// The arguments to use in creating the fixture
+        /// The arguments to use in creating the fixture, or empty array if none are provided.
         /// </summary>
-        public object[] Arguments { get; internal set; }
+        public override object[] Arguments { get; }
 
         /// <summary>
         /// Set to true to suppress sorting this suite's contents
@@ -282,7 +283,6 @@ namespace NUnit.Framework.Internal
                     break;
                 }
         }
-
         #endregion
     }
 }

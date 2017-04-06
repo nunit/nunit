@@ -124,8 +124,8 @@ namespace NUnit.Framework.Internal.Builders
                 }
             }
 
-            var fixture = new TestFixture(typeInfo);
-            
+            var fixture = new TestFixture(typeInfo, arguments);
+
             if (arguments != null && arguments.Length > 0)
             {
                 string name = fixture.Name = typeInfo.GetDisplayName(arguments);
@@ -133,7 +133,6 @@ namespace NUnit.Framework.Internal.Builders
                 fixture.FullName = nspace != null && nspace != ""
                     ? nspace + "." + name
                     : name;
-                fixture.Arguments = arguments;
             }
 
             if (fixture.RunState != RunState.NotRunnable)
