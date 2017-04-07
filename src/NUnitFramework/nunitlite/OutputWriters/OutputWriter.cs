@@ -57,12 +57,12 @@ namespace NUnitLite
         /// </summary>
         /// <param name="test">The test to be written</param>
         /// <param name="outputPath">Path to the file to which the test info is written</param>
-        public void WriteTestFile(ITest test, ITestFilter filter, string outputPath)
+        public void WriteTestFile(ITest test, string outputPath)
         {
             using (var stream = new FileStream(outputPath, FileMode.Create))
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
             {
-                WriteTestFile(test, filter, writer);
+                WriteTestFile(test, writer);
             }
         }
 
@@ -80,6 +80,6 @@ namespace NUnitLite
         /// </summary>
         /// <param name="test">The test to be written</param>
         /// <param name="writer">A TextWriter to which the test info is written</param>
-        public abstract void WriteTestFile(ITest test, ITestFilter filter, TextWriter writer);
+        public abstract void WriteTestFile(ITest test, TextWriter writer);
     }
 }
