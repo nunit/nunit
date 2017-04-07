@@ -202,7 +202,7 @@ namespace NUnit.Framework.Api
             var filterSettings = new Dictionary<string, object>(Settings);
             filterSettings.Add(FrameworkPackageSettings.InternalTestFilter, filter);
 
-            if(!string.IsNullOrWhiteSpace(_assemblyName))
+            if(_assemblyName != string.Empty)
             {
                 return _builder.Build(_assemblyName, filterSettings);
             }
