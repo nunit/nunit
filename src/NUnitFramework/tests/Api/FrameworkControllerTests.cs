@@ -46,6 +46,7 @@ namespace NUnit.Framework.Api
         private const string MISSING_FILE = "junk.dll";
         private const string MISSING_NAME = "junk";
         private const string EMPTY_FILTER = "<filter/>";
+        private const string FIXTURE_CAT_FILTER = "<filter><cat>FixtureCategory</cat></filter>";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #if PORTABLE
@@ -58,6 +59,16 @@ namespace NUnit.Framework.Api
         private IDictionary _settings = new Dictionary<string, object>();
         private FrameworkController _controller;
         private ICallbackEventHandler _handler;
+
+        public class FixtureCategoryTester
+        {
+            [Category("FixtureCategory")]
+            [Test]
+            public void TestInFixtureCategory()
+            {
+
+            }
+        }
 
         [SetUp]
         public void CreateController()
@@ -150,6 +161,22 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region ExploreTestsAction
+        [Test]
+        public void ExploreTestsAction_FilterCategory_ReturnsTests()
+        {
+            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.ExploreTestsAction(_controller, FIXTURE_CAT_FILTER, _handler);
+            var result = TNode.FromXml(_handler.GetCallbackResult());
+
+            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
+            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
+            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+        }
+
         [Test]
         public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite()
         {

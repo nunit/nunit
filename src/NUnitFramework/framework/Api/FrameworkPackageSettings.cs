@@ -115,6 +115,11 @@ namespace NUnit
         /// </summary>
         public const string TestParametersDictionary = "TestParametersDictionary";
 
+        /// <summary>
+        /// Internal test filter that will be applied when test case fixtures are built
+        /// </summary>
+        public const string InternalTestFilter = "TestFilter";
+
         #endregion
     }
 }

@@ -46,6 +46,8 @@ namespace NUnit.Framework.Api
 
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private Assembly _assembly;
+        private string _assemblyName = string.Empty;
 
 #if !PORTABLE
         // Saved Console.Out and Console.Error
@@ -148,6 +150,7 @@ namespace NUnit.Framework.Api
         public ITest Load(string assemblyName, IDictionary<string, object> settings)
         {
             Settings = settings;
+            _assemblyName = assemblyName;
 
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
@@ -165,6 +168,7 @@ namespace NUnit.Framework.Api
         public ITest Load(Assembly assembly, IDictionary<string, object> settings)
         {
             Settings = settings;
+            _assembly = assembly;
 
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
@@ -183,6 +187,26 @@ namespace NUnit.Framework.Api
                 throw new InvalidOperationException("The CountTestCases method was called but no test has been loaded");
 
             return CountTestCases(LoadedTest, filter);
+        }
+
+        /// <summary>
+        /// Explore the test cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>Test Suite that contains </returns>
+        public ITest ExploreTests(ITestFilter filter)
+        {
+            if(LoadedTest == null)
+                throw new InvalidOperationException("The CountTestCases method was called but no test has been loaded");
+
+            var filterSettings = new Dictionary<string, object>(Settings);
+            filterSettings.Add(FrameworkPackageSettings.InternalTestFilter, filter);
+
+            if(!string.IsNullOrWhiteSpace(_assemblyName))
+            {
+                return _builder.Build(_assemblyName, filterSettings);
+            }
+            return _builder.Build(_assembly, filterSettings);
         }
 
         /// <summary>

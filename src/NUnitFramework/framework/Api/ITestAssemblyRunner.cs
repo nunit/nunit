@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
 {
@@ -35,6 +36,13 @@ namespace NUnit.Framework.Api
     /// </summary>
     public interface ITestAssemblyRunner
     {
+        /// <summary>
+        /// Count Test Cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>The number of test cases found</returns>
+        ITest ExploreTests(ITestFilter filter);
+
         #region Properties
 
         /// <summary>
