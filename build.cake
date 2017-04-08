@@ -31,7 +31,7 @@ var WindowsFrameworks = new string[] {
     "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard16", "portable" };
 
 var LinuxFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard16" };
 
 var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
 
@@ -43,10 +43,6 @@ var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
 var PACKAGE_DIR = PROJECT_DIR + "package/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
-
-var SOLUTION_FILE = IsRunningOnWindows()
-    ? "./nunit.sln"
-    : "./nunit.linux.sln";
 
 // Package sources for nuget restore
 var PACKAGE_SOURCE = new string[]
@@ -121,7 +117,7 @@ Task("InitializeBuild")
             Information("Restoring .NET Core packages");
             StartProcess("dotnet", new ProcessSettings
             {
-                Arguments = "restore"
+                Arguments = "restore --verbosity minimal"
             });
         }
 
@@ -228,14 +224,9 @@ Task("Build20")
 
 Task("BuildNetStandard")
     .Description("Builds the .NET Standard version of the framework")
-    .WithCriteria(IsRunningOnWindows())
+    .WithCriteria(isDotNetCoreInstalled)
     .Does(() =>
     {
-        if(!isDotNetCoreInstalled)
-        {
-            Warning(".NET Standard was not built because .NET Core SDK is not installed");
-            return;
-        }
         BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
@@ -321,7 +312,7 @@ Task("Test20")
 
 Task("TestNetStandard")
     .Description("Tests the .NET Standard version of the framework")
-    .WithCriteria(IsRunningOnWindows())
+    .WithCriteria(isDotNetCoreInstalled)
     .IsDependentOn("BuildNetStandard")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
