@@ -31,7 +31,7 @@ for i in "$@"; do
     shift
 done
 
-if [ which mono == 0 ]; then
+if which mono ; then
 
     # Download NuGet if it does not exist.
     if [ ! -f $NUGET_EXE ]; then
