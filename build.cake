@@ -168,6 +168,7 @@ Task("InitializeBuild")
 
 Task("Build45")
     .Description("Builds the .NET 4.5 version of the framework")
+    .WithCriteria(IsWindowsOrHasMono())
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-4.5.csproj", configuration);
@@ -182,6 +183,7 @@ Task("Build45")
 
 Task("Build40")
     .Description("Builds the .NET 4.0 version of the framework")
+    .WithCriteria(IsWindowsOrHasMono())
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-4.0.csproj", configuration);
@@ -196,6 +198,7 @@ Task("Build40")
 
 Task("Build35")
     .Description("Builds the .NET 3.5 version of the framework")
+    .WithCriteria(IsWindowsOrHasMono())
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-3.5.csproj", configuration);
@@ -210,6 +213,7 @@ Task("Build35")
 
 Task("Build20")
     .Description("Builds the .NET 2.0 version of the framework")
+    .WithCriteria(IsWindowsOrHasMono())
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-2.0.csproj", configuration);
@@ -267,6 +271,7 @@ Task("CheckForError")
 Task("Test45")
     .Description("Tests the .NET 4.5 version of the framework")
     .IsDependentOn("Build45")
+    .WithCriteria(IsWindowsOrHasMono())
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -279,6 +284,7 @@ Task("Test45")
 Task("Test40")
     .Description("Tests the .NET 4.0 version of the framework")
     .IsDependentOn("Build40")
+    .WithCriteria(IsWindowsOrHasMono())
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -291,6 +297,7 @@ Task("Test40")
 Task("Test35")
     .Description("Tests the .NET 3.5 version of the framework")
     .IsDependentOn("Build35")
+    .WithCriteria(IsWindowsOrHasMono())
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -303,6 +310,7 @@ Task("Test35")
 Task("Test20")
     .Description("Tests the .NET 2.0 version of the framework")
     .IsDependentOn("Build20")
+    .WithCriteria(IsWindowsOrHasMono())
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -491,6 +499,28 @@ bool CheckIfDotNetCoreInstalled()
         return false;
     }
     return true;
+}
+
+bool IsWindowsOrHasMono()
+{
+    if (IsRunningOnWindows())
+        return true;
+
+    try
+    {
+        Information("Checking if XBuild is installed");
+        StartProcess("xbuild", new ProcessSettings
+        {
+            Arguments = "/version"
+        });
+    }
+    catch(Exception)
+    {
+        Warning("Mono is not installed.");
+        return false;
+    }
+    return true;
+}
 }
 
 void RunGitCommand(string arguments)
