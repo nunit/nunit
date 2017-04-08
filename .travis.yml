@@ -7,6 +7,7 @@ mono:
 os:
   - linux
   - osx
+dist: trusty
 matrix:
   allow_failures:
     - mono: latest
