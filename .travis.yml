@@ -1,5 +1,6 @@
 language: csharp
 sudo: false
+dotnet: 1.0.0-preview2-003131
 mono:
   - latest
   - 4.2.4
