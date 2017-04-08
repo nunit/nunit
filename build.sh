@@ -9,7 +9,7 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TOOLS_DIR=$SCRIPT_DIR/tools
 NUGET_EXE=$TOOLS_DIR/nuget.exe
 CAKE_EXE=$TOOLS_DIR/Cake/Cake.exe
-CAKE_VERSION=0.15.2
+CAKE_CORE_VERSION=0.19.3
 
 # Define default arguments.
 SCRIPT="build.cake"
@@ -115,9 +115,9 @@ else
 
     if [ ! -f "$CAKE_EXE" ]; then
         if [ ! -f "$TOOLS_DIR/project.json" ]; then
-            echo '{"dependencies":{"Cake.CoreCLR": "'$CAKE_VERSION'"},"frameworks":{"netstandard1.6":{}}}' > "$TOOLS_DIR/project.json"
+            echo '{"dependencies":{"Cake.CoreCLR": "'$CAKE_CORE_VERSION'"},"frameworks":{"netstandard1.6":{}}}' > "$TOOLS_DIR/project.json"
         fi
-        exec dotnet restore "$TOOLS_DIR" --packages "$TOOLS_DIR" -f "$CAKE_FEED"
+        exec dotnet restore "$TOOLS_DIR" --packages "$TOOLS_DIR"
         if [ $? -ne 0 ]; then
             echo "An error occured while installing Cake."
             exit 1
