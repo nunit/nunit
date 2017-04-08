@@ -128,8 +128,8 @@ else
     fi
 
     # Make sure that Cake has been installed.
-    if [ ! -f "$CAKE_EXE" ]; then
-        echo "Could not find Cake.exe at '$CAKE_EXE'."
+    if [ ! -f "$CAKE_CORE_EXE" ]; then
+        echo "Could not find Cake.exe at '$CAKE_CORE_EXE'."
         exit 1
     fi
 
