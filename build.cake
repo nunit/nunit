@@ -101,14 +101,18 @@ Task("InitializeBuild")
     .Description("Initializes the build")
     .Does(() =>
     {
-        foreach(var package in packages)
+
+        if (IsWindowsOrHasMono())
         {
-            Information("Restoring NuGet package " + package);
-            NuGetRestore(package, new NuGetRestoreSettings
+            foreach(var package in packages)
             {
-                PackagesDirectory = "./packages/",
-                Source = PACKAGE_SOURCE
-            });
+                Information("Restoring NuGet package " + package);
+                NuGetRestore(package, new NuGetRestoreSettings
+                {
+                    PackagesDirectory = "./packages/",
+                    Source = PACKAGE_SOURCE
+                });
+            }
         }
 
         if(isDotNetCoreInstalled)
