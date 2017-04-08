@@ -31,9 +31,7 @@ for i in "$@"; do
     shift
 done
 
-monoInstalled=`which mono`
-
-if $smonoInstalled; then
+if [ which mono == 0 ]; then
 
     # Download NuGet if it does not exist.
     if [ ! -f $NUGET_EXE ]; then
