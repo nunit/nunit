@@ -119,7 +119,7 @@ else
         if [ ! -f "$TOOLS_DIR/project.json" ]; then
             echo '{"dependencies":{"Cake.CoreCLR": "'$CAKE_CORE_VERSION'"},"frameworks":{"netstandard1.6":{}}}' > "$TOOLS_DIR/project.json"
         fi
-        exec dotnet restore "$TOOLS_DIR" --packages "$TOOLS_DIR"
+        dotnet restore "$TOOLS_DIR" --packages "$TOOLS_DIR"
         if [ $? -ne 0 ]; then
             echo "An error occured while installing Cake."
             exit 1
