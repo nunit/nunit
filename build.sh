@@ -4,6 +4,8 @@
 # downloading Cake and all specified tools from NuGet.
 ###############################################################
 
+set -x
+
 # Define directories.
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TOOLS_DIR=$SCRIPT_DIR/tools
