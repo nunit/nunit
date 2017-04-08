@@ -224,13 +224,14 @@ Task("Build20")
 
 Task("BuildNetStandard")
     .Description("Builds the .NET Standard version of the framework")
-    .WithCriteria(isDotNetCoreInstalled)
+    .WithCriteria(CheckIfDotNetCoreInstalled())
     .Does(() =>
     {
         BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
@@ -245,6 +246,7 @@ Task("BuildPortable")
         BuildProject("src/NUnitFramework/nunitlite/nunitlite-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/testdata/nunit.testdata-portable.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/tests/nunit.framework.tests-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-portable.csproj", configuration);
@@ -312,7 +314,7 @@ Task("Test20")
 
 Task("TestNetStandard")
     .Description("Tests the .NET Standard version of the framework")
-    .WithCriteria(isDotNetCoreInstalled)
+    .WithCriteria(CheckIfDotNetCoreInstalled())
     .IsDependentOn("BuildNetStandard")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
