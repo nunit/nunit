@@ -12,6 +12,7 @@ TOOLS_DIR=$SCRIPT_DIR/tools
 NUGET_EXE=$TOOLS_DIR/nuget.exe
 CAKE_EXE=$TOOLS_DIR/Cake/Cake.exe
 CAKE_CORE_VERSION=0.19.3
+CAKE_CORE_EXE=$TOOLS_DIR/Cake.CoreCLR/$CAKE_CORE_VERSION/Cake.dll
 
 # Define default arguments.
 SCRIPT="build.cake"
@@ -137,6 +138,6 @@ else
     ###########################################################################
 
     # Start Cake
-    dotnet "$CAKE_EXE" build.cake --verbosity=$VERBOSITY --configuration=$CONFIGURATION --target=$TARGET $DRYRUN "${SCRIPT_ARGUMENTS[@]}"
+    dotnet "$CAKE_CORE_EXE" build.cake --verbosity=$VERBOSITY --configuration=$CONFIGURATION --target=$TARGET $DRYRUN "${SCRIPT_ARGUMENTS[@]}"
 
 fi
