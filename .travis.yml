@@ -1,14 +1,24 @@
 language: csharp
 sudo: false
-dotnet: 1.0.0-preview2-003131
-mono:
-  - latest
-  - 4.2.4
-os:
-  - linux
-  - osx
-dist: trusty
+
 matrix:
+  include:
+    - os: linux
+      mono: 4.2.4
+    - os: linux
+      mono: latest
+    - os: linux
+      dist: trusty
+      mono: none
+      dotnet: 1.0.0-preview2-003131
+    - os: osx
+      mono: 4.2.4
+    - os: osx
+      mono: latest
+    - os: osx
+      mono: none
+      dotnet: 1.0.0-preview2-003131
+
   allow_failures:
     - mono: latest
     - os: osx
