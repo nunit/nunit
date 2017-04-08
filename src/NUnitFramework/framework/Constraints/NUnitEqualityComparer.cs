@@ -231,11 +231,14 @@ namespace NUnit.Framework.Constraints
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
             }
 
-            MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
-            if (equals != null)
-                return InvokeFirstIEquatableEqualsSecond(x, y, equals);
-            if (xType != yType && (equals = FirstImplementsIEquatableOfSecond(yType, xType)) != null)
-                return InvokeFirstIEquatableEqualsSecond(y, x, equals);
+            if (!compareAsCollection)
+            {
+                MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
+                if (equals != null)
+                    return InvokeFirstIEquatableEqualsSecond(x, y, equals);
+                if (xType != yType && (equals = FirstImplementsIEquatableOfSecond(yType, xType)) != null)
+                    return InvokeFirstIEquatableEqualsSecond(y, x, equals);
+            }
 
             if (x is IEnumerable && y is IEnumerable)
                 return EnumerablesEqual((IEnumerable) x, (IEnumerable) y, ref tolerance);

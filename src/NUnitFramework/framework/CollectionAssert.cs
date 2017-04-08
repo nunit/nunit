@@ -170,7 +170,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
         {
-            Assert.That(actual, Is.EqualTo(expected), message, args);
+            Assert.That(actual, Is.EqualTo(expected).AsCollection, message, args);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
         {
-            Assert.That(actual, Is.Not.EqualTo(expected), message, args);
+            Assert.That(actual, Is.Not.EqualTo(expected).AsCollection, message, args);
         }
 
         /// <summary>

@@ -133,8 +133,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqual()
         {
-            var set1 = new SimpleObjectCollection("x", "y", "z");
-            var set2 = new SimpleObjectCollection("x", "y", "z");
+            var set1 = new SimpleEnumerable("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "y", "z");
 
             CollectionAssert.AreEqual(set1,set2);
             CollectionAssert.AreEqual(set1,set2,new TestComparer());
@@ -251,7 +251,22 @@ namespace NUnit.Framework.Assertions
                                     Contains("But was:  2"));
         }
 #endif
-        
+
+        [Test]
+        public void AreEqual_IEquatableImplementationIsIgnored()
+        {
+            var x = new Constraints.EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new Constraints.EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
+
+            // They are not equal using Assert
+            Assert.AreNotEqual(x, y, "Assert 1");
+            Assert.AreNotEqual(y, x, "Assert 2");
+
+            // Using CollectionAssert they are equal
+            CollectionAssert.AreEqual(x, y, "CollectionAssert 1");
+            CollectionAssert.AreEqual(y, x, "CollectionAssert 2");
+        }
+
         #endregion
 
         #region AreEquivalent
@@ -341,6 +356,21 @@ namespace NUnit.Framework.Assertions
 
             CollectionAssert.AreNotEqual(set1,set2);
             CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
+        }
+
+        [Test]
+        public void AreNotEqual_IEquatableImplementationIsIgnored()
+        {
+            var x = new Constraints.EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new Constraints.EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
+
+            // Equal using Assert
+            Assert.AreEqual(x, y, "Assert 1");
+            Assert.AreEqual(y, x, "Assert 2");
+
+            // Not equal using CollectionAssert
+            CollectionAssert.AreNotEqual(x, y, "CollectionAssert 1");
+            CollectionAssert.AreNotEqual(y, x, "CollectionAssert 2");
         }
 
         #endregion
