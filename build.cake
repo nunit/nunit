@@ -237,14 +237,14 @@ Task("BuildNetStandard")
     .WithCriteria(CheckIfDotNetCoreInstalled())
     .Does(() =>
     {
-        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
+        BuildNetCoreProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
     });
 
 Task("BuildPortable")
@@ -566,6 +566,11 @@ void BuildProject(string projectPath, string configuration)
         .WithTarget("Build")
         .WithProperty("NodeReuse", "false")
 		.WithProperty("Platform", "AnyCPU"));
+}
+
+void BuildNetCoreProject(string projectPath, string configuration)
+{
+    DotNetCoreBuild(projectPath);
 }
 
 //////////////////////////////////////////////////////////////////////
