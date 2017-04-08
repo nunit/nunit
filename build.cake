@@ -570,7 +570,11 @@ void BuildProject(string projectPath, string configuration)
 
 void BuildNetCoreProject(string projectPath, string configuration)
 {
-    DotNetCoreBuild(projectPath);
+    StartProcess( "dotnet",
+        new ProcessSettings()
+        {
+            Arguments = "build " + projectPath
+        });
 }
 
 //////////////////////////////////////////////////////////////////////
