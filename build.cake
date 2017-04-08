@@ -115,10 +115,13 @@ Task("InitializeBuild")
         if(isDotNetCoreInstalled)
         {
             Information("Restoring .NET Core packages");
-            StartProcess("dotnet", new ProcessSettings
+
+            var settings = new DotNetCoreRestoreSettings
             {
-                Arguments = "restore --verbosity minimal"
-            });
+                Verbosity = DotNetCoreRestoreVerbosity.Minimal,
+            };
+
+            DotNetCoreRestore(settings);
         }
 
         if (isAppveyor)
@@ -520,7 +523,6 @@ bool IsWindowsOrHasMono()
         return false;
     }
     return true;
-}
 }
 
 void RunGitCommand(string arguments)
