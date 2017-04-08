@@ -33,7 +33,7 @@ done
 
 monoInstalled=`which mono`
 
-if monoInstalled; then
+if $smonoInstalled; then
 
     # Download NuGet if it does not exist.
     if [ ! -f $NUGET_EXE ]; then
