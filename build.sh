@@ -138,6 +138,5 @@ else
     ###########################################################################
 
     # Start Cake
-    dotnet "$CAKE_CORE_EXE" build.cake --verbosity=$VERBOSITY --configuration=$CONFIGURATION --target=$TARGET $DRYRUN "${SCRIPT_ARGUMENTS[@]}"
-
+    dotnet "$CAKE_CORE_EXE" build.cake --verbosity=$VERBOSITY --configuration=$CONFIGURATION --target=$TARGET
 fi
