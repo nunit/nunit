@@ -201,6 +201,26 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void IEquatableIsIgnoredAndEnumerableEqualsUsedWithAsCollection()
+        {
+            comparer.CompareAsCollection = true;
+
+            var x = new EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
+            var z = new EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
+
+            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.False);
+            Assert.That(comparer.AreEqual(y, x, ref tolerance), Is.False);
+            Assert.That(comparer.AreEqual(x, z, ref tolerance), Is.True);
+            Assert.That(comparer.AreEqual(z, x, ref tolerance), Is.True);
+
+            Assert.That(y, Is.Not.EqualTo(x).AsCollection);
+            Assert.That(x, Is.Not.EqualTo(y).AsCollection);
+            Assert.That(z, Is.EqualTo(x).AsCollection);
+            Assert.That(x, Is.EqualTo(z).AsCollection);
+        }
+
+        [Test]
         public void InheritingAndOverridingIEquatable()
         {
             var obj1 = new InheritingEquatableObject { SomeProperty = 1, OtherProperty = 2 };
