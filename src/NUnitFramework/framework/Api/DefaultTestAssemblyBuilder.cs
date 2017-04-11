@@ -177,14 +177,7 @@ namespace NUnit.Framework.Api
                 IList fixtureNames = null;
                 if (options.ContainsKey(FrameworkPackageSettings.LOAD))
                     fixtureNames = options[FrameworkPackageSettings.LOAD] as IList;
-
-                ITestFilter filter = TestFilter.Empty;
-                if(options.ContainsKey(FrameworkPackageSettings.InternalTestFilter))
-                {
-                    filter = options[FrameworkPackageSettings.InternalTestFilter] as ITestFilter;
-                }
-
-                var fixtures = GetFixtures(assembly, fixtureNames, filter);
+                var fixtures = GetFixtures(assembly, fixtureNames);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyPath, fixtures);
             }
@@ -201,7 +194,7 @@ namespace NUnit.Framework.Api
 
         #region Helper Methods
 
-        private IList<Test> GetFixtures(Assembly assembly, IList names, ITestFilter filter)
+        private IList<Test> GetFixtures(Assembly assembly, IList names)
         {
             var fixtures = new List<Test>();
             log.Debug("Examining assembly for test fixtures");
@@ -223,11 +216,8 @@ namespace NUnit.Framework.Api
                     if (_defaultSuiteBuilder.CanBuildFrom(typeInfo))
                     {
                         Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo);
-                        if(filter.Pass(fixture))
-                        {
-                            fixtures.Add(fixture);
-                            testcases += fixture.TestCaseCount;
-                        }
+                        fixtures.Add(fixture);
+                        testcases += fixture.TestCaseCount;
                     }
                 }
                 catch (Exception ex)

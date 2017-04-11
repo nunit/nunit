@@ -46,8 +46,6 @@ namespace NUnit.Framework.Api
 
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
-        private Assembly _assembly;
-        private string _assemblyName = string.Empty;
 
 #if !PORTABLE
         // Saved Console.Out and Console.Error
@@ -150,7 +148,6 @@ namespace NUnit.Framework.Api
         public ITest Load(string assemblyName, IDictionary<string, object> settings)
         {
             Settings = settings;
-            _assemblyName = assemblyName;
 
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
@@ -168,7 +165,6 @@ namespace NUnit.Framework.Api
         public ITest Load(Assembly assembly, IDictionary<string, object> settings)
         {
             Settings = settings;
-            _assembly = assembly;
 
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
