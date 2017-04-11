@@ -66,7 +66,13 @@ namespace NUnit.Framework.Api
             [Test]
             public void TestInFixtureCategory()
             {
+                throw new NotSupportedException();
+            }
 
+            [Test]
+            public void TestOutOfFixtureCategory()
+            {
+                throw new NotSupportedException();
             }
         }
 

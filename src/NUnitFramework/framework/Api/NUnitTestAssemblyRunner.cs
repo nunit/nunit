@@ -195,14 +195,7 @@ namespace NUnit.Framework.Api
             if(LoadedTest == null)
                 throw new InvalidOperationException("The CountTestCases method was called but no test has been loaded");
 
-            var filterSettings = new Dictionary<string, object>(Settings);
-            filterSettings.Add(FrameworkPackageSettings.InternalTestFilter, filter);
-
-            if(_assemblyName != string.Empty)
-            {
-                return _builder.Build(_assemblyName, filterSettings);
-            }
-            return _builder.Build(_assembly, filterSettings);
+            return new TestSuite(LoadedTest as TestSuite, filter);
         }
 
         /// <summary>
