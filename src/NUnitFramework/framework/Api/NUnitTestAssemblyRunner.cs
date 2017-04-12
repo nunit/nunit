@@ -193,7 +193,10 @@ namespace NUnit.Framework.Api
         public ITest ExploreTests(ITestFilter filter)
         {
             if(LoadedTest == null)
-                throw new InvalidOperationException("The CountTestCases method was called but no test has been loaded");
+                throw new InvalidOperationException("The ExploreTests method was called but no test has been loaded");
+
+            if(filter == TestFilter.Empty)
+                return LoadedTest;
 
             return new TestSuite(LoadedTest as TestSuite, filter);
         }

@@ -34,6 +34,7 @@ using NUnit.Framework.Internal.Execution;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
 using NUnit.TestUtilities;
+using NUnit.Framework.Internal.Filters;
 
 namespace NUnit.Framework.Api
 {
@@ -160,6 +161,68 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
 
+        #endregion
+
+        #region ExploreTests
+        [Test]
+        public void ExploreTests_WithoutLoad_ThrowsInvalidOperation()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(
+                    () => _runner.ExploreTests(TestFilter.Empty));
+            Assert.That(ex.Message, Is.EqualTo("The ExploreTests method was called but no test has been loaded"));
+        }
+
+        [Test]
+        public void ExploreTests_FileNotFound_ReturnsZeroTests()
+        {
+            _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
+            var explorer = _runner.ExploreTests(TestFilter.Empty);
+            Assert.That(explorer.TestCaseCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ExploreTests_BadFile_ReturnsZeroTests()
+        {
+            _runner.Load(BAD_FILE, EMPTY_SETTINGS);
+            var explorer = _runner.ExploreTests(TestFilter.Empty);
+            Assert.That(explorer.TestCaseCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ExploreTests_AfterLoad_ReturnsCorrectCount()
+        {
+            LoadMockAssembly();
+            var explorer = _runner.ExploreTests(TestFilter.Empty);
+            Assert.That(explorer.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
+        }
+
+        [Test]
+        public void ExploreTest_AfterLoad_ReturnsSameTestCount()
+        {
+            LoadMockAssembly();
+            var explorer = _runner.ExploreTests(TestFilter.Empty);
+            Assert.That(explorer.TestCaseCount, Is.EqualTo(_runner.CountTestCases(TestFilter.Empty)));
+        }
+
+        [Test]
+        public void ExploreTests_AfterLoad_WithFilter_ReturnCorrectCount()
+        {
+            LoadMockAssembly();
+            ITestFilter filter = new CategoryFilter("FixtureCategory");
+
+            var explorer = _runner.ExploreTests(filter);
+            Assert.That(explorer.TestCaseCount, Is.EqualTo(MockTestFixture.Tests));
+        }
+
+        [Test]
+        public void ExploreTests_AfterLoad_WithFilter_ReturnSameTestCount()
+        {
+            LoadMockAssembly();
+            ITestFilter filter = new CategoryFilter("FixtureCategory");
+
+            var explorer = _runner.ExploreTests(filter);
+            Assert.That(explorer.TestCaseCount, Is.EqualTo(_runner.CountTestCases(filter)));
+        }
         #endregion
 
         #region Run
