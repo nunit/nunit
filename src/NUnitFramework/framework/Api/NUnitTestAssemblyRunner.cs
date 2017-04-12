@@ -189,7 +189,7 @@ namespace NUnit.Framework.Api
         /// Explore the test cases using a filter
         /// </summary>
         /// <param name="filter">The filter to apply</param>
-        /// <returns>Test Suite that contains </returns>
+        /// <returns>Test Assembly with test cases that matches the filter</returns>
         public ITest ExploreTests(ITestFilter filter)
         {
             if(LoadedTest == null)
@@ -198,7 +198,7 @@ namespace NUnit.Framework.Api
             if(filter == TestFilter.Empty)
                 return LoadedTest;
 
-            return new TestSuite(LoadedTest as TestSuite, filter);
+            return new TestAssembly(LoadedTest as TestAssembly, filter);
         }
 
         /// <summary>

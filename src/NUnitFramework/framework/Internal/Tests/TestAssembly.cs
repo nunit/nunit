@@ -24,6 +24,8 @@
 using System.IO;
 using System.Reflection;
 
+using NUnit.Framework.Interfaces;
+
 namespace NUnit.Framework.Internal
 {
     /// <summary>
@@ -53,6 +55,19 @@ namespace NUnit.Framework.Internal
         public TestAssembly(string path) : base(path)
         {
             this.Name = Path.GetFileName(path);
+        }
+
+        /// <summary>
+        /// Copy-constructor style to create a filtered copy of the test assemblies
+        /// test cases
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="filter"></param>
+        public TestAssembly(TestAssembly assembly, ITestFilter filter)
+            : base(assembly as TestSuite, filter)
+        {
+            this.Name     = assembly.Name;
+            this.Assembly = assembly.Assembly;
         }
 
         /// <summary>

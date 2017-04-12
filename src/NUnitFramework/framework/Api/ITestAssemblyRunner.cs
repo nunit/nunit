@@ -36,13 +36,6 @@ namespace NUnit.Framework.Api
     /// </summary>
     public interface ITestAssemblyRunner
     {
-        /// <summary>
-        /// Count Test Cases using a filter
-        /// </summary>
-        /// <param name="filter">The filter to apply</param>
-        /// <returns>The number of test cases found</returns>
-        ITest ExploreTests(ITestFilter filter);
-
         #region Properties
 
         /// <summary>
@@ -100,6 +93,13 @@ namespace NUnit.Framework.Api
         /// <param name="filter">The filter to apply</param>
         /// <returns>The number of test cases found</returns>
         int CountTestCases(ITestFilter filter);
+
+        /// <summary>
+        /// Explore the test cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>Test Assembly with test cases that matches the filter</returns>
+        ITest ExploreTests(ITestFilter filter);
 
         /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,

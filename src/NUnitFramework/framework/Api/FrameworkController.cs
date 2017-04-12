@@ -227,8 +227,7 @@ namespace NUnit.Framework.Api
             if (Runner.LoadedTest == null)
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
-            // TODO: Make use of the filter
-            return Runner.LoadedTest.ToXml(true).OuterXml;
+            return Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true).OuterXml;
         }
 
         /// <summary>
@@ -352,8 +351,7 @@ namespace NUnit.Framework.Api
             if (Runner.LoadedTest == null)
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
-            // TODO: Make use of the filter
-            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
+            handler.RaiseCallbackEvent(Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true).OuterXml);
         }
 
         private void RunTests(ICallbackEventHandler handler, string filter)

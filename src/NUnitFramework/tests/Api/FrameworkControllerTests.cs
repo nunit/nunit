@@ -177,7 +177,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockTestFixture.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
         }
 
@@ -195,6 +195,22 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+        }
+
+        [TestCase(FIXTURE_CAT_FILTER)]
+        [TestCase(EMPTY_FILTER)]
+        public void ExploreTestsAction_AfterLoad_ReturnsSameCount(string filter)
+        {
+            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.ExploreTestsAction(_controller, filter, _handler);
+            var exploreResult = TNode.FromXml(_handler.GetCallbackResult());
+
+            var exploreTestCount = exploreResult.Attributes["testcasecount"];
+
+            new FrameworkController.CountTestsAction(_controller, filter, _handler);
+            var countResult = _handler.GetCallbackResult();
+
+            Assert.That(exploreTestCount, Is.EqualTo(countResult));
         }
 
         [Test]
