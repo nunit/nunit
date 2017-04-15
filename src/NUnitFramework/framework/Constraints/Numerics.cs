@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// The Numerics class contains common operations on numeric _values.
     /// </summary>
-    public class Numerics
+    public static class Numerics
     {
         #region Numeric Type Recognition
         /// <summary>
@@ -344,6 +344,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Numeric Comparisons
+
         /// <summary>
         /// Compare two numeric _values, performing the usual numeric conversions.
         /// </summary>
@@ -373,9 +374,5 @@ namespace NUnit.Framework.Constraints
             return Convert.ToInt32(expected).CompareTo(Convert.ToInt32(actual));
         }
         #endregion
-
-        private Numerics()
-        {
-        }
     }
 }
