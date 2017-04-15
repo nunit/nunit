@@ -57,5 +57,29 @@ namespace NUnit.Framework.Constraints
             ClassWithIComparableOfT actual = new ClassWithIComparableOfT(42);
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
         }
+
+        [TestCase(6.0, 5.0, 0.05)]
+        [TestCase(5.0001, 5.0, 0.05)]
+        [TestCase(4.9999, 5.0, 0.05)]
+        [TestCase(210, 200, 5)]
+        [TestCase(202, 200, 5)]
+        [TestCase(198, 200, 5)]
+        [TestCase(195, 200, 5)]
+        public void SimpleTolerance(object actual, object expected, object tolerance)
+        {
+            Assert.That(actual, Is.GreaterThanOrEqualTo(expected).Within(tolerance));
+        }
+
+        [TestCase(4.9, 5.0, 0.05)]
+        [TestCase(194, 200, 5)]
+        [TestCase(190, 200, 5)]
+        public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
+        {
+            var ex = Assert.Throws<AssertionException>(
+                () => Assert.That(actual, Is.GreaterThanOrEqualTo(expected).Within(tolerance)),
+                "Assertion should have failed");
+
+            Assert.That(ex.Message, Contains.Substring("Expected: greater than or equal to " + expected.ToString()));
+        }
     }
 }

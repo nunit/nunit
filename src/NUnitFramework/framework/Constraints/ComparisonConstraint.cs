@@ -40,6 +40,11 @@ namespace NUnit.Framework.Constraints
         private object _expected;
 
         /// <summary>
+        /// Tolerance used in making the comparison
+        /// </summary>
+        private Tolerance _tolerance = Tolerance.Default;
+
+        /// <summary>
         /// ComparisonAdapter to be used in making the comparison
         /// </summary>
         private ComparisonAdapter _comparer = ComparisonAdapter.Default;
@@ -69,6 +74,9 @@ namespace NUnit.Framework.Constraints
             Guard.ArgumentValid(_expected != null, "Cannot compare using a null reference.", nameof(_expected));
             Guard.ArgumentValid(actual != null, "Cannot compare to a null reference.", nameof(actual));
             Guard.OperationValid(IsSuccess != null, "Internal Error: Derived class didn't set IsSuccess.");
+
+            if (!_tolerance.IsUnsetOrDefault && new NUnitEqualityComparer().AreEqual(_expected, actual, ref _tolerance))
+                return new ConstraintResult(this, actual, true);
 
             return new ConstraintResult(this, actual, IsSuccess(_comparer.Compare(actual, _expected)));
         }
@@ -112,6 +120,15 @@ namespace NUnit.Framework.Constraints
         public ComparisonConstraint Using<T>(Comparison<T> comparer)
         {
             this._comparer = ComparisonAdapter.For(comparer);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the tolerance for use in this comparison
+        /// </summary>
+        public ComparisonConstraint Within(object tol)
+        {
+            _tolerance = new Tolerance(tol);
             return this;
         }
 
