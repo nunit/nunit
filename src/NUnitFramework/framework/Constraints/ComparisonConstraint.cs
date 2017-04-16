@@ -57,6 +57,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The value against which to make a comparison.</param>
         protected ComparisonConstraint(object expected) : base(expected)
         {
+            Guard.ArgumentValid(expected != null, "Cannot compare using a null reference.", nameof(_expected));
             _expected = expected;
         }
 
@@ -71,20 +72,15 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentValid(_expected != null, "Cannot compare using a null reference.", nameof(_expected));
             Guard.ArgumentValid(actual != null, "Cannot compare to a null reference.", nameof(actual));
-            Guard.OperationValid(IsSuccess != null, "Internal Error: Derived class didn't set IsSuccess.");
 
-            if (!_tolerance.IsUnsetOrDefault && new NUnitEqualityComparer().AreEqual(_expected, actual, ref _tolerance))
-                return new ConstraintResult(this, actual, true);
-
-            return new ConstraintResult(this, actual, IsSuccess(_comparer.Compare(actual, _expected)));
+            return new ConstraintResult(this, actual, PerformComparison(_comparer, actual, _expected, _tolerance));
         }
 
         /// <summary>
-        /// Protected function assigned by derived class to evaluate comparison result
+        /// Protected function overridden by derived class to actually perform the comparison
         /// </summary>
-        protected Func<int, bool> IsSuccess;
+        protected abstract bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance);
 
         #endregion
 

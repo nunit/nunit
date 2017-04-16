@@ -290,7 +290,7 @@ namespace NUnit.Framework.Internal
             if (tolerance != null && !tolerance.IsUnsetOrDefault)
             {
                 Write(" +/- ");
-                Write(MsgUtils.FormatValue(tolerance.Value));
+                Write(MsgUtils.FormatValue(tolerance.Amount));
                 if (tolerance.Mode != ToleranceMode.Linear)
                     Write(" {0}", tolerance.Mode);
             }

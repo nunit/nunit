@@ -36,8 +36,15 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value.</param>
         public GreaterThanConstraint(object expected) : base(expected)
         {
-            IsSuccess = (comp) => comp > 0;
             Description = "greater than " + MsgUtils.FormatValue(expected);
+        }
+
+        /// <summary>
+        /// Perform the comparison
+        /// </summary>
+        protected override bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance)
+        {
+            return comparer.Compare(actual, tolerance.ApplyToValue(expected).LowerBound) > 0;
         }
     }
 }

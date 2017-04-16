@@ -61,18 +61,17 @@ namespace NUnit.Framework.Constraints
         [TestCase(4.0, 5.0, 0.05)]
         [TestCase(4.9999, 5.0, 0.05)]
         [TestCase(5.04, 5.0, 0.05)]
-        [TestCase(5.05, 5.0, 0.05)] // This should really fail
         [TestCase(198, 200, 5)]
         [TestCase(202, 200, 5)]
         [TestCase(204, 200, 5)]
-        [TestCase(205, 200, 5)] // This should really fail
         public void SimpleTolerance(object actual, object expected, object tolerance)
         {
             Assert.That(actual, Is.LessThan(expected).Within(tolerance));
         }
 
         [TestCase(5.1, 5.0, 0.05)]
-        [TestCase(206, 200, 5)]
+        [TestCase(5.05, 5.0, 0.05)]
+        [TestCase(205, 200, 5)]
         [TestCase(210, 200, 5)]
         public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
         {
@@ -86,19 +85,18 @@ namespace NUnit.Framework.Constraints
         [TestCase(4.0, 5.0, 1)]
         [TestCase(4.9999, 5.0, 1)]
         [TestCase(5.04, 5.0, 1)]
-        [TestCase(5.05, 5.0, 1)] // This should really fail
         [TestCase(198, 200, 2.5)]
         [TestCase(202, 200, 2.5)]
         [TestCase(204, 200, 2.5)]
-        [TestCase(205, 200, 2.5)] // This should really fail
         public void PercentTolerance(object actual, object expected, object percent)
         {
             Assert.That(actual, Is.LessThan(expected).Within(percent).Percent);
         }
 
         [TestCase(5.1, 5.0, 1)]
-        [TestCase(206, 200, 2.5)]
+        [TestCase(5.05, 5.0, 1)]
         [TestCase(210, 200, 2.5)]
+        [TestCase(205, 200, 2.5)]
         public void PercentTolerance_Failure(object actual, object expected, object tolerance)
         {
             var ex = Assert.Throws<AssertionException>(
