@@ -125,6 +125,7 @@ namespace NUnit.Framework.Internal
 
             CurrentValueFormatter = (val) => MsgUtils.DefaultValueFormatter(val);
             IsSingleThreaded = false;
+            DefaultFloatingPointTolerance = Tolerance.Default;
         }
 
         /// <summary>
@@ -145,6 +146,8 @@ namespace NUnit.Framework.Internal
 
             _currentCulture = other.CurrentCulture;
             _currentUICulture = other.CurrentUICulture;
+
+            DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
 
 #if !PORTABLE && !NETSTANDARD1_6
             _currentPrincipal = other.CurrentPrincipal;
@@ -316,7 +319,13 @@ namespace NUnit.Framework.Internal
         /// The ParallelScope to be used by tests running in this context.
         /// For builds with out the parallel feature, it has no effect.
         /// </summary>
-        public ParallelScope ParallelScope { get; set; }
+        public ParallelScope ParallelScope { get; set; } 
+
+        /// <summary>
+        /// Default tolerance value used for floating point equality
+        /// when no other tolerance is specified.
+        /// </summary>
+        public Tolerance DefaultFloatingPointTolerance { get; set; }
 
 #if PARALLEL
         /// <summary>

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -132,8 +133,12 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault && GlobalSettings.DefaultFloatingPointTolerance > 0.0d)
-                tolerance = new Tolerance(GlobalSettings.DefaultFloatingPointTolerance);
+            if (tolerance.IsUnsetOrDefault)
+            {
+                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
+                if (temp != null && !temp.IsUnsetOrDefault)
+                    tolerance = temp;
+            }
 
             switch (tolerance.Mode)
             {
@@ -172,8 +177,13 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault && GlobalSettings.DefaultFloatingPointTolerance > 0.0d)
-                tolerance = new Tolerance(GlobalSettings.DefaultFloatingPointTolerance);
+            if (tolerance.IsUnsetOrDefault)
+            {
+                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
+                if (temp != null && !temp.IsUnsetOrDefault)
+                    tolerance = temp;
+            }
+
 
             switch (tolerance.Mode)
             {

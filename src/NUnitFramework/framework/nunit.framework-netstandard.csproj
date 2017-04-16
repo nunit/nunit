@@ -98,6 +98,7 @@
     <Compile Include="Attributes\DatapointAttribute.cs" />
     <Compile Include="Attributes\DatapointsAttribute.cs" />
     <Compile Include="Attributes\DatapointSourceAttribute.cs" />
+    <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
     <Compile Include="Attributes\DescriptionAttribute.cs" />
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />

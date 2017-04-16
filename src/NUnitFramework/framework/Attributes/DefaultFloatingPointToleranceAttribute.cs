@@ -23,21 +23,40 @@
 
 using System;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// GlobalSettings is a place for setting default values used
-	/// by the framework in performing asserts. Anything set through
-    /// this class applies to the entire test run. It should not normally
-    /// be used from within a test, since it is not thread-safe.
-	/// </summary>
-	public static class GlobalSettings
-	{
+    /// <summary>
+    /// DefaultFloatingPointToleranceAttribute sets the tolerance used
+    /// by default when checking the equality of floating point values.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class DefaultFloatingPointToleranceAttribute : NUnitAttribute, IApplyToContext
+    {
+        private Tolerance _tolerance;
+
         /// <summary>
-        /// Default tolerance for floating point equality
+        /// Construct specifying an amount
         /// </summary>
-        [Obsolete("This setting is ignored. Use DefaultFloatingPointAttribute instead.")]
-        public static double DefaultFloatingPointTolerance = 0.0d;
+        /// <param name="amount"></param>
+        public DefaultFloatingPointToleranceAttribute(double amount)
+        {
+            _tolerance = new Tolerance(amount);
+        }
+
+        #region IApplyToContext Members
+
+        /// <summary>
+        /// Apply changes to the TestExecutionContext
+        /// </summary>
+        /// <param name="context">The TestExecutionContext</param>
+        public void ApplyToContext(TestExecutionContext context)
+        {
+            context.DefaultFloatingPointTolerance = _tolerance;
+        }
+
+        #endregion
     }
 }
