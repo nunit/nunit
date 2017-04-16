@@ -54,15 +54,15 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="ComparisonConstraint"/> class.
         /// </summary>
-        /// <param name="value">The value against which to make a comparison.</param>
-        protected ComparisonConstraint(object value) : base(value)
+        /// <param name="expected">The value against which to make a comparison.</param>
+        protected ComparisonConstraint(object expected) : base(expected)
         {
-            _expected = value;
+            _expected = expected;
         }
 
         #endregion
 
-        #region Apply Constraint
+        #region Overrides
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value   
@@ -126,10 +126,30 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Set the tolerance for use in this comparison
         /// </summary>
-        public ComparisonConstraint Within(object tol)
+        public ComparisonConstraint Within(object amount)
         {
-            _tolerance = new Tolerance(tol);
+            if (!_tolerance.IsUnsetOrDefault)
+                throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
+
+            _tolerance = new Tolerance(amount);
+            Description += " within " + MsgUtils.FormatValue(amount);
             return this;
+        }
+
+        /// <summary>
+        /// Switches the .Within() modifier to interpret its tolerance as
+        /// a percentage that the actual _values is allowed to deviate from
+        /// the expected value.
+        /// </summary>
+        /// <returns>Self</returns>
+        public ComparisonConstraint Percent
+        {
+            get
+            {
+                _tolerance = _tolerance.Percent;
+                Description += " percent";
+                return this;
+            }
         }
 
         #endregion

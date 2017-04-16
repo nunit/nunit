@@ -34,8 +34,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value.</param>
         public LessThanOrEqualConstraint(object expected) : base(expected)
         {
-            Description = "less than or equal to " + MsgUtils.FormatValue(expected);
             IsSuccess = (comp) => comp <= 0;
+            Description = "less than or equal to " + MsgUtils.FormatValue(expected);
         }
     }
 }

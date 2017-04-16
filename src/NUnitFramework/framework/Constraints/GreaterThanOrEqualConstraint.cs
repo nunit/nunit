@@ -34,8 +34,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value.</param>
         public GreaterThanOrEqualConstraint(object expected) : base(expected)
         {
-            Description = "greater than or equal to " + MsgUtils.FormatValue(expected);
             IsSuccess = (comp) => comp >= 0;
+            Description = "greater than or equal to " + MsgUtils.FormatValue(expected);
         }
     }
 }

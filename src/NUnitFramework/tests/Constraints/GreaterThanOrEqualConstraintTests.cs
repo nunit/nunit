@@ -81,5 +81,29 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(ex.Message, Contains.Substring("Expected: greater than or equal to " + expected.ToString()));
         }
+
+        [TestCase(6.0, 5.0, 1)]
+        [TestCase(5.0001, 5.0, 1)]
+        [TestCase(4.9999, 5.0, 1)]
+        [TestCase(210, 200, 2.5)]
+        [TestCase(202, 200, 2.5)]
+        [TestCase(198, 200, 2.5)]
+        [TestCase(195, 200, 2.5)]
+        public void PercentTolerance(object actual, object expected, object tolerance)
+        {
+            Assert.That(actual, Is.GreaterThanOrEqualTo(expected).Within(tolerance).Percent);
+        }
+
+        [TestCase(4.9, 5.0, 1)]
+        [TestCase(194, 200, 2.5)]
+        [TestCase(190, 200, 2.5)]
+        public void PercentTolerance_Failure(object actual, object expected, object tolerance)
+        {
+            var ex = Assert.Throws<AssertionException>(
+                () => Assert.That(actual, Is.GreaterThanOrEqualTo(expected).Within(tolerance).Percent),
+                "Assertion should have failed");
+
+            Assert.That(ex.Message, Contains.Substring("Expected: greater than or equal to " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent" ));
+        }
     }
 }
