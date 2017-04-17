@@ -34,6 +34,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class Tolerance
     {
+        #region Constants and Static Properties
+
         private const string ModeMustFollowTolerance = "Tolerance amount must be specified before setting mode";
         private const string MultipleToleranceModes = "Tried to use multiple tolerance modes at the same time";
         private const string NumericToleranceRequired = "A numeric tolerance is required";
@@ -59,6 +61,10 @@ namespace NUnit.Framework.Constraints
             get { return new Tolerance(0, ToleranceMode.Linear); }
         }
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Constructs a linear tolerance of a specified amount
         /// </summary>
@@ -73,31 +79,9 @@ namespace NUnit.Framework.Constraints
             Mode = mode;
         }
 
-        /// <summary>
-        /// Gets the <see cref="ToleranceMode"/> for the current Tolerance
-        /// </summary>
-        public ToleranceMode Mode { get; private set; }
-        
+        #endregion
 
-        /// <summary>
-        /// Tests that the current Tolerance is linear with a 
-        /// numeric value, throwing an exception if it is not.
-        /// </summary>
-        private void CheckLinearAndNumeric()
-        {
-            if (Mode != ToleranceMode.Linear)
-                throw new InvalidOperationException(Mode == ToleranceMode.Unset
-                    ? ModeMustFollowTolerance
-                    : MultipleToleranceModes);
-
-            if (!Numerics.IsNumericType(Amount))
-                throw new InvalidOperationException(NumericToleranceRequired);
-        }
-
-        /// <summary>
-        /// Gets the magnitude of the current Tolerance instance.
-        /// </summary>
-        public object Amount { get; private set; }
+        #region Modifier Properties
 
         /// <summary>
         /// Returns a new tolerance, using the current amount as a percentage.
@@ -201,6 +185,20 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+        #endregion
+
+        #region Other Public Properties
+
+        /// <summary>
+        /// Gets the <see cref="ToleranceMode"/> for the current Tolerance
+        /// </summary>
+        public ToleranceMode Mode { get; }
+
+        /// <summary>
+        /// Gets the magnitude of the current Tolerance instance.
+        /// </summary>
+        public object Amount { get; }
+
         /// <summary>
         /// Returns true if the current tolerance has not been set or is using the .
         /// </summary>
@@ -208,6 +206,10 @@ namespace NUnit.Framework.Constraints
         {
             get { return Mode == ToleranceMode.Unset; }
         }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Apply the tolerance to an expected value and return
@@ -230,6 +232,25 @@ namespace NUnit.Framework.Constraints
                 case ToleranceMode.Percent:
                     return PercentRange(value);
             }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Tests that the current Tolerance is linear with a 
+        /// numeric value, throwing an exception if it is not.
+        /// </summary>
+        private void CheckLinearAndNumeric()
+        {
+            if (Mode != ToleranceMode.Linear)
+                throw new InvalidOperationException(Mode == ToleranceMode.Unset
+                    ? ModeMustFollowTolerance
+                    : MultipleToleranceModes);
+
+            if (!Numerics.IsNumericType(Amount))
+                throw new InvalidOperationException(NumericToleranceRequired);
         }
 
         private Range LinearRange(object value)
@@ -297,6 +318,10 @@ namespace NUnit.Framework.Constraints
             return new Range(v - offset, v + offset);
         }
 
+        #endregion
+
+        #region Nested Range Class
+
         /// <summary>
         /// Tolerance.Range represents the range of values that match
         /// a specific tolerance, when applied to a specific value.
@@ -322,5 +347,7 @@ namespace NUnit.Framework.Constraints
                 UpperBound = upperBound;
             }
         }
+
+        #endregion
     }
 }
