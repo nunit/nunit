@@ -383,7 +383,7 @@ namespace NUnit.Framework.Constraints
                 if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
                 {
                     sb.Append(" +/- ");
-                    sb.Append(MsgUtils.FormatValue(_tolerance.Value));
+                    sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
                     if (_tolerance.Mode != ToleranceMode.Linear)
                     {
                         sb.Append(" ");

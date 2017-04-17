@@ -37,61 +37,54 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The value against which a comparison is to be made
         /// </summary>
-        protected object expected;
+        private object _expected;
+
         /// <summary>
-        /// If true, less than returns success
+        /// Tolerance used in making the comparison
         /// </summary>
-        protected bool lessComparisonResult = false;
-        /// <summary>
-        /// if true, equal returns success
-        /// </summary>
-        protected bool equalComparisonResult = false;
-        /// <summary>
-        /// if true, greater than returns success
-        /// </summary>
-        protected bool greaterComparisonResult = false;
+        private Tolerance _tolerance = Tolerance.Default;
 
         /// <summary>
         /// ComparisonAdapter to be used in making the comparison
         /// </summary>
-        private ComparisonAdapter comparer = ComparisonAdapter.Default;
+        private ComparisonAdapter _comparer = ComparisonAdapter.Default;
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComparisonConstraint"/> class.
         /// </summary>
-        /// <param name="value">The value against which to make a comparison.</param>
-        /// <param name="lessComparisonResult">if set to <c>true</c> less succeeds.</param>
-        /// <param name="equalComparisonResult">if set to <c>true</c> equal succeeds.</param>
-        /// <param name="greaterComparisonResult">if set to <c>true</c> greater succeeds.</param>
-        /// <param name="predicate">String used in describing the constraint.</param>
-        protected ComparisonConstraint(object value, bool lessComparisonResult, bool equalComparisonResult, bool greaterComparisonResult, string predicate)
-            : base(value)
+        /// <param name="expected">The value against which to make a comparison.</param>
+        protected ComparisonConstraint(object expected) : base(expected)
         {
-            this.expected = value;
-            this.lessComparisonResult = lessComparisonResult;
-            this.equalComparisonResult = equalComparisonResult;
-            this.greaterComparisonResult = greaterComparisonResult;
-            this.Description = predicate + " " + MsgUtils.FormatValue(expected);
+            Guard.ArgumentValid(expected != null, "Cannot compare using a null reference.", nameof(_expected));
+            _expected = expected;
+        }
+
+        #endregion
+
+        #region Overrides
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value   
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            Guard.ArgumentValid(actual != null, "Cannot compare to a null reference.", nameof(actual));
+
+            return new ConstraintResult(this, actual, PerformComparison(_comparer, actual, _expected, _tolerance));
         }
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given value
+        /// Protected function overridden by derived class to actually perform the comparison
         /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo<TActual>(TActual actual)
-        {
-            if (expected == null)
-                throw new ArgumentException("Cannot compare using a null reference", "expected");
+        protected abstract bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance);
 
-            if (actual == null)
-                throw new ArgumentException("Cannot compare to null reference", "actual");
+        #endregion
 
-            int icomp = comparer.Compare(expected, actual);
-
-            bool hasSucceeded = icomp < 0 && greaterComparisonResult || icomp == 0 && equalComparisonResult || icomp > 0 && lessComparisonResult;
-            return new ConstraintResult(this, actual, hasSucceeded);
-        }
+        #region Constraint Modifiers
 
         /// <summary>
         /// Modifies the constraint to use an <see cref="IComparer"/> and returns self
@@ -100,7 +93,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using(IComparer comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
+            this._comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -111,7 +104,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(IComparer<T> comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
+            this._comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -122,8 +115,39 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(Comparison<T> comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
+            this._comparer = ComparisonAdapter.For(comparer);
             return this;
         }
+
+        /// <summary>
+        /// Set the tolerance for use in this comparison
+        /// </summary>
+        public ComparisonConstraint Within(object amount)
+        {
+            if (!_tolerance.IsUnsetOrDefault)
+                throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
+
+            _tolerance = new Tolerance(amount);
+            Description += " within " + MsgUtils.FormatValue(amount);
+            return this;
+        }
+
+        /// <summary>
+        /// Switches the .Within() modifier to interpret its tolerance as
+        /// a percentage that the actual _values is allowed to deviate from
+        /// the expected value.
+        /// </summary>
+        /// <returns>Self</returns>
+        public ComparisonConstraint Percent
+        {
+            get
+            {
+                _tolerance = _tolerance.Percent;
+                Description += " percent";
+                return this;
+            }
+        }
+
+        #endregion
     }
 }

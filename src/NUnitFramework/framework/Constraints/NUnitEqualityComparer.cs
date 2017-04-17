@@ -202,9 +202,9 @@ namespace NUnit.Framework.Constraints
                 DateTimeOffset xAsOffset = (DateTimeOffset)x;
                 DateTimeOffset yAsOffset = (DateTimeOffset)y;
 
-                if (tolerance != null && tolerance.Value is TimeSpan)
+                if (tolerance != null && tolerance.Amount is TimeSpan)
                 {
-                    TimeSpan amount = (TimeSpan)tolerance.Value;
+                    TimeSpan amount = (TimeSpan)tolerance.Amount;
                     result = (xAsOffset - yAsOffset).Duration() <= amount;
                 }
                 else
@@ -220,9 +220,9 @@ namespace NUnit.Framework.Constraints
                 return result;
             }
 
-            if (tolerance != null && tolerance.Value is TimeSpan)
+            if (tolerance != null && tolerance.Amount is TimeSpan)
             {
-                TimeSpan amount = (TimeSpan)tolerance.Value;
+                TimeSpan amount = (TimeSpan)tolerance.Amount;
 
                 if (x is DateTime && y is DateTime)
                     return ((DateTime)x - (DateTime)y).Duration() <= amount;

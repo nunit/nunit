@@ -57,5 +57,61 @@ namespace NUnit.Framework.Constraints
             ClassWithIComparableOfT actual = new ClassWithIComparableOfT(42);
             Assert.That(actual, Is.GreaterThan(expected));
         }
+
+        [TestCase(6.0, 5.0, 0.05)]
+        [TestCase(5.05, 5.0, 0.05)] // upper range bound
+        [TestCase(5.0001, 5.0, 0.05)]
+        [TestCase(4.9999, 5.0, 0.05)]
+        [TestCase(4.9501, 5.0, 0.05)] // lower range bound + .01
+        [TestCase(210, 200, 5)]
+        [TestCase(205, 200, 5)] // upper range bound
+        [TestCase(202, 200, 5)]
+        [TestCase(198, 200, 5)]
+        [TestCase(196, 200, 5)] // lower range bound + 1
+        public void SimpleTolerance(object actual, object expected, object tolerance)
+        {
+            Assert.That(actual, Is.GreaterThan(expected).Within(tolerance));
+        }
+
+        [TestCase(4.95, 5.0, 0.05)] // lower range bound
+        [TestCase(4.9, 5.0, 0.05)]
+        [TestCase(195, 200, 5)] // lower range bound
+        [TestCase(190, 200, 5)]
+        public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
+        {
+            var ex = Assert.Throws<AssertionException>(
+                () => Assert.That(actual, Is.GreaterThan(expected).Within(tolerance)),
+                "Assertion should have failed");
+
+            Assert.That(ex.Message, Contains.Substring("Expected: greater than " + expected.ToString()));
+        }
+
+        [TestCase(6.0, 5.0, 1)]
+        [TestCase(5.05, 5.0, 1)] // upper range bound
+        [TestCase(5.0001, 5.0, 1)]
+        [TestCase(4.9999, 5.0, 1)]
+        [TestCase(4.9501, 5.0, 1)] // lower range bound + .01
+        [TestCase(210, 200, 2.5)]
+        [TestCase(205, 200, 2.5)] // upper range bound
+        [TestCase(202, 200, 2.5)]
+        [TestCase(198, 200, 2.5)]
+        [TestCase(196, 200, 2.5)] // lower range bound + 1
+        public void PercentTolerance(object actual, object expected, object tolerance)
+        {
+            Assert.That(actual, Is.GreaterThan(expected).Within(tolerance).Percent);
+        }
+
+        [TestCase(4.95, 5.0, 1)] // lower range bound
+        [TestCase(4.9, 5.0, 1)]
+        [TestCase(195, 200, 2.5)] // lower range bound
+        [TestCase(190, 200, 2.5)]
+        public void PercentTolerance_Failure(object actual, object expected, object tolerance)
+        {
+            var ex = Assert.Throws<AssertionException>(
+                () => Assert.That(actual, Is.GreaterThan(expected).Within(tolerance).Percent),
+                "Assertion should have failed");
+
+            Assert.That(ex.Message, Contains.Substring("Expected: greater than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
+        }
     }
 }

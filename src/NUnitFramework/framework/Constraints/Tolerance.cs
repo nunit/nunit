@@ -34,8 +34,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class Tolerance
     {
-        private readonly ToleranceMode mode;
-        private readonly object amount;
+        #region Constants and Static Properties
 
         private const string ModeMustFollowTolerance = "Tolerance amount must be specified before setting mode";
         private const string MultipleToleranceModes = "Tried to use multiple tolerance modes at the same time";
@@ -62,6 +61,10 @@ namespace NUnit.Framework.Constraints
             get { return new Tolerance(0, ToleranceMode.Linear); }
         }
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Constructs a linear tolerance of a specified amount
         /// </summary>
@@ -72,41 +75,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private Tolerance(object amount, ToleranceMode mode)
         {
-            this.amount = amount;
-            this.mode = mode;
+            Amount = amount;
+            Mode = mode;
         }
 
-        /// <summary>
-        /// Gets the <see cref="ToleranceMode"/> for the current Tolerance
-        /// </summary>
-        public ToleranceMode Mode
-        {
-            get { return this.mode; }
-        }
-        
+        #endregion
 
-        /// <summary>
-        /// Tests that the current Tolerance is linear with a 
-        /// numeric value, throwing an exception if it is not.
-        /// </summary>
-        private void CheckLinearAndNumeric()
-        {
-            if (mode != ToleranceMode.Linear)
-                throw new InvalidOperationException(mode == ToleranceMode.Unset
-                    ? ModeMustFollowTolerance
-                    : MultipleToleranceModes);
-
-            if (!Numerics.IsNumericType(amount))
-                throw new InvalidOperationException(NumericToleranceRequired);
-        }
-
-        /// <summary>
-        /// Gets the value of the current Tolerance instance.
-        /// </summary>
-        public object Value
-        {
-            get { return amount; }
-        }
+        #region Modifier Properties
 
         /// <summary>
         /// Returns a new tolerance, using the current amount as a percentage.
@@ -116,7 +91,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(this.amount, ToleranceMode.Percent);
+                return new Tolerance(Amount, ToleranceMode.Percent);
             }
         }
 
@@ -128,7 +103,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(this.amount, ToleranceMode.Ulps);
+                return new Tolerance(Amount, ToleranceMode.Ulps);
             }
         }
 
@@ -141,7 +116,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromDays(Convert.ToDouble(amount)));
+                return new Tolerance(TimeSpan.FromDays(Convert.ToDouble(Amount)));
             }
         }
 
@@ -154,7 +129,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromHours(Convert.ToDouble(amount)));
+                return new Tolerance(TimeSpan.FromHours(Convert.ToDouble(Amount)));
             }
         }
 
@@ -167,7 +142,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromMinutes(Convert.ToDouble(amount)));
+                return new Tolerance(TimeSpan.FromMinutes(Convert.ToDouble(Amount)));
             }
         }
 
@@ -180,7 +155,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromSeconds(Convert.ToDouble(amount)));
+                return new Tolerance(TimeSpan.FromSeconds(Convert.ToDouble(Amount)));
             }
         }
 
@@ -193,7 +168,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromMilliseconds(Convert.ToDouble(amount)));
+                return new Tolerance(TimeSpan.FromMilliseconds(Convert.ToDouble(Amount)));
             }
         }
 
@@ -206,16 +181,173 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromTicks(Convert.ToInt64(amount)));
+                return new Tolerance(TimeSpan.FromTicks(Convert.ToInt64(Amount)));
             }
         }
+
+        #endregion
+
+        #region Other Public Properties
+
+        /// <summary>
+        /// Gets the <see cref="ToleranceMode"/> for the current Tolerance
+        /// </summary>
+        public ToleranceMode Mode { get; }
+
+        /// <summary>
+        /// Gets the magnitude of the current Tolerance instance.
+        /// </summary>
+        public object Amount { get; }
 
         /// <summary>
         /// Returns true if the current tolerance has not been set or is using the .
         /// </summary>
         public bool IsUnsetOrDefault
         {
-            get { return mode == ToleranceMode.Unset; }
+            get { return Mode == ToleranceMode.Unset; }
         }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Apply the tolerance to an expected value and return
+        /// a Tolerance.Range that represents the acceptable values.
+        /// </summary>
+        public Range ApplyToValue(object value)
+        {
+            // TODO: This should really be a generic, but we will
+            // first have to make Tolerance and the constraints
+            // that use it generic as well.
+            switch (Mode)
+            {
+                default:
+                case ToleranceMode.Unset:
+                    return new Range(value, value);
+
+                case ToleranceMode.Linear:
+                    return LinearRange(value);
+
+                case ToleranceMode.Percent:
+                    return PercentRange(value);
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Tests that the current Tolerance is linear with a 
+        /// numeric value, throwing an exception if it is not.
+        /// </summary>
+        private void CheckLinearAndNumeric()
+        {
+            if (Mode != ToleranceMode.Linear)
+                throw new InvalidOperationException(Mode == ToleranceMode.Unset
+                    ? ModeMustFollowTolerance
+                    : MultipleToleranceModes);
+
+            if (!Numerics.IsNumericType(Amount))
+                throw new InvalidOperationException(NumericToleranceRequired);
+        }
+
+        private Range LinearRange(object value)
+        {
+            if (Amount is double || value is double)
+            {
+                var amount = Convert.ToDouble(Amount);
+                var v = Convert.ToDouble(value);
+                return new Range(v - amount, v + amount);
+            }
+
+            if (Amount is float || value is float)
+            {
+                var amount = Convert.ToSingle(Amount);
+                var v = Convert.ToSingle(value);
+                return new Range(v - amount, v + amount);
+            }
+
+            if (Amount is decimal || value is decimal)
+            {
+                var amount = Convert.ToDecimal(Amount);
+                var v = Convert.ToDecimal(value);
+                return new Range(v - amount, v + amount);
+            }
+
+            if (Amount is ulong || value is ulong)
+            {
+                var amount = Convert.ToUInt64(Amount);
+                var v = Convert.ToUInt64(value);
+                return new Range(v - amount, v + amount);
+            }
+
+            if (Amount is long || value is long)
+            {
+                var amount = Convert.ToInt64(Amount);
+                var v = Convert.ToInt64(value);
+                return new Range(v - amount, v + amount);
+            }
+
+            if (Amount is uint || value is uint)
+            {
+                var amount = Convert.ToUInt32(Amount);
+                var v = Convert.ToUInt32(value);
+                return new Range(v - amount, v + amount);
+            }
+
+            if (Numerics.IsFixedPointNumeric(Amount) && Numerics.IsFixedPointNumeric(value))
+            {
+                var amount = Convert.ToInt32(Amount);
+                var v = Convert.ToInt32(value);
+                return new Range(v - amount, v + amount);
+            }
+
+            throw new InvalidOperationException("Cannot create range for a non-numeric value");
+        }
+
+        private Range PercentRange(object value)
+        {
+            if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
+                throw new InvalidOperationException("Cannot create range for a non-numeric value");
+
+            var v = Convert.ToDouble(value);
+            var offset = v * Convert.ToDouble(Amount) / 100.0;
+
+            return new Range(v - offset, v + offset);
+        }
+
+        #endregion
+
+        #region Nested Range Class
+
+        /// <summary>
+        /// Tolerance.Range represents the range of values that match
+        /// a specific tolerance, when applied to a specific value.
+        /// </summary>
+        public class Range
+        {
+            /// <summary>
+            /// The lower bound of the range
+            /// </summary>
+            public readonly object LowerBound;
+
+            /// <summary>
+            /// The Upper bound of the range
+            /// </summary>
+            public readonly object UpperBound;
+
+            /// <summary>
+            ///  Construct a Range
+            /// </summary>
+            public Range(object lowerBound, object upperBound)
+            {
+                LowerBound = lowerBound;
+                UpperBound = upperBound;
+            }
+        }
+
+        #endregion
     }
 }

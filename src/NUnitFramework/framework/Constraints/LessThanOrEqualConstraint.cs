@@ -32,6 +32,17 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="LessThanOrEqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public LessThanOrEqualConstraint(object expected) : base(expected, true, true, false, "less than or equal to") { }
+        public LessThanOrEqualConstraint(object expected) : base(expected)
+        {
+            Description = "less than or equal to " + MsgUtils.FormatValue(expected);
+        }
+
+        /// <summary>
+        /// Perform the comparison
+        /// </summary>
+        protected override bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance)
+        {
+            return comparer.Compare(actual, tolerance.ApplyToValue(expected).UpperBound) <= 0;
+        }
     }
 }

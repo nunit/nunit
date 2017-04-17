@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -32,6 +34,17 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="GreaterThanConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public GreaterThanConstraint(object expected) : base(expected, false, false, true, "greater than") { }
+        public GreaterThanConstraint(object expected) : base(expected)
+        {
+            Description = "greater than " + MsgUtils.FormatValue(expected);
+        }
+
+        /// <summary>
+        /// Perform the comparison
+        /// </summary>
+        protected override bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance)
+        {
+            return comparer.Compare(actual, tolerance.ApplyToValue(expected).LowerBound) > 0;
+        }
     }
 }
