@@ -126,7 +126,7 @@ namespace NUnit.Tests
 #endif
         }
 
-        [TestFixture(Description="Fake Test Fixture")]
+        [TestFixture("Fake Test Fixture")]
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
@@ -148,7 +148,7 @@ namespace NUnit.Tests
 
             public const int Inconclusive = 1;
 
-            [Test(Description="Mock Test #1")]
+            [Test("Mock Test #1")]
             [Category("MockCategory")]
             [Property("Severity", "Critical")]
             public void TestWithDescription() { }

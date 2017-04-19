@@ -43,7 +43,7 @@ namespace NUnit.Framework
         /// Default constructor
         /// </summary>
         public TestFixtureAttribute() : this( new object[0] ) { }
-        
+
         /// <summary>
         /// Construct with a object[] representing a set of arguments. 
         /// In .NET 2.0, the arguments may later be separated into
