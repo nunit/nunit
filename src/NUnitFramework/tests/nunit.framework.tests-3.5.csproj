@@ -94,6 +94,7 @@
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
+    <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
     <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
     <Compile Include="Internal\Filters\ClassNameFilterTests.cs" />
