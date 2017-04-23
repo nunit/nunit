@@ -38,45 +38,138 @@ namespace NUnitLite.Tests
     [TestFixture]
     public class CommandLineTests
     {
-        #region @filename Tests
+        #region Argument PreProcessor Tests
 
 #if !PORTABLE
-        [Test]
-        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "--filearg1\r\n--filearg2", "--arg1 --filearg1 --filearg2 --arg2", "")]
-        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "--filearg1 --filearg2", "--arg1 --filearg1 --filearg2 --arg2", "")]
-        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "--filearg1 --filearg2\r\n--filearg3 --filearg4", "--arg1 --filearg1 --filearg2 --filearg3 --filearg4 --arg2", "")]
-        [TestCase("--arg1 @[,]file1.txt --arg2", "file1.txt", "--filearg1:filearg2\r\nfilearg3\r\nfilearg4", "--arg1 --filearg1:filearg2,filearg3,filearg4 --arg2", "")]
-        [TestCase("--arg1 @file1.txt --arg2", "", "", "--arg1 --arg2", "The file \"file1.txt\" was not found")]
-        [TestCase("--arg1 @ --arg2", "", "", "--arg1 --arg2", "The file name should not be empty")]
-        [TestCase("--arg1 @file1.txt --arg2 @file2.txt", "file1.txt|file2.txt", "--filearg1 --filearg2|--filearg3", "--arg1 --filearg1 --filearg2 --arg2 --filearg3", "")]
-        [TestCase("--arg1 @file1.txt --arg2", "file1.txt", "", "--arg1 --arg2", "")]
-        [TestCase("--arg1 @file1.txt --arg2 @file2.txt", "file1.txt|file2.txt|file3.txt", "--filearg1 --filearg2|--filearg3 @file3.txt|--filearg4", "--arg1 --filearg1 --filearg2 --arg2 --filearg3 --filearg4", "")]
-        public void AtsignFilenameTests(string commandLine, string testFileNames, string testFileContents, string expectedArgs, string expectedErrors)
+        [TestCase("--arg", "--arg")]
+        [TestCase("--ArG", "--ArG")]
+        [TestCase("--arg1 --arg2", "--arg1", "--arg2")]
+        [TestCase("--arg1 data --arg2", "--arg1", "data", "--arg2")]
+        [TestCase("")]
+        [TestCase("   ")]
+        [TestCase("\"--arg 1\" --arg2", "--arg 1", "--arg2")]
+        [TestCase("--arg1 \"--arg 2\"", "--arg1", "--arg 2")]
+        [TestCase("\"--arg 1\" \"--arg 2\"", "--arg 1", "--arg 2")]
+        [TestCase("\"--arg 1\" \"--arg 2\" arg3 \"arg 4\"", "--arg 1", "--arg 2", "arg3", "arg 4")]
+        [TestCase("--arg1 \"--arg 2\" arg3 \"arg 4\"", "--arg1", "--arg 2", "arg3", "arg 4")]
+        [TestCase("\"--arg 1\" \"--arg 2\" arg3 \"arg 4\" \"--arg 1\" \"--arg 2\" arg3 \"arg 4\"",
+            "--arg 1", "--arg 2", "arg3", "arg 4", "--arg 1", "--arg 2", "arg3", "arg 4")]
+        [TestCase("\"--arg\"", "--arg")]
+        [TestCase("\"--arg 1\"", "--arg 1")]
+        [TestCase("\"--arg abc\"", "--arg abc")]
+        [TestCase("\"--arg   abc\"", "--arg   abc")]
+        [TestCase("\" --arg   abc \"", " --arg   abc ")]
+        [TestCase("\"--arg=abc\"", "--arg=abc")]
+        [TestCase("\"--arg=aBc\"", "--arg=aBc")]
+        [TestCase("\"--arg = abc\"", "--arg = abc")]
+        [TestCase("\"--arg=abc,xyz\"", "--arg=abc,xyz")]
+        [TestCase("\"--arg=abc, xyz\"", "--arg=abc, xyz")]
+        [TestCase("\"@arg = ~ ` ! @ # $ % ^ & * ( ) _ - : ; + ' ' { } [ ] | \\ ? / . , , xYz\"",
+            "@arg = ~ ` ! @ # $ % ^ & * ( ) _ - : ; + ' ' { } [ ] | \\ ? / . , , xYz")]
+        public void GetArgsFromCommandLine(string cmdline, params string[] expectedArgs)
         {
-            var ee = expectedErrors.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            var tfn = testFileNames.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var tfc = testFileContents.Split(new[] { '|' });
-            var tfs = new TestFile[tfn.Length];
+            var actualArgs = CommandLineOptions.GetArgs(cmdline);
 
-            for (int ix = 0; ix < tfn.Length; ++ix)
-                tfs[ix] = new TestFile(Path.Combine(TestContext.CurrentContext.TestDirectory, tfn[ix]), tfc[ix], true);
+            Assert.AreEqual(expectedArgs, actualArgs);
+        }
+
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1 --filearg2", "--arg1", "--filearg1", "--filearg2", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1\r\n--filearg2", "--arg1", "--filearg1", "--filearg2", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1 data", "--arg1", "--filearg1", "data", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1 \"data in quotes\"", "--arg1", "--filearg1", "data in quotes", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1 \"data in quotes with 'single' quotes\"", "--arg1", "--filearg1", "data in quotes with 'single' quotes", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1 \"data in quotes with /slashes/\"", "--arg1", "--filearg1", "data in quotes with /slashes/", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2 @file2.txt", "file1.txt:--filearg1 --filearg2,file2.txt:--filearg3", "--arg1", "--filearg1", "--filearg2", "--arg2", "--filearg3")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:", "--arg1", "--arg2")]
+        // Blank lines
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--fileArg1\n\n\n--fileArg2", "--arg1", "--fileArg1", "--fileArg2", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--fileArg1\r\n\r\n\r\n--fileArg2", "--arg1", "--fileArg1", "--fileArg2", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1 --filearg2\r\n\n--filearg3 --filearg4", "--arg1", "--filearg1", "--filearg2", "--filearg3", "--filearg4", "--arg2")]
+
+        // Comments
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--fileArg1\nThis is NOT treated as a COMMENT\n--fileArg2", "--arg1", "--fileArg1", "This", "is", "NOT", "treated", "as", "a", "COMMENT", "--fileArg2", "--arg2")]
+        [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--fileArg1\n#This is treated as a COMMENT\n--fileArg2", "--arg1", "--fileArg1", "--fileArg2", "--arg2")]
+        // Nested files
+        [TestCase("--arg1 @file1.txt --arg2 @file2.txt", "file1.txt:--filearg1 --filearg2,file2.txt:--filearg3 @file3.txt,file3.txt:--filearg4", "--arg1", "--filearg1", "--filearg2", "--arg2", "--filearg3", "--filearg4")]
+        // Where clauses
+        [TestCase("testfile.dll @file1.txt --arg2", "file1.txt:--where test==somelongname", "testfile.dll", "--where", "test==somelongname", "--arg2")]
+        // NOTE: The next is not valid. Where clause is spread over several args and therefore won't parse. Quotes are required.
+        [TestCase("testfile.dll @file1.txt --arg2", "file1.txt:--where test == somelongname", "testfile.dll", "--where", "test", "==", "somelongname", "--arg2")]
+        [TestCase("testfile.dll @file1.txt --arg2", 
+            "file1.txt:--where \"test == somelongname\"", 
+            "testfile.dll", "--where", "test == somelongname", "--arg2")]
+        [TestCase("testfile.dll @file1.txt --arg2", 
+            "file1.txt:--where\n    \"test == somelongname\"", 
+            "testfile.dll", "--where", "test == somelongname", "--arg2")]
+        [TestCase("testfile.dll @file1.txt --arg2", 
+            "file1.txt:--where\n    \"test == somelongname or test == /another long name/ or cat == SomeCategory\"",
+            "testfile.dll", "--where", "test == somelongname or test == /another long name/ or cat == SomeCategory", "--arg2")]
+        [TestCase("testfile.dll @file1.txt --arg2", 
+            "file1.txt:--where\n    \"test == somelongname or\ntest == /another long name/ or\ncat == SomeCategory\"",
+            "testfile.dll", "--where", "test == somelongname or test == /another long name/ or cat == SomeCategory", "--arg2")]
+        [TestCase("testfile.dll @file1.txt --arg2",
+            "file1.txt:--where\n    \"test == somelongname ||\ntest == /another long name/ ||\ncat == SomeCategory\"",
+            "testfile.dll", "--where", "test == somelongname || test == /another long name/ || cat == SomeCategory", "--arg2")]
+        public void GetArgsFromFiles(string commandLine, string files, params string[] expectedArgs)
+        {
+            var filespecs = files.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var testFiles = new TestFile[filespecs.Length];
+
+            for (int ix = 0; ix < filespecs.Length; ++ix)
+            {
+                var filespec = filespecs[ix];
+                var split = filespec.IndexOf( ':' );
+                if (split < 0) throw new Exception("Invalid test data");
+
+                var fileName = filespec.Substring(0, split);
+                var fileContent = filespec.Substring(split + 1);
+
+                testFiles[ix] = new TestFile(Path.Combine(TestContext.CurrentContext.TestDirectory, fileName), fileContent, true);
+            }
 
             var options = new NUnitLiteOptions();
 
-            string actualExpectedArgs;
+            string[] expandedArgs;
 
             try
             {
-                actualExpectedArgs = String.Join(" ", options.PreParse(CommandLineOptions.GetArgs(commandLine)).ToArray());
+                expandedArgs = options.PreParse(CommandLineOptions.GetArgs(commandLine)).ToArray();
             }
             finally
             {
-                foreach (var tf in tfs)
+                foreach (var tf in testFiles)
                     tf.Dispose();
             }
 
-            Assert.AreEqual(expectedArgs, actualExpectedArgs);
-            Assert.AreEqual(options.ErrorMessages, ee);
+            Assert.AreEqual(expectedArgs, expandedArgs);
+            Assert.Zero(options.ErrorMessages.Count);
+        }
+
+        [TestCase("--arg1 @file1.txt --arg2", "The file \"file1.txt\" was not found.")]
+        [TestCase("--arg1 @ --arg2", "You must include a file name after @.")]
+        public void GetArgsFromFiles_FailureTests(string args, string errorMessage)
+        {
+            var options = new NUnitLiteOptions();
+
+            options.PreParse(CommandLineOptions.GetArgs(args));
+
+            Assert.That(options.ErrorMessages, Is.EqualTo(new object[] { errorMessage }));
+        }
+
+        //[Test]
+        public void GetArgsFromFiles_NestingOverflow()
+        {
+            var options = new NUnitLiteOptions();
+            var args = new[] { "--arg1", "@file1.txt", "--arg2" };
+            var expectedErrors = new string[] { "@ nesting exceeds maximum depth of 3." };
+
+            using (new TestFile(Path.Combine(TestContext.CurrentContext.TestDirectory, "file1.txt"), "@file1.txt", true))
+            {
+                var expandedArgs = options.PreParse(args);
+
+                Assert.AreEqual(args, expandedArgs);
+                Assert.AreEqual(expectedErrors, options.ErrorMessages);
+            }
         }
 #endif
         #endregion

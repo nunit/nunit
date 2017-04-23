@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Options;
+using System.Text;
 
 namespace NUnit.Common
 {
@@ -74,24 +75,24 @@ namespace NUnit.Common
                 Parse(PreParse(args));
         }
 
-#if !PORTABLE
+#if PORTABLE
+        internal IEnumerable<string> PreParse(IEnumerable<string> args)
+        {
+            return args;
+        }
+#else
         private int _nesting = 0;
-#endif
 
         internal IEnumerable<string> PreParse(IEnumerable<string> args)
         {
-#if PORTABLE
-            return args;
-#else
             if (++_nesting > 3)
             {
-                ErrorMessages.Add("@ nesting exceeds maximum depth of 3");
+                ErrorMessages.Add("@ nesting exceeds maximum depth of 3.");
                 --_nesting;
                 return args;
             }
 
             var listArgs = new List<string>();
-            var delim = ' ';
 
             foreach (var arg in args)
             {
@@ -103,64 +104,63 @@ namespace NUnit.Common
 
                 if (arg.Length == 1)
                 {
-                    ErrorMessages.Add("The file name should not be empty");
+                    ErrorMessages.Add("You must include a file name after @.");
                     continue;
                 }
 
-                var offset = 1;
-                if (arg.Length > 4 && arg[1] == '[' && arg[3] == ']')
-                {
-                    delim = arg[2];
-                    offset = 4;
-                }
-
-                var filename = arg.Substring(offset);
+                var filename = arg.Substring(1);
 
                 if (!File.Exists(filename))
                 {
-                    ErrorMessages.Add("The file \"" + filename + "\" was not found");
+                    ErrorMessages.Add("The file \"" + filename + "\" was not found.");
                     continue;
                 }
 
-                string contents;
                 try
-                    {
-#if NETCF
-                    using (var sr = new StreamReader (filename))
-                        {
-                        contents = sr.ReadToEnd ();
-                        }
-#else
-                    contents = File.ReadAllText (filename);
-#endif
-                    }
+                {
+                    listArgs.AddRange(PreParse(GetArgsFromFile(filename)));
+                }
                 catch (IOException ex)
-                    {
+                {
                     ErrorMessages.Add("Error reading \"" + filename + "\": " + ex.Message);
-                    continue;
-                    }
-
-                var newArgs = GetArgs(contents.Replace("\r", "").Replace('\n', delim));
-                listArgs.AddRange(PreParse(newArgs));
+                }
             }
 
             --_nesting;
             return listArgs;
-#endif
         }
 
-#if !PORTABLE
+        private static readonly Regex ArgsRegex = new Regex(@"\G(""((""""|[^""])+)""|(\S+)) *", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+        // Get args from a string of args
         internal static IEnumerable<string> GetArgs(string commandLine)
         {
-            const string re = @"\G(""((""""|[^""])+)""|(\S+)) *";
-            var ms = Regex.Matches(commandLine, re);
-            return ms.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @""""));
+            foreach (Match m in ArgsRegex.Matches(commandLine))
+                yield return Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @"""");
+        }
+
+        // Get args from an included file
+        private static IEnumerable<string> GetArgsFromFile(string filename)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var line in File.ReadAllLines(filename))
+            {
+                if (!string.IsNullOrEmpty(line) && line[0] != '#')
+                {
+                    if (sb.Length > 0)
+                        sb.Append(' ');
+                    sb.Append(line);
+                }
+            }
+
+            return GetArgs(sb.ToString());
         }
 #endif
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         // Action to Perform
 
