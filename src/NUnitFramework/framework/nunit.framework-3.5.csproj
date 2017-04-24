@@ -62,6 +62,7 @@
     <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
     <Compile Include="Attributes\NonParallelizableAttribute.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
@@ -370,7 +371,6 @@
     <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseBuilder.cs" />
     <Compile Include="FileAssert.cs" />
-    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />

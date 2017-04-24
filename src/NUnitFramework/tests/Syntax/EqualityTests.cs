@@ -131,22 +131,12 @@ namespace NUnit.Framework.Syntax
                 "ulong actual, int expected, int tolerance");
         }
 
-        [Test, NonParallelizable]
+        [Test, DefaultFloatingPointTolerance(0.05)]
         public void EqualityTestsUsingDefaultFloatingPointTolerance()
         {
-            var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
-            GlobalSettings.DefaultFloatingPointTolerance = 0.05d;
-
-            try
-            {
-                Assert.That(4.99d, Is.EqualTo(5.0d));
-                Assert.That(4.0d, Is.Not.EqualTo(5.0d));
-                Assert.That(4.99f, Is.EqualTo(5.0f));
-            }
-            finally
-            {
-                GlobalSettings.DefaultFloatingPointTolerance = savedTolerance;
-            }
+            Assert.That(4.99d, Is.EqualTo(5.0d));
+            Assert.That(4.0d, Is.Not.EqualTo(5.0d));
+            Assert.That(4.99f, Is.EqualTo(5.0f));
         }
     }
 }

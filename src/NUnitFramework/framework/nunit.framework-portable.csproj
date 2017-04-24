@@ -95,6 +95,7 @@
     <Compile Include="Attributes\DatapointAttribute.cs" />
     <Compile Include="Attributes\DatapointsAttribute.cs" />
     <Compile Include="Attributes\DatapointSourceAttribute.cs" />
+    <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
     <Compile Include="Attributes\DescriptionAttribute.cs" />
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
@@ -259,7 +260,6 @@
     <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
     <Compile Include="FileAssert.cs" />
-    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\AssertionResult.cs" />

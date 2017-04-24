@@ -88,6 +88,7 @@
       <DependentUpon>Assert.cs</DependentUpon>
     </Compile>
     <Compile Include="AssertionHelper.cs" />
+    <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\NonParallelizableAttribute.cs" />
     <Compile Include="Internal\Commands\AfterTestCommand.cs" />
@@ -270,7 +271,6 @@
     <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
     <Compile Include="FileAssert.cs" />
-    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\AssertionResult.cs" />

@@ -41,10 +41,7 @@ namespace NUnit.Framework.Constraints
         private const string NumericToleranceRequired = "A numeric tolerance is required";
 
         /// <summary>
-        /// Returns a default Tolerance object, equivalent to 
-        /// specifying an exact match unless <see cref="GlobalSettings.DefaultFloatingPointTolerance"/>
-        /// is set, in which case, the <see cref="GlobalSettings.DefaultFloatingPointTolerance"/>
-        /// will be used.
+        /// Returns a default Tolerance object, equivalent to an exact match.
         /// </summary>
         public static Tolerance Default
         {
@@ -52,9 +49,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns an empty Tolerance object, equivalent to 
-        /// specifying an exact match even if 
-        /// <see cref="GlobalSettings.DefaultFloatingPointTolerance"/> is set.
+        /// Returns an empty Tolerance object, equivalent to an exact match.
         /// </summary>
         public static Tolerance Exact
         {

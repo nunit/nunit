@@ -90,6 +90,7 @@
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
     <Compile Include="Attributes\NonParallelizableAttribute.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
@@ -267,7 +268,6 @@
     <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="FileAssert.cs" />
-    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />
