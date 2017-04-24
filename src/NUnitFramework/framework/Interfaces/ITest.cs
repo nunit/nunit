@@ -44,6 +44,11 @@ namespace NUnit.Framework.Interfaces
         string Name { get; }
 
         /// <summary>
+        /// Gets the type of the test
+        /// </summary>
+        string TestType { get; }
+
+        /// <summary>
         /// Gets the fully qualified name of the test
         /// </summary>
         string FullName { get; }
