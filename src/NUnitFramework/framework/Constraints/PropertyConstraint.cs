@@ -70,7 +70,8 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException(string.Format("Property {0} was not found", name), "name");
 
             propValue = property.GetValue(actual, null);
-            return new ConstraintResult(this, propValue, BaseConstraint.ApplyTo(propValue).IsSuccess);
+            var baseResult = BaseConstraint.ApplyTo(propValue);
+            return new ConstraintResult(this, baseResult.ActualValue, baseResult.IsSuccess);
         }
 
         /// <summary>
