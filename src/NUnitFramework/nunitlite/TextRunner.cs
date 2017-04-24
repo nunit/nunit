@@ -252,7 +252,7 @@ namespace NUnitLite
                 TestFilter filter = CreateTestFilter(_options);
 
                 _runner.Load(_testAssembly, runSettings);
-                return _options.Explore ? ExploreTests() : RunTests(filter, runSettings);
+                return _options.Explore ? ExploreTests(filter) : RunTests(filter, runSettings);
             }
             catch (FileNotFoundException ex)
             {
@@ -318,10 +318,10 @@ namespace NUnitLite
             _textUI.DisplaySummaryReport(Summary);
         }
 
-        private int ExploreTests()
+        private int ExploreTests(ITestFilter filter)
         {
 #if !PORTABLE
-            ITest testNode = _runner.LoadedTest;
+            ITest testNode = _runner.ExploreTests(filter);
 
             var specs = _options.ExploreOutputSpecifications;
 

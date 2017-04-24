@@ -98,6 +98,37 @@ namespace NUnit.Framework.Internal
             OneTimeTearDownMethods = new MethodInfo[0];
         }
 
+        /// <summary>
+        /// Copy constructor style to create a filtered copy of the given test suite
+        /// </summary>
+        /// <param name="suite">Test Suite to copy</param>
+        /// <param name="filter">Filter to be applied</param>
+        public TestSuite(TestSuite suite, ITestFilter filter)
+            : base(suite.Name)
+        {
+            this.FullName = suite.FullName;
+            this.Method   = suite.Method;
+            this.RunState = suite.RunState;
+            this.Fixture  = suite.Fixture;
+
+            foreach(var child in suite.tests)
+            {
+                if(filter.Pass(child))
+                {
+                    if(child.IsSuite)
+                    {
+                        TestSuite childSuite = new TestSuite(child as TestSuite, filter);
+                        childSuite.Parent    = this;
+                        this.tests.Add(childSuite);
+                    }
+                    else
+                    {
+                        this.tests.Add(child);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Public Methods

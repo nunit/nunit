@@ -186,6 +186,22 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
+        /// Explore the test cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>Test Assembly with test cases that matches the filter</returns>
+        public ITest ExploreTests(ITestFilter filter)
+        {
+            if(LoadedTest == null)
+                throw new InvalidOperationException("The ExploreTests method was called but no test has been loaded");
+
+            if(filter == TestFilter.Empty)
+                return LoadedTest;
+
+            return new TestAssembly(LoadedTest as TestAssembly, filter);
+        }
+
+        /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,
         /// and the listener interface is notified as it progresses.
         /// </summary>

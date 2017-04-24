@@ -46,6 +46,7 @@ namespace NUnit.Framework.Api
         private const string MISSING_FILE = "junk.dll";
         private const string MISSING_NAME = "junk";
         private const string EMPTY_FILTER = "<filter/>";
+        private const string FIXTURE_CAT_FILTER = "<filter><cat>FixtureCategory</cat></filter>";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #if PORTABLE
@@ -58,6 +59,20 @@ namespace NUnit.Framework.Api
         private IDictionary _settings = new Dictionary<string, object>();
         private FrameworkController _controller;
         private ICallbackEventHandler _handler;
+
+        public class FixtureCategoryTester
+        {
+            [Category("FixtureCategory")]
+            [Test]
+            public void TestInFixtureCategory()
+            {
+            }
+
+            [Test]
+            public void TestOutOfFixtureCategory()
+            {
+            }
+        }
 
         [SetUp]
         public void CreateController()
@@ -151,6 +166,22 @@ namespace NUnit.Framework.Api
 
         #region ExploreTestsAction
         [Test]
+        public void ExploreTestsAction_FilterCategory_ReturnsTests()
+        {
+            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.ExploreTestsAction(_controller, FIXTURE_CAT_FILTER, _handler);
+            var result = TNode.FromXml(_handler.GetCallbackResult());
+
+            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
+            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
+            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockTestFixture.Tests.ToString()));
+            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+        }
+
+        [Test]
         public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite()
         {
             new FrameworkController.LoadTestsAction(_controller, _handler);
@@ -164,6 +195,22 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+        }
+
+        [TestCase(FIXTURE_CAT_FILTER)]
+        [TestCase(EMPTY_FILTER)]
+        public void ExploreTestsAction_AfterLoad_ReturnsSameCount(string filter)
+        {
+            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.ExploreTestsAction(_controller, filter, _handler);
+            var exploreResult = TNode.FromXml(_handler.GetCallbackResult());
+
+            var exploreTestCount = exploreResult.Attributes["testcasecount"];
+
+            new FrameworkController.CountTestsAction(_controller, filter, _handler);
+            var countResult = _handler.GetCallbackResult();
+
+            Assert.That(exploreTestCount, Is.EqualTo(countResult));
         }
 
         [Test]
