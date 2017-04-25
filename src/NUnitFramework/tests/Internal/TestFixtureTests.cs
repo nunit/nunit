@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
@@ -130,8 +131,16 @@ namespace NUnit.Framework.Internal
         {
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithMultipleArgsSupplied));
             Assert.True(fixture.HasChildren);
-            Assert.That(fixture.Tests[0].Arguments, Is.EqualTo(new[] { 7, 3 }));
-            Assert.That(fixture.Tests[1].Arguments, Is.EqualTo(new[] { 8, 4 }));
+
+            var expectedArgumentSeries = new[]
+            {
+                new object[] {8, 4},
+                new object[] {7, 3}
+            };
+
+            var actualArgumentSeries = fixture.Tests.Select(x => x.Arguments).ToArray();
+
+            Assert.That(actualArgumentSeries, Is.EquivalentTo(expectedArgumentSeries));
         }
 
         [Test]
