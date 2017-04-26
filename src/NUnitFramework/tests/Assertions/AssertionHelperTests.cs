@@ -5,6 +5,7 @@ using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Syntax
 {
+    [Obsolete("Test of Obsolete AssertionHelper class")]
     class AssertionHelperTests : AssertionHelper
     {
 #if !PORTABLE

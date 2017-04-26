@@ -295,7 +295,6 @@
     <Compile Include="Constraints\Constraint.cs" />
     <Compile Include="Constraints\ConstraintBuilder.cs" />
     <Compile Include="Constraints\ConstraintExpression.cs" />
-    <Compile Include="Constraints\ConstraintFactory.cs" />
     <Compile Include="Constraints\ContainsConstraint.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraint.cs" />
