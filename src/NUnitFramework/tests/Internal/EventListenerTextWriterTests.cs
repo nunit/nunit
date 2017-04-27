@@ -25,24 +25,34 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
     public class EventListenerTextWriterTests
     {
+        private static readonly string STREAM_NAME = "EventListenerTextWriterTestsStream";
         private static readonly string NL = Environment.NewLine;
 
-        TestListenerHelper TestResult;
-        TextWriter TestWriter;
+        TestListenerIntercepter ListenerResult;
+        TextWriter ListenerWriter;
 
         [SetUp]
         public void SetUp()
         {
-            TestResult = new TestListenerHelper();
-            TestExecutionContext.CurrentContext.Listener = TestResult;
+            // Wrap the current listener, listening to events, and forwarding the original event
+            ListenerResult = new TestListenerIntercepter(TestExecutionContext.CurrentContext.Listener);
+            TestExecutionContext.CurrentContext.Listener = ListenerResult;
 
-            TestWriter = TextWriter.Synchronized(TestContext.Error);
+            ListenerWriter = TextWriter.Synchronized(new EventListenerTextWriter(STREAM_NAME, TextWriter.Null));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            // Restore the original listener
+            TestExecutionContext.CurrentContext.Listener = ListenerResult.DefaultListener;
         }
 
         [Test]
@@ -51,13 +61,13 @@ namespace NUnit.Framework.Internal
             var format = "{0} {1} {2} {3}";
             var arg = new object[] { "Hello", 4, 2, "World" };
 
-            TestWriter.Write(format, arg);
-            TestWriter.WriteLine(format, arg);
+            ListenerWriter.Write(format, arg);
+            ListenerWriter.WriteLine(format, arg);
 
             var expected = "Hello 4 2 World";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -66,13 +76,13 @@ namespace NUnit.Framework.Internal
             var format = "{0:dd MMM yyyy}";
             var arg0 = new DateTime(2017, 4, 20);
 
-            TestWriter.Write(format, arg0);
-            TestWriter.WriteLine(format, arg0);
+            ListenerWriter.Write(format, arg0);
+            ListenerWriter.WriteLine(format, arg0);
 
             var expected = "20 Apr 2017";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -82,13 +92,13 @@ namespace NUnit.Framework.Internal
             var arg0 = 5;
             var arg1 = "@";
 
-            TestWriter.Write(format, arg0, arg1);
-            TestWriter.WriteLine(format, arg0, arg1);
+            ListenerWriter.Write(format, arg0, arg1);
+            ListenerWriter.WriteLine(format, arg0, arg1);
 
             var expected = "05.00 @";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -99,13 +109,13 @@ namespace NUnit.Framework.Internal
             var arg1 = 9.0;
             var arg2 = "Fox";
 
-            TestWriter.Write(format, arg0, arg1, arg2);
-            TestWriter.WriteLine(format, arg0, arg1, arg2);
+            ListenerWriter.Write(format, arg0, arg1, arg2);
+            ListenerWriter.WriteLine(format, arg0, arg1, arg2);
 
             var expected = "Quick 9.00 Fox";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
 
         }
 
@@ -114,13 +124,13 @@ namespace NUnit.Framework.Internal
         {
             var obj = new { Mary = "Lamb", Sheep = "White" };
 
-            TestWriter.Write(obj);
-            TestWriter.WriteLine(obj);
+            ListenerWriter.Write(obj);
+            ListenerWriter.WriteLine(obj);
 
             var expected = "{ Mary = Lamb, Sheep = White }";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -128,13 +138,13 @@ namespace NUnit.Framework.Internal
         {
             var str = "Insert coin here";
 
-            TestWriter.Write(str);
-            TestWriter.WriteLine(str);
+            ListenerWriter.Write(str);
+            ListenerWriter.WriteLine(str);
 
             var expected = "Insert coin here";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -142,13 +152,13 @@ namespace NUnit.Framework.Internal
         {
             decimal value = 2.731m;
 
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "2.731";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -156,13 +166,13 @@ namespace NUnit.Framework.Internal
         {
             double value = -1.5;
 
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "-1.5";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -170,13 +180,13 @@ namespace NUnit.Framework.Internal
         {
             ulong value = 1234567890123456;
 
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "1234567890123456";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -184,13 +194,13 @@ namespace NUnit.Framework.Internal
         {
             long value = -987654321;
             
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "-987654321";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -198,13 +208,13 @@ namespace NUnit.Framework.Internal
         {
             uint value = 0xff;
             
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "255";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -212,13 +222,13 @@ namespace NUnit.Framework.Internal
         {
             int value = 0xff;
 
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "255";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -226,13 +236,13 @@ namespace NUnit.Framework.Internal
         {
             bool value = true;
 
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = Boolean.TrueString;
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -240,13 +250,13 @@ namespace NUnit.Framework.Internal
         {
             char value = 'x';
 
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "x";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -254,13 +264,13 @@ namespace NUnit.Framework.Internal
         {
             char[] buffer = new char[] { 'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd' };
 
-            TestWriter.Write(buffer);
-            TestWriter.WriteLine(buffer);
+            ListenerWriter.Write(buffer);
+            ListenerWriter.WriteLine(buffer);
 
             var expected = "Hello World";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -270,13 +280,13 @@ namespace NUnit.Framework.Internal
             int index = 6;
             int count = 7;
 
-            TestWriter.Write(buffer, index, count);
-            TestWriter.WriteLine(buffer, index, count);
+            ListenerWriter.Write(buffer, index, count);
+            ListenerWriter.WriteLine(buffer, index, count);
 
             var expected = " Miss M";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
@@ -284,50 +294,57 @@ namespace NUnit.Framework.Internal
         {
             float value = -5.0f;
 
-            TestWriter.Write(value);
-            TestWriter.WriteLine(value);
+            ListenerWriter.Write(value);
+            ListenerWriter.WriteLine(value);
 
             var expected = "-5";
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(TestResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
 
         [Test]
         public void TestWriteLine()
         {
-            TestWriter.WriteLine();
+            ListenerWriter.WriteLine();
 
             var expected = NL;
-            Assert.That(TestResult.Outputs.Count, Is.EqualTo(1));
-            Assert.That(TestResult.Outputs[0], Is.EqualTo(expected));
+            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(1));
+            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
         }
 
         #region ITestListener implementation
 
-        private class TestListenerHelper : ITestListener
+        private class TestListenerIntercepter : ITestListener
         {
             public IList<string> Outputs { get; internal set; }
+            public ITestListener DefaultListener { get; internal set; }
 
-            public TestListenerHelper()
+            public TestListenerIntercepter(ITestListener defaultListener)
             {
+                DefaultListener = defaultListener;
                 Outputs = new List<string>();
             }
 
             void ITestListener.TestStarted(ITest test)
             {
-                // Intentionally empty
+                if (DefaultListener != null)
+                    DefaultListener.TestStarted(test);
             }
 
             void ITestListener.TestFinished(ITestResult result)
             {
-                // Intentionally empty
+                if (DefaultListener != null)
+                    DefaultListener.TestFinished(result);
             }
 
             void ITestListener.TestOutput(TestOutput output)
             {
                 Assert.IsNotNull(output);
                 Outputs.Add(output.Text);
+
+                if (DefaultListener != null)
+                    DefaultListener.TestOutput(output);
             }
         }
 
