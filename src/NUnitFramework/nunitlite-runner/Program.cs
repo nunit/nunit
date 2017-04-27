@@ -43,7 +43,7 @@ namespace NUnitLite
         static int Main(string[] args)
         {
 #if PORTABLE
-            return new TextRunner().Execute(new ColorConsoleWriter(), Console.In, new NUnitLiteOptions(args));
+            return new TextRunner().Execute(new ColorConsoleWriter(), Console.In, args);
 #else
             return new TextRunner().Execute(args);
 #endif

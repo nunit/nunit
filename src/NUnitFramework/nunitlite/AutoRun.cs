@@ -95,7 +95,7 @@ namespace NUnitLite
         /// <param name="reader">A TextReader used when waiting for input</param>
         public int Execute(string[] args, ExtendedTextWriter writer, TextReader reader)
         {
-            return new TextRunner(_testAssembly).Execute(writer, reader, new NUnitLiteOptions(args));
+            return new TextRunner(_testAssembly).Execute(writer, reader, args);
         }
     }
 }

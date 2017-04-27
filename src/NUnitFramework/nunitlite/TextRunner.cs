@@ -73,7 +73,6 @@ namespace NUnitLite
         #endregion
 
         private Assembly _testAssembly;
-        private readonly List<Assembly> _assemblies = new List<Assembly>();
         private ITestAssemblyRunner _runner;
 
         private NUnitLiteOptions _options;
@@ -83,9 +82,11 @@ namespace NUnitLite
 
         #region Constructors
 
-        //// <summary>
-        //// Initializes a new instance of the <see cref="TextRunner"/> class.
-        //// </summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextRunner"/> class
+        /// without specifying an assembly. This is interpreted as allowing
+        /// a single input file in the argument list to Execute().
+        /// </summary>
         public TextRunner() { }
 
         /// <summary>
@@ -112,8 +113,8 @@ namespace NUnitLite
 #if !PORTABLE
         public int Execute(string[] args)
         {
-            _options = new NUnitLiteOptions(args);
-
+            _options = new NUnitLiteOptions(_testAssembly == null, args);
+                    
             ExtendedTextWriter outWriter = null;
             if (_options.OutFile != null)
             {
@@ -168,10 +169,11 @@ namespace NUnitLite
 #endif
 
         // Entry point called by AutoRun and by the portable nunitlite.runner
-        public int Execute(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
+        public int Execute(ExtendedTextWriter writer, TextReader reader, string[] args)
         {
-            _textUI = new TextUI(writer, reader, options);
-            _options = options;
+            _options = new NUnitLiteOptions(_testAssembly == null, args);
+
+            _textUI = new TextUI(writer, reader, _options);
 
             return Execute();
         }
@@ -211,37 +213,33 @@ namespace NUnitLite
                 if (_options.ErrorMessages.Count > 0)
                 {
                     _textUI.DisplayErrors(_options.ErrorMessages);
+                    _textUI.Writer.WriteLine();
                     _textUI.DisplayHelp();
 
                     return TextRunner.INVALID_ARG;
+                }
+
+                if (_testAssembly == null && _options.InputFile == null)
+                {
+                    _textUI.DisplayError("No test assembly was specified.");
+                    _textUI.Writer.WriteLine();
+                    _textUI.DisplayHelp();
+
+                    return TextRunner.OK;
                 }
 
                 _textUI.DisplayRuntimeEnvironment();
 
                 var testFile = _testAssembly != null
                     ? AssemblyHelper.GetAssemblyPath(_testAssembly)
-                    : _options.InputFiles.Count > 0
-                        ? _options.InputFiles[0]
-                        : null;
+                    : _options.InputFile;
 
-                if (testFile != null)
-                {
-                    _textUI.DisplayTestFiles(new string[] { testFile });
-                    if (_testAssembly == null)
-                        _testAssembly = AssemblyHelper.Load(testFile);
-                }
-                else
-                {
-                    _textUI.DisplayHelp();
-                    return TextRunner.OK;
-                }
-
+                _textUI.DisplayTestFiles(new string[] { testFile });
+                if (_testAssembly == null)
+                    _testAssembly = AssemblyHelper.Load(testFile);
 
                 if (_options.WaitBeforeExit && _options.OutFile != null)
                     _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
-
-                foreach (string nameOrPath in _options.InputFiles)
-                    _assemblies.Add(AssemblyHelper.Load(nameOrPath));
 
                 var runSettings = MakeRunSettings(_options);
 
@@ -437,8 +435,8 @@ namespace NUnitLite
             const string ext = "log";
             var baseName = _testAssembly != null
                 ? _testAssembly.GetName().Name
-                : _options.InputFiles.Count > 0
-                    ? Path.GetFileNameWithoutExtension(_options.InputFiles[0])
+                : _options.InputFile != null
+                    ? Path.GetFileNameWithoutExtension(_options.InputFile)
                     : "NUnitLite";
 
 #if NETSTANDARD1_6
