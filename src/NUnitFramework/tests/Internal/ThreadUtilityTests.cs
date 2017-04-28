@@ -8,6 +8,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class ThreadUtilityTests
     {
+        [Platform("Win")]
         [Timeout(1000)]
         [TestCase(false, TestName = "Abort")]
         [TestCase(true, TestName = "Kill")]

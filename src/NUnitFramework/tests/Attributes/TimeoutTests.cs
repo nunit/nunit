@@ -158,7 +158,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-        [Test]
+        [Test, Platform("Win")]
         public void TimeoutWithMessagePumpShouldAbort()
         {
             ITestResult result = TestBuilder.RunTest(

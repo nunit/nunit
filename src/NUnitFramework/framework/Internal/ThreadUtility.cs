@@ -173,13 +173,24 @@ namespace NUnit.Framework.Internal
 
 
 
+        private static bool isNotOnWindows;
+
         /// <summary>
         /// Captures the current thread's native id. If provided to <see cref="Kill(Thread,int)"/> later, allows the thread to be killed if it's in a message pump native blocking wait.
         /// </summary>
         [SecuritySafeCritical]
         public static int GetCurrentThreadNativeId()
         {
-            return GetCurrentThreadId();
+            if (isNotOnWindows) return 0;
+            try
+            {
+                return GetCurrentThreadId();
+            }
+            catch (EntryPointNotFoundException)
+            {
+                isNotOnWindows = true;
+                return 0;
+            }
         }
 
 
