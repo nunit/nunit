@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Commands
     {
         Timer _commandTimer;
         private bool _commandTimedOut = false;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
         /// </summary>
@@ -54,13 +54,14 @@ namespace NUnit.Framework.Internal.Commands
             BeforeTest = (context) =>
             {
                 var testThread = Thread.CurrentThread;
+                var nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
 
                 // Create a timer to cancel the current thread
                 _commandTimer = new Timer(
                     (o) =>
                     {
                         _commandTimedOut = true;
-                        testThread.Abort();
+                        ThreadUtility.Abort(testThread, nativeThreadId);
                         // No join here, since the thread doesn't really terminate
                     },
                     null,

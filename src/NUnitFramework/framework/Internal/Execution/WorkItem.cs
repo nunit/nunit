@@ -236,7 +236,7 @@ namespace NUnit.Framework.Internal.Execution
                     return;
                 }
 
-                log.Debug("Running on separate thread because {0} is specified.", 
+                log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
                 RunOnSeparateThread(targetApartment);
@@ -263,6 +263,7 @@ namespace NUnit.Framework.Internal.Execution
             if (force)
             {
                 Thread tThread;
+                int tNativeThreadId;
 
                 lock (threadLock)
                 {
@@ -270,13 +271,14 @@ namespace NUnit.Framework.Internal.Execution
                         return;
 
                     tThread = thread;
+                    tNativeThreadId = nativeThreadId;
                     thread = null;
                 }
 
                 if (!tThread.Join(0))
                 {
                     log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
-                    ThreadUtility.Kill(tThread);
+                    ThreadUtility.Kill(tThread, tNativeThreadId);
 
                     tThread.Join();
 
@@ -361,14 +363,14 @@ namespace NUnit.Framework.Internal.Execution
             return list;
         }
 
-        // This method builds a list of nodes that can be used to 
+        // This method builds a list of nodes that can be used to
         // run setup and teardown according to the NUnit specs.
         // We need to execute setup and teardown methods one level
         // at a time. However, we can't discover them by reflection
         // one level at a time, because that would cause overridden
         // methods to be called twice, once on the base class and
         // once on the derived class.
-        // 
+        //
         // For that reason, we start with a list of all setup and
         // teardown methods, found using a single reflection call,
         // and then descend through the inheritance hierarchy,
@@ -413,10 +415,16 @@ namespace NUnit.Framework.Internal.Execution
 
 #if !PORTABLE && !NETSTANDARD1_6
         private Thread thread;
+        private int nativeThreadId;
 
         private void RunOnSeparateThread(ApartmentState apartment)
         {
-            thread = new Thread(new ThreadStart(() => RunOnCurrentThread()));
+            thread = new Thread(() =>
+            {
+                lock (threadLock)
+                    nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
+                RunOnCurrentThread();
+            });
             thread.SetApartmentState(apartment);
             thread.CurrentCulture = Context.CurrentCulture;
             thread.CurrentUICulture = Context.CurrentUICulture;
