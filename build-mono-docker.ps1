@@ -4,4 +4,4 @@ trap [Management.Automation.CommandNotFoundException] {
   continue;
 }
 
-docker run --rm -it -v ${pwd}:/nunit -w=/nunit mono:latest bash build.sh $args
+docker run --rm -it -v ${PSScriptRoot}:/nunit -w=/nunit mono:latest bash build.sh $args
