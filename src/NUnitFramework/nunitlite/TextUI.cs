@@ -248,11 +248,12 @@ namespace NUnitLite
                 WriteLabelLine(test.FullName);
         }
 
-#endregion
+        #endregion
 
-#region TestFinished
+        #region TestFinished
 
         private bool _testCreatedOutput = false;
+        private bool _needsNewLine = false;
 
         public void TestFinished(ITestResult result)
         {
@@ -261,7 +262,7 @@ namespace NUnitLite
                 if (_displayBeforeOutput)
                     WriteLabelLine(result.Test.FullName);
 
-                WriteOutputLine(result.Output);
+                WriteOutput(result.Output);
 
                 if (!result.Output.EndsWith("\n"))
                     Writer.WriteLine();
@@ -289,7 +290,7 @@ namespace NUnitLite
             if (_displayBeforeOutput && output.TestName != null)
                 WriteLabelLine(output.TestName);
 
-            WriteOutputLine(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
+            WriteOutput(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
         }
 
 #endregion
@@ -650,7 +651,10 @@ namespace NUnitLite
         {
             if (label != _currentLabel)
             {
+                WriteNewLineIfNeeded();
+
                 Writer.WriteLine(ColorStyle.SectionHeader, "=> " + label);
+
                 _testCreatedOutput = true;
                 _currentLabel = label;
             }
@@ -658,6 +662,8 @@ namespace NUnitLite
 
         private void WriteLabelLineAfterTest(string label, ResultState resultState)
         {
+            WriteNewLineIfNeeded();
+
             string status = string.IsNullOrEmpty(resultState.Label)
                 ? resultState.Status.ToString()
                 : resultState.Label;
@@ -668,22 +674,29 @@ namespace NUnitLite
             _currentLabel = label;
         }
 
-        private void WriteOutputLine(string text)
+        private void WriteNewLineIfNeeded()
         {
-            WriteOutputLine(ColorStyle.Output, text);
+            if (_needsNewLine)
+            {
+                Writer.WriteLine();
+                _needsNewLine = false;
+            }
         }
 
-        private void WriteOutputLine(ColorStyle color, string text)
+        private void WriteOutput(string text)
+        {
+            WriteOutput(ColorStyle.Output, text);
+        }
+
+        private void WriteOutput(ColorStyle color, string text)
         {
             Writer.Write(color, text);
 
-            if (!text.EndsWith(Environment.NewLine))
-                Writer.WriteLine();
-
             _testCreatedOutput = true;
+            _needsNewLine = !text.EndsWith("\n");
         }
 
-        private static ColorStyle GetColorForResultStatus(string status)
+         private static ColorStyle GetColorForResultStatus(string status)
         {
             switch (status)
             {

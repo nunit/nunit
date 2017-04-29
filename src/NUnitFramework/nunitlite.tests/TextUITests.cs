@@ -198,6 +198,25 @@ namespace NUnitLite.Tests
             Assert.That(Report, Is.EqualTo(expected));
         }
 
+        [TestCase("Off", "ABC+XYZ\n")]
+        [TestCase("On", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nABC+XYZ\n")]
+        [TestCase("All", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nABC+XYZ\n")]
+        [TestCase("Before", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nABC+XYZ\n")]
+        [TestCase("After", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nABC+XYZ\nPassed => NUnitLite.Tests.TextUITests.MyFakeMethod\n")]
+        public void TestWritesSingleCharacters(string labels, string expected)
+        {
+            var result = new TestCaseResult(Fakes.GetTestMethod(this, "MyFakeMethod"));
+            result.SetResult(ResultState.Success);
+
+            result.OutWriter.Write(new [] { 'A', 'B', 'C' });
+            result.OutWriter.Write('+');
+            result.OutWriter.WriteLine("XYZ");
+            
+            CreateTextUI(labels).TestFinished(result);
+
+            Assert.That(Report, Is.EqualTo(expected));
+        }
+
         [TestCase("Off", TestStatus.Passed, "", "", "")]
         [TestCase("On", TestStatus.Passed, "", "", "")]
         [TestCase("All", TestStatus.Passed, "", "", "")]
@@ -231,15 +250,58 @@ namespace NUnitLite.Tests
             Assert.That(Report, Is.EqualTo(expected));
         }
 
-        [TestCase("Off", "OUTPUT\n")]
-        [TestCase("On", "=> SomeMethod\nOUTPUT\n")]
-        [TestCase("All", "=> SomeMethod\nOUTPUT\n")]
-        [TestCase("Before", "=> SomeMethod\nOUTPUT\n")]
-        [TestCase("After", "=> SomeMethod\nOUTPUT\n")]
-        public void ImmediateOutput(string labels, string expected)
-        {
-            CreateTextUI(labels).TestOutput(new NUnit.Framework.Interfaces.TestOutput("OUTPUT", "", "SomeMethod"));
+        static TestCaseData[] ImmediateOutputData = new[] {
+            new TestCaseData("Off",
+                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                "OUTPUT\n"),
+            new TestCaseData("On",
+                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT\n"),
+            new TestCaseData("All",
+                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT\n"),
+            new TestCaseData("Before",
+                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT\n"),
+            new TestCaseData("After",
+                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT\n"),
+            new TestCaseData("Off",
+                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                "OUTPUT"),
+            new TestCaseData("On",
+                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT"),
+            new TestCaseData("All",
+                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT"),
+            new TestCaseData("Before",
+                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT"),
+            new TestCaseData("After",
+                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                "=> SomeMethod\nOUTPUT"),
+            new TestCaseData("On",
+                new [] { new TestOutput("A", "", "T1"), new TestOutput("B", "", "T1"), new TestOutput("C", "", "T1") },
+                "=> T1\nABC"),
+            new TestCaseData("On",
+                new [] { new TestOutput("A", "", "T1"), new TestOutput("B", "", "T1"), new TestOutput("C", "", "T1"), new TestOutput("\n", "", "T1") },
+                "=> T1\nABC\n"),
+            new TestCaseData("On",
+                new [] { new TestOutput("Hello\n", "", "EN"), new TestOutput("Ciao!\n", "", "IT"), new TestOutput("World!\n", "", "EN") },
+                "=> EN\nHello\n=> IT\nCiao!\n=> EN\nWorld!\n"),
+            new TestCaseData("On",
+                new [] { new TestOutput("Hello", "", "EN"), new TestOutput("Ciao!", "", "IT"), new TestOutput("World!", "", "EN") },
+                "=> EN\nHello\n=> IT\nCiao!\n=> EN\nWorld!"),
+        };
 
+        [TestCaseSource(nameof(ImmediateOutputData))]
+        public void ImmediateOutput(string labels, TestOutput[] outputs, string expected)
+        {
+            var textUI = CreateTextUI(labels);
+            foreach (var output in outputs)
+                textUI.TestOutput(output);
+            
             Assert.That(Report, Is.EqualTo(expected));
         }
 
@@ -275,7 +337,7 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test);
-            textUI.TestOutput(new TestOutput("IMMEDIATE OUTPUT", "", test.FullName));
+            textUI.TestOutput(new TestOutput("IMMEDIATE OUTPUT\n", "", test.FullName));
             result.OutWriter.WriteLine("NORMAL OUTPUT");
             textUI.TestFinished(result);
 
@@ -392,10 +454,10 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test1);
-            textUI.TestOutput(new TestOutput("Immediate output from first test", "", test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", test1.FullName));
             textUI.TestStarted(test2);
-            textUI.TestOutput(new TestOutput("Another immediate output from first test", "", test1.FullName));
-            textUI.TestOutput(new TestOutput("Immediate output from second test", "", test2.FullName));
+            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", test2.FullName));
             result1.OutWriter.WriteLine("OUTPUT1");
             textUI.TestFinished(result1);
             result2.OutWriter.WriteLine("OUTPUT2");
@@ -465,10 +527,10 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test1);
-            textUI.TestOutput(new TestOutput("Immediate output from first test", "", test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", test1.FullName));
             textUI.TestStarted(test2);
-            textUI.TestOutput(new TestOutput("Another immediate output from first test", "", test1.FullName));
-            textUI.TestOutput(new TestOutput("Immediate output from second test", "", test2.FullName));
+            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", test2.FullName));
             result2.OutWriter.WriteLine("OUTPUT2");
             textUI.TestFinished(result2);
             result1.OutWriter.WriteLine("OUTPUT1");
