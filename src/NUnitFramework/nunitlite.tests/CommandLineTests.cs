@@ -222,7 +222,7 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
+        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "Before", "After", "All" }, new string[] { "JUNK" })]
 #if !PORTABLE
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]

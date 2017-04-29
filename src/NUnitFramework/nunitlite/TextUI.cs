@@ -40,23 +40,36 @@ namespace NUnitLite
     {
         public ExtendedTextWriter Writer { get; private set; }
 
-        private TextReader _reader;
-        private NUnitLiteOptions _options;
+        private readonly TextReader _reader;
+        private readonly NUnitLiteOptions _options;
 
-        #region Constructors
+        private readonly bool _displayBeforeTest;
+        private readonly bool _displayAfterTest;
+        private readonly bool _displayBeforeOutput;
+
+        #region Constructor
 
         public TextUI(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
         {
             Writer = writer;
             _reader = reader;
             _options = options;
+
+#if NETSTANDARD1_6 || PORTABLE
+            string labelsOption = options.DisplayTestLabels?.ToUpper() ?? "ON";
+#else
+            string labelsOption = options.DisplayTestLabels?.ToUpper(CultureInfo.InvariantCulture) ?? "ON";
+#endif
+            _displayBeforeTest = labelsOption == "ALL" || labelsOption == "BEFORE";
+            _displayAfterTest = labelsOption == "AFTER";
+            _displayBeforeOutput = _displayBeforeTest || _displayAfterTest || labelsOption == "ON";
         }
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
-        #region DisplayHeader
+#region DisplayHeader
 
         /// <summary>
         /// Writes the header.
@@ -82,9 +95,9 @@ namespace NUnitLite
             Writer.WriteLine();
         }
 
-        #endregion
+#endregion
 
-        #region DisplayTestFiles
+#region DisplayTestFiles
 
         public void DisplayTestFiles(IEnumerable<string> testFiles)
         {
@@ -96,9 +109,9 @@ namespace NUnitLite
             Writer.WriteLine();
         }
 
-        #endregion
+#endregion
 
-        #region DisplayHelp
+#region DisplayHelp
 
         public void DisplayHelp()
         {
@@ -151,9 +164,9 @@ namespace NUnitLite
             Writer.WriteLine();
         }
 
-        #endregion
+#endregion
 
-        #region DisplayRuntimeEnvironment
+#region DisplayRuntimeEnvironment
 
         /// <summary>
         /// Displays info about the runtime environment.
@@ -173,9 +186,9 @@ namespace NUnitLite
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region DisplayTestFilters
+#region DisplayTestFilters
 
         public void DisplayTestFilters()
         {
@@ -194,9 +207,9 @@ namespace NUnitLite
             }
         }
 
-        #endregion
+#endregion
 
-        #region DisplayRunSettings
+#region DisplayRunSettings
 
         public void DisplayRunSettings()
         {
@@ -225,32 +238,39 @@ namespace NUnitLite
             Writer.WriteLine();
         }
 
-        #endregion
+#endregion
 
-        #region TestFinished
+#region TestStarted
+
+        public void TestStarted(ITest test)
+        {
+            if (_displayBeforeTest && !test.IsSuite)
+                WriteLabelLine(test.FullName);
+        }
+
+#endregion
+
+#region TestFinished
 
         private bool _testCreatedOutput = false;
 
         public void TestFinished(ITestResult result)
         {
-            bool isSuite = result.Test.IsSuite;
-
-            var labels = "ON";
-
-            if (_options.DisplayTestLabels != null)
-                labels = _options.DisplayTestLabels.ToUpperInvariant();
-
-            if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
-            {
-                WriteLabelLine(result.Test.FullName);
-            }
-
             if (result.Output.Length > 0)
             {
+                if (_displayBeforeOutput)
+                    WriteLabelLine(result.Test.FullName);
+
                 WriteOutputLine(result.Output);
 
                 if (!result.Output.EndsWith("\n"))
                     Writer.WriteLine();
+            }
+
+            if (!result.Test.IsSuite)
+            {
+                if (_displayAfterTest)
+                    WriteLabelLineAfterTest(result.Test.FullName, result.ResultState);
             }
 
             if (result.Test is TestAssembly && _testCreatedOutput)
@@ -260,27 +280,21 @@ namespace NUnitLite
             }
         }
 
-        #endregion
+#endregion
 
-        #region TestOutput
+#region TestOutput
 
         public void TestOutput(TestOutput output)
         {
-            var labels = "ON";
-
-            if (_options.DisplayTestLabels != null)
-                labels = _options.DisplayTestLabels.ToUpperInvariant();
-
-            if (labels == "ON" || labels == "All")
-                if (output.TestName != null)
-                    WriteLabelLine(output.TestName);
+            if (_displayBeforeOutput && output.TestName != null)
+                WriteLabelLine(output.TestName);
 
             WriteOutputLine(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
         }
 
-        #endregion
+#endregion
 
-        #region WaitForUser
+#region WaitForUser
 
         public void WaitForUser(string message)
         {
@@ -292,11 +306,11 @@ namespace NUnitLite
             }
         }
 
-        #endregion
+#endregion
 
-        #region Test Result Reports
+#region Test Result Reports
 
-        #region DisplaySummaryReport
+#region DisplaySummaryReport
 
         public void DisplaySummaryReport(ResultSummary summary)
         {
@@ -359,9 +373,9 @@ namespace NUnitLite
             Writer.WriteLabel(label, count.ToString(CultureInfo.CurrentUICulture), count > 0 ? color : ColorStyle.Value);
         }
 
-        #endregion
+#endregion
 
-        #region DisplayErrorsAndFailuresReport
+#region DisplayErrorsAndFailuresReport
 
         public void DisplayErrorsFailuresAndWarningsReport(ITestResult result)
         {
@@ -377,9 +391,9 @@ namespace NUnitLite
             }
         }
 
-        #endregion
+#endregion
 
-        #region DisplayNotRunReport
+#region DisplayNotRunReport
 
         public void DisplayNotRunReport(ITestResult result)
         {
@@ -391,9 +405,9 @@ namespace NUnitLite
             Writer.WriteLine();
         }
 
-        #endregion
+#endregion
 
-        #region DisplayFullReport
+#region DisplayFullReport
 
 #if FULL    // Not currently used, but may be reactivated
         /// <summary>
@@ -410,29 +424,29 @@ namespace NUnitLite
         }
 #endif
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region DisplayWarning
+#region DisplayWarning
 
         public void DisplayWarning(string text)
         {
             Writer.WriteLine(ColorStyle.Warning, text);
         }
 
-        #endregion
+#endregion
 
-        #region DisplayError
+#region DisplayError
 
         public void DisplayError(string text)
         {
             Writer.WriteLine(ColorStyle.Error, text);
         }
 
-        #endregion
+#endregion
 
-        #region DisplayErrors
+#region DisplayErrors
 
         public void DisplayErrors(IList<string> messages)
         {
@@ -440,11 +454,11 @@ namespace NUnitLite
                 DisplayError(message);
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private void DisplayErrorsFailuresAndWarnings(ITestResult result)
         {
@@ -642,6 +656,18 @@ namespace NUnitLite
             }
         }
 
+        private void WriteLabelLineAfterTest(string label, ResultState resultState)
+        {
+            string status = string.IsNullOrEmpty(resultState.Label)
+                ? resultState.Status.ToString()
+                : resultState.Label;
+
+            Writer.Write(GetColorForResultStatus(status), status);
+            Writer.WriteLine(ColorStyle.SectionHeader, " => " + label);
+
+            _currentLabel = label;
+        }
+
         private void WriteOutputLine(string text)
         {
             WriteOutputLine(ColorStyle.Output, text);
@@ -655,6 +681,26 @@ namespace NUnitLite
                 Writer.WriteLine();
 
             _testCreatedOutput = true;
+        }
+
+        private static ColorStyle GetColorForResultStatus(string status)
+        {
+            switch (status)
+            {
+                case "Passed":
+                    return ColorStyle.Pass;
+                case "Failed":
+                    return ColorStyle.Failure;
+                case "Error":
+                case "Invalid":
+                case "Cancelled":
+                    return ColorStyle.Error;
+                case "Warning":
+                case "Ignored":
+                    return ColorStyle.Warning;
+                default:
+                    return ColorStyle.Output;
+            }
         }
 
 #endregion
