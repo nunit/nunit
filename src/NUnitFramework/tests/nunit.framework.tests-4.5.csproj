@@ -211,6 +211,7 @@
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
+    <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
