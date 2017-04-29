@@ -41,12 +41,6 @@ namespace NUnitLite.Tests
 
         private StringBuilder _reportBuilder;
 
-        private static readonly string[] REPORT_SEQUENCE = new string[] {
-            "Test Run Summary",
-            "Errors and Failures",
-            "Tests Not Run"
-        };
-
         [SetUp]
         public void SetUp()
         {
