@@ -76,6 +76,7 @@
     <Compile Include="NUnit2XmlOutputWriterTests.cs" />
     <Compile Include="TestNameParserTests.cs" />
     <Compile Include="TestSelectionParserTests.cs" />
+    <Compile Include="TextUIReportTests.cs" />
     <Compile Include="TextUITests.cs">
       <SubType>Code</SubType>
     </Compile>
