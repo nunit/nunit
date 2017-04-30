@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,12 +33,12 @@ namespace NUnitLite
     /// <summary>
     /// The AutoRun class is used by executable test
     /// assemblies to control their own execution.
-    /// 
+    ///
     /// Call it from your executable test like this:
     ///    new AutoRun().Execute(args);
     /// The arguments can be those passed into your exe
     /// or constructed for the purpose in your code.
-    /// 
+    ///
     /// If the tests are in a dll, you can write a stub
     /// executable that runs them like this:
     ///    new Autorun().Execute(testAssembly, args);
@@ -65,8 +65,7 @@ namespace NUnitLite
             _testAssembly = testAssembly;
         }
 
-#if !PORTABLE
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Default Constructor, only used where GetCallingAssembly is available
         /// </summary>
@@ -82,7 +81,6 @@ namespace NUnitLite
         {
             return new TextRunner(_testAssembly).Execute(args);
         }
-#endif
 
         /// <summary>
         /// Execute the tests in the assembly, passing in

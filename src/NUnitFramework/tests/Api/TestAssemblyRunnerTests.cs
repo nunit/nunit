@@ -52,7 +52,7 @@ namespace NUnit.Framework.Api
         private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
 
-#if PORTABLE
+#if NETSTANDARD1_3
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #endif
 
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
-#if PORTABLE
+#if NETSTANDARD1_3
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_NAME));
 #else
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
 #endif
 
@@ -286,7 +286,7 @@ namespace NUnit.Framework.Api
                 Does.StartWith(COULD_NOT_LOAD_MSG));
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void Run_WithParameters()
         {
@@ -521,7 +521,7 @@ namespace NUnit.Framework.Api
 
         private ITest LoadMockAssembly(IDictionary<string, object> settings)
         {
-#if PORTABLE
+#if NETSTANDARD1_3
             return _runner.Load(
                 typeof(MockAssembly).GetTypeInfo().Assembly, 
                 settings);
@@ -534,7 +534,7 @@ namespace NUnit.Framework.Api
 
         private ITest LoadSlowTests()
         {
-#if PORTABLE
+#if NETSTANDARD1_3
             return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly, EMPTY_SETTINGS);
 #else
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);

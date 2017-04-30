@@ -25,7 +25,7 @@ using System;
 using NUnit.Common;
 using NUnit.Framework;
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
 namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]

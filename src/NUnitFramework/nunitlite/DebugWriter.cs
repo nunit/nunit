@@ -105,7 +105,7 @@ namespace NUnitLite
         /// </returns>
         public override System.Text.Encoding Encoding
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             get { return System.Text.Encoding.UTF8; }
 #else
             get { return System.Text.Encoding.Default; }

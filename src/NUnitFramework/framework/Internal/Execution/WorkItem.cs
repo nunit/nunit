@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
                 : ParallelScope.Default;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
                 ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
                 : ApartmentState.Unknown;
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal.Execution
             Result = wrappedItem.Result;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TargetApartment = wrappedItem.TargetApartment;
 #endif
 
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public ParallelScope ParallelScope { get; private set; }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -259,7 +259,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Context != null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             if (force)
             {
                 Thread tThread;
@@ -411,7 +411,7 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Private Methods
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         private Thread thread;
 
         private void RunOnSeparateThread(ApartmentState apartment)

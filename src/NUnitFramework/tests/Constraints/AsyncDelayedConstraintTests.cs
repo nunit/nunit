@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ( NET_4_0 || NET_4_5 ) && !PORTABLE
+#if ( NET_4_0 || NET_4_5 ) && !NETSTANDARD1_3
 using System;
 using System.Threading.Tasks;
 

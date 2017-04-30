@@ -170,7 +170,7 @@ namespace NUnitLite
         /// </summary>
         public void DisplayRuntimeEnvironment()
         {
-#if !PORTABLE
+#if !NETSTANDARD1_3
             WriteSectionHeader("Runtime Environment");
 #if NETSTANDARD1_6
             Writer.WriteLabelLine("   OS Version: ", RuntimeInformation.OSDescription);
@@ -223,7 +223,7 @@ namespace NUnitLite
                     : Math.Max(Environment.ProcessorCount, 2));
 #endif
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Directory.GetCurrentDirectory());
 #endif
 
@@ -503,7 +503,7 @@ namespace NUnitLite
             string reportID = (++_reportIndex).ToString();
             int numAsserts = result.AssertionResults.Count;
 
-#if PORTABLE && !NETSTANDARD1_6
+#if NETSTANDARD1_3 && !NETSTANDARD1_6
             ColorStyle style = GetColorStyle(resultState);
             string status = GetResultStatus(resultState);
             DisplayTestResult(style, reportID, status, fullName, message, stackTrace);

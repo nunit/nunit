@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-#if PORTABLE
+#if NETSTANDARD1_3
 using System.Linq;
 #endif
 using System.Reflection;
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal
             {
                 object arg = arglist[i];
 
-#if PORTABLE
+#if NETSTANDARD1_3
                 if (arg != null)
 #else
                 if (arg != null && arg is IConvertible)
@@ -298,7 +298,7 @@ namespace NUnit.Framework.Internal
         {
             Type[] typeParameters = type.GetGenericArguments();
 
-#if PORTABLE
+#if NETSTANDARD1_3
             Type[] argTypes = arglist.Select(a => a == null ? typeof(object) : a.GetType()).ToArray();
             if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.GetTypeInfo().IsGenericType))
                 return false;

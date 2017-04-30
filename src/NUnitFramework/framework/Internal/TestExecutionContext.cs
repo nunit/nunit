@@ -31,7 +31,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Runtime.Remoting.Messaging;
 using System.Security;
 using System.Security.Principal;
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
     /// or which might be changed by the user tests.
     /// </summary>
     public class TestExecutionContext
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         : LongLivedMarshalByRefObject, ILogicalThreadAffinative
 #endif
     {
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult _currentResult;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// The current Principal.
         /// </summary>
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Internal
 
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             _currentPrincipal = other.CurrentPrincipal;
 #endif
 
@@ -182,7 +182,7 @@ namespace NUnit.Framework.Internal
                 _currentContext.Value = value;
             }
         }
-#elif PORTABLE
+#elif NETSTANDARD1_3
         // The portable build only supports a single thread of
         // execution, so we can use a simple static field to
         // hold the current TestExecutionContext.
@@ -385,7 +385,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
@@ -400,13 +400,13 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
@@ -445,7 +445,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -457,7 +457,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void EstablishExecutionEnvironment()
         {
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             Thread.CurrentThread.CurrentCulture = _currentCulture;
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             Thread.CurrentPrincipal = _currentPrincipal;
@@ -507,7 +507,7 @@ namespace NUnit.Framework.Internal
 
         #region InitializeLifetimeService
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Obtain lifetime service object
         /// </summary>

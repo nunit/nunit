@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal
             : base(method.TypeInfo.FullName, method.Name)
         {
             Method = method;
-#if PORTABLE
+#if NETSTANDARD1_3
             _isTheory = false;
 #else
             _isTheory = method.IsDefined<TheoryAttribute>(true);

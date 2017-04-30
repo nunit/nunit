@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE && !NETCOREAPP1_0
+#if !NETSTANDARD1_3 && !NETCOREAPP1_0
 using System;
 using System.IO;
 using System.Text;

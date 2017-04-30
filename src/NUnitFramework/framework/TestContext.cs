@@ -77,7 +77,7 @@ namespace NUnit.Framework
             get { return TestExecutionContext.CurrentContext.OutWriter; }
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Gets a TextWriter that will send output directly to Console.Error
         /// </summary>
@@ -127,7 +127,7 @@ namespace NUnit.Framework
         }
 #endif
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Gets the directory containing the current test assembly.
         /// </summary>

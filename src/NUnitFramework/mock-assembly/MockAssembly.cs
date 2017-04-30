@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -25,9 +25,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-#if !PORTABLE
 using NUnitLite;
-#endif
 
 namespace NUnit.Tests
 {
@@ -37,7 +35,7 @@ namespace NUnit.Tests
         /// MockAssembly is intended for those few tests that can only
         /// be made to work by loading an entire assembly. Please don't
         /// add any other entries or use it for other purposes.
-        /// 
+        ///
         /// Most tests used as data for NUnit's own tests should be
         /// in the testdata assembly.
         /// </summary>
@@ -75,14 +73,10 @@ namespace NUnit.Tests
 
             public const int TestStartedEvents = Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests;
             public const int TestFinishedEvents = Tests;
-#if PORTABLE && !NETSTANDARD1_6
-            public const int TestOutputEvents = 0;
-#else
             public const int TestOutputEvents = 1;
-#endif
 
             public const int Nodes = Tests + Suites;
-            
+
             public const int ExplicitFixtures = 1;
             public const int SuitesRun = Suites - ExplicitFixtures;
 
@@ -106,8 +100,7 @@ namespace NUnit.Tests
 
             public const int Inconclusive = MockTestFixture.Inconclusive;
 
-#if !PORTABLE
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             public static readonly Assembly ThisAssembly = typeof(MockAssembly).GetTypeInfo().Assembly;
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(ThisAssembly);
 
@@ -122,7 +115,6 @@ namespace NUnit.Tests
             {
                 new AutoRun().Execute(args);
             }
-#endif
 #endif
         }
 
@@ -159,7 +151,7 @@ namespace NUnit.Tests
             [Test]
             public void FailingTest()
             {
-#if !PORTABLE
+#if !NETSTANDARD1_3
                 Console.Error.WriteLine("Immediate Error Message");
 #endif
                 Assert.Fail("Intentional failure");
@@ -189,7 +181,7 @@ namespace NUnit.Tests
             [Test]
             public void DisplayRunParameters()
             {
-#if !PORTABLE
+#if !NETSTANDARD1_3
                 foreach (string name in TestContext.Parameters.Names)
                     Console.WriteLine("Parameter {0} = {1}", name, TestContext.Parameters[name]);
 #endif
@@ -214,10 +206,10 @@ namespace NUnit.Tests
         public class OneTestCase
         {
             public const int Tests = 1;
-            public const int Suites = 1;		
+            public const int Suites = 1;
 
             [Test]
-            public virtual void TestCase() 
+            public virtual void TestCase()
             {}
         }
     }
@@ -248,7 +240,7 @@ namespace NUnit.Tests
 
         [Test]
         public void Test2() { }
-        
+
         [Test]
         public void Test3() { }
     }
@@ -278,27 +270,27 @@ namespace NUnit.Tests
         [Test]
         public void SomeTest() { }
     }
-    
+
     [TestFixture]
     public class FixtureWithTestCases
     {
         public const int Tests = 4;
         public const int Suites = 3;
-        
+
         [TestCase(2, 2, ExpectedResult=4)]
         [TestCase(9, 11, ExpectedResult=20)]
         public int MethodWithParameters(int x, int y)
         {
             return x+y;
         }
-        
+
         [TestCase(2, 4)]
         [TestCase(9.2, 11.7)]
         public void GenericMethod<T>(T x, T y)
         {
         }
     }
-    
+
     [TestFixture(5)]
     [TestFixture(42)]
     public class ParameterizedFixture
@@ -307,29 +299,29 @@ namespace NUnit.Tests
         public const int Suites = 3;
 
         public ParameterizedFixture(int num) { }
-        
+
         [Test]
         public void Test1() { }
-        
+
         [Test]
         public void Test2() { }
     }
-    
+
     public class GenericFixtureConstants
     {
         public const int Tests = 4;
         public const int Suites = 3;
     }
-    
+
     [TestFixture(5)]
     [TestFixture(11.5)]
     public class GenericFixture<T>
     {
         public GenericFixture(T num){ }
-        
+
         [Test]
         public void Test1() { }
-        
+
         [Test]
         public void Test2() { }
     }

@@ -75,13 +75,13 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary<string, object> options)
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             log.Debug("Loading {0}", assembly.FullName);
 #else
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
 #endif
 
-#if PORTABLE
+#if NETSTANDARD1_3
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).FullName;
 #else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(string assemblyName, IDictionary<string, object> options)
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             log.Debug("Loading {0}", assemblyName);
 #else
             log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Api
                     TestContext.DefaultWorkDirectory = options[FrameworkPackageSettings.WorkDirectory] as string;
                 else
                     TestContext.DefaultWorkDirectory =
-#if PORTABLE
+#if NETSTANDARD1_3
                         @"\My Documents";
 #else
                         Directory.GetCurrentDirectory();
@@ -262,7 +262,7 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -287,7 +287,7 @@ namespace NUnit.Framework.Api
 
             testAssembly.ApplyAttributesToTest(assembly);
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 #endif

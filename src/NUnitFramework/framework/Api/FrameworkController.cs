@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,21 +41,21 @@ using System.Runtime.InteropServices;
 namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// FrameworkController provides a facade for use in loading, browsing 
-    /// and running tests without requiring a reference to the NUnit 
+    /// FrameworkController provides a facade for use in loading, browsing
+    /// and running tests without requiring a reference to the NUnit
     /// framework. All calls are encapsulated in constructors for
     /// this class and its nested classes, which only require the
     /// types of the Common Type System as arguments.
-    /// 
+    ///
     /// The controller supports four actions: Load, Explore, Count and Run.
     /// They are intended to be called by a driver, which should allow for
-    /// proper sequencing of calls. Load must be called before any of the 
+    /// proper sequencing of calls. Load must be called before any of the
     /// other actions. The driver may support other actions, such as
     /// reload on run, by combining these calls.
     /// </summary>
     public class FrameworkController : LongLivedMarshalByRefObject
     {
-#if !PORTABLE
+#if !NETSTANDARD1_3
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 #endif
 
@@ -128,13 +128,13 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
-#if !PORTABLE
-        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
-        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+#if !NETSTANDARD1_3
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-#endif   
+#endif
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;
@@ -148,7 +148,7 @@ namespace NUnit.Framework.Api
 
                 if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)Settings[FrameworkPackageSettings.InternalTraceWriter], traceLevel);
-#if !PORTABLE
+#if !NETSTANDARD1_3
                 else
                 {
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Api
                         : Directory.GetCurrentDirectory();
 #if NETSTANDARD1_6
                     var id = DateTime.Now.ToString("o");
-#else      
+#else
                     var id = Process.GetCurrentProcess().Id;
 #endif
                     var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
@@ -244,9 +244,7 @@ namespace NUnit.Framework.Api
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE
             InsertEnvironmentElement(result);
-#endif
 
             return result.OuterXml;
         }
@@ -292,9 +290,7 @@ namespace NUnit.Framework.Api
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE
             InsertEnvironmentElement(result);
-#endif
 
             return result.OuterXml;
         }
@@ -363,9 +359,7 @@ namespace NUnit.Framework.Api
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE
             InsertEnvironmentElement(result);
-#endif
 
             handler.RaiseCallbackEvent(result.OuterXml);
         }
@@ -387,13 +381,12 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
         }
 
-#if !PORTABLE
         /// <summary>
         /// Inserts environment element
         /// </summary>
         /// <param name="targetNode">Target node</param>
         /// <returns>The new node</returns>
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
@@ -401,18 +394,19 @@ namespace NUnit.Framework.Api
 
             var assemblyName = AssemblyHelper.GetAssemblyName(typeof(FrameworkController).GetTypeInfo().Assembly);
             env.AddAttribute("framework-version", assemblyName.Version.ToString());
-            env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
-            env.AddAttribute("os-version", RuntimeInformation.OSDescription);
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
-            env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+#if !NETSTANDARD1_3
+            env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
+            env.AddAttribute("os-version", RuntimeInformation.OSDescription);
+            env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
-
+#endif
             return env;
         }
 #else
-        public static TNode InsertEnvironmentElement(TNode targetNode)
+            public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
             targetNode.ChildNodes.Insert(0, env);
@@ -436,7 +430,6 @@ namespace NUnit.Framework.Api
         {
             return IntPtr.Size == 8 ? "x64" : "x86";
         }
-#endif
 #endif
 
         /// <summary>

@@ -161,7 +161,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertionResults[0].Message, Is.Not.Null, "Assertion Message should not be null");
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
 #endif
 

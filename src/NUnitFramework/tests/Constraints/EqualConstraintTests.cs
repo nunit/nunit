@@ -180,7 +180,7 @@ namespace NUnit.Framework.Constraints
 
         #region DateTimeOffsetEquality
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
 
         public class DateTimeOffsetShouldBeSame
         {
@@ -359,7 +359,7 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
@@ -532,7 +532,7 @@ namespace NUnit.Framework.Constraints
                 Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
             [Test]
             public void CanCompareUncomparableTypes()
             {
@@ -765,7 +765,7 @@ namespace NUnit.Framework.Constraints
     }
     #endregion
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
     /// <summary>
     /// ConvertibleComparer is used in testing to ensure that objects
     /// of different types can be compared when appropriate.

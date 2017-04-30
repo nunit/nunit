@@ -36,7 +36,7 @@ namespace NUnitLite
     {
         readonly TextWriter _outWriter;
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Default constructor using Console.Out
         /// </summary>

@@ -27,7 +27,7 @@ using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
-#if PORTABLE|| NETSTANDARD1_6
+#if NETSTANDARD1_3|| NETSTANDARD1_6
 using System.Linq;
 #endif
 
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return ParameterInfo.GetAttributes<T>(inherit).ToArray();
 #else
             return (T[])ParameterInfo.GetCustomAttributes(typeof(T), inherit);
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsDefined<T>(bool inherit)
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return ParameterInfo.GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
 #else
             return ParameterInfo.IsDefined(typeof(T), inherit);

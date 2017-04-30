@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,7 +28,7 @@ using System.Linq;
 
 namespace NUnit.Compatibility
 {
-#if !NET_4_5 && !PORTABLE && !NETSTANDARD1_6
+#if !NET_4_5 && !NETSTANDARD1_3 && !NETSTANDARD1_6
     /// <summary>
     /// Provides NUnit specific extensions to aid in Reflection
     /// across multiple frameworks
@@ -71,7 +71,7 @@ namespace NUnit.Compatibility
         }
     }
 
-#elif PORTABLE || NETSTANDARD1_6
+#elif NETSTANDARD1_3 || NETSTANDARD1_6
 
     /// <summary>
     /// Provides NUnit specific extensions to aid in Reflection
@@ -79,7 +79,7 @@ namespace NUnit.Compatibility
     /// </summary>
     /// <remarks>
     /// This version of the class allows direct calls on Type on
-    /// those platforms that would normally require use of 
+    /// those platforms that would normally require use of
     /// GetTypeInfo().
     /// </remarks>
     public static class TypeExtensions
@@ -122,7 +122,7 @@ namespace NUnit.Compatibility
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="type"></param>
         /// <param name="other"></param>
@@ -133,7 +133,7 @@ namespace NUnit.Compatibility
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="type"></param>
         /// <param name="other"></param>
@@ -445,7 +445,7 @@ namespace NUnit.Compatibility
     {
         /// <summary>
         /// DNX does not have a version of GetCustomAttributes on Assembly that takes an inherit
-        /// parameter since it doesn't make sense on Assemblies. This version just ignores the 
+        /// parameter since it doesn't make sense on Assemblies. This version just ignores the
         /// inherit parameter.
         /// </summary>
         /// <param name="asm">The assembly</param>
@@ -516,7 +516,7 @@ namespace NUnit.Compatibility
         {
             if (to.IsAssignableFrom(from))
                 return true;
-            
+
             // Look for the marker that indicates from was null
             if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
                 return true;

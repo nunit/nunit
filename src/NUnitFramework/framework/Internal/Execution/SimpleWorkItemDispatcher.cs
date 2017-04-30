@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItemDispatcher : IWorkItemDispatcher
     {
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         // The first WorkItem to be dispatched, assumed to be top-level item
         private WorkItem _topLevelWorkItem;
 
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             Dispatch(topLevelWorkItem);
 #else
             _topLevelWorkItem = topLevelWorkItem;
@@ -75,14 +75,14 @@ namespace NUnit.Framework.Internal.Execution
                 work.Execute();
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         private void RunnerThreadProc()
         {
             _topLevelWorkItem.Execute();
         }
 #endif
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         private object cancelLock = new object();
 #endif
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
         public void CancelRun(bool force)
         {
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             lock (cancelLock)
             {
                 if (_topLevelWorkItem != null)

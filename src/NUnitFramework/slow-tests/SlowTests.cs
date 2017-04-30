@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,7 +28,7 @@ namespace NUnit.Tests
     public class SlowTests
     {
         const int DELAY = 1000;
-        
+
         public class AAA
         {
             [Test]
@@ -61,7 +61,7 @@ namespace NUnit.Tests
 
         private static void Delay()
         {
-#if PORTABLE
+#if NETSTANDARD1_3
             System.Threading.Tasks.Task.Delay(DELAY);
 #else
             System.Threading.Thread.Sleep(DELAY);

@@ -110,16 +110,15 @@ namespace NUnitLite
 
         #region Public Methods
 
-#if !PORTABLE
         public int Execute(string[] args)
         {
             _options = new NUnitLiteOptions(_testAssembly == null, args);
-                    
+
             ExtendedTextWriter outWriter = null;
             if (_options.OutFile != null)
             {
                 var outFile = Path.Combine(_options.WorkDirectory, _options.OutFile);
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                 var textWriter = File.CreateText(outFile);
 #else
                 var textWriter = TextWriter.Synchronized(new StreamWriter(outFile));
@@ -136,7 +135,7 @@ namespace NUnitLite
             if (_options.ErrFile != null)
             {
                 var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                 errWriter = File.CreateText(errFile);
 #else
                 errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
@@ -152,21 +151,20 @@ namespace NUnitLite
             finally
             {
                 if (_options.OutFile != null && outWriter != null)
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                     outWriter.Dispose();
 #else
                     outWriter.Close();
 #endif
 
                 if (_options.ErrFile != null && errWriter != null)
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                     errWriter.Dispose();
 #else
                     errWriter.Close();
 #endif
             }
         }
-#endif
 
         // Entry point called by AutoRun and by the portable nunitlite.runner
         public int Execute(ExtendedTextWriter writer, TextReader reader, string[] args)
@@ -183,13 +181,13 @@ namespace NUnitLite
         {
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
             InitializeInternalTrace();
 #endif
 
             try
             {
-#if !PORTABLE
+#if !NETSTANDARD1_3
                 if (!Directory.Exists(_options.WorkDirectory))
                     Directory.CreateDirectory(_options.WorkDirectory);
 #endif
@@ -281,7 +279,7 @@ namespace NUnitLite
 
             ReportResults(result);
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
             if (_options.ResultOutputSpecifications.Count > 0)
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
@@ -318,7 +316,7 @@ namespace NUnitLite
 
         private int ExploreTests(ITestFilter filter)
         {
-#if !PORTABLE
+#if !NETSTANDARD1_3
             ITest testNode = _runner.ExploreTests(filter);
 
             var specs = _options.ExploreOutputSpecifications;
@@ -354,7 +352,7 @@ namespace NUnitLite
             if (options.RandomSeed >= 0)
                 runSettings[FrameworkPackageSettings.RandomSeed] = options.RandomSeed;
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
             if (options.WorkDirectory != null)
                 runSettings[FrameworkPackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
 #endif
@@ -406,7 +404,7 @@ namespace NUnitLite
             return filter;
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         private void InitializeInternalTrace()
         {
             var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel ?? "Off", true);

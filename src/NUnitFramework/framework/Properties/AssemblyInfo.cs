@@ -40,7 +40,7 @@ using System.Security;
 [assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
 #elif NET_2_0
 [assembly: AssemblyTitle("NUnit Framework .NET 2.0")]
-#elif PORTABLE
+#elif NETSTANDARD1_3
 [assembly: AssemblyTitle("NUnit Framework Portable")]
 #else
 [assembly: AssemblyTitle("NUnit Framework")]
@@ -50,6 +50,6 @@ using System.Security;
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
 [assembly: AllowPartiallyTrustedCallers]
 #endif

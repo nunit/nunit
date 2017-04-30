@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
         TextWriter writer;
         object myLock = new object();
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.
         /// </summary>

@@ -184,7 +184,7 @@ namespace NUnit.Framework.Constraints
             if ( x is char && y is char )
                 return CharsEqual( (char)x, (char)y );
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
             if (x is DirectoryInfo && y is DirectoryInfo)
                 return DirectoriesEqual((DirectoryInfo)x, (DirectoryInfo)y);
 #endif
@@ -392,7 +392,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Method to compare two DirectoryInfo objects
         /// </summary>

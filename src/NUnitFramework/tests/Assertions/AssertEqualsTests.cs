@@ -422,7 +422,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void DirectoryInfoEqual()
         {

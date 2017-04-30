@@ -73,7 +73,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
     [TestFixture]
     public class AttributeTest : SyntaxTest
     {
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
     [TestFixture]
     public class AttributeTest_Generic : SyntaxTest
     {

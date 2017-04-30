@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // Enable these tests if you need to debug unhandled exceptions
-#if !PORTABLE && false
+#if !NETSTANDARD1_3 && false
 using System;
 using System.Collections;
 using System.Text;

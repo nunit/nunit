@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         const string UriSchemeFile = "file";
         const string SchemeDelimiter = "://";
 #else
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if PORTABLE
+#if NETSTANDARD1_3
             return assembly.ManifestModule.FullyQualifiedName;
 #else
             string codeBase = assembly.CodeBase;
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
 
         #region GetDirectoryName
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal
         /// <returns>An AssemblyName</returns>
         public static AssemblyName GetAssemblyName(Assembly assembly)
         {
-#if PORTABLE
+#if NETSTANDARD1_3
             return new AssemblyName(assembly.FullName);
 #else
             return assembly.GetName();
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if PORTABLE
+#if NETSTANDARD1_3
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
         /// </summary>

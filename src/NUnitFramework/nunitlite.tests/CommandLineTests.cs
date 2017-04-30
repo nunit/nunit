@@ -40,7 +40,7 @@ namespace NUnitLite.Tests
     {
         #region Argument PreProcessor Tests
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [TestCase("--arg", "--arg")]
         [TestCase("--ArG", "--ArG")]
         [TestCase("--arg1 --arg2", "--arg1", "--arg2")]
@@ -190,7 +190,7 @@ namespace NUnitLite.Tests
         [TestCase("ShowVersion", "version|V")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [TestCase("NoHeader", "noheader|noh")]
 #endif
         [TestCase("TeamCity", "teamcity")]
@@ -223,7 +223,7 @@ namespace NUnitLite.Tests
 
         [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "Before", "After", "All" }, new string[] { "JUNK" })]
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
@@ -256,7 +256,7 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
 #endif
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
@@ -317,7 +317,7 @@ namespace NUnitLite.Tests
 
         [TestCase("--where")]
         [TestCase("--timeout")]
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
@@ -433,7 +433,7 @@ namespace NUnitLite.Tests
             Assert.AreEqual("results.xml", options.InputFile);
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void ResultOptionWithFilePath()
         {
@@ -534,7 +534,7 @@ namespace NUnitLite.Tests
 
         #region Explore Option
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void ExploreOptionWithoutPath()
         {

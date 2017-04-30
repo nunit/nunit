@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             new ArrayList(),
 #endif
             new System.Collections.Generic.List<int>()
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Constraints
         };
     }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
     [TestFixture]
     public class EmptyDirectoryConstraintTest
     {

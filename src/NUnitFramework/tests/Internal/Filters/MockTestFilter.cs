@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Filters
     /// 
     /// It would be better to use a Mocking-Framework for this.
     /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
     public class MockTestFilter : TestFilter

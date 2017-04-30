@@ -132,7 +132,7 @@ namespace NUnit.Framework
                 if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
                     continue;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                 if (arg is DBNull)
                 {
                     data[i] = null;

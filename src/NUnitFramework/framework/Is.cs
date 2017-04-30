@@ -171,7 +171,7 @@ namespace NUnit.Framework
 
         #region BinarySerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -185,7 +185,7 @@ namespace NUnit.Framework
 
         #region XmlSerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -487,7 +487,7 @@ namespace NUnit.Framework
 
         #endregion
         
-#if !PORTABLE
+#if !NETSTANDARD1_3
         #region SamePath
 
         /// <summary>

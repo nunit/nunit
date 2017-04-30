@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         private static readonly bool PLATFORM_IGNORE = true;
 #else
         private static readonly bool PLATFORM_IGNORE = OSPlatform.CurrentPlatform.IsUnix;

@@ -154,7 +154,7 @@ namespace NUnit.Framework.Assertions
             Assert.IsEmpty( new int[0], "Failed on empty Array" );
             Assert.IsEmpty((IEnumerable)new int[0], "Failed on empty IEnumerable");
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
             Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
 #endif
@@ -209,7 +209,7 @@ namespace NUnit.Framework.Assertions
             Assert.IsNotEmpty( array, "Failed on Array" );
             Assert.IsNotEmpty( (IEnumerable)array, "Failed on IEnumerable" );
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             ArrayList list = new ArrayList(array);
             Hashtable hash = new Hashtable();
             hash.Add("array", array);
@@ -249,7 +249,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void IsNotEmptyFailsOnEmptyArrayList()
         {

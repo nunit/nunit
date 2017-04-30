@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
 using System.Windows.Forms;
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Api
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         // Saved Console.Out and Console.Error
         private TextWriter _savedOut;
         private TextWriter _savedErr;
@@ -276,7 +276,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         private void StartRun(ITestListener listener)
         {
-#if !PORTABLE
+#if !NETSTANDARD1_3
             // Save Console.Out and Error for later restoration
             _savedOut = Console.Out;
             _savedErr = Console.Error;
@@ -302,7 +302,7 @@ namespace NUnit.Framework.Api
                 (bool)Settings[FrameworkPackageSettings.DebugTests])
                 System.Diagnostics.Debugger.Launch();
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -353,7 +353,7 @@ namespace NUnit.Framework.Api
                 _pump.Dispose();
 #endif
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
 #endif
@@ -385,7 +385,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather

@@ -38,7 +38,7 @@ namespace NUnit.TestUtilities.Comparers
         int IComparer.Compare(object x, object y)
         {
             WasCalled = true;
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return Comparer<object>.Default.Compare(x, y);
 #else
             return Comparer.Default.Compare(x, y);

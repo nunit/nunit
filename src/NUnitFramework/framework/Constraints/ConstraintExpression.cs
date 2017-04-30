@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,9 +28,9 @@ using System.Runtime.CompilerServices;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// ConstraintExpression represents a compound constraint in the 
+    /// ConstraintExpression represents a compound constraint in the
     /// process of being constructed from a series of syntactic elements.
-    /// 
+    ///
     /// Individual elements are appended to the expression as they are
     /// reorganized. When a constraint is appended, it is returned as the
     /// value of the operation so that modifiers may be applied. However,
@@ -55,13 +55,13 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstraintExpression"/> class.
         /// </summary>
-        public ConstraintExpression() 
+        public ConstraintExpression()
         {
             this.builder = new ConstraintBuilder();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConstraintExpression"/> 
+        /// Initializes a new instance of the <see cref="ConstraintExpression"/>
         /// class passing in a ConstraintBuilder, which may be pre-populated.
         /// </summary>
         /// <param name="builder">The builder.</param>
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Constraints
         /// Appends a constraint to the expression and returns that
         /// constraint, which is associated with the current state
         /// of the expression being built. Note that the constraint
-        /// is not reduced at this time. For example, if there 
+        /// is not reduced at this time. For example, if there
         /// is a NotOperator on the stack we don't reduce and
         /// return a NotConstraint. The original constraint must
         /// be returned because it may support modifiers that
@@ -190,9 +190,9 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-        
+
         #region Exactly(n)
-        
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
@@ -203,9 +203,9 @@ namespace NUnit.Framework.Constraints
             builder.Append(new ExactCountOperator(expectedCount));
             return new ItemsConstraintExpression(builder);
         }
-        
+
         #endregion
-        
+
         #region Property
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-        
+
         #region Attribute
 
         /// <summary>
@@ -365,7 +365,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Positive
- 
+
         /// <summary>
         /// Returns a constraint that tests for a positive value
         /// </summary>
@@ -373,11 +373,11 @@ namespace NUnit.Framework.Constraints
         {
             get { return (GreaterThanConstraint)this.Append(new GreaterThanConstraint(0)); }
         }
- 
+
         #endregion
- 
+
         #region Negative
- 
+
         /// <summary>
         /// Returns a constraint that tests for a negative value
         /// </summary>
@@ -427,7 +427,7 @@ namespace NUnit.Framework.Constraints
         #region Unique
 
         /// <summary>
-        /// Returns a constraint that tests whether a collection 
+        /// Returns a constraint that tests whether a collection
         /// contains all unique items.
         /// </summary>
         public UniqueItemsConstraint Unique
@@ -439,7 +439,7 @@ namespace NUnit.Framework.Constraints
 
         #region BinarySerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -453,7 +453,7 @@ namespace NUnit.Framework.Constraints
 
         #region XmlSerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -651,7 +651,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the actual value
-        /// is a collection containing the same elements as the 
+        /// is a collection containing the same elements as the
         /// collection supplied as an argument.
         /// </summary>
         public CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
@@ -726,9 +726,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a new ContainsConstraint. This constraint
         /// will, in turn, make use of the appropriate second-level
-        /// constraint, depending on the type of the actual argument. 
+        /// constraint, depending on the type of the actual argument.
         /// This overload is only used if the item sought is a string,
-        /// since any other type implies that we are looking for a 
+        /// since any other type implies that we are looking for a
         /// collection member.
         /// </summary>
         public ContainsConstraint Contains(string expected)
@@ -748,9 +748,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a new ContainsConstraint. This constraint
         /// will, in turn, make use of the appropriate second-level
-        /// constraint, depending on the type of the actual argument. 
+        /// constraint, depending on the type of the actual argument.
         /// This overload is only used if the item sought is a string,
-        /// since any other type implies that we are looking for a 
+        /// since any other type implies that we are looking for a
         /// collection member.
         /// </summary>
         public ContainsConstraint Contain(string expected)
@@ -901,12 +901,12 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-        
-#if !PORTABLE
+
+#if !NETSTANDARD1_3
         #region SamePath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same as an expected path after canonicalization.
         /// </summary>
         public SamePathConstraint SamePath(string expected)
@@ -919,7 +919,7 @@ namespace NUnit.Framework.Constraints
         #region SubPath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the a subpath of the expected path after canonicalization.
         /// </summary>
         public SubPathConstraint SubPathOf(string expected)
@@ -932,7 +932,7 @@ namespace NUnit.Framework.Constraints
         #region SamePathOrUnder
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same path or under an expected path after canonicalization.
         /// </summary>
         public SamePathOrUnderConstraint SamePathOrUnder(string expected)
@@ -946,7 +946,7 @@ namespace NUnit.Framework.Constraints
         #region InRange
 
         /// <summary>
-        /// Returns a constraint that tests whether the actual value falls 
+        /// Returns a constraint that tests whether the actual value falls
         /// within a specified range.
         /// </summary>
         public RangeConstraint InRange(IComparable from, IComparable to)
@@ -958,7 +958,7 @@ namespace NUnit.Framework.Constraints
 
         #region Exist
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.

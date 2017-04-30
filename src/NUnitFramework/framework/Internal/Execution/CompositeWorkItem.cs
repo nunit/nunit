@@ -318,7 +318,7 @@ namespace NUnit.Framework.Internal.Execution
                     child.TestWorker = this.TestWorker;
 #endif
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                     if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)
                         child.TargetApartment = TargetApartment;
 #endif

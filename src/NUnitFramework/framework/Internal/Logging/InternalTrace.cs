@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static bool Initialized { get; private set; }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         /// <summary>
         /// Initialize the internal trace facility using the name of the log
         /// to be written to and the trace level.

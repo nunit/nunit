@@ -28,9 +28,12 @@ Supported platforms:
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
     <copyright>Copyright (c) 2017 Charlie Poole</copyright>
     <dependencies>
+      <group targetFramework="netstandard1.3">
+        <dependency id="NETStandard.Library" version="1.6.1" />
+      </group>
       <group targetFramework="netstandard1.6">
-        <dependency id="NETStandard.Library" version="1.6.0" />
-        <dependency id="System.Runtime.Loader" version="4.0.0" />
+        <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="System.Runtime.Loader" version="4.3.0" />
       </group>
     </dependencies>
   </metadata>
@@ -47,13 +50,9 @@ Supported platforms:
     <file src="bin/net-4.0/nunit.framework.xml" target="lib/net40" />
     <file src="bin/net-4.5/nunit.framework.dll" target="lib/net45" />
     <file src="bin/net-4.5/nunit.framework.xml" target="lib/net45" />
+    <file src="bin/netstandard13/nunit.framework.dll" target="lib/netstandard1.3" />
+    <file src="bin/netstandard13/nunit.framework.xml" target="lib/netstandard1.3" />
     <file src="bin/netstandard16/nunit.framework.dll" target="lib/netstandard1.6" />
     <file src="bin/netstandard16/nunit.framework.xml" target="lib/netstandard1.6" />
-    <file src="bin/portable/nunit.framework.dll" target="lib/portable-net45+win8+wp8+wpa81" />
-    <file src="bin/portable/nunit.framework.xml" target="lib/portable-net45+win8+wp8+wpa81" />
-    <file src="bin/portable/nunit.framework.dll" target="lib/MonoAndroid" />
-    <file src="bin/portable/nunit.framework.xml" target="lib/MonoAndroid" />
-    <file src="bin/portable/nunit.framework.dll" target="lib/Xamarin.iOS10" />
-    <file src="bin/portable/nunit.framework.xml" target="lib/Xamarin.iOS10" />
   </files>
 </package>

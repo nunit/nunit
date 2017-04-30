@@ -8,7 +8,7 @@ namespace NUnit.Framework.Syntax
     [Obsolete("Test of Obsolete AssertionHelper class")]
     class AssertionHelperTests : AssertionHelper
     {
-#if !PORTABLE
+#if !NETSTANDARD1_3
         private static readonly string DEFAULT_PATH_CASE = Path.DirectorySeparatorChar == '\\' ? "ignorecase" : "respectcase";
 #endif
 
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Syntax
 
         #region Attribute
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void AttributeExistsTest()
         {
@@ -314,7 +314,7 @@ namespace NUnit.Framework.Syntax
 
         #region After
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void After()
         {
@@ -612,7 +612,7 @@ namespace NUnit.Framework.Syntax
 
         #region SamePath
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void SamePath()
         {
@@ -663,7 +663,7 @@ namespace NUnit.Framework.Syntax
 
 #region SamePathOrUnder
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void SamePathOrUnder()
         {
@@ -714,7 +714,7 @@ namespace NUnit.Framework.Syntax
 
         #region BinarySerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void BinarySerializableConstraint()
         {
@@ -728,7 +728,7 @@ namespace NUnit.Framework.Syntax
 
         #region XmlSerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void XmlSerializableConstraint()
         {

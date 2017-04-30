@@ -84,7 +84,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(comparer.AreEqual(x, y, ref tolerance));
         }
 
-#if !PORTABLE
+#if !NETSTANDARD1_3
         [Test]
         public void SameDirectoriesAreEqual()
         {

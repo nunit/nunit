@@ -103,7 +103,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
         }
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -160,7 +160,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
+#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
         }
