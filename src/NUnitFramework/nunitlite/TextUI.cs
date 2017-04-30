@@ -65,7 +65,7 @@ namespace NUnitLite
             _displayBeforeOutput = _displayBeforeTest || _displayAfterTest || labelsOption == "ON";
         }
 
-#endregion
+        #endregion
 
 #region Public Methods
 
