@@ -52,17 +52,7 @@ namespace NUnitLite
             _options = options;
         }
 
-        public TextUI(ExtendedTextWriter writer, TextReader reader)
-            : this(writer, reader, new NUnitLiteOptions()) { }
-
-        public TextUI(ExtendedTextWriter writer)
-#if PORTABLE
-            : this(writer, null, new NUnitLiteOptions()) { }
-#else
-            : this(writer, Console.In, new NUnitLiteOptions()) { }
-#endif
-
-    #endregion
+        #endregion
 
         #region Public Methods
 
@@ -112,17 +102,16 @@ namespace NUnitLite
 
         public void DisplayHelp()
         {
-            WriteHeader("Usage: NUNITLITE [assembly] [options]");
+            WriteHeader("Usage: NUNITLITE-RUNNER assembly [options]");
+            WriteHeader("       USER-EXECUTABLE [options]");
             Writer.WriteLine();
             WriteHelpLine("Runs a set of NUnitLite tests from the console.");
             Writer.WriteLine();
 
             WriteSectionHeader("Assembly:");
-            WriteHelpLine("      An alternate assembly from which to execute tests. Normally, the tests");
-            WriteHelpLine("      contained in the executable test assembly itself are run. An alternate");
-            WriteHelpLine("      assembly is specified using the assembly name, without any path or.");
-            WriteHelpLine("      extension. It must be in the same in the same directory as the executable");
-            WriteHelpLine("      or on the probing path.");
+            WriteHelpLine("      File name or path of the assembly from which to execute tests. Required");
+            WriteHelpLine("      when using the nunitlite-runner executable to run the tests. Not allowed");
+            WriteHelpLine("      when running a self-executing user test assembly.");
             Writer.WriteLine();
 
             WriteSectionHeader("Options:");

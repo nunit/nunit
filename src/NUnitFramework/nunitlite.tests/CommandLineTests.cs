@@ -183,7 +183,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions();
             Assert.True(options.Validate());
-            Assert.AreEqual(0, options.InputFiles.Count);
+            Assert.Null(options.InputFile);
         }
 
         [TestCase("ShowHelp", "help|h")]
@@ -331,29 +331,39 @@ namespace NUnitLite.Tests
         }
 
         [Test]
-        public void AssemblyName()
+        public void AssemblyIsInvalidByDefault()
         {
             var options = new NUnitLiteOptions("nunit.tests.dll");
-            Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Count);
-            Assert.AreEqual("nunit.tests.dll", options.InputFiles[0]);
+            Assert.False(options.Validate());
+            Assert.AreEqual(1, options.ErrorMessages.Count);
+            Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: nunit.tests.dll"));
         }
 
-        // [Test]
-        // public void FixtureNamePlusAssemblyIsValid()
-        // {
-        //    var options = new NUnitLiteOptions( "-fixture:NUnit.Tests.AllTests", "nunit.tests.dll" );
-        //    Assert.AreEqual("nunit.tests.dll", options.Parameters[0]);
-        //    Assert.AreEqual("NUnit.Tests.AllTests", options.fixture);
-        //    Assert.IsTrue(options.Validate());
-        // }
+        [Test]
+        public void MultipleAssembliesAreInvalidByDefault()
+        {
+            var options = new NUnitLiteOptions("nunit.tests.dll", "another.dll");
+            Assert.False(options.Validate());
+            Assert.AreEqual(2, options.ErrorMessages.Count);
+            Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: nunit.tests.dll"));
+            Assert.That(options.ErrorMessages[1], Contains.Substring("Invalid entry: another.dll"));
+        }
 
         [Test]
-        public void AssemblyAloneIsValid()
+        public void AssemblyIsValidIfAllowed()
         {
-            var options = new NUnitLiteOptions("nunit.tests.dll");
+            var options = new NUnitLiteOptions(true, "nunit.tests.dll");
             Assert.True(options.Validate());
-            Assert.AreEqual(0, options.ErrorMessages.Count, "command line should be valid");
+            Assert.AreEqual(0, options.ErrorMessages.Count);
+        }
+
+        [Test]
+        public void MultipleAssembliesAreInvalidEvenIfOneIsAllowed()
+        {
+            var options = new NUnitLiteOptions(true, "nunit.tests.dll", "another.dll");
+            Assert.False(options.Validate());
+            Assert.AreEqual(1, options.ErrorMessages.Count);
+            Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: another.dll"));
         }
 
         [Test]
@@ -364,13 +374,6 @@ namespace NUnitLite.Tests
             Assert.AreEqual(1, options.ErrorMessages.Count);
             Assert.AreEqual("Invalid argument: -asembly:nunit.tests.dll", options.ErrorMessages[0]);
         }
-
-        // [Test]
-        // public void NoFixtureNameProvided()
-        // {
-        //    ConsoleOptions options = new ConsoleOptions( "-fixture:", "nunit.tests.dll" );
-        //    Assert.IsFalse(options.Validate());
-        // }
 
         [Test]
         public void InvalidCommandLineParms()
@@ -389,7 +392,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TimeoutIsMinusOneIfNoOptionIsProvided()
         {
-            var options = new NUnitLiteOptions("tests.dll");
+            var options = new NUnitLiteOptions();
             Assert.True(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
@@ -397,13 +400,13 @@ namespace NUnitLite.Tests
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
-            Assert.Throws<OptionException>(() => new NUnitLiteOptions("tests.dll", "-timeout"));
+            Assert.Throws<OptionException>(() => new NUnitLiteOptions("-timeout"));
         }
 
         [Test]
         public void TimeoutParsesIntValueCorrectly()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-timeout:5000");
+            var options = new NUnitLiteOptions("-timeout:5000");
             Assert.True(options.Validate());
             Assert.AreEqual(5000, options.DefaultTimeout);
         }
@@ -411,7 +414,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TimeoutCausesErrorIfValueIsNotInteger()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-timeout:abc");
+            var options = new NUnitLiteOptions("-timeout:abc");
             Assert.False(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
@@ -423,20 +426,19 @@ namespace NUnitLite.Tests
         [Test]
         public void FileNameWithoutResultOptionLooksLikeParameter()
         {
-            var options = new NUnitLiteOptions("tests.dll", "results.xml");
+            var options = new NUnitLiteOptions(true, "results.xml");
             Assert.True(options.Validate());
             Assert.AreEqual(0, options.ErrorMessages.Count);
-            Assert.AreEqual(2, options.InputFiles.Count);
+            //Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: results.xml"));
+            Assert.AreEqual("results.xml", options.InputFile);
         }
 
 #if !PORTABLE
         [Test]
         public void ResultOptionWithFilePath()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-result:results.xml");
+            var options = new NUnitLiteOptions("-result:results.xml");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
-            Assert.AreEqual("tests.dll", options.InputFiles[0]);
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
@@ -447,10 +449,8 @@ namespace NUnitLite.Tests
         [Test]
         public void ResultOptionWithFilePathAndFormat()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-result:results.xml;format=nunit2");
+            var options = new NUnitLiteOptions("-result:results.xml;format=nunit2");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
-            Assert.AreEqual("tests.dll", options.InputFiles[0]);
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
@@ -461,10 +461,8 @@ namespace NUnitLite.Tests
         [Test]
         public void ResultOptionWithFilePathAndTransform()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-result:results.xml;transform=transform.xslt");
+            var options = new NUnitLiteOptions("-result:results.xml;transform=transform.xslt");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
-            Assert.AreEqual("tests.dll", options.InputFiles[0]);
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
@@ -475,7 +473,7 @@ namespace NUnitLite.Tests
         [Test]
         public void ResultOptionWithoutFileNameIsInvalid()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-result:");
+            var options = new NUnitLiteOptions("-result:");
             Assert.False(options.Validate(), "Should not be valid");
             Assert.AreEqual(1, options.ErrorMessages.Count, "An error was expected");
         }
@@ -483,7 +481,7 @@ namespace NUnitLite.Tests
         [Test]
         public void ResultOptionMayBeRepeated()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-result:results.xml", "-result:nunit2results.xml;format=nunit2", "-result:myresult.xml;transform=mytransform.xslt");
+            var options = new NUnitLiteOptions("-result:results.xml", "-result:nunit2results.xml;format=nunit2", "-result:myresult.xml;transform=mytransform.xslt");
             Assert.True(options.Validate(), "Should be valid");
 
             var specs = options.ResultOutputSpecifications;
@@ -508,7 +506,7 @@ namespace NUnitLite.Tests
         [Test]
         public void DefaultResultSpecification()
         {
-            var options = new NUnitLiteOptions("test.dll");
+            var options = new NUnitLiteOptions();
             Assert.AreEqual(1, options.ResultOutputSpecifications.Count);
 
             var spec = options.ResultOutputSpecifications[0];
@@ -520,14 +518,14 @@ namespace NUnitLite.Tests
         [Test]
         public void NoResultSuppressesDefaultResultSpecification()
         {
-            var options = new NUnitLiteOptions("test.dll", "-noresult");
+            var options = new NUnitLiteOptions("-noresult");
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
 
         [Test]
         public void NoResultSuppressesAllResultSpecifications()
         {
-            var options = new NUnitLiteOptions("test.dll", "-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
+            var options = new NUnitLiteOptions("-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
 #endif
@@ -540,7 +538,7 @@ namespace NUnitLite.Tests
         [Test]
         public void ExploreOptionWithoutPath()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-explore");
+            var options = new NUnitLiteOptions("-explore");
             Assert.True(options.Validate());
             Assert.True(options.Explore);
         }
@@ -548,10 +546,8 @@ namespace NUnitLite.Tests
         [Test]
         public void ExploreOptionWithFilePath()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-explore:results.xml");
+            var options = new NUnitLiteOptions("-explore:results.xml");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
-            Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.True(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
@@ -563,10 +559,8 @@ namespace NUnitLite.Tests
         [Test]
         public void ExploreOptionWithFilePathAndFormat()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-explore:results.xml;format=cases");
+            var options = new NUnitLiteOptions("-explore:results.xml;format=cases");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
-            Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.True(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
@@ -578,10 +572,8 @@ namespace NUnitLite.Tests
         [Test]
         public void ExploreOptionWithFilePathAndTransform()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-explore:results.xml;transform=myreport.xslt");
+            var options = new NUnitLiteOptions("-explore:results.xml;transform=myreport.xslt");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
-            Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.True(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
@@ -593,11 +585,9 @@ namespace NUnitLite.Tests
         [Test]
         public void ExploreOptionWithFilePathUsingEqualSign()
         {
-            var options = new NUnitLiteOptions("tests.dll", "-explore=C:/nunit/tests/bin/Debug/console-test.xml");
+            var options = new NUnitLiteOptions("-explore=C:/nunit/tests/bin/Debug/console-test.xml");
             Assert.True(options.Validate());
             Assert.True(options.Explore);
-            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
-            Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
 
@@ -643,7 +633,7 @@ namespace NUnitLite.Tests
         public void SingleTestParameter()
         {
             var options = new NUnitLiteOptions("--params=X=5");
-            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { {"X", "5" } }));
         }
 
@@ -651,7 +641,7 @@ namespace NUnitLite.Tests
         public void TwoTestParametersInOneOption()
         {
             var options = new NUnitLiteOptions("--params:X=5;Y=7");
-            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" }, { "Y", "7" } }));
         }
 
@@ -659,7 +649,7 @@ namespace NUnitLite.Tests
         public void TwoTestParametersInSeparateOptions()
         {
             var options = new NUnitLiteOptions("-p:X=5", "-p:Y=7");
-            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" }, { "Y", "7" } }));
         }
 
@@ -667,7 +657,7 @@ namespace NUnitLite.Tests
         public void ThreeTestParametersInTwoOptions()
         {
             var options = new NUnitLiteOptions("--params:X=5;Y=7", "-p:Z=3");
-            Assert.That(options.errorMessages, Is.Empty);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" }, { "Y", "7" }, { "Z", "3" } }));
         }
 
