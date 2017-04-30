@@ -2,13 +2,11 @@ language: csharp
 sudo: false
 mono:
   - latest
-  - 4.2.4
 os:
   - linux
   - osx
 matrix:
   allow_failures:
-    - mono: latest
     - os: osx
   fast_finish: true
 script:
