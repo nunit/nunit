@@ -40,16 +40,26 @@ namespace NUnitLite
     {
         public ExtendedTextWriter Writer { get; private set; }
 
-        private TextReader _reader;
-        private NUnitLiteOptions _options;
+        private readonly TextReader _reader;
+        private readonly NUnitLiteOptions _options;
 
-        #region Constructors
+        private readonly bool _displayBeforeTest;
+        private readonly bool _displayAfterTest;
+        private readonly bool _displayBeforeOutput;
+
+        #region Constructor
 
         public TextUI(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
         {
             Writer = writer;
             _reader = reader;
             _options = options;
+
+            string labelsOption = options.DisplayTestLabels?.ToUpperInvariant() ?? "ON";
+
+            _displayBeforeTest = labelsOption == "ALL" || labelsOption == "BEFORE";
+            _displayAfterTest = labelsOption == "AFTER";
+            _displayBeforeOutput = _displayBeforeTest || _displayAfterTest || labelsOption == "ON";
         }
 
         #endregion
@@ -227,30 +237,38 @@ namespace NUnitLite
 
         #endregion
 
+        #region TestStarted
+
+        public void TestStarted(ITest test)
+        {
+            if (_displayBeforeTest && !test.IsSuite)
+                WriteLabelLine(test.FullName);
+        }
+
+        #endregion
+
         #region TestFinished
 
         private bool _testCreatedOutput = false;
+        private bool _needsNewLine = false;
 
         public void TestFinished(ITestResult result)
         {
-            bool isSuite = result.Test.IsSuite;
-
-            var labels = "ON";
-
-            if (_options.DisplayTestLabels != null)
-                labels = _options.DisplayTestLabels.ToUpperInvariant();
-
-            if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
-            {
-                WriteLabelLine(result.Test.FullName);
-            }
-
             if (result.Output.Length > 0)
             {
-                WriteOutputLine(result.Output);
+                if (_displayBeforeOutput)
+                    WriteLabelLine(result.Test.FullName);
+
+                WriteOutput(result.Output);
 
                 if (!result.Output.EndsWith("\n"))
                     Writer.WriteLine();
+            }
+
+            if (!result.Test.IsSuite)
+            {
+                if (_displayAfterTest)
+                    WriteLabelLineAfterTest(result.Test.FullName, result.ResultState);
             }
 
             if (result.Test is TestAssembly && _testCreatedOutput)
@@ -266,16 +284,10 @@ namespace NUnitLite
 
         public void TestOutput(TestOutput output)
         {
-            var labels = "ON";
+            if (_displayBeforeOutput && output.TestName != null)
+                WriteLabelLine(output.TestName);
 
-            if (_options.DisplayTestLabels != null)
-                labels = _options.DisplayTestLabels.ToUpperInvariant();
-
-            if (labels == "ON" || labels == "All")
-                if (output.TestName != null)
-                    WriteLabelLine(output.TestName);
-
-            WriteOutputLine(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
+            WriteOutput(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
         }
 
         #endregion
@@ -636,27 +648,71 @@ namespace NUnitLite
         {
             if (label != _currentLabel)
             {
+                WriteNewLineIfNeeded();
+
                 Writer.WriteLine(ColorStyle.SectionHeader, "=> " + label);
+
                 _testCreatedOutput = true;
                 _currentLabel = label;
             }
         }
 
-        private void WriteOutputLine(string text)
+        private void WriteLabelLineAfterTest(string label, ResultState resultState)
         {
-            WriteOutputLine(ColorStyle.Output, text);
+            WriteNewLineIfNeeded();
+
+            string status = string.IsNullOrEmpty(resultState.Label)
+                ? resultState.Status.ToString()
+                : resultState.Label;
+
+            Writer.Write(GetColorForResultStatus(status), status);
+            Writer.WriteLine(ColorStyle.SectionHeader, " => " + label);
+
+            _currentLabel = label;
         }
 
-        private void WriteOutputLine(ColorStyle color, string text)
+        private void WriteNewLineIfNeeded()
+        {
+            if (_needsNewLine)
+            {
+                Writer.WriteLine();
+                _needsNewLine = false;
+            }
+        }
+
+        private void WriteOutput(string text)
+        {
+            WriteOutput(ColorStyle.Output, text);
+        }
+
+        private void WriteOutput(ColorStyle color, string text)
         {
             Writer.Write(color, text);
 
-            if (!text.EndsWith(Environment.NewLine))
-                Writer.WriteLine();
-
             _testCreatedOutput = true;
+            _needsNewLine = !text.EndsWith("\n");
         }
 
-#endregion
+         private static ColorStyle GetColorForResultStatus(string status)
+        {
+            switch (status)
+            {
+                case "Passed":
+                    return ColorStyle.Pass;
+                case "Failed":
+                    return ColorStyle.Failure;
+                case "Error":
+                case "Invalid":
+                case "Cancelled":
+                    return ColorStyle.Error;
+                case "Warning":
+                case "Ignored":
+                    return ColorStyle.Warning;
+                default:
+                    return ColorStyle.Output;
+            }
+        }
+
+        #endregion
     }
 }
