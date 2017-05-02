@@ -315,7 +315,7 @@ Task("Test20")
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
-Task("TestNetStandard1613")
+Task("TestNetStandard13")
     .Description("Tests the .NET Standard 1.3 version of the framework")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("BuildNetStandard13")
@@ -455,8 +455,8 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net-3.5/*.*") +
             GetFiles(currentImageDir + "bin/net-4.0/*.*") +
             GetFiles(currentImageDir + "bin/net-4.5/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard13/*.*");
-            GetFiles(currentImageDir + "bin/netstandard16/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard13/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard16/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
