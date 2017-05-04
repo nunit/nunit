@@ -63,10 +63,5 @@ namespace NUnit.Framework.Internal.Filters
         {
             get { return "namespace"; }
         }
-
-        private string GetNamespaceFromTest(Test test)
-        {
-            return test.TypeInfo.Namespace;
-        }
     }
 }

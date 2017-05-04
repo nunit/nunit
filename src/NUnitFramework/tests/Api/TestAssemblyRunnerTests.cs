@@ -229,13 +229,11 @@ namespace NUnit.Framework.Api
         {
             LoadMockAssembly();
 
-            var ex = Assert.Catch(() =>
+            var ex = Assert.Throws<ArgumentException>(() =>
                 {
-                    var invalidFilter = TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>");
-                    _runner.Run(this, invalidFilter);
+                    TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>");
                 });
 
-            Assert.That(ex, Is.TypeOf<ArgumentException>());
             Assert.That(ex.Message, Does.StartWith(string.Format(INVALID_FILTER_ELEMENT_MESSAGE, "invalidElement")));
         }
 
