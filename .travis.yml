@@ -3,21 +3,26 @@ sudo: false
 
 matrix:
   include:
+  include:
+    - os: linux
+      mono: 4.2.4
+      dotnet: 1.0.0-preview2-003131
+
 #    - os: linux
 #      mono: 4.2.4
 #    - os: linux
 #      mono: latest
-    - os: linux
-      dist: trusty
-      mono: none
-      dotnet: 1.0.0-preview2-003131
+#    - os: linux
+#      dist: trusty
+#      mono: none
+#      dotnet: 1.0.0-preview2-003131
  #   - os: osx
  #     mono: 4.2.4
  #   - os: osx
  #     mono: latest
-    - os: osx
-      mono: none
-      dotnet: 1.0.0-preview2-003131
+#    - os: osx
+#      mono: none
+#      dotnet: 1.0.0-preview2-003131
 
   allow_failures:
     - mono: latest
