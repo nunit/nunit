@@ -254,6 +254,7 @@ Task("BuildPortable")
         BuildProject("src/NUnitFramework/nunitlite/nunitlite-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/testdata/nunit.testdata-portable.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/tests/nunit.framework.tests-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-portable.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-portable.csproj", configuration);
