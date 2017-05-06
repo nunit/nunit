@@ -23,8 +23,6 @@
 
 #if PARALLEL
 
-//#define NO_PARALLEL_CASES
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -38,9 +36,6 @@ namespace NUnit.Framework.Internal.Execution
     public class ParallelWorkItemDispatcher : IWorkItemDispatcher
     {
         private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
-
-        private readonly int _levelOfParallelism;
-        private int _itemsDispatched;
 
         // WorkShifts - Dispatcher processes tests in three non-overlapping shifts.
         // See comment in Workshift.cs for a more detailed explanation.
@@ -67,8 +62,6 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="levelOfParallelism">Number of workers to use</param>
         public ParallelWorkItemDispatcher(int levelOfParallelism)
         {
-            _levelOfParallelism = levelOfParallelism;
-
             // Initialize WorkShifts
             Shifts = new WorkShift[]
             {
@@ -86,7 +79,7 @@ namespace NUnit.Framework.Internal.Execution
                 var parallelQueue = new WorkItemQueue("ParallelQueue");
                 _parallelShift.AddQueue(parallelQueue);
 
-                for (int i = 1; i <= _levelOfParallelism; i++)
+                for (int i = 1; i <= levelOfParallelism; i++)
                 {
                     string name = string.Format("Worker#" + i.ToString());
                     _parallelShift.Assign(new TestWorker(parallelQueue, name, ApartmentState.MTA));
@@ -176,8 +169,6 @@ namespace NUnit.Framework.Internal.Execution
                         NonParallelQueue.Enqueue(work);
                     break;
             }
-
-            Interlocked.Increment(ref _itemsDispatched);
         }
 
         /// <summary>
@@ -276,15 +267,6 @@ namespace NUnit.Framework.Internal.Execution
             // the tests one by one on the same thread as the fixture.
             if (work.Context.IsSingleThreaded)
                 return ExecutionStrategy.Direct;
-
-#if NO_PARALLEL_CASES
-            // For now, if this represents a test case, run directly. 
-            // This avoids issues caused by tests that access the fixture 
-            // state and allows handling ApartmentState preferences set on 
-            // the fixture more easily.
-            if (work is SimpleWorkItem)
-                return ExecutionStrategy.Direct;
-#endif
 
             if (work.ParallelScope.HasFlag(ParallelScope.Self) ||
                 work.Context.ParallelScope.HasFlag(ParallelScope.Children) ||
