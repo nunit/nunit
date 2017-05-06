@@ -199,6 +199,7 @@
     <Compile Include="Internal\Filters\FullNameFilterTests.cs" />
     <Compile Include="Internal\Filters\IdFilterTests.cs" />
     <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
+	<Compile Include="Internal\Filters\NamespaceFilterTests.cs" />
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />

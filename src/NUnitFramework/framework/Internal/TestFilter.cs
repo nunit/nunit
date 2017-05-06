@@ -183,6 +183,9 @@ namespace NUnit.Framework.Internal
                 case "class":
                     return new ClassNameFilter(node.Value) { IsRegex = isRegex };
 
+                case "namespace":
+                    return new NamespaceFilter(node.Value) { IsRegex = isRegex };
+
                 case "cat":
                     return new CategoryFilter(node.Value) { IsRegex = isRegex };
 
