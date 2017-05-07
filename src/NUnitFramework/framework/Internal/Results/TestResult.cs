@@ -80,7 +80,7 @@ namespace NUnit.Framework.Internal
         private string _message;
         private string _stackTrace;
 
-        private List<AssertionResult> _assertionResults = new List<AssertionResult>();
+        private readonly List<AssertionResult> _assertionResults = new List<AssertionResult>();
 
 #if PARALLEL
         /// <summary>
@@ -183,6 +183,11 @@ namespace NUnit.Framework.Internal
         public DateTime EndTime { get; set; }
 
         /// <summary>
+        /// Gets or sets the list of test attachments
+        /// </summary>
+        internal ICollection<TestAttachment> TestAttachments { private get; set; }
+
+        /// <summary>
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
@@ -268,7 +273,7 @@ namespace NUnit.Framework.Internal
                 InternalAssertCount = value;
             }
         }
-
+        
         /// <summary>
         /// Gets the number of test cases that failed
         /// when running the test and all its children.
@@ -397,6 +402,9 @@ namespace NUnit.Framework.Internal
 
             if (AssertionResults.Count > 0)
                 AddAssertionsElement(thisNode);
+
+            if (TestAttachments?.Count > 0)
+                AddAttatchmentsElement(thisNode);
 
             if (recursive && HasChildren)
                 foreach (TestResult child in Children)
@@ -698,6 +706,26 @@ namespace NUnit.Framework.Internal
                 case AssertionStatus.Error:
                     return ResultState.Error;
             }
+        }
+
+        /// <summary>
+        /// Adds a attachments element to a node and returns it.
+        /// </summary>
+        /// <param name="targetNode">The target node.</param>
+        /// <returns>The new attachments element.</returns>
+        private TNode AddAttatchmentsElement(TNode targetNode)
+        {
+            TNode attachmentsNode = targetNode.AddElement("attachments");
+
+            foreach (var attachment in TestAttachments)
+            {
+                var attachmentNode = attachmentsNode.AddElement("attachment", attachment.Filepath);
+
+                if (attachment.Description != null)
+                    attachmentNode.AddAttribute("description", attachment.Description);
+            }
+
+            return attachmentsNode;
         }
 
         /// <summary>

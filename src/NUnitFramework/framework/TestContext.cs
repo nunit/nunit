@@ -295,6 +295,16 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Attach a file to the current test result
+        /// </summary>
+        /// <param name="filepath">Relative or absolute filepath to attachment</param>
+        /// <param name="description">Optional description of attachment</param>
+        public static void AddTestAttachment(string filepath, string description = null)
+        {
+            TestExecutionContext.CurrentContext.AddTestAttachment(filepath, description);
+        }
+
+        /// <summary>
         /// This method provides a simplified way to add a ValueFormatter
         /// delegate to the chain of responsibility, creating the factory
         /// delegate internally. It is useful when the Type of the object

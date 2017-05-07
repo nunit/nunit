@@ -303,6 +303,8 @@ namespace NUnit.Framework.Internal.Execution
             // results along with it's own asserts.
             Result.AssertCount += Context.AssertCount;
 
+            Result.TestAttachments = Context.TestAttachments;
+
             Context.Listener.TestFinished(Result);
 
             if (Completed != null)

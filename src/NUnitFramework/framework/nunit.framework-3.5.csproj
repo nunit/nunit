@@ -159,6 +159,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\ParameterWrapper.cs" />
+    <Compile Include="Internal\TestAttachment.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestNameGenerator.cs" />
     <Compile Include="Internal\TypeWrapper.cs" />

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Diagnostics;
 using System.IO;
@@ -96,6 +97,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult _currentResult;
 
+        /// <summary>
+        /// Files attached to the current test context
+        /// </summary>
+        private readonly IList<TestAttachment> _testAttachments = new List<TestAttachment>();
+
 #if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// The current Principal.
@@ -142,6 +148,7 @@ namespace NUnit.Framework.Internal
             _listener = other._listener;
             StopOnError = other.StopOnError;
             TestCaseTimeout = other.TestCaseTimeout;
+            _testAttachments = new List<TestAttachment>(other._testAttachments);
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
             _currentCulture = other.CurrentCulture;
@@ -426,6 +433,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ValueFormatter CurrentValueFormatter { get; private set; }
 
+        internal ReadOnlyCollection<TestAttachment> TestAttachments => new ReadOnlyCollection<TestAttachment>(_testAttachments);
+
         /// <summary>
         /// If true, all tests must run on the same thread. No new thread may be spawned.
         /// </summary>
@@ -491,6 +500,28 @@ namespace NUnit.Framework.Internal
         public void AddFormatter(ValueFormatterFactory formatterFactory)
         {
             CurrentValueFormatter = formatterFactory(CurrentValueFormatter);
+        }
+
+        /// <summary>
+        /// Attach a file to the current test result
+        /// </summary>
+        /// <param name="filepath">Filepath to attachment. Can be absolute, or relative to working directory.</param>
+        /// <param name="description">Optional description of attachment</param>
+        public void AddTestAttachment(string filepath, string description = null)
+        {
+            Guard.ArgumentNotNull(filepath, nameof(filepath));
+            Guard.ArgumentValid(filepath.IndexOfAny(Path.GetInvalidPathChars()) == -1, 
+                $"Test attachment filepath contains invalid path characters. {filepath}", nameof(filepath));
+
+            if (!Path.IsPathRooted(filepath))
+                filepath = Path.Combine(TestContext.CurrentContext.WorkDirectory, filepath);
+
+#if !PORTABLE
+            if (!File.Exists(filepath))
+                throw new FileNotFoundException("Test attachment filepath could not be found.", filepath);
+#endif
+
+            _testAttachments.Add(new TestAttachment(filepath, description));
         }
 
         private TestExecutionContext CreateIsolatedContext()

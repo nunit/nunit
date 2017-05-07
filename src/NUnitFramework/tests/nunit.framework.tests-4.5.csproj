@@ -239,6 +239,7 @@
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\Results\AssertionResultTests.cs" />
+    <Compile Include="Internal\Results\TestResultAttachmentTests.cs" />
     <Compile Include="Internal\Results\TestResultFailureTests.cs" />
     <Compile Include="Internal\Results\TestResultGeneralTests.cs" />
     <Compile Include="Internal\Results\TestResultIgnoredTests.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Internal\Results\TestResultOutputTests.cs" />
     <Compile Include="Internal\Results\TestResultSuccessTests.cs" />
     <Compile Include="Internal\Results\TestResultTests.cs" />
+    <Compile Include="Internal\Results\TestResultWarningTests.cs" />
     <Compile Include="Internal\TestMethodTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpFixtureTests.cs" />

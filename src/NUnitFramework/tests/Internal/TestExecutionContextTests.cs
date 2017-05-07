@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Globalization;
+using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using System.Security.Principal;
@@ -43,28 +44,38 @@ namespace NUnit.Framework.Internal
     [TestFixture][Property("Question", "Why?")]
     public class TestExecutionContextTests
     {
-        TestExecutionContext _fixtureContext;
-        TestExecutionContext _setupContext;
-        ResultState _fixtureResult;
+        private TestExecutionContext _fixtureContext;
+        private TestExecutionContext _setupContext;
+        private ResultState _fixtureResult;
 
 #if !PORTABLE && !NETSTANDARD1_6
-        string originalDirectory;
-        IPrincipal originalPrincipal;
+        private string originalDirectory;
+        private IPrincipal originalPrincipal;
 #endif
 
-        DateTime _fixtureCreateTime = DateTime.UtcNow;
-        long _fixtureCreateTicks = Stopwatch.GetTimestamp();
+        private const string TempFileName = "NUnitTests.tmp";
+        private string _tempFilePath;
+        private DateTime _fixtureCreateTime = DateTime.UtcNow;
+        private long _fixtureCreateTicks = Stopwatch.GetTimestamp();
         
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             _fixtureContext = TestExecutionContext.CurrentContext;
             _fixtureResult = _fixtureContext.CurrentResult.ResultState;
+            _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "NUnitTests.tmp");
+#if !PORTABLE
+            File.Create(_tempFilePath).Dispose();
+#endif
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
+#if !PORTABLE
+            File.Delete(_tempFilePath);
+#endif
+
             // TODO: We put some tests in one time teardown to verify that
             // the context is still valid. It would be better if these tests
             // were placed in a second-level test, invoked from this test class.
@@ -906,6 +917,56 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        #region AddTestAttachment
+
+        [Test]
+        public void FilePathOnlyAddedToTestAttachments()
+        {
+            var context = new TestExecutionContext();
+            context.AddTestAttachment(_tempFilePath);
+
+            Assert.That(context.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").Null);
+        }
+
+        [Test]
+        public void FilePathAndDescriptionAddedToTestAttachments()
+        {
+            var context = new TestExecutionContext();
+            context.AddTestAttachment(_tempFilePath, "Description");
+
+            Assert.That(context.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").EqualTo("Description"));
+        }
+
+        [Test]
+        public void RelativePathsMadeAbsolute()
+        {
+            var context = new TestExecutionContext();
+            context.AddTestAttachment(TempFileName);
+
+            Assert.That(context.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName)));
+        }
+
+        [TestCase(null)]
+#if !PORTABLE && !NETSTANDARD1_6
+        [TestCase("bad<>path.png", IncludePlatform = "Windows")]
+#endif
+        public void InvalidFilePathsThrowsArgumentException(string filepath)
+        {
+            var context = new TestExecutionContext();
+            Assert.That(() => context.AddTestAttachment(filepath), Throws.InstanceOf<ArgumentException>());
+        }
+
+#if !PORTABLE
+        [Test]
+        public void NoneExistandFileThrowsFileNotFoundException()
+        {
+            var context = new TestExecutionContext();
+            Assert.That(() => context.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
+        }
+#endif
+
+#endregion
 
         #region SingleThreaded
 
