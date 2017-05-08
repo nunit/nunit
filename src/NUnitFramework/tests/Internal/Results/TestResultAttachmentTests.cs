@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SingleAttachmentXmlAsExpected()
         {
-            _result.TestAttachments = new List<TestAttachment> { new TestAttachment("file.txt", null) };
+            _result.AddTestAttachment(new TestAttachment("file.txt", null));
 
             var xml = _result.ToXml(false);
 
@@ -54,11 +54,8 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void MultipleAttachmentXmlAsExpected()
         {
-            _result.TestAttachments = new List<TestAttachment>
-            {
-                new TestAttachment("file1.txt", null),
-                new TestAttachment("file2.txt", null)
-            };
+            _result.AddTestAttachment(new TestAttachment("file1.txt", null));
+            _result.AddTestAttachment(new TestAttachment("file2.txt", null));
 
             var xml = _result.ToXml(false);
 
@@ -84,7 +81,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void DescriptionAttributeAsExpected()
         {
-            _result.TestAttachments = new List<TestAttachment> { new TestAttachment("file.txt", "description") };
+            _result.AddTestAttachment(new TestAttachment("file.txt", "description"));
 
             var xml = _result.ToXml(false);
 
@@ -96,7 +93,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void NoDescriptionWhenNull()
         {
-            _result.TestAttachments = new List<TestAttachment> { new TestAttachment("file.txt", null) };
+            _result.AddTestAttachment(new TestAttachment("file.txt", null));
             var xml = _result.ToXml(false);
 
             var attachmentNode = xml.SelectSingleNode("attachments").SelectSingleNode("attachment");

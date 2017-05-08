@@ -82,6 +82,12 @@ namespace NUnit.Framework.Internal
 
         private readonly List<AssertionResult> _assertionResults = new List<AssertionResult>();
 
+        /// <summary>
+        /// TestAttachments attached to result.
+        /// Only exposed for testing.
+        /// </summary>
+        internal ICollection<TestAttachment> TestAttachments { get; } = new List<TestAttachment>();
+
 #if PARALLEL
         /// <summary>
         /// ReaderWriterLock
@@ -183,9 +189,13 @@ namespace NUnit.Framework.Internal
         public DateTime EndTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of test attachments
+        /// Adds a test attachment to the test result
         /// </summary>
-        internal ICollection<TestAttachment> TestAttachments { private get; set; }
+        /// <param name="attachment">The TestAttachment object to attach</param>
+        internal void AddTestAttachment(TestAttachment attachment)
+        {
+            TestAttachments.Add(attachment);
+        }
 
         /// <summary>
         /// Gets the message associated with a test
@@ -403,7 +413,7 @@ namespace NUnit.Framework.Internal
             if (AssertionResults.Count > 0)
                 AddAssertionsElement(thisNode);
 
-            if (TestAttachments?.Count > 0)
+            if (TestAttachments.Count > 0)
                 AddAttatchmentsElement(thisNode);
 
             if (recursive && HasChildren)

@@ -97,11 +97,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult _currentResult;
 
-        /// <summary>
-        /// Files attached to the current test context
-        /// </summary>
-        private readonly IList<TestAttachment> _testAttachments = new List<TestAttachment>();
-
 #if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// The current Principal.
@@ -148,7 +143,6 @@ namespace NUnit.Framework.Internal
             _listener = other._listener;
             StopOnError = other.StopOnError;
             TestCaseTimeout = other.TestCaseTimeout;
-            _testAttachments = new List<TestAttachment>(other._testAttachments);
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
             _currentCulture = other.CurrentCulture;
@@ -433,8 +427,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ValueFormatter CurrentValueFormatter { get; private set; }
 
-        internal ReadOnlyCollection<TestAttachment> TestAttachments => new ReadOnlyCollection<TestAttachment>(_testAttachments);
-
         /// <summary>
         /// If true, all tests must run on the same thread. No new thread may be spawned.
         /// </summary>
@@ -521,7 +513,7 @@ namespace NUnit.Framework.Internal
                 throw new FileNotFoundException("Test attachment filepath could not be found.", filepath);
 #endif
 
-            _testAttachments.Add(new TestAttachment(filepath, description));
+            CurrentResult.AddTestAttachment(new TestAttachment(filepath, description));
         }
 
         private TestExecutionContext CreateIsolatedContext()

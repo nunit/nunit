@@ -923,28 +923,28 @@ namespace NUnit.Framework.Internal
         [Test]
         public void FilePathOnlyAddedToTestAttachments()
         {
-            var context = new TestExecutionContext();
+            var context = CreateFakeContext();
             context.AddTestAttachment(_tempFilePath);
 
-            Assert.That(context.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").Null);
+            Assert.That(context.CurrentResult.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").Null);
         }
 
         [Test]
         public void FilePathAndDescriptionAddedToTestAttachments()
         {
-            var context = new TestExecutionContext();
+            var context = CreateFakeContext();
             context.AddTestAttachment(_tempFilePath, "Description");
 
-            Assert.That(context.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").EqualTo("Description"));
+            Assert.That(context.CurrentResult.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").EqualTo("Description"));
         }
 
         [Test]
         public void RelativePathsMadeAbsolute()
         {
-            var context = new TestExecutionContext();
+            var context = CreateFakeContext();
             context.AddTestAttachment(TempFileName);
 
-            Assert.That(context.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName)));
+            Assert.That(context.CurrentResult.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName)));
         }
 
         [TestCase(null)]
@@ -953,7 +953,7 @@ namespace NUnit.Framework.Internal
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filepath)
         {
-            var context = new TestExecutionContext();
+            var context = CreateFakeContext();
             Assert.That(() => context.AddTestAttachment(filepath), Throws.InstanceOf<ArgumentException>());
         }
 
@@ -961,12 +961,21 @@ namespace NUnit.Framework.Internal
         [Test]
         public void NoneExistandFileThrowsFileNotFoundException()
         {
-            var context = new TestExecutionContext();
+            var context = CreateFakeContext();
             Assert.That(() => context.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
         }
 #endif
 
-#endregion
+        public TestExecutionContext CreateFakeContext()
+        {
+            var fakeResult = TestUtilities.Fakes.GetTestMethod(this, "FakeMethod").MakeTestResult();
+            var context = new TestExecutionContext { CurrentResult = fakeResult };
+            return context;
+        }
+
+        public void FakeMethod() { }
+
+        #endregion
 
         #region SingleThreaded
 
