@@ -246,14 +246,14 @@ namespace NUnit.Framework.Internal.Execution
             return false;
         }
 
-        private enum ExecutionStrategy
+        internal enum ExecutionStrategy
         {
             Direct,
             Parallel,
             NonParallel,
         }
         
-        private static ExecutionStrategy GetExecutionStrategy(WorkItem work)
+        internal static ExecutionStrategy GetExecutionStrategy(WorkItem work)
         {
             // If there is no fixture and so nothing to do but dispatch 
             // grandchildren we run directly. This saves time that would 
@@ -268,21 +268,21 @@ namespace NUnit.Framework.Internal.Execution
             if (work.Context.IsSingleThreaded)
                 return ExecutionStrategy.Direct;
 
-            if (work.ParallelScope.HasFlag(ParallelScope.Self) ||
-                work.Context.ParallelScope.HasFlag(ParallelScope.Children) ||
-                work.Test is TestFixture && work.Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
-            {
-                return ExecutionStrategy.Parallel;
-            }
-            else
+            // Check if item is explicitly marked as non-parallel
             if (work.ParallelScope.HasFlag(ParallelScope.None))
-            {
                 return ExecutionStrategy.NonParallel;
-            }
-            else
-            {
-                return ExecutionStrategy.Direct;
-            }
+
+            // Check if item is explicitly marked as parallel
+            if (work.ParallelScope.HasFlag(ParallelScope.Self))
+                return ExecutionStrategy.Parallel;
+
+            // Item is not explicitly marked, so check the inherited context
+            if (work.Context.ParallelScope.HasFlag(ParallelScope.Children) ||
+                work.Test is TestFixture && work.Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
+                    return ExecutionStrategy.Parallel;
+
+            // If all else fails, run on same thread
+            return ExecutionStrategy.Direct;
         }
 
 #endregion
