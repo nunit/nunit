@@ -410,10 +410,10 @@ namespace NUnit.Common
                         }
                     }
                 });
-
+#if !PORTABLE && !NETSTANDARD
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => DefaultTimeout = RequiredInt(v, "--timeout"));
-
+#endif
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => RandomSeed = RequiredInt(v, "--seed"));
 #if !PORTABLE
