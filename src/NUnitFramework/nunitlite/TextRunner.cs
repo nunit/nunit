@@ -440,7 +440,7 @@ namespace NUnitLite
                     : "NUnitLite";
 
 #if NETSTANDARD1_6
-            var id = DateTime.Now.ToString("o");
+            var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
             var id = Process.GetCurrentProcess().Id;
 #endif
