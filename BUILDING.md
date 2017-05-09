@@ -5,6 +5,7 @@ The source code is kept in two GitHub repositories at http://github.com/nunit/nu
 http://github.com/nunit/nunit-console.
 
 There are two ways to build NUnit: using the solution file in an IDE or through the build script.
+See also [Building and testing for Linux on a Windows machine](#building-and-testing-for-linux-on-a-windows-machine).
 
 ## Solution Build
 
@@ -67,3 +68,19 @@ For a full list of tasks, run `build.cmd -ShowDescription`.
     you have to be very careful that the build is up to date before packaging.
 
  2. For additional targets, refer to the build.cake script itself.
+
+### Building and testing for Linux on a Windows machine
+
+Most of the time, it's not necessary to build or run tests on platforms other than your primary
+platform. The continuous integration which runs on every PR is enough to catch any problems.
+
+Once in a while you may find it desirable to be primarily developing the repository on a Windows
+machine but to run Linux tests on the same set of files while you edit them in Windows.
+One convenient way to do this is to pass the same arguments to [build-mono-docker.ps1](.\build-mono-docker.ps1) that you would pass to build.ps1. It requires
+[Docker](https://docs.docker.com/docker-for-windows/install/) to be installed.
+
+For example, to build and test everything: `.\build-mono-docker.ps1 -t test`
+
+This will run a temporary container using the latest
+[Mono image](https://hub.docker.com/r/library/mono/), mounting the repo inside the container
+and executing the [build.sh](build.sh) Cake bootstrapper with the arguments you specify.
