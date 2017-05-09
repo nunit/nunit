@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.App": "1.0.1"
+    "Microsoft.NETCore.App": "1.1.1"
   },
   "runtimes": {
     "win7": {},
@@ -9,7 +9,7 @@
     "osx.10.10-x64": {}
   },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "imports": [
         "dnxcore50",
         "portable-net452"

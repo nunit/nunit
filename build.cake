@@ -231,6 +231,7 @@ Task("BuildNetStandard13")
         BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard13.csproj", configuration);
         BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard13.csproj", configuration);
         BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard13.csproj", configuration);
         BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard13.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard13.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard13.csproj", configuration);
@@ -250,6 +251,7 @@ Task("BuildNetStandard16")
         BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard16.csproj", configuration);
         BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard16.csproj", configuration);
         BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard16.csproj", configuration);
         BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard16.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard16.csproj", configuration);
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard16.csproj", configuration);

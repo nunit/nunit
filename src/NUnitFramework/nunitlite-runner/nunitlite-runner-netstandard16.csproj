@@ -10,13 +10,14 @@
     <RootNamespace>NUnitLite</RootNamespace>
     <AssemblyName>nunitlite-runner</AssemblyName>
     <TargetFrameworkIdentifier>.NETCoreApp</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v1.1</TargetFrameworkVersion>
     <BaseNuGetRuntimeIdentifier>win7</BaseNuGetRuntimeIdentifier>
     <NoStdLib>true</NoStdLib>
     <NoWarn>$(NoWarn);1701</NoWarn>
     <FileAlignment>512</FileAlignment>
     <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
     <LangVersion>6</LangVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
