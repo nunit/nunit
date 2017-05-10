@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void CreateQueue()
         {
-            _queue = new WorkItemQueue("TestQ");
+            _queue = new WorkItemQueue("TestQ", true, ApartmentState.MTA);
         }
 
         [Test]
@@ -63,11 +63,12 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void StopQueue_WithWorkers()
         {
+            var dispatcher = new ParallelWorkItemDispatcher(2);
             var workers = new TestWorker[]
             {
-                new TestWorker(_queue, "1", ApartmentState.MTA),
-                new TestWorker(_queue, "2", ApartmentState.MTA),
-                new TestWorker(_queue, "3", ApartmentState.MTA)
+                new TestWorker(dispatcher, _queue, "1"),
+                new TestWorker(dispatcher, _queue, "2"),
+                new TestWorker(dispatcher, _queue, "3")
             };
 
             foreach (var worker in workers)

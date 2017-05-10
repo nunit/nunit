@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
@@ -36,7 +37,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void CreateShift()
         {
-            _shift = new WorkShift("dummy");
+            _shift = new WorkShift(null, "dummy");
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void AddQueue()
         {
-            _shift.AddQueue(new WorkItemQueue("test"));
+            _shift.AddQueue(new WorkItemQueue("test", true, ApartmentState.MTA));
             Assert.False(_shift.IsActive, "Should not be active");
             Assert.That(_shift.Queues.Count, Is.EqualTo(1));
             Assert.That(_shift.Queues[0].State, Is.EqualTo(WorkItemQueueState.Paused));
@@ -65,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void AddQueueThenStart()
         {
-            _shift.AddQueue(new WorkItemQueue("test"));
+            _shift.AddQueue(new WorkItemQueue("test", true, ApartmentState.MTA));
             _shift.Start();
             Assert.True(_shift.IsActive, "Should be active");
             Assert.That(_shift.Queues.Count, Is.EqualTo(1));
@@ -76,7 +77,7 @@ namespace NUnit.Framework.Internal.Execution
         public void StartShiftThenAddQueue()
         {
             _shift.Start();
-            _shift.AddQueue(new WorkItemQueue("test"));
+            _shift.AddQueue(new WorkItemQueue("test", true, ApartmentState.MTA));
             Assert.True(_shift.IsActive, "Should be active");
             Assert.That(_shift.Queues.Count, Is.EqualTo(1));
             Assert.That(_shift.Queues[0].State, Is.EqualTo(WorkItemQueueState.Running));
@@ -85,9 +86,9 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void AddQueueThenStartThenAddQueue()
         {
-            _shift.AddQueue(new WorkItemQueue("test"));
+            _shift.AddQueue(new WorkItemQueue("test", true, ApartmentState.MTA));
             _shift.Start();
-            _shift.AddQueue(new WorkItemQueue("test2"));
+            _shift.AddQueue(new WorkItemQueue("test2", true, ApartmentState.STA));
             Assert.True(_shift.IsActive, "Should be active");
             Assert.That(_shift.Queues.Count, Is.EqualTo(2));
             Assert.That(_shift.Queues[0].State, Is.EqualTo(WorkItemQueueState.Running));
@@ -97,7 +98,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void HasWorkTest()
         {
-            var q = new WorkItemQueue("test");
+            var q = new WorkItemQueue("test", true, ApartmentState.MTA);
             _shift.AddQueue(q);
             Assert.False(_shift.HasWork, "Should not have work initially");
             q.Enqueue(Fakes.GetWorkItem(this, "Test1"));

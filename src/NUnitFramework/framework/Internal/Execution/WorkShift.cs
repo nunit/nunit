@@ -50,19 +50,16 @@ namespace NUnit.Framework.Internal.Execution
         private object _syncRoot = new object();
         private int _busyCount = 0;
 
-        // Shift name - used for logging
-        private string _name;
-
         /// <summary>
         /// Construct a WorkShift
         /// </summary>
-        public WorkShift(string name)
+        public WorkShift(ParallelWorkItemDispatcher dispatcher, string name)
         {
-            _name = name;
-
-            this.IsActive = false;
-            this.Queues = new List<WorkItemQueue>();
-            this.Workers = new List<TestWorker>();
+            Dispatcher = dispatcher;
+            Name = name;
+            IsActive = false;
+            Queues = new List<WorkItemQueue>();
+            Workers = new List<TestWorker>();
         }
 
         #region Public Events and Properties
@@ -71,6 +68,11 @@ namespace NUnit.Framework.Internal.Execution
         /// Event that fires when the shift has ended
         /// </summary>
         public event EventHandler EndOfShift;
+        
+        /// <summary>
+        /// The Name of this shift
+        /// </summary>
+        public string Name { get; }
 
         /// <summary>
         /// Gets a flag indicating whether the shift is currently active
@@ -81,12 +83,17 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets a list of the queues associated with this shift.
         /// </summary>
         /// <remarks>Used for testing</remarks>
-        public IList<WorkItemQueue> Queues { get; private set; }
+        public IList<WorkItemQueue> Queues { get; }
 
         /// <summary>
         /// Gets the list of workers associated with this shift.
         /// </summary>
-        public IList<TestWorker> Workers { get; private set; }
+        public IList<TestWorker> Workers { get; }
+
+        /// <summary>
+        /// The dispatcher that started the shift
+        /// </summary>
+        public ParallelWorkItemDispatcher Dispatcher { get; private set; }
 
         /// <summary>
         /// Gets a bool indicating whether this shift has any work to do
@@ -113,11 +120,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void AddQueue(WorkItemQueue queue)
         {
-            log.Debug("{0} shift adding queue {1}", _name, queue.Name);
+            log.Debug("{0} shift adding queue {1}", Name, queue.Name);
 
             Queues.Add(queue);
 
-            if (this.IsActive)
+            if (IsActive)
                 queue.Start();
         }
 
@@ -127,37 +134,54 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="worker"></param>
         public void Assign(TestWorker worker)
         {
-            log.Debug("{0} shift assigned worker {1}", _name, worker.Name);
+            log.Debug("{0} shift assigned worker {1}", Name, worker.Name);
 
             Workers.Add(worker);
-
-            worker.Busy += (s, ea) => Interlocked.Increment(ref _busyCount);
-            worker.Idle += (s, ea) =>
-            {
-                // Quick check first using Interlocked.Decrement
-                if (Interlocked.Decrement(ref _busyCount) == 0)
-                    lock (_syncRoot)
-                    {
-                        // Check busy count again under the lock
-                        if (_busyCount == 0 && !HasWork)
-                            this.EndShift();
-                    }
-            };
-
-            worker.Start();
         }
+
+        bool _firstStart = true;
 
         /// <summary>
         /// Start or restart processing for the shift
         /// </summary>
         public void Start()
         {
-            log.Info("{0} shift starting", _name);
+            log.Info("{0} shift starting", Name);
 
-            this.IsActive = true;
+            IsActive = true;
+
+            if (_firstStart)
+                StartWorkers();
 
             foreach (var q in Queues)
                 q.Start();
+
+            _firstStart = false;
+        }
+    
+        private void StartWorkers()
+        {
+            foreach (var worker in Workers)
+            {
+                worker.Busy += (s, ea) => Interlocked.Increment(ref _busyCount);
+                worker.Idle += (s, ea) =>
+                {
+                    // Quick check first using Interlocked.Decrement
+                    if (Interlocked.Decrement(ref _busyCount) == 0)
+                        lock (_syncRoot)
+                        {
+                            // Check busy count again under the lock. If there is no work and
+                            // no saved queues to restore, then the shift is over.
+                            if (_busyCount == 0 && !HasWork)
+                            {
+                                Dispatcher.RestoreQueueState();
+                                EndShift();
+                            }
+                        }
+                };
+
+                worker.Start();
+            }
         }
 
         /// <summary>
@@ -166,17 +190,16 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void EndShift()
         {
-            log.Info("{0} shift ending", _name);
+            log.Info("{0} shift ending", Name);
 
-            this.IsActive = false;
+            IsActive = false;
 
             // Pause all queues
             foreach (var q in Queues)
                 q.Pause();
 
             // Signal the dispatcher that shift ended
-            if (EndOfShift != null)
-                EndOfShift(this, EventArgs.Empty);
+            EndOfShift(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -184,7 +207,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void ShutDown()
         {
-            this.IsActive = false;
+            IsActive = false;
 
             foreach (var q in Queues)
                 q.Stop();
@@ -197,7 +220,7 @@ namespace NUnit.Framework.Internal.Execution
         public void Cancel(bool force)
         {
             if (force)
-                this.IsActive = false;
+                IsActive = false;
 
             foreach (var w in Workers)
                 w.Cancel(force);

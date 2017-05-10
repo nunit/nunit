@@ -41,6 +41,8 @@ namespace NUnit.Framework.Internal.Execution
 
         private bool _running;
 
+        private bool _nonParallel;
+
         #region Events
 
         /// <summary>
@@ -60,14 +62,18 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
+        /// <param name="dispatcher">The ParallelWorkItemDispatcher under whose control the worker runs</param>
         /// <param name="queue">The queue from which to pull work items</param>
         /// <param name="name">The name of this worker</param>
-        /// <param name="apartmentState">The apartment state to use for running tests</param>
-        public TestWorker(WorkItemQueue queue, string name, ApartmentState apartmentState)
+        public TestWorker(ParallelWorkItemDispatcher dispatcher, WorkItemQueue queue, string name)
         {
+            Guard.ArgumentNotNull(dispatcher, nameof(dispatcher));
+            Guard.ArgumentNotNull(queue, nameof(queue));
+
+            Dispatcher = dispatcher;
             WorkQueue = queue;
             Name = name;
-            Apartment = apartmentState;
+            _nonParallel = !WorkQueue.IsParallelQueue;
         }
 
         #endregion
@@ -80,14 +86,14 @@ namespace NUnit.Framework.Internal.Execution
         public WorkItemQueue WorkQueue { get; private set; }
 
         /// <summary>
+        /// The dispatcher under whose control this worker is running
+        /// </summary>
+        public ParallelWorkItemDispatcher Dispatcher { get; }
+
+        /// <summary>
         /// The name of this worker - also used for the thread
         /// </summary>
         public string Name { get; private set; }
-
-        /// <summary>
-        /// The Apartment in which this worker runs tests
-        /// </summary>
-        public ApartmentState Apartment { get; private set; }
 
         /// <summary>
         /// Indicates whether the worker thread is running
@@ -116,6 +122,9 @@ namespace NUnit.Framework.Internal.Execution
                     if (_currentWorkItem == null)
                         break;
 
+                    if (_nonParallel && _currentWorkItem is CompositeWorkItem)
+                        Dispatcher.SaveQueueState();
+                        
                     log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Name);
 
                     Busy(this, EventArgs.Empty);
@@ -144,7 +153,7 @@ namespace NUnit.Framework.Internal.Execution
 
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
-            _workerThread.SetApartmentState(Apartment);
+            _workerThread.SetApartmentState(WorkQueue.TargetApartment);
             _workerThread.Start();
         }
 

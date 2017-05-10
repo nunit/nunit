@@ -64,7 +64,9 @@ namespace NUnit.Framework.Internal.Execution
 
         private Logger log = InternalTrace.GetLogger("WorkItemQueue");
 
-        private readonly ConcurrentQueue<WorkItem> _innerQueue = new ConcurrentQueue<WorkItem>();
+        private ConcurrentQueue<WorkItem> _innerQueue = new ConcurrentQueue<WorkItem>();
+
+        private Stack<ConcurrentQueue<WorkItem>> _savedQueues = new Stack<ConcurrentQueue<WorkItem>>();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
@@ -85,9 +87,13 @@ namespace NUnit.Framework.Internal.Execution
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
         /// </summary>
         /// <param name="name">The name of the queue.</param>
-        public WorkItemQueue(string name)
+        /// <param name="isParallel">Flag indicating whether this is a parallel queue</param>
+        /// "<param name="apartment">ApartmentState to use for items on this queue</param>
+        public WorkItemQueue(string name, bool isParallel, ApartmentState apartment)
         {
             Name = name;
+            IsParallelQueue = isParallel;
+            TargetApartment = apartment;
             State = WorkItemQueueState.Paused;
             MaxCount = 0;
             ItemsProcessed = 0;
@@ -99,6 +105,16 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets the name of the work item queue.
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets a flag indicating whether this queue is used for parallel execution
+        /// </summary>
+        public bool IsParallelQueue { get; private set; }
+
+        /// <summary>
+        /// Gets the target ApartmentState for work items on this queue
+        /// </summary>
+        public ApartmentState TargetApartment { get; private set; }
 
         private int _itemsProcessed;
         /// <summary>
@@ -243,7 +259,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            log.Info("{0} starting", Name);
+            log.Info("{0}.{1} starting", Name, _savedQueues.Count);
 
             if (Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Running, (int)WorkItemQueueState.Paused) == (int)WorkItemQueueState.Paused)
                 _mreAdd.Set();
@@ -254,7 +270,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            log.Info("{0} stopping - {1} WorkItems processed, max size {2}", Name, ItemsProcessed, MaxCount);
+            log.Info("{0}.{1} stopping - {2} WorkItems processed, max size {3}", Name, _savedQueues.Count, ItemsProcessed, MaxCount);
 
             if (Interlocked.Exchange(ref _state, (int)WorkItemQueueState.Stopped) != (int)WorkItemQueueState.Stopped)
                 _mreAdd.Set();
@@ -265,9 +281,35 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Pause()
         {
-            log.Info("{0} pausing", Name);
+            log.Info("{0}.{1} pausing", Name, _savedQueues.Count);
 
             Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Paused, (int)WorkItemQueueState.Running);
+        }
+
+        /// <summary>
+        /// Save the current inner queue and create new ones for use by
+        /// a non-parallel fixture with parallel children.
+        /// </summary>
+        internal void Save()
+        {
+            Pause();
+
+            _savedQueues.Push(_innerQueue);
+            _innerQueue = new ConcurrentQueue<WorkItem>();
+
+            Start();
+        }
+
+        /// <summary>
+        /// Restore the inner queue that was previously saved
+        /// </summary>
+        internal void Restore()
+        {
+            Pause();
+
+            _innerQueue = _savedQueues.Pop();
+
+            Start();
         }
 
         #endregion
