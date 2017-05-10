@@ -89,6 +89,19 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
         }
 
+        [Test]
+        public void ThrowsExceptionOnApplyWithComparer()
+        {
+            RangeConstraint test = new RangeConstraint(5, 42);
+            Comparison<int> comparer = (x, y) => x.CompareTo(y);
+            Comparison<int> rComparer = (x, y) => y.CompareTo(x);
+            Assert.DoesNotThrow(()=> test.ApplyTo(7));
+            Assert.Throws<ArgumentException>(() => test.Using(rComparer).ApplyTo(7));
+            Assert.Throws<ArgumentException>(() => test.ApplyTo(7));
+            test.Using(comparer);
+            Assert.DoesNotThrow(() => test.ApplyTo(15));
+        }
+
         [TestCaseSource("NoIComparableTestCase")]
         public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object from, object to, System.Collections.IComparer comparer)
         {

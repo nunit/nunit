@@ -534,9 +534,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// inclusively within a specified range.
         /// </summary>
-        /// <remarks>from must be less than or equal to true</remarks> 
-        /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
-        /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
+        /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
+        /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
+        /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
         /// <returns></returns>
         public static RangeConstraint InRange(IComparable from, IComparable to)
         {
@@ -547,9 +547,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// inclusively within a specified range.
         /// </summary>
-        /// <remarks>from must be less than or equal to true</remarks> 
-        /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
-        /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
+        /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
+        /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
+        /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
         /// <param name="comparer">Class that implements <seealso cref="IComparer"/> used to compare the objects.</param>
         /// <returns></returns>
         public static RangeConstraint InRange(object from, object to, IComparer comparer)
