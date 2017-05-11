@@ -281,7 +281,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Pause()
         {
-            log.Info("{0}.{1} pausing", Name, _savedQueues.Count);
+            log.Debug("{0}.{1} pausing", Name, _savedQueues.Count);
 
             Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Paused, (int)WorkItemQueueState.Running);
         }

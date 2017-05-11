@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void CreateShift()
         {
-            _shift = new WorkShift(null, "dummy");
+            _shift = new WorkShift("dummy");
         }
 
         [Test]

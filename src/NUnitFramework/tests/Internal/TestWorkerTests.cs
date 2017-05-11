@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal.Execution
         public void SetUp()
         {
             _queue = new WorkItemQueue("TestQ", true, ApartmentState.MTA);
-            _worker = new TestWorker(new ParallelWorkItemDispatcher(2), _queue, "TestQ_Worker");
+            _worker = new TestWorker(_queue, "TestQ_Worker");
         }
 
         [TearDown]

@@ -46,14 +46,21 @@ namespace NUnit.Framework.Internal.Execution
         #region Events
 
         /// <summary>
+        /// Event handler for TestWorker events
+        /// </summary>
+        /// <param name="worker"></param>
+        /// <param name="work"></param>
+        public delegate void TestWorkerEventHandler(TestWorker worker, WorkItem work);
+
+        /// <summary>
         /// Event signaled immediately before executing a WorkItem
         /// </summary>
-        public event EventHandler Busy;
+        public event TestWorkerEventHandler Busy;
 
         /// <summary>
         /// Event signaled immediately after executing a WorkItem
         /// </summary>
-        public event EventHandler Idle;
+        public event TestWorkerEventHandler Idle;
 
         #endregion
 
@@ -62,15 +69,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
-        /// <param name="dispatcher">The ParallelWorkItemDispatcher under whose control the worker runs</param>
         /// <param name="queue">The queue from which to pull work items</param>
         /// <param name="name">The name of this worker</param>
-        public TestWorker(ParallelWorkItemDispatcher dispatcher, WorkItemQueue queue, string name)
+        public TestWorker(WorkItemQueue queue, string name)
         {
-            Guard.ArgumentNotNull(dispatcher, nameof(dispatcher));
             Guard.ArgumentNotNull(queue, nameof(queue));
 
-            Dispatcher = dispatcher;
             WorkQueue = queue;
             Name = name;
             _nonParallel = !WorkQueue.IsParallelQueue;
@@ -84,11 +88,6 @@ namespace NUnit.Framework.Internal.Execution
         /// The WorkItemQueue from which this worker pulls WorkItems
         /// </summary>
         public WorkItemQueue WorkQueue { get; private set; }
-
-        /// <summary>
-        /// The dispatcher under whose control this worker is running
-        /// </summary>
-        public ParallelWorkItemDispatcher Dispatcher { get; }
 
         /// <summary>
         /// The name of this worker - also used for the thread
@@ -122,18 +121,15 @@ namespace NUnit.Framework.Internal.Execution
                     if (_currentWorkItem == null)
                         break;
 
-                    if (_nonParallel && _currentWorkItem is CompositeWorkItem)
-                        Dispatcher.SaveQueueState();
-                        
                     log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Name);
-
-                    Busy(this, EventArgs.Empty);
 
                     _currentWorkItem.TestWorker = this;
 
+                    Busy(this, _currentWorkItem);
+
                     _currentWorkItem.Execute();
 
-                    Idle(this, EventArgs.Empty);
+                    Idle(this, _currentWorkItem);
 
                     ++_workItemCount;
                 }

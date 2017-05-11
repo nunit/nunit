@@ -46,9 +46,9 @@ namespace NUnit.Framework.Internal.Execution
         public ParallelWorkItemDispatcher(int levelOfParallelism)
         {
             // Create Shifts
-            ParallelShift = new WorkShift(this, "Parallel");
-            NonParallelShift = new WorkShift(this, "NonParallel");
-            NonParallelSTAShift = new WorkShift(this, "NonParallelSTA");
+            ParallelShift = new WorkShift("Parallel");
+            NonParallelShift = new WorkShift("NonParallel");
+            NonParallelSTAShift = new WorkShift("NonParallelSTA");
 
             foreach (var shift in Shifts)
                 shift.EndOfShift += OnEndOfShift;
@@ -64,12 +64,24 @@ namespace NUnit.Framework.Internal.Execution
             for (int i = 1; i <= levelOfParallelism; i++)
             {
                 string name = string.Format("Worker#" + i.ToString());
-                ParallelShift.Assign(new TestWorker(this, ParallelQueue, name));
+                ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
-            ParallelShift.Assign(new TestWorker(this, ParallelSTAQueue, "Worker#STA"));
-            NonParallelShift.Assign(new TestWorker(this, NonParallelQueue, "Worker#STA_NP"));
-            NonParallelSTAShift.Assign(new TestWorker(this, NonParallelSTAQueue, "Worker#NP_STA"));
+            ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "Worker#STA"));
+
+            var worker = new TestWorker(NonParallelQueue, "Worker#STA_NP");
+            worker.Busy += OnStartNonParallelWorkItem;
+            NonParallelShift.Assign(worker);
+
+            worker = new TestWorker(NonParallelSTAQueue, "Worker#NP_STA");
+            worker.Busy += OnStartNonParallelWorkItem;
+            NonParallelSTAShift.Assign(worker);
+        }
+
+        private void OnStartNonParallelWorkItem(TestWorker worker, WorkItem work)
+        {
+            if (work is CompositeWorkItem)
+                SaveQueueState(work);
         }
 
         #endregion
@@ -186,9 +198,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Save the state of the queues
         /// </summary>
-        public void SaveQueueState()
+        internal void SaveQueueState(WorkItem work)
         {
-            log.Info("Saving Queue State");
+            log.Info("Saving Queue State for {0}", work.Name);
             lock (_queueLock)
             {
                 foreach (WorkItemQueue queue in Queues)
@@ -201,24 +213,19 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Try to restore a saved queue state
         /// </summary><returns>True if the state was restored, otherwise false</returns>
-        public bool RestoreQueueState()
+        private void RestoreQueueState()
         {
-            if (_savedQueueLevel == 0)
-                return false;
+            Guard.OperationValid(_savedQueueLevel > 0, "Internal Error: Called RestoreQueueState with no saved queues!");
 
-            log.Info("Restoring Queue State");
+            // Keep lock until we can remove for both methods
             lock (_queueLock)
             {
-                // Check again to be sure
-                if (_savedQueueLevel == 0)
-                    return false;
+                log.Info("Restoring Queue State");
 
                 foreach (WorkItemQueue queue in Queues)
                     queue.Restore();
 
                 _savedQueueLevel--;
-
-                return true;
             }
         }
 
@@ -228,6 +235,9 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnEndOfShift(object sender, EventArgs ea)
         {
+            if (_savedQueueLevel > 0)
+                RestoreQueueState();
+
             if (!StartNextShift())
             {
                 foreach (var shift in Shifts)

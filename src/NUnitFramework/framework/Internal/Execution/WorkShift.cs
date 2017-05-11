@@ -53,9 +53,8 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Construct a WorkShift
         /// </summary>
-        public WorkShift(ParallelWorkItemDispatcher dispatcher, string name)
+        public WorkShift(string name)
         {
-            Dispatcher = dispatcher;
             Name = name;
             IsActive = false;
             Queues = new List<WorkItemQueue>();
@@ -89,11 +88,6 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets the list of workers associated with this shift.
         /// </summary>
         public IList<TestWorker> Workers { get; }
-
-        /// <summary>
-        /// The dispatcher that started the shift
-        /// </summary>
-        public ParallelWorkItemDispatcher Dispatcher { get; private set; }
 
         /// <summary>
         /// Gets a bool indicating whether this shift has any work to do
@@ -170,11 +164,10 @@ namespace NUnit.Framework.Internal.Execution
                     if (Interlocked.Decrement(ref _busyCount) == 0)
                         lock (_syncRoot)
                         {
-                            // Check busy count again under the lock. If there is no work and
-                            // no saved queues to restore, then the shift is over.
+                            // Check busy count again under the lock. If there is no work
+                            // try to restore any saved queues and end the shift.
                             if (_busyCount == 0 && !HasWork)
                             {
-                                Dispatcher.RestoreQueueState();
                                 EndShift();
                             }
                         }
@@ -194,7 +187,7 @@ namespace NUnit.Framework.Internal.Execution
 
             IsActive = false;
 
-            // Pause all queues
+            // Pause all queues for this shift
             foreach (var q in Queues)
                 q.Pause();
 
