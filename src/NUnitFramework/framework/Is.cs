@@ -534,7 +534,6 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// inclusively within a specified range.
         /// </summary>
-        /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
         /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
         /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
         /// <returns></returns>
@@ -547,7 +546,6 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// inclusively within a specified range.
         /// </summary>
-        /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
         /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
         /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
         /// <param name="comparer">Class that implements <seealso cref="IComparer"/> used to compare the objects.</param>

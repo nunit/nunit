@@ -93,13 +93,13 @@ namespace NUnit.Framework.Constraints
         public void ThrowsExceptionOnApplyWithComparer()
         {
             RangeConstraint test = new RangeConstraint(5, 42);
-            Comparison<int> comparer = (x, y) => x.CompareTo(y);
             Comparison<int> rComparer = (x, y) => y.CompareTo(x);
-            Assert.DoesNotThrow(()=> test.ApplyTo(7));
+            Comparison<int> comparer = (x, y) => x.CompareTo(y);
+            Assert.DoesNotThrow(() => test.ApplyTo(7));
+            Assert.Throws<ArgumentException>(() => test.Using(rComparer));
             Assert.Throws<ArgumentException>(() => test.Using(rComparer).ApplyTo(7));
-            Assert.Throws<ArgumentException>(() => test.ApplyTo(7));
-            test.Using(comparer);
-            Assert.DoesNotThrow(() => test.ApplyTo(15));
+            Assert.DoesNotThrow(() => test.Using(comparer));
+            Assert.DoesNotThrow(() => test.ApplyTo(7));
         }
 
         [TestCaseSource("NoIComparableTestCase")]
