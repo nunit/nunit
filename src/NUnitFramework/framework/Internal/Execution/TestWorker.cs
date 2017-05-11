@@ -41,15 +41,13 @@ namespace NUnit.Framework.Internal.Execution
 
         private bool _running;
 
-        private bool _nonParallel;
-
         #region Events
 
         /// <summary>
         /// Event handler for TestWorker events
         /// </summary>
-        /// <param name="worker"></param>
-        /// <param name="work"></param>
+        /// <param name="worker">The TestWorker sending the event</param>
+        /// <param name="work">The WorkItem that caused the event</param>
         public delegate void TestWorkerEventHandler(TestWorker worker, WorkItem work);
 
         /// <summary>
@@ -77,7 +75,6 @@ namespace NUnit.Framework.Internal.Execution
 
             WorkQueue = queue;
             Name = name;
-            _nonParallel = !WorkQueue.IsParallelQueue;
         }
 
         #endregion
