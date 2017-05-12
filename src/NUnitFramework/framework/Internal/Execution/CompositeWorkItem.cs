@@ -44,21 +44,11 @@ namespace NUnit.Framework.Internal.Execution
         private TestSuiteResult _suiteResult;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
-        private List<WorkItem> _children;
 
         /// <summary>
         /// List of Child WorkItems
         /// </summary>
-        public List<WorkItem> Children
-        {
-            get { return _children; }
-            private set { _children = value; }
-        }
-
-        /// <summary>
-        /// A count of how many tests in the work item have a value for the Order Property
-        /// </summary>
-        private int _countOrder;
+        public List<WorkItem> Children { get; } = new List<WorkItem>();
 
         private CountdownEvent _childTestCountdown;
 
@@ -73,7 +63,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             _suite = suite;
             _suiteResult = Result as TestSuiteResult;
-            _countOrder = 0;
         }
 
         /// <summary>
@@ -96,9 +85,7 @@ namespace NUnit.Framework.Internal.Execution
                             // default to inconclusive.
                             Result.SetResult(ResultState.Success);
 
-                            CreateChildWorkItems();
-
-                            if (_children.Count > 0)
+                            if (Children.Count > 0)
                             {
                                 InitializeSetUpAndTearDownCommands();
 
@@ -118,7 +105,7 @@ namespace NUnit.Framework.Internal.Execution
                                         case TestStatus.Skipped:
                                         case TestStatus.Inconclusive:
                                         case TestStatus.Failed:
-                                            SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                                            SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
                                             break;
                                     }
                                 }
@@ -276,19 +263,24 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.TestType == "Theory")
                 Result.SetResult(ResultState.Inconclusive);
 
-            int childCount = _children.Count;
+            int childCount = Children.Count;
             if (childCount == 0)
                 throw new InvalidOperationException("RunChildren called but item has no children");
 
             _childTestCountdown = new CountdownEvent(childCount);
 
-            foreach (WorkItem child in _children)
+            foreach (WorkItem child in Children)
             {
                 if (CheckForCancellation())
                     break;
 
                 child.Completed += new EventHandler(OnChildItemCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
+
+#if PARALLEL
+                // In case we run directly, on same thread
+                child.TestWorker = TestWorker;
+#endif
 
                 Context.Dispatcher.Dispatch(child);
                 childCount--;
@@ -305,94 +297,25 @@ namespace NUnit.Framework.Internal.Execution
                 }
         }
 
-        private void CreateChildWorkItems()
-        {
-            _children = new List<WorkItem>();
-
-            foreach (ITest test in _suite.Tests)
-            {
-                if (Filter.Pass(test))
-                {
-                    var child = WorkItem.CreateWorkItem(test, Filter);
-#if PARALLEL
-                    child.TestWorker = this.TestWorker;
-#endif
-
-#if !PORTABLE && !NETSTANDARD1_6
-                    if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)
-                        child.TargetApartment = TargetApartment;
-#endif
-
-                    if (test.Properties.ContainsKey(PropertyNames.Order))
-                    {
-                        _children.Insert(0, child);
-                        _countOrder++;
-                    }
-                    else
-                    {
-                        _children.Add(child);
-                    }
-                }
-            }
-
-            if (_countOrder != 0) SortChildren();
-        }
-
-        private class WorkItemOrderComparer : IComparer<WorkItem>
-        {
-            /// <summary>
-            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
-            /// </summary>
-            /// <returns>
-            /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>, as shown in the following table.Value Meaning Less than zero<paramref name="x"/> is less than <paramref name="y"/>.Zero<paramref name="x"/> equals <paramref name="y"/>.Greater than zero<paramref name="x"/> is greater than <paramref name="y"/>.
-            /// </returns>
-            /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param>
-            public int Compare(WorkItem x, WorkItem y)
-            {
-                var xKey = int.MaxValue;
-                var yKey = int.MaxValue;
-
-                if (x.Test.Properties.ContainsKey(PropertyNames.Order))
-                    xKey = (int)x.Test.Properties[PropertyNames.Order][0];
-
-                if (y.Test.Properties.ContainsKey(PropertyNames.Order))
-                    yKey = (int)y.Test.Properties[PropertyNames.Order][0];
-
-                return xKey.CompareTo(yKey);
-            }
-        }
-
-        /// <summary>
-        /// Sorts tests under this suite.
-        /// </summary>
-        private void SortChildren()
-        {
-            _children.Sort(0, _countOrder, new WorkItemOrderComparer());
-        }
-
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
-            SkipChildren(_suite, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
+            SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
         }
 
-        private void SkipChildren(TestSuite suite, ResultState resultState, string message)
+        private void SkipChildren(CompositeWorkItem workItem, ResultState resultState, string message)
         {
-            foreach (Test child in suite.Tests)
+            foreach (WorkItem child in workItem.Children)
             {
-                if (Filter.Pass(child))
-                {
-                    TestResult childResult = child.MakeTestResult();
-                    childResult.SetResult(resultState, message);
-                    _suiteResult.AddResult(childResult);
+                child.Result.SetResult(resultState, message);
+                _suiteResult.AddResult(child.Result);
 
-                    // Some runners may depend on getting the TestFinished event
-                    // even for tests that have been skipped at a higher level.
-                    Context.Listener.TestFinished(childResult);
+                // Some runners may depend on getting the TestFinished event
+                // even for tests that have been skipped at a higher level.
+                Context.Listener.TestFinished(child.Result);
 
-                    if (child.IsSuite)
-                        SkipChildren((TestSuite)child, resultState, message);
-                }
+                if (child is CompositeWorkItem)
+                    SkipChildren((CompositeWorkItem)child, resultState, message);
             }
         }
 
@@ -468,10 +391,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (cancelLock)
             {
-                if (_children == null)
-                    return;
-
-                foreach (var child in _children)
+                foreach (var child in Children)
                 {
                     var ctx = child.Context;
                     if (ctx != null)

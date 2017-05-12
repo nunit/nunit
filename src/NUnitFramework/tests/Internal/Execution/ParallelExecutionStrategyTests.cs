@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal.Execution
             _testMethod.Properties.Set(PropertyNames.ParallelScope, testScope);
             _context.ParallelScope = contextScope;
 
-            WorkItem work = WorkItem.CreateWorkItem(_testMethod, TestFilter.Empty);
+            WorkItem work = WorkItemBuilder.CreateWorkItem(_testMethod, TestFilter.Empty);
             work.InitializeContext(_context);
 
             // We use a string for expected because the ExecutionStrategy enum is internal and can't be an arg to a public method
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Internal.Execution
             _testFixture.Properties.Set(PropertyNames.ParallelScope, testScope);
             _context.ParallelScope = contextScope;
 
-            WorkItem work = WorkItem.CreateWorkItem(_testFixture, TestFilter.Empty);
+            WorkItem work = WorkItemBuilder.CreateWorkItem(_testFixture, TestFilter.Empty);
             work.InitializeContext(_context);
 
             // We use a string for expected because the ExecutionStrategy enum is internal and can't be an arg to a public method
