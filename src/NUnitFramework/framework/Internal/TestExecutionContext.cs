@@ -500,6 +500,8 @@ namespace NUnit.Framework.Internal
             if (context.CurrentTest != null)
                 context.CurrentResult = context.CurrentTest.MakeTestResult();
 
+            context.TestWorker = TestWorker;
+
             return context;
         }
 
