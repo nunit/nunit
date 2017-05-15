@@ -1,6 +1,6 @@
-# Building NUnit 3.0
+# Building NUnit 3
 
-NUnit 3.0 consists of three separate layers: the Framework, the Engine and the Console Runner.
+NUnit 3 consists of three separate layers: the Framework, the Engine and the Console Runner.
 The source code is kept in two GitHub repositories at http://github.com/nunit/nunit and
 http://github.com/nunit/nunit-console.
 
