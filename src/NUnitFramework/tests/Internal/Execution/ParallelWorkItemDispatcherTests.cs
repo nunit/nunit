@@ -41,9 +41,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void ConstructorCreatesQueues()
         {
-            var queues = new List<WorkItemQueue>(_dispatcher.Queues);
-
-            Assert.That(List.Map(queues).Property("Name"), 
+            Assert.That(_dispatcher.Queues.Select(q => q.Name),
                 Is.EquivalentTo(new[] { "ParallelQueue", "NonParallelQueue", "ParallelSTAQueue", "NonParallelSTAQueue" }));
         }
 
@@ -53,7 +51,7 @@ namespace NUnit.Framework.Internal.Execution
             var shifts = new List<WorkShift>(_dispatcher.Shifts);
 
             Assert.That(shifts, Is.Unique);
-            Assert.That(shifts.Count(), Is.EqualTo(3));
+            Assert.That(shifts.Count, Is.EqualTo(3));
 
             // Parallel Shift
             Assert.That(shifts[0].Name, Is.EqualTo("Parallel"));
