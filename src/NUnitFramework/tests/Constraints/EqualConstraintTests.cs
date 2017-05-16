@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Comparers;
 
@@ -520,6 +521,90 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region ObjectsThatAreAlsoIEnumerableEquality
+
+        public sealed class ObjectsThatAreAlsoIEnumerableEquality
+        {
+            [Test]
+            public void WhenEnumerableItemsMatchAndObjectSame_ShouldBeEqual()
+            {
+                SimpleGrouping<string, int> objA = new SimpleGrouping<string, int>("abc", 1, 2);
+                SimpleGrouping<string, int> objB = new SimpleGrouping<string, int>("abc", 1, 2);
+                Assert.AreEqual(objA, objB);
+            }
+
+            [Test]
+            public void WhenEnumerableItemsMatchButObjectDifferent_ShouldBeNotEqual()
+            {
+                SimpleGrouping<string, int> objA = new SimpleGrouping<string, int>("abc", 1, 2);
+                SimpleGrouping<string, int> objB = new SimpleGrouping<string, int>("xyz", 1, 2);
+                Assert.AreNotEqual(objA, objB, "Should not be equal because the keys don't match");
+            }
+
+            internal sealed class SimpleGrouping<TKey, TElement> : IGrouping<TKey,TElement>
+            {
+                private readonly TKey _key;
+                private readonly List<TElement> _elements;
+
+                public SimpleGrouping(TKey key, params TElement[] elements)
+                {
+                    _key = key;
+                    _elements = elements.ToList();
+                }
+
+                public TKey Key
+                {
+                    get { return _key; }
+                }
+
+                public IEnumerator<TElement> GetEnumerator()
+                {
+                    return _elements.GetEnumerator();
+                }
+
+                IEnumerator IEnumerable.GetEnumerator()
+                {
+                    return _elements.GetEnumerator();
+                }
+
+                public override bool Equals(object obj)
+                {
+                    SimpleGrouping<TKey, TElement> other = obj as SimpleGrouping<TKey, TElement>;
+                    if (other == null)
+                    {
+                        return false;
+                    }
+
+                    if (!this._key.Equals(other._key))
+                    {
+                        return false;
+                    }
+
+                    if (this._elements.Count != other._elements.Count)
+                    {
+                        return false;
+                    }
+
+                    for (int i = 0; i < this._elements.Count; i++)
+                    {
+                        if (!_elements[i].Equals(other._elements[i]))
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                public override int GetHashCode()
+                {
+                    return _key.GetHashCode();
+                }
+            }
+        }
+
+        #endregion
+
         #region UsingModifier
 
         public class UsingModifier
@@ -764,7 +849,7 @@ namespace NUnit.Framework.Constraints
         }
     }
     #endregion
-
+    
 #if !PORTABLE
     /// <summary>
     /// ConvertibleComparer is used in testing to ensure that objects

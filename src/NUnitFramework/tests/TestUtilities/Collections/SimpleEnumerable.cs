@@ -31,7 +31,7 @@ namespace NUnit.TestUtilities.Collections
     /// SimpleObjectCollection is used in testing to ensure that only
     /// methods of the ICollection interface are accessible.
     /// </summary>
-    class SimpleEnumerable : IEnumerable
+    class SimpleEnumerable : IEnumerable, IEquatable<SimpleEnumerable>
     {
         private readonly List<object> contents = new List<object>();
 
@@ -50,6 +50,11 @@ namespace NUnit.TestUtilities.Collections
         public IEnumerator GetEnumerator()
         {
             return contents.GetEnumerator();
+        }
+
+        bool IEquatable<SimpleEnumerable>.Equals(SimpleEnumerable other)
+        {
+            return Object.ReferenceEquals(this, other);
         }
 
         #endregion
