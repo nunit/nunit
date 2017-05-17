@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             IMethodInfo method = new MethodWrapper(typeof(DummyFixture), "DummyTest");
             ITest test = new TestMethod(method);
-            _workItem = WorkItem.CreateWorkItem(test, TestFilter.Empty);
+            _workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty);
 
             _context = new TestExecutionContext();
             _workItem.InitializeContext(_context);

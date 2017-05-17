@@ -1,11 +1,9 @@
-﻿using System;
-using NUnit.Framework.Internal;
+﻿using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.TestData;
-using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     public class TestOrderAttributeTests

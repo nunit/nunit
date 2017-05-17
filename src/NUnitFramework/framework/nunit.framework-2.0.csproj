@@ -144,12 +144,13 @@
     <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
     <Compile Include="Internal\Commands\TimeoutCommand.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
+    <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
     <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
     <Compile Include="Internal\Filters\TestNameFilter.cs" />
     <Compile Include="Internal\Filters\ClassNameFilter.cs" />
     <Compile Include="Internal\Filters\MethodNameFilter.cs" />
-	<Compile Include="Internal\Filters\NamespaceFilter.cs" />
+    <Compile Include="Internal\Filters\NamespaceFilter.cs" />
     <Compile Include="Internal\Logging\ILogger.cs" />
     <Compile Include="Internal\Logging\InternalTrace.cs" />
     <Compile Include="Internal\Logging\InternalTraceLevel.cs" />

@@ -166,7 +166,7 @@ namespace NUnit.TestUtilities
             context.TestObject = testObject;
             context.Dispatcher = new SuperSimpleDispatcher();
 
-            var work = WorkItem.CreateWorkItem(test, TestFilter.Empty);
+            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
             work.InitializeContext(context);
 
             return work;

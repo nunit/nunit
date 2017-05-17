@@ -195,6 +195,7 @@
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
+    <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
     <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
     <Compile Include="Internal\Filters\ClassNameFilterTests.cs" />
