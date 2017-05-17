@@ -273,8 +273,9 @@ namespace NUnitLite.Tests
                 Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
             }
         }
-
+#if !PORTABLE && !NETSTANDARD1_6
         [TestCase("DefaultTimeout", "timeout")]
+#endif
         [TestCase("RandomSeed", "seed")]
 #if PARALLEL
         [TestCase("NumberOfTestWorkers", "workers")]
@@ -316,12 +317,14 @@ namespace NUnitLite.Tests
         // }
 
         [TestCase("--where")]
-        [TestCase("--timeout")]
 #if !PORTABLE
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
+#if !NETSTANDARD1_6
+        [TestCase("--timeout")]
+#endif
 #endif
         public void MissingValuesAreReported(string option)
         {
@@ -396,7 +399,7 @@ namespace NUnitLite.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
-
+#if !PORTABLE && !NETSTANDARD1_6
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
@@ -418,10 +421,11 @@ namespace NUnitLite.Tests
             Assert.False(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
+#endif
 
-        #endregion
+#endregion
 
-        #region EngineResult Option
+#region EngineResult Option
 
         [Test]
         public void FileNameWithoutResultOptionLooksLikeParameter()
@@ -530,9 +534,9 @@ namespace NUnitLite.Tests
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Explore Option
+#region Explore Option
 
 #if !PORTABLE
         [Test]
@@ -625,9 +629,9 @@ namespace NUnitLite.Tests
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
         }
 
-        #endregion
+#endregion
 
-        #region Test Parameters
+#region Test Parameters
 
         [Test]
         public void SingleTestParameter()
@@ -683,9 +687,9 @@ namespace NUnitLite.Tests
                 Console.WriteLine("   Name: {0} Value: {1}", name, TestContext.Parameters[name]);
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         //private static FieldInfo GetFieldInfo(string fieldName)
         //{
@@ -701,7 +705,7 @@ namespace NUnitLite.Tests
             return property;
         }
 
-        #endregion
+#endregion
 
         internal sealed class DefaultOptionsProviderStub : IDefaultOptionsProvider
         {
