@@ -180,3 +180,4 @@ MockAssemblyResult.xml
 PortabilityAnalysis*.html
 project.lock.json
 *.project.lock.json
+.dotnet
