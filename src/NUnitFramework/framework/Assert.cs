@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -57,7 +57,7 @@ namespace NUnit.Framework
         /// <summary>
         /// We don't actually want any instances of this object, but some people
         /// like to inherit from it to add other static methods. Hence, the
-        /// protected constructor disallows any instances of this object. 
+        /// protected constructor disallows any instances of this object.
         /// </summary>
         protected Assert() { }
 
@@ -67,7 +67,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// DO NOT USE! Use Assert.AreEqual(...) instead.
-        /// The Equals method throws an InvalidOperationException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -80,7 +80,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// DO NOT USE!
-        /// The ReferenceEquals method throws an InvalidOperationException. This is done 
+        /// The ReferenceEquals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -96,7 +96,7 @@ namespace NUnit.Framework
         #region Pass
 
         /// <summary>
-        /// Throws a <see cref="SuccessException"/> with the message and arguments 
+        /// Throws a <see cref="SuccessException"/> with the message and arguments
         /// that are passed in. This allows a test to be cut short, with a result
         /// of success returned to NUnit.
         /// </summary>
@@ -116,7 +116,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws a <see cref="SuccessException"/> with the message and arguments 
+        /// Throws a <see cref="SuccessException"/> with the message and arguments
         /// that are passed in. This allows a test to be cut short, with a result
         /// of success returned to NUnit.
         /// </summary>
@@ -127,7 +127,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws a <see cref="SuccessException"/> with the message and arguments 
+        /// Throws a <see cref="SuccessException"/> with the message and arguments
         /// that are passed in. This allows a test to be cut short, with a result
         /// of success returned to NUnit.
         /// </summary>
@@ -141,8 +141,8 @@ namespace NUnit.Framework
         #region Fail
 
         /// <summary>
-        /// Throws an <see cref="AssertionException"/> with the message and arguments 
-        /// that are passed in. This is used by the other Assert functions. 
+        /// Throws an <see cref="AssertionException"/> with the message and arguments
+        /// that are passed in. This is used by the other Assert functions.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -156,8 +156,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an <see cref="AssertionException"/> with the message that is 
-        /// passed in. This is used by the other Assert functions. 
+        /// Throws an <see cref="AssertionException"/> with the message that is
+        /// passed in. This is used by the other Assert functions.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         static public void Fail(string message)
@@ -166,8 +166,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an <see cref="AssertionException"/>. 
-        /// This is used by the other Assert functions. 
+        /// Throws an <see cref="AssertionException"/>.
+        /// This is used by the other Assert functions.
         /// </summary>
         static public void Fail()
         {
@@ -206,7 +206,7 @@ namespace NUnit.Framework
         #region Ignore
 
         /// <summary>
-        /// Throws an <see cref="IgnoreException"/> with the message and arguments 
+        /// Throws an <see cref="IgnoreException"/> with the message and arguments
         /// that are passed in.  This causes the test to be reported as ignored.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
@@ -225,8 +225,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an <see cref="IgnoreException"/> with the message that is 
-        /// passed in. This causes the test to be reported as ignored. 
+        /// Throws an <see cref="IgnoreException"/> with the message that is
+        /// passed in. This causes the test to be reported as ignored.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         static public void Ignore(string message)
@@ -235,8 +235,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an <see cref="IgnoreException"/>. 
-        /// This causes the test to be reported as ignored. 
+        /// Throws an <see cref="IgnoreException"/>.
+        /// This causes the test to be reported as ignored.
         /// </summary>
         static public void Ignore()
         {
@@ -248,7 +248,7 @@ namespace NUnit.Framework
         #region InConclusive
 
         /// <summary>
-        /// Throws an <see cref="InconclusiveException"/> with the message and arguments 
+        /// Throws an <see cref="InconclusiveException"/> with the message and arguments
         /// that are passed in.  This causes the test to be reported as inconclusive.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
@@ -267,8 +267,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an <see cref="InconclusiveException"/> with the message that is 
-        /// passed in. This causes the test to be reported as inconclusive. 
+        /// Throws an <see cref="InconclusiveException"/> with the message that is
+        /// passed in. This causes the test to be reported as inconclusive.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         static public void Inconclusive(string message)
@@ -277,8 +277,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an <see cref="InconclusiveException"/>. 
-        /// This causes the test to be reported as Inconclusive. 
+        /// Throws an <see cref="InconclusiveException"/>.
+        /// This causes the test to be reported as Inconclusive.
         /// </summary>
         static public void Inconclusive()
         {
@@ -378,28 +378,8 @@ namespace NUnit.Framework
         // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments
         private static StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
 
-        private static string GetStackTrace()
-        {
-            string stackTrace = null;
-
-#if NETSTANDARD1_3 && !NETSTANDARD1_6
-            // TODO: This isn't actually working! Since we catch it right here,
-            // the stack trace only has one entry.
-            try
-            {
-                // Throw to get stack trace for recording the assertion
-                throw new Exception();
-            }
-            catch (Exception ex)
-            {
-                stackTrace = ex.StackTrace;
-            }
-#else
-            stackTrace = SystemEnvironmentFilter.Filter(Environment.StackTrace);
-#endif
-
-            return StackFilter.DefaultFilter.Filter(stackTrace);
-        }
+        private static string GetStackTrace() =>
+            StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(Environment.StackTrace));
 
         private static void IncrementAssertCount()
         {

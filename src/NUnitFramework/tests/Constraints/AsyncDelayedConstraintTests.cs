@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ( NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6 )
+#if (NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6)
 using System;
 using System.Threading.Tasks;
 
@@ -98,12 +98,10 @@ namespace NUnit.Framework.Constraints.Tests
 
 		private static async Task<int> One()
 		{
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            return await Task.FromResult(1);
-#elif NET_4_5
-            return await Task.Run(() => 1);
-#elif NET_4_0
-			return await TaskEx.Run(() => 1);
+#if NET_4_0
+            return await TaskEx.Run(() => 1);
+#else
+			return await Task.Run(() => 1);
 #endif
 		}
 
