@@ -26,9 +26,8 @@ namespace NUnit.Framework
     using System;
 
     /// <summary>
-    /// Attribute used to mark a class that contains one-time SetUp 
-    /// and/or TearDown methods that apply to all the tests in a
-    /// namespace or an assembly.
+    /// Attribute used to identify a method that is called 
+    /// immediately before each test is run.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class SetUpAttribute : NUnitAttribute
