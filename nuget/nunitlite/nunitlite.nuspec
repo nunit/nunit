@@ -30,6 +30,10 @@ How to use this package:
       <group>
         <dependency id="NUnit" version="[$version$]" />
       </group>
+      <group targetFramework="net20" />
+      <group targetFramework="net35" />
+      <group targetFramework="net40" />
+      <group targetFramework="net45" />
       <group targetFramework="netstandard1.3">
         <dependency id="NETStandard.Library" version="1.6.0" />
         <dependency id="System.Threading.Thread" version="4.3.0" />
