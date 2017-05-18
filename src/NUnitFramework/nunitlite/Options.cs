@@ -123,7 +123,7 @@
 //      p.Parse (new string[]{"-a-"});  // sets v == null
 //
 // The NUnit version of this file introduces conditional compilation for
-// building under a portable class library  (NETSTANDARD1_3).
+// building under .NET Standard
 //
 // 11/5/2015 -
 // Change namespace to avoid conflict with user code use of mono.options

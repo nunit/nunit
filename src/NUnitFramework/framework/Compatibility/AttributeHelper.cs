@@ -34,7 +34,7 @@ namespace NUnit.Compatibility
         /// <summary>
         /// Gets the custom attributes from the given object.
         /// </summary>
-        /// <remarks>Portable libraries do not have an ICustomAttributeProvider, so we need to cast to each of
+        /// <remarks>.NET Standard 1.3 libraries do not have an ICustomAttributeProvider, so we need to cast to each of
         /// it's direct subtypes and try to get attributes off those instead.</remarks>
         /// <param name="actual">The actual.</param>
         /// <param name="attributeType">Type of the attribute.</param>

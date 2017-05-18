@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
                 yield return GetTestCase(Method("AsyncTaskTestCaseWithParametersSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("AsyncTaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
                 yield return GetTestCase(Method("TaskResultCheckSuccessReturningNull"), ResultState.Success, 1, false);
-                
+
                 yield return GetTestCase(Method("NestedAsyncTaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("NestedAsyncTaskError"), ResultState.Error, 0, false);
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal
         {
             var data = new TestCaseData(method, resultState, assertionCount);
             if (PLATFORM_IGNORE && ignoreThis)
-                data = data.Ignore("Intermittent failure on Linux and under Portable build");
+                data = data.Ignore("Intermittent failure on Linux");
             return data;
         }
 

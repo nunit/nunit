@@ -403,9 +403,6 @@ namespace NUnit.Compatibility
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this member
         /// </summary>
-        /// <remarks> Portable throws an argument exception if T does not
-        /// derive from Attribute. NUnit uses interfaces to find attributes, thus
-        /// this method</remarks>
         public static IEnumerable<T> GetAttributes<T>(this MemberInfo info, bool inherit) where T : class
         {
             return GetAttributesImpl<T>(info.GetCustomAttributes(inherit));
@@ -439,7 +436,7 @@ namespace NUnit.Compatibility
     }
 
     /// <summary>
-    /// Extensions for Assembly that are not available in portable
+    /// Extensions for Assembly that are not available in .NET Standard
     /// </summary>
     public static class AssemblyExtensions
     {

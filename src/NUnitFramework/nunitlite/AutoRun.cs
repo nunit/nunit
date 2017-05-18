@@ -43,7 +43,7 @@ namespace NUnitLite
     /// executable that runs them like this:
     ///    new Autorun().Execute(testAssembly, args);
     ///
-    /// When running tests compiled against the portable
+    /// When running tests compiled against the .NET Standard
     /// framework, the methods above are not available.
     /// Run your tests like this:
     ///    new AutoRun().Execute(testAssembly, args, output, input);

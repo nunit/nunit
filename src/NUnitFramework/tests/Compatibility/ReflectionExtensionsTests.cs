@@ -29,7 +29,7 @@ using NUnit.Compatibility;
 namespace NUnit.Framework.Tests.Compatibility
 {
     /// <summary>
-    /// A series of unit tests to ensure that the type extensions in the portable
+    /// A series of unit tests to ensure that the type extensions in the .NET Standard
     /// framework behave the same as their counterparts in the full framework
     /// </summary>
     [TestFixture]

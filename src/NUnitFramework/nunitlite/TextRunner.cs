@@ -166,7 +166,7 @@ namespace NUnitLite
             }
         }
 
-        // Entry point called by AutoRun and by the portable nunitlite.runner
+        // Entry point called by AutoRun and by the .NET Standard nunitlite.runner
         public int Execute(ExtendedTextWriter writer, TextReader reader, string[] args)
         {
             _options = new NUnitLiteOptions(_testAssembly == null, args);

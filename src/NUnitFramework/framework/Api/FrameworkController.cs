@@ -193,7 +193,7 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-        #region Public Action methods Used by nunit.driver for running portable tests
+        #region Public Action methods Used by nunit.driver for running tests
 
         /// <summary>
         /// Loads the tests in the assembly
