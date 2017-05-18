@@ -15,8 +15,8 @@
 
 Supported platforms:
 - .NET 2.0+
-- .NET Standard 1.6
-- Portable Libraries (supporting Profile259)
+- .NET Standard 1.3 and 1.6
+- .NET Core
 
 How to use this package:
 
