@@ -43,6 +43,9 @@ namespace NUnit.Framework.Internal.Filters
     // Name filter
     //    <name>xxxxx</name>
     //
+    // Namespace filter
+    //    <namespace>xxxxx</namespace>
+    //
     // Category filter 
     //    <cat>cat1</cat>
     //    <cat>cat1,cat2,cat3</cat>
@@ -65,6 +68,9 @@ namespace NUnit.Framework.Internal.Filters
         protected readonly TestSuite _anotherFixture = TestBuilder.MakeFixture(typeof(AnotherFixture));
         protected readonly TestSuite _yetAnotherFixture = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
         protected readonly TestSuite _fixtureWithMultipleTests = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
+        protected readonly TestSuite _nestingFixture = TestBuilder.MakeFixture(typeof(NestingFixture));
+        protected readonly TestSuite _nestedFixture = TestBuilder.MakeFixture(typeof(NestingFixture.NestedFixture));
+        protected readonly TestSuite _emptyNestedFixture = TestBuilder.MakeFixture(typeof(NestingFixture.EmptyNestedFixture));
         protected readonly TestSuite _topLevelSuite = new TestSuite("MySuite");
 
         [OneTimeSetUp]
@@ -74,6 +80,10 @@ namespace NUnit.Framework.Internal.Filters
             _topLevelSuite.Add(_anotherFixture);
             _topLevelSuite.Add(_yetAnotherFixture);
             _topLevelSuite.Add(_fixtureWithMultipleTests);
+            _topLevelSuite.Add(_nestingFixture);
+
+            _nestingFixture.Add(_nestedFixture);
+            _nestingFixture.Add(_emptyNestedFixture);
         }
 
         #region Fixtures Used by Tests
@@ -94,8 +104,7 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         private class YetAnotherFixture
-        {
-        }
+        { }
 
         private class FixtureWithMultipleTests
         {
@@ -104,6 +113,17 @@ namespace NUnit.Framework.Internal.Filters
 
             [Test, Category ("Dummy")]
             public void Test2 () {}
+        }
+
+        private class NestingFixture
+        {
+            public class NestedFixture
+            {
+                [Test]
+                public void Test() { }
+            }
+
+            internal class EmptyNestedFixture { }
         }
         #endregion
     }

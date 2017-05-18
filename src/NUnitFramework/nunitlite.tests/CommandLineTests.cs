@@ -97,16 +97,16 @@ namespace NUnitLite.Tests
         [TestCase("testfile.dll @file1.txt --arg2", "file1.txt:--where test==somelongname", "testfile.dll", "--where", "test==somelongname", "--arg2")]
         // NOTE: The next is not valid. Where clause is spread over several args and therefore won't parse. Quotes are required.
         [TestCase("testfile.dll @file1.txt --arg2", "file1.txt:--where test == somelongname", "testfile.dll", "--where", "test", "==", "somelongname", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
-            "file1.txt:--where \"test == somelongname\"", 
+        [TestCase("testfile.dll @file1.txt --arg2",
+            "file1.txt:--where \"test == somelongname\"",
             "testfile.dll", "--where", "test == somelongname", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
-            "file1.txt:--where\n    \"test == somelongname\"", 
+        [TestCase("testfile.dll @file1.txt --arg2",
+            "file1.txt:--where\n    \"test == somelongname\"",
             "testfile.dll", "--where", "test == somelongname", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
+        [TestCase("testfile.dll @file1.txt --arg2",
             "file1.txt:--where\n    \"test == somelongname or test == /another long name/ or cat == SomeCategory\"",
             "testfile.dll", "--where", "test == somelongname or test == /another long name/ or cat == SomeCategory", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
+        [TestCase("testfile.dll @file1.txt --arg2",
             "file1.txt:--where\n    \"test == somelongname or\ntest == /another long name/ or\ncat == SomeCategory\"",
             "testfile.dll", "--where", "test == somelongname or test == /another long name/ or cat == SomeCategory", "--arg2")]
         [TestCase("testfile.dll @file1.txt --arg2",
@@ -273,8 +273,9 @@ namespace NUnitLite.Tests
                 Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
             }
         }
-
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [TestCase("DefaultTimeout", "timeout")]
+#endif
         [TestCase("RandomSeed", "seed")]
 #if PARALLEL
         [TestCase("NumberOfTestWorkers", "workers")]
@@ -316,12 +317,14 @@ namespace NUnitLite.Tests
         // }
 
         [TestCase("--where")]
-        [TestCase("--timeout")]
 #if !NETSTANDARD1_3
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
+#if !NETSTANDARD1_6
+        [TestCase("--timeout")]
+#endif
 #endif
         public void MissingValuesAreReported(string option)
         {
@@ -396,7 +399,7 @@ namespace NUnitLite.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
-
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
@@ -418,10 +421,11 @@ namespace NUnitLite.Tests
             Assert.False(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
+#endif
 
-        #endregion
+#endregion
 
-        #region EngineResult Option
+#region EngineResult Option
 
         [Test]
         public void FileNameWithoutResultOptionLooksLikeParameter()

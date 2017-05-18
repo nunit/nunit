@@ -150,11 +150,11 @@ namespace NUnitLite
             WriteHelpLine("          --OPTION:filename;transform=xsltfile");
             Writer.WriteLine();
             WriteHelpLine("      The --result option may use any of the following formats:");
-            WriteHelpLine("          nunit3 - the native XML format for NUnit 3.0");
+            WriteHelpLine("          nunit3 - the native XML format for NUnit 3");
             WriteHelpLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
             Writer.WriteLine();
             WriteHelpLine("      The --explore option may use any of the following formats:");
-            WriteHelpLine("          nunit3 - the native XML format for NUnit 3.0");
+            WriteHelpLine("          nunit3 - the native XML format for NUnit 3");
             WriteHelpLine("          cases  - a text file listing the full names of all test cases.");
             WriteHelpLine("      If --explore is used without any specification following, a list of");
             WriteHelpLine("      test cases is output to the console.");

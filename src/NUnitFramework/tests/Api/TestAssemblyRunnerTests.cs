@@ -55,6 +55,7 @@ namespace NUnit.Framework.Api
 #if NETSTANDARD1_3
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
 #endif
+        private const string INVALID_FILTER_ELEMENT_MESSAGE = "Invalid filter element: {0}";
 
         private static readonly IDictionary<string, object> EMPTY_SETTINGS = new Dictionary<string, object>();
 
@@ -287,6 +288,19 @@ namespace NUnit.Framework.Api
         }
 
 #if !NETSTANDARD1_3
+        [Test]
+        public void RunTestsAction_WithInvalidFilterElement_ThrowsArgumentException()
+        {
+            LoadMockAssembly();
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+                {
+                    TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>");
+                });
+
+            Assert.That(ex.Message, Does.StartWith(string.Format(INVALID_FILTER_ELEMENT_MESSAGE, "invalidElement")));
+        }
+
         [Test]
         public void Run_WithParameters()
         {
@@ -523,7 +537,7 @@ namespace NUnit.Framework.Api
         {
 #if NETSTANDARD1_3
             return _runner.Load(
-                typeof(MockAssembly).GetTypeInfo().Assembly, 
+                typeof(MockAssembly).GetTypeInfo().Assembly,
                 settings);
 #else
             return _runner.Load(

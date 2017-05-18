@@ -213,6 +213,8 @@
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
+    <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
+    <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
     <Compile Include="Internal\Filters\CategoryFilterTests.cs" />
@@ -221,6 +223,7 @@
     <Compile Include="Internal\Filters\FullNameFilterTests.cs" />
     <Compile Include="Internal\Filters\IdFilterTests.cs" />
     <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\NamespaceFilterTests.cs" />
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\Filters\PropertyFilterTests.cs" />

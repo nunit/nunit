@@ -44,14 +44,21 @@ namespace NUnit.Framework.Internal.Execution
         #region Events
 
         /// <summary>
+        /// Event handler for TestWorker events
+        /// </summary>
+        /// <param name="worker">The TestWorker sending the event</param>
+        /// <param name="work">The WorkItem that caused the event</param>
+        public delegate void TestWorkerEventHandler(TestWorker worker, WorkItem work);
+
+        /// <summary>
         /// Event signaled immediately before executing a WorkItem
         /// </summary>
-        public event EventHandler Busy;
+        public event TestWorkerEventHandler Busy;
 
         /// <summary>
         /// Event signaled immediately after executing a WorkItem
         /// </summary>
-        public event EventHandler Idle;
+        public event TestWorkerEventHandler Idle;
 
         #endregion
 
@@ -62,12 +69,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="queue">The queue from which to pull work items</param>
         /// <param name="name">The name of this worker</param>
-        /// <param name="apartmentState">The apartment state to use for running tests</param>
-        public TestWorker(WorkItemQueue queue, string name, ApartmentState apartmentState)
+        public TestWorker(WorkItemQueue queue, string name)
         {
+            Guard.ArgumentNotNull(queue, nameof(queue));
+
             WorkQueue = queue;
             Name = name;
-            Apartment = apartmentState;
         }
 
         #endregion
@@ -83,11 +90,6 @@ namespace NUnit.Framework.Internal.Execution
         /// The name of this worker - also used for the thread
         /// </summary>
         public string Name { get; private set; }
-
-        /// <summary>
-        /// The Apartment in which this worker runs tests
-        /// </summary>
-        public ApartmentState Apartment { get; private set; }
 
         /// <summary>
         /// Indicates whether the worker thread is running
@@ -118,13 +120,13 @@ namespace NUnit.Framework.Internal.Execution
 
                     log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Name);
 
-                    Busy(this, EventArgs.Empty);
-
                     _currentWorkItem.TestWorker = this;
+
+                    Busy(this, _currentWorkItem);
 
                     _currentWorkItem.Execute();
 
-                    Idle(this, EventArgs.Empty);
+                    Idle(this, _currentWorkItem);
 
                     ++_workItemCount;
                 }
@@ -144,7 +146,7 @@ namespace NUnit.Framework.Internal.Execution
 
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
-            _workerThread.SetApartmentState(Apartment);
+            _workerThread.SetApartmentState(WorkQueue.TargetApartment);
             _workerThread.Start();
         }
 

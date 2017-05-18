@@ -48,25 +48,6 @@ namespace NUnit.Framework.Internal.Execution
     {
         static Logger log = InternalTrace.GetLogger("WorkItem");
 
-        #region Static Factory Method
-
-        /// <summary>
-        /// Creates a work item.
-        /// </summary>
-        /// <param name="test">The test for which this WorkItem is being created.</param>
-        /// <param name="filter">The filter to be used in selecting any child Tests.</param>
-        /// <returns></returns>
-        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter)
-        {
-            TestSuite suite = test as TestSuite;
-            if (suite != null)
-                return new CompositeWorkItem(suite, filter);
-            else
-                return new SimpleWorkItem((TestMethod)test, filter);
-        }
-
-        #endregion
-
         #region Construction and Initialization
 
         /// <summary>
@@ -236,7 +217,7 @@ namespace NUnit.Framework.Internal.Execution
                     return;
                 }
 
-                log.Debug("Running on separate thread because {0} is specified.", 
+                log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
                 RunOnSeparateThread(targetApartment);
@@ -444,7 +425,6 @@ namespace NUnit.Framework.Internal.Execution
         }
         #endregion
     }
-
 
 #if NET_2_0 || NET_3_5
     static class ActionTargetsExtensions

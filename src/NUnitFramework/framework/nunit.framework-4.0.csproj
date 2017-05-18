@@ -342,6 +342,7 @@
     <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
+    <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Internal\Execution\WorkShift.cs" />
@@ -352,6 +353,7 @@
     <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\MethodNameFilter.cs" />
+    <Compile Include="Internal\Filters\NamespaceFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />

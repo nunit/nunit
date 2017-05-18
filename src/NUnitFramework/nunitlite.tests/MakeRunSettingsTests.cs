@@ -30,6 +30,7 @@ namespace NUnitLite.Tests
 {
     public class MakeRunSettingsTests
     {
+#if !NETSTANDARD1_6
         [Test]
         public void WhenTimeoutIsSpecified_RunSettingsIncludeIt()
         {
@@ -39,6 +40,7 @@ namespace NUnitLite.Tests
             Assert.That(settings.ContainsKey("DefaultTimeout"));
             Assert.AreEqual(50, settings["DefaultTimeout"]);
         }
+#endif
 
         [Test]
         public void WhenWorkDirectoryIsSpecified_RunSettingsIncludeIt()

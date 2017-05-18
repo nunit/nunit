@@ -146,15 +146,6 @@ Task("InitializeBuild")
                 Source = PACKAGE_SOURCE
             });
         }
-
-        if(isDotNetCoreInstalled)
-        {
-            Information("Restoring .NET Core packages");
-            StartProcess("dotnet", new ProcessSettings
-            {
-                Arguments = "restore"
-            });
-        }
     });
 
 //////////////////////////////////////////////////////////////////////

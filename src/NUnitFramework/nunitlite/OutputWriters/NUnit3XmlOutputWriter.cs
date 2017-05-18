@@ -37,7 +37,7 @@ namespace NUnitLite
 {
     /// <summary>
     /// NUnit3XmlOutputWriter is responsible for writing the results
-    /// of a test to a file in NUnit 3.0 format.
+    /// of a test to a file in NUnit 3 format.
     /// </summary>
     public class NUnit3XmlOutputWriter : OutputWriter
     {
