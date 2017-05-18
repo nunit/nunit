@@ -394,7 +394,7 @@ namespace NUnit.Common
 #endif
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => RandomSeed = RequiredInt(v, "--seed"));
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_3
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => NumberOfTestWorkers = RequiredInt(v, "--workers"));
 #endif

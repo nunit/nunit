@@ -10,7 +10,7 @@
     <RootNamespace>NUnitLite</RootNamespace>
     <AssemblyName>nunitlite-runner</AssemblyName>
     <TargetFrameworkIdentifier>.NETCoreApp</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v1.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BaseNuGetRuntimeIdentifier>win7</BaseNuGetRuntimeIdentifier>
     <NoStdLib>true</NoStdLib>
     <NoWarn>$(NoWarn);1701</NoWarn>
