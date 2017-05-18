@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3
 using System;
 using System.IO;
 using System.ComponentModel;
@@ -237,4 +236,3 @@ namespace NUnit.Framework
         #endregion
     }
 }
-#endif

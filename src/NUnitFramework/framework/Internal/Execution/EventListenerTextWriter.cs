@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3
 using System;
 using System.IO;
 using System.Text;
@@ -31,7 +30,7 @@ namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// EventListenerTextWriter sends text output to the currently active
-    /// ITestEventListener in the form of a TestOutput object. If no event 
+    /// ITestEventListener in the form of a TestOutput object. If no event
     /// listener is active in the context, or if there is no context,
     /// the output is forwarded to the supplied default writer.
     /// </summary>
@@ -56,7 +55,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         override public System.Text.Encoding Encoding
 		{
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             get { return Encoding.UTF8; }
 #else
             get { return Encoding.Default; }
@@ -443,4 +442,3 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
-#endif

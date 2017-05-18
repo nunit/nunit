@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -180,15 +180,13 @@ namespace NUnit.Framework.Constraints
 
         #region DateTimeOffsetEquality
 
-#if !NETSTANDARD1_3
-
         public class DateTimeOffsetShouldBeSame
         {
-      
+
             [Datapoints]
-            public static readonly DateTimeOffset[] sameDateTimeOffsets = 
+            public static readonly DateTimeOffset[] sameDateTimeOffsets =
                 {
-                    new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0)), 
+                    new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0)),
                     new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0)),
                     new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 1, 0)),
                     new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 55), new TimeSpan(3, 0, 0)),
@@ -223,7 +221,7 @@ namespace NUnit.Framework.Constraints
             public void NegativeEqualityTestWithTolerance(DateTimeOffset value1, DateTimeOffset value2)
             {
                 Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
-                
+
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes);
             }
 
@@ -231,7 +229,7 @@ namespace NUnit.Framework.Constraints
             public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
             {
                 Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
-                
+
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
             }
 
@@ -329,7 +327,6 @@ namespace NUnit.Framework.Constraints
                 Assert.That(a, Is.EqualTo(b).Within(TimeSpan.FromMinutes(2)));
             }
         }
-#endif
 
         #endregion
 
@@ -532,7 +529,6 @@ namespace NUnit.Framework.Constraints
                 Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
-#if !NETSTANDARD1_3
             [Test]
             public void CanCompareUncomparableTypes()
             {
@@ -540,7 +536,6 @@ namespace NUnit.Framework.Constraints
                 var comparer = new ConvertibleComparer();
                 Assert.That(2 + 2, Is.EqualTo("4").Using(comparer));
             }
-#endif
 
             [Test]
             public void UsesProvidedEqualityComparer()
@@ -739,7 +734,7 @@ namespace NUnit.Framework.Constraints
                 {
                     return false;
                 }
-                return _value.Equals(((baseTest)obj)._value);    
+                return _value.Equals(((baseTest)obj)._value);
             }
 
             public override string ToString()
@@ -765,7 +760,6 @@ namespace NUnit.Framework.Constraints
     }
     #endregion
 
-#if !NETSTANDARD1_3
     /// <summary>
     /// ConvertibleComparer is used in testing to ensure that objects
     /// of different types can be compared when appropriate.
@@ -782,6 +776,4 @@ namespace NUnit.Framework.Constraints
             return string.Compare(str1, str2, StringComparison.Ordinal);
         }
     }
-#endif
-
 }

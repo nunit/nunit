@@ -34,7 +34,7 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
@@ -55,9 +55,7 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class FrameworkController : LongLivedMarshalByRefObject
     {
-#if !NETSTANDARD1_3
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
-#endif
 
         // Pre-loaded test assembly, if passed in constructor
         private Assembly _testAssembly;
@@ -128,13 +126,11 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
-#if !NETSTANDARD1_3
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-#endif
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;
@@ -148,13 +144,12 @@ namespace NUnit.Framework.Api
 
                 if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)Settings[FrameworkPackageSettings.InternalTraceWriter], traceLevel);
-#if !NETSTANDARD1_3
                 else
                 {
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                     var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
                     var id = Process.GetCurrentProcess().Id;
@@ -162,7 +157,6 @@ namespace NUnit.Framework.Api
                     var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
-#endif
             }
         }
 
@@ -397,12 +391,12 @@ namespace NUnit.Framework.Api
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
-#if !NETSTANDARD1_3
             env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
             env.AddAttribute("os-version", RuntimeInformation.OSDescription);
+#if !NETSTANDARD1_3
             env.AddAttribute("machine-name", Environment.MachineName);
-            env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
 #endif
+            env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
             return env;
         }
 #else

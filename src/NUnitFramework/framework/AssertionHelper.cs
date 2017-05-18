@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -40,9 +40,9 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>. Works Identically to 
+        /// an <see cref="AssertionException"/>. Works Identically to
         /// <see cref="Assert.That(bool, string, object[])"/>.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -411,7 +411,7 @@ namespace NUnit.Framework
         #region Unique
 
         /// <summary>
-        /// Returns a constraint that tests whether a collection 
+        /// Returns a constraint that tests whether a collection
         /// contains all unique items.
         /// </summary>
         public UniqueItemsConstraint Unique
@@ -635,7 +635,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the actual value
-        /// is a collection containing the same elements as the 
+        /// is a collection containing the same elements as the
         /// collection supplied as an argument.
         /// </summary>
         public CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
@@ -710,9 +710,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a new ContainsConstraint. This constraint
         /// will, in turn, make use of the appropriate second-level
-        /// constraint, depending on the type of the actual argument. 
+        /// constraint, depending on the type of the actual argument.
         /// This overload is only used if the item sought is a string,
-        /// since any other type implies that we are looking for a 
+        /// since any other type implies that we are looking for a
         /// collection member.
         /// </summary>
         public ContainsConstraint Contains(string expected)
@@ -898,11 +898,10 @@ namespace NUnit.Framework
 
         #endregion
 
-#if !NETSTANDARD1_3
         #region SamePath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same as an expected path after canonicalization.
         /// </summary>
         public SamePathConstraint SamePath(string expected)
@@ -915,7 +914,7 @@ namespace NUnit.Framework
         #region SubPath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is a subpath of the expected path after canonicalization.
         /// </summary>
         public SubPathConstraint SubPathOf(string expected)
@@ -928,7 +927,7 @@ namespace NUnit.Framework
         #region SamePathOrUnder
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same path or under an expected path after canonicalization.
         /// </summary>
         public SamePathOrUnderConstraint SamePathOrUnder(string expected)
@@ -937,12 +936,11 @@ namespace NUnit.Framework
         }
 
         #endregion
-#endif
 
         #region InRange
 
         /// <summary>
-        /// Returns a constraint that tests whether the actual value falls 
+        /// Returns a constraint that tests whether the actual value falls
         /// within a specified range.
         /// </summary>
         public RangeConstraint InRange(IComparable from, IComparable to)

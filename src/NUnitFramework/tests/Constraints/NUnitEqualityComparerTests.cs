@@ -84,7 +84,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(comparer.AreEqual(x, y, ref tolerance));
         }
 
-#if !NETSTANDARD1_3
         [Test]
         public void SameDirectoriesAreEqual()
         {
@@ -105,7 +104,6 @@ namespace NUnit.Framework.Constraints
                 Assert.That(comparer.AreEqual(one, two, ref tolerance), Is.False);
             }
         }
-#endif
 
         [Test]
         public void CanCompareArrayContainingSelfToSelf()

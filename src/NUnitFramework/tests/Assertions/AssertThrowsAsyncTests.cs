@@ -103,35 +103,27 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { throw new ArgumentException("myMessage", "myParam"); });
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentException);
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
         }
 
         [Test]
@@ -142,35 +134,27 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }, TaskScheduler.Default); });
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }, TaskScheduler.Default); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !NETSTANDARD1_3
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
         }
 
 

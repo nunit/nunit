@@ -422,7 +422,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !NETSTANDARD1_3
         [Test]
         public void DirectoryInfoEqual()
         {
@@ -443,7 +442,6 @@ namespace NUnit.Framework.Assertions
                 Assert.Throws<AssertionException>(() => Assert.AreEqual(one.Directory, two.Directory));
             }
         }
-#endif
 
         private enum MyEnum
         {

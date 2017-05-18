@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3
 using System;
 using System.Collections;
 using System.Text;
@@ -85,4 +84,3 @@ namespace NUnit.TestData.UnhandledExceptionData
         #endregion
     }
 }
-#endif

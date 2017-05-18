@@ -181,16 +181,12 @@ namespace NUnitLite
         {
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
-#if !NETSTANDARD1_3
             InitializeInternalTrace();
-#endif
 
             try
             {
-#if !NETSTANDARD1_3
                 if (!Directory.Exists(_options.WorkDirectory))
                     Directory.CreateDirectory(_options.WorkDirectory);
-#endif
 
                 if (_options.TeamCity)
                     _teamCity = new TeamCityEventListener(_textUI.Writer);
@@ -279,7 +275,6 @@ namespace NUnitLite
 
             ReportResults(result);
 
-#if !NETSTANDARD1_3
             if (_options.ResultOutputSpecifications.Count > 0)
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
@@ -287,7 +282,6 @@ namespace NUnitLite
                 foreach (var spec in _options.ResultOutputSpecifications)
                     outputManager.WriteResultFile(result, spec, runSettings, filter);
             }
-#endif
             if (Summary.InvalidTestFixtures > 0)
                 return INVALID_TEST_FIXTURE;
 
@@ -316,7 +310,6 @@ namespace NUnitLite
 
         private int ExploreTests(ITestFilter filter)
         {
-#if !NETSTANDARD1_3
             ITest testNode = _runner.ExploreTests(filter);
 
             var specs = _options.ExploreOutputSpecifications;
@@ -330,7 +323,6 @@ namespace NUnitLite
                 foreach (var spec in _options.ExploreOutputSpecifications)
                     outputManager.WriteTestFile(testNode, spec);
             }
-#endif
 
             return OK;
         }
@@ -352,10 +344,9 @@ namespace NUnitLite
             if (options.RandomSeed >= 0)
                 runSettings[FrameworkPackageSettings.RandomSeed] = options.RandomSeed;
 
-#if !NETSTANDARD1_3
             if (options.WorkDirectory != null)
                 runSettings[FrameworkPackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
-#endif
+
             if (options.DefaultTimeout >= 0)
                 runSettings[FrameworkPackageSettings.DefaultTimeout] = options.DefaultTimeout;
 
@@ -404,7 +395,6 @@ namespace NUnitLite
             return filter;
         }
 
-#if !NETSTANDARD1_3
         private void InitializeInternalTrace()
         {
             var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel ?? "Off", true);
@@ -437,7 +427,7 @@ namespace NUnitLite
                     ? Path.GetFileNameWithoutExtension(_options.InputFile)
                     : "NUnitLite";
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
             var id = Process.GetCurrentProcess().Id;
@@ -445,7 +435,6 @@ namespace NUnitLite
 
             return string.Format(LOG_FILE_FORMAT, id, baseName, ext);
         }
-#endif
 
         #endregion
 

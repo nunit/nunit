@@ -30,7 +30,7 @@ using NUnit.Common;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
@@ -170,9 +170,8 @@ namespace NUnitLite
         /// </summary>
         public void DisplayRuntimeEnvironment()
         {
-#if !NETSTANDARD1_3
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             Writer.WriteLabelLine("   OS Version: ", RuntimeInformation.OSDescription);
             Writer.WriteLabelLine("  CLR Version: ", RuntimeInformation.FrameworkDescription);
 #else
@@ -180,7 +179,6 @@ namespace NUnitLite
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
 #endif
             Writer.WriteLine();
-#endif
         }
 
         #endregion
@@ -223,10 +221,7 @@ namespace NUnitLite
                     : Math.Max(Environment.ProcessorCount, 2));
 #endif
 
-#if !NETSTANDARD1_3
             Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Directory.GetCurrentDirectory());
-#endif
-
             Writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
 
             if (_options.TeamCity)

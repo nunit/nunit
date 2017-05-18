@@ -92,12 +92,8 @@ namespace NUnit.Framework.Internal.Execution
 
             public static void DummyTest()
             {
-#if !NETSTANDARD1_3
                 if (Delay > 0)
                     Thread.Sleep(Delay);
-#else
-                System.Threading.Tasks.Task.Delay(Delay);
-#endif
             }
         }
     }

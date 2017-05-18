@@ -290,7 +290,6 @@ namespace NUnit.Framework.Constraints
 
         #region After Modifier
 
-#if !NETSTANDARD1_3
         /// <summary>
         /// Returns a DelayedConstraint.WithRawDelayInterval with the specified delay time.
         /// </summary>
@@ -317,7 +316,6 @@ namespace NUnit.Framework.Constraints
                 delayInMilliseconds,
                 pollingInterval);
         }
-#endif
 
         #endregion
 

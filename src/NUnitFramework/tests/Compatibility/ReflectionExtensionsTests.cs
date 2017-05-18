@@ -269,7 +269,7 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(minfo != null, Is.EqualTo(shouldFind));
         }
 
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         [Test]
         public void CanGetAttributesUsingAnInterface()
         {
@@ -278,9 +278,7 @@ namespace NUnit.Framework.Tests.Compatibility
             var attr = method.GetAttributes<ITestAction>(false);
             Assert.That(attr, Is.Not.Null);
         }
-#endif
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
         [Test]
         public void CanHandleNoGetterPropertyMember()
         {

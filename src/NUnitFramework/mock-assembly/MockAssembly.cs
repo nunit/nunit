@@ -151,9 +151,7 @@ namespace NUnit.Tests
             [Test]
             public void FailingTest()
             {
-#if !NETSTANDARD1_3
                 Console.Error.WriteLine("Immediate Error Message");
-#endif
                 Assert.Fail("Intentional failure");
             }
 
@@ -181,10 +179,8 @@ namespace NUnit.Tests
             [Test]
             public void DisplayRunParameters()
             {
-#if !NETSTANDARD1_3
                 foreach (string name in TestContext.Parameters.Names)
                     Console.WriteLine("Parameter {0} = {1}", name, TestContext.Parameters[name]);
-#endif
             }
 
             [Test]

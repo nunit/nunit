@@ -8,9 +8,7 @@ namespace NUnit.Framework.Syntax
     [Obsolete("Test of Obsolete AssertionHelper class")]
     class AssertionHelperTests : AssertionHelper
     {
-#if !NETSTANDARD1_3
         private static readonly string DEFAULT_PATH_CASE = Path.DirectorySeparatorChar == '\\' ? "ignorecase" : "respectcase";
-#endif
 
         #region Not
 
@@ -184,7 +182,6 @@ namespace NUnit.Framework.Syntax
 
         #region Attribute
 
-#if !NETSTANDARD1_3
         [Test]
         public void AttributeExistsTest()
         {
@@ -224,7 +221,6 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<AttributeConstraint>());
             Expect(constraint.ToString(), EqualTo("<attribute NUnit.Framework.TestFixtureAttribute <property Description <not <null>>>>"));
         }
-#endif
 
         #endregion
 
@@ -612,7 +608,6 @@ namespace NUnit.Framework.Syntax
 
         #region SamePath
 
-#if !NETSTANDARD1_3
         [Test]
         public void SamePath()
         {
@@ -657,13 +652,11 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<NotConstraint>());
             Expect(constraint.ToString(), EqualTo(@"<not <samepath ""/path/to/match"" respectcase>>"));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region SamePathOrUnder
+        #region SamePathOrUnder
 
-#if !NETSTANDARD1_3
         [Test]
         public void SamePathOrUnder()
         {
@@ -708,7 +701,6 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<NotConstraint>());
             Expect(constraint.ToString(), EqualTo(@"<not <samepathorunder ""/path/to/match"" respectcase>>"));
         }
-#endif
 
         #endregion
 

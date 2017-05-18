@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<empty>";
         }
 
-        static object[] SuccessData = new object[] 
+        static object[] SuccessData = new object[]
         {
             string.Empty,
             new object[0],
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<emptystring>";
         }
 
-        static object[] SuccessData = new object[] 
+        static object[] SuccessData = new object[]
         {
             string.Empty
         };
@@ -95,7 +95,6 @@ namespace NUnit.Framework.Constraints
         };
     }
 
-#if !NETSTANDARD1_3
     [TestFixture]
     public class EmptyDirectoryConstraintTest
     {
@@ -114,7 +113,7 @@ namespace NUnit.Framework.Constraints
             using (var testDir = new TestDirectory())
             {
                 var stream = File.Create(Path.Combine(testDir.Directory.FullName, "DUMMY.FILE"));
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                 stream.Dispose();
 #else
                 stream.Close();
@@ -123,5 +122,4 @@ namespace NUnit.Framework.Constraints
             }
         }
     }
-#endif
 }

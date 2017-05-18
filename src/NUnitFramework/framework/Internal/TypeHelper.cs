@@ -23,9 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-#if NETSTANDARD1_3
-using System.Linq;
-#endif
 using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
@@ -253,11 +250,7 @@ namespace NUnit.Framework.Internal
             {
                 object arg = arglist[i];
 
-#if NETSTANDARD1_3
-                if (arg != null)
-#else
                 if (arg != null && arg is IConvertible)
-#endif
                 {
                     Type argType = arg.GetType();
                     Type targetType = parameters[i].ParameterType;
@@ -297,20 +290,6 @@ namespace NUnit.Framework.Internal
         public static bool CanDeduceTypeArgsFromArgs(Type type, object[] arglist, ref Type[] typeArgsOut)
         {
             Type[] typeParameters = type.GetGenericArguments();
-
-#if NETSTANDARD1_3
-            Type[] argTypes = arglist.Select(a => a == null ? typeof(object) : a.GetType()).ToArray();
-            if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.GetTypeInfo().IsGenericType))
-                return false;
-            try
-            {
-                type = type.MakeGenericType(argTypes);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-#endif
 
             foreach (ConstructorInfo ctor in type.GetConstructors())
             {

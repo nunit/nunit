@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -199,10 +199,8 @@ namespace NUnit.Framework.Constraints
         [TestCase(s52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
         public static void TestClipString(string input, int max, int start, string result)
         {
-#if !NETSTANDARD1_3
             System.Console.WriteLine("input=  \"{0}\"", input);
             System.Console.WriteLine("result= \"{0}\"", result);
-#endif
             Assert.That(MsgUtils.ClipString(input, max, start), Is.EqualTo(result));
         }
 

@@ -40,7 +40,6 @@ namespace NUnitLite.Tests
     {
         #region Argument PreProcessor Tests
 
-#if !NETSTANDARD1_3
         [TestCase("--arg", "--arg")]
         [TestCase("--ArG", "--ArG")]
         [TestCase("--arg1 --arg2", "--arg1", "--arg2")]
@@ -173,7 +172,6 @@ namespace NUnitLite.Tests
                 Assert.AreEqual(expectedErrors, options.ErrorMessages);
             }
         }
-#endif
         #endregion
 
         #region General Tests
@@ -190,9 +188,7 @@ namespace NUnitLite.Tests
         [TestCase("ShowVersion", "version|V")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
-#if !NETSTANDARD1_3
         [TestCase("NoHeader", "noheader|noh")]
-#endif
         [TestCase("TeamCity", "teamcity")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
@@ -223,12 +219,10 @@ namespace NUnitLite.Tests
 
         [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "Before", "After", "All" }, new string[] { "JUNK" })]
-#if !NETSTANDARD1_3
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
-#endif
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -256,9 +250,7 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
-#if !NETSTANDARD1_3
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
-#endif
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
         {
             PropertyInfo property = GetPropertyInfo(propertyName);
@@ -317,14 +309,12 @@ namespace NUnitLite.Tests
         // }
 
         [TestCase("--where")]
-#if !NETSTANDARD1_3
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [TestCase("--timeout")]
-#endif
 #endif
         public void MissingValuesAreReported(string option)
         {
@@ -437,7 +427,6 @@ namespace NUnitLite.Tests
             Assert.AreEqual("results.xml", options.InputFile);
         }
 
-#if !NETSTANDARD1_3
         [Test]
         public void ResultOptionWithFilePath()
         {
@@ -532,13 +521,11 @@ namespace NUnitLite.Tests
             var options = new NUnitLiteOptions("-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
-#endif
 
         #endregion
 
         #region Explore Option
 
-#if !NETSTANDARD1_3
         [Test]
         public void ExploreOptionWithoutPath()
         {
@@ -594,8 +581,6 @@ namespace NUnitLite.Tests
             Assert.True(options.Explore);
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
-
-#endif
 
         [TestCase(true, null, true)]
         [TestCase(false, null, false)]

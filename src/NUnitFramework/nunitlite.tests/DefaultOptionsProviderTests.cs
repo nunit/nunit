@@ -25,7 +25,6 @@ using System;
 using NUnit.Common;
 using NUnit.Framework;
 
-#if !NETSTANDARD1_3
 namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]
@@ -71,4 +70,3 @@ namespace NUnit.ConsoleRunner.Tests
         }
     }
 }
-#endif

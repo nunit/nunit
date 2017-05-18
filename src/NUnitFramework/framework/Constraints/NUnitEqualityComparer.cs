@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -157,7 +157,7 @@ namespace NUnit.Framework.Constraints
 
             if (x is IDictionary && y is IDictionary)
                 return DictionariesEqual((IDictionary)x, (IDictionary)y, ref tolerance);
-            
+
             // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
             if (x is DictionaryEntry && y is DictionaryEntry)
                 return DictionaryEntriesEqual((DictionaryEntry)x, (DictionaryEntry)y, ref tolerance);
@@ -184,10 +184,8 @@ namespace NUnit.Framework.Constraints
             if ( x is char && y is char )
                 return CharsEqual( (char)x, (char)y );
 
-#if !NETSTANDARD1_3
             if (x is DirectoryInfo && y is DirectoryInfo)
                 return DirectoriesEqual((DirectoryInfo)x, (DirectoryInfo)y);
-#endif
 
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.AreEqual(x, y, ref tolerance);
@@ -277,7 +275,7 @@ namespace NUnit.Framework.Constraints
         {
             return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
         }
-        
+
         #endregion
 
         #region Helper Methods
@@ -312,7 +310,7 @@ namespace NUnit.Framework.Constraints
         {
             if (x.Count != y.Count)
                 return false;
- 
+
             CollectionTally tally = new CollectionTally(this, x.Keys);
             if (!tally.TryRemove(y.Keys) || tally.Count > 0)
                 return false;
@@ -320,7 +318,7 @@ namespace NUnit.Framework.Constraints
             foreach (object key in x.Keys)
                 if (!AreEqual(x[key], y[key], ref tolerance))
                     return false;
- 
+
             return true;
         }
 
@@ -392,7 +390,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#if !NETSTANDARD1_3
         /// <summary>
         /// Method to compare two DirectoryInfo objects
         /// </summary>
@@ -412,7 +409,6 @@ namespace NUnit.Framework.Constraints
             // TODO: Find a cleaner way to do this
             return new SamePathConstraint(x.FullName).ApplyTo(y.FullName).IsSuccess;
         }
-#endif
 
         private bool StreamsEqual(Stream x, Stream y)
         {
@@ -472,7 +468,7 @@ namespace NUnit.Framework.Constraints
 
             return true;
         }
-        
+
         #endregion
 
         #region Nested FailurePoint Class

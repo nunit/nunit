@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -31,8 +31,8 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// EqualConstraint is able to compare an actual value with the
-    /// expected value provided in its constructor. Two objects are 
-    /// considered equal if both are null, or if both have the same 
+    /// expected value provided in its constructor. Two objects are
+    /// considered equal if both are null, or if both have the same
     /// value. NUnit has special semantics for some object types.
     /// </summary>
     public class EqualConstraint : Constraint
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
 
         #region Properties
 
-        // TODO: Remove public properties 
+        // TODO: Remove public properties
         // They are only used by EqualConstraintResult
         // EqualConstraint should inject them into the constructor.
 
@@ -128,7 +128,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Flag the constraint to suppress string clipping 
+        /// Flag the constraint to suppress string clipping
         /// and return self.
         /// </summary>
         public EqualConstraint NoClip
@@ -177,8 +177,8 @@ namespace NUnit.Framework.Constraints
         /// </remarks>
         public EqualConstraint WithSameOffset
         {
-            get 
-            { 
+            get
+            {
                 _comparer.WithSameOffset = true;
                 return this;
             }
@@ -376,8 +376,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get 
-            { 
+            get
+            {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected));
 
                 if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
@@ -406,7 +406,6 @@ namespace NUnit.Framework.Constraints
         // null array reference. Others could be added in the future.
         private void AdjustArgumentIfNeeded<T>(ref T arg)
         {
-#if !NETSTANDARD1_3
             if (arg != null)
             {
                 Type argType = arg.GetType();
@@ -420,7 +419,6 @@ namespace NUnit.Framework.Constraints
                     arg = (T)ctor.Invoke(new object[] { array });
                 }
             }
-#endif
         }
 
         #endregion

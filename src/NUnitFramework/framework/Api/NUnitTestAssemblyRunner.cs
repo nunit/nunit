@@ -47,11 +47,9 @@ namespace NUnit.Framework.Api
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
-#if !NETSTANDARD1_3
         // Saved Console.Out and Console.Error
         private TextWriter _savedOut;
         private TextWriter _savedErr;
-#endif
 
 #if PARALLEL
         // Event Pump
@@ -276,14 +274,12 @@ namespace NUnit.Framework.Api
         /// </summary>
         private void StartRun(ITestListener listener)
         {
-#if !NETSTANDARD1_3
             // Save Console.Out and Error for later restoration
             _savedOut = Console.Out;
             _savedErr = Console.Error;
 
             Console.SetOut(new TextCapture(Console.Out));
             Console.SetError(new EventListenerTextWriter("Error", Console.Error));
-#endif
 
 #if PARALLEL
             // Queue and pump events, unless settings have SynchronousEvents == false
@@ -353,10 +349,8 @@ namespace NUnit.Framework.Api
                 _pump.Dispose();
 #endif
 
-#if !NETSTANDARD1_3
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
-#endif
 
             _runComplete.Set();
         }

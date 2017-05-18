@@ -31,7 +31,7 @@ using System.IO;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
@@ -123,9 +123,9 @@ namespace NUnitLite
             var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).GetTypeInfo().Assembly);
             xmlWriter.WriteAttributeString("nunit-version", assemblyName.Version.ToString());
             xmlWriter.WriteAttributeString("cwd", Directory.GetCurrentDirectory());
-#if !NETSTANDARD1_3
             xmlWriter.WriteAttributeString("clr-version", RuntimeInformation.FrameworkDescription);
             xmlWriter.WriteAttributeString("os-version", RuntimeInformation.OSDescription);
+#if !NETSTANDARD1_3
             xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
 #endif
             xmlWriter.WriteEndElement();

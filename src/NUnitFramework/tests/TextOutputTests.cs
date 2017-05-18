@@ -40,7 +40,6 @@ namespace NUnit.Framework.Tests
             get { return TestExecutionContext.CurrentContext.CurrentResult.Output; }
         }
 
-#if !NETSTANDARD1_3
         [Test]
         public void ConsoleWrite_WritesToResult()
         {
@@ -129,7 +128,6 @@ namespace NUnit.Framework.Tests
             Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
             Assert.That(_testOutput.Stream, Is.EqualTo("Progress"));
         }
-#endif
 
         [Test]
         public void TestContextOut_WritesToResult()

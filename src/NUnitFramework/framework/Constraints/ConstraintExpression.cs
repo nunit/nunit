@@ -902,7 +902,6 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-#if !NETSTANDARD1_3
         #region SamePath
 
         /// <summary>
@@ -941,7 +940,6 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-#endif
 
         #region InRange
 
@@ -958,7 +956,6 @@ namespace NUnit.Framework.Constraints
 
         #region Exist
 
-#if !NETSTANDARD1_3
         /// <summary>
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
@@ -967,7 +964,6 @@ namespace NUnit.Framework.Constraints
         {
             get { return Append(new FileOrDirectoryExistsConstraint()); }
         }
-#endif
 
         #endregion
 

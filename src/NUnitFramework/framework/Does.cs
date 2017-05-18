@@ -46,7 +46,6 @@ namespace NUnit.Framework
 
         #region Exist
 
-#if !NETSTANDARD1_3
         /// <summary>
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
@@ -55,7 +54,6 @@ namespace NUnit.Framework
         {
             get { return new FileOrDirectoryExistsConstraint(); }
         }
-#endif
 
         #endregion
 

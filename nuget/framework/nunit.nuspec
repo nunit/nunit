@@ -29,11 +29,13 @@ Supported platforms:
     <copyright>Copyright (c) 2017 Charlie Poole</copyright>
     <dependencies>
       <group targetFramework="netstandard1.3">
-        <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="NETStandard.Library" version="1.6.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
       </group>
       <group targetFramework="netstandard1.6">
-        <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="NETStandard.Library" version="1.6.0" />
         <dependency id="System.Runtime.Loader" version="4.3.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
       </group>
     </dependencies>
   </metadata>

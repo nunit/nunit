@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Api
     // Functional tests of the FrameworkController and all subordinate classes
     public class FrameworkControllerTests
     {
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
 #else
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
@@ -49,12 +49,8 @@ namespace NUnit.Framework.Api
         private const string FIXTURE_CAT_FILTER = "<filter><cat>FixtureCategory</cat></filter>";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
-#if NETSTANDARD1_3
-        private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_NAME;
-#else
         private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_FILE;
         private static readonly string MOCK_ASSEMBLY_PATH = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE);
-#endif
 
         private IDictionary _settings = new Dictionary<string, object>();
         private FrameworkController _controller;

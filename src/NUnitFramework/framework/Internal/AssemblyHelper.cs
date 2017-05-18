@@ -78,7 +78,6 @@ namespace NUnit.Framework.Internal
 
         #region GetDirectoryName
 
-#if !NETSTANDARD1_3
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>
@@ -88,7 +87,6 @@ namespace NUnit.Framework.Internal
         {
             return Path.GetDirectoryName(GetAssemblyPath(assembly));
         }
-#endif
 
         #endregion
 
@@ -101,11 +99,7 @@ namespace NUnit.Framework.Internal
         /// <returns>An AssemblyName</returns>
         public static AssemblyName GetAssemblyName(Assembly assembly)
         {
-#if NETSTANDARD1_3
-            return new AssemblyName(assembly.FullName);
-#else
             return assembly.GetName();
-#endif
         }
 
         #endregion
@@ -128,7 +122,7 @@ namespace NUnit.Framework.Internal
         }
 #elif NETSTANDARD1_6
         /// <summary>
-        /// Loads an assembly given a string, which may be the 
+        /// Loads an assembly given a string, which may be the
         /// path to the assembly or the AssemblyName
         /// </summary>
         /// <param name="nameOrPath"></param>
@@ -149,7 +143,7 @@ namespace NUnit.Framework.Internal
         }
 #else
         /// <summary>
-        /// Loads an assembly given a string, which may be the 
+        /// Loads an assembly given a string, which may be the
         /// path to the assembly or the AssemblyName
         /// </summary>
         /// <param name="nameOrPath"></param>

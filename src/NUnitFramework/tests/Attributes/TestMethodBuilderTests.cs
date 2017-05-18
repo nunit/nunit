@@ -126,7 +126,6 @@ namespace NUnit.Framework.Attributes
 
         #region TheoryAttribute
 
-#if !NETSTANDARD1_3
         [Test]
         public void TheoryAttribute_NoArgs_NoCases()
         {
@@ -144,7 +143,6 @@ namespace NUnit.Framework.Attributes
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
-#endif
 
         #endregion
 

@@ -20,7 +20,6 @@
 // 
 // **********************************************************************************
 
-#if !NETSTANDARD1_3
 using System;
 using NUnit.Framework;
 
@@ -55,5 +54,4 @@ namespace NUnit.TestData
         }
     }
 }
-#endif
 

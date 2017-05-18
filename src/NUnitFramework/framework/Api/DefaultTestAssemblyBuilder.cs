@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -81,12 +81,7 @@ namespace NUnit.Framework.Api
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
 #endif
 
-#if NETSTANDARD1_3
-            string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).FullName;
-#else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-#endif
-
             return Build(assembly, assemblyPath, options);
         }
 
@@ -134,12 +129,7 @@ namespace NUnit.Framework.Api
                 if (options.ContainsKey(FrameworkPackageSettings.WorkDirectory))
                     TestContext.DefaultWorkDirectory = options[FrameworkPackageSettings.WorkDirectory] as string;
                 else
-                    TestContext.DefaultWorkDirectory =
-#if NETSTANDARD1_3
-                        @"\My Documents";
-#else
-                        Directory.GetCurrentDirectory();
-#endif
+                    TestContext.DefaultWorkDirectory = Directory.GetCurrentDirectory();
 
                 if (options.ContainsKey(FrameworkPackageSettings.TestParametersDictionary))
                 {
@@ -262,13 +252,11 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-#if !NETSTANDARD1_3
-        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
-        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-#endif
         private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList<Test> fixtures)
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyName);

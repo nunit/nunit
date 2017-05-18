@@ -179,11 +179,7 @@ namespace NUnit.TestUtilities
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
             {
-#if NETSTANDARD1_3
-                System.Threading.Tasks.Task.Delay(1);
-#else
                 Thread.Sleep(1);
-#endif
             }
 
             return work.Result;

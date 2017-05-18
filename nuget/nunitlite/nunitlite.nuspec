@@ -30,9 +30,15 @@ How to use this package:
       <group>
         <dependency id="NUnit" version="[$version$]" />
       </group>
+      <group targetFramework="netstandard1.3">
+        <dependency id="NETStandard.Library" version="1.6.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
+      </group>
       <group targetFramework="netstandard1.6">
         <dependency id="NETStandard.Library" version="1.6.0" />
-      </group>
+        <dependency id="System.Runtime.Loader" version="4.3.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
+      </group>git
     </dependencies>
   </metadata>
   <files>
@@ -43,14 +49,13 @@ How to use this package:
     <file src="bin/net-3.5/nunitlite.dll" target="lib/net35" />
     <file src="bin/net-4.0/nunitlite.dll" target="lib/net40" />
     <file src="bin/net-4.5/nunitlite.dll" target="lib/net45" />
+    <file src="bin/netstandard13/nunitlite.dll" target="lib/netstandard1.3" />
     <file src="bin/netstandard16/nunitlite.dll" target="lib/netstandard1.6" />
-    <file src="bin/portable/nunitlite.dll" target="lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac" />
     <file src="bin/net-2.0/nunitlite-runner.exe" target="tools/net20" />
     <file src="bin/net-3.5/nunitlite-runner.exe" target="tools/net35" />
     <file src="bin/net-4.0/nunitlite-runner.exe" target="tools/net40" />
     <file src="bin/net-4.5/nunitlite-runner.exe" target="tools/net45" />
     <file src="bin/netstandard16/nunitlite-runner.exe" target="tools/netcore" />
-    <file src="bin/portable/nunitlite-runner.exe" target="tools/portable" />
     <file src="..\..\nuget\nunitlite\Program.cs" target="content" />
     <file src="..\..\nuget\nunitlite\Program.vb" target="content" />
     <file src="..\..\nuget\nunitlite\install.ps1" target="tools" />

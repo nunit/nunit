@@ -61,11 +61,7 @@ namespace NUnit.Tests
 
         private static void Delay()
         {
-#if NETSTANDARD1_3
-            System.Threading.Tasks.Task.Delay(DELAY);
-#else
             System.Threading.Thread.Sleep(DELAY);
-#endif
         }
     }
 }

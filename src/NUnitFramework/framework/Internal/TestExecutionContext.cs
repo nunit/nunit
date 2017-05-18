@@ -166,7 +166,7 @@ namespace NUnit.Framework.Internal
 
         // NOTE: We use different implementations for various platforms.
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
         /// <summary>
         /// Gets and sets the current context.
@@ -182,20 +182,6 @@ namespace NUnit.Framework.Internal
                 _currentContext.Value = value;
             }
         }
-#elif NETSTANDARD1_3
-        // The portable build only supports a single thread of
-        // execution, so we can use a simple static field to
-        // hold the current TestExecutionContext.
-        private static TestExecutionContext _currentContext;
-
-        /// <summary>
-        /// Gets and sets the current context.
-        /// </summary>
-        public static TestExecutionContext CurrentContext
-        {
-            get { return _currentContext; }
-            private set { _currentContext = value; }
-        }
 #else
         // In all other builds, we use the CallContext
         private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
@@ -205,16 +191,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
-            // This getter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
-            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+            // This getter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
+            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
             // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             get
             {
                 return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
             }
-            // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class. 
-            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
+            // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
+            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
             // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             private set
@@ -310,7 +296,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// The current WorkItemDispatcher. Made public for 
+        /// The current WorkItemDispatcher. Made public for
         /// use by nunitlite.tests
         /// </summary>
         public IWorkItemDispatcher Dispatcher { get; set; }
@@ -319,7 +305,7 @@ namespace NUnit.Framework.Internal
         /// The ParallelScope to be used by tests running in this context.
         /// For builds with out the parallel feature, it has no effect.
         /// </summary>
-        public ParallelScope ParallelScope { get; set; } 
+        public ParallelScope ParallelScope { get; set; }
 
         /// <summary>
         /// Default tolerance value used for floating point equality
@@ -529,7 +515,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// An IsolatedContext is used when running code
-        /// that may effect the current result in ways that 
+        /// that may effect the current result in ways that
         /// should not impact the final result of the test.
         /// A new TestExecutionContext is created with an
         /// initially clear result, which is discarded on
