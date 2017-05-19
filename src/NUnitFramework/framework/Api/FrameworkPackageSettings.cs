@@ -39,7 +39,7 @@ namespace NUnit
 
         /// <summary>
         /// Flag (bool) indicating whether to pause execution of tests to allow
-        /// the user to attache a debugger.
+        /// the user to attach a debugger.
         /// </summary>
         public const string PauseBeforeRun = "PauseBeforeRun";
 
