@@ -416,7 +416,6 @@
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
