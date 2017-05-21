@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 #if PARALLEL
 using System.Collections.Concurrent;
 #endif
@@ -80,7 +81,8 @@ namespace NUnit.Framework.Internal
         private string _message;
         private string _stackTrace;
 
-        private List<AssertionResult> _assertionResults = new List<AssertionResult>();
+        private readonly List<AssertionResult> _assertionResults = new List<AssertionResult>();
+        private readonly List<TestAttachment> _testAttachments = new List<TestAttachment>();
 
 #if PARALLEL
         /// <summary>
@@ -181,6 +183,20 @@ namespace NUnit.Framework.Internal
         /// Gets or sets the time the test finished running.
         /// </summary>
         public DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// Adds a test attachment to the test result
+        /// </summary>
+        /// <param name="attachment">The TestAttachment object to attach</param>
+        internal void AddTestAttachment(TestAttachment attachment)
+        {
+            _testAttachments.Add(attachment);
+        }
+
+        /// <summary>
+        /// Gets the collection of files attached to the test
+        /// </summary>
+        public ICollection<TestAttachment> TestAttachments => new ReadOnlyCollection<TestAttachment>(_testAttachments);
 
         /// <summary>
         /// Gets the message associated with a test
@@ -397,6 +413,9 @@ namespace NUnit.Framework.Internal
 
             if (AssertionResults.Count > 0)
                 AddAssertionsElement(thisNode);
+
+            if (_testAttachments.Count > 0)
+                AddAttachmentsElement(thisNode);
 
             if (recursive && HasChildren)
                 foreach (TestResult child in Children)
@@ -698,6 +717,28 @@ namespace NUnit.Framework.Internal
                 case AssertionStatus.Error:
                     return ResultState.Error;
             }
+        }
+
+        /// <summary>
+        /// Adds an attachments element to a node and returns it.
+        /// </summary>
+        /// <param name="targetNode">The target node.</param>
+        /// <returns>The new attachments element.</returns>
+        private TNode AddAttachmentsElement(TNode targetNode)
+        {
+            TNode attachmentsNode = targetNode.AddElement("attachments");
+
+            foreach (var attachment in _testAttachments)
+            {
+                var attachmentNode = attachmentsNode.AddElement("attachment");
+
+                attachmentNode.AddElement("filePath", attachment.FilePath);
+
+                if (attachment.Description != null)
+                    attachmentNode.AddElementWithCDATA("description", attachment.Description);
+            }
+
+            return attachmentsNode;
         }
 
         /// <summary>

@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Globalization;
+using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using System.Security.Principal;
@@ -43,17 +44,17 @@ namespace NUnit.Framework.Internal
     [TestFixture][Property("Question", "Why?")]
     public class TestExecutionContextTests
     {
-        TestExecutionContext _fixtureContext;
-        TestExecutionContext _setupContext;
-        ResultState _fixtureResult;
+        private TestExecutionContext _fixtureContext;
+        private TestExecutionContext _setupContext;
+        private ResultState _fixtureResult;
 
 #if !PORTABLE && !NETSTANDARD1_6
-        string originalDirectory;
-        IPrincipal originalPrincipal;
+        private string originalDirectory;
+        private IPrincipal originalPrincipal;
 #endif
 
-        DateTime _fixtureCreateTime = DateTime.UtcNow;
-        long _fixtureCreateTicks = Stopwatch.GetTimestamp();
+        private DateTime _fixtureCreateTime = DateTime.UtcNow;
+        private long _fixtureCreateTicks = Stopwatch.GetTimestamp();
         
         [OneTimeSetUp]
         public void OneTimeSetUp()
