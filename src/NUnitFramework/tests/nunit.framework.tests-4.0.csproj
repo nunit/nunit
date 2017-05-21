@@ -143,7 +143,8 @@
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
     <Compile Include="Internal\Results\AssertionResultTests.cs" />
-    <Compile Include="Internal\Results\TestResultAttachmentTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentXmlTests.cs" />
     <Compile Include="Internal\Results\TestResultFailureTests.cs" />
     <Compile Include="Internal\Results\TestResultGeneralTests.cs" />
     <Compile Include="Internal\Results\TestResultIgnoredTests.cs" />

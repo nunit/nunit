@@ -130,6 +130,7 @@
     <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
+    <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
@@ -159,7 +160,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\ParameterWrapper.cs" />
-    <Compile Include="Internal\TestAttachment.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestNameGenerator.cs" />
     <Compile Include="Internal\TypeWrapper.cs" />

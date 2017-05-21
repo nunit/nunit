@@ -195,5 +195,13 @@ namespace NUnit.Framework.Interfaces
         {
             get;
         }
+
+        /// <summary>
+        /// Gets the collection of files attached to the test
+        /// </summary>
+        ICollection<TestAttachment> TestAttachments
+        {
+            get;
+        }
     }
 }

@@ -53,8 +53,6 @@ namespace NUnit.Framework.Internal
         private IPrincipal originalPrincipal;
 #endif
 
-        private const string TempFileName = "NUnitTests.tmp";
-        private string _tempFilePath;
         private DateTime _fixtureCreateTime = DateTime.UtcNow;
         private long _fixtureCreateTicks = Stopwatch.GetTimestamp();
         
@@ -63,19 +61,11 @@ namespace NUnit.Framework.Internal
         {
             _fixtureContext = TestExecutionContext.CurrentContext;
             _fixtureResult = _fixtureContext.CurrentResult.ResultState;
-            _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "NUnitTests.tmp");
-#if !PORTABLE
-            File.Create(_tempFilePath).Dispose();
-#endif
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-#if !PORTABLE
-            File.Delete(_tempFilePath);
-#endif
-
             // TODO: We put some tests in one time teardown to verify that
             // the context is still valid. It would be better if these tests
             // were placed in a second-level test, invoked from this test class.
@@ -915,65 +905,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentValueFormatter, Is.EqualTo(originalFormatter));
             Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
         }
-
-        #endregion
-
-        #region AddTestAttachment
-
-        [Test]
-        public void FilePathOnlyAddedToTestAttachments()
-        {
-            var context = CreateFakeContext();
-            context.AddTestAttachment(_tempFilePath);
-
-            Assert.That(context.CurrentResult.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").Null);
-        }
-
-        [Test]
-        public void FilePathAndDescriptionAddedToTestAttachments()
-        {
-            var context = CreateFakeContext();
-            context.AddTestAttachment(_tempFilePath, "Description");
-
-            Assert.That(context.CurrentResult.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(_tempFilePath).And.Property("Description").EqualTo("Description"));
-        }
-
-        [Test]
-        public void RelativePathsMadeAbsolute()
-        {
-            var context = CreateFakeContext();
-            context.AddTestAttachment(TempFileName);
-
-            Assert.That(context.CurrentResult.TestAttachments, Has.Exactly(1).Property("Filepath").EqualTo(Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName)));
-        }
-
-        [TestCase(null)]
-#if !PORTABLE && !NETSTANDARD1_6
-        [TestCase("bad<>path.png", IncludePlatform = "Windows")]
-#endif
-        public void InvalidFilePathsThrowsArgumentException(string filepath)
-        {
-            var context = CreateFakeContext();
-            Assert.That(() => context.AddTestAttachment(filepath), Throws.InstanceOf<ArgumentException>());
-        }
-
-#if !PORTABLE
-        [Test]
-        public void NoneExistandFileThrowsFileNotFoundException()
-        {
-            var context = CreateFakeContext();
-            Assert.That(() => context.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
-        }
-#endif
-
-        public TestExecutionContext CreateFakeContext()
-        {
-            var fakeResult = TestUtilities.Fakes.GetTestMethod(this, "FakeMethod").MakeTestResult();
-            var context = new TestExecutionContext { CurrentResult = fakeResult };
-            return context;
-        }
-
-        public void FakeMethod() { }
 
         #endregion
 

@@ -21,34 +21,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using NUnit.Framework.Internal;
+using System.Linq;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Results
 {
-    public class TestResultAttachmentTests
+    public class TestAttachmentXmlTests
     {
+        private const string AttachmentsXName = "attachments";
+        private const string AttachmentXName = "attachment";
+        private const string FilepathXName = "filePath";
+        private const string DescriptionXName = "description";
+
         private TestResult _result;
 
         [SetUp]
         public void SetUp()
         {
-            _result = TestUtilities.Fakes.GetTestMethod(this, "FakeMethod").MakeTestResult();
+            _result = TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
         }
 
         [Test]
         public void SingleAttachmentXmlAsExpected()
         {
             _result.AddTestAttachment(new TestAttachment("file.txt", null));
-
             var xml = _result.ToXml(false);
 
-            var attachmentsNode = xml.SelectSingleNode("attachments");
-            Assert.That(attachmentsNode, Is.Not.Null, "Attachments node not found");
+            var attachmentsNode = xml.SelectSingleNode(AttachmentsXName);
+            Assert.That(attachmentsNode, Is.Not.Null, $"{AttachmentsXName} node not found");
 
-            var attachmentNode = attachmentsNode.SelectSingleNode("attachment");
-            Assert.That(attachmentNode, Is.Not.Null, "Attachments node not found");
-            Assert.That(attachmentNode, Has.Property("Value").EqualTo("file.txt"));
+            var attachmentNode = attachmentsNode.SelectSingleNode(AttachmentXName);
+            Assert.That(attachmentNode, Is.Not.Null, $"{AttachmentXName} node not found");
+
+            var filePathNode = attachmentNode.SelectSingleNode(FilepathXName);
+            Assert.That(filePathNode, Has.Property(nameof(TNode.Value)).EqualTo("file.txt"));
         }
 
         [Test]
@@ -56,17 +62,14 @@ namespace NUnit.Framework.Internal.Results
         {
             _result.AddTestAttachment(new TestAttachment("file1.txt", null));
             _result.AddTestAttachment(new TestAttachment("file2.txt", null));
-
             var xml = _result.ToXml(false);
 
-            var attachmentsNode = xml.SelectSingleNode("attachments");
-            Assert.That(attachmentsNode, Is.Not.Null, "Attachments node not found");
-
-            var attachmentNodeList = attachmentsNode.SelectNodes("attachment");
+            var attachmentNodeList = xml.SelectSingleNode(AttachmentsXName).SelectNodes(AttachmentXName);
             Assert.That(attachmentNodeList, Has.Count.EqualTo(2));
 
-            Assert.That(attachmentNodeList, Has.Exactly(1).Property("Value").EqualTo("file1.txt"));
-            Assert.That(attachmentNodeList, Has.Exactly(1).Property("Value").EqualTo("file2.txt"));
+            var filePathsNodes = attachmentNodeList.Select(n => n.SelectSingleNode(FilepathXName)).ToList();
+            Assert.That(filePathsNodes, Has.Exactly(1).Property(nameof(TNode.Value)).EqualTo("file1.txt"));
+            Assert.That(filePathsNodes, Has.Exactly(1).Property(nameof(TNode.Value)).EqualTo("file2.txt"));
         }
 
         [Test]
@@ -74,20 +77,19 @@ namespace NUnit.Framework.Internal.Results
         {
             var xml = _result.ToXml(false);
 
-            var attachmentsNode = xml.SelectSingleNode("attachments");
-            Assert.That(attachmentsNode, Is.Null, "Unexpected attachments node found");
+            var attachmentsNode = xml.SelectSingleNode(AttachmentsXName);
+            Assert.That(attachmentsNode, Is.Null, $"Unexpected {AttachmentsXName} node found");
         }
 
         [Test]
-        public void DescriptionAttributeAsExpected()
+        public void DescriptionNodeAsExpected()
         {
             _result.AddTestAttachment(new TestAttachment("file.txt", "description"));
-
             var xml = _result.ToXml(false);
 
-            var attachmentNode = xml.SelectSingleNode("attachments").SelectSingleNode("attachment");
-
-            Assert.That(attachmentNode.Attributes["description"], Is.EqualTo("description"));
+            var descriptionNode = xml.SelectSingleNode(AttachmentsXName).SelectSingleNode(AttachmentXName).SelectSingleNode(DescriptionXName);
+            Assert.That(descriptionNode, Has.Property(nameof(TNode.ValueIsCDATA)).True);
+            Assert.That(descriptionNode, Has.Property(nameof(TNode.Value)).EqualTo("description"));
         }
 
         [Test]
@@ -96,9 +98,8 @@ namespace NUnit.Framework.Internal.Results
             _result.AddTestAttachment(new TestAttachment("file.txt", null));
             var xml = _result.ToXml(false);
 
-            var attachmentNode = xml.SelectSingleNode("attachments").SelectSingleNode("attachment");
-
-            Assert.That(attachmentNode.Attributes, Does.Not.ContainKey("description"));
+            var attachmentNode = xml.SelectSingleNode(AttachmentsXName).SelectSingleNode(AttachmentXName);
+            Assert.That(attachmentNode.ChildNodes, Has.Exactly(0).Property(nameof(TNode.Name)).EqualTo(DescriptionXName));
         }
 
         private void FakeMethod() { }

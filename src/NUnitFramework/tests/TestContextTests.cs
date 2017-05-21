@@ -46,6 +46,10 @@ namespace NUnit.Framework.Tests
 #endif
         private string _workDirectory;
 
+        private string _tempFilePath;
+
+        private const string TempFileName = "NUnitTests.tmp";
+
         public TestContextTests()
         {
             _name = TestContext.CurrentContext.Test.Name;
@@ -54,6 +58,23 @@ namespace NUnit.Framework.Tests
             _testDirectory = TestContext.CurrentContext.TestDirectory;
 #endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
+        }
+
+        [OneTimeSetUp]
+        public void CreateTempFile()
+        {
+            _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName);
+#if !PORTABLE
+            File.Create(_tempFilePath).Dispose();
+#endif
+        }
+
+        [OneTimeTearDown]
+        public void RemoveTempFile()
+        {
+#if !PORTABLE
+            File.Delete(_tempFilePath);
+#endif
         }
 
         [SetUp]
@@ -337,6 +358,39 @@ namespace NUnit.Framework.Tests
 #else
             await Task.Yield();
 #endif
+        }
+#endif
+
+        #endregion
+
+        #region Test Attachments
+
+        [Test]
+        public void FilePathOnlyDoesNotThrow()
+        {
+            Assert.That(() => TestContext.AddTestAttachment(_tempFilePath), Throws.Nothing);
+        }
+
+        [Test]
+        public void FilePathAndDescriptionDoesNotThrow()
+        {
+            Assert.That(() => TestContext.AddTestAttachment(_tempFilePath, "Description"), Throws.Nothing);
+        }
+
+        [TestCase(null)]
+#if !PORTABLE && !NETSTANDARD1_6
+        [TestCase("bad<>path.png", IncludePlatform = "Windows")]
+#endif
+        public void InvalidFilePathsThrowsArgumentException(string filePath)
+        {
+            Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
+        }
+
+#if !PORTABLE
+        [Test]
+        public void NoneExistentFileThrowsFileNotFoundException()
+        {
+            Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
         }
 #endif
 

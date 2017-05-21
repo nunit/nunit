@@ -101,7 +101,7 @@
     <Compile Include="Internal\Commands\ConstructFixtureCommand.cs" />
     <Compile Include="Internal\Commands\TimeoutCommand.cs" />
     <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
-    <Compile Include="Internal\TestAttachment.cs" />
+    <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />

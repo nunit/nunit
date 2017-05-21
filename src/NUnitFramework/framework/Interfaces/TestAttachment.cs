@@ -21,32 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The TestAttachment class represents a file attached to a TestResult,
     /// with an optional description.
     /// </summary>
-    internal class TestAttachment
+    public class TestAttachment
     {
         /// <summary>
-        /// Absolute filepath to attachment file
+        /// Absolute file path to attachment file
         /// </summary>
-        public string Filepath { get; }
+        public string FilePath { get; }
 
         /// <summary>
-        /// Optional user specifed description of attachment
+        /// User specifed description of attachment. May be null.
         /// </summary>
         public string Description { get; }
 
         /// <summary>
         /// Creates a TestAttachment class to represent a file attached to a test result.
         /// </summary>
-        /// <param name="filepath">Absolute filepath to attachment file</param>
-        /// <param name="description">Optional user specifed description of attachment</param>
-        public TestAttachment(string filepath, string description)
+        /// <param name="filePath">Absolute file path to attachment file</param>
+        /// <param name="description">User specifed description of attachment. May be null.</param>
+        public TestAttachment(string filePath, string description)
         {
-            Filepath = filepath;
+            FilePath = filePath;
             Description = description;
         }
     }

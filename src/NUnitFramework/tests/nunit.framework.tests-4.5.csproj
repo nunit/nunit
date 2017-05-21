@@ -239,7 +239,8 @@
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\Results\AssertionResultTests.cs" />
-    <Compile Include="Internal\Results\TestResultAttachmentTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentXmlTests.cs" />
     <Compile Include="Internal\Results\TestResultFailureTests.cs" />
     <Compile Include="Internal\Results\TestResultGeneralTests.cs" />
     <Compile Include="Internal\Results\TestResultIgnoredTests.cs" />

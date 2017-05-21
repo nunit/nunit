@@ -295,6 +295,7 @@
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
+    <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\TNode.cs" />
@@ -389,7 +390,6 @@
     <Compile Include="Internal\RuntimeFramework.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
-    <Compile Include="Internal\TestAttachment.cs" />
     <Compile Include="Internal\TestCaseParameters.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />

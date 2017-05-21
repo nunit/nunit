@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Diagnostics;
 using System.IO;
@@ -492,28 +491,6 @@ namespace NUnit.Framework.Internal
         public void AddFormatter(ValueFormatterFactory formatterFactory)
         {
             CurrentValueFormatter = formatterFactory(CurrentValueFormatter);
-        }
-
-        /// <summary>
-        /// Attach a file to the current test result
-        /// </summary>
-        /// <param name="filepath">Filepath to attachment. Can be absolute, or relative to working directory.</param>
-        /// <param name="description">Optional description of attachment</param>
-        public void AddTestAttachment(string filepath, string description = null)
-        {
-            Guard.ArgumentNotNull(filepath, nameof(filepath));
-            Guard.ArgumentValid(filepath.IndexOfAny(Path.GetInvalidPathChars()) == -1, 
-                $"Test attachment filepath contains invalid path characters. {filepath}", nameof(filepath));
-
-            if (!Path.IsPathRooted(filepath))
-                filepath = Path.Combine(TestContext.CurrentContext.WorkDirectory, filepath);
-
-#if !PORTABLE
-            if (!File.Exists(filepath))
-                throw new FileNotFoundException("Test attachment filepath could not be found.", filepath);
-#endif
-
-            CurrentResult.AddTestAttachment(new TestAttachment(filepath, description));
         }
 
         private TestExecutionContext CreateIsolatedContext()

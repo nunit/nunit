@@ -297,11 +297,24 @@ namespace NUnit.Framework
         /// <summary>
         /// Attach a file to the current test result
         /// </summary>
-        /// <param name="filepath">Relative or absolute filepath to attachment</param>
+        /// <param name="filePath">Relative or absolute file path to attachment</param>
         /// <param name="description">Optional description of attachment</param>
-        public static void AddTestAttachment(string filepath, string description = null)
+        public static void AddTestAttachment(string filePath, string description = null)
         {
-            TestExecutionContext.CurrentContext.AddTestAttachment(filepath, description);
+            Guard.ArgumentNotNull(filePath, nameof(filePath));
+            Guard.ArgumentValid(filePath.IndexOfAny(Path.GetInvalidPathChars()) == -1,
+                $"Test attachment file path contains invalid path characters. {filePath}", nameof(filePath));
+
+            if (!Path.IsPathRooted(filePath))
+                filePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, filePath);
+
+#if !PORTABLE
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Test attachment file path could not be found.", filePath);
+#endif
+
+            var result = TestExecutionContext.CurrentContext.CurrentResult;
+            result.AddTestAttachment(new TestAttachment(filePath, description));
         }
 
         /// <summary>
