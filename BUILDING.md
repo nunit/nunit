@@ -13,10 +13,7 @@ The framework is built using a single Visual Studio solution (nunit.sln on Windo
 and nunit.linux.sln on Linux), which may be built with Visual Studio 2012+, SharpDevelop.
 or MonoDevelop.
 
-The solutions all place their output in a common bin directory. Console runner and engine
-components are placed directly in the bin directory while framework components end up in
-subdirectories net-2.0, net-3.5, net4.0, net4.5 and portable. Future platform
-builds will cause new subdirectories to be created.
+The solutions all place their output in a common bin directory under the solution root.
 
 ## Build Script
 
@@ -50,13 +47,6 @@ important top-level tasks to use are listed here:
  * Build               Builds everything. This is the default if no target is given.
  * Rebuild             Cleans the output directory and builds everything
  * Test                Runs all tests. Dependent on Build.
- * TestAllFrameworks   Runs all framework tests. Dependent on Build.
- * Test45              Tests the 4.5 framework without building first.
- * Test40              Tests the 4.0 framework without building first.
- * Test35              Tests the 3.5 framework without building first.
- * Test20              Tests the 2.0 framework without building first.
- * TestPortable        Tests the portable framework without building first.
- * TestNetStandard     Tests the NetStandard framework without building first.
  * Package             Creates all packages without building first. See Note below.
 ```
 
