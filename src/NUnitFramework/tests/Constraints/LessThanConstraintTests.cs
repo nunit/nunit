@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace NUnit.Framework.Constraints
 {
@@ -83,7 +84,7 @@ namespace NUnit.Framework.Constraints
                 () => Assert.That(actual, Is.LessThan(expected).Within(tolerance)),
                 "Assertion should have failed");
 
-            Assert.That(ex.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + tolerance.ToString()));
+            Assert.That(ex.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + Convert.ToDouble(tolerance).ToString(CultureInfo.InvariantCulture)));
         }
 
         [TestCase(4.0, 5.0, 1)]

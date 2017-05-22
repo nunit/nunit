@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
@@ -34,6 +35,7 @@ namespace NUnit.Framework.Internal
     {
         private static readonly string STREAM_NAME = "EventListenerTextWriterTestsStream";
         private static readonly string NL = Environment.NewLine;
+        private readonly string decimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
         TestListenerIntercepter ListenerResult;
         TextWriter ListenerWriter;
@@ -95,7 +97,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(format, arg0, arg1);
             ListenerWriter.WriteLine(format, arg0, arg1);
 
-            var expected = "05.00 @";
+            var expected = $"05{decimalSeparator}00 @";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
@@ -112,7 +114,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(format, arg0, arg1, arg2);
             ListenerWriter.WriteLine(format, arg0, arg1, arg2);
 
-            var expected = "Quick 9.00 Fox";
+            var expected = $"Quick 9{decimalSeparator}00 Fox";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
@@ -155,7 +157,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
-            var expected = "2.731";
+            var expected = $"2{decimalSeparator}731";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
@@ -169,7 +171,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
-            var expected = "-1.5";
+            var expected = $"-1{decimalSeparator}5";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
