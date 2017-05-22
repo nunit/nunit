@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,20 +21,33 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
-namespace NUnit.Framework
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The SpecialValue enum is used to represent TestCase arguments
-    /// that cannot be used as arguments to an Attribute.
+    /// The TestAttachment class represents a file attached to a TestResult,
+    /// with an optional description.
     /// </summary>
-    public enum SpecialValue
+    public class TestAttachment
     {
         /// <summary>
-        /// Null represents a null value, which cannot be used as an 
-        /// argument to an attribute under .NET 1.x
+        /// Absolute file path to attachment file
         /// </summary>
-        Null
+        public string FilePath { get; }
+
+        /// <summary>
+        /// User specifed description of attachment. May be null.
+        /// </summary>
+        public string Description { get; }
+
+        /// <summary>
+        /// Creates a TestAttachment class to represent a file attached to a test result.
+        /// </summary>
+        /// <param name="filePath">Absolute file path to attachment file</param>
+        /// <param name="description">User specifed description of attachment. May be null.</param>
+        public TestAttachment(string filePath, string description)
+        {
+            FilePath = filePath;
+            Description = description;
+        }
     }
 }

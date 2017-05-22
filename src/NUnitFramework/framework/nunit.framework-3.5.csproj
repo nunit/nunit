@@ -130,6 +130,7 @@
     <Compile Include="Interfaces\IParameterInfo.cs" />
     <Compile Include="Interfaces\IReflectionInfo.cs" />
     <Compile Include="Interfaces\ITypeInfo.cs" />
+    <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
@@ -417,7 +418,6 @@
     <Compile Include="Iz.cs" />
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
-    <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />

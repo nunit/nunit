@@ -115,6 +115,8 @@
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentXmlTests.cs" />
     <Compile Include="Internal\Results\TestResultWarningTests.cs" />
     <Compile Include="Internal\Results\TestResultIgnoredTests.cs" />
     <Compile Include="Internal\Results\TestResultMixedResultTests.cs" />

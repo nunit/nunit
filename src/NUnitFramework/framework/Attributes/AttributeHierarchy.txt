@@ -16,8 +16,6 @@ NUnitAttribute
 	FixtureBuilderAttribute
 		TestFixtureAttribute          : IFixtureBuilder, IApplyToTest
 	SetUpAttribute                    : 
-	PreTestAttribute                  : 
-	PostTestAttribute                 : 
 	SetUpFixtureAttribute         
 	SuiteAttribute                
 	TearDownAttribute             

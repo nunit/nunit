@@ -287,6 +287,7 @@
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
+    <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\TNode.cs" />
@@ -407,7 +408,6 @@
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />

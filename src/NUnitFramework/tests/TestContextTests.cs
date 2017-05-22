@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -44,12 +44,29 @@ namespace NUnit.Framework.Tests
         private string _testDirectory;
         private string _workDirectory;
 
+        private string _tempFilePath;
+
+        private const string TempFileName = "NUnitTests.tmp";
+
         public TestContextTests()
         {
             _name = TestContext.CurrentContext.Test.Name;
 
             _testDirectory = TestContext.CurrentContext.TestDirectory;
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
+        }
+
+        [OneTimeSetUp]
+        public void CreateTempFile()
+        {
+            _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName);
+            File.Create(_tempFilePath).Dispose();
+        }
+
+        [OneTimeTearDown]
+        public void RemoveTempFile()
+        {
+            File.Delete(_tempFilePath);
         }
 
         [SetUp]
@@ -331,6 +348,37 @@ namespace NUnit.Framework.Tests
 #endif
         }
 #endif
+
+        #endregion
+
+        #region Test Attachments
+
+        [Test]
+        public void FilePathOnlyDoesNotThrow()
+        {
+            Assert.That(() => TestContext.AddTestAttachment(_tempFilePath), Throws.Nothing);
+        }
+
+        [Test]
+        public void FilePathAndDescriptionDoesNotThrow()
+        {
+            Assert.That(() => TestContext.AddTestAttachment(_tempFilePath, "Description"), Throws.Nothing);
+        }
+
+        [TestCase(null)]
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+        [TestCase("bad<>path.png", IncludePlatform = "Windows")]
+#endif
+        public void InvalidFilePathsThrowsArgumentException(string filePath)
+        {
+            Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public void NoneExistentFileThrowsFileNotFoundException()
+        {
+            Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
+        }
 
         #endregion
     }

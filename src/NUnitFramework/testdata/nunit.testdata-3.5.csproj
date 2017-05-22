@@ -80,6 +80,7 @@
     <Compile Include="RepeatedTestFixture.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="SingleThreadedFixtureData.cs" />
+    <Compile Include="TestAttachmentsTests.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseOrderAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />

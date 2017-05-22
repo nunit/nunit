@@ -291,6 +291,27 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Attach a file to the current test result
+        /// </summary>
+        /// <param name="filePath">Relative or absolute file path to attachment</param>
+        /// <param name="description">Optional description of attachment</param>
+        public static void AddTestAttachment(string filePath, string description = null)
+        {
+            Guard.ArgumentNotNull(filePath, nameof(filePath));
+            Guard.ArgumentValid(filePath.IndexOfAny(Path.GetInvalidPathChars()) == -1,
+                $"Test attachment file path contains invalid path characters. {filePath}", nameof(filePath));
+
+            if (!Path.IsPathRooted(filePath))
+                filePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, filePath);
+
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Test attachment file path could not be found.", filePath);
+
+            var result = TestExecutionContext.CurrentContext.CurrentResult;
+            result.AddTestAttachment(new TestAttachment(filePath, description));
+        }
+
+        /// <summary>
         /// This method provides a simplified way to add a ValueFormatter
         /// delegate to the chain of responsibility, creating the factory
         /// delegate internally. It is useful when the Type of the object

@@ -122,13 +122,6 @@ namespace NUnit.Framework
                 if (arg == null)
                     continue;
 
-                if (arg.GetType().FullName == "NUnit.Framework.SpecialValue" &&
-                    arg.ToString() == "Null")
-                {
-                    data[i] = null;
-                    continue;
-                }
-
                 if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
                     continue;
 

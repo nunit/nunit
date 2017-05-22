@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Globalization;
+using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Interfaces;
@@ -46,9 +47,9 @@ namespace NUnit.Framework.Internal
     [TestFixture][Property("Question", "Why?")]
     public class TestExecutionContextTests
     {
-        TestExecutionContext _fixtureContext;
-        TestExecutionContext _setupContext;
-        ResultState _fixtureResult;
+        private TestExecutionContext _fixtureContext;
+        private TestExecutionContext _setupContext;
+        private ResultState _fixtureResult;
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
         string originalDirectory;
