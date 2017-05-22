@@ -60,6 +60,18 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Gets the value of the parameter with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the parameter. If <see langword="null"/>, throws <see cref="ArgumentNullException"/>.</param>
+        /// <param name="value">The value of the parameter, if the name is found.</param>
+        /// <returns>True if a parameter with the given name exists, otherwise false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/> is <see langword="null"/>.</exception>
+        public bool TryGetValue(string name, out string value)
+        {
+            return _parameters.TryGetValue(name, out value);
+        }
+
+        /// <summary>
         /// Get the value of a parameter or a default string
         /// </summary>
         /// <param name="name">Name of the parameter</param>

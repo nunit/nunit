@@ -107,6 +107,34 @@ namespace NUnit.Framework.Tests
 
         #endregion
 
+        #region TryGetValue
+
+        [Test]
+        public void TryGetValue_Existing()
+        {
+            _parameters.Add("SomeParm", "5");
+            string value;
+            Assert.That(_parameters.TryGetValue("SomeParm", out value), Is.True);
+            Assert.That(value, Is.EqualTo("5"));
+        }
+
+        [Test]
+        public void TryGetValue_Missing()
+        {
+            _parameters.Add("SomeParm", "5");
+            string _;
+            Assert.That(_parameters.TryGetValue("SomeOtherParm", out _), Is.False);
+        }
+
+        [Test]
+        public void TryGetValue_NullKeyThrowsException()
+        {
+            string _;
+            Assert.That(() => _parameters.TryGetValue(null, out _), Throws.ArgumentNullException);
+        }
+
+        #endregion
+
         #region Get String
 
         [Test]
