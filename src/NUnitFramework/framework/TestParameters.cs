@@ -30,7 +30,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Gets a flag indicating whether a parameter with the specified name exists.N
+        /// Gets a flag indicating whether a parameter with the specified name exists.
         /// </summary>
         /// <param name="name">Name of the parameter</param>
         /// <returns>True if it exists, otherwise false</returns>
