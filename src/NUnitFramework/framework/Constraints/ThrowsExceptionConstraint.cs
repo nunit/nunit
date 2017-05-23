@@ -53,6 +53,10 @@ namespace NUnit.Framework.Constraints
 
             if (code != null)
             {
+#if ASYNC
+                if (AwaitUtils.IsAsyncVoid(code))
+                    throw new ArgumentException("'async void' methods are not supported. Please use 'async Task' instead.");
+#endif
                 try
                 {
                     code();
@@ -66,17 +70,13 @@ namespace NUnit.Framework.Constraints
             AsyncTestDelegate asyncCode = actual as AsyncTestDelegate;
             if (asyncCode != null)
             {
-                using (var region = AsyncInvocationRegion.Create(asyncCode))
+                try
                 {
-                    try
-                    {
-                        var task = asyncCode();
-                        region.WaitForPendingOperationsToComplete(task);
-                    }
-                    catch (Exception ex)
-                    {
-                        caughtException = ex;
-                    }
+                    AwaitUtils.Await(asyncCode, asyncCode.Invoke());
+                }
+                catch (Exception ex)
+                {
+                    caughtException = ex;
                 }
             }
             if (code == null && asyncCode == null)

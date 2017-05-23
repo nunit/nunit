@@ -91,6 +91,7 @@
     <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\NonParallelizableAttribute.cs" />
+    <Compile Include="Internal\AwaitUtils.AwaitableApiAccessors.cs" />
     <Compile Include="Internal\Commands\AfterTestCommand.cs" />
     <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
     <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
@@ -320,7 +321,7 @@
     <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
-    <Compile Include="Internal\AsyncInvocationRegion.cs" />
+    <Compile Include="Internal\AwaitUtils.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />

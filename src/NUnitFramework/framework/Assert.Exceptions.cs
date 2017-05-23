@@ -42,23 +42,8 @@ namespace NUnit.Framework
             Exception caughtException = null;
 
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(code))
-            {
-                using (var region = AsyncInvocationRegion.Create(code))
-                {
-                    code();
-
-                    try
-                    {
-                        region.WaitForPendingOperationsToComplete(null);
-                    }
-                    catch (Exception e)
-                    {
-                        caughtException = e;
-                    }
-                }
-            }
-            else
+            if (AwaitUtils.IsAsyncVoid(code))
+                throw new ArgumentException("'async void' methods are not supported. Please use 'async Task' instead.", nameof(code));
 #endif
 
             using (new TestExecutionContext.IsolatedContext())

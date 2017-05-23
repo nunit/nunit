@@ -248,6 +248,23 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+#if NET_4_0
+        [Platform(Exclude = "Net-4.0", Reason = "Not supported by async polyfill for .NET 4.0.")]
+#endif
+        public void AsyncThrownOperationCanceledExceptionShouldNotChangeType()
+        {
+            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            {
+#if NET_4_0
+                await TaskEx.Yield();
+#else
+                await Task.Yield();
+#endif
+                throw new OperationCanceledException();
+            });
+        }
+
+        [Test]
         public void DoesNotThrowSucceeds()
         {
             Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsNothing);

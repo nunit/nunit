@@ -348,13 +348,13 @@ namespace NUnit.Framework.Constraints
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
-#if NET_4_0 || NET_4_5
-            if (AsyncInvocationRegion.IsAsyncOperation(del))
-                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
-                    return region.WaitForPendingOperationsToComplete(del());
+#if ASYNC
+            var invokeResult = del.Invoke();
+            object awaitedResult;
+            return AwaitUtils.TryAwait(del, invokeResult, out awaitedResult) ? awaitedResult : invokeResult;
+#else
+            return del.Invoke();
 #endif
-
-            return del();
         }
 
         /// <summary>
