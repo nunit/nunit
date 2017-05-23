@@ -947,9 +947,18 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls 
-        /// within a specified range.
+        /// inclusively within a specified range.
         /// </summary>
         public RangeConstraint InRange(IComparable from, IComparable to)
+        {
+            return (RangeConstraint)this.Append(new RangeConstraint(from, to));
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value falls
+        /// inclusively within a specified range for objects not implementing IComparable. 
+        /// </summary>
+        public RangeConstraint InRange(object from, object to)
         {
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
         }
