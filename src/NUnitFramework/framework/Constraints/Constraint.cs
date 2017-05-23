@@ -117,11 +117,12 @@ namespace NUnit.Framework.Constraints
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(del))
-                using (var region = AsyncInvocationRegion.Create(del))
-                    return ApplyTo(region.WaitForPendingOperationsToComplete(del()));
-#endif
+            var invokeResult = GetTestObject(del);
+            object awaitedResult;
+            return ApplyTo(AwaitUtils.TryAwait(del, invokeResult, out awaitedResult) ? awaitedResult : invokeResult);
+#else
             return ApplyTo(GetTestObject(del));
+#endif
         }
 
 #pragma warning disable 3006

@@ -77,28 +77,24 @@ namespace NUnit.Framework.Internal.Commands
         private object RunTestMethod(TestExecutionContext context)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
+            if (AwaitUtils.IsAwaitable(testMethod.Method.MethodInfo))
                 return RunAsyncTestMethod(context);
-            else
 #endif
-                return RunNonAsyncTestMethod(context);
+            return RunNonAsyncTestMethod(context);
         }
 
 #if ASYNC
         private object RunAsyncTestMethod(TestExecutionContext context)
         {
-            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method.MethodInfo))
-            {
-                object result = Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
+            object result = Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
 
-                try
-                {
-                    return region.WaitForPendingOperationsToComplete(result);
-                }
-                catch (Exception e)
-                {
-                    throw new NUnitException("Rethrown", e);
-                }
+            try
+            {
+                return AwaitUtils.Await(testMethod.Method.MethodInfo, result);
+            }
+            catch (Exception e)
+            {
+                throw new NUnitException("Rethrown", e);
             }
         }
 #endif
