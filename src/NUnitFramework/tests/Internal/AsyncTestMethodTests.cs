@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 #if ASYNC
+using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -118,6 +119,19 @@ namespace NUnit.Framework.Internal
         private static IMethodInfo Method(string name)
         {
             return new MethodWrapper(typeof(AsyncRealFixture), name);
+        }
+
+        [Test]
+#if NET_4_0
+        [Platform(Exclude = "Net-4.0", Reason = "Not supported by async polyfill for .NET 4.0.")]
+#endif
+        public void AsyncThrownOperationCanceledExceptionShouldNotChangeType()
+        {
+            var test = _builder.BuildFrom(Method(nameof(AsyncRealFixture.ThrowAsyncOperationCanceledException)));
+            var result = TestBuilder.RunTest(test, _testObject);
+
+            var ex = new OperationCanceledException();
+            Assert.That(result.Message, Is.EqualTo($"{ex.GetType()} : {ex.Message}"));
         }
     }
 }
