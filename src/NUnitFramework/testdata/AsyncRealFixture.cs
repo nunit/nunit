@@ -68,6 +68,13 @@ namespace NUnit.TestData
             Assert.Fail("Should never get here");
         }
 
+        [Test]
+        public async System.Threading.Tasks.Task ThrowAsyncOperationCanceledException()
+        {
+            await Task.Yield();
+            throw new OperationCanceledException();
+        }
+
 #endregion
 
 #region non-async Task
