@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
@@ -80,7 +79,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(format, arg0);
             ListenerWriter.WriteLine(format, arg0);
 
-            var expected = $"20 {CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(4)} 2017";
+            var expected = $"{arg0:dd MMM yyyy}";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
