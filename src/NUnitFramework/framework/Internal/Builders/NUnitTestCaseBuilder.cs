@@ -161,21 +161,25 @@ namespace NUnit.Framework.Internal.Builders
             ITypeInfo returnType = testMethod.Method.ReturnType;
 
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
+            if (AwaitUtils.IsAsyncVoid(testMethod.Method.MethodInfo))
+                return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
+
+            if (AwaitUtils.IsAwaitable(testMethod.Method.MethodInfo))
             {
-                if (returnType.IsType(typeof(void)))
-                    return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
+                var resultType = AwaitUtils.GetAwaitableResultType(testMethod.Method.MethodInfo);
 
-                var returnsGenericTask = returnType.IsGenericType &&
-                    returnType.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>);
-
-                if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
-                    return MarkAsNotRunnable(testMethod,
-                        "Async test method must have non-generic Task return type when no result is expected");
-
-                if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
-                    return MarkAsNotRunnable(testMethod,
-                        "Async test method must have Task<T> return type when a result is expected");
+                if (parms != null && parms.HasExpectedResult)
+                {
+                    if (resultType == typeof(void))
+                        return MarkAsNotRunnable(testMethod,
+                            "Async test method must not return void when awaited when a result is expected");
+                }
+                else
+                {
+                    if (resultType != typeof(void))
+                        return MarkAsNotRunnable(testMethod,
+                            "Async test method must return void when awaited when no result is expected");
+                }
             }
             else
 #endif

@@ -95,18 +95,17 @@ namespace NUnit.Framework.Internal.Commands
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(method))
-                RunAsyncMethod(method, context);
-            else
+            RunAsyncOrNonAsyncMethod(method, context);
+#else
+            RunNonAsyncMethod(method, context);
 #endif
-                RunNonAsyncMethod(method, context);
         }
 
 #if ASYNC
-        private void RunAsyncMethod(MethodInfo method, TestExecutionContext context)
+        private void RunAsyncOrNonAsyncMethod(MethodInfo method, TestExecutionContext context)
         {
-            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(method))
-                region.WaitForPendingOperationsToComplete(RunNonAsyncMethod(method, context));
+            object _;
+            AwaitUtils.TryAwait(method, RunNonAsyncMethod(method, context), out _);
         }
 #endif
         private object RunNonAsyncMethod(MethodInfo method, TestExecutionContext context)

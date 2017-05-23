@@ -132,6 +132,8 @@
     <Compile Include="Interfaces\ITypeInfo.cs" />
     <Compile Include="Interfaces\AssertionStatus.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
+    <Compile Include="Internal\AwaitUtils.AwaitableApiAccessors.cs" />
+    <Compile Include="Internal\AwaitUtils.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Internal\Commands\AfterTestActionCommand.cs" />
@@ -182,7 +184,6 @@
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
-    <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
     <Compile Include="Internal\Commands\TestActionCommand.cs" />
     <Compile Include="Internal\Commands\TestActionItem.cs" />

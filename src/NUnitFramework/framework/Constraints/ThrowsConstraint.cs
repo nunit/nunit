@@ -157,36 +157,33 @@ namespace NUnit.Framework.Constraints
                 var invocationDescriptor = GetInvocationDescriptor(invocation);
 
 #if ASYNC
-                if (AsyncInvocationRegion.IsAsyncOperation(invocationDescriptor.Delegate))
+                if (AwaitUtils.IsAwaitable(invocationDescriptor.Delegate))
                 {
-                    using (var region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))
+                    try
                     {
-                        try
-                        {
-                            object result = invocationDescriptor.Invoke();
-                            region.WaitForPendingOperationsToComplete(result);
-                            return null;
-                        }
-                        catch (Exception ex)
-                        {
-                            return ex;
-                        }
+                        object result = invocationDescriptor.Invoke();
+                        AwaitUtils.Await(invocationDescriptor.Delegate, result);
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex;
                     }
                 }
-                else
+
+                if (AwaitUtils.IsAsyncVoid(invocationDescriptor.Delegate))
+                    throw new ArgumentException("'async void' methods are not supported. Please use 'async Task' instead.");
 #endif
+                using (new TestExecutionContext.IsolatedContext())
                 {
-                    using (new TestExecutionContext.IsolatedContext())
+                    try
                     {
-                        try
-                        {
-                            invocationDescriptor.Invoke();
-                            return null;
-                        }
-                        catch (Exception ex)
-                        {
-                            return ex;
-                        }
+                        invocationDescriptor.Invoke();
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex;
                     }
                 }
             }
