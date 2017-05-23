@@ -83,30 +83,39 @@ Setup(context =>
 {
     if (isAppveyor)
     {
-        var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
-        var branch = AppVeyor.Environment.Repository.Branch;
-        var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
+        var tag = AppVeyor.Environment.Repository.Tag;
 
-        if (branch == "master" && !isPullRequest)
+        if (tag.IsTag)
         {
-            packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
+            packageVersion = tag.Name;
         }
         else
         {
-            var suffix = "-ci-" + buildNumber + dbgSuffix;
+            var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
+            var branch = AppVeyor.Environment.Repository.Branch;
+            var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 
-            if (isPullRequest)
-                suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
-            else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-                suffix += "-pre-" + buildNumber;
+            if (branch == "master" && !isPullRequest)
+            {
+                packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
+            }
             else
-                suffix += "-" + branch;
+            {
+                var suffix = "-ci-" + buildNumber + dbgSuffix;
 
-            // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-            if (suffix.Length > 21)
-                suffix = suffix.Substring(0, 21);
+                if (isPullRequest)
+                    suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
+                else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+                    suffix += "-pre-" + buildNumber;
+                else
+                    suffix += "-" + System.Text.RegularExpressions.Regex.Replace(branch, "[^0-9A-Za-z-]+", "-");
 
-            packageVersion = version + suffix;
+                // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
+                if (suffix.Length > 21)
+                    suffix = suffix.Substring(0, 21);
+
+                packageVersion = version + suffix;
+            }
         }
 
         AppVeyor.UpdateBuildVersion(packageVersion);

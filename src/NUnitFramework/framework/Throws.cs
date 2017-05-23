@@ -84,7 +84,7 @@ namespace NUnit.Framework
         #region ArgumentNullException
 
         /// <summary>
-        /// Creates a constraint specifying an expected ArgumentNUllException
+        /// Creates a constraint specifying an expected ArgumentNullException
         /// </summary>
         public static ExactTypeConstraint ArgumentNullException
         {
