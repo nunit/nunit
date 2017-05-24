@@ -80,9 +80,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             CheckForSpuriousAssertionResults();
         }
@@ -95,9 +93,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             CheckForSpuriousAssertionResults();
         }

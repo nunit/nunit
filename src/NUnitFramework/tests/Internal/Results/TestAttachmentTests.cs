@@ -38,18 +38,14 @@ namespace NUnit.Framework.Internal.Results
         public void CreateTempFile()
         {
             _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, TestAttachmentsTests.TempFileName);
-#if !PORTABLE
             File.Create(_tempFilePath).Dispose();
-#endif
         }
 
-#if !PORTABLE
         [OneTimeTearDown]
         public void RemoveTempFile()
         {
             File.Delete(_tempFilePath);
         }
-#endif
 
         [Test]
         public void FilePathAndAttachmentPassedThroughToTestResult()

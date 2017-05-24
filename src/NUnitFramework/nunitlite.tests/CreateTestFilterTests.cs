@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -166,4 +165,3 @@ namespace NUnitLite.Tests
         }
     }
 }
-#endif

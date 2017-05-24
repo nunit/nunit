@@ -165,7 +165,7 @@ namespace NUnit.Framework.Internal
             writer.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                 System.Environment.CurrentManagedThreadId,
 #else
                 System.Threading.Thread.CurrentThread.ManagedThreadId,

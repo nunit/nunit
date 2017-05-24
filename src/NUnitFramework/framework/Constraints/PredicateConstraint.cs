@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                 var name = predicate.GetMethodInfo().Name;
 #else
                 var name = predicate.Method.Name;

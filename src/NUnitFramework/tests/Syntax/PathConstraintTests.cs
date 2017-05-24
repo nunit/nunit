@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using System;
 using System.IO;
 
@@ -161,4 +160,3 @@ namespace NUnit.Framework.Syntax
         }
     }
 }
-#endif

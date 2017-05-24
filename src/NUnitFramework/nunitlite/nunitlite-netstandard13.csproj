@@ -5,7 +5,7 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C28BC2BD-2D6A-4524-996E-45BA87B65B9F}</ProjectGuid>
+    <ProjectGuid>{D339BFC2-AF3F-46FA-899A-14BAD4BCA35B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnitLite</RootNamespace>
@@ -15,7 +15,7 @@
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\netstandard13\</IntermediateOutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <LangVersion>6</LangVersion>
@@ -24,8 +24,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_6;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\netstandard13\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -34,8 +34,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;NETSTANDARD1_6;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\netstandard13\</OutputPath>
+    <DefineConstants>TRACE;NETSTANDARD1_3;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -78,16 +78,16 @@
     <Compile Include="Tokenizer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-netstandard.csproj">
-      <Project>{FCF07E6C-335D-4265-B529-B7AF0E1076AB}</Project>
-      <Name>nunit.framework-netstandard</Name>
+    <ProjectReference Include="..\framework\nunit.framework-netstandard13.csproj">
+      <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
+      <Name>nunit.framework-netstandard13</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-    <None Include="nunitlite-netstandard.project.json" />
+    <None Include="nunitlite-netstandard13.project.json" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
@@ -99,6 +99,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <NuGetTargetMoniker>.NETStandard,Version=v1.6</NuGetTargetMoniker>
+    <NuGetTargetMoniker>.NETStandard,Version=v1.3</NuGetTargetMoniker>
   </PropertyGroup>
 </Project>

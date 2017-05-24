@@ -12,24 +12,25 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <IntermediateOutputPath>obj\$(Configuration)\netstandard13\</IntermediateOutputPath>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;PORTABLE;ASYNC</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\netstandard13\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NETSTANDARD1_3;ASYNC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE;ASYNC</DefineConstants>
-    <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NETSTANDARD1_3;ASYNC</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\netstandard13\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
@@ -162,6 +163,7 @@
     <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
+    <Compile Include="Constraints\IntervalTests.cs" />
     <Compile Include="Constraints\LessThanConstraintTests.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\NUnitComparerTests.cs" />
@@ -192,6 +194,7 @@
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
+    <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
@@ -205,6 +208,7 @@
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
+    <Compile Include="Internal\Filters\PropertyFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
@@ -316,32 +320,35 @@
       <Link>nunit.snk</Link>
     </None>
     <None Include="app.config" />
-    <None Include="nunit.framework.tests-portable.project.json" />
+    <None Include="nunit.framework.tests-netstandard13.project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
+    <ProjectReference Include="..\framework\nunit.framework-netstandard13.csproj">
       <Project>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</Project>
-      <Name>nunit.framework-portable</Name>
+      <Name>nunit.framework-netstandard13</Name>
     </ProjectReference>
-    <ProjectReference Include="..\slow-tests\slow-nunit-tests-portable.csproj">
+    <ProjectReference Include="..\slow-tests\slow-nunit-tests-netstandard13.csproj">
       <Project>{74CB429E-69D7-4525-BBDF-BBC47DBC7070}</Project>
-      <Name>slow-nunit-tests-portable</Name>
+      <Name>slow-nunit-tests-netstandard13</Name>
     </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-portable.csproj">
+    <ProjectReference Include="..\testdata\nunit.testdata-netstandard13.csproj">
       <Project>{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}</Project>
-      <Name>nunit.testdata-portable</Name>
+      <Name>nunit.testdata-netstandard13</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-assembly-portable.csproj">
+    <ProjectReference Include="..\mock-assembly\mock-assembly-netstandard13.csproj">
       <Project>{8C53C716-3E54-4DFE-8CD9-F4099042FCFA}</Project>
-      <Name>mock-assembly-portable</Name>
+      <Name>mock-assembly-netstandard13</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <NuGetTargetMoniker>.NETStandard,Version=v1.3</NuGetTargetMoniker>
+  </PropertyGroup>
 </Project>

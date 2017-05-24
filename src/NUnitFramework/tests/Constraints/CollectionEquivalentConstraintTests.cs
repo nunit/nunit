@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Constraints
                     yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"A", 1}, {"b", 2}});
                     yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }}, new Dictionary<char, int> {{'a', 1}});
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                     yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"},{2, "B"}});
                     yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{1, 'a'},{2, 'b'}});
                     yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}, {"b", 2}});
@@ -162,8 +162,8 @@ namespace NUnit.Framework.Constraints
             Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
         }
 
-#if (NET_4_0 || NET_4_5) && !PORTABLE
-        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0,Net-4.5,Mono-4.5")]
+#if (NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6)
+        [Test]
         public void WorksWithHashSets()
         {
             var hash1 = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(new CollectionEquivalentConstraint(hash1).ApplyTo(hash2).IsSuccess);
         }
 
-        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0,Net-4.5,Mono-4.5")]
+        [Test]
         public void WorksWithHashSetAndArray()
         {
             var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
@@ -182,7 +182,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(constraint.ApplyTo(array).IsSuccess);
         }
 
-        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0,Net-4.5,Mono-4.5")]
+        [Test]
         public void WorksWithArrayAndHashSet()
         {
             var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
@@ -192,7 +192,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(constraint.ApplyTo(hash).IsSuccess);
         }
 
-        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0,Net-4.5,Mono-4.5")]
+        [Test]
         public void FailureMessageWithHashSetAndArray()
         {
             var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });

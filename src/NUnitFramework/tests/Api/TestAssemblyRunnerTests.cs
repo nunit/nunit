@@ -41,20 +41,21 @@ namespace NUnit.Framework.Api
     // Functional tests of the TestAssemblyRunner and all subordinate classes
     public class TestAssemblyRunnerTests : ITestListener
     {
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
-        private const string COULD_NOT_LOAD_MSG = "The system cannot find the file specified.";
 #else
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
+#endif
+#if NETSTANDARD1_6
+        private const string COULD_NOT_LOAD_MSG = "The system cannot find the file specified.";
+#else
         private const string COULD_NOT_LOAD_MSG = "Could not load";
 #endif
         private const string BAD_FILE = "mock-assembly.pdb";
         private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
 
-#if PORTABLE
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
-#endif
         private const string INVALID_FILTER_ELEMENT_MESSAGE = "Invalid filter element: {0}";
 
         private static readonly IDictionary<string, object> EMPTY_SETTINGS = new Dictionary<string, object>();
@@ -83,7 +84,7 @@ namespace NUnit.Framework.Api
             _inconclusiveCount = 0;
         }
 
-        #region Load
+#region Load
 
         [Test]
         public void Load_GoodFile_ReturnsRunnableSuite()
@@ -92,11 +93,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
-#if PORTABLE
-            Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_NAME));
-#else
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
-#endif
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
         }
@@ -129,9 +126,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
 
-        #endregion
+#endregion
 
-        #region CountTestCases
+#region CountTestCases
 
         [Test]
         public void CountTestCases_AfterLoad_ReturnsCorrectCount()
@@ -162,9 +159,9 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
 
-        #endregion
+#endregion
 
-        #region ExploreTests
+#region ExploreTests
         [Test]
         public void ExploreTests_WithoutLoad_ThrowsInvalidOperation()
         {
@@ -224,9 +221,9 @@ namespace NUnit.Framework.Api
             var explorer = _runner.ExploreTests(filter);
             Assert.That(explorer.TestCaseCount, Is.EqualTo(_runner.CountTestCases(filter)));
         }
-        #endregion
+#endregion
 
-        #region Run
+#region Run
 
         [Test]
         public void Run_AfterLoad_ReturnsRunnableSuite()
@@ -254,9 +251,7 @@ namespace NUnit.Framework.Api
 
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
-#if !PORTABLE
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
-#endif
 
             Assert.That(_successCount, Is.EqualTo(MockAssembly.Passed));
             Assert.That(_failCount, Is.EqualTo(MockAssembly.Failed));
@@ -300,7 +295,6 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Does.StartWith(string.Format(INVALID_FILTER_ELEMENT_MESSAGE, "invalidElement")));
         }
 
-#if !PORTABLE
         [Test]
         public void Run_WithParameters()
         {
@@ -324,7 +318,6 @@ namespace NUnit.Framework.Api
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
             CheckParameterOutput(result);
         }
-#endif
 
         [Test]
         public void Run_BadFile_ReturnsNonRunnableSuite()
@@ -341,9 +334,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load"));
         }
 
-        #endregion
+#endregion
 
-        #region RunAsync
+#region RunAsync
 
         [Test]
         public void RunAsync_AfterLoad_ReturnsRunnableSuite()
@@ -422,9 +415,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load"));
         }
 
-        #endregion
+#endregion
 
-        #region StopRun
+#region StopRun
 
         [Test]
         public void StopRun_WhenNoTestIsRunning_Succeeds()
@@ -450,9 +443,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region Cancel Run
+#region Cancel Run
 
         [Test]
         public void CancelRun_WhenNoTestIsRunning_Succeeds()
@@ -481,9 +474,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region ITestListener Implementation
+#region ITestListener Implementation
 
         void ITestListener.TestStarted(ITest test)
         {
@@ -524,9 +517,9 @@ namespace NUnit.Framework.Api
             _testOutputCount++;
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private ITest LoadMockAssembly()
         {
@@ -535,24 +528,14 @@ namespace NUnit.Framework.Api
 
         private ITest LoadMockAssembly(IDictionary<string, object> settings)
         {
-#if PORTABLE
-            return _runner.Load(
-                typeof(MockAssembly).GetTypeInfo().Assembly, 
-                settings);
-#else
             return _runner.Load(
                 Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE),
                 settings);
-#endif
         }
 
         private ITest LoadSlowTests()
         {
-#if PORTABLE
-            return _runner.Load(typeof(SlowTests).GetTypeInfo().Assembly, EMPTY_SETTINGS);
-#else
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);
-#endif
         }
 
         private void CheckParameterOutput(ITestResult result)
@@ -565,6 +548,6 @@ namespace NUnit.Framework.Api
                 "Parameter Y = 7" + Environment.NewLine));
         }
 
-        #endregion
+#endregion
     }
 }

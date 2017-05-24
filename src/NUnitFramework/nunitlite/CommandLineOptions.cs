@@ -43,16 +43,10 @@ namespace NUnit.Common
     public class CommandLineOptions : OptionSet
     {
         private static readonly string DEFAULT_WORK_DIRECTORY =
-#if PORTABLE
-            @"\My Documents";
-#else
             Directory.GetCurrentDirectory();
-#endif
 
         private bool validated;
-#if !PORTABLE
         private bool noresult;
-#endif
 
         #region Constructors
 
@@ -63,8 +57,8 @@ namespace NUnit.Common
             if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
 
             TeamCity = defaultOptionsProvider.TeamCity;
-            
-            ConfigureOptions(requireInputFile);            
+
+            ConfigureOptions(requireInputFile);
             if (args != null)
                 Parse(PreParse(args));
         }
@@ -76,12 +70,6 @@ namespace NUnit.Common
                 Parse(PreParse(args));
         }
 
-#if PORTABLE
-        internal IEnumerable<string> PreParse(IEnumerable<string> args)
-        {
-            return args;
-        }
-#else
         private int _nesting = 0;
 
         internal IEnumerable<string> PreParse(IEnumerable<string> args)
@@ -157,7 +145,6 @@ namespace NUnit.Common
 
             return GetArgs(sb.ToString());
         }
-#endif
 
         #endregion
 
@@ -204,7 +191,6 @@ namespace NUnit.Common
         public bool WaitBeforeExit { get; private set; }
 
         // Output Control
-
         public bool NoHeader { get; private set; }
 
         public bool NoColor { get; private set; }
@@ -219,19 +205,16 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
-#if !PORTABLE
         private string workDirectory = null;
-        public string WorkDirectory 
+        public string WorkDirectory
         {
             get { return workDirectory ?? DEFAULT_WORK_DIRECTORY; }
         }
         public bool WorkDirectorySpecified { get { return workDirectory != null; } }
-#endif
 
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
 
-#if !PORTABLE
         private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
@@ -248,13 +231,13 @@ namespace NUnit.Common
         }
 
         public IList<OutputSpecification> ExploreOutputSpecifications { get; } = new List<OutputSpecification>();
-#endif
+
         // Error Processing
 
         public IList<string> ErrorMessages { get; } = new List<string>();
 
-#endregion
-        
+        #endregion
+
         #region Public Methods
 
         public bool Validate()
@@ -334,11 +317,7 @@ namespace NUnit.Common
         {
             if (path == null) return null;
 
-#if PORTABLE
-            return Path.Combine(DEFAULT_WORK_DIRECTORY , path);
-#else
             return Path.GetFullPath(path);
-#endif
         }
 
         protected virtual void ConfigureOptions(bool allowInputFile)
@@ -351,7 +330,7 @@ namespace NUnit.Common
             // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
-#if !PORTABLE
+
             this.Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
                 v =>
                 {
@@ -384,7 +363,6 @@ namespace NUnit.Common
                     }
                 });
 
-#endif
             this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));
 
@@ -410,22 +388,22 @@ namespace NUnit.Common
                         }
                     }
                 });
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => DefaultTimeout = RequiredInt(v, "--timeout"));
 #endif
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => RandomSeed = RequiredInt(v, "--seed"));
-#if !PORTABLE
+
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => NumberOfTestWorkers = RequiredInt(v, "--workers"));
-#endif
+
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v != null);
 
             this.Add("wait", "Wait for input before closing console window.",
                 v => WaitBeforeExit = v != null);
-#if !PORTABLE
+
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
                 v => workDirectory = RequiredValue(v, "--work"));
@@ -448,7 +426,7 @@ namespace NUnit.Common
 
             this.Add("noresult", "Don't save any test results.",
                 v => noresult = v != null);
-#endif
+
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "Before", "After", "All"));
 
@@ -458,7 +436,6 @@ namespace NUnit.Common
             this.Add("teamcity", "Turns on use of TeamCity service messages.",
                 v => TeamCity = v != null);
 
-#if !PORTABLE
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
@@ -467,7 +444,7 @@ namespace NUnit.Common
 
             this.Add("nocolor|noc", "Displays console output without color.",
                 v => NoColor = v != null);
-#endif
+
             this.Add("help|h", "Display this message and exit.",
                 v => ShowHelp = v != null);
 
@@ -491,11 +468,7 @@ namespace NUnit.Common
 
         private bool LooksLikeAnOption(string v)
         {
-#if PORTABLE
-            return v.StartsWith("-") || v.StartsWith("/") && Environment.NewLine == "\r\n";
-#else
             return v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/';
-#endif
         }
 
         #endregion

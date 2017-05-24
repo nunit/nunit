@@ -33,7 +33,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(LevelOfParallelismAttribute), PropertyNames.LevelOfParallelism, 7)]
         [TestCase(typeof(MaxTimeAttribute), PropertyNames.MaxTime, 50)]
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Fixtures)]
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [TestCase(typeof(RequiresThreadAttribute), PropertyNames.RequiresThread, true)]
 #endif
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)

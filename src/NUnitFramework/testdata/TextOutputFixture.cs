@@ -20,7 +20,6 @@
 // 
 // **********************************************************************************
 
-#if !PORTABLE
 using System;
 using NUnit.Framework;
 
@@ -55,5 +54,4 @@ namespace NUnit.TestData
         }
     }
 }
-#endif
 

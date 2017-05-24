@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -31,7 +31,7 @@ using System.IO;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
@@ -116,20 +116,22 @@ namespace NUnitLite
             xmlWriter.WriteEndElement();
         }
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
             var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).GetTypeInfo().Assembly);
             xmlWriter.WriteAttributeString("nunit-version", assemblyName.Version.ToString());
+            xmlWriter.WriteAttributeString("cwd", Directory.GetCurrentDirectory());
             xmlWriter.WriteAttributeString("clr-version", RuntimeInformation.FrameworkDescription);
             xmlWriter.WriteAttributeString("os-version", RuntimeInformation.OSDescription);
-            xmlWriter.WriteAttributeString("cwd", Directory.GetCurrentDirectory());
+#if !NETSTANDARD1_3
             xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
+#endif
             xmlWriter.WriteEndElement();
         }
 #else
-        private void WriteEnvironment()
+            private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
             var assemblyName = AssemblyHelper.GetAssemblyName(Assembly.GetExecutingAssembly());
@@ -182,7 +184,7 @@ namespace NUnitLite
             xmlWriter.WriteEndElement(); // test-results
             xmlWriter.WriteEndDocument();
             xmlWriter.Flush();
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             xmlWriter.Close();
 #endif
         }

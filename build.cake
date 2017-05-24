@@ -28,7 +28,7 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var WindowsFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard16", "portable" };
+    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard13", "netstandard16" };
 
 var LinuxFrameworks = new string[] {
     "net-4.5", "net-4.0", "net-3.5", "net-2.0" };
@@ -81,6 +81,46 @@ var packages = new string[]{
 
 Setup(context =>
 {
+    if (isAppveyor)
+    {
+        var tag = AppVeyor.Environment.Repository.Tag;
+
+        if (tag.IsTag)
+        {
+            packageVersion = tag.Name;
+        }
+        else
+        {
+            var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
+            var branch = AppVeyor.Environment.Repository.Branch;
+            var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
+
+            if (branch == "master" && !isPullRequest)
+            {
+                packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
+            }
+            else
+            {
+                var suffix = "-ci-" + buildNumber + dbgSuffix;
+
+                if (isPullRequest)
+                    suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
+                else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
+                    suffix += "-pre-" + buildNumber;
+                else
+                    suffix += "-" + System.Text.RegularExpressions.Regex.Replace(branch, "[^0-9A-Za-z-]+", "-");
+
+                // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
+                if (suffix.Length > 21)
+                    suffix = suffix.Substring(0, 21);
+
+                packageVersion = version + suffix;
+            }
+        }
+
+        AppVeyor.UpdateBuildVersion(packageVersion);
+    }
+
     Information("Building version {0} of NUnit.", packageVersion);
 
     isDotNetCoreInstalled = CheckIfDotNetCoreInstalled();
@@ -123,46 +163,6 @@ Task("InitializeBuild")
             {
                 Arguments = "restore"
             });
-        }
-
-        if (isAppveyor)
-        {
-            var tag = AppVeyor.Environment.Repository.Tag;
-
-            if (tag.IsTag)
-            {
-                packageVersion = tag.Name;
-            }
-            else
-            {
-                var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
-                var branch = AppVeyor.Environment.Repository.Branch;
-                var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
-
-                if (branch == "master" && !isPullRequest)
-                {
-                    packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
-                }
-                else
-                {
-                    var suffix = "-ci-" + buildNumber + dbgSuffix;
-
-                    if (isPullRequest)
-                        suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
-                    else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-                        suffix += "-pre-" + buildNumber;
-                    else
-                        suffix += "-" + System.Text.RegularExpressions.Regex.Replace(branch, "[^0-9A-Za-z-]+", "-");
-
-                    // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-                    if (suffix.Length > 21)
-                        suffix = suffix.Substring(0, 21);
-
-                    packageVersion = version + suffix;
-                }
-            }
-
-            AppVeyor.UpdateBuildVersion(packageVersion);
         }
     });
 
@@ -226,38 +226,44 @@ Task("Build20")
         BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-2.0.csproj", configuration);
     });
 
-Task("BuildNetStandard")
-    .Description("Builds the .NET Standard version of the framework")
+Task("BuildNetStandard13")
+    .Description("Builds the .NET Standard 1.3 version of the framework")
     .WithCriteria(IsRunningOnWindows())
     .Does(() =>
     {
         if(!isDotNetCoreInstalled)
         {
-            Warning(".NET Standard was not built because .NET Core SDK is not installed");
+            Warning(".NET Standard 1.3 was not built because .NET Core SDK is not installed");
             return;
         }
-        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard.csproj", configuration);
+        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard13.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard13.csproj", configuration);
     });
 
-Task("BuildPortable")
-    .Description("Builds the PCL version of the framework")
+Task("BuildNetStandard16")
+    .Description("Builds the .NET Standard 1.6 version of the framework")
     .WithCriteria(IsRunningOnWindows())
     .Does(() =>
     {
-        BuildProject("src/NUnitFramework/framework/nunit.framework-portable.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-portable.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-portable.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-portable.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-portable.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-portable.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-portable.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-portable.csproj", configuration);
+        if(!isDotNetCoreInstalled)
+        {
+            Warning(".NET Standard 1.6 was not built because .NET Core SDK is not installed");
+            return;
+        }
+        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard16.csproj", configuration);
+        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard16.csproj", configuration);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -320,10 +326,28 @@ Task("Test20")
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
-Task("TestNetStandard")
-    .Description("Tests the .NET Standard version of the framework")
+Task("TestNetStandard13")
+    .Description("Tests the .NET Standard 1.3 version of the framework")
     .WithCriteria(IsRunningOnWindows())
-    .IsDependentOn("BuildNetStandard")
+    .IsDependentOn("BuildNetStandard13")
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
+    .Does(() =>
+    {
+        if(!isDotNetCoreInstalled)
+        {
+            Warning(".NET Standard was not tested because .NET Core SDK is not installed");
+            return;
+        }
+        var runtime = "netstandard13";
+        var dir = BIN_DIR + runtime + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+    });
+
+Task("TestNetStandard16")
+    .Description("Tests the .NET Standard 1.6 version of the framework")
+    .WithCriteria(IsRunningOnWindows())
+    .IsDependentOn("BuildNetStandard16")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
@@ -336,19 +360,6 @@ Task("TestNetStandard")
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
-    });
-
-Task("TestPortable")
-    .Description("Tests the PCL version of the framework")
-    .WithCriteria(IsRunningOnWindows())
-    .IsDependentOn("BuildPortable")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "portable";
-        var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -455,8 +466,8 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net-3.5/*.*") +
             GetFiles(currentImageDir + "bin/net-4.0/*.*") +
             GetFiles(currentImageDir + "bin/net-4.5/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard16/*.*") +
-            GetFiles(currentImageDir + "bin/portable/*.*");
+            GetFiles(currentImageDir + "bin/netstandard13/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard16/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
@@ -619,9 +630,9 @@ Task("Build")
     .IsDependentOn("Build40")
     .IsDependentOn("Build35")
     .IsDependentOn("Build20")
-    .IsDependentOn("BuildNetStandard")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
-    .IsDependentOn("BuildPortable");
+    .IsDependentOn("BuildNetStandard13")
+    .IsDependentOn("BuildNetStandard16");
 
 Task("Test")
     .Description("Builds and tests all versions of the framework")
@@ -630,9 +641,9 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
-    .IsDependentOn("TestNetStandard")
 // NOTE: The following tasks use Criteria and will be skipped on Linux
-    .IsDependentOn("TestPortable");
+    .IsDependentOn("TestNetStandard13")
+    .IsDependentOn("TestNetStandard16");
 
 Task("Package")
     .Description("Packages all versions of the framework")

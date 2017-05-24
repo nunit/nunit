@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -97,7 +97,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Positive
- 
+
         /// <summary>
         /// Returns a constraint that tests for a positive value
         /// </summary>
@@ -105,11 +105,11 @@ namespace NUnit.Framework
         {
             get { return new GreaterThanConstraint(0); }
         }
- 
+
         #endregion
- 
+
         #region Negative
- 
+
         /// <summary>
         /// Returns a constraint that tests for a negative value
         /// </summary>
@@ -159,7 +159,7 @@ namespace NUnit.Framework
         #region Unique
 
         /// <summary>
-        /// Returns a constraint that tests whether a collection 
+        /// Returns a constraint that tests whether a collection
         /// contains all unique items.
         /// </summary>
         public static UniqueItemsConstraint Unique
@@ -171,7 +171,7 @@ namespace NUnit.Framework
 
         #region BinarySerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -185,7 +185,7 @@ namespace NUnit.Framework
 
         #region XmlSerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -383,7 +383,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the actual value
-        /// is a collection containing the same elements as the 
+        /// is a collection containing the same elements as the
         /// collection supplied as an argument.
         /// </summary>
         public static CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
@@ -486,12 +486,11 @@ namespace NUnit.Framework
         }
 
         #endregion
-        
-#if !PORTABLE
+
         #region SamePath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same as an expected path after canonicalization.
         /// </summary>
         public static SamePathConstraint SamePath(string expected)
@@ -504,7 +503,7 @@ namespace NUnit.Framework
         #region SubPath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is a subpath of the expected path after canonicalization.
         /// </summary>
         public static SubPathConstraint SubPathOf(string expected)
@@ -517,7 +516,7 @@ namespace NUnit.Framework
         #region SamePathOrUnder
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same path or under an expected path after canonicalization.
         /// </summary>
         public static SamePathOrUnderConstraint SamePathOrUnder(string expected)
@@ -526,7 +525,6 @@ namespace NUnit.Framework
         }
 
         #endregion
-#endif
 
         #region InRange
 
@@ -534,7 +532,7 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// inclusively within a specified range.
         /// </summary>
-        /// <remarks>from must be less than or equal to true</remarks> 
+        /// <remarks>from must be less than or equal to true</remarks>
         /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
         /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
         /// <returns></returns>

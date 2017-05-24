@@ -31,10 +31,6 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Copyright (C) 2017 Charlie Poole")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
-#if PORTABLE
-[assembly: AssemblyMetadata("PCL", "True")]
-#endif
-
 #if DEBUG
 #if NET_4_5
 [assembly: AssemblyConfiguration(".NET 4.5 Debug")]
@@ -44,10 +40,10 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 3.5 Debug")]
 #elif NET_2_0
 [assembly: AssemblyConfiguration(".NET 2.0 Debug")]
+#elif NETSTANDARD1_3
+[assembly: AssemblyConfiguration(".NET Standard 1.3 Debug")]
 #elif NETSTANDARD1_6
-[assembly: AssemblyConfiguration("NetStandard 1.6 Debug")]
-#elif PORTABLE
-[assembly: AssemblyConfiguration("Portable Debug")]
+[assembly: AssemblyConfiguration(".NET Standard 1.6 Debug")]
 #else
 [assembly: AssemblyConfiguration("Debug")]
 #endif
@@ -60,10 +56,10 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 3.5")]
 #elif NET_2_0
 [assembly: AssemblyConfiguration(".NET 2.0")]
+#elif NETSTANDARD1_3
+[assembly: AssemblyConfiguration(".NET Standard 1.3")]
 #elif NETSTANDARD1_6
-[assembly: AssemblyConfiguration("NetStandard 1.6")]
-#elif PORTABLE
-[assembly: AssemblyConfiguration("Portable")]
+[assembly: AssemblyConfiguration(".NET Standard 1.6")]
 #else
 [assembly: AssemblyConfiguration("")]
 #endif

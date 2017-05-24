@@ -351,11 +351,11 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void PlatformAttributeRunsTest()
         {
-            string myPlatform = GetMyPlatform();           
+            string myPlatform = GetMyPlatform();
             new PlatformAttribute(myPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
@@ -382,7 +382,7 @@ namespace NUnit.Framework.Attributes
         {
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {
-                return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux"; 
+                return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux";
             }
             return "Win";
         }
@@ -409,7 +409,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 
         #region RequiresMTAAttribute
 
@@ -457,7 +457,7 @@ namespace NUnit.Framework.Attributes
 
         #region RequiresThreadAttribute
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -474,7 +474,7 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -506,7 +506,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 
         #region SetCultureAttribute
 

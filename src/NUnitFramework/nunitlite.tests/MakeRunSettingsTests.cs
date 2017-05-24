@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using System.IO;
 using NUnit.Common;
 using NUnit.Framework;
@@ -30,7 +29,7 @@ namespace NUnitLite.Tests
 {
     public class MakeRunSettingsTests
     {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void WhenTimeoutIsSpecified_RunSettingsIncludeIt()
         {
@@ -73,4 +72,3 @@ namespace NUnitLite.Tests
         }
     }
 }
-#endif

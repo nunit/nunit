@@ -28,7 +28,7 @@ using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Linq;
 #endif
 
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
                 .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
 #else
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                 catch (System.Threading.ThreadAbortException)
                 {
                     // No need to wrap or rethrow ThreadAbortException

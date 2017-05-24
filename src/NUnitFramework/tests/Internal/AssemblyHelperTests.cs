@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using System.IO;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -84,4 +83,3 @@ namespace NUnit.Framework.Internal.Tests
         }
     }
 }
-#endif

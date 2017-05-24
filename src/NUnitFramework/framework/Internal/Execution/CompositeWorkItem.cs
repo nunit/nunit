@@ -153,7 +153,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeSetUpAndTearDownCommands()
         {
-            List<SetUpTearDownItem> setUpTearDownItems = 
+            List<SetUpTearDownItem> setUpTearDownItems =
                 BuildSetUpTearDownList(_suite.OneTimeSetUpMethods, _suite.OneTimeTearDownMethods);
 
             var actionItems = new List<TestActionItem>();
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             TestCommand command = new EmptyTestCommand(Test);
 
-            // Add Action Commands 
+            // Add Action Commands
             int index = actions.Count;
             while (--index >= 0)
                 command = new BeforeTestActionCommand(command, actions[index]);
@@ -368,7 +368,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private void OnAllChildItemsCompleted()
         {
@@ -436,7 +436,7 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             public override void Execute()
             {

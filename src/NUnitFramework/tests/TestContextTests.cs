@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,9 +41,7 @@ namespace NUnit.Framework.Tests
 
         private string _name;
 
-#if !PORTABLE
         private string _testDirectory;
-#endif
         private string _workDirectory;
 
         private string _tempFilePath;
@@ -54,9 +52,7 @@ namespace NUnit.Framework.Tests
         {
             _name = TestContext.CurrentContext.Test.Name;
 
-#if !PORTABLE
             _testDirectory = TestContext.CurrentContext.TestDirectory;
-#endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
         }
 
@@ -64,17 +60,13 @@ namespace NUnit.Framework.Tests
         public void CreateTempFile()
         {
             _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName);
-#if !PORTABLE
             File.Create(_tempFilePath).Dispose();
-#endif
         }
 
         [OneTimeTearDown]
         public void RemoveTempFile()
         {
-#if !PORTABLE
             File.Delete(_tempFilePath);
-#endif
         }
 
         [SetUp]
@@ -85,7 +77,6 @@ namespace NUnit.Framework.Tests
 
         #region TestDirectory
 
-#if !PORTABLE
         [Test]
         public void ConstructorCanAccessTestDirectory()
         {
@@ -102,7 +93,6 @@ namespace NUnit.Framework.Tests
         {
             yield return TestContext.CurrentContext.TestDirectory;
         }
-#endif
 
         #endregion
 
@@ -119,9 +109,7 @@ namespace NUnit.Framework.Tests
         {
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             Assert.NotNull(workDirectory);
-#if !PORTABLE
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
-#endif
         }
 
         [TestCaseSource("WorkDirectorySource")]
@@ -378,7 +366,7 @@ namespace NUnit.Framework.Tests
         }
 
         [TestCase(null)]
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [TestCase("bad<>path.png", IncludePlatform = "Windows")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
@@ -386,13 +374,11 @@ namespace NUnit.Framework.Tests
             Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
         }
 
-#if !PORTABLE
         [Test]
         public void NoneExistentFileThrowsFileNotFoundException()
         {
             Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
         }
-#endif
 
         #endregion
     }
@@ -419,10 +405,8 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-#if !PORTABLE
             Assert.That(context.TestDirectory, Is.Not.Null);
             Assert.That(context.WorkDirectory, Is.Not.Null);
-#endif
         }
     }
 

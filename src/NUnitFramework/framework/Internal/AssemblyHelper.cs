@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         const string UriSchemeFile = "file";
         const string SchemeDelimiter = "://";
 #else
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if PORTABLE
+#if NETSTANDARD1_3
             return assembly.ManifestModule.FullyQualifiedName;
 #else
             string codeBase = assembly.CodeBase;
@@ -78,7 +78,6 @@ namespace NUnit.Framework.Internal
 
         #region GetDirectoryName
 
-#if !PORTABLE
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>
@@ -88,7 +87,6 @@ namespace NUnit.Framework.Internal
         {
             return Path.GetDirectoryName(GetAssemblyPath(assembly));
         }
-#endif
 
         #endregion
 
@@ -101,18 +99,14 @@ namespace NUnit.Framework.Internal
         /// <returns>An AssemblyName</returns>
         public static AssemblyName GetAssemblyName(Assembly assembly)
         {
-#if PORTABLE
-            return new AssemblyName(assembly.FullName);
-#else
             return assembly.GetName();
-#endif
         }
 
         #endregion
 
         #region Load
 
-#if PORTABLE
+#if NETSTANDARD1_3
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
         /// </summary>
@@ -128,7 +122,7 @@ namespace NUnit.Framework.Internal
         }
 #elif NETSTANDARD1_6
         /// <summary>
-        /// Loads an assembly given a string, which may be the 
+        /// Loads an assembly given a string, which may be the
         /// path to the assembly or the AssemblyName
         /// </summary>
         /// <param name="nameOrPath"></param>
@@ -149,7 +143,7 @@ namespace NUnit.Framework.Internal
         }
 #else
         /// <summary>
-        /// Loads an assembly given a string, which may be the 
+        /// Loads an assembly given a string, which may be the
         /// path to the assembly or the AssemblyName
         /// </summary>
         /// <param name="nameOrPath"></param>

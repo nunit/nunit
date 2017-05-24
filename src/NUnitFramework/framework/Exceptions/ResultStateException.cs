@@ -30,7 +30,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Abstract base for Exceptions that terminate a test and provide a ResultState.
     /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
     public abstract class ResultStateException : Exception
@@ -48,7 +48,7 @@ namespace NUnit.Framework
             base(message, inner) 
         {}
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Serialization Constructor
         /// </summary>

@@ -105,14 +105,12 @@ namespace NUnit.Framework.Internal.Results
             TestContext.WriteLine("The characters &, ', \", < and > must be escaped.");
         }
 
-#if !PORTABLE
         [Test]
         public void WriteToTestContextProgress()
         {
             TestContext.Progress.WriteLine("This is a test!");
             TestContext.Progress.WriteLine("The characters &, ', \", < and > must be escaped.");
         }
-#endif
 
         private void FakeMethod() { }
     }

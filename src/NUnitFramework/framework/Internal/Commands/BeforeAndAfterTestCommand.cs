@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (Exception ex)
             {
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif

@@ -129,7 +129,7 @@ namespace NUnit.Framework.Assertions.Tests
                     Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
                     Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
-#if !PORTABLE || NETSTANDARD1_6
+#if !NETSTANDARD1_3 || NETSTANDARD1_6
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.

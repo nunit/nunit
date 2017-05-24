@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FCF07E6C-335D-4265-B529-B7AF0E1076AB}</ProjectGuid>
+    <ProjectGuid>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Framework</RootNamespace>
@@ -15,7 +15,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
-    <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\netstandard13\</IntermediateOutputPath>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
@@ -23,22 +23,22 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NETSTANDARD1_6;ASYNC</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\netstandard13\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NETSTANDARD1_3;ASYNC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\..\bin\Debug\netstandard16\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\netstandard13\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NETSTANDARD1_6;ASYNC</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\netstandard13\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NETSTANDARD1_3;ASYNC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\..\bin\Release\netstandard16\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\netstandard13\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -429,7 +429,7 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-    <None Include="nunit.framework-netstandard.project.json" />
+    <None Include="nunit.framework-netstandard13.project.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compatibility\System\" />
@@ -443,6 +443,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <NuGetTargetMoniker>.NETStandard,Version=v1.6</NuGetTargetMoniker>
+    <NuGetTargetMoniker>.NETStandard,Version=v1.3</NuGetTargetMoniker>
   </PropertyGroup>
 </Project>

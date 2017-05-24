@@ -40,7 +40,6 @@ namespace NUnitLite.Tests
     {
         #region Argument PreProcessor Tests
 
-#if !PORTABLE
         [TestCase("--arg", "--arg")]
         [TestCase("--ArG", "--ArG")]
         [TestCase("--arg1 --arg2", "--arg1", "--arg2")]
@@ -97,16 +96,16 @@ namespace NUnitLite.Tests
         [TestCase("testfile.dll @file1.txt --arg2", "file1.txt:--where test==somelongname", "testfile.dll", "--where", "test==somelongname", "--arg2")]
         // NOTE: The next is not valid. Where clause is spread over several args and therefore won't parse. Quotes are required.
         [TestCase("testfile.dll @file1.txt --arg2", "file1.txt:--where test == somelongname", "testfile.dll", "--where", "test", "==", "somelongname", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
-            "file1.txt:--where \"test == somelongname\"", 
+        [TestCase("testfile.dll @file1.txt --arg2",
+            "file1.txt:--where \"test == somelongname\"",
             "testfile.dll", "--where", "test == somelongname", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
-            "file1.txt:--where\n    \"test == somelongname\"", 
+        [TestCase("testfile.dll @file1.txt --arg2",
+            "file1.txt:--where\n    \"test == somelongname\"",
             "testfile.dll", "--where", "test == somelongname", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
+        [TestCase("testfile.dll @file1.txt --arg2",
             "file1.txt:--where\n    \"test == somelongname or test == /another long name/ or cat == SomeCategory\"",
             "testfile.dll", "--where", "test == somelongname or test == /another long name/ or cat == SomeCategory", "--arg2")]
-        [TestCase("testfile.dll @file1.txt --arg2", 
+        [TestCase("testfile.dll @file1.txt --arg2",
             "file1.txt:--where\n    \"test == somelongname or\ntest == /another long name/ or\ncat == SomeCategory\"",
             "testfile.dll", "--where", "test == somelongname or test == /another long name/ or cat == SomeCategory", "--arg2")]
         [TestCase("testfile.dll @file1.txt --arg2",
@@ -173,7 +172,6 @@ namespace NUnitLite.Tests
                 Assert.AreEqual(expectedErrors, options.ErrorMessages);
             }
         }
-#endif
         #endregion
 
         #region General Tests
@@ -190,9 +188,7 @@ namespace NUnitLite.Tests
         [TestCase("ShowVersion", "version|V")]
         [TestCase("StopOnError", "stoponerror")]
         [TestCase("WaitBeforeExit", "wait")]
-#if !PORTABLE
         [TestCase("NoHeader", "noheader|noh")]
-#endif
         [TestCase("TeamCity", "teamcity")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
@@ -223,12 +219,10 @@ namespace NUnitLite.Tests
 
         [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "Before", "After", "All" }, new string[] { "JUNK" })]
-#if !PORTABLE
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
-#endif
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -256,9 +250,7 @@ namespace NUnitLite.Tests
         }
 
         [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
-#if !PORTABLE
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
-#endif
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
         {
             PropertyInfo property = GetPropertyInfo(propertyName);
@@ -273,7 +265,7 @@ namespace NUnitLite.Tests
                 Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
             }
         }
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [TestCase("DefaultTimeout", "timeout")]
 #endif
         [TestCase("RandomSeed", "seed")]
@@ -317,14 +309,12 @@ namespace NUnitLite.Tests
         // }
 
         [TestCase("--where")]
-#if !PORTABLE
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [TestCase("--timeout")]
-#endif
 #endif
         public void MissingValuesAreReported(string option)
         {
@@ -399,7 +389,7 @@ namespace NUnitLite.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
@@ -437,7 +427,6 @@ namespace NUnitLite.Tests
             Assert.AreEqual("results.xml", options.InputFile);
         }
 
-#if !PORTABLE
         [Test]
         public void ResultOptionWithFilePath()
         {
@@ -532,13 +521,11 @@ namespace NUnitLite.Tests
             var options = new NUnitLiteOptions("-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
-#endif
 
-#endregion
+        #endregion
 
-#region Explore Option
+        #region Explore Option
 
-#if !PORTABLE
         [Test]
         public void ExploreOptionWithoutPath()
         {
@@ -595,8 +582,6 @@ namespace NUnitLite.Tests
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
 
-#endif
-
         [TestCase(true, null, true)]
         [TestCase(false, null, false)]
         [TestCase(true, false, true)]
@@ -629,9 +614,9 @@ namespace NUnitLite.Tests
             Assert.AreEqual(actualTeamCity, expectedTeamCity);
         }
 
-#endregion
+        #endregion
 
-#region Test Parameters
+        #region Test Parameters
 
         [Test]
         public void SingleTestParameter()
@@ -687,9 +672,9 @@ namespace NUnitLite.Tests
                 Console.WriteLine("   Name: {0} Value: {1}", name, TestContext.Parameters[name]);
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         //private static FieldInfo GetFieldInfo(string fieldName)
         //{
@@ -705,7 +690,7 @@ namespace NUnitLite.Tests
             return property;
         }
 
-#endregion
+        #endregion
 
         internal sealed class DefaultOptionsProviderStub : IDefaultOptionsProvider
         {

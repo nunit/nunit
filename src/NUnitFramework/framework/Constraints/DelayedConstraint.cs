@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -35,7 +34,7 @@ namespace NUnit.Framework.Constraints
     public class DelayedConstraint : PrefixConstraint
     {
         /// <summary>
-        /// Allows only changing the time dimension of delay interval and setting a polling interval of a DelayedConstraint 
+        /// Allows only changing the time dimension of delay interval and setting a polling interval of a DelayedConstraint
         /// </summary>
         public class WithRawDelayInterval : DelayedConstraint
         {
@@ -348,7 +347,7 @@ namespace NUnit.Framework.Constraints
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
-#if NET_4_0 || NET_4_5
+#if NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
                     return region.WaitForPendingOperationsToComplete(del());
@@ -388,4 +387,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-#endif

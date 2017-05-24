@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// The filter applies when running the test, after it has been
     /// loaded, since this is the only time an ITest exists.
     /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
     public abstract class TestFilter : ITestFilter
@@ -203,7 +203,7 @@ namespace NUnit.Framework.Internal
         /// Nested class provides an empty filter - one that always
         /// returns true when called. It never matches explicitly.
         /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Serializable]
 #endif
         private class EmptyFilter : TestFilter

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if !NET_4_5 && !PORTABLE && !NETSTANDARD1_6
+#if !NET_4_5 && !NETSTANDARD1_3 && !NETSTANDARD1_6
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET_4_5 || PORTABLE || NETSTANDARD1_6
+#if NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
 #else
             PreserveStackTrace(exception);
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Internal
         // TODO: Move to a utility class
         /// <summary>
         /// Builds up a message, using the Message field of the specified exception
-        /// as well as any InnerExceptions. 
+        /// as well as any InnerExceptions.
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns>A combined message string.</returns>

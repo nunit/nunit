@@ -18,7 +18,6 @@
     <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -164,6 +163,7 @@
     <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
+    <Compile Include="Constraints\IntervalTests.cs" />
     <Compile Include="Constraints\LessThanConstraintTests.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\NUnitComparerTests.cs" />
@@ -194,6 +194,7 @@
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
+    <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
     <Compile Include="Internal\Filters\AndFilterTests.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
+    <Compile Include="Internal\Filters\PropertyFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
@@ -318,24 +320,24 @@
       <Link>nunit.snk</Link>
     </None>
     <None Include="app.config" />
-    <None Include="nunit.framework.tests-netstandard.project.json" />
+    <None Include="nunit.framework.tests-netstandard16.project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-netstandard.csproj">
+    <ProjectReference Include="..\framework\nunit.framework-netstandard16.csproj">
       <Project>{FCF07E6C-335D-4265-B529-B7AF0E1076AB}</Project>
-      <Name>nunit.framework-netstandard</Name>
+      <Name>nunit.framework-netstandard16</Name>
     </ProjectReference>
-    <ProjectReference Include="..\slow-tests\slow-nunit-tests-netstandard.csproj">
+    <ProjectReference Include="..\slow-tests\slow-nunit-tests-netstandard16.csproj">
       <Project>{4ee0beea-d510-4afd-b840-73f8705a8272}</Project>
-      <Name>slow-nunit-tests-netstandard</Name>
+      <Name>slow-nunit-tests-netstandard16</Name>
     </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-netstandard.csproj">
+    <ProjectReference Include="..\testdata\nunit.testdata-netstandard16.csproj">
       <Project>{6D8DCE9D-B224-46B5-B7F5-021534907DBA}</Project>
-      <Name>nunit.testdata-netstandard</Name>
+      <Name>nunit.testdata-netstandard16</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-assembly-netstandard.csproj">
+    <ProjectReference Include="..\mock-assembly\mock-assembly-netstandard16.csproj">
       <Project>{06EB9559-89AE-487A-B80B-C4816B50A592}</Project>
-      <Name>mock-assembly-netstandard</Name>
+      <Name>mock-assembly-netstandard16</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

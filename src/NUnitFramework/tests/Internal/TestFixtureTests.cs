@@ -92,13 +92,11 @@ namespace NUnit.Framework.Internal
             CanConstructFrom(typeof(FixtureWithoutTestFixtureAttributeContainingTestCaseSource));
         }
 
-#if !PORTABLE
         [Test]
         public void ConstructFromTypeWithoutTestFixtureAttributeContainingTheory()
         {
             CanConstructFrom(typeof(FixtureWithoutTestFixtureAttributeContainingTheory));
         }
-#endif
 
         [Test]
         public void CannotRunConstructorWithArgsNotSupplied()

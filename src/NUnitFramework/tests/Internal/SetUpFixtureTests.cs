@@ -4,7 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal
         #region Builder Tests
 
         /// <summary>
-        /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class as a 'virtual namespace' into which 
+        /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class as a 'virtual namespace' into which
         /// all it's sibling classes are inserted.
         /// </summary>
         [NUnit.Framework.Test]
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class with no parent namespace 
+        /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class with no parent namespace
         /// as a 'virtual assembly' into which all it's sibling fixtures are inserted.
         /// </summary>
         [NUnit.Framework.Test]

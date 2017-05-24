@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -44,8 +44,11 @@ namespace NUnit.Framework.Internal
             // Wrap the current listener, listening to events, and forwarding the original event
             ListenerResult = new TestListenerIntercepter(TestExecutionContext.CurrentContext.Listener);
             TestExecutionContext.CurrentContext.Listener = ListenerResult;
-
+#if NETSTANDARD1_3 || NETSTANDARD1_6
+            ListenerWriter = new EventListenerTextWriter(STREAM_NAME, TextWriter.Null);
+#else
             ListenerWriter = TextWriter.Synchronized(new EventListenerTextWriter(STREAM_NAME, TextWriter.Null));
+#endif
         }
 
         [TearDown]
@@ -193,7 +196,7 @@ namespace NUnit.Framework.Internal
         public void TestWriteLong()
         {
             long value = -987654321;
-            
+
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
@@ -207,7 +210,7 @@ namespace NUnit.Framework.Internal
         public void TestWriteUInt()
         {
             uint value = 0xff;
-            
+
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
@@ -313,7 +316,7 @@ namespace NUnit.Framework.Internal
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
         }
 
-        #region ITestListener implementation
+#region ITestListener implementation
 
         private class TestListenerIntercepter : ITestListener
         {
@@ -348,6 +351,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #endregion
+#endregion
     }
 }

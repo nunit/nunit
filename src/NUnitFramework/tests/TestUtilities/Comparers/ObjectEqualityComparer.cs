@@ -37,7 +37,7 @@ namespace NUnit.TestUtilities.Comparers
         bool IEqualityComparer.Equals(object x, object y)
         {
             Called = true;
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return Comparer<object>.Default.Compare(x, y) == 0;
 #else
             return Comparer.Default.Compare(x, y) == 0;

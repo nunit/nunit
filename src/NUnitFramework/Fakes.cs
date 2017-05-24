@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,7 +26,7 @@ using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
-#if PORTABLE && !NUNITLITE && !NETSTANDARD1_6
+#if NETSTANDARD1_3
 using BF = NUnit.Compatibility.BindingFlags;
 #else
 using BF = System.Reflection.BindingFlags;
@@ -114,7 +114,7 @@ namespace NUnit.TestUtilities
         public event System.EventHandler Executed;
 
         public FakeWorkItem(Test test, TestExecutionContext context)
-            : base(test, TestFilter.Empty) 
+            : base(test, TestFilter.Empty)
         {
             InitializeContext(context);
         }

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</ProjectGuid>
+    <ProjectGuid>{FCF07E6C-335D-4265-B529-B7AF0E1076AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Framework</RootNamespace>
@@ -12,31 +12,33 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <IntermediateOutputPath>obj\$(Configuration)\netstandard16\</IntermediateOutputPath>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE;ASYNC</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\netstandard16\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NETSTANDARD1_6;ASYNC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\..\bin\Debug\portable\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\netstandard16\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;PORTABLE;ASYNC</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\netstandard16\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NETSTANDARD1_6;ASYNC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\..\bin\Release\portable\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\netstandard16\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -86,6 +88,7 @@
     </Compile>
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
+    <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
@@ -193,6 +196,7 @@
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraint.cs" />
+    <Compile Include="Constraints\Interval.cs" />
     <Compile Include="Constraints\IResolveConstraint.cs" />
     <Compile Include="Constraints\ItemsConstraintExpression.cs" />
     <Compile Include="Constraints\LessThanConstraint.cs" />
@@ -425,17 +429,20 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-    <None Include="nunit.framework-portable.project.json" />
+    <None Include="nunit.framework-netstandard16.project.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compatibility\System\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <NuGetTargetMoniker>.NETStandard,Version=v1.6</NuGetTargetMoniker>
+  </PropertyGroup>
 </Project>
