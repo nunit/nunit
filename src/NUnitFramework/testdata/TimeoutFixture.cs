@@ -23,6 +23,7 @@
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
 
@@ -50,6 +51,20 @@ namespace NUnit.TestData
         {
             while (true) { }
         }
+
+
+        [Test, Timeout(500)]
+        public void TimeoutWithMessagePumpShouldAbort()
+        {
+            // Simulate System.Windows.Forms.Application.Run or .ShowDialog,
+            // or System.Windows.Threading.Dispatcher.PushFrame,
+            // which block on native calls to WaitMessage or MsgWaitForMultipleObjectsEx.
+            while (true)
+                WaitMessage();
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool WaitMessage();
     }
 
     public class TimeoutFixtureWithTimeoutInSetUp : TimeoutFixture
