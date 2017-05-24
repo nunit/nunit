@@ -30,7 +30,9 @@ namespace NUnit.Framework
     using Internal;
 
     /// <summary>
-    /// SetUpFixtureAttribute is used to identify a SetUpFixture
+    /// Attribute used to identify a class that contains
+    /// <see cref="OneTimeSetUpAttribute" /> or <see cref="OneTimeTearDownAttribute" />
+    /// methods for all the test fixtures under a given namespace.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
