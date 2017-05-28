@@ -296,13 +296,30 @@ namespace NUnit.Framework.Api
             if (!System.Diagnostics.Debugger.IsAttached &&
                 Settings.ContainsKey(FrameworkPackageSettings.DebugTests) &&
                 (bool)Settings[FrameworkPackageSettings.DebugTests])
-                System.Diagnostics.Debugger.Launch();
+            {
+                try
+                {
+                    System.Diagnostics.Debugger.Launch();
+                }
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+                catch (SecurityException)
+                {
+                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission is not set to start the debugger.");
+                    return;
+                }
+#endif
+                //System.Diagnostics.Debugger.Launch() not implemented on mono
+                catch (NotImplementedException)
+                {
+                    TopLevelWorkItem.MarkNotRunnable("Debugger unavailable on this platform.");
+                    return;
+                }
+            }
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
-
 #endif
 
             Context.Dispatcher.Start(TopLevelWorkItem);

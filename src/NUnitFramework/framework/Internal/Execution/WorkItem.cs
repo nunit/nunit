@@ -229,6 +229,16 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
+        /// <summary>
+        /// Marks the WorkItem as NotRunnable.
+        /// </summary>
+        /// <param name="reason">Reason for test being NotRunnable.</param>
+        public void MarkNotRunnable(string reason)
+        {
+            Result.SetResult(ResultState.NotRunnable, reason);
+            WorkItemComplete();
+        }
+
         private object threadLock = new object();
 
         /// <summary>
