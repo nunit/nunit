@@ -367,7 +367,7 @@ namespace NUnit.Framework.Tests
 
         [TestCase(null)]
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
-        [TestCase("bad<>path.png", IncludePlatform = "Windows")]
+        [TestCase("bad<>path.png", IncludePlatform = "Win")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
         {
