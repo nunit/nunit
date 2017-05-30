@@ -1,3 +1,90 @@
+### NUnit 3.7 - May 29, 2017
+
+This release of NUnit expands on parallel test execution to allow test methods to
+be run in parallel. Please see the [Parallelizable Attribute](https://github.com/nunit/docs/wiki/Parallelizable-Attribute)
+for more information.
+
+NUnit 3.7 also drops the Portable build of the framework and replaces it with a
+.NET Standard 1.3 version to compliment the .NET Standard 1.6 version. This change
+enables several constraints and other features in the .NET Standard builds that
+weren't available in portable like Path and Directory based asserts.
+
+The AssertionHelper class has been deprecated because it is seldom used and has
+not received any of the updates that Asserts and Constraints receive. If your code
+is using the AssertionHelper class, we recommend that you migrate your asserts.
+
+#### Issues Resolved
+
+ * 164 Run test methods within a fixture in parallel
+ * 391 Multiple Assertions
+ * 652 Add ability to execute test actions before SetUp or OneTimeSetUp
+ * 1000 Support multiple Author attributes per test
+ * 1096 Treat OneTimeSetup and OneTimeTearDown as separate work items
+ * 1143 NUnitLite - Explore flag does not apply where filter to output
+ * 1238 Feature request: Print LoaderExceptions when fixture loading fails
+ * 1363 Make Timeouts work without running test on its own thread
+ * 1474 Several SetUpFixtures at the same level may be active at the same time
+ * 1819 TestContext.Progress.Write writes new line
+ * 1830 Add --labels switch changes to nunilite and nunitlite tests
+ * 1859 ConcurrentQueue is duplicate with System.Threading.dll package
+ * 1877 Resolve differences between NUnit Console and NUnitLite implementations of @filename
+ * 1885 Test parameter containing a semicolon
+ * 1896 Test has passed however Reason with an empty message is printed in the xml
+ * 1918 Changing DefaultFloatingPointTolerance breaks tests running in parallel
+ * 1932 NUnit Warn class should be removed from stack trace by filter
+ * 1934 NullReferenceException when null arguments are used in TestFixtureAttribute
+ * 1952 TestContext.Out null when used in task with .NET Core
+ * 1963 Investigate removing SpecialValue
+ * 1965 TestContext does not flow in async method
+ * 1971 Switch CHANGES.txt to Markdown
+ * 1973 Implemented TestExecutionContext to use AsyncLocal<> for NETSTANDARD1_6
+ * 1975 TestFixtureSource doesn't work with a class that has no namespace
+ * 1983 Add missing ConstraintExpression.Contain overload
+ * 1990 Add namespace filter
+ * 1997 Remove unused --verbose and --full command line options
+ * 1999 Author Tests assume ICustomAttributeProvider.GetCustomAttributes return order is defined
+ * 2003 Better user info about ParallelizableAttribute and ParallelScope
+ * 2005 Exclude empty failure messages from results xml
+ * 2007 3.6 Multiple assertion backwards compatibility
+ * 2010 Add DelayedConstraint in NetStandard 1.6 build
+ * 2020 Better message when timeout fails
+ * 2023 Ability to abort threads running a message pump
+ * 2025 NullReferenceException using Is.EqualTo on two unequal strings
+ * 2030 Add method to mark tests as invalid with a reason
+ * 2031 Limit Language level to C#6
+ * 2034 Remove silverlight project - no longer used
+ * 2035 NullReferenceException inside failing Assert.That call
+ * 2040 Cannot catch AssertionException
+ * 2045 NUnitlite-runner crashes if no file is provided
+ * 2050 Creation of TestExecutionContext should be explicit
+ * 2052 NullReferenceException with TestCaseSource if a property has no setter
+ * 2061 TestContext.WorkDirectory not initialized during build process
+ * 2079 Make TestMethod.Arguments public or otherwise accessible (e.g. TestContext)
+ * 2080 Allow comments in @FILE files
+ * 2087 Enhance error message: Test is not runnable in single-threaded context. Timeout
+ * 2092 Convert Portable library to .NET Standard 1.3
+ * 2095 Extend use of tolerance to ComparisonConstraints
+ * 2099 Include type in start-suite/start-test report elements
+ * 2110 NullReferenceException when getting TestDirectory from TestContext
+ * 2115 Mark AssertionHelper as Obsolete
+ * 2121 Chained PropertyConstraint constraints report incorrect ActualValue
+ * 2131 Remove "Version 3" suffix from NUnitLite NuGet Package
+ * 2132 TestFixtureTests.CapturesArgumentsForConstructorWithMultipleArgsSupplied assumes order of custom attributes
+ * 2143 Non-parallel fixture with parallel children runs in parallel with other fixtures
+ * 2147 Test Assembly using NUnitLite & Nunit 3.6.1 hangs under .NET Core when `--timeout` is supplied on command line
+ * 2150 Add portable-slow-tests to Cake file
+ * 2152 Allow attaching files to TestResults
+ * 2154 Fix execution of non-parallel test fixtures
+ * 2157 Getting WorkerId inside Assert.Throws / DoesNotThrow returns null instead of previous non-null value
+ * 2158 Update SetupFixtureAttribute XML Docs
+ * 2159 Prevent crash in .NET standard with log file path
+ * 2165 Trying to install NUnit 3.6.1 on .NET Framework asks for download of 20 more packages
+ * 2169 Incorrect xmldocs for SetUpAttribute
+ * 2170 Cake build fails if only Visual Studio 2017 installed
+ * 2173 Remove PreTestAttribute and PostTestAttribute
+ * 2186 Replace special characters as part of converting branch names to package versions
+ * 2191 System.Reflection.TargetInvocationException with nunit3-console --debug on Mono
+
 ### NUnit 3.6.1 - February 26, 2017
 
 This is a hotfix release of the framework that addresses critical issues found in
