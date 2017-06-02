@@ -177,11 +177,13 @@ namespace NUnit.Framework.Api
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
         }
 
-        [Test]
-        public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(EMPTY_FILTER)]
+        public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
             new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.ExploreTestsAction(_controller, filter, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));

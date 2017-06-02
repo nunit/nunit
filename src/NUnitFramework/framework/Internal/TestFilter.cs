@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -58,9 +58,9 @@ namespace NUnit.Framework.Internal
         public bool TopLevel { get; set; }
 
         /// <summary>
-        /// Determine if a particular test passes the filter criteria. The default 
+        /// Determine if a particular test passes the filter criteria. The default
         /// implementation checks the test itself, its parents and any descendants.
-        /// 
+        ///
         /// Derived classes may override this method or any of the Match methods
         /// to change the behavior of the filter.
         /// </summary>
@@ -125,6 +125,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestFilter FromXml(string xmlText)
         {
+            if (string.IsNullOrEmpty(xmlText))
+                xmlText = "<filter />";
+
             TNode topNode = TNode.FromXml(xmlText);
 
             if (topNode.Name != "filter")
@@ -169,7 +172,7 @@ namespace NUnit.Framework.Internal
                     return new NotFilter(FromXml(node.FirstChild));
 
                 case "id":
-                    return new IdFilter(node.Value); 
+                    return new IdFilter(node.Value);
 
                 case "test":
                     return new FullNameFilter(node.Value) { IsRegex = isRegex };

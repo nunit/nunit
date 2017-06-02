@@ -336,8 +336,6 @@ namespace NUnit.Framework.Api
 
         private void ExploreTests(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             if (Runner.LoadedTest == null)
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
