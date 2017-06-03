@@ -192,7 +192,7 @@ namespace NUnit.Framework.Internal.Execution
                 q.Pause();
 
             // Signal the dispatcher that shift ended
-            EndOfShift(this, EventArgs.Empty);
+            EndOfShift?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

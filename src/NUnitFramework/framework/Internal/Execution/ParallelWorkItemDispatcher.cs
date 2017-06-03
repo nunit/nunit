@@ -37,6 +37,8 @@ namespace NUnit.Framework.Internal.Execution
     {
         private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
 
+        private WorkItem _topLevelWorkItem;
+
         #region Constructor
 
         /// <summary>
@@ -137,6 +139,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
+            _topLevelWorkItem = topLevelWorkItem;
+
             var strategy = topLevelWorkItem.ParallelScope.HasFlag(ParallelScope.None)
                 ? ExecutionStrategy.NonParallel
                 : ExecutionStrategy.Parallel;
@@ -238,11 +242,19 @@ namespace NUnit.Framework.Internal.Execution
             if (_savedQueueLevel > 0)
                 RestoreQueueState();
 
-            if (!StartNextShift())
+            // Shift has ended but all work may not yet be done
+            while (_topLevelWorkItem.State != WorkItemState.Complete)
             {
-                foreach (var shift in Shifts)
-                    shift.ShutDown();
+                // This will fail if there is no work - all queues empty.
+                // In that case, we just continue the loop until either
+                // a shift is started or all the work is complete.
+                if (StartNextShift())
+                    return;
             }
+
+            // All work is complete, so shutdown.
+            foreach (var shift in Shifts)
+                shift.ShutDown();
         }
 
         private bool StartNextShift()
