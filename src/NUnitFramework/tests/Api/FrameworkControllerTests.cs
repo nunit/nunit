@@ -56,6 +56,16 @@ namespace NUnit.Framework.Api
         private FrameworkController _controller;
         private ICallbackEventHandler _handler;
 
+        public static IEnumerable EmptyFilters
+        {
+            get
+            {
+                yield return new TestCaseData(null);
+                yield return new TestCaseData("");
+                yield return new TestCaseData(EMPTY_FILTER);
+            }
+        }
+
         public class FixtureCategoryTester
         {
             [Category("FixtureCategory")]
@@ -177,9 +187,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(EMPTY_FILTER)]
+        [TestCaseSource(nameof(EmptyFilters))]
         public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
             new FrameworkController.LoadTestsAction(_controller, _handler);
@@ -257,11 +265,11 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region CountTestsAction
-        [Test]
-        public void CountTestsAction_AfterLoad_ReturnsCorrectCount()
+        [TestCaseSource(nameof(EmptyFilters))]
+        public void CountTestsAction_AfterLoad_ReturnsCorrectCount(string filter)
         {
             new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.CountTestsAction(_controller, filter, _handler);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo(MockAssembly.Tests.ToString()));
         }
 
@@ -295,11 +303,11 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region RunTestsAction
-        [Test]
-        public void RunTestsAction_AfterLoad_ReturnsRunnableSuite()
+        [TestCaseSource(nameof(EmptyFilters))]
+        public void RunTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
             new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.RunTestsAction(_controller, filter, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             // TODO: Any failure here throws an exception because the call to RunTestsAction
@@ -366,11 +374,11 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region RunAsyncAction
-        [Test]
-        public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite()
+        [TestCaseSource(nameof(EmptyFilters))]
+        public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
             new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler);
+            new FrameworkController.RunAsyncAction(_controller, filter, _handler);
             //var result = TNode.FromXml(_handler.GetCallbackResult());
 
             //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
