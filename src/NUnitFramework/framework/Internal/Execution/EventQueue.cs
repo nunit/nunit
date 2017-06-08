@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal.Execution
                 break;
             } while (true);
 
-            Thread.Sleep(1);  // give EventPump thread a chance to process the event
+            Thread.Sleep(0);  // give EventPump thread a chance to process the event
         }
 
         /// <summary>
