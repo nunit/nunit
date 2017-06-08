@@ -47,35 +47,35 @@ namespace NUnit.Framework.Internal.Tests
     @"   at NUnit.Tests.GreaterThanMatcherTest.MatchesGoodValue() in D:\Dev\NUnitLite\NUnitLiteTests\GreaterThanMatcherTest.cs:line 12" + NL;
 
         private static readonly string shortTrace_Result =
-    @"at NUnit.Tests.GreaterThanMatcherTest.MatchesGoodValue() in D:\Dev\NUnitLite\NUnitLiteTests\GreaterThanMatcherTest.cs:line 12" + NL;
+    @"   at NUnit.Tests.GreaterThanMatcherTest.MatchesGoodValue() in D:\Dev\NUnitLite\NUnitLiteTests\GreaterThanMatcherTest.cs:line 12" + NL;
 
         // NOTE: In most cases, NUnit does not have to deal with traces
         // like this because the InnerException of a TargetInvocationException
         // only includes the methods called from the point of invocation.
         // However, in the compact framework, such long traces may arise.
         private static readonly string longTrace =
-    @"  at NUnit.Framework.Assert.Fail(String message, Object[] args)" + NL +
-    @"  at MyNamespace.MyAppsTests.AssertFailTest()" + NL +
-    @"  at System.Reflection.RuntimeMethodInfo.InternalInvoke(RuntimeMethodInfo rtmi, Object obj, BindingFlags invokeAttr, Binder binder, Object parameters, CultureInfo culture, Boolean isBinderDefault, Assembly caller, Boolean verifyAccess, StackCrawlMark& stackMark)" + NL +
-    @"  at System.Reflection.RuntimeMethodInfo.InternalInvoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture, Boolean verifyAccess, StackCrawlMark& stackMark)" + NL +
-    @"  at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)" + NL +
-    @"  at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)" + NL +
-    @"  at NUnitLite.ProxyTestCase.InvokeMethod(MethodInfo method, Object[] args)" + NL +
-    @"  at NUnit.Framework.TestCase.RunTest()" + NL +
-    @"  at NUnit.Framework.TestCase.RunBare()" + NL +
-    @"  at NUnit.Framework.TestCase.Run(TestResult result, TestListener listener)" + NL +
-    @"  at NUnit.Framework.TestCase.Run(TestListener listener)" + NL +
-    @"  at NUnit.Framework.TestSuite.Run(TestListener listener)" + NL +
-    @"  at NUnit.Framework.TestSuite.Run(TestListener listener)" + NL +
-    @"  at NUnitLite.Runner.TestRunner.Run(ITest test)" + NL +
-    @"  at NUnitLite.Runner.ConsoleUI.Run(ITest test)" + NL +
-    @"  at NUnitLite.Runner.TestRunner.Run(Assembly assembly)" + NL +
-    @"  at NUnitLite.Runner.ConsoleUI.Run()" + NL +
-    @"  at NUnitLite.Runner.ConsoleUI.Main(String[] args)" + NL +
-    @"  at OpenNETCF.Linq.Demo.Program.Main(String[] args)" + NL;
+    @"   at NUnit.Framework.Assert.Fail(String message, Object[] args)" + NL +
+    @"   at MyNamespace.MyAppsTests.AssertFailTest()" + NL +
+    @"   at System.Reflection.RuntimeMethodInfo.InternalInvoke(RuntimeMethodInfo rtmi, Object obj, BindingFlags invokeAttr, Binder binder, Object parameters, CultureInfo culture, Boolean isBinderDefault, Assembly caller, Boolean verifyAccess, StackCrawlMark& stackMark)" + NL +
+    @"   at System.Reflection.RuntimeMethodInfo.InternalInvoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture, Boolean verifyAccess, StackCrawlMark& stackMark)" + NL +
+    @"   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)" + NL +
+    @"   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)" + NL +
+    @"   at NUnitLite.ProxyTestCase.InvokeMethod(MethodInfo method, Object[] args)" + NL +
+    @"   at NUnit.Framework.TestCase.RunTest()" + NL +
+    @"   at NUnit.Framework.TestCase.RunBare()" + NL +
+    @"   at NUnit.Framework.TestCase.Run(TestResult result, TestListener listener)" + NL +
+    @"   at NUnit.Framework.TestCase.Run(TestListener listener)" + NL +
+    @"   at NUnit.Framework.TestSuite.Run(TestListener listener)" + NL +
+    @"   at NUnit.Framework.TestSuite.Run(TestListener listener)" + NL +
+    @"   at NUnitLite.Runner.TestRunner.Run(ITest test)" + NL +
+    @"   at NUnitLite.Runner.ConsoleUI.Run(ITest test)" + NL +
+    @"   at NUnitLite.Runner.TestRunner.Run(Assembly assembly)" + NL +
+    @"   at NUnitLite.Runner.ConsoleUI.Run()" + NL +
+    @"   at NUnitLite.Runner.ConsoleUI.Main(String[] args)" + NL +
+    @"   at OpenNETCF.Linq.Demo.Program.Main(String[] args)" + NL;
 
         private static readonly string longTrace_Result =
-    @"at MyNamespace.MyAppsTests.AssertFailTest()" + NL;
+    @"   at MyNamespace.MyAppsTests.AssertFailTest()" + NL;
 
         #endregion
 
