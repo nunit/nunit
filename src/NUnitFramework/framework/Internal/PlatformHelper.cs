@@ -164,7 +164,7 @@ namespace NUnit.Framework.Internal
 //				versionSpecification = parts[1];
 //			}
 
-            switch( platformName.ToUpper() )
+            switch (platformName.ToUpperInvariant())
             {
                 case "WIN":
                 case "WIN32":
