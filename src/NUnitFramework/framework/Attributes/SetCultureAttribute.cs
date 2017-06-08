@@ -49,7 +49,7 @@ namespace NUnit.Framework
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
-            context.CurrentCulture = new System.Globalization.CultureInfo(_culture);
+            context.CurrentCulture = new System.Globalization.CultureInfo(_culture, false);
         }
 
         #endregion
