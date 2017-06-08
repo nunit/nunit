@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(format, arg0);
             ListenerWriter.WriteLine(format, arg0);
 
-            var expected = "20 Apr 2017";
+            var expected = $"{arg0:dd MMM yyyy}";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(format, arg0, arg1);
             ListenerWriter.WriteLine(format, arg0, arg1);
 
-            var expected = "05.00 @";
+            var expected = $"{5:00.00} @";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(format, arg0, arg1, arg2);
             ListenerWriter.WriteLine(format, arg0, arg1, arg2);
 
-            var expected = "Quick 9.00 Fox";
+            var expected = $"Quick {9:#.00} Fox";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
-            var expected = "2.731";
+            var expected = $"{2.731:0.000}";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
-            var expected = "-1.5";
+            var expected = $"{-1.5:0.0}";
             Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));

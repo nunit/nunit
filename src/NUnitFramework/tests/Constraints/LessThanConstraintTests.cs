@@ -83,7 +83,7 @@ namespace NUnit.Framework.Constraints
                 () => Assert.That(actual, Is.LessThan(expected).Within(tolerance)),
                 "Assertion should have failed");
 
-            Assert.That(ex.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + tolerance.ToString()));
+            Assert.That(ex.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance)));
         }
 
         [TestCase(4.0, 5.0, 1)]
