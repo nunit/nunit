@@ -365,6 +365,7 @@ namespace NUnit.Framework.Attributes
             var fixture = new DisposableFixture();
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.disposeCalled, Is.EqualTo(1));
+            Assert.That(fixture.Actions, Is.EqualTo(new object[] { "OneTimeSetUp", "OneTimeTearDown", "Dispose" }));
         }
 
         [Test]

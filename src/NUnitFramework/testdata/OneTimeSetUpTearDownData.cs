@@ -429,12 +429,26 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class DisposableFixture : IDisposable
     {
         public int disposeCalled = 0;
+        public List<String> Actions = new List<String>();
+        
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Actions.Add("OneTimeSetUp");
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Actions.Add("OneTimeTearDown");
+        }
 
         [Test]
         public void OneTest() { }
 
         public void Dispose()
         {
+            Actions.Add("Dispose");
             disposeCalled++;
         }
     }

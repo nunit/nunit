@@ -220,22 +220,22 @@ namespace NUnit.Framework.Internal.Execution
         {
             TestCommand command = new EmptyTestCommand(Test);
 
-            // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
-                command = new DisposeFixtureCommand(command);
-
-            // Create the OneTimeTearDown commands
-            foreach (SetUpTearDownItem item in setUpTearDownItems)
-                command = new OneTimeTearDownCommand(command, item);
+            // For Theories, follow with TheoryResultCommand to adjust result as needed
+            if (Test.TestType == "Theory")
+                command = new TheoryResultCommand(command);
 
             // Create the AfterTestAction commands
             int index = actions.Count;
             while (--index >= 0)
                 command = new AfterTestActionCommand(command, actions[index]);
 
-            // For Theories, follow with TheoryResultCommand to adjust result as needed
-            if (Test.TestType == "Theory")
-                command = new TheoryResultCommand(command);
+            // Create the OneTimeTearDown commands
+            foreach (SetUpTearDownItem item in setUpTearDownItems)
+                command = new OneTimeTearDownCommand(command, item);
+
+            // Dispose of fixture if necessary
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
+                command = new DisposeFixtureCommand(command);
 
             return command;
         }
