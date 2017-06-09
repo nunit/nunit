@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal
                     if (_bottomOfStackRegex != null && _bottomOfStackRegex.IsMatch(line))
                         break;
 
-                    sw.WriteLine(line.Trim());
+                    sw.WriteLine(line);
                     line = sr.ReadLine();
                 }
             }
