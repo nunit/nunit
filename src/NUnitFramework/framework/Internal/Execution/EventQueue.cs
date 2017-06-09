@@ -210,10 +210,6 @@ namespace NUnit.Framework.Internal.Execution
                     return null;
 
                 _mreAdd.Wait(-1);
-
-                if (Interlocked.CompareExchange(ref _stopped, 0, 0) != 0)
-                    return null;
-
             } while (true);
         }
 
