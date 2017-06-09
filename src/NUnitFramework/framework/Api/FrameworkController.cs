@@ -216,8 +216,6 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of exploring the tests</returns>
         public string ExploreTests(string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             if (Runner.LoadedTest == null)
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
@@ -231,8 +229,6 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of the test run</returns>
         public string RunTests(string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
@@ -275,8 +271,6 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of the test run</returns>
         public string RunTests(Action<string> callback, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             var handler = new ActionCallback(callback);
 
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
@@ -296,8 +290,6 @@ namespace NUnit.Framework.Api
         /// <param name="filter">A string containing the XML representation of the filter to use</param>
         private void RunAsync(Action<string> callback, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             var handler = new ActionCallback(callback);
 
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
@@ -320,8 +312,6 @@ namespace NUnit.Framework.Api
         /// <returns>The number of tests</returns>
         public int CountTests(string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             return Runner.CountTestCases(TestFilter.FromXml(filter));
         }
 
@@ -336,8 +326,6 @@ namespace NUnit.Framework.Api
 
         private void ExploreTests(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             if (Runner.LoadedTest == null)
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
@@ -346,8 +334,6 @@ namespace NUnit.Framework.Api
 
         private void RunTests(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
@@ -360,8 +346,6 @@ namespace NUnit.Framework.Api
 
         private void RunAsync(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
 

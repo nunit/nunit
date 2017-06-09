@@ -1,3 +1,13 @@
+### NUnit 3.7.1 - June 6, 2017
+
+This is a hotfix release that addresses occasional hangs when using test parallization
+and fixes crashes in NCrunch prior to version 3.9.
+
+#### Issues Resolved
+
+ * 2205 Ncrunch: System.Xml.XmlException: Root element is missing, when adding NUnit 3.7.0
+ * 2209 NUnit occasionally hangs when parallelizable TestFixture has OneTimeSetUp and OneTimeTearDown
+
 ### NUnit 3.7 - May 29, 2017
 
 This release of NUnit expands on parallel test execution to allow test methods to
