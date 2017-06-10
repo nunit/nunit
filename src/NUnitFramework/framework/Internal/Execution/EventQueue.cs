@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.Execution
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim(false);
+        private readonly AutoResetEvent _mreAdd = new AutoResetEvent(false);
 
         private int _stopped;
 
@@ -209,7 +209,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (!blockWhenEmpty || Interlocked.CompareExchange(ref _stopped, 0, 0) != 0)
                     return null;
 
-                _mreAdd.Wait(-1);
+                _mreAdd.WaitOne();
             } while (true);
         }
 
