@@ -81,7 +81,7 @@ namespace NUnit.Framework.Constraints
                 _realConstraint = constraint;
             }
             else
-                _realConstraint = new CollectionContainsConstraint(_expected);
+                _realConstraint = new SomeItemsConstraint(new EqualConstraint(_expected));
 
             return _realConstraint.ApplyTo(actual);
         }

@@ -133,7 +133,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<contains 42>";
+            parseTree = "<some <equal 42>>";
             staticSyntax = Has.Member(42);
             builderSyntax = Builder().Contains(42);
         }
