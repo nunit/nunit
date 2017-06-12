@@ -347,7 +347,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [OneTimeSetUp]
         public void SetUpCallsIgnore() 
         {
-            Assert.Ignore( "TestFixtureSetUp called Ignore" );
+            Assert.Ignore("OneTimeSetUp called Ignore");
         }
 
         [Test]
@@ -363,13 +363,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         public int tearDownCount = 0;
 
         [OneTimeSetUp]
-        public virtual void TestFixtureSetUp()
+        public virtual void OneTimeSetUp()
         {
             setUpCount++;
         }
 
         [OneTimeTearDown]
-        public virtual void TestFixtureTearDown()
+        public virtual void OneTimeTearDown()
         {
             tearDownCount++;
         }

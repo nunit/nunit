@@ -336,16 +336,16 @@ namespace NUnit.Framework.Attributes
             suite.Add( fixtureSuite );
 
             TestBuilder.RunTest(fixtureSuite, fixture);
-            Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running fixture" );
-            Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running fixture" );
+            Assert.IsFalse( fixture.setupCalled, "OneTimeSetUp called running fixture");
+            Assert.IsFalse( fixture.teardownCalled, "OneTimeSetUp called running fixture");
 
             TestBuilder.RunTest(suite, fixture);
-            Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running enclosing suite" );
-            Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running enclosing suite" );
+            Assert.IsFalse( fixture.setupCalled, "OneTimeSetUp called running enclosing suite");
+            Assert.IsFalse( fixture.teardownCalled, "OneTimeTearDown called running enclosing suite");
 
             TestBuilder.RunTest(testMethod, fixture);
-            Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running a test case" );
-            Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running a test case" );
+            Assert.IsFalse( fixture.setupCalled, "OneTimeSetUp called running a test case");
+            Assert.IsFalse( fixture.teardownCalled, "OneTimeTearDown called running a test case");
         }
 
         [Test]
