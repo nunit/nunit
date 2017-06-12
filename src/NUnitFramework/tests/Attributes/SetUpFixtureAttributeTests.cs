@@ -42,20 +42,6 @@ namespace NUnit.Framework.Attributes
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
-#pragma warning disable 618 // Obsolete Attributes
-        private class Class1
-        {
-            [TestFixtureSetUp]
-            public void SomeMethod() { }
-        }
-
-        private class Class2
-        {
-            [TestFixtureTearDown]
-            public void SomeMethod() { }
-        }
-#pragma warning restore
-
         private class Class3
         {
             [SetUp]

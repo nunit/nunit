@@ -121,8 +121,6 @@
     <Compile Include="Attributes\RandomAttribute.cs" />
     <Compile Include="Attributes\RangeAttribute.cs" />
     <Compile Include="Attributes\RepeatAttribute.cs" />
-    <Compile Include="Attributes\RequiresMTAAtribute.cs" />
-    <Compile Include="Attributes\RequiresSTAAttribute.cs" />
     <Compile Include="Attributes\RequiresThreadAttribute.cs" />
     <Compile Include="Attributes\RetryAttribute.cs" />
     <Compile Include="Attributes\SequentialAttribute.cs" />
@@ -136,9 +134,7 @@
     <Compile Include="Attributes\TestCaseAttribute.cs" />
     <Compile Include="Attributes\TestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\TestFixtureAttribute.cs" />
-    <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
-    <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
     <Compile Include="Attributes\TheoryAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />

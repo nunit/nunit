@@ -215,7 +215,7 @@ namespace NUnit.Framework.Attributes
 
             // should have one suite and one fixture
             Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), result.ResultState, "Suite should be ignored");
-            Assert.AreEqual("TestFixtureSetUp called Ignore", result.Message);
+            Assert.AreEqual("OneTimeSetUp called Ignore", result.Message);
             Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
 
             Assert.AreEqual(1, result.Children.Count(), "Child result count");
