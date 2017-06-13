@@ -26,6 +26,8 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -209,7 +211,7 @@ namespace NUnit.Framework.Constraints
                 return null;
 
             Type valueType = value.GetType();
-            if (!valueType.IsGenericType)
+            if (!valueType.GetTypeInfo().IsGenericType)
                 return null;
 
             Type baseValueType = valueType.GetGenericTypeDefinition();
