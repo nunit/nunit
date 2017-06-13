@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using NUnit.Framework.Internal;
 
@@ -95,7 +96,9 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
 
-            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));            
+            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
+
+            AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
         }
 
         /// <summary>
@@ -198,6 +201,42 @@ namespace NUnit.Framework.Constraints
             }
 
             return sb.ToString();
+        }
+
+        private static string TryFormatKeyValuePair(object value)
+        {
+            if (value == null)
+                return null;
+
+            Type valueType = value.GetType();
+            if (!valueType.IsGenericType)
+                return null;
+
+            Type baseValueType = valueType.GetGenericTypeDefinition();
+            if (baseValueType != typeof(KeyValuePair<,>))
+                return null;
+
+            object k = valueType.GetProperty("Key").GetValue(value, null);
+            object v = valueType.GetProperty("Value").GetValue(value, null);
+
+            return FormatKeyValuePair(k, v);
+        }
+
+        private static string FormatKeyValuePair(object key, object value)
+        {
+            StringBuilder s = new StringBuilder();
+            s.Append('[');
+            if (key != null)
+            {
+                s.Append(FormatValue(key));
+            }
+            s.Append(", ");
+            if (value != null)
+            {
+                s.Append(FormatValue(value));
+            }
+            s.Append(']');
+            return s.ToString();
         }
 
         private static string FormatString(string s)
