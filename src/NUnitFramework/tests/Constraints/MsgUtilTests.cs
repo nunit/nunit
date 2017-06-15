@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -126,17 +127,28 @@ namespace NUnit.Framework.Constraints
             Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123)), Is.EqualTo("2007-07-04 09:15:30.123"));
         }
 
-		[Test]
+        [Test]
         public static void FormatValue_DateTimeOffsetTest()
         {
             Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
         }
 
-#endregion
+        [TestCase(null, null, "[null, null]")]
+        [TestCase(null, "Second", "[null, \"Second\"]")]
+        [TestCase("First", null, "[\"First\", null]")]
+        [TestCase("First", "Second", "[\"First\", \"Second\"]")]
+        [TestCase(123, 'h', "[123, 'h']")]
+        public static void FormatValue_KeyValuePairTest(object key, object value, string expectedResult)
+        {
+            string s = MsgUtils.FormatValue(new KeyValuePair<object, object>(key, value));
+            Assert.That(s, Is.EqualTo(expectedResult));
+        }
 
-		#region EscapeControlChars
+        #endregion
 
-		[TestCase ("\n", "\\n")]
+        #region EscapeControlChars
+
+        [TestCase("\n", "\\n")]
         [TestCase("\n\n", "\\n\\n")]
         [TestCase("\n\n\n", "\\n\\n\\n")]
         [TestCase("\r", "\\r")]
