@@ -133,6 +133,14 @@ namespace NUnit.Framework.Constraints
             Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
         }
 
+        [TestCase('a', "'a'")]
+        [TestCase('h', "'h'")]
+        [TestCase('z', "'z'")]
+        public static void FormatValue_CharTest(char c, string expected)
+        {
+            Assert.That(MsgUtils.FormatValue(c), Is.EqualTo(expected));
+        }
+
         [TestCase(null, null, "[null, null]")]
         [TestCase(null, "Second", "[null, \"Second\"]")]
         [TestCase("First", null, "[\"First\", null]")]
@@ -217,12 +225,6 @@ namespace NUnit.Framework.Constraints
         }
 
 #endregion
-
-        //[TestCase('\0')]
-        //[TestCase('\r')]
-        //public void CharacterArgumentTest(char c)
-        //{
-        //}
 
 #region ClipExpectedAndActual
 
