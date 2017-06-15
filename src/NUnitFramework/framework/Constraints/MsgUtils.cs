@@ -226,19 +226,7 @@ namespace NUnit.Framework.Constraints
 
         private static string FormatKeyValuePair(object key, object value)
         {
-            StringBuilder s = new StringBuilder();
-            s.Append('[');
-            if (key != null)
-            {
-                s.Append(FormatValue(key));
-            }
-            s.Append(", ");
-            if (value != null)
-            {
-                s.Append(FormatValue(value));
-            }
-            s.Append(']');
-            return s.ToString();
+            return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
         }
 
         private static string FormatString(string s)

@@ -133,19 +133,14 @@ namespace NUnit.Framework.Constraints
             Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
         }
 
-        [Test]
-        public static void FormatValue_KeyValuePairTest()
-        {
-            Assert.That(MsgUtils.FormatValue(new KeyValuePair<string, char>("Hello", 'h')), Is.EqualTo("[\"Hello\", 'h']"));
-        }
-
-        [TestCase(null, null, "[, ]")]
-        [TestCase(null, "Second", "[, \"Second\"]")]
-        [TestCase("First", null, "[\"First\", ]")]
+        [TestCase(null, null, "[null, null]")]
+        [TestCase(null, "Second", "[null, \"Second\"]")]
+        [TestCase("First", null, "[\"First\", null]")]
         [TestCase("First", "Second", "[\"First\", \"Second\"]")]
-        public static void FormatValue_KeyValuePairWithNullsTest(string key, string value, string expectedResult)
+        [TestCase(123, 'h', "[123, 'h']")]
+        public static void FormatValue_KeyValuePairTest(object key, object value, string expectedResult)
         {
-            string s = MsgUtils.FormatValue(new KeyValuePair<string, string>(key, value));
+            string s = MsgUtils.FormatValue(new KeyValuePair<object, object>(key, value));
             Assert.That(s, Is.EqualTo(expectedResult));
         }
 
@@ -153,7 +148,7 @@ namespace NUnit.Framework.Constraints
 
         #region EscapeControlChars
 
-        [TestCase ("\n", "\\n")]
+        [TestCase("\n", "\\n")]
         [TestCase("\n\n", "\\n\\n")]
         [TestCase("\n\n\n", "\\n\\n\\n")]
         [TestCase("\r", "\\r")]
