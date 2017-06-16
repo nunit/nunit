@@ -48,7 +48,7 @@ To help new contributors get their feet wet, we have marked a number of issues w
 
 It is also a good idea to add a comment to an issue that you are working on to let everyone know. If you stop working on it, also please let us know.
 
-Please read through the developer section of the [NUnit documentation](https://github.com/nunit/docs/wiki/NUnit-Documentation) before contributing to understand our coding standards and contribution guidelines.
+Please read through the [developer docs](https://github.com/nunit/docs/wiki/Team-Practices#technical-practices) before contributing to understand our coding standards and contribution guidelines.
 
 ## License
 
