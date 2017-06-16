@@ -46,10 +46,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="scope">The ParallelScope associated with this attribute.</param>
         public ParallelizableAttribute(ParallelScope scope) : base()
-        {
+        { 
             _scope = scope;
 
-            Properties.Add(PropertyNames.ParallelScope, scope);
+            Properties.Set(PropertyNames.ParallelScope, scope);
         }
 
         /// <summary>
@@ -58,6 +58,10 @@ namespace NUnit.Framework
         /// <param name="test"></param>
         public override void ApplyToTest(Test test)
         {
+            // Adjust property to include ParallelScope.Self if a fixture has ParallelScope.Fixtures on it
+            if (test is TestFixture && _scope.HasFlag(ParallelScope.Fixtures))
+                Properties.Set(PropertyNames.ParallelScope, _scope | ParallelScope.Self);
+
             base.ApplyToTest(test);
 
             if (test.RunState == RunState.NotRunnable)
