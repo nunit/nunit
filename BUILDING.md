@@ -15,6 +15,15 @@ or MonoDevelop.
 
 The solutions all place their output in a common bin directory under the solution root.
 
+## Running Tests
+
+The tests that should be run in the solution are grouped by project name:
+ * `nunit.framework.tests-*`
+ * `nunitlite.tests-*`
+ * `slow-nunit-tests-*`
+
+Other test projects contain tests designed to fail purposely for integration tests.
+
 ## Build Script
 
 We use **Cake** (http://cakebuild.net) to build NUnit for distribution. The primary script that controls
