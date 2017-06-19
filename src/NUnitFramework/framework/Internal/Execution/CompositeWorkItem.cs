@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal.Execution
                             Result.SetResult(ResultState.Success);
 
                             if (Children.Count > 0)
-                            {
+                            {   
                                 InitializeSetUpAndTearDownCommands();
 
                                 PerformOneTimeSetUp();
