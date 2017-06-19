@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Constraints
 {
@@ -702,12 +701,12 @@ namespace NUnit.Framework.Constraints
         #region Member
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Member(object expected)
+        public SomeItemsConstraint Member(object expected)
         {
-            return (CollectionContainsConstraint)this.Append(new CollectionContainsConstraint(expected));
+            return (SomeItemsConstraint)this.Append(new SomeItemsConstraint(new EqualConstraint(expected)));
         }
 
         #endregion
@@ -715,12 +714,12 @@ namespace NUnit.Framework.Constraints
         #region Contains
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Contains(object expected)
+        public SomeItemsConstraint Contains(object expected)
         {
-            return (CollectionContainsConstraint)this.Append(new CollectionContainsConstraint(expected));
+            return (SomeItemsConstraint)this.Append(new SomeItemsConstraint(new EqualConstraint(expected)));
         }
 
         /// <summary>
@@ -737,10 +736,10 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Contain(object expected)
+        public SomeItemsConstraint Contain(object expected)
         {
             return Contains(expected);
         }

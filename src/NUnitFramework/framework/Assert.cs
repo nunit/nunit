@@ -298,7 +298,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Contains(object expected, ICollection actual, string message, params object[] args)
         {
-            Assert.That(actual, new CollectionContainsConstraint(expected) ,message, args);
+            Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)) ,message, args);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace NUnit.Framework
         /// <param name="actual">The collection to be examined</param>
         public static void Contains(object expected, ICollection actual)
         {
-            Assert.That(actual, new CollectionContainsConstraint(expected) ,null, null);
+            Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)) ,null, null);
         }
 
         #endregion

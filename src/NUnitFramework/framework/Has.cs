@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -193,12 +192,12 @@ namespace NUnit.Framework
         #region Member
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="EqualConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static CollectionContainsConstraint Member(object expected)
+        public static EqualConstraint Member(object expected)
         {
-            return new CollectionContainsConstraint(expected);
+            return Some.EqualTo(expected);
         }
 
         #endregion

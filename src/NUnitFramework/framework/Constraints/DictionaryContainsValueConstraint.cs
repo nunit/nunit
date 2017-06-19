@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     /// DictionaryContainsValueConstraint is used to test whether a dictionary
     /// contains an expected object as a value.
     /// </summary>
-    public class DictionaryContainsValueConstraint : CollectionContainsConstraint
+    public class DictionaryContainsValueConstraint : CollectionItemsEqualConstraint
     {
         /// <summary>
         /// Construct a DictionaryContainsValueConstraint
@@ -39,6 +39,7 @@ namespace NUnit.Framework.Constraints
         public DictionaryContainsValueConstraint(object expected)
             : base(expected)
         {
+            Expected = expected;
         }
 
         /// <summary> 
@@ -59,6 +60,11 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Gets the expected object
+        /// </summary>
+        protected object Expected { get; private set; }
+
+        /// <summary>
         /// Test whether the expected value is contained in the dictionary
         /// </summary>
         protected override bool Matches(IEnumerable actual)
@@ -68,7 +74,25 @@ namespace NUnit.Framework.Constraints
             if (dictionary == null)
                 throw new ArgumentException("The actual value must be an IDictionary", "actual");
 
-            return base.Matches(dictionary.Values);
+            foreach (object obj in dictionary.Values)
+                if (ItemsEqual(obj, Expected))
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied predicate function
+        /// </summary>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public DictionaryContainsValueConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        {
+            // reverse the order of the arguments to match expectations of PredicateEqualityComparer
+            Func<TMemberType, TCollectionType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
+
+            base.Using(EqualityAdapter.For(invertedComparison));
+            return this;
         }
     }
 }

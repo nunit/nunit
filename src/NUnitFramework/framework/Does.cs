@@ -60,12 +60,12 @@ namespace NUnit.Framework
         #region Contain
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="EqualConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static CollectionContainsConstraint Contain(object expected)
+        public static EqualConstraint Contain(object expected)
         {
-            return new CollectionContainsConstraint(expected);
+            return new ConstraintExpression().Some.EqualTo(expected);
         }
 
         /// <summary>
