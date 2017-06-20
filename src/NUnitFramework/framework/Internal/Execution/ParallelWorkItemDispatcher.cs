@@ -304,8 +304,12 @@ namespace NUnit.Framework.Internal.Execution
                 work.Test is TestFixture && work.Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
                     return ExecutionStrategy.Parallel;
 
-            // If all else fails, run on same thread
-            return ExecutionStrategy.Direct;
+            // There is no scope specified either on the item itself or in the context.
+            // In that case, simple work items are test cases and just run on the same
+            // thread, while composite work items and teardowns are non-parallel.
+            return work is SimpleWorkItem
+                ? ExecutionStrategy.Direct
+                : ExecutionStrategy.NonParallel;
         }
 
 #endregion
