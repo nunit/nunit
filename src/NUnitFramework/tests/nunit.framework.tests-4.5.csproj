@@ -175,6 +175,7 @@
     <Compile Include="Constraints\EqualConstraintTests.cs" />
     <Compile Include="Constraints\EqualTest.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
+    <Compile Include="Constraints\ExactlyOneConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
     <Compile Include="Constraints\FileOrDirectoryExistsConstraintTests.cs" />
     <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
