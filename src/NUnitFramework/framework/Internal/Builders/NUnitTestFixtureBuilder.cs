@@ -38,12 +38,13 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class NUnitTestFixtureBuilder
     {
-        #region Static Fields
+        #region Messages
 
-        static readonly string NO_TYPE_ARGS_MSG =
-            "Fixture type contains generic parameters. You must either provide " +
-            "Type arguments or specify constructor arguments that allow NUnit " +
-            "to deduce the Type arguments.";
+        const string NO_TYPE_ARGS_MSG =
+            "Fixture type contains generic parameters. You must either provide Type arguments or specify constructor arguments that allow NUnit to deduce the Type arguments.";
+
+        const string PARALLEL_NOT_ALLOWED_MSG =
+            "ParallelizableAttribute is only allowed on test methods and fixtures";
 
         #endregion
 
@@ -177,9 +178,10 @@ namespace NUnit.Framework.Internal.Builders
                 Test test = BuildTestCase(method, fixture);
 
                 if (test != null)
-                {
                     fixture.Add(test);
-                }
+                else // it's not a test, check for disallowed attributes
+                    if (method.IsDefined<ParallelizableAttribute>(false))
+                        fixture.MakeInvalid(PARALLEL_NOT_ALLOWED_MSG);
             }
         }
 
