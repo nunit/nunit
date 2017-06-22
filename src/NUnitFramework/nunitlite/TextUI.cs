@@ -76,7 +76,7 @@ namespace NUnitLite
             Assembly executingAssembly = GetType().GetTypeInfo().Assembly;
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
-            string copyright = "Copyright (C) 2017, Charlie Poole";
+            string copyright = "Copyright (C) 2017 Charlie Poole, Rob Prouse";
             string build = "";
 
             var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
