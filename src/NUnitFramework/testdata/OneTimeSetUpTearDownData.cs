@@ -49,10 +49,10 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
     [TestFixture]
@@ -122,7 +122,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
     }
 
-    [TestFixture,Explicit]
+    [TestFixture, Explicit]
     public class ExplicitSetUpAndTearDownFixture
     {
         public int setUpCount = 0;
@@ -141,20 +141,20 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
     [TestFixture]
     public class InheritSetUpAndTearDown : SetUpAndTearDownFixture
     {
         [Test]
-        public void AnotherTest(){}
+        public void AnotherTest() { }
 
         [Test]
-        public void YetAnotherTest(){}
+        public void YetAnotherTest() { }
     }
 
     [TestFixture]
@@ -282,6 +282,17 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
 
         [Test]
         public static void MyTest() { }
+    }
+
+    [TestFixture]
+    public class FixtureWithParallelizableOnOneTimeSetUp
+    {
+        [OneTimeSetUp]
+        [Parallelizable]
+        public void BadOneTimeSetup() { }
+
+        [Test]
+        public void Test() { }
     }
 
     [TestFixture]

@@ -184,11 +184,20 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
         }
 
-//		[Test]
-//		public void CannotRunAbstractFixture()
-//		{
-//            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
-//		}
+        [Test]
+        public void FixtureWithParallelizableOnOneTimeSetUpIsInvalid()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureWithParallelizableOnOneTimeSetUp));
+            Assert.AreEqual(RunState.NotRunnable, suite.RunState);
+            Assert.AreEqual("ParallelizableAttribute is only allowed on test methods and fixtures", 
+                suite.Properties.Get(PropertyNames.SkipReason));
+        }
+
+        //		[Test]
+        //		public void CannotRunAbstractFixture()
+        //		{
+        //            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
+        //		}
 
         [Test]
         public void CanRunFixtureDerivedFromAbstractTestFixture()
