@@ -197,7 +197,9 @@ namespace NUnit.Framework.Internal.Execution
                 break;
             } while (true);
 
-            Thread.Sleep(1);  // give EventPump thread a chance to process the event
+            // Setting this to anything other than 0 causes NUnit to be sensitive
+            // to the windows timer resolution - see issue #2217 
+            Thread.Sleep(0);  // give EventPump thread a chance to process the event
         }
 
         /// <summary>
