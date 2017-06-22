@@ -45,7 +45,7 @@ How to use this package:
       </group>
     </dependencies>
   </metadata>
-  <files>C
+  <files>
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
