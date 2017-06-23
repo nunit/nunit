@@ -28,7 +28,7 @@ namespace NUnit.TestData
     [TestFixture]
     public class TestAttachmentsTests
     {
-        public const string TempFileName = "NUnitTests.tmp";
+        public const string TempFileName = "TestAttachmentsTests.tmp";
         public const string Description = "Description for attachment";
 
         [Test]

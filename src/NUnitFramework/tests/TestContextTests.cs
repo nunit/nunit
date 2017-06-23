@@ -46,7 +46,7 @@ namespace NUnit.Framework.Tests
 
         private string _tempFilePath;
 
-        private const string TempFileName = "NUnitTests.tmp";
+        private const string TempFileName = "TestContextTests.tmp";
 
         public TestContextTests()
         {
