@@ -51,21 +51,56 @@ namespace NUnit.Framework.Constraints
 
             int count = actualEnumerable.Cast<object>().Count();
 
-            if (count != 1)
-            {
-                return new ConstraintResult(this, actual, false);
-            }
-
             if (_itemConstraint == null)
             {
-                //Don't need to check the value of the singular item in the collection.
-                return new ConstraintResult(this, actual, true);
-            } else
+                //Only checking the count of actualEnumerable.
+                if (count == 1)
+                {
+                    return new ConstraintResult(this, "1", true);
+                }
+                else
+                {
+                    return new ConstraintResult(this, count, false);
+                }
+            }
+            else
             {
-                object firstItem = actualEnumerable.Cast<object>().First();
-                bool firstItemIsSuccess = _itemConstraint.ApplyTo(firstItem).IsSuccess;
+                if (count > 0)
+                {
+                    int successfulItems = 0;
 
-                return new ConstraintResult(this, actual, firstItemIsSuccess);
+                    foreach(object item in actualEnumerable)
+                    {
+                        if (_itemConstraint.ApplyTo(item).IsSuccess)
+                            successfulItems++;
+                    }
+
+                    return new ConstraintResult(this, actual, (successfulItems == 1));
+                }
+                else
+                {
+                    return new ConstraintResult(this, actual, false);
+                }
+                
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="Description"/> of what this constraint tests,
+        /// for use in messages and in the <see cref="ConstraintResult"/>.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                if (_itemConstraint == null)
+                {
+                    return "length of 1";
+                }
+                else
+                {
+                    return PrefixConstraint.FormatDescription("one item", _itemConstraint);
+                }
             }
         }
     }

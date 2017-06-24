@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace NUnit.Framework.Tests.Constraints
     {
         private static IEnumerable<string> testCollectionLen1 = new List<string> { "item" };
         private static IEnumerable<string> testCollectionLen2 = new List<string> { "item", "otherItem" };
+        private static IEnumerable<string> testCollectionLen3 = new List<string> { "item", "item", "otherItem" };
 
         [Test]
         public void ExactlyOneItemMatches()
@@ -22,6 +24,50 @@ namespace NUnit.Framework.Tests.Constraints
         public void ExactlyOneItemDoesNotMatch()
         {
             Assert.That(testCollectionLen1, new ExactlyOneConstraint(Is.Not.EqualTo("notItem")));
+        }
+
+        [Test]
+        public void ExactlyOneItemMustMatchButDoesNotMatchTestMessage()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "one item equal to \"notItem\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"item\" >" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen1, new ExactlyOneConstraint(Is.EqualTo("notItem"))));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExpectedExactlyOneItemButGotTwoTestMessage()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "length of 1" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "2" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen2, new ExactlyOneConstraint()));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyOneItemMustMatchesButNotSingularElementTestMessage()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "one item equal to \"notItem\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"item\", \"otherItem\" >" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen2, new ExactlyOneConstraint(Is.EqualTo("notItem"))));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyOneItemMustMatchButMultipleMatchTestMessage()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "one item equal to \"notItem\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"item\", \"item\", \"otherItem\" >" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen3, new ExactlyOneConstraint(Is.EqualTo("item"))));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -39,7 +85,13 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void ExactlyOneConstraintMatchingWhereCollectionIsTwo()
         {
-            Assert.IsFalse(new ExactlyOneConstraint(Is.EqualTo("item")).ApplyTo(testCollectionLen2).IsSuccess);
+            Assert.That(testCollectionLen2, new ExactlyOneConstraint(Is.EqualTo("item")));
+        }
+
+        [Test]
+        public void ExactlyOneConstraintFailsWhereThereAreMultipleMatches()
+        {
+            Assert.IsFalse(new ExactlyOneConstraint(Is.EqualTo("item")).ApplyTo(testCollectionLen3).IsSuccess);
         }
 
         [Test]
