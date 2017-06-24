@@ -70,6 +70,7 @@
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
+    <Compile Include="Assertions\AdhocTestExecutionTests.cs" />
     <Compile Include="Assertions\AssertionHelperTests.cs" />
     <Compile Include="Assertions\AssertMultipleTests.cs" />
     <Compile Include="Assertions\AssertPolarityTests.cs" />
