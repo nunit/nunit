@@ -16,15 +16,33 @@ namespace NUnit.Framework.Tests.Constraints
         private static IEnumerable<string> testCollectionLen3 = new List<string> { "item", "item", "otherItem" };
 
         [Test]
+        public void ExactlyOneThrowsWhenNotIEnumberable()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                Assert.That(new int(), new ExactlyOneConstraint(Is.EqualTo("item"))));
+        }
+
+        [Test]
+        public void ExactlyOneThrowsWhenConstraintIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var blah = new ExactlyOneConstraint(null);
+            });
+        }
+
+        [Test]
         public void ExactlyOneItemMatches()
         {
             Assert.That(testCollectionLen1, new ExactlyOneConstraint(Is.EqualTo("item")));
+            Assert.That(testCollectionLen1, Has.One().EqualTo("item"));
         }
 
         [Test]
         public void ExactlyOneItemDoesNotMatch()
         {
             Assert.That(testCollectionLen1, new ExactlyOneConstraint(Is.Not.EqualTo("notItem")));
+            Assert.That(testCollectionLen1, Has.One().Not.EqualTo("notItem"));
         }
 
         [Test]
@@ -42,6 +60,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void ExactlyOneItemMustMatchButNoneInCollection()
         {
             Assert.IsFalse(new ExactlyOneConstraint(Is.EqualTo("item")).ApplyTo(testCollectionLen0).IsSuccess);
+            Assert.IsFalse(Has.One().EqualTo("item").ApplyTo(testCollectionLen0).IsSuccess);
         }
 
         [Test]
@@ -56,7 +75,15 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void ExpectedExactlyOneItemButGotTwoTestMessage()
+        public void ExactlyOneBlankConstraintWhereCollectionIsTwo()
+        {
+            Assert.IsFalse(new ExactlyOneConstraint().ApplyTo(testCollectionLen2).IsSuccess);
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen2, Has.One().Items));
+        }
+
+        [Test]
+        public void ExactlyOneBlankConstraintWhereCollectionIsTwoTestMessage()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "length of 1" + Environment.NewLine +
@@ -67,7 +94,16 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void ExactlyOneItemMustMatchesButNotSingularElementTestMessage()
+        public void ExactlyOneItemDoesNotMatchFromTwoElements()
+        {
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen2, new ExactlyOneConstraint(Is.EqualTo("notItem"))));
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen2, Has.One().EqualTo("notItem")));
+        }
+
+        [Test]
+        public void ExactlyOneItemDoesNotMatchFromTwoElementsTestMessage()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "one item equal to \"notItem\"" + Environment.NewLine +
@@ -75,6 +111,14 @@ namespace NUnit.Framework.Tests.Constraints
             var ex = Assert.Throws<AssertionException>(() =>
                 Assert.That(testCollectionLen2, new ExactlyOneConstraint(Is.EqualTo("notItem"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyOneItemMustMatchButMultipleMatch()
+        {
+            Assert.IsFalse(new ExactlyOneConstraint(Is.EqualTo("item")).ApplyTo(testCollectionLen3).IsSuccess);
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen3, Has.One().EqualTo("item")));
         }
 
         [Test]
@@ -92,48 +136,22 @@ namespace NUnit.Framework.Tests.Constraints
         public void ExactlyOneBlankConstraintWhereCollectionIsOne()
         {
             Assert.That(testCollectionLen1, new ExactlyOneConstraint());
-        }
-
-        [Test]
-        public void ExactlyOneBlankConstraintWhereCollectionIsTwo()
-        {
-            Assert.IsFalse(new ExactlyOneConstraint().ApplyTo(testCollectionLen2).IsSuccess);
+            Assert.That(testCollectionLen1, Has.One().Items);
         }
 
         [Test]
         public void ExactlyOneConstraintMatchingWhereCollectionIsTwo()
         {
             Assert.That(testCollectionLen2, new ExactlyOneConstraint(Is.EqualTo("item")));
-        }
-
-        [Test]
-        public void ExactlyOneConstraintFailsWhereThereAreMultipleMatches()
-        {
-            Assert.IsFalse(new ExactlyOneConstraint(Is.EqualTo("item")).ApplyTo(testCollectionLen3).IsSuccess);
+            Assert.That(testCollectionLen2, Has.One().EqualTo("item"));
         }
 
         [Test]
         public void ExactlyOneConstraintNotMatchingWhereCollectionIsTwo()
         {
             Assert.IsFalse(new ExactlyOneConstraint(Is.EqualTo("blah")).ApplyTo(testCollectionLen2).IsSuccess);
-        }
-
-        [Test]
-        public void ExactlyOneThrowsWhenNotIEnumberable()
-        {
-            Assert.Throws<ArgumentException>(delegate ()
-            {
-                Assert.That(new int(), new ExactlyOneConstraint(Is.EqualTo("item")));
-            });
-        }
-
-        [Test]
-        public void ExactlyOneThrowsWhenConstraintIsNull()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var blah = new ExactlyOneConstraint(null);
-            });
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen2, Has.One().EqualTo("blah")));
         }
     }
 }

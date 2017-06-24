@@ -99,7 +99,22 @@ namespace NUnit.Framework
         {
             return new ConstraintExpression().Exactly(expectedCount);
         }
- 
+
+        #endregion
+
+        #region One
+
+        /// <summary>
+        /// Returns a <see cref="ConstraintExpression"/> which will apply
+        /// the following constraint to only one member of the collection,
+        /// and fail if none or more than one matches occur.
+        /// </summary>
+        /// <returns></returns>
+        public static ItemsConstraintExpression One()
+        {
+            return new ConstraintExpression().Exactly(1);
+        }
+
         #endregion
 
         #region Property
