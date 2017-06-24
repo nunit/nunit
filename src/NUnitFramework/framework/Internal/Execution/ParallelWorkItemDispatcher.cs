@@ -82,8 +82,10 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnStartNonParallelWorkItem(TestWorker worker, WorkItem work)
         {
-            if (work is CompositeWorkItem)
-                SaveQueueState(work);
+            // This captures the startup of TestFixtures and SetUpFixtures,
+            // but not their teardown items, which are not composite items
+            if (work is CompositeWorkItem && work.Test.TypeInfo != null)
+                IsolateQueues(work);
         }
 
         #endregion
@@ -197,12 +199,12 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         private object _queueLock = new object();
-        private int _savedQueueLevel = 0;
+        private int _isolationLevel = 0;
 
         /// <summary>
-        /// Save the state of the queues
+        /// Save the state of the queues and create a new isolated set
         /// </summary>
-        internal void SaveQueueState(WorkItem work)
+        internal void IsolateQueues(WorkItem work)
         {
             log.Info("Saving Queue State for {0}", work.Name);
             lock (_queueLock)
@@ -210,16 +212,16 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (WorkItemQueue queue in Queues)
                     queue.Save();
 
-                _savedQueueLevel++;
+                _isolationLevel++;
             }
         }
 
         /// <summary>
-        /// Try to restore a saved queue state
-        /// </summary><returns>True if the state was restored, otherwise false</returns>
-        private void RestoreQueueState()
+        /// Remove isolated queues and restore old ones
+        /// </summary>
+        private void RestoreQueues()
         {
-            Guard.OperationValid(_savedQueueLevel > 0, "Internal Error: Called RestoreQueueState with no saved queues!");
+            Guard.OperationValid(_isolationLevel > 0, "Internal Error: Called RestoreQueueState with no saved queues!");
 
             // Keep lock until we can remove for both methods
             lock (_queueLock)
@@ -229,7 +231,7 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (WorkItemQueue queue in Queues)
                     queue.Restore();
 
-                _savedQueueLevel--;
+                _isolationLevel--;
             }
         }
 
@@ -239,8 +241,8 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnEndOfShift(object sender, EventArgs ea)
         {
-            if (_savedQueueLevel > 0)
-                RestoreQueueState();
+            if (_isolationLevel > 0)
+                RestoreQueues();
 
             // Shift has ended but all work may not yet be done
             while (_topLevelWorkItem.State != WorkItemState.Complete)
@@ -283,8 +285,6 @@ namespace NUnit.Framework.Internal.Execution
             // If there is no fixture and so nothing to do but dispatch 
             // grandchildren we run directly. This saves time that would 
             // otherwise be spent enqueuing and dequeing items.
-            // TODO: It would be even better if we could avoid creating 
-            // these "do-nothing" work items in the first place.
             if (work.Test.TypeInfo == null)
                 return ExecutionStrategy.Direct;
 
@@ -306,8 +306,12 @@ namespace NUnit.Framework.Internal.Execution
                 work.Test is TestFixture && work.Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
                     return ExecutionStrategy.Parallel;
 
-            // If all else fails, run on same thread
-            return ExecutionStrategy.Direct;
+            // There is no scope specified either on the item itself or in the context.
+            // In that case, simple work items are test cases and just run on the same
+            // thread, while composite work items and teardowns are non-parallel.
+            return work is SimpleWorkItem
+                ? ExecutionStrategy.Direct
+                : ExecutionStrategy.NonParallel;
         }
 
 #endregion

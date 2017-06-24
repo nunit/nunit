@@ -90,6 +90,9 @@ namespace NUnit.Framework.Internal.Execution
             Result = wrappedItem.Result;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
+#if PARALLEL
+            TestWorker = wrappedItem.TestWorker;
+#endif
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TargetApartment = wrappedItem.TargetApartment;
 #endif
