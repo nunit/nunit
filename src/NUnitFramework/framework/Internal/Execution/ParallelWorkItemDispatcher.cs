@@ -82,6 +82,8 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnStartNonParallelWorkItem(TestWorker worker, WorkItem work)
         {
+            // This captures the startup of TestFixtures and SetUpFixtures,
+            // but not their teardown items, which are not composite items
             if (work is CompositeWorkItem && work.Test.TypeInfo != null)
                 IsolateQueues(work);
         }
