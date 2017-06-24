@@ -10,6 +10,7 @@ namespace NUnit.Framework.Tests.Constraints
 {
     public class ExactlyOneConstraintTests
     {
+        private static IEnumerable<string> testCollectionLen0 = new List<string>();
         private static IEnumerable<string> testCollectionLen1 = new List<string> { "item" };
         private static IEnumerable<string> testCollectionLen2 = new List<string> { "item", "otherItem" };
         private static IEnumerable<string> testCollectionLen3 = new List<string> { "item", "item", "otherItem" };
@@ -34,6 +35,23 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "< \"item\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() =>
                 Assert.That(testCollectionLen1, new ExactlyOneConstraint(Is.EqualTo("notItem"))));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyOneItemMustMatchButNoneInCollection()
+        {
+            Assert.IsFalse(new ExactlyOneConstraint(Is.EqualTo("item")).ApplyTo(testCollectionLen0).IsSuccess);
+        }
+
+        [Test]
+        public void ExactlyOneItemMustMatchButNoneInCollectionTestMessage()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "one item equal to \"item\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "<empty>" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() =>
+                Assert.That(testCollectionLen0, new ExactlyOneConstraint(Is.EqualTo("item"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -66,7 +84,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Expected + "one item equal to \"notItem\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "< \"item\", \"item\", \"otherItem\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() =>
-                Assert.That(testCollectionLen3, new ExactlyOneConstraint(Is.EqualTo("item"))));
+                Assert.That(testCollectionLen3, new ExactlyOneConstraint(Is.EqualTo("notItem"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
