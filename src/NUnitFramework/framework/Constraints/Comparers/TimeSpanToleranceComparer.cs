@@ -28,10 +28,15 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DateTime"/>s or <see cref="TimeSpan"/>s.
     /// </summary>
-    internal class TimeSpanToleranceComparer
+    internal class TimeSpanToleranceComparer : IComparer
     {
-        internal bool? Equal(object x, object y, TimeSpan amount)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            if (tolerance == null || !(tolerance.Amount is TimeSpan))
+                return null;
+
+            TimeSpan amount = (TimeSpan)tolerance.Amount;
+
             if (x is DateTime && y is DateTime)
                 return ((DateTime)x - (DateTime)y).Duration() <= amount;
 

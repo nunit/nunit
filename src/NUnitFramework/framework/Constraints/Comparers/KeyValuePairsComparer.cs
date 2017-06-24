@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="KeyValuePair{TKey, TValue}"/>s.
     /// </summary>
-    internal class KeyValuePairsComparer
+    internal class KeyValuePairsComparer : IComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -40,8 +40,9 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        internal bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            // IDictionary<,> will eventually try to compare it's key value pairs when using CollectionTally
             Type xType = x.GetType();
             Type yType = y.GetType();
 

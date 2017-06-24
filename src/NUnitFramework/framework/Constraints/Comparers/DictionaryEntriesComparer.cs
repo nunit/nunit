@@ -26,9 +26,9 @@ using System.Collections;
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Comparator for two <see cref="IDictionary"/>s.
+    /// Comparator for two <see cref="DictionaryEntry"/>s.
     /// </summary>
-    internal class DictionaryEntriesComparer
+    internal class DictionaryEntriesComparer : IComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -37,11 +37,18 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        internal bool Equal(DictionaryEntry x, DictionaryEntry y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
+            if (!(x is DictionaryEntry) || !(y is DictionaryEntry))
+                return null;
+
+            DictionaryEntry xDictionaryEntry = (DictionaryEntry)x;
+            DictionaryEntry yDictionaryEntry = (DictionaryEntry)y;
+
             var keyTolerance = Tolerance.Exact;
-            return _equalityComparer.AreEqual(x.Key, y.Key, ref keyTolerance) 
-                && _equalityComparer.AreEqual(x.Value, y.Value, ref tolerance);
+            return _equalityComparer.AreEqual(xDictionaryEntry.Key, yDictionaryEntry.Key, ref keyTolerance) 
+                && _equalityComparer.AreEqual(xDictionaryEntry.Value, yDictionaryEntry.Value, ref tolerance);
         }
     }
 }

@@ -31,10 +31,20 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two types related by <see cref="IEquatable{T}"/>.
     /// </summary>
-    internal class IEquatablesComparer
+    internal class IEquatablesComparer : IComparer
     {
-        internal bool? Equal(object x, object y)
+        private readonly NUnitEqualityComparer _equalityComparer;
+
+        internal IEquatablesComparer(NUnitEqualityComparer equalityComparer)
         {
+            _equalityComparer = equalityComparer;
+        }
+
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        {
+            if (_equalityComparer.CompareAsCollection)
+                return null;
+
             Type xType = x.GetType();
             Type yType = y.GetType();
 

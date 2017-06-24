@@ -28,20 +28,26 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DirectoryInfo"/>s.
     /// </summary>
-    internal class DirectoriesComparer
+    internal class DirectoriesComparer : IComparer 
     {
-        internal bool Equal(DirectoryInfo x, DirectoryInfo y)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            if (!(x is DirectoryInfo) || !(y is DirectoryInfo))
+                return null;
+
+            DirectoryInfo xDirectoryInfo = (DirectoryInfo)x;
+            DirectoryInfo yDirectoryInfo = (DirectoryInfo)y;
+
             // Do quick compares first
-            if (x.Attributes != y.Attributes ||
-                x.CreationTime != y.CreationTime ||
-                x.LastAccessTime != y.LastAccessTime)
+            if (xDirectoryInfo.Attributes != yDirectoryInfo.Attributes ||
+                xDirectoryInfo.CreationTime != yDirectoryInfo.CreationTime ||
+                xDirectoryInfo.LastAccessTime != yDirectoryInfo.LastAccessTime)
             {
                 return false;
             }
 
             // TODO: Find a cleaner way to do this
-            return new SamePathConstraint(x.FullName).ApplyTo(y.FullName).IsSuccess;
+            return new SamePathConstraint(xDirectoryInfo.FullName).ApplyTo(yDirectoryInfo.FullName).IsSuccess;
         }
     }
 }

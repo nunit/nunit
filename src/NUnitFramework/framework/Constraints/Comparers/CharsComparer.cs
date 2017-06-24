@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Char"/>s.
     /// </summary>
-    internal class CharsComparer
+    internal class CharsComparer : IComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -37,12 +37,18 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        internal bool Equal(char x, char y)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            if (!(x is char) || !(y is char))
+                return null;
+
+            char xChar = (char)x;
+            char yChar = (char)y;
+
             bool caseInsensitive = _equalityComparer.IgnoreCase;
 
-            char c1 = caseInsensitive ? Char.ToLower(x) : x;
-            char c2 = caseInsensitive ? Char.ToLower(y) : y;
+            char c1 = caseInsensitive ? Char.ToLower(xChar) : xChar;
+            char c2 = caseInsensitive ? Char.ToLower(yChar) : yChar;
 
             return c1 == c2;
         }

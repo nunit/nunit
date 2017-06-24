@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="IEnumerable"/>s.
     /// </summary>
-    internal class EnumerablesComparer
+    internal class EnumerablesComparer : IComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -38,15 +38,21 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        internal bool Equal(IEnumerable x, IEnumerable y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            if (!(x is IEnumerable) || !(y is IEnumerable))
+                return null;
+
+            IEnumerable xIEnumerable = (IEnumerable)x;
+            IEnumerable yIEnumerable = (IEnumerable)y;
+
             IEnumerator expectedEnum = null;
             IEnumerator actualEnum = null;
 
             try
             {
-                expectedEnum = x.GetEnumerator();
-                actualEnum = y.GetEnumerator();
+                expectedEnum = xIEnumerable.GetEnumerator();
+                actualEnum = yIEnumerable.GetEnumerator();
 
                 int count;
                 for (count = 0; ; count++)

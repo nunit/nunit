@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="IDictionary"/>s.
     /// </summary>
-    internal class DictionariesComparer
+    internal class DictionariesComparer : IComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -37,17 +37,23 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        internal bool Equal(IDictionary x, IDictionary y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
-            if (x.Count != y.Count)
+            if (!(x is IDictionary) || !(y is IDictionary))
+                return null;
+
+            IDictionary xDictionary = (IDictionary)x;
+            IDictionary yDictionary = (IDictionary)y;
+
+            if (xDictionary.Count != yDictionary.Count)
                 return false;
 
-            CollectionTally tally = new CollectionTally(_equalityComparer, x.Keys);
-            if (!tally.TryRemove(y.Keys) || tally.Count > 0)
+            CollectionTally tally = new CollectionTally(_equalityComparer, xDictionary.Keys);
+            if (!tally.TryRemove(yDictionary.Keys) || tally.Count > 0)
                 return false;
 
-            foreach (object key in x.Keys)
-                if (!_equalityComparer.AreEqual(x[key], y[key], ref tolerance))
+            foreach (object key in xDictionary.Keys)
+                if (!_equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance))
                     return false;
 
             return true;

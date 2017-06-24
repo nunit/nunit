@@ -26,10 +26,13 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Numerics"/>s.
     /// </summary>
-    internal class NumericsComparer
+    internal class NumericsComparer : IComparer
     {
-        internal bool Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            if (!Numerics.IsNumericType(x) || !Numerics.IsNumericType(y))
+                return null;
+
             return Numerics.AreEqual(x, y, ref tolerance);
         }
     }

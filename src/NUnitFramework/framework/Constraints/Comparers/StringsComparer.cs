@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="String"/>s.
     /// </summary>
-    internal class StringsComparer
+    internal class StringsComparer : IComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -37,12 +37,18 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        internal bool Equal(string x, string y)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
+            if (!(x is string) || !(y is string))
+                return null;
+
+            string xString = (string)x;
+            string yString = (string)y;
+
             bool caseInsensitive = _equalityComparer.IgnoreCase;
 
-            string s1 = caseInsensitive ? x.ToLower() : x;
-            string s2 = caseInsensitive ? y.ToLower() : y;
+            string s1 = caseInsensitive ? xString.ToLower() : xString;
+            string s2 = caseInsensitive ? yString.ToLower() : yString;
 
             return s1.Equals(s2);
         }

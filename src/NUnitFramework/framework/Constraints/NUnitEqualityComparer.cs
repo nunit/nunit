@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints.Comparers;
 
@@ -57,37 +55,32 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private List<FailurePoint> failurePoints;
 
-        private readonly EnumerablesComparer _enumerablesComparer;
-        private readonly ArraysComparer _arraysComparer;
-        private readonly CharsComparer _charsComparer;
-        private readonly DateTimeOffsetsComparer _dateTimeOffsetsComparer;
-        private readonly DictionariesComparer _dictionariesComparer;
-        private readonly DictionaryEntriesComparer _dictionaryEntriesComparer;
-        private readonly DirectoriesComparer _directoriesComparer;
-        private readonly IEquatablesComparer _IEqualityComparer;
-        private readonly KeyValuePairsComparer _keyValuePairsComparer;
-        private readonly NumericsComparer _numericsComparer;
-        private readonly StreamsComparer _streamsComparer;
-        private readonly StringsComparer _stringsComparer;
-        private readonly TimeSpanToleranceComparer _timeSpanToleranceComparer;
+        /// <summary>
+        /// List of comparers used to compare pairs of objects.
+        /// </summary>
+        private readonly List<Comparers.IComparer> _comparers;
 
         #endregion
 
         internal NUnitEqualityComparer()
         {
-            _enumerablesComparer = new EnumerablesComparer(this);
-            _arraysComparer = new ArraysComparer(_enumerablesComparer);
-            _charsComparer = new CharsComparer(this);
-            _dateTimeOffsetsComparer = new DateTimeOffsetsComparer(this);
-            _dictionariesComparer = new DictionariesComparer(this);
-            _dictionaryEntriesComparer = new DictionaryEntriesComparer(this);
-            _directoriesComparer = new DirectoriesComparer();
-            _IEqualityComparer = new IEquatablesComparer();
-            _keyValuePairsComparer = new KeyValuePairsComparer(this);
-            _numericsComparer = new NumericsComparer();
-            _streamsComparer = new StreamsComparer(this);
-            _stringsComparer = new StringsComparer(this );
-            _timeSpanToleranceComparer = new TimeSpanToleranceComparer();
+            EnumerablesComparer _enumerablesComparer = new EnumerablesComparer(this);
+            _comparers = new List<Comparers.IComparer>
+            {
+                new ArraysComparer(this, _enumerablesComparer),
+                new DictionariesComparer(this),
+                new DictionaryEntriesComparer(this),
+                new KeyValuePairsComparer(this),
+                new StringsComparer(this ),
+                new StreamsComparer(this),
+                new CharsComparer(this),
+                new DirectoriesComparer(),
+                new NumericsComparer(),
+                new DateTimeOffsetsComparer(this),
+                new TimeSpanToleranceComparer(),
+                new IEquatablesComparer(this),
+                _enumerablesComparer
+            };
         }
 
         #region Properties
@@ -175,55 +168,12 @@ namespace NUnit.Framework.Constraints
             if (externalComparer != null)
                 return externalComparer.AreEqual(x, y);
 
-            if (x.GetType().IsArray && y.GetType().IsArray && !compareAsCollection)
-                return _arraysComparer.Equal((Array)x, (Array)y, ref tolerance);
-
-            if (x is IDictionary && y is IDictionary)
-                return _dictionariesComparer.Equal((IDictionary)x, (IDictionary)y, ref tolerance);
-
-            // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
-            if (x is DictionaryEntry && y is DictionaryEntry)
-                return _dictionaryEntriesComparer.Equal((DictionaryEntry)x, (DictionaryEntry)y, ref tolerance);
-
-            // IDictionary<,> will eventually try to compare it's key value pairs when using CollectionTally
-            bool? keyValuePairEqual = _keyValuePairsComparer.Equal(x, y, ref tolerance);
-            if (keyValuePairEqual.HasValue)
-                return keyValuePairEqual.Value;
-
-            if (x is string && y is string)
-                return _stringsComparer.Equal((string)x, (string)y);
-
-            if (x is Stream && y is Stream)
-                return _streamsComparer.Equal((Stream)x, (Stream)y);
-
-            if (x is char && y is char)
-                return _charsComparer.Equal((char)x, (char)y);
-
-            if (x is DirectoryInfo && y is DirectoryInfo)
-                return _directoriesComparer.Equal((DirectoryInfo)x, (DirectoryInfo)y);
-
-            if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
-                return _numericsComparer.Equal(x, y, ref tolerance);
-
-            if (x is DateTimeOffset && y is DateTimeOffset)
-                return _dateTimeOffsetsComparer.Equal((DateTimeOffset)x, (DateTimeOffset)y, ref tolerance);
-
-            if (tolerance != null && tolerance.Amount is TimeSpan)
+            foreach (Comparers.IComparer comparer in _comparers)
             {
-                bool? result = _timeSpanToleranceComparer.Equal(x, y, (TimeSpan)tolerance.Amount);
+                bool? result = comparer.Equal(x, y, ref tolerance);
                 if (result.HasValue)
                     return result.Value;
             }
-
-            if (!compareAsCollection)
-            {
-                bool? result = _IEqualityComparer.Equal(x, y);
-                if (result.HasValue)
-                    return result.Value;
-            }
-
-            if (x is IEnumerable && y is IEnumerable)
-                return _enumerablesComparer.Equal((IEnumerable) x, (IEnumerable) y, ref tolerance);
 
             return x.Equals(y);
         }

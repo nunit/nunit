@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Stream"/>s.
     /// </summary>
-    internal class StreamsComparer
+    internal class StreamsComparer : IComparer
     {
         private static readonly int BUFFER_SIZE = 4096;
 
@@ -40,36 +40,42 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        internal bool Equal(Stream x, Stream y)
+        public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
-            if (x == y) return true;
+            if (!(x is Stream) || !(y is Stream))
+                return null;
 
-            if (!x.CanRead)
+            Stream xStream = (Stream)x;
+            Stream yStream = (Stream)y;
+
+            if (xStream == yStream) return true;
+
+            if (!xStream.CanRead)
                 throw new ArgumentException("Stream is not readable", "expected");
-            if (!y.CanRead)
+            if (!yStream.CanRead)
                 throw new ArgumentException("Stream is not readable", "actual");
-            if (!x.CanSeek)
+            if (!xStream.CanSeek)
                 throw new ArgumentException("Stream is not seekable", "expected");
-            if (!y.CanSeek)
+            if (!yStream.CanSeek)
                 throw new ArgumentException("Stream is not seekable", "actual");
 
-            if (x.Length != y.Length) return false;
+            if (xStream.Length != yStream.Length) return false;
 
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
 
-            BinaryReader binaryReaderExpected = new BinaryReader(x);
-            BinaryReader binaryReaderActual = new BinaryReader(y);
+            BinaryReader binaryReaderExpected = new BinaryReader(xStream);
+            BinaryReader binaryReaderActual = new BinaryReader(yStream);
 
-            long expectedPosition = x.Position;
-            long actualPosition = y.Position;
+            long expectedPosition = xStream.Position;
+            long actualPosition = yStream.Position;
 
             try
             {
                 binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
                 binaryReaderActual.BaseStream.Seek(0, SeekOrigin.Begin);
 
-                for (long readByte = 0; readByte < x.Length; readByte += BUFFER_SIZE)
+                for (long readByte = 0; readByte < xStream.Length; readByte += BUFFER_SIZE)
                 {
                     binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
@@ -92,8 +98,8 @@ namespace NUnit.Framework.Constraints.Comparers
             }
             finally
             {
-                x.Position = expectedPosition;
-                y.Position = actualPosition;
+                xStream.Position = expectedPosition;
+                yStream.Position = actualPosition;
             }
 
             return true;
