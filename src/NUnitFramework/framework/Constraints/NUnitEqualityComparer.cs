@@ -25,8 +25,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
+using NUnit.Framework.Constraints.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -58,8 +57,38 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private List<FailurePoint> failurePoints;
 
-        private static readonly int BUFFER_SIZE = 4096;
+        private readonly EnumerablesComparer _enumerablesComparer;
+        private readonly ArraysComparer _arraysComparer;
+        private readonly CharsComparer _charsComparer;
+        private readonly DateTimeOffsetsComparer _dateTimeOffsetsComparer;
+        private readonly DictionariesComparer _dictionariesComparer;
+        private readonly DictionaryEntriesComparer _dictionaryEntriesComparer;
+        private readonly DirectoriesComparer _directoriesComparer;
+        private readonly IEquatablesComparer _IEqualityComparer;
+        private readonly KeyValuePairsComparer _keyValuePairsComparer;
+        private readonly NumericsComparer _numericsComparer;
+        private readonly StreamsComparer _streamsComparer;
+        private readonly StringsComparer _stringsComparer;
+        private readonly TimeSpanToleranceComparer _timeSpanToleranceComparer;
+
         #endregion
+
+        internal NUnitEqualityComparer()
+        {
+            _enumerablesComparer = new EnumerablesComparer(this);
+            _arraysComparer = new ArraysComparer(_enumerablesComparer);
+            _charsComparer = new CharsComparer(this);
+            _dateTimeOffsetsComparer = new DateTimeOffsetsComparer(this);
+            _dictionariesComparer = new DictionariesComparer(this);
+            _dictionaryEntriesComparer = new DictionaryEntriesComparer(this);
+            _directoriesComparer = new DirectoriesComparer();
+            _IEqualityComparer = new IEquatablesComparer();
+            _keyValuePairsComparer = new KeyValuePairsComparer(this);
+            _numericsComparer = new NumericsComparer();
+            _streamsComparer = new StreamsComparer(this);
+            _stringsComparer = new StringsComparer(this );
+            _timeSpanToleranceComparer = new TimeSpanToleranceComparer();
+        }
 
         #region Properties
 
@@ -123,7 +152,7 @@ namespace NUnit.Framework.Constraints
         /// modifier.
         /// </remarks>
         public bool WithSameOffset { get; set; }
-		#endregion
+        #endregion
 
         #region Public Methods
         /// <summary>
@@ -142,138 +171,61 @@ namespace NUnit.Framework.Constraints
             if (object.ReferenceEquals(x, y))
                 return true;
 
-            Type xType = x.GetType();
-            Type yType = y.GetType();
-
-            Type xGenericTypeDefinition = xType.GetTypeInfo().IsGenericType ? xType.GetGenericTypeDefinition() : null;
-            Type yGenericTypeDefinition = yType.GetTypeInfo().IsGenericType ? yType.GetGenericTypeDefinition() : null;
-
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
                 return externalComparer.AreEqual(x, y);
 
-            if (xType.IsArray && yType.IsArray && !compareAsCollection)
-                return ArraysEqual((Array)x, (Array)y, ref tolerance);
+            if (x.GetType().IsArray && y.GetType().IsArray && !compareAsCollection)
+                return _arraysComparer.Equal((Array)x, (Array)y, ref tolerance);
 
             if (x is IDictionary && y is IDictionary)
-                return DictionariesEqual((IDictionary)x, (IDictionary)y, ref tolerance);
+                return _dictionariesComparer.Equal((IDictionary)x, (IDictionary)y, ref tolerance);
 
             // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
             if (x is DictionaryEntry && y is DictionaryEntry)
-                return DictionaryEntriesEqual((DictionaryEntry)x, (DictionaryEntry)y, ref tolerance);
+                return _dictionaryEntriesComparer.Equal((DictionaryEntry)x, (DictionaryEntry)y, ref tolerance);
 
             // IDictionary<,> will eventually try to compare it's key value pairs when using CollectionTally
-            if (xGenericTypeDefinition == typeof(KeyValuePair<,>) &&
-                yGenericTypeDefinition == typeof(KeyValuePair<,>))
-            {
-                var keyTolerance = Tolerance.Exact;
-                object xKey = xType.GetProperty("Key").GetValue(x, null);
-                object yKey = yType.GetProperty("Key").GetValue(y, null);
-                object xValue = xType.GetProperty("Value").GetValue(x, null);
-                object yValue = yType.GetProperty("Value").GetValue(y, null);
-
-                return AreEqual(xKey, yKey, ref keyTolerance) && AreEqual(xValue, yValue, ref tolerance);
-            }
+            bool? keyValuePairEqual = _keyValuePairsComparer.Equal(x, y, ref tolerance);
+            if (keyValuePairEqual.HasValue)
+                return keyValuePairEqual.Value;
 
             if (x is string && y is string)
-                return StringsEqual((string)x, (string)y);
+                return _stringsComparer.Equal((string)x, (string)y);
 
             if (x is Stream && y is Stream)
-                return StreamsEqual((Stream)x, (Stream)y);
+                return _streamsComparer.Equal((Stream)x, (Stream)y);
 
-            if ( x is char && y is char )
-                return CharsEqual( (char)x, (char)y );
+            if (x is char && y is char)
+                return _charsComparer.Equal((char)x, (char)y);
 
             if (x is DirectoryInfo && y is DirectoryInfo)
-                return DirectoriesEqual((DirectoryInfo)x, (DirectoryInfo)y);
+                return _directoriesComparer.Equal((DirectoryInfo)x, (DirectoryInfo)y);
 
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
-                return Numerics.AreEqual(x, y, ref tolerance);
+                return _numericsComparer.Equal(x, y, ref tolerance);
 
             if (x is DateTimeOffset && y is DateTimeOffset)
-            {
-                bool result;
-
-                DateTimeOffset xAsOffset = (DateTimeOffset)x;
-                DateTimeOffset yAsOffset = (DateTimeOffset)y;
-
-                if (tolerance != null && tolerance.Amount is TimeSpan)
-                {
-                    TimeSpan amount = (TimeSpan)tolerance.Amount;
-                    result = (xAsOffset - yAsOffset).Duration() <= amount;
-                }
-                else
-                {
-                    result = xAsOffset == yAsOffset;
-                }
-
-                if (result && WithSameOffset)
-                {
-                    result = xAsOffset.Offset == yAsOffset.Offset;
-                }
-
-                return result;
-            }
+                return _dateTimeOffsetsComparer.Equal((DateTimeOffset)x, (DateTimeOffset)y, ref tolerance);
 
             if (tolerance != null && tolerance.Amount is TimeSpan)
             {
-                TimeSpan amount = (TimeSpan)tolerance.Amount;
-
-                if (x is DateTime && y is DateTime)
-                    return ((DateTime)x - (DateTime)y).Duration() <= amount;
-
-                if (x is TimeSpan && y is TimeSpan)
-                    return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
+                bool? result = _timeSpanToleranceComparer.Equal(x, y, (TimeSpan)tolerance.Amount);
+                if (result.HasValue)
+                    return result.Value;
             }
 
             if (!compareAsCollection)
             {
-                MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
-                if (equals != null)
-                    return InvokeFirstIEquatableEqualsSecond(x, y, equals);
-                if (xType != yType && (equals = FirstImplementsIEquatableOfSecond(yType, xType)) != null)
-                    return InvokeFirstIEquatableEqualsSecond(y, x, equals);
+                bool? result = _IEqualityComparer.Equal(x, y);
+                if (result.HasValue)
+                    return result.Value;
             }
 
             if (x is IEnumerable && y is IEnumerable)
-                return EnumerablesEqual((IEnumerable) x, (IEnumerable) y, ref tolerance);
+                return _enumerablesComparer.Equal((IEnumerable) x, (IEnumerable) y, ref tolerance);
 
             return x.Equals(y);
-        }
-
-        private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
-        {
-            var pair = new KeyValuePair<Type, MethodInfo>();
-
-            foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
-                if (xEquatableArgument.Key.IsAssignableFrom(second))
-                    if (pair.Key == null || pair.Key.IsAssignableFrom(xEquatableArgument.Key))
-                        pair = xEquatableArgument;
-
-            return pair.Value;
-        }
-
-        private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
-        {
-            // NOTE: Original implementation used Array.ConvertAll and
-            // Array.FindAll, which don't exist in the compact framework.
-            var genericArgs = new List<KeyValuePair<Type, MethodInfo>>();
-
-            foreach (Type @interface in type.GetInterfaces())
-            {
-                if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
-                {
-                    genericArgs.Add(new KeyValuePair<Type, MethodInfo>(
-                        @interface.GetGenericArguments()[0], @interface.GetMethod("Equals")));
-                }
-            }
-
-            return genericArgs;
-        }
-
-        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
-        {
-            return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
         }
 
         #endregion
@@ -287,186 +239,6 @@ namespace NUnit.Framework.Constraints
                     return adapter;
 
             return null;
-        }
-
-        /// <summary>
-        /// Helper method to compare two arrays
-        /// </summary>
-        private bool ArraysEqual(Array x, Array y, ref Tolerance tolerance)
-        {
-            int rank = x.Rank;
-
-            if (rank != y.Rank)
-                return false;
-
-            for (int r = 1; r < rank; r++)
-                if (x.GetLength(r) != y.GetLength(r))
-                    return false;
-
-            return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);
-        }
-
-        private bool DictionariesEqual(IDictionary x, IDictionary y, ref Tolerance tolerance)
-        {
-            if (x.Count != y.Count)
-                return false;
-
-            CollectionTally tally = new CollectionTally(this, x.Keys);
-            if (!tally.TryRemove(y.Keys) || tally.Count > 0)
-                return false;
-
-            foreach (object key in x.Keys)
-                if (!AreEqual(x[key], y[key], ref tolerance))
-                    return false;
-
-            return true;
-        }
-
-        private bool DictionaryEntriesEqual(DictionaryEntry x, DictionaryEntry y, ref Tolerance tolerance)
-        {
-            var keyTolerance = Tolerance.Exact;
-            return AreEqual(x.Key, y.Key, ref keyTolerance) && AreEqual(x.Value, y.Value, ref tolerance);
-        }
-
-        private bool StringsEqual(string x, string y)
-        {
-            string s1 = caseInsensitive ? x.ToLower() : x;
-            string s2 = caseInsensitive ? y.ToLower() : y;
-
-            return s1.Equals(s2);
-        }
-
-        private bool CharsEqual(char x, char y)
-        {
-            char c1 = caseInsensitive ? Char.ToLower(x) : x;
-            char c2 = caseInsensitive ? Char.ToLower(y) : y;
-
-            return c1 == c2;
-        }
-
-        private bool EnumerablesEqual(IEnumerable x, IEnumerable y, ref Tolerance tolerance)
-        {
-            IEnumerator expectedEnum = null;
-            IEnumerator actualEnum = null;
-
-            try
-            {
-                expectedEnum = x.GetEnumerator();
-                actualEnum = y.GetEnumerator();
-
-                int count;
-                for (count = 0; ; count++)
-                {
-                    bool expectedHasData = expectedEnum.MoveNext();
-                    bool actualHasData = actualEnum.MoveNext();
-
-                    if (!expectedHasData && !actualHasData)
-                        return true;
-
-                    if (expectedHasData != actualHasData ||
-                        !AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
-                    {
-                        FailurePoint fp = new FailurePoint();
-                        fp.Position = count;
-                        fp.ExpectedHasData = expectedHasData;
-                        if (expectedHasData)
-                            fp.ExpectedValue = expectedEnum.Current;
-                        fp.ActualHasData = actualHasData;
-                        if (actualHasData)
-                            fp.ActualValue = actualEnum.Current;
-                        failurePoints.Insert(0, fp);
-                        return false;
-                    }
-                }
-            }
-            finally
-            {
-                var expectedDisposable = expectedEnum as IDisposable;
-                if (expectedDisposable != null) expectedDisposable.Dispose();
-
-                var actualDisposable = actualEnum as IDisposable;
-                if (actualDisposable != null) actualDisposable.Dispose();
-
-            }
-        }
-
-        /// <summary>
-        /// Method to compare two DirectoryInfo objects
-        /// </summary>
-        /// <param name="x">first directory to compare</param>
-        /// <param name="y">second directory to compare</param>
-        /// <returns>true if equivalent, false if not</returns>
-        private static bool DirectoriesEqual(DirectoryInfo x, DirectoryInfo y)
-        {
-            // Do quick compares first
-            if (x.Attributes != y.Attributes ||
-                x.CreationTime != y.CreationTime ||
-                x.LastAccessTime != y.LastAccessTime)
-            {
-                return false;
-            }
-
-            // TODO: Find a cleaner way to do this
-            return new SamePathConstraint(x.FullName).ApplyTo(y.FullName).IsSuccess;
-        }
-
-        private bool StreamsEqual(Stream x, Stream y)
-        {
-            if (x == y) return true;
-
-            if (!x.CanRead)
-                throw new ArgumentException("Stream is not readable", "expected");
-            if (!y.CanRead)
-                throw new ArgumentException("Stream is not readable", "actual");
-            if (!x.CanSeek)
-                throw new ArgumentException("Stream is not seekable", "expected");
-            if (!y.CanSeek)
-                throw new ArgumentException("Stream is not seekable", "actual");
-
-            if (x.Length != y.Length) return false;
-
-            byte[] bufferExpected = new byte[BUFFER_SIZE];
-            byte[] bufferActual = new byte[BUFFER_SIZE];
-
-            BinaryReader binaryReaderExpected = new BinaryReader(x);
-            BinaryReader binaryReaderActual = new BinaryReader(y);
-
-            long expectedPosition = x.Position;
-            long actualPosition = y.Position;
-
-            try
-            {
-                binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
-                binaryReaderActual.BaseStream.Seek(0, SeekOrigin.Begin);
-
-                for (long readByte = 0; readByte < x.Length; readByte += BUFFER_SIZE)
-                {
-                    binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
-                    binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
-
-                    for (int count = 0; count < BUFFER_SIZE; ++count)
-                    {
-                        if (bufferExpected[count] != bufferActual[count])
-                        {
-                            FailurePoint fp = new FailurePoint();
-                            fp.Position = readByte + count;
-                            fp.ExpectedHasData = true;
-                            fp.ExpectedValue = bufferExpected[count];
-                            fp.ActualHasData = true;
-                            fp.ActualValue = bufferActual[count];
-                            failurePoints.Insert(0, fp);
-                            return false;
-                        }
-                    }
-                }
-            }
-            finally
-            {
-                x.Position = expectedPosition;
-                y.Position = actualPosition;
-            }
-
-            return true;
         }
 
         #endregion
