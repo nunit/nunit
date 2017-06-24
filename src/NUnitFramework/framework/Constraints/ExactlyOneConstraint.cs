@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         {
             Guard.ArgumentNotNull(itemConstraint, "itemConstraint");
 
-            _itemConstraint = itemConstraint;
+            _itemConstraint = itemConstraint.Resolve();
         }
 
         /// <summary>
