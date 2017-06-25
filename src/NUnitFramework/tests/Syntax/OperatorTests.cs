@@ -168,6 +168,55 @@ namespace NUnit.Framework.Syntax
     }
     #endregion
 
+    #region One
+
+    //TODO: to be completed once ConstraintExpression implements One().
+    public class One_WithoutConstraint : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<exactcount>";
+            staticSyntax = Has.One().Items;
+            builderSyntax = Builder().One().Items;
+        }
+    }
+
+    public class One_WithConstraint : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<exactcount <lessthan 0>>";
+            staticSyntax = Has.One().Items.LessThan(0);
+            builderSyntax = Builder().One().Items.LessThan(0);
+        }
+    }
+
+    public class One_WithConstraint_BeforeBinaryOperators : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<exactcount <or <lessthan 0> <and <greaterthan 10> <lessthan 20>>>>";
+            staticSyntax = Has.One().Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
+            builderSyntax = Builder().One().Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
+        }
+    }
+
+    public class One_WithConstraint_BeforeAndAfterBinaryOperators : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<and <exactcount <lessthan 0>> <exactcount <greaterthan 10>>>";
+            staticSyntax = Has.One().Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
+            builderSyntax = Builder().One().Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
+        }
+    }
+
+    #endregion
+
     #region And
     public class AndTest : SyntaxTest
     {
