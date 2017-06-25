@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -184,11 +184,20 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
         }
 
-//		[Test]
-//		public void CannotRunAbstractFixture()
-//		{
-//            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
-//		}
+        [Test]
+        public void FixtureWithParallelizableOnOneTimeSetUpIsInvalid()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureWithParallelizableOnOneTimeSetUp));
+            Assert.AreEqual(RunState.NotRunnable, suite.RunState);
+            Assert.AreEqual("ParallelizableAttribute is only allowed on test methods and fixtures", 
+                suite.Properties.Get(PropertyNames.SkipReason));
+        }
+
+        //		[Test]
+        //		public void CannotRunAbstractFixture()
+        //		{
+        //            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
+        //		}
 
         [Test]
         public void CanRunFixtureDerivedFromAbstractTestFixture()

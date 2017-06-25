@@ -1,5 +1,5 @@
 // ****************************************************************
-// Copyright 2007, Charlie Poole
+// Copyright 2007, Charlie Poole, Rob Prouse
 // This is free software licensed under the NUnit license. You may
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
