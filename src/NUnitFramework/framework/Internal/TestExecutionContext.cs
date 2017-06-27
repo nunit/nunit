@@ -24,9 +24,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
+using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
@@ -35,7 +36,6 @@ using NUnit.Framework.Internal.Execution;
 using System.Runtime.Remoting.Messaging;
 using System.Security;
 using System.Security.Principal;
-using NUnit.Compatibility;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -175,9 +175,9 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return _currentContext.Value;
+                return _currentContext.Value ?? (_currentContext.Value = new AdhocContext());
             }
-            private set
+            internal set // internal so that AdhocTestExecutionTests can get at it
             {
                 _currentContext.Value = value;
             }
@@ -197,7 +197,15 @@ namespace NUnit.Framework.Internal
             [SecuritySafeCritical]
             get
             {
-                return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+                var context = CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+
+                if (context == null)
+                {
+                    context = new AdhocContext();
+                    CallContext.SetData(CONTEXT_KEY, context);
+                }
+
+                return context;
             }
             // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
             // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
@@ -548,6 +556,33 @@ namespace NUnit.Framework.Internal
             {
                 CurrentContext = _originalContext;
             }
+        }
+
+        #endregion
+
+        #region Nested AdhocTestExecutionContext
+
+        /// <summary>
+        /// An AdhocTestExecutionContext is created whenever a context is needed
+        /// but not available in CurrentContext. This happens when tests are run
+        /// on an adoc basis or Asserts are used outside of tests.
+        /// </summary>
+        public class AdhocContext : TestExecutionContext
+        {
+            /// <summary>
+            /// Construct an AdhocTestExecutionContext, which is used
+            /// whenever the current TestExecutionContext is found to be null.
+            /// </summary>
+            public AdhocContext()
+            {
+                var type = GetType();
+                var method = type.GetMethod("AdhocTestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                CurrentTest = new TestMethod(new MethodWrapper(type, method));
+                CurrentResult = CurrentTest.MakeTestResult();
+            }
+
+            private void AdhocTestMethod() { }
         }
 
         #endregion
