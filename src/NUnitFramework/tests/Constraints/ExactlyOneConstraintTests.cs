@@ -51,6 +51,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.Throws<ArgumentNullException>(() =>
             {
                 var blah = new ExactlyOneConstraint(null);
+                blah.GetHashCode();
             });
         }
 
