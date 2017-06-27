@@ -170,7 +170,6 @@ namespace NUnit.Framework.Syntax
 
     #region One
 
-    //TODO: to be completed once ConstraintExpression implements One().
     public class One_WithoutConstraint : SyntaxTest
     {
         [SetUp]

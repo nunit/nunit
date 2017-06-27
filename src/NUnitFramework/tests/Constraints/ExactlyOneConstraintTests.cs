@@ -32,6 +32,13 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ExactlyOneItemInCollection()
+        {
+            Assert.That(testCollectionLen1, new ExactlyOneConstraint());
+            Assert.That(testCollectionLen1, Has.One().Items);
+        }
+
+        [Test]
         public void ExactlyOneItemMatches()
         {
             Assert.That(testCollectionLen1, new ExactlyOneConstraint(Is.EqualTo("item")));
@@ -54,6 +61,12 @@ namespace NUnit.Framework.Tests.Constraints
             var ex = Assert.Throws<AssertionException>(() =>
                 Assert.That(testCollectionLen1, new ExactlyOneConstraint(Is.EqualTo("notItem"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExactlyOneItemInCollectionButNone()
+        {
+            Assert.IsFalse(new ExactlyOneConstraint().ApplyTo(testCollectionLen0).IsSuccess);
         }
 
         [Test]
