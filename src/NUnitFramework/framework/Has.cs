@@ -105,11 +105,10 @@ namespace NUnit.Framework
         #region One
 
         /// <summary>
-        /// Returns a <see cref="ConstraintExpression"/> which will apply
+        /// Returns a <see cref="ItemsConstraintExpression"/> which will apply
         /// the following constraint to only one member of the collection,
-        /// and fail if none or more than one matches occur.
+        /// and fail if none or more than one match occurs.
         /// </summary>
-        /// <returns></returns>
         public static ItemsConstraintExpression One()
         {
             return new ConstraintExpression().Exactly(1);

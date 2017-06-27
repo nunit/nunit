@@ -31,9 +31,8 @@ using System.Threading.Tasks;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// <see cref="ExactlyOneConstraint"/> applies another constraint to
-    /// a singular item in a collection, succeeding only if the singular 
-    /// item in the collection succeeds.
+    /// Applies a constraint to a collection, testing that exactly one
+    /// item within the collection meets the provided constraint.
     /// </summary>
     public class ExactlyOneConstraint : Constraint
     {
@@ -49,7 +48,10 @@ namespace NUnit.Framework.Constraints
         /// Construct an <see cref="ExactlyOneConstraint"/> on top of
         /// an existing constraint.
         /// </summary>
-        /// <param name="itemConstraint"></param>
+        /// <param name="itemConstraint">
+        /// The constraint that will be attempted to be applied
+        /// to a singular item in the collection.
+        /// </param>
         public ExactlyOneConstraint(IConstraint itemConstraint)
             : base(itemConstraint)
         {
@@ -60,11 +62,18 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Apply the constraint to the singular item in the collection, 
-        /// succeeding only if the singular item passes.
+        /// succeeding only if a singular item passes.
         /// </summary>
-        /// <typeparam name="TActual"></typeparam>
-        /// <param name="actual"></param>
-        /// <returns></returns>
+        /// <typeparam name="TActual">
+        /// Type of the collection.
+        /// </typeparam>
+        /// <param name="actual">
+        /// The collection to apply the <see cref="IConstraint"/> to.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ConstraintResult"/> of the constraint applied to the provided
+        /// collection.
+        /// </returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             if (!(actual is IEnumerable))
@@ -77,14 +86,7 @@ namespace NUnit.Framework.Constraints
             if (_itemConstraint == null)
             {
                 //Only checking the count of actualEnumerable.
-                if (count == 1)
-                {
-                    return new ConstraintResult(this, "1", true);
-                }
-                else
-                {
-                    return new ConstraintResult(this, count, false);
-                }
+                return new ConstraintResult(this, count, (count == 1));
             }
             else
             {

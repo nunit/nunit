@@ -211,9 +211,8 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a <see cref="ItemsConstraintExpression"/>, which will
         /// apply the following constraint to a collection of length one, succeeding
-        /// only if the the singular collection item succeeds.
+        /// only a singular item within the collection succeeds.
         /// </summary>
-        /// <returns></returns>
         public ItemsConstraintExpression One()
         {
             builder.Append(new ExactCountOperator(1));
