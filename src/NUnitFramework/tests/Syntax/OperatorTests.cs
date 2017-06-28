@@ -176,8 +176,8 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = "<exactcount>";
-            staticSyntax = Has.One().Items;
-            builderSyntax = Builder().One().Items;
+            staticSyntax = Has.One.Items;
+            builderSyntax = Builder().One.Items;
         }
     }
 
@@ -187,8 +187,8 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = "<exactcount <lessthan 0>>";
-            staticSyntax = Has.One().Items.LessThan(0);
-            builderSyntax = Builder().One().Items.LessThan(0);
+            staticSyntax = Has.One.Items.LessThan(0);
+            builderSyntax = Builder().One.Items.LessThan(0);
         }
     }
 
@@ -198,8 +198,8 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = "<exactcount <or <lessthan 0> <and <greaterthan 10> <lessthan 20>>>>";
-            staticSyntax = Has.One().Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
-            builderSyntax = Builder().One().Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
+            staticSyntax = Has.One.Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
+            builderSyntax = Builder().One.Items.LessThan(0).Or.GreaterThan(10).And.LessThan(20);
         }
     }
 
@@ -209,8 +209,8 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = "<and <exactcount <lessthan 0>> <exactcount <greaterthan 10>>>";
-            staticSyntax = Has.One().Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
-            builderSyntax = Builder().One().Items.LessThan(0).And.Exactly(3).Items.GreaterThan(10);
+            staticSyntax = Has.One.Items.LessThan(0).And.One.Items.GreaterThan(10);
+            builderSyntax = Builder().One.Items.LessThan(0).And.One.Items.GreaterThan(10);
         }
     }
 

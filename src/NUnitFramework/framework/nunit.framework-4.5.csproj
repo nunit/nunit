@@ -91,7 +91,6 @@
     <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\NonParallelizableAttribute.cs" />
-    <Compile Include="Constraints\ExactlyOneConstraint.cs" />
     <Compile Include="Internal\Commands\AfterTestCommand.cs" />
     <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
     <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />

@@ -109,9 +109,12 @@ namespace NUnit.Framework
         /// the following constraint to only one member of the collection,
         /// and fail if none or more than one match occurs.
         /// </summary>
-        public static ItemsConstraintExpression One()
+        public static ItemsConstraintExpression One
         {
-            return new ConstraintExpression().Exactly(1);
+            get
+            {
+                return new ConstraintExpression().Exactly(1);
+            }
         }
 
         #endregion
