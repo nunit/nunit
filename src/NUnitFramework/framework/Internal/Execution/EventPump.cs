@@ -140,6 +140,7 @@ namespace NUnit.Framework.Internal.Execution
                 _pumpThread = new Thread (PumpThreadProc)
                     {
                     Name = "EventPumpThread" + Name,
+                    Priority = ThreadPriority.Highest
                     };
 
                 _pumpThread.Start();

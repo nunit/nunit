@@ -140,6 +140,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
+        private const int spinCount = 5;
+
 //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
         private readonly ConcurrentQueue<Event> _queue = new ConcurrentQueue<Event>();
@@ -147,7 +149,17 @@ namespace NUnit.Framework.Internal.Execution
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly AutoResetEvent _mreAdd = new AutoResetEvent(false);
+        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim(false);
+
+        /* The whole idea is to use these two values in a transactional
+         * way to track and manage the actual data inside the underlying lock-free collection
+         * instead of directly working with it or using external locking.
+         *
+         * They are manipulated with CAS and are guaranteed to increase over time and use
+         * of the instance thus preventing ABA problems.
+         */
+        private int _addId = int.MinValue;
+        private int _removeId = int.MinValue;
 
         private int _stopped;
 
@@ -168,11 +180,26 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="e">The event to enqueue.</param>
         public void Enqueue(Event e)
         {
-            // Add to the collection
-            _queue.Enqueue(e);
+            do
+            {
+                int cachedAddId = _addId;
 
-            // Wake up threads that may have been sleeping
-            _mreAdd.Set();
+                // Validate that we have are the current enqueuer
+                if (Interlocked.CompareExchange(ref _addId, cachedAddId + 1, cachedAddId) != cachedAddId)
+                    continue;
+
+                // Add to the collection
+                _queue.Enqueue(e);
+
+                // Wake up threads that may have been sleeping
+                _mreAdd.Set();
+
+                break;
+            } while (true);
+
+            // Setting this to anything other than 0 causes NUnit to be sensitive
+            // to the windows timer resolution - see issue #2217 
+            Thread.Sleep(0);  // give EventPump thread a chance to process the event
         }
 
         /// <summary>
@@ -197,19 +224,58 @@ namespace NUnit.Framework.Internal.Execution
         /// </returns>
         public Event Dequeue(bool blockWhenEmpty)
         {
+            SpinWait sw = new SpinWait();
+
             do
             {
-                // Dequeue our work item
-                Event e;
-                if (_queue.TryDequeue (out e))
+                int cachedRemoveId = _removeId;
+                int cachedAddId = _addId;
+
+                // Empty case
+                if (cachedRemoveId == cachedAddId)
                 {
-                    return e;
+                    if (!blockWhenEmpty || _stopped != 0)
+                        return null;
+
+                    // Spin a few times to see if something changes
+                    if (sw.Count <= spinCount)
+                    {
+                        sw.SpinOnce();
+                    }
+                    else
+                    {
+                        // Reset to wait for an enqueue
+                        _mreAdd.Reset();
+
+                        // Recheck for an enqueue to avoid a Wait
+                        if (cachedRemoveId != _removeId || cachedAddId != _addId)
+                        {
+                            // Queue is not empty, set the event
+                            _mreAdd.Set();
+                            continue;
+                        }
+
+                        // Wait for something to happen
+                        _mreAdd.Wait(500);
+                    }
+
+                    continue;
                 }
 
-                if (!blockWhenEmpty || Interlocked.CompareExchange(ref _stopped, 0, 0) != 0)
-                    return null;
+                // Validate that we are the current dequeuer
+                if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
+                    continue;
 
-                _mreAdd.WaitOne();
+
+                // Dequeue our work item
+                Event e;
+                while (!_queue.TryDequeue (out e))
+                {
+                    if (!blockWhenEmpty || _stopped != 0)
+                        return null;
+                }
+
+                return e;
             } while (true);
         }
 
