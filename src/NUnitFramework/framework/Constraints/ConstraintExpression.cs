@@ -206,6 +206,25 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region One
+       
+        /// <summary>
+        /// Returns a <see cref="ItemsConstraintExpression"/>, which will
+        /// apply the following constraint to a collection of length one, succeeding
+        /// only if exactly one of them succeeds.
+        /// </summary>
+        public ItemsConstraintExpression One
+        {
+            get
+            {
+                builder.Append(new ExactCountOperator(1));
+                return new ItemsConstraintExpression(builder);
+            }
+            
+        }
+
+        #endregion
+
         #region Property
 
         /// <summary>
