@@ -687,6 +687,17 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region Guids
+
+        [Test]
+        [Description("Test that all generated Guids are unique")]
+        public void RandomGuidsAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextGuid(), 10, 10);
+        }
+
+        #endregion
+
         #region Repeatability
 
         public static class Repeatability

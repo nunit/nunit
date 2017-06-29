@@ -611,6 +611,25 @@ namespace NUnit.Framework.Internal
             return unchecked(raw % range + min);
         }
 
+        #endregion 
+
+        #region Guid
+
+        /// <summary>
+        /// Returns a random <see cref="Guid"/>.
+        /// </summary>
+        public Guid NextGuid()
+        {
+            //We use the algorithm described in https://tools.ietf.org/html/rfc4122#section-4.4
+            var b = new byte[16];
+            NextBytes(b);
+            //set the version to 4
+            b[7] = (byte)((b[7] & 0x0f) | 0x40);
+            //set the 2-bits indicating the variant to 1 and 0
+            b[8] = (byte)((b[8] & 0x3f) | 0x80);
+            return new Guid(b);
+        }
+
         #endregion
 
         #region Helper Methods
