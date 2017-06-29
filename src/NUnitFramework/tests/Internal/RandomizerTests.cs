@@ -696,6 +696,18 @@ namespace NUnit.Framework.Internal
             UniqueValues.Check(() => _randomizer.NextGuid(), 10, 10);
         }
 
+        [Test]
+        [Description("Test that generated Guids are version 4 variant 1 Guids")]
+        public void RandomGuidsAreV4()
+        {
+            Guid guid = _randomizer.NextGuid();
+            byte[] bytes = guid.ToByteArray();
+            //check the version
+            Assert.That(bytes[7] & 0xf0, Is.EqualTo(0x40));
+            //check the variant
+            Assert.That(bytes[8] & 0xc0, Is.EqualTo(0x80));
+        }
+
         #endregion
 
         #region Repeatability
