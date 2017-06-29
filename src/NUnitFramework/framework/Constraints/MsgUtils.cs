@@ -101,6 +101,8 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
 
             AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
+
+            AddFormatter(next => val => TryFormatValueTuple(val) ?? next(val));
         }
 
         /// <summary>
@@ -227,6 +229,38 @@ namespace NUnit.Framework.Constraints
         private static string FormatKeyValuePair(object key, object value)
         {
             return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
+        }
+
+        private static string TryFormatValueTuple(object value)
+        {
+            if (value == null)
+                return null;
+
+            Type valueType = value.GetType();
+            string typeName = GetTypeNameWithoutGenerics(valueType.FullName);
+            if (typeName != "System.ValueTuple")
+                return null;
+
+            int numberOfGenericArgs = valueType.GetGenericArguments().Length;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("(");
+            for (int i = 0; i < numberOfGenericArgs; i++)
+            {
+                if (i > 0) sb.Append(", ");
+
+                string propertyName = "Item" + (i + 1);
+                object itemValue = valueType.GetField(propertyName).GetValue(value);
+                sb.Append(FormatValue(itemValue));
+            }
+            sb.Append(")");
+
+            return sb.ToString();
+        }
+
+        private static string GetTypeNameWithoutGenerics(string fullTypeName)
+        {
+            int index = fullTypeName.IndexOf('`');
+            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
         }
 
         private static string FormatString(string s)
