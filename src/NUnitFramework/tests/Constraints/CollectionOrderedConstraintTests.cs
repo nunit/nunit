@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -125,7 +125,11 @@ namespace NUnit.Framework.Constraints
                 Is.Ordered.By("A").Descending.Then.By("B").Descending ),
             new TestCaseData(
                 new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 42), new TestClass3("ABC", 1) },
-                Is.Ordered.Descending.By("A").Then.Descending.By("B") )
+                Is.Ordered.Descending.By("A").Then.Descending.By("B") ),
+            // Ordered by a field
+            new TestCaseData(
+                new[] { new TestClass4("aaa"), new TestClass4("bbb"), new TestClass4("ccc") },
+                Is.Ordered.By("Name") ),
         };
 
         #endregion
@@ -303,6 +307,21 @@ namespace NUnit.Framework.Constraints
             public override string ToString()
             {
                 return A.ToString() + "," + B.ToString();
+            }
+        }
+
+        public class TestClass4
+        {
+            public readonly string Name;
+
+            public TestClass4(string name)
+            {
+                Name = name;
+            }
+
+            public override string ToString()
+            {
+                return Name;
             }
         }
 
