@@ -125,11 +125,7 @@ namespace NUnit.Framework.Constraints
                 Is.Ordered.By("A").Descending.Then.By("B").Descending ),
             new TestCaseData(
                 new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 42), new TestClass3("ABC", 1) },
-                Is.Ordered.Descending.By("A").Then.Descending.By("B") ),
-            // Ordered by a field
-            new TestCaseData(
-                new[] { new TestClass4("aaa"), new TestClass4("bbb"), new TestClass4("ccc") },
-                Is.Ordered.By("Name") ),
+                Is.Ordered.Descending.By("A").Then.Descending.By("B") )
         };
 
         #endregion
@@ -259,6 +255,28 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => Assert.That(new [] { new object(), new object() }, Is.Ordered));
         }
 
+        [TestCaseSource(nameof(InvalidOrderedByData))]
+        public void IsOrdered_ThrowsOnMissingProperty(object[] collection, string property, string expectedIndex)
+        {
+            Assert.That(() => Assert.That(collection, Is.Ordered.By(property)), Throws.ArgumentException.With.Message.Contain(expectedIndex));
+        }
+
+        static readonly object[] InvalidOrderedByData = new[]
+        {
+            new TestCaseData(
+                new object [] { "a", "b" },
+                "A",
+                "index 0"),
+            new TestCaseData(
+                new object [] { new TestClass3("a", 1), "b" },
+                "A",
+                "index 1"),
+            new TestCaseData(
+                new object [] { new TestClass3("a", 1), new TestClass3("b", 1), new TestClass4("c") },
+                "A",
+                "index 2"),
+        };
+
         #endregion
 
         #region Test Classes
@@ -312,16 +330,16 @@ namespace NUnit.Framework.Constraints
 
         public class TestClass4
         {
-            public readonly string Name;
+            public readonly string A;
 
-            public TestClass4(string name)
+            public TestClass4(string a)
             {
-                Name = name;
+                A = a;
             }
 
             public override string ToString()
             {
-                return Name;
+                return A;
             }
         }
 

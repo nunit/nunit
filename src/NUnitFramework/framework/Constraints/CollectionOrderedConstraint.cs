@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
             CreateNextStep(null);
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
@@ -161,7 +161,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get 
+            get
             {
                 string description = "collection ordered";
 
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Constraints
             foreach (object current in actual)
             {
                 if (current == null)
-                    throw new ArgumentNullException("actual", "Null value at index " + index.ToString());
+                    throw new ArgumentNullException(nameof(actual), "Null value at index " + index.ToString());
 
                 if (previous != null)
                 {
@@ -202,13 +202,16 @@ namespace NUnit.Framework.Constraints
                         foreach (var step in _steps)
                         {
                             string propertyName = step.PropertyName;
-                            PropertyInfo previousProp = previous.GetType().GetProperty(propertyName);
-                            PropertyInfo prop = current.GetType().GetProperty(propertyName);
-                            var previousValue = previousProp.GetValue(previous, null);
-                            var currentValue = prop.GetValue(current, null);
 
-                            if (currentValue == null)
-                                throw new ArgumentException("actual", "Null property value at index " + index.ToString());
+                            PropertyInfo previousProp = previous.GetType().GetProperty(propertyName);
+                            if (previousProp == null)
+                                throw new ArgumentException($"Property {propertyName} not found at index {index - 1}", nameof(actual));
+                            var previousValue = previousProp.GetValue(previous, null);
+
+                            PropertyInfo prop = current.GetType().GetProperty(propertyName);
+                            if (prop == null)
+                                throw new ArgumentException($"Property {propertyName} not found at index {index}", nameof(actual));
+                            var currentValue = prop.GetValue(current, null);
 
                             int comparisonResult = step.Comparer.Compare(previousValue, currentValue);
 
