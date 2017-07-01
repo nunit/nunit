@@ -41,7 +41,6 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
         /// </summary>
-        /// <param name="expected">The _expected.</param>
         public ContainsConstraint(object expected)
         {
             this._expected = expected;
