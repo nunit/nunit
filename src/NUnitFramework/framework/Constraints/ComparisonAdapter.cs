@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// ComparisonAdapter class centralizes all comparisons of
-    /// _values in NUnit, adapting to the use of any provided
+    /// values in NUnit, adapting to the use of any provided
     /// <see cref="IComparer"/>, <see cref="IComparer{T}"/>
     /// or <see cref="Comparison{T}"/>.
     /// </summary>

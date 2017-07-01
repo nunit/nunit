@@ -27,7 +27,7 @@ using System.Collections;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RangeAttribute is used to supply a range of _values to an
+    /// RangeAttribute is used to supply a range of values to an
     /// individual parameter of a parameterized test.
     /// </summary>
     public class RangeAttribute : ValuesAttribute

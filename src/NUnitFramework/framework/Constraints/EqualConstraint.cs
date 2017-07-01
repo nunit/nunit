@@ -186,13 +186,13 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
-        /// a distance in representable _values (see remarks).
+        /// a distance in representable values (see remarks).
         /// </summary>
         /// <returns>Self.</returns>
         /// <remarks>
         /// Ulp stands for "unit in the last place" and describes the minimum
         /// amount a given value can change. For any integers, an ulp is 1 whole
-        /// digit. For floating point _values, the accuracy of which is better
+        /// digit. For floating point values, the accuracy of which is better
         /// for smaller numbers and worse for larger numbers, an ulp depends
         /// on the size of the number. Using ulps for comparison of floating
         /// point results instead of fixed tolerances is safer because it will
@@ -209,7 +209,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
-        /// a percentage that the actual _values is allowed to deviate from
+        /// a percentage that the actual values is allowed to deviate from
         /// the expected value.
         /// </summary>
         /// <returns>Self</returns>

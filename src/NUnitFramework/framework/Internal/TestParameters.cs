@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
         #region IApplyToTest Members
 
         /// <summary>
-        /// Applies ParameterSet _values to the test itself.
+        /// Applies ParameterSet values to the test itself.
         /// </summary>
         /// <param name="test">A test.</param>
         public void ApplyToTest(Test test)

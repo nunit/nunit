@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -255,6 +255,28 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => Assert.That(new [] { new object(), new object() }, Is.Ordered));
         }
 
+        [TestCaseSource(nameof(InvalidOrderedByData))]
+        public void IsOrdered_ThrowsOnMissingProperty(object[] collection, string property, string expectedIndex)
+        {
+            Assert.That(() => Assert.That(collection, Is.Ordered.By(property)), Throws.ArgumentException.With.Message.Contain(expectedIndex));
+        }
+
+        static readonly object[] InvalidOrderedByData = new[]
+        {
+            new TestCaseData(
+                new object [] { "a", "b" },
+                "A",
+                "index 0"),
+            new TestCaseData(
+                new object [] { new TestClass3("a", 1), "b" },
+                "A",
+                "index 1"),
+            new TestCaseData(
+                new object [] { new TestClass3("a", 1), new TestClass3("b", 1), new TestClass4("c") },
+                "A",
+                "index 2"),
+        };
+
         #endregion
 
         #region Test Classes
@@ -303,6 +325,21 @@ namespace NUnit.Framework.Constraints
             public override string ToString()
             {
                 return A.ToString() + "," + B.ToString();
+            }
+        }
+
+        public class TestClass4
+        {
+            public readonly string A;
+
+            public TestClass4(string a)
+            {
+                A = a;
+            }
+
+            public override string ToString()
+            {
+                return A;
             }
         }
 

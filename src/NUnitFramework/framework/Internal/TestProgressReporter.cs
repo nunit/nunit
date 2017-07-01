@@ -140,7 +140,7 @@ namespace NUnit.Framework.Internal
         /// corresponding xml representations.
         /// </summary>
         /// <param name="original">The string to be used</param>
-        /// <returns>A new string with the _values replaced</returns>
+        /// <returns>A new string with the values replaced</returns>
         private static string FormatAttributeValue(string original)
         {
             return original

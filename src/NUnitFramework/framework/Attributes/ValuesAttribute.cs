@@ -96,7 +96,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the collection of _values to be used as arguments
+        /// Get the collection of values to be used as arguments
         /// </summary>
         public IEnumerable GetData(IParameterInfo parameter)
         {
