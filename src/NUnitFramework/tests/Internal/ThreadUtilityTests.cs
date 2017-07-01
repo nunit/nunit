@@ -9,7 +9,6 @@ namespace NUnit.Framework.Internal
     public class ThreadUtilityTests
     {
         [Platform("Win")]
-        [Timeout(1000)]
         [TestCase(false, TestName = "Abort")]
         [TestCase(true, TestName = "Kill")]
         public void AbortOrKillThreadWithMessagePump(bool kill)
@@ -34,9 +33,8 @@ namespace NUnit.Framework.Internal
                 else
                     ThreadUtility.Abort(thread, nativeId);
 
-                thread.Join();
+                Assert.That(thread.Join(1000), "Native message pump was not able to be interrupted to enable a managed thread abort.");
             }
-
         }
 
         [DllImport("user32.dll")]
