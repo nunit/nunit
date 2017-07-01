@@ -368,6 +368,7 @@
     <Compile Include="Internal\Filters\TestNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />
+    <Compile Include="Internal\IndirectTestAssemblyAttribute.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\Logging\ILogger.cs" />

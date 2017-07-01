@@ -84,9 +84,9 @@ namespace NUnit.Framework.Api
         public void CreateController()
         {
 #if NETSTANDARD1_3 || NETSTANDARD1_6
-            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
+            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings, indirectMode: true);
 #else
-            _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, "ID", _settings);
+            _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, "ID", _settings, indirectMode: true);
 #endif
             _handler = new CallbackEventHandler();
         }
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_Assembly_ReturnsRunnableSuite()
         {
-            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
+            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings, indirectMode: true);
             new FrameworkController.LoadTestsAction(_controller, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 

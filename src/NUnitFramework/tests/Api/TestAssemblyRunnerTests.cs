@@ -73,7 +73,7 @@ namespace NUnit.Framework.Api
         [SetUp]
         public void CreateRunner()
         {
-            _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            _runner = new NUnitTestAssemblyRunner(DefaultTestAssemblyBuilder.IndirectMode);
 
             _testStartedCount = 0;
             _testFinishedCount = 0;
