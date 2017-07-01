@@ -40,8 +40,8 @@ namespace NUnit.Framework.Constraints
     ///     accuracy for smaller numbers and lower accuracy for very large numbers.
     ///   </para>
     ///   <para>
-    ///     If a comparison is allowed "2 ulps" of deviation, that means the _values are
-    ///     allowed to deviate by up to 2 adjacent floating point _values, which might be
+    ///     If a comparison is allowed "2 ulps" of deviation, that means the values are
+    ///     allowed to deviate by up to 2 adjacent floating point values, which might be
     ///     as low as 0.0000001 for small numbers or as high as 10.0 for large numbers.
     ///   </para>
     /// </remarks>
@@ -90,23 +90,23 @@ namespace NUnit.Framework.Constraints
 
         #endregion // struct DoubleLongUnion
 
-        /// <summary>Compares two floating point _values for equality</summary>
+        /// <summary>Compares two floating point values for equality</summary>
         /// <param name="left">First floating point value to be compared</param>
         /// <param name="right">Second floating point value t be compared</param>
         /// <param name="maxUlps">
-        ///   Maximum number of representable floating point _values that are allowed to
-        ///   be between the left and the right floating point _values
+        ///   Maximum number of representable floating point values that are allowed to
+        ///   be between the left and the right floating point values
         /// </param>
         /// <returns>True if both numbers are equal or close to being equal</returns>
         /// <remarks>
         ///   <para>
-        ///     Floating point _values can only represent a finite subset of natural numbers.
-        ///     For example, the _values 2.00000000 and 2.00000024 can be stored in a float,
+        ///     Floating point values can only represent a finite subset of natural numbers.
+        ///     For example, the values 2.00000000 and 2.00000024 can be stored in a float,
         ///     but nothing inbetween them.
         ///   </para>
         ///   <para>
-        ///     This comparison will count how many possible floating point _values are between
-        ///     the left and the right number. If the number of possible _values between both
+        ///     This comparison will count how many possible floating point values are between
+        ///     the left and the right number. If the number of possible values between both
         ///     numbers is less than or equal to maxUlps, then the numbers are considered as
         ///     being equal.
         ///   </para>
@@ -142,24 +142,24 @@ namespace NUnit.Framework.Constraints
             return Math.Abs(leftUnion.Int - rightUnion.Int) <= maxUlps;
         }
 
-        /// <summary>Compares two double precision floating point _values for equality</summary>
+        /// <summary>Compares two double precision floating point values for equality</summary>
         /// <param name="left">First double precision floating point value to be compared</param>
         /// <param name="right">Second double precision floating point value t be compared</param>
         /// <param name="maxUlps">
-        ///   Maximum number of representable double precision floating point _values that are
-        ///   allowed to be between the left and the right double precision floating point _values
+        ///   Maximum number of representable double precision floating point values that are
+        ///   allowed to be between the left and the right double precision floating point values
         /// </param>
         /// <returns>True if both numbers are equal or close to being equal</returns>
         /// <remarks>
         ///   <para>
-        ///     Double precision floating point _values can only represent a limited series of
-        ///     natural numbers. For example, the _values 2.0000000000000000 and 2.0000000000000004
+        ///     Double precision floating point values can only represent a limited series of
+        ///     natural numbers. For example, the values 2.0000000000000000 and 2.0000000000000004
         ///     can be stored in a double, but nothing inbetween them.
         ///   </para>
         ///   <para>
         ///     This comparison will count how many possible double precision floating point
-        ///     _values are between the left and the right number. If the number of possible
-        ///     _values between both numbers is less than or equal to maxUlps, then the numbers
+        ///     values are between the left and the right number. If the number of possible
+        ///     values between both numbers is less than or equal to maxUlps, then the numbers
         ///     are considered as being equal.
         ///   </para>
         ///   <para>

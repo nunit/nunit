@@ -32,8 +32,8 @@ namespace NUnit.Framework.Internal
     /// A PropertyBag represents a collection of name value pairs
     /// that allows duplicate entries with the same key. Methods
     /// are provided for adding a new pair as well as for setting
-    /// a key to a single value. All keys are strings but _values
-    /// may be of any type. Null _values are not permitted, since
+    /// a key to a single value. All keys are strings but values
+    /// may be of any type. Null values are not permitted, since
     /// a null entry represents the absence of the key.
     /// </summary>
     public class PropertyBag : IPropertyBag
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Sets the value for a key, removing any other
-        /// _values that are already in the property set.
+        /// values that are already in the property set.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Gets a single value for a key, using the first
-        /// one if multiple _values are present and returning
+        /// one if multiple values are present and returning
         /// null if the value is not found.
         /// </summary>
         /// <param name="key"></param>
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="key">The key to be checked</param>
         /// <returns>
-        /// True if their are _values present, otherwise false
+        /// True if their are values present, otherwise false
         /// </returns>
         public bool ContainsKey(string key)
         {
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets or sets the list of _values for a particular key
+        /// Gets or sets the list of values for a particular key
         /// </summary>
         public IList this[string key]
         {

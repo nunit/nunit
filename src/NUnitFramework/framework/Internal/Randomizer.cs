@@ -30,7 +30,7 @@ using System.Text;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Randomizer returns a set of random _values in a repeatable
+    /// Randomizer returns a set of random values in a repeatable
     /// way, to allow re-running of tests if necessary. It extends
     /// the .NET Random class, providing random values for a much
     /// wider range of types.
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get a Randomizer for a particular member, returning
         /// one that has already been created if it exists.
-        /// This ensures that the same _values are generated
+        /// This ensures that the same values are generated
         /// each time the tests are reloaded.
         /// </summary>
         public static Randomizer GetRandomizer(MemberInfo member)

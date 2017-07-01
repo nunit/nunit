@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal.Builders
         ///
         /// Currently, NUnitTestMethods are required to be public,
         /// non-abstract methods, either static or instance,
-        /// returning void. They may take arguments but the _values must
+        /// returning void. They may take arguments but the values must
         /// be provided or the TestMethod is not considered runnable.
         ///
         /// Methods not meeting these criteria will be marked as

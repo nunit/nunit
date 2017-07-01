@@ -28,7 +28,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// RangeConstraint tests whether two _values are within a 
+    /// RangeConstraint tests whether two values are within a 
     /// specified range.
     /// </summary>
     public class RangeConstraint : Constraint

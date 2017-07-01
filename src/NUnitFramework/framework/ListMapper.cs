@@ -47,9 +47,9 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Produces a collection containing all the _values of a property
+        /// Produces a collection containing all the values of a property
         /// </summary>
-        /// <param name="name">The collection of property _values</param>
+        /// <param name="name">The collection of property values</param>
         /// <returns></returns>
         public ICollection Property( string name )
         {
