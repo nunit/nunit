@@ -616,7 +616,7 @@ namespace NUnit.Framework.Internal
         #region Guid
 
         /// <summary>
-        /// Returns a random <see cref="Guid"/>.
+        /// Generates a valid version 4 <see cref="Guid"/>.
         /// </summary>
         public Guid NextGuid()
         {
