@@ -94,8 +94,8 @@
     <Compile Include="Constraints\Comparers\DictionaryEntriesComparer.cs" />
     <Compile Include="Constraints\Comparers\DirectoriesComparer.cs" />
     <Compile Include="Constraints\Comparers\EnumerablesComparer.cs" />
-    <Compile Include="Constraints\Comparers\IComparer.cs" />
-    <Compile Include="Constraints\Comparers\IEquatablesComparer.cs" />
+    <Compile Include="Constraints\Comparers\EquatablesComparer.cs" />
+    <Compile Include="Constraints\Comparers\IChainComparer.cs" />
     <Compile Include="Constraints\Comparers\KeyValuePairsComparer.cs" />
     <Compile Include="Constraints\Comparers\NumericsComparer.cs" />
     <Compile Include="Constraints\Comparers\StreamsComparer.cs" />

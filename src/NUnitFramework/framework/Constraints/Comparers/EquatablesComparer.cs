@@ -31,11 +31,11 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two types related by <see cref="IEquatable{T}"/>.
     /// </summary>
-    internal class IEquatablesComparer : IComparer
+    internal class EquatablesComparer : IChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
-        internal IEquatablesComparer(NUnitEqualityComparer equalityComparer)
+        internal EquatablesComparer(NUnitEqualityComparer equalityComparer)
         {
             _equalityComparer = equalityComparer;
         }

@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Array"/>s.
     /// </summary>
-    internal class ArraysComparer : IComparer
+    internal class ArraysComparer : IChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
         private readonly EnumerablesComparer _enumerablesComparer;

@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Char"/>s.
     /// </summary>
-    internal class CharsComparer : IComparer
+    internal class CharsComparer : IChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 

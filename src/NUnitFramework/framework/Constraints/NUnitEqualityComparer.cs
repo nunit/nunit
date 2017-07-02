@@ -58,14 +58,14 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// List of comparers used to compare pairs of objects.
         /// </summary>
-        private readonly List<Comparers.IComparer> _comparers;
+        private readonly List<IChainComparer> _comparers;
 
         #endregion
 
         internal NUnitEqualityComparer()
         {
             EnumerablesComparer _enumerablesComparer = new EnumerablesComparer(this);
-            _comparers = new List<Comparers.IComparer>
+            _comparers = new List<IChainComparer>
             {
                 new ArraysComparer(this, _enumerablesComparer),
                 new DictionariesComparer(this),
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
                 new NumericsComparer(),
                 new DateTimeOffsetsComparer(this),
                 new TimeSpanToleranceComparer(),
-                new IEquatablesComparer(this),
+                new EquatablesComparer(this),
                 new ValueTupleComparer(this),
                 _enumerablesComparer
             };
@@ -169,7 +169,7 @@ namespace NUnit.Framework.Constraints
             if (externalComparer != null)
                 return externalComparer.AreEqual(x, y);
 
-            foreach (Comparers.IComparer comparer in _comparers)
+            foreach (IChainComparer comparer in _comparers)
             {
                 bool? result = comparer.Equal(x, y, ref tolerance);
                 if (result.HasValue)

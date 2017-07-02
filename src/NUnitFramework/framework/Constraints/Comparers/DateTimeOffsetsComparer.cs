@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DateTimeOffset"/>s.
     /// </summary>
-    internal class DateTimeOffsetsComparer : IComparer
+    internal class DateTimeOffsetsComparer : IChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 

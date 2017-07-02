@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <c>ValueTuple</c>s.
     /// </summary>
-    internal class ValueTupleComparer : IComparer
+    internal class ValueTupleComparer : IChainComparer
     {
         const string nameofValueTuple = "System.ValueTuple";
         private readonly NUnitEqualityComparer _equalityComparer;

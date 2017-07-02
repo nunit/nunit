@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Interface for comparing two <see cref="Object"/>s.
     /// </summary>
-    internal interface IComparer
+    internal interface IChainComparer
     {
         /// <summary>
         /// Method for comparing two objects with a tolerance.

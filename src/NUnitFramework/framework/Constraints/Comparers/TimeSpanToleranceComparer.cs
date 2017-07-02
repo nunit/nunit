@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DateTime"/>s or <see cref="TimeSpan"/>s.
     /// </summary>
-    internal class TimeSpanToleranceComparer : IComparer
+    internal class TimeSpanToleranceComparer : IChainComparer
     {
         public bool? Equal(object x, object y, ref Tolerance tolerance)
         {

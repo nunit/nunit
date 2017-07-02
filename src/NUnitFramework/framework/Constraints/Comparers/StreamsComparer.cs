@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Stream"/>s.
     /// </summary>
-    internal class StreamsComparer : IComparer
+    internal class StreamsComparer : IChainComparer
     {
         private static readonly int BUFFER_SIZE = 4096;
 

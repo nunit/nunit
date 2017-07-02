@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DirectoryInfo"/>s.
     /// </summary>
-    internal class DirectoriesComparer : IComparer 
+    internal class DirectoriesComparer : IChainComparer
     {
         public bool? Equal(object x, object y, ref Tolerance tolerance)
         {

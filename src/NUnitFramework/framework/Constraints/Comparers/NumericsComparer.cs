@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Numerics"/>s.
     /// </summary>
-    internal class NumericsComparer : IComparer
+    internal class NumericsComparer : IChainComparer
     {
         public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
