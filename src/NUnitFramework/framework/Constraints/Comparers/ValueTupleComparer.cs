@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
-                string propertyName = "Item" + (i + 1);
+                string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
                 object xItem = xType.GetField(propertyName).GetValue(x);
                 object yItem = yType.GetField(propertyName).GetValue(y);
 

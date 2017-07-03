@@ -241,18 +241,30 @@ namespace NUnit.Framework.Constraints
             if (typeName != "System.ValueTuple")
                 return null;
 
+            return FormatValueTuple(value, true);
+        }
+
+        private static string FormatValueTuple(object value, bool printParentheses)
+        {
+            Type valueType = value.GetType();
             int numberOfGenericArgs = valueType.GetGenericArguments().Length;
+
             StringBuilder sb = new StringBuilder();
-            sb.Append("(");
+            if (printParentheses)
+                sb.Append("(");
+
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
                 if (i > 0) sb.Append(", ");
 
-                string propertyName = "Item" + (i + 1);
+                bool notLastElement = i < 7;
+                string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
                 object itemValue = valueType.GetField(propertyName).GetValue(value);
-                sb.Append(FormatValue(itemValue));
+                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatValueTuple(itemValue, false);
+                sb.Append(formattedValue);
             }
-            sb.Append(")");
+            if (printParentheses)
+                sb.Append(")");
 
             return sb.ToString();
         }
