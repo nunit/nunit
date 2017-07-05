@@ -364,6 +364,7 @@ namespace NUnit.Framework
             for (int i = 0; i < arglist.Length; i++)
             {
                 var targetType = parameters[i].ParameterType;
+
                 TypeHelper.TryConvert(ref arglist[i], targetType);
             }
         }
