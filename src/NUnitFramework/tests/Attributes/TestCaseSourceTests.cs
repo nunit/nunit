@@ -169,21 +169,8 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(q, n / d);
         }
 
-        [Test, TestCaseSource("MyDataWithOptionalValues")]
-        public void TestMayHaveOptionalArgs(int n, int d = 4, int q = 3)
-        {
-            Assert.AreEqual(q, n / d);
-        }
-
         [Test, TestCaseSource("FourArgs")]
         public void TestWithFourArguments(int n, int d, int q, int r)
-        {
-            Assert.AreEqual(q, n / d);
-            Assert.AreEqual(r, n % d);
-        }
-
-        [Test, TestCaseSource("FourArgsWithOptionalValues")]
-        public void TestWithFourArgumentsAndOptionalValues(int n, int d, int q = 3, int r = 0)
         {
             Assert.AreEqual(q, n / d);
             Assert.AreEqual(r, n % d);
@@ -354,12 +341,6 @@ namespace NUnit.Framework.Attributes
             new object[] { 12, 4, 3 },
             new object[] { 12, 6, 2 } };
 
-        static object[] MyDataWithOptionalValues = new object[] {
-            new object[] { 12, 3, 4 },
-            new object[] { 12, 4 },
-            new object[] { 12 },
-            new object[] { 12, 6, 2 } };
-
         static object[] MyIntData = new object[] {
             new int[] { 12, 3, 4 },
             new int[] { 12, 4, 3 },
@@ -380,11 +361,6 @@ namespace NUnit.Framework.Attributes
         static object[] FourArgs = new object[] {
             new TestCaseData( 12, 3, 4, 0 ),
             new TestCaseData( 12, 4, 3, 0 ),
-            new TestCaseData( 12, 5, 2, 2 ) };
-
-        static object[] FourArgsWithOptionalValues = new object[] {
-            new TestCaseData( 12, 3, 4 ),
-            new TestCaseData( 12, 4 ),
             new TestCaseData( 12, 5, 2, 2 ) };
 
         static int[] EvenNumbers = new int[] { 2, 4, 6, 8 };
