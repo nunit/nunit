@@ -43,47 +43,44 @@ namespace NUnit.Framework.Internal
         #region Constructors
 
         /// <summary>
-        /// Default Constructor creates an empty parameter set
+        /// Default constructor inititalizes default state.
         /// </summary>
-        public TestParameters()
+        protected TestParameters()
         {
             RunState = RunState.Runnable;
             Properties = new PropertyBag();
         }
 
         /// <summary>
-        /// Construct a parameter set with a list of arguments
+        /// Construct a parameter set with a list of <paramref name="args">arguments</paramref>.
         /// </summary>
-        /// <param name="args"></param>
-        public TestParameters(object[] args)
+        protected TestParameters(object[] args)
+            : this()
         {
-            RunState = RunState.Runnable;
             InitializeArguments(args);
-            Properties = new PropertyBag();
         }
 
         /// <summary>
-        /// Construct a non-runnable ParameterSet, specifying
-        /// the provider exception that made it invalid.
+        /// Construct a non-runnable ParameterSet, specifying the provider
+        /// <paramref name="exception">exception</paramref> that made it invalid.
         /// </summary>
-        public TestParameters(Exception exception)
+        protected TestParameters(Exception exception)
+            : this()
         {
             RunState = RunState.NotRunnable;
-            Properties = new PropertyBag();
 
             Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
             Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
         }
 
         /// <summary>
-        /// Construct a ParameterSet from an object implementing ITestData
+        /// Construct a ParameterSet from an <paramref name="data">object</paramref>
+        /// implementing <see cref="ITestData"/>.
         /// </summary>
-        /// <param name="data"></param>
-        public TestParameters(ITestData data)
+        protected TestParameters(ITestData data)
+            : this()
         {
             RunState = data.RunState;
-            Properties = new PropertyBag();
-
             TestName = data.TestName;
 
             InitializeArguments(data.Arguments);
