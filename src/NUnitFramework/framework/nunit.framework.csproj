@@ -16,4 +16,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+  </ItemGroup>
+
 </Project>

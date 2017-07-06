@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Compatibility
 {
@@ -472,19 +473,6 @@ namespace NUnit.Compatibility
             return true;
         }
 
-        // §6.1.2 (Implicit numeric conversions) of the specification
-        static Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
-            { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
-            { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(ulong), new List<Type> { typeof(byte), typeof(ushort), typeof(uint), typeof(char) } },
-            { typeof(long), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(char) } },
-            { typeof(uint), new List<Type> { typeof(byte), typeof(ushort), typeof(char) } },
-            { typeof(int), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(char) } },
-            { typeof(ushort), new List<Type> { typeof(byte), typeof(char) } },
-            { typeof(short), new List<Type> { typeof(byte) } }
-        };
-
         /// <summary>
         /// Determines if one type can be implicitly converted from another
         /// </summary>
@@ -500,7 +488,7 @@ namespace NUnit.Compatibility
             if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
                 return true;
 
-            if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
+            if (ConvertibleTypes.Numeric[to, from])
                 return true;
 
             return from.GetMethods(BindingFlags.Public | BindingFlags.Static)

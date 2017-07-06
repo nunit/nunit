@@ -363,49 +363,8 @@ namespace NUnit.Framework
         {
             for (int i = 0; i < arglist.Length; i++)
             {
-                object arg = arglist[i];
-                Type targetType = parameters[i].ParameterType;
-
-                if (arg == null)
-                    continue;
-
-                if (targetType.IsInstanceOfType(arg))
-                    continue;
-
-                if (arg.GetType().FullName == "System.DBNull")
-                {
-                    arglist[i] = null;
-                    continue;
-                }
-
-                bool convert = false;
-
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
-                    targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
-                {
-                    convert = arg is int;
-                }
-                else if (targetType == typeof(decimal) || targetType == typeof(decimal?))
-                {
-                    convert = arg is double || arg is string || arg is int;
-                }
-                else if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
-                {
-                    convert = arg is string;
-                }
-
-                if (convert)
-                {
-                    Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ? 
-                        targetType.GetGenericArguments()[0] : targetType;
-                    arglist[i] = Convert.ChangeType(arg, convertTo, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else
-                // Convert.ChangeType doesn't work for TimeSpan from string
-                if ((targetType == typeof(TimeSpan) || targetType == typeof(TimeSpan?)) && arg is string)
-                {
-                    arglist[i] = TimeSpan.Parse((string)arg);
-                }
+                var targetType = parameters[i].ParameterType;
+                TypeHelper.TryConvert(ref arglist[i], targetType);
             }
         }
         #endregion

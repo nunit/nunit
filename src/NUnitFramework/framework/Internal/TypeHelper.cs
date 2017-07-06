@@ -22,7 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
@@ -47,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// A special value, which is used to indicate that BestCommonType() method
         /// was unable to find a common type for the specified arguments.
         /// </summary>
-        public static readonly Type NonmatchingType = typeof( NonmatchingTypeClass );
+        public static readonly Type NonmatchingType = typeof(NonmatchingTypeClass);
 
         /// <summary>
         /// Gets the display name for a Type as used by NUnit.
@@ -66,7 +68,7 @@ namespace NUnit.Framework.Internal
                 if (index >= 0) name = name.Substring(0, index);
 
                 index = name.LastIndexOf('.');
-                if (index >= 0) name = name.Substring(index+1);
+                if (index >= 0) name = name.Substring(index + 1);
 
                 var genericArguments = type.GetGenericArguments();
                 var currentArgument = 0;
@@ -106,8 +108,8 @@ namespace NUnit.Framework.Internal
             }
 
             int lastdot = type.FullName.LastIndexOf('.');
-            return lastdot >= 0 
-                ? type.FullName.Substring(lastdot+1)
+            return lastdot >= 0
+                ? type.FullName.Substring(lastdot + 1)
                 : type.FullName;
         }
 
@@ -123,7 +125,7 @@ namespace NUnit.Framework.Internal
             if (arglist == null || arglist.Length == 0)
                 return baseName;
 
-            StringBuilder sb = new StringBuilder( baseName );
+            StringBuilder sb = new StringBuilder(baseName);
 
             sb.Append("(");
             for (int i = 0; i < arglist.Length; i++)
@@ -165,8 +167,8 @@ namespace NUnit.Framework.Internal
         /// <returns>Either type1 or type2, depending on which is more general.</returns>
         public static Type BestCommonType(Type type1, Type type2)
         {
-            if ( type1 == TypeHelper.NonmatchingType ) return TypeHelper.NonmatchingType;
-            if ( type2 == TypeHelper.NonmatchingType ) return TypeHelper.NonmatchingType;
+            if (type1 == TypeHelper.NonmatchingType) return TypeHelper.NonmatchingType;
+            if (type2 == TypeHelper.NonmatchingType) return TypeHelper.NonmatchingType;
 
             if (type1 == type2) return type1;
             if (type1 == null) return type2;
@@ -208,8 +210,8 @@ namespace NUnit.Framework.Internal
                 if (type2 == typeof(sbyte)) return type2;
             }
 
-            if ( type1.IsAssignableFrom( type2 ) ) return type1;
-            if ( type2.IsAssignableFrom( type1 ) ) return type2;
+            if (type1.IsAssignableFrom(type2)) return type1;
+            if (type2.IsAssignableFrom(type1)) return type2;
 
             return TypeHelper.NonmatchingType;
         }
@@ -223,17 +225,91 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public static bool IsNumeric(Type type)
         {
-            return type == typeof(double) ||
-                    type == typeof(float) ||
-                    type == typeof(decimal) ||
-                    type == typeof(Int64) ||
-                    type == typeof(Int32) ||
-                    type == typeof(Int16) ||
-                    type == typeof(UInt64) ||
-                    type == typeof(UInt32) ||
-                    type == typeof(UInt16) ||
-                    type == typeof(byte) ||
-                    type == typeof(sbyte);
+            return type == typeof(byte)
+                   || type == typeof(sbyte)
+                   || type == typeof(short)
+                   || type == typeof(ushort)
+                   || type == typeof(int)
+                   || type == typeof(uint)
+                   || type == typeof(long)
+                   || type == typeof(ulong)
+                   || type == typeof(decimal)
+                   || type == typeof(float)
+                   || type == typeof(double)
+                ;
+        }
+
+        /// <summary>
+        /// Return default value for selected <paramref name="type">type</paramref>.
+        /// </summary>
+        /// <param name="type">The type to get default value for.</param>
+        public static object GetDefaultValue(Type type)
+        {
+            return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
+        }
+
+        #region Type conversions
+        /// <summary>
+        /// Attempt to convert some <paramref name="value">value</paramref> into
+        /// another <paramref name="targetType">type</paramref>.
+        /// </summary>
+        /// <param name="value">Value to be converted.</param>
+        /// <param name="targetType">Taget type for the conversion.</param>
+        /// <returns>
+        /// Returns true if conversion was successful.
+        /// </returns>
+        public static bool TryConvert(ref object value, Type targetType)
+        {
+            // Nulls should be converted to default value of the target type.
+            if (value == null)
+            {
+                value = GetDefaultValue(targetType);
+                return true;
+            }
+
+            // DBNull.Value should be converted to default value of the target type.
+            if (value is DBNull)
+            {
+                value = GetDefaultValue(targetType);
+                return true;
+            }
+
+            // If target type is Nullable<T>, we can unwrap this interface.
+            // If source value is Nullable, CLR will unwrap it automatically while
+            // boxing Nullable<T> to value object we are working with.
+            var targetInfo = targetType.GetTypeInfo();
+            if (targetInfo.IsGenericType && targetInfo.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                targetType = targetType.GetGenericArguments()[0];
+            }
+
+            // If source and target types are equal or assignable, then we reuse the same value.
+            // Equality checking is redundant, but improves performance.
+            Type type = value.GetType();
+            if (targetType == type || targetType.IsAssignableFrom(type))
+            {
+                return true;
+            }
+
+            // Types that may be converted using Convert.ChangeType.
+            if (ConvertibleTypes.Internal[type, targetType])
+            {
+                value = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+                return true;
+            }
+
+            // Custom string parsing routines those are not supported by IConvertible.
+            var stringValue = value as string;
+            if (stringValue != null)
+            {
+                if (targetType == typeof(TimeSpan))
+                {
+                    value = TimeSpan.Parse(stringValue);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -246,34 +322,13 @@ namespace NUnit.Framework.Internal
         {
             System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);
 
-            for (int i = 0; i < arglist.Length; i++)
+            for (var i = 0; i < arglist.Length; i++)
             {
-                object arg = arglist[i];
-
-                if (arg is IConvertible)
-                {
-                    Type argType = arg.GetType();
-                    Type targetType = parameters[i].ParameterType;
-                    bool convert = false;
-
-                    if (argType != targetType && IsNumeric(argType) && IsNumeric(targetType))
-                    {
-                        if (targetType == typeof(double) || targetType == typeof(float))
-                            convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
-                        else
-                            if (targetType == typeof(long))
-                                convert = arg is int || arg is short || arg is byte || arg is sbyte;
-                            else
-                                if (targetType == typeof(short))
-                                    convert = arg is byte || arg is sbyte;
-                    }
-
-                    if (convert)
-                        arglist[i] = Convert.ChangeType(arg, targetType,
-                            System.Globalization.CultureInfo.InvariantCulture);
-                }
+                TryConvert(ref arglist[i], parameters[i].ParameterType);
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Determines whether this instance can deduce type args for a generic type from the supplied arguments.
@@ -301,8 +356,8 @@ namespace NUnit.Framework.Internal
                     {
                         if (typeParameters[i].IsGenericParameter || parameters[j].ParameterType.Equals(typeParameters[i]))
                             typeArgs[i] = TypeHelper.BestCommonType(
-                                              typeArgs[i],
-                                              arglist[j].GetType());
+                                typeArgs[i],
+                                arglist[j].GetType());
                     }
 
                     if (typeArgs[i] == null)
@@ -344,6 +399,32 @@ namespace NUnit.Framework.Internal
             }
 
             return declaredInterfaces.ToArray();
+        }
+
+        /// <summary>
+        /// Converts an array of objects to the <paramref name="targetType"/>, if it is supported.
+        /// </summary>
+        public static IEnumerable ConvertData(object[] data, Type targetType)
+        {
+            if (data.Length == 0)
+            {
+                if (targetType == typeof(bool))
+                {
+                    return new object[] { true, false };
+                }
+
+                if (targetType.GetTypeInfo().IsEnum)
+                {
+                    return Enum.GetValues(targetType);
+                }
+            }
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                TryConvert(ref data[i], targetType);
+            }
+
+            return data;
         }
 
         /// <summary>

@@ -216,7 +216,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable GetData(IParameterInfo parameter)
         {
-            return ParamAttributeTypeConversions.ConvertData(_data, parameter.ParameterType);
+            return TypeHelper.ConvertData(_data, parameter.ParameterType);
         }
     }
 }
