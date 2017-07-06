@@ -41,8 +41,10 @@ namespace NUnit.Framework.Internal
         /// strB is sorted first</returns>
         public static int Compare(string strA, string strB, bool ignoreCase)
         {
-            var comparison = ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
-            return string.Compare(strA, strB, comparison);
+            string s1 = ignoreCase ? strA.ToUpperInvariant() : strA;
+            string s2 = ignoreCase ? strB.ToUpperInvariant() : strB;
+
+            return String.CompareOrdinal(s1, s2);
         }
 
         /// <summary>

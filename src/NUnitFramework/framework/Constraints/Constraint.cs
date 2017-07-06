@@ -174,7 +174,7 @@ namespace NUnit.Framework.Constraints
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             sb.Append("<");
-            sb.Append(DisplayName.ToLower());
+            sb.Append(DisplayName.ToLowerInvariant());
 
             foreach (object arg in Arguments)
             {

@@ -25,6 +25,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+using NUnit.Framework;
+#endif
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Comparers;
 
@@ -672,6 +675,29 @@ namespace NUnit.Framework.Constraints
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));
             Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
         }
+
+        #region StringsIgnoringCaseEquality
+
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+        public class StringsIgnoringCaseEquality
+        {
+            [Test]
+            [SetCulture("tr-TR")]
+            public void TurkishI()
+            {
+                Assert.That("I", Is.Not.EqualTo("i").IgnoreCase);
+            }
+
+            [Test]
+            [SetCulture("en-US")]
+            public void EnglishI()
+            {
+                Assert.That("I", Is.EqualTo("i").IgnoreCase);
+            }
+        }
+#endif
+
+#endregion
     }
     namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
         class ReallyLongClassNameShouldBeHere {

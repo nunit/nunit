@@ -330,16 +330,16 @@ namespace NUnit.Framework.Constraints
 
         private bool StringsEqual(string x, string y)
         {
-            string s1 = caseInsensitive ? x.ToLower() : x;
-            string s2 = caseInsensitive ? y.ToLower() : y;
+            string s1 = caseInsensitive ? x.ToUpperInvariant() : x;
+            string s2 = caseInsensitive ? y.ToUpperInvariant() : y;
 
             return s1.Equals(s2);
         }
 
         private bool CharsEqual(char x, char y)
         {
-            char c1 = caseInsensitive ? Char.ToLower(x) : x;
-            char c2 = caseInsensitive ? Char.ToLower(y) : y;
+            char c1 = caseInsensitive ? Char.ToUpperInvariant(x) : x;
+            char c2 = caseInsensitive ? Char.ToUpperInvariant(y) : y;
 
             return c1 == c2;
         }
