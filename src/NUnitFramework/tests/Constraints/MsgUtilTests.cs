@@ -152,6 +152,63 @@ namespace NUnit.Framework.Constraints
             Assert.That(s, Is.EqualTo(expectedResult));
         }
 
+#if NET_4_5
+        [Test]
+        public static void FormatValue_EmptyValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create());
+            Assert.That(s, Is.EqualTo("()"));
+        }
+
+        [Test]
+        public static void FormatValue_OneElementValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create("Hello"));
+            Assert.That(s, Is.EqualTo("(\"Hello\")"));
+        }
+
+        [Test]
+        public static void FormatValue_TwoElementsValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create("Hello", 123));
+            Assert.That(s, Is.EqualTo("(\"Hello\", 123)"));
+        }
+
+        [Test]
+        public static void FormatValue_ThreeElementsValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create("Hello", 123, 'a'));
+            Assert.That(s, Is.EqualTo("(\"Hello\", 123, 'a')"));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsValueTupleTest()
+        {
+            var tuple = ValueTuple.Create(1, 2, 3, 4, 5, 6, 7, 8);
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8)"));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsValueTupleNestedTest()
+        {
+            var tuple = ValueTuple.Create(1, 2, 3, 4, 5, 6, 7, ValueTuple.Create(8, "9"));
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, (8, \"9\"))"));
+        }
+
+        [Test]
+        public static void FormatValue_FifteenElementsValueTupleTest()
+        {
+            var tupleLastElements = ValueTuple.Create(8, 9, 10, 11, "12", 13, 14, "15");
+            var tuple = new ValueTuple<int, int, int, int, int, int, int, ValueTuple<int, int, int, int, string, int, int, ValueTuple<string>>>
+                (1, 2, 3, 4, 5, 6, 7, tupleLastElements);
+
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, \"12\", 13, 14, \"15\")"));
+        }
+#endif
+
         #endregion
 
         #region EscapeControlChars
