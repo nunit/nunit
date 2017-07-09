@@ -217,6 +217,20 @@ namespace NUnit.Framework
                             }
 
                             parms = new TestCaseParameters(args);
+
+                            var alignable = parms as IAlignArguments;
+                            if (alignable != null)
+                            {
+                                try
+                                {
+                                    alignable.Align(method);
+                                }
+                                catch (Exception e)
+                                {
+                                    data.Add(new TestCaseParameters(e));
+                                    continue;
+                                }
+                            }
                         }
 
                         if (this.Category != null)
