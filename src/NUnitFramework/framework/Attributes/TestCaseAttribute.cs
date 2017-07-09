@@ -23,8 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -253,123 +251,6 @@ namespace NUnit.Framework
  
         #endregion
 
-        #region Helper Methods
-
-        private TestCaseParameters GetParametersForTestCase(IMethodInfo method)
-        {
-            TestCaseParameters parms;
-
-            try
-            {
-                IParameterInfo[] parameters = method.GetParameters();
-                int argsNeeded = parameters.Length;
-                int argsProvided = Arguments.Length;
-
-                parms = new TestCaseParameters(this);
-
-                // Special handling for params arguments
-                if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
-                {
-                    IParameterInfo lastParameter = parameters[argsNeeded - 1];
-                    Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType();
-
-                    if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
-                    {
-                        if (argsProvided == argsNeeded)
-                        {
-                            if (!lastParameterType.IsInstanceOfType(parms.Arguments[argsProvided - 1]))
-                            {
-                                Array array = Array.CreateInstance(elementType, 1);
-                                array.SetValue(parms.Arguments[argsProvided - 1], 0);
-                                parms.Arguments[argsProvided - 1] = array;
-                            }
-                        }
-                        else
-                        {
-                            object[] newArglist = new object[argsNeeded];
-                            for (int i = 0; i < argsNeeded && i < argsProvided; i++)
-                                newArglist[i] = parms.Arguments[i];
-
-                            int length = argsProvided - argsNeeded + 1;
-                            Array array = Array.CreateInstance(elementType, length);
-                            for (int i = 0; i < length; i++)
-                                array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
-
-                            newArglist[argsNeeded - 1] = array;
-                            parms.Arguments = newArglist;
-                            argsProvided = argsNeeded;
-                        }
-                    }
-                }
-
-                //Special handling for optional parameters
-                if (parms.Arguments.Length < argsNeeded)
-                {
-                    object[] newArgList = new object[parameters.Length];
-                    Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
-
-                    //Fill with Type.Missing for remaining required parameters where optional
-                    for (var i = parms.Arguments.Length; i < parameters.Length; i++)
-                    {
-                        if (parameters[i].IsOptional)
-                            newArgList[i] = Type.Missing;
-                        else
-                        {
-                            if (i < parms.Arguments.Length)
-                                newArgList[i] = parms.Arguments[i];
-                            else
-                                throw new TargetParameterCountException(string.Format(
-                                    "Method requires {0} arguments but TestCaseAttribute only supplied {1}",
-                                    argsNeeded, 
-                                    argsProvided));
-                        }
-                    }
-                    parms.Arguments = newArgList;
-                }
-
-                //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                //    parms.Arguments = new object[]{parms.Arguments};
-
-                // Special handling when sole argument is an object[]
-                if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                {
-                    if (argsProvided > 1 ||
-                        argsProvided == 1 && parms.Arguments[0].GetType() != typeof(object[]))
-                    {
-                        parms.Arguments = new object[] { parms.Arguments };
-                    }
-                }
-
-                if (argsProvided == argsNeeded)
-                    PerformSpecialConversions(parms.Arguments, parameters);
-            }
-            catch (Exception ex)
-            {
-                parms = new TestCaseParameters(ex);
-            }
-
-            return parms;
-        }
-
-        /// <summary>
-        /// Performs several special conversions allowed by NUnit in order to
-        /// permit arguments with types that cannot be used in the constructor
-        /// of an Attribute such as TestCaseAttribute or to simplify their use.
-        /// </summary>
-        /// <param name="arglist">The arguments to be converted</param>
-        /// <param name="parameters">The ParameterInfo array for the method</param>
-        private static void PerformSpecialConversions(object[] arglist, IParameterInfo[] parameters)
-        {
-            for (int i = 0; i < arglist.Length; i++)
-            {
-                var targetType = parameters[i].ParameterType;
-
-                TypeHelper.TryConvert(ref arglist[i], targetType);
-            }
-        }
-        #endregion
-
         #region ITestBuilder Members
 
         /// <summary>
@@ -381,7 +262,24 @@ namespace NUnit.Framework
         /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
-            TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
+            TestCaseParameters parms;
+            try
+            {
+                parms = new TestCaseParameters(this);
+                
+				// Because aligning parameters involves validation, we skip this
+				// action if test is not going to be executed.
+				if (RunState == RunState.Runnable)
+				{
+					parms.Align(method);
+                }
+            }
+            catch (Exception ex)
+            {
+                parms = new TestCaseParameters(ex);
+            }
+
+            TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, parms);
 
 #if PLATFORM_DETECTION
             if (test.RunState != RunState.NotRunnable &&

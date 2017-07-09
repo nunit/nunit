@@ -84,7 +84,9 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestMethodWithWrongArgumentTypesProvidedGivesError()
         {
-            TestAssert.IsRunnable(fixtureType, "TestMethodWithWrongArgumentTypesProvided", ResultState.Error);
+            // TODO: Should conversion failure somehow differs from the other alignment errors?
+            // TestAssert.IsRunnable(fixtureType, "TestMethodWithWrongArgumentTypesProvided", ResultState.Error);
+            TestAssert.ChildNotRunnable(fixtureType, "TestMethodWithWrongArgumentTypesProvided");
         }
 
         [Test]
@@ -108,7 +110,9 @@ namespace NUnit.Framework.Internal
         [Test]
         public void StaticTestMethodWithWrongArgumentTypesProvidedGivesError()
         {
-            TestAssert.IsRunnable(fixtureType, "StaticTestMethodWithWrongArgumentTypesProvided", ResultState.Error);
+            // TODO: Should conversion failure somehow differs from the other alignment errors?
+            // TestAssert.IsRunnable(fixtureType, "StaticTestMethodWithWrongArgumentTypesProvided", ResultState.Error);
+            TestAssert.ChildNotRunnable(fixtureType, "StaticTestMethodWithWrongArgumentTypesProvided");
         }
 
         [Test]
@@ -120,7 +124,9 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestMethodWithNonConvertibleArgumentsGivesError()
         {
-            TestAssert.IsRunnable(fixtureType, "TestMethodWithNonConvertibleArguments", ResultState.Error);
+            // TODO: Should conversion failure somehow differs from the other alignment errors?
+            // TestAssert.IsRunnable(fixtureType, "TestMethodWithNonConvertibleArguments", ResultState.Error);
+            TestAssert.ChildNotRunnable(fixtureType, "TestMethodWithNonConvertibleArguments");
         }
 
         [Test]
