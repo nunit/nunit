@@ -413,9 +413,9 @@ namespace NUnitLite.Tests
         }
 #endif
 
-#endregion
+        #endregion
 
-#region EngineResult Option
+        #region EngineResult Option
 
         [Test]
         public void FileNameWithoutResultOptionLooksLikeParameter()
@@ -509,9 +509,9 @@ namespace NUnitLite.Tests
             Assert.That(options.ErrorMessages, Has.Exactly(1).Contains("invalid output spec").IgnoreCase);
         }
 
-    #endregion
+        #endregion
 
-    #region Explore Option
+        #region Explore Option
 
         [Test]
         public void ExploreOptionWithoutPath()
