@@ -378,6 +378,16 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
+        [Test]
+        public void InvalidPlatformAttributeIsNotRunnable()
+        {
+            var invalidPlatform = "FakePlatform";
+            new PlatformAttribute(invalidPlatform).ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+                Does.StartWith("Invalid platform name"));
+        }
+
         string GetMyPlatform()
         {
             if (System.IO.Path.DirectorySeparatorChar == '/')
