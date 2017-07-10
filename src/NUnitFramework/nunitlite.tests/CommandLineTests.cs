@@ -436,7 +436,6 @@ namespace NUnitLite.Tests
             OutputSpecification spec = options.ResultOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
             Assert.AreEqual("nunit3", spec.Format);
-            Assert.Null(spec.Transform);
         }
 
         [Test]
@@ -448,19 +447,6 @@ namespace NUnitLite.Tests
             OutputSpecification spec = options.ResultOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
             Assert.AreEqual("nunit2", spec.Format);
-            Assert.Null(spec.Transform);
-        }
-
-        [Test]
-        public void ResultOptionWithFilePathAndTransform()
-        {
-            var options = new NUnitLiteOptions("-result:results.xml;transform=transform.xslt");
-            Assert.True(options.Validate());
-
-            OutputSpecification spec = options.ResultOutputSpecifications[0];
-            Assert.AreEqual("results.xml", spec.OutputPath);
-            Assert.AreEqual("user", spec.Format);
-            Assert.AreEqual("transform.xslt", spec.Transform);
         }
 
         [Test]
@@ -474,26 +460,19 @@ namespace NUnitLite.Tests
         [Test]
         public void ResultOptionMayBeRepeated()
         {
-            var options = new NUnitLiteOptions("-result:results.xml", "-result:nunit2results.xml;format=nunit2", "-result:myresult.xml;transform=mytransform.xslt");
+            var options = new NUnitLiteOptions("-result:results.xml", "-result:nunit2results.xml;format=nunit2");
             Assert.True(options.Validate(), "Should be valid");
 
             var specs = options.ResultOutputSpecifications;
-            Assert.AreEqual(3, specs.Count);
+            Assert.That(specs, Has.Count.EqualTo(2));
 
             var spec1 = specs[0];
             Assert.AreEqual("results.xml", spec1.OutputPath);
             Assert.AreEqual("nunit3", spec1.Format);
-            Assert.Null(spec1.Transform);
 
             var spec2 = specs[1];
             Assert.AreEqual("nunit2results.xml", spec2.OutputPath);
             Assert.AreEqual("nunit2", spec2.Format);
-            Assert.Null(spec2.Transform);
-
-            var spec3 = specs[2];
-            Assert.AreEqual("myresult.xml", spec3.OutputPath);
-            Assert.AreEqual("user", spec3.Format);
-            Assert.AreEqual("mytransform.xslt", spec3.Transform);
         }
 
         [Test]
@@ -505,7 +484,6 @@ namespace NUnitLite.Tests
             var spec = options.ResultOutputSpecifications[0];
             Assert.AreEqual("TestResult.xml", spec.OutputPath);
             Assert.AreEqual("nunit3", spec.Format);
-            Assert.Null(spec.Transform);
         }
 
         [Test]
@@ -522,9 +500,18 @@ namespace NUnitLite.Tests
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
 
-        #endregion
+        [Test]
+        public void InvalidResultSpecRecordsError()
+        {
+            var options = new NUnitLiteOptions("test.dll", "-result:userspecifed.xml;format=nunit2;format=nunit3");
+            Assert.That(options.ResultOutputSpecifications, Has.Exactly(1).Items
+                    .And.Exactly(1).Property(nameof(OutputSpecification.OutputPath)).EqualTo("TestResult.xml"));
+            Assert.That(options.ErrorMessages, Has.Exactly(1).Contains("invalid output spec").IgnoreCase);
+        }
 
-        #region Explore Option
+    #endregion
+
+    #region Explore Option
 
         [Test]
         public void ExploreOptionWithoutPath()
@@ -544,7 +531,6 @@ namespace NUnitLite.Tests
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
             Assert.AreEqual("nunit3", spec.Format);
-            Assert.Null(spec.Transform);
         }
 
         [Test]
@@ -557,20 +543,6 @@ namespace NUnitLite.Tests
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
             Assert.AreEqual("cases", spec.Format);
-            Assert.Null(spec.Transform);
-        }
-
-        [Test]
-        public void ExploreOptionWithFilePathAndTransform()
-        {
-            var options = new NUnitLiteOptions("-explore:results.xml;transform=myreport.xslt");
-            Assert.True(options.Validate());
-            Assert.True(options.Explore);
-
-            OutputSpecification spec = options.ExploreOutputSpecifications[0];
-            Assert.AreEqual("results.xml", spec.OutputPath);
-            Assert.AreEqual("user", spec.Format);
-            Assert.AreEqual("myreport.xslt", spec.Transform);
         }
 
         [Test]
