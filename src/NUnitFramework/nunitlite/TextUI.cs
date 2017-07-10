@@ -147,7 +147,6 @@ namespace NUnitLite
             WriteHelpLine("      the following forms:");
             WriteHelpLine("          --OPTION:filename");
             WriteHelpLine("          --OPTION:filename;format=formatname");
-            WriteHelpLine("          --OPTION:filename;transform=xsltfile");
             Writer.WriteLine();
             WriteHelpLine("      The --result option may use any of the following formats:");
             WriteHelpLine("          nunit3 - the native XML format for NUnit 3");
