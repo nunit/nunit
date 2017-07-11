@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // TODO: Rework this
-// RepeatAttribute should either
+// RetryAttribute should either
 //  1) Apply at load time to create the exact number of tests, or
 //  2) Apply at run time, generating tests or results dynamically
 //
@@ -36,8 +36,8 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RepeatAttribute may be applied to test case in order
-    /// to run it multiple times.
+    /// RetryAttribute is used on a test method to specify that it should
+    /// be rerun if it fails, up to a maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class RetryAttribute : PropertyAttribute, IWrapSetUpTearDown
@@ -45,7 +45,7 @@ namespace NUnit.Framework
         private int _count;
 
         /// <summary>
-        /// Construct a RepeatAttribute
+        /// Construct a RetryAttribute
         /// </summary>
         /// <param name="count">The number of times to run the test</param>
         public RetryAttribute(int count) : base(count)
