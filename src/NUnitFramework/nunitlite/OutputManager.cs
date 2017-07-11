@@ -72,12 +72,6 @@ namespace NUnitLite
                     outputWriter = new NUnit2XmlOutputWriter();
                     break;
 
-                //case "user":
-                //    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                //    string dir = Path.GetDirectoryName(uri.LocalPath);
-                //    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
-                //    break;
-
                 default:
                     throw new ArgumentException(
                         string.Format("Invalid XML output format '{0}'", spec.Format),
@@ -108,15 +102,9 @@ namespace NUnitLite
                     outputWriter = new TestCaseOutputWriter();
                     break;
 
-                //case "user":
-                //    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                //    string dir = Path.GetDirectoryName(uri.LocalPath);
-                //    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
-                //    break;
-
                 default:
                     throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
+                        string.Format("Invalid output format '{0}'", spec.Format),
                         "spec");
             }
 
