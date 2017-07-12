@@ -40,7 +40,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Construct a <see cref="RetryAttribute" />
         /// </summary>
-        /// <param name="count">The maximum number of times the test should be rerun if it fails</param>
+        /// <param name="count">The maximum number of times the test should be run if it fails</param>
         public RetryAttribute(int count) : base(count)
         {
             _count = count;
