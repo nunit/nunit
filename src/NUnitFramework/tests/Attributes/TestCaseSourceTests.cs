@@ -142,6 +142,12 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(q, n / d);
         }
 
+        [Test, TestCaseSource("MyArrayData")]
+        public void SourceMayReturnArrayForArray(int[] array)
+        {
+            Assert.That(true);
+        }
+
         [Test, TestCaseSource("EvenNumbers")]
         public void SourceMayReturnSinglePrimitiveArgumentAlone(int n)
         {
@@ -330,6 +336,13 @@ namespace NUnit.Framework.Attributes
             new int[] { 12, 3, 4 },
             new int[] { 12, 4, 3 },
             new int[] { 12, 6, 2 } };
+
+        static object[] MyArrayData = new object[]
+        {
+            new int[] { 12 },
+            new int[] { 12, 4 },
+            new int[] { 12, 6, 2 }
+        };
 
         public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {
