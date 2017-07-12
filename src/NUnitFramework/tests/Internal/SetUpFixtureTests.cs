@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal
         {
             TestUtilities.SimpleEventRecorder.Clear();
 
-            builder = new DefaultTestAssemblyBuilder();
+            builder = DefaultTestAssemblyBuilder.IndirectMode;
             runner = new NUnitTestAssemblyRunner(builder);
         }
         #endregion SetUp

@@ -69,10 +69,25 @@ namespace NUnit.Framework.Api
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
+            : this(assemblyNameOrPath, idPrefix, settings, indirectMode: false)
+        {
+        }
+
+        /// <summary>
+        /// Construct a FrameworkController using the default builder and runner.
+        /// </summary>
+        /// <param name="assemblyNameOrPath">The AssemblyName or path to the test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
+        /// <param name="indirectMode">
+        /// Whether to run only tests intended to be run indirectly, or tests intended to be run directly.
+        /// See <see cref="IndirectTestAssemblyAttribute"/>.
+        /// </param>
+        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, bool indirectMode)
         {
             Initialize(assemblyNameOrPath, settings);
 
-            this.Builder = new DefaultTestAssemblyBuilder();
+            this.Builder = indirectMode ? DefaultTestAssemblyBuilder.IndirectMode : DefaultTestAssemblyBuilder.Default;
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
             Test.IdPrefix = idPrefix;
@@ -86,6 +101,22 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings)
             : this(assembly.FullName, idPrefix, settings)
+        {
+            _testAssembly = assembly;
+        }
+
+        /// <summary>
+        /// Construct a FrameworkController using the default builder and runner.
+        /// </summary>
+        /// <param name="assembly">The test assembly</param>
+        /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
+        /// <param name="indirectMode">
+        /// Whether to run only tests intended to be run indirectly, or tests intended to be run directly.
+        /// See <see cref="IndirectTestAssemblyAttribute"/>.
+        /// </param>
+        public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings, bool indirectMode)
+            : this(assembly.FullName, idPrefix, settings, indirectMode)
         {
             _testAssembly = assembly;
         }

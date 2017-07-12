@@ -53,7 +53,7 @@ namespace NUnit.Framework.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-            var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            var runner = new NUnitTestAssemblyRunner(DefaultTestAssemblyBuilder.IndirectMode);
 
             ActionAttributeFixture.ClearResults();
 

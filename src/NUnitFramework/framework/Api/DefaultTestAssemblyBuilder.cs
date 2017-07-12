@@ -40,14 +40,31 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
-        static Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
+        /// <summary>
+        /// Shared instance with default options.
+        /// </summary>
+        public static DefaultTestAssemblyBuilder Default { get; } = new DefaultTestAssemblyBuilder();
+
+        /// <summary>
+        /// Shared instance for running only tests intended to be run indirectly.
+        /// See <see cref="IndirectTestAssemblyAttribute"/>.
+        /// </summary>
+        public static DefaultTestAssemblyBuilder IndirectMode { get; } = new DefaultTestAssemblyBuilder(indirectMode: true);
+
+        private static readonly Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
 
         #region Instance Fields
 
         /// <summary>
         /// The default suite builder used by the test assembly builder.
         /// </summary>
-        ISuiteBuilder _defaultSuiteBuilder;
+        private readonly ISuiteBuilder _defaultSuiteBuilder;
+
+        /// <summary>.
+        /// Whether to run only tests intended to be run indirectly, or tests intended to be run directly.
+        /// See <see cref="IndirectTestAssemblyAttribute"/>.
+        /// </summary>
+        private readonly bool _indirectMode;
 
         #endregion
 
@@ -59,6 +76,12 @@ namespace NUnit.Framework.Api
         public DefaultTestAssemblyBuilder()
         {
             _defaultSuiteBuilder = new DefaultSuiteBuilder();
+        }
+
+        private DefaultTestAssemblyBuilder(bool indirectMode)
+            : this()
+        {
+            _indirectMode = indirectMode;
         }
 
         #endregion
@@ -119,6 +142,12 @@ namespace NUnit.Framework.Api
 
         private TestSuite Build(Assembly assembly, string assemblyPath, IDictionary<string, object> options)
         {
+            var isIndirectTestAssembly = assembly.GetCustomAttribute<IndirectTestAssemblyAttribute>() != null;
+            if (isIndirectTestAssembly != _indirectMode)
+            {
+                return new TestAssembly(assemblyPath);
+            }
+
             TestSuite testAssembly = null;
 
             try
