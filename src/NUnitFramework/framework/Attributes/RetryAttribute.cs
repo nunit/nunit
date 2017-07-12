@@ -35,15 +35,15 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class RetryAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
-        private int _count;
+        private int _tryCount;
 
         /// <summary>
         /// Construct a <see cref="RetryAttribute" />
         /// </summary>
-        /// <param name="count">The maximum number of times the test should be run if it fails</param>
-        public RetryAttribute(int count) : base(count)
+        /// <param name="tryCount">The maximum number of times the test should be run if it fails</param>
+        public RetryAttribute(int tryCount) : base(tryCount)
         {
-            _count = count;
+            _tryCount = tryCount;
         }
 
         #region IWrapSetUpTearDown Members
@@ -55,7 +55,7 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RetryCommand(command, _count);
+            return new RetryCommand(command, _tryCount);
         }
 
         #endregion
@@ -67,17 +67,17 @@ namespace NUnit.Framework
         /// </summary>
         public class RetryCommand : DelegatingTestCommand
         {
-            private int _retryCount;
+            private int _tryCount;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RetryCommand"/> class.
             /// </summary>
             /// <param name="innerCommand">The inner command.</param>
-            /// <param name="retryCount">The number of repetitions</param>
-            public RetryCommand(TestCommand innerCommand, int retryCount)
+            /// <param name="tryCount">The maximum number of repetitions</param>
+            public RetryCommand(TestCommand innerCommand, int tryCount)
                 : base(innerCommand)
             {
-                _retryCount = retryCount;
+                _tryCount = tryCount;
             }
 
             /// <summary>
@@ -87,7 +87,7 @@ namespace NUnit.Framework
             /// <returns>A TestResult</returns>
             public override TestResult Execute(TestExecutionContext context)
             {
-                int count = _retryCount;
+                int count = _tryCount;
 
                 while (count-- > 0)
                 {
