@@ -21,13 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-// TODO: Rework this
-// RepeatAttribute should either
-//  1) Apply at load time to create the exact number of tests, or
-//  2) Apply at run time, generating tests or results dynamically
-//
-// #1 is feasible but doesn't provide much benefit
-// #2 requires infrastructure for dynamic test cases first
 using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;

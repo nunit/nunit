@@ -21,13 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-// TODO: Rework this
-// RetryAttribute should either
-//  1) Apply at load time to create the exact number of tests, or
-//  2) Apply at run time, generating tests or results dynamically
-//
-// #1 is feasible but doesn't provide much benefit
-// #2 requires infrastructure for dynamic test cases first
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -36,7 +29,7 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RetryAttribute is used on a test method to specify that it should
+    /// <see cref="RetryAttribute" /> is used on a test method to specify that it should
     /// be rerun if it fails, up to a maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
@@ -45,9 +38,9 @@ namespace NUnit.Framework
         private int _count;
 
         /// <summary>
-        /// Construct a RetryAttribute
+        /// Construct a <see cref="RetryAttribute" />
         /// </summary>
-        /// <param name="count">The number of times to run the test</param>
+        /// <param name="count">The maximum number of times the test should be rerun if it fails</param>
         public RetryAttribute(int count) : base(count)
         {
             _count = count;
@@ -70,7 +63,7 @@ namespace NUnit.Framework
         #region Nested RetryCommand Class
 
         /// <summary>
-        /// The test command for the RetryAttribute
+        /// The test command for the <see cref="RetryAttribute"/>
         /// </summary>
         public class RetryCommand : DelegatingTestCommand
         {
