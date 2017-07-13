@@ -45,10 +45,11 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Modify the constraint to ignore case in matching.
+        /// This will call Using(StringComparison.CurrentCultureIgnoreCase) 
         /// </summary>
         public override StringConstraint IgnoreCase
         {
-            get { caseInsensitive = true; comparisonType = null; return this; }
+            get { caseInsensitive = true; Using(StringComparison.CurrentCultureIgnoreCase); return this; }
         }
 
         /// <summary>
@@ -60,9 +61,7 @@ namespace NUnit.Framework.Constraints
         {
             if (actual == null) return false;
 
-            var actualComparison = comparisonType ?? (caseInsensitive ?
-                StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture);
-
+            var actualComparison = comparisonType ?? StringComparison.CurrentCulture;
             return actual.IndexOf(expected, actualComparison) >= 0;
         }
 
@@ -71,7 +70,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public SubstringConstraint Using(StringComparison comparisonType)
         {
-            this.comparisonType = comparisonType;
+            if (this.comparisonType == null)
+                this.comparisonType = comparisonType;
+            else if (this.comparisonType != comparisonType)
+                throw new InvalidOperationException("A different comparison type was already set.");
+
             return this;
         }
     }
