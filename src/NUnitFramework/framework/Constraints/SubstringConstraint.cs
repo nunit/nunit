@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override StringConstraint IgnoreCase
         {
-            get { caseInsensitive = true; Using(StringComparison.CurrentCultureIgnoreCase); return this; }
+            get { Using(StringComparison.CurrentCultureIgnoreCase); return base.IgnoreCase; }
         }
 
         /// <summary>
