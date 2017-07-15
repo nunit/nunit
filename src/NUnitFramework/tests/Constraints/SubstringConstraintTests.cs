@@ -45,6 +45,110 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
+
+        [TestCase(" ss ", "ß", false, StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "ß", false, StringComparison.CurrentCulture, false)]
+        [TestCase(" ss ", "s", false, StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "s", false, StringComparison.CurrentCulture, false)]
+        [TestCase(" ss ", "ß", false, StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", false, StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", false, StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", false, StringComparison.CurrentCultureIgnoreCase, true)]
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+        [TestCase(" ss ", "ß", false, StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "ß", false, StringComparison.InvariantCulture, false)]
+        [TestCase(" ss ", "s", false, StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "s", false, StringComparison.InvariantCulture, false)]
+        [TestCase(" ss ", "ß", false, StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", false, StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", false, StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", false, StringComparison.InvariantCultureIgnoreCase, true)]
+#endif
+        [TestCase(" ss ", "ß", false, StringComparison.Ordinal, false)]
+        [TestCase(" SS ", "ß", false, StringComparison.Ordinal, false)]
+        [TestCase(" ss ", "s", false, StringComparison.Ordinal, true)]
+        [TestCase(" SS ", "s", false, StringComparison.Ordinal, false)]
+        [TestCase(" ss ", "ß", false, StringComparison.OrdinalIgnoreCase, false)]
+        [TestCase(" SS ", "ß", false, StringComparison.OrdinalIgnoreCase, false)]
+        [TestCase(" ss ", "s", false, StringComparison.OrdinalIgnoreCase, true)]
+        [TestCase(" SS ", "s", false, StringComparison.OrdinalIgnoreCase, true)]
+
+        [TestCase(" ss ", "ß", true, StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "ß", true, StringComparison.CurrentCulture, false)]
+        [TestCase(" ss ", "s", true, StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "s", true, StringComparison.CurrentCulture, false)]
+        [TestCase(" ss ", "ß", true, StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", true, StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", true, StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", true, StringComparison.CurrentCultureIgnoreCase, true)]
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)           
+        [TestCase(" ss ", "ß", true, StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "ß", true, StringComparison.InvariantCulture, false)]
+        [TestCase(" ss ", "s", true, StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "s", true, StringComparison.InvariantCulture, false)]
+        [TestCase(" ss ", "ß", true, StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", true, StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", true, StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", true, StringComparison.InvariantCultureIgnoreCase, true)]
+#endif                         
+        [TestCase(" ss ", "ß", true, StringComparison.Ordinal, false)]
+        [TestCase(" SS ", "ß", true, StringComparison.Ordinal, false)]
+        [TestCase(" ss ", "s", true, StringComparison.Ordinal, true)]
+        [TestCase(" SS ", "s", true, StringComparison.Ordinal, false)]
+        [TestCase(" ss ", "ß", true, StringComparison.OrdinalIgnoreCase, false)]
+        [TestCase(" SS ", "ß", true, StringComparison.OrdinalIgnoreCase, false)]
+        [TestCase(" ss ", "s", true, StringComparison.OrdinalIgnoreCase, true)]
+        [TestCase(" SS ", "s", true, StringComparison.OrdinalIgnoreCase, true)]
+
+        public void UsingAfterIgnoreCase(string actual, string expected, bool ignoreCase, StringComparison comparison, bool succeeds)
+        {
+            SubstringConstraint substringConstraint = Contains.Substring(expected);
+            // In case StringConstraint.IgnoreCase was set to true 
+            if (ignoreCase)
+                substringConstraint = substringConstraint.IgnoreCase as SubstringConstraint;
+
+            Constraint constraint = substringConstraint.Using(comparison);
+            if (!succeeds)
+                constraint = new NotConstraint(constraint);
+
+            Assert.That(actual, constraint);
+        }
+
+        [TestCase(" ss ", "ß", StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "ß", StringComparison.CurrentCulture, true)]
+        [TestCase(" ss ", "s", StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "s", StringComparison.CurrentCulture, true)]
+        [TestCase(" ss ", "ß", StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", StringComparison.CurrentCultureIgnoreCase, true)]
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)           
+        [TestCase(" ss ", "ß", StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "ß", StringComparison.InvariantCulture, true)]
+        [TestCase(" ss ", "s", StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "s", StringComparison.InvariantCulture, true)]
+        [TestCase(" ss ", "ß", StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", StringComparison.InvariantCultureIgnoreCase, true)]
+#endif                         
+        [TestCase(" ss ", "ß", StringComparison.Ordinal, true)]
+        [TestCase(" SS ", "ß", StringComparison.Ordinal, true)]
+        [TestCase(" ss ", "s", StringComparison.Ordinal, true)]
+        [TestCase(" SS ", "s", StringComparison.Ordinal, true)]
+        [TestCase(" ss ", "ß", StringComparison.OrdinalIgnoreCase, true)]
+        [TestCase(" SS ", "ß", StringComparison.OrdinalIgnoreCase, true)]
+        [TestCase(" ss ", "s", StringComparison.OrdinalIgnoreCase, true)]
+        [TestCase(" SS ", "s", StringComparison.OrdinalIgnoreCase, true)]
+        public void UsingBeforeIgnoreCase(string actual, string expected, StringComparison comparison, bool succeeds)
+        {
+            SubstringConstraint substringConstraint = Contains.Substring(expected);
+            Constraint constraint = substringConstraint.Using(comparison).IgnoreCase;
+            if (!succeeds)
+                constraint = new NotConstraint(constraint);
+
+            Assert.That(actual, constraint);
+        }
     }
 
     [TestFixture]
@@ -78,7 +182,7 @@ namespace NUnit.Framework.Constraints
     //    }
 
     //    static object[] SuccessData = new object[] { "hello world!", "Hello World!", "HELLO world!" };
-            
+
     //    static object[] FailureData = new object[] { "goodbye", "Hello Friends!", string.Empty, null };
 
 

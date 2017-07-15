@@ -21,6 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Globalization;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -29,6 +32,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SubstringConstraint : StringConstraint
     {
+        private StringComparison? comparisonType;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
         /// </summary>
@@ -39,16 +44,35 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Modify the constraint to ignore case in matching.
+        /// </summary>
+        public override StringConstraint IgnoreCase
+        {
+            get { caseInsensitive = true; comparisonType = null; return this; }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            if (this.caseInsensitive)
-                return actual != null && actual.ToLower().IndexOf(expected.ToLower()) >= 0;
-            else
-                return actual != null && actual.IndexOf(expected) >= 0;
+            if (actual == null) return false;
+
+            var actualComparison = comparisonType ?? (caseInsensitive ?
+                StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture);
+
+            return actual.IndexOf(expected, actualComparison) >= 0;
+        }
+
+        /// <summary>
+        /// Modify the constraint to the specified comparison.
+        /// </summary>
+        public SubstringConstraint Using(StringComparison comparisonType)
+        {
+            this.comparisonType = comparisonType;
+            return this;
         }
     }
 }
