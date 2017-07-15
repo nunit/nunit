@@ -429,7 +429,7 @@ namespace NUnit.Framework.Internal
         public void PlatformAttribute_InvalidPlatform()
         {
             PlatformAttribute attr = new PlatformAttribute( "Net-1.0,Net11,Mono" );
-            Assert.Throws<ArgumentException>(
+            Assert.Throws<InvalidPlatformException>(
                 () => winXPHelper.IsPlatformSupported(attr), 
                 "Invalid platform name Net11");
         }

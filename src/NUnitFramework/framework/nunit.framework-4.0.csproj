@@ -377,6 +377,7 @@
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
+    <Compile Include="Internal\InvalidPlatformException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\Logging\ILogger.cs" />
     <Compile Include="Internal\Logging\InternalTrace.cs" />
