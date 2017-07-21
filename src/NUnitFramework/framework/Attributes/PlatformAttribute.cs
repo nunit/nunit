@@ -59,18 +59,22 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable &&
                 test.RunState != RunState.Ignored)
             {
+                bool platformIsSupported = false;
                 try
                 {
-                    if (!platformHelper.IsPlatformSupported(this))
-                    {
-                        test.RunState = RunState.Skipped;
-                        test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
-                    }
+                    platformIsSupported = platformHelper.IsPlatformSupported(this);
                 }
                 catch (InvalidPlatformException ex)
                 {
                     test.RunState = RunState.NotRunnable;
                     test.Properties.Add(PropertyNames.SkipReason, ex.Message);
+                    return;
+                }
+
+                if (!platformIsSupported)
+                {
+                    test.RunState = RunState.Skipped;
+                    test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
                 }
             }
         }
