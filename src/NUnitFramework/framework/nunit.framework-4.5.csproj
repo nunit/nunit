@@ -103,6 +103,7 @@
     <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
     <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
+    <Compile Include="Internal\InvalidPlatformException.cs" />
     <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />

@@ -118,23 +118,15 @@ namespace NUnit.Framework.Internal
 
         private bool IsPlatformSupported(string include, string exclude)
         {
-            try
+            if (include != null && !IsPlatformSupported(include))
             {
-                if (include != null && !IsPlatformSupported(include))
-                {
-                    _reason = string.Format("Only supported on {0}", include);
-                    return false;
-                }
-
-                if (exclude != null && IsPlatformSupported(exclude))
-                {
-                    _reason = string.Format("Not supported on {0}", exclude);
-                    return false;
-                }
+                _reason = string.Format("Only supported on {0}", include);
+                return false;
             }
-            catch (Exception ex)
+
+            if (exclude != null && IsPlatformSupported(exclude))
             {
-                _reason = ex.Message;
+                _reason = string.Format("Not supported on {0}", exclude);
                 return false;
             }
 
@@ -142,8 +134,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Test to determine if the a particular platform or comma-
-        /// delimited set of platforms is in use.
+        /// Test to determine if a particular platform or comma-delimited set of platforms is in use.
         /// </summary>
         /// <param name="platform">Name of the platform or comma-separated list of platform ids</param>
         /// <returns>True if the platform is in use on the system</returns>
@@ -154,15 +145,6 @@ namespace NUnit.Framework.Internal
 
             string platformName = platform.Trim();
             bool isSupported;
-
-//			string versionSpecification = null;
-//
-//			string[] parts = platformName.Split( new char[] { '-' } );
-//			if ( parts.Length == 2 )
-//			{
-//				platformName = parts[0];
-//				versionSpecification = parts[1];
-//			}
 
             switch( platformName.ToUpper() )
             {
@@ -322,7 +304,7 @@ namespace NUnit.Framework.Internal
                     return IsRuntimeSupported(RuntimeType.MonoTouch, versionSpecification);
 
                 default:
-                    throw new ArgumentException("Invalid platform name", platformName);
+                    throw new InvalidPlatformException("Invalid platform name: " + platformName);
             }
         }
 

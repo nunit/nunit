@@ -56,12 +56,26 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (test.RunState != RunState.NotRunnable && 
-                test.RunState != RunState.Ignored && 
-                !platformHelper.IsPlatformSupported(this))
+            if (test.RunState != RunState.NotRunnable &&
+                test.RunState != RunState.Ignored)
             {
-                test.RunState = RunState.Skipped;
-                test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
+                bool platformIsSupported = false;
+                try
+                {
+                    platformIsSupported = platformHelper.IsPlatformSupported(this);
+                }
+                catch (InvalidPlatformException ex)
+                {
+                    test.RunState = RunState.NotRunnable;
+                    test.Properties.Add(PropertyNames.SkipReason, ex.Message);
+                    return;
+                }
+
+                if (!platformIsSupported)
+                {
+                    test.RunState = RunState.Skipped;
+                    test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
+                }
             }
         }
 
