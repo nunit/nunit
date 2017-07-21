@@ -386,6 +386,8 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(test.Properties.Get(PropertyNames.SkipReason),
                 Does.StartWith("Invalid platform name"));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+                Does.Contain(invalidPlatform));
         }
 
         string GetMyPlatform()
