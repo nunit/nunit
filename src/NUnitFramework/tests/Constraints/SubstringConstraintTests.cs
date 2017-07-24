@@ -38,13 +38,98 @@ namespace NUnit.Framework.Constraints
         }
 
         static object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
-        
-        static object[] FailureData = new object[] { 
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+
+        static object[] FailureData = new object[] {
+            new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "HELLO", "\"HELLO\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
+
+        [TestCase(" ss ", "ß", StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "ß", StringComparison.CurrentCulture, false)]
+        [TestCase(" ss ", "s", StringComparison.CurrentCulture, true)]
+        [TestCase(" SS ", "s", StringComparison.CurrentCulture, false)]
+        [TestCase(" ss ", "ß", StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", StringComparison.CurrentCultureIgnoreCase, true)]
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+        [TestCase(" ss ", "ß", StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "ß", StringComparison.InvariantCulture, false)]
+        [TestCase(" ss ", "s", StringComparison.InvariantCulture, true)]
+        [TestCase(" SS ", "s", StringComparison.InvariantCulture, false)]
+        [TestCase(" ss ", "ß", StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "ß", StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" ss ", "s", StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" SS ", "s", StringComparison.InvariantCultureIgnoreCase, true)]
+#endif
+        [TestCase(" ss ", "ß", StringComparison.Ordinal, false)]
+        [TestCase(" SS ", "ß", StringComparison.Ordinal, false)]
+        [TestCase(" ss ", "s", StringComparison.Ordinal, true)]
+        [TestCase(" SS ", "s", StringComparison.Ordinal, false)]
+        [TestCase(" ss ", "ß", StringComparison.OrdinalIgnoreCase, false)]
+        [TestCase(" SS ", "ß", StringComparison.OrdinalIgnoreCase, false)]
+        [TestCase(" ss ", "s", StringComparison.OrdinalIgnoreCase, true)]
+        [TestCase(" SS ", "s", StringComparison.OrdinalIgnoreCase, true)]
+        public void SpecifyComparisonType(string actual, string expected, StringComparison comparison, bool succeeds)
+        {
+            Constraint constraint = Contains.Substring(expected).Using(comparison);
+            if (!succeeds)
+                constraint = new NotConstraint(constraint);
+
+            Assert.That(actual, constraint);
+        }
+
+        [Test]
+        public void UseDifferentComparisonTypes_ThrowsException()
+        {
+            var subStringConstraint = theConstraint as SubstringConstraint;
+            // Invoke Using method before IgnoreCase
+            Assert.That(() => subStringConstraint.Using(StringComparison.CurrentCulture).IgnoreCase,
+    Throws.TypeOf<InvalidOperationException>());
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+            Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCulture).IgnoreCase,
+                Throws.TypeOf<InvalidOperationException>());
+            Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCultureIgnoreCase).IgnoreCase,
+                Throws.TypeOf<InvalidOperationException>());
+#endif
+            Assert.That(() => subStringConstraint.Using(StringComparison.Ordinal).IgnoreCase,
+                Throws.TypeOf<InvalidOperationException>());
+            Assert.That(() => subStringConstraint.Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
+                Throws.TypeOf<InvalidOperationException>());
+
+            // Invoke IgnoreCase before Using method
+            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.CurrentCulture),
+                Throws.TypeOf<InvalidOperationException>());
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.InvariantCulture),
+                Throws.TypeOf<InvalidOperationException>());
+            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.InvariantCultureIgnoreCase),
+                Throws.TypeOf<InvalidOperationException>());
+#endif
+            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.Ordinal).IgnoreCase,
+                Throws.TypeOf<InvalidOperationException>());
+            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
+                Throws.TypeOf<InvalidOperationException>());
+        }
+        
+        [Test]
+        public void UseSameComparisonTypes_DoesNotThrowException()
+        {
+            var subStringConstraint = theConstraint as SubstringConstraint;
+            Assert.DoesNotThrow(() =>
+            {
+                var newConstraint = subStringConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
+            });
+
+            var stringConstraint = theConstraint as StringConstraint;
+            Assert.DoesNotThrow(() =>
+            {
+                var newConstraint = stringConstraint.IgnoreCase as SubstringConstraint;
+                newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
+            });
+        }
     }
 
     [TestFixture]
@@ -78,7 +163,7 @@ namespace NUnit.Framework.Constraints
     //    }
 
     //    static object[] SuccessData = new object[] { "hello world!", "Hello World!", "HELLO world!" };
-            
+
     //    static object[] FailureData = new object[] { "goodbye", "Hello Friends!", string.Empty, null };
 
 
