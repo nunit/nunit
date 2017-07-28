@@ -32,28 +32,47 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionTally
     {
-        // Internal list used to track occurrences
-        private readonly List<object> list = new List<object>();
+        /// <summary>
+        /// Internal list used to keep track of items not yet tallied.
+        /// </summary>
+        private readonly List<object> _items = new List<object>();
+
+        /// <summary>
+        /// Items attempted to be tallied, but were not found in the original
+        /// <see cref="IEnumerable"/> provided at construction.
+        /// </summary>
+        public List<object> ExtraItems
+        {
+            get;
+            private set;
+        } = new List<object>();
+
+        /// <summary>
+        /// Provides the current list of items that have not been removed
+        /// from the tally.
+        /// </summary>
+        public List<object> MissingItems
+        {
+            get { return _items; }
+        }
 
         private readonly NUnitEqualityComparer comparer;
 
         /// <summary>
         /// Construct a CollectionTally object from a comparer and a collection
         /// </summary>
+        /// <param name="comparer">
+        /// The comparer to use for equality.
+        /// </param>
+        /// <param name="c">
+        /// The expected collection to compare against.
+        /// </param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
             this.comparer = comparer;
 
             foreach (object o in c)
-                list.Add(o);
-        }
-
-        /// <summary>
-        /// The number of objects remaining in the tally
-        /// </summary>
-        public int Count
-        {
-            get { return list.Count; }
+                _items.Add(o);
         }
 
         private bool ItemsEqual(object expected, object actual)
@@ -69,12 +88,14 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if successful, false if the object was not found</returns>
         public bool TryRemove(object o)
         {
-            for (int index = 0; index < list.Count; index++)
-                if (ItemsEqual(list[index], o))
+            for (int index = 0; index < _items.Count; index++)
+                if (ItemsEqual(_items[index], o))
                 {
-                    list.RemoveAt(index);
+                    _items.RemoveAt(index);
                     return true;
                 }
+
+            ExtraItems.Add(o);
 
             return false;
         }
@@ -86,11 +107,17 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if successful, false if any object was not found</returns>
         public bool TryRemove(IEnumerable c)
         {
-            foreach (object o in c)
-                if (!TryRemove(o))
-                    return false;
+            bool allItemsWereFound = true;
 
-            return true;
+            foreach (object o in c)
+            { 
+                if (!TryRemove(o))
+                {
+                    allItemsWereFound = false;
+                }
+            }
+
+            return allItemsWereFound;
         }
     }
 }

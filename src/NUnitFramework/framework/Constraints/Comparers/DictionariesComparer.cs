@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 return false;
 
             CollectionTally tally = new CollectionTally(_equalityComparer, xDictionary.Keys);
-            if (!tally.TryRemove(yDictionary.Keys) || tally.Count > 0)
+            if (!tally.TryRemove(yDictionary.Keys) || tally.MissingItems.Count > 0)
                 return false;
 
             foreach (object key in xDictionary.Keys)

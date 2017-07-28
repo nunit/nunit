@@ -162,6 +162,7 @@
     <Compile Include="Constraints\BinarySerializableTest.cs" />
     <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEqualsTests.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintResultTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
+    <Compile Include="Internal\CollectionTallyTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventListenerTextWriterTests.cs" />

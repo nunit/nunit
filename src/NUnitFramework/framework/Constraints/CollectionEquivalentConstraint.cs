@@ -34,6 +34,12 @@ namespace NUnit.Framework.Constraints
         private readonly IEnumerable _expected;
 
         /// <summary>
+        /// The <see cref="CollectionTally"/> of the last performed collection equivalence
+        /// comparison.
+        /// </summary>
+        private CollectionTally _lastPerformedTally;
+
+        /// <summary>
         /// Construct a CollectionEquivalentConstraint
         /// </summary>
         /// <param name="expected"></param>
@@ -67,13 +73,36 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            // This is just an optimization
-            if (_expected is ICollection && actual is ICollection)
-                if (((ICollection)actual).Count != ((ICollection)_expected).Count)
-                    return false;
+            //Store the tally so the collection is only iterated over once.
+            _lastPerformedTally = Tally(_expected);
 
-            CollectionTally tally = Tally(_expected);
-            return tally.TryRemove(actual) && tally.Count == 0;
+            return _lastPerformedTally.TryRemove(actual) && _lastPerformedTally.MissingItems.Count == 0;
+        }
+
+        /// <summary>
+        /// Test whether the collection is equivalent to the expected.
+        /// </summary>
+        /// <typeparam name="TActual">
+        /// Actual collection type.
+        /// </typeparam>
+        /// <param name="actual">
+        /// Actual collection to compare.
+        /// </param>
+        /// <returns>
+        /// A <see cref="CollectionEquivalentConstraintResult"/> indicating whether or not
+        /// the two collections are equivalent.
+        /// </returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            // TODO: Use an error result if actual is not IEnumerable
+            IEnumerable enumerable = actual as IEnumerable;
+            if (enumerable == null)
+                throw new ArgumentException("The actual value must be an IEnumerable", "actual");
+
+            bool matchesResult = Matches(enumerable);
+
+            return new CollectionEquivalentConstraintResult(
+                this, _lastPerformedTally, actual, matchesResult);
         }
 
         /// <summary>

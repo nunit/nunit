@@ -149,6 +149,7 @@
     <Compile Include="Constraints\BinarySerializableTest.cs" />
     <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
     <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintResultTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
+    <Compile Include="Internal\CollectionTallyTests.cs" />
     <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
