@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal.Execution
                                             RunChildren();
                                             return;
                                         // Just return: completion event will take care
-                                        // of TestFixtureTearDown when all tests are done.
+                                        // of OneTimeTearDown when all tests are done.
 
                                         case TestStatus.Skipped:
                                         case TestStatus.Inconclusive:

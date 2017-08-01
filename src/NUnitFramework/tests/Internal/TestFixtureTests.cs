@@ -226,13 +226,13 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanRunMultipleTestFixtureSetUp()
+        public void CanRunMultipleOneTimeSetUp()
         {
             TestAssert.IsRunnable(typeof(MultipleFixtureSetUpAttributes));
         }
 
         [Test]
-        public void CanRunMultipleTestFixtureTearDown()
+        public void CanRunMultipleOneTimeTearDown()
         {
             TestAssert.IsRunnable(typeof(MultipleFixtureTearDownAttributes));
         }
@@ -376,7 +376,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region TestFixtureSetUp Signature
+        #region OneTimeSetUp Signature
 
         [Test]
         public void CannotRunPrivateFixtureSetUp()
@@ -410,7 +410,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region TestFixtureTearDown Signature
+        #region OneTimeTearDown Signature
 
         [Test]
         public void CannotRunPrivateFixtureTearDown()

@@ -79,11 +79,8 @@ namespace NUnit.Framework
 
             var invalidAttributes = new Type[] { 
                 typeof(SetUpAttribute), 
-                typeof(TearDownAttribute),
-#pragma warning disable 618 // Obsolete Attributes
-                typeof(TestFixtureSetUpAttribute), 
-                typeof(TestFixtureTearDownAttribute) };
-#pragma warning restore
+                typeof(TearDownAttribute)
+            };
 
             foreach (Type invalidType in invalidAttributes)
                 if (typeInfo.HasMethodWithAttribute(invalidType))

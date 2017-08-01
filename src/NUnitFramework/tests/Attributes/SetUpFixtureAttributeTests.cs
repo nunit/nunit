@@ -31,10 +31,8 @@ namespace NUnit.Framework.Attributes
 {
     public class SetUpFixtureAttributeTests
     {
-        [TestCase(typeof(Class1))]
-        [TestCase(typeof(Class2))]
-        [TestCase(typeof(Class3))]
-        [TestCase(typeof(Class4))]
+        [TestCase(typeof(TestSetupClass))]
+        [TestCase(typeof(TestTearDownClass))]
         public void CertainAttributesAreNotAllowed(Type type)
         {
             var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(type));
@@ -42,27 +40,13 @@ namespace NUnit.Framework.Attributes
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
-#pragma warning disable 618 // Obsolete Attributes
-        private class Class1
-        {
-            [TestFixtureSetUp]
-            public void SomeMethod() { }
-        }
-
-        private class Class2
-        {
-            [TestFixtureTearDown]
-            public void SomeMethod() { }
-        }
-#pragma warning restore
-
-        private class Class3
+        private class TestSetupClass
         {
             [SetUp]
             public void SomeMethod() { }
         }
 
-        private class Class4
+        private class TestTearDownClass
         {
             [TearDown]
             public void SomeMethod() { }
