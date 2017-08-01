@@ -32,7 +32,7 @@ namespace NUnit.Framework.Attributes
     public class SetUpFixtureAttributeTests
     {
         [TestCase(typeof(TestSetupClass))]
-        [TestCase(typeof(TestSearDownClass))]
+        [TestCase(typeof(TestTearDownClass))]
         public void CertainAttributesAreNotAllowed(Type type)
         {
             var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(type));
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Attributes
             public void SomeMethod() { }
         }
 
-        private class TestSearDownClass
+        private class TestTearDownClass
         {
             [TearDown]
             public void SomeMethod() { }
