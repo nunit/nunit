@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,7 +28,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Abstract base class for constraints that compare _values to
+    /// Abstract base class for constraints that compare values to
     /// determine if one is greater than, equal to or less than
     /// the other.
     /// </summary>
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
-        /// a percentage that the actual _values is allowed to deviate from
+        /// a percentage that the actual values is allowed to deviate from
         /// the expected value.
         /// </summary>
         /// <returns>Self</returns>

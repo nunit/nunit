@@ -1,5 +1,5 @@
 // *****************************************************
-// Copyright 2007, Charlie Poole
+// Copyright 2007, Charlie Poole, Rob Prouse
 //
 // Licensed under the Open Software License version 3.0
 // *****************************************************

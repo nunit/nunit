@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -376,6 +376,18 @@ namespace NUnit.Framework.Attributes
             string myPlatform = GetMyPlatform();
             new PlatformAttribute(myPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        [Test]
+        public void InvalidPlatformAttributeIsNotRunnable()
+        {
+            var invalidPlatform = "FakePlatform";
+            new PlatformAttribute(invalidPlatform).ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+                Does.StartWith("Invalid platform name"));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+                Does.Contain(invalidPlatform));
         }
 
         string GetMyPlatform()

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2014 Charlie Poole
+// Copyright (c) 2007-2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -429,9 +429,9 @@ namespace NUnit.Framework.Internal
         public void PlatformAttribute_InvalidPlatform()
         {
             PlatformAttribute attr = new PlatformAttribute( "Net-1.0,Net11,Mono" );
-            Assert.IsFalse( winXPHelper.IsPlatformSupported( attr ) );
-            Assert.That( winXPHelper.Reason, Does.StartWith("Invalid platform name"));
-            Assert.That( winXPHelper.Reason, Does.Contain("Net11"));
+            Assert.Throws<InvalidPlatformException>(
+                () => winXPHelper.IsPlatformSupported(attr), 
+                "Invalid platform name Net11");
         }
 
         [Test]

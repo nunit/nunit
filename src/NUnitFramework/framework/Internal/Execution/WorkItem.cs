@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012-2017 Charlie Poole
+// Copyright (c) 2012-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -90,6 +90,9 @@ namespace NUnit.Framework.Internal.Execution
             Result = wrappedItem.Result;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
+#if PARALLEL
+            TestWorker = wrappedItem.TestWorker;
+#endif
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TargetApartment = wrappedItem.TargetApartment;
 #endif

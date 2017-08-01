@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     /// modifies or combines constraints. 
     /// 
     /// Constraint operators use left and right precedence
-    /// _values to determine whether the top operator on the
+    /// values to determine whether the top operator on the
     /// stack should be reduced before pushing a new operator.
     /// </summary>
     public abstract class ConstraintOperator

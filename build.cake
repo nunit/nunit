@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.6.0
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.6.1
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");

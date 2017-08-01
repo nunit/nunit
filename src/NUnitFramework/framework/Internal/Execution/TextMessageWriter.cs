@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -152,9 +152,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Display Expected and Actual lines for given _values. This
+        /// Display Expected and Actual lines for given values. This
         /// method may be called by constraints that need more control over
-        /// the display of actual and expected _values than is provided
+        /// the display of actual and expected values than is provided
         /// by the default implementation.
         /// </summary>
         /// <param name="expected">The expected value</param>
@@ -165,7 +165,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Display Expected and Actual lines for given _values, including
+        /// Display Expected and Actual lines for given values, including
         /// a tolerance value on the expected line.
         /// </summary>
         /// <param name="expected">The expected value</param>
@@ -183,7 +183,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Display the expected and actual string _values on separate lines.
+        /// Display the expected and actual string values on separate lines.
         /// If the mismatch parameter is >=0, an additional line is displayed
         /// line containing a caret that points to the mismatch point.
         /// </summary>

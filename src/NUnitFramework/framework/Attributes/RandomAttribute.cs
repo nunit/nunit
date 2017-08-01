@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,7 +34,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RandomAttribute is used to supply a set of random _values
+    /// RandomAttribute is used to supply a set of random values
     /// to a single parameter of a parameterized test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
@@ -149,7 +149,7 @@ namespace NUnit.Framework
         #region IParameterDataSource Interface
 
         /// <summary>
-        /// Get the collection of _values to be used as arguments.
+        /// Get the collection of values to be used as arguments.
         /// </summary>
         public IEnumerable GetData(IParameterInfo parameter)
         {
@@ -200,7 +200,7 @@ namespace NUnit.Framework
 
             return _source.GetData(parameter);
 
-            //// Copy the random _values into the data array
+            //// Copy the random values into the data array
             //// and call the base class which may need to
             //// convert them to another type.
             //this.data = new object[values.Count];

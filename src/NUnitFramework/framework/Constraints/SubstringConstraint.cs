@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,6 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Globalization;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -29,6 +32,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SubstringConstraint : StringConstraint
     {
+        private StringComparison? comparisonType;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
         /// </summary>
@@ -39,16 +44,42 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Modify the constraint to ignore case in matching.
+        /// This will call Using(StringComparison.CurrentCultureIgnoreCase).
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
+        /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
+        public override StringConstraint IgnoreCase
+        {
+            get { Using(StringComparison.CurrentCultureIgnoreCase); return base.IgnoreCase; }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            if (this.caseInsensitive)
-                return actual != null && actual.ToLower().IndexOf(expected.ToLower()) >= 0;
-            else
-                return actual != null && actual.IndexOf(expected) >= 0;
+            if (actual == null) return false;
+
+            var actualComparison = comparisonType ?? StringComparison.CurrentCulture;
+            return actual.IndexOf(expected, actualComparison) >= 0;
+        }
+
+        /// <summary>
+        /// Modify the constraint to the specified comparison.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
+        /// than <paramref name="comparisonType"/> was already set.</exception>
+        public SubstringConstraint Using(StringComparison comparisonType)
+        {
+            if (this.comparisonType == null)
+                this.comparisonType = comparisonType;
+            else if (this.comparisonType != comparisonType)
+                throw new InvalidOperationException("A different comparison type was already set.");
+
+            return this;
         }
     }
 }

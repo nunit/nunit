@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Internal
         /// corresponding xml representations.
         /// </summary>
         /// <param name="original">The string to be used</param>
-        /// <returns>A new string with the _values replaced</returns>
+        /// <returns>A new string with the values replaced</returns>
         private static string FormatAttributeValue(string original)
         {
             return original

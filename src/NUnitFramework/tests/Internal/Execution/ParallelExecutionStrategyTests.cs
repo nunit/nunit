@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(ParallelWorkItemDispatcher.GetExecutionStrategy(work).ToString(), Is.EqualTo("Direct"));
         }
 
-        [TestCase(ParallelScope.Default, ParallelScope.Default, "Direct")]
+        [TestCase(ParallelScope.Default, ParallelScope.Default, "NonParallel")]
         [TestCase(ParallelScope.Self, ParallelScope.Default, "Parallel")]
         [TestCase(ParallelScope.None, ParallelScope.Default, "NonParallel")]
         [TestCase(ParallelScope.Default, ParallelScope.Children, "Parallel")]
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Internal.Execution
         [TestCase(ParallelScope.Default, ParallelScope.Fixtures, "Parallel")]
         [TestCase(ParallelScope.Self, ParallelScope.Fixtures, "Parallel")]
         [TestCase(ParallelScope.None, ParallelScope.Fixtures, "NonParallel")]
-        public void ParallelExeutionStrategy_TestFixture(ParallelScope testScope, ParallelScope contextScope, string expectedStrategy)
+        public void ParallelExecutionStrategy_TestFixture(ParallelScope testScope, ParallelScope contextScope, string expectedStrategy)
         {
             _testFixture.Properties.Set(PropertyNames.ParallelScope, testScope);
             _context.ParallelScope = contextScope;

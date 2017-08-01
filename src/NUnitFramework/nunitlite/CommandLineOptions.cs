@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -414,14 +414,13 @@ namespace NUnit.Common
             this.Add("err=", "File {PATH} to contain error output from the tests.",
                 v => ErrFile = RequiredValue(v, "--err"));
 
-            this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.",
-                v => resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--resultxml"))));
+            this.Add("result=", "An output {SPEC} for saving the test results. This option may be repeated.",
+                v => ResolveOutputSpecification(RequiredValue(v, "--resultxml"), resultOutputSpecifications));
 
             this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v =>
             {
                 Explore = true;
-                if (v != null)
-                    ExploreOutputSpecifications.Add(new OutputSpecification(v));
+                ResolveOutputSpecification(v, ExploreOutputSpecifications);
             });
 
             this.Add("noresult", "Don't save any test results.",
@@ -469,6 +468,22 @@ namespace NUnit.Common
         private bool LooksLikeAnOption(string v)
         {
             return v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/';
+        }
+
+        private void ResolveOutputSpecification(string value, IList<OutputSpecification> outputSpecifications)
+        {
+            if (value == null)
+                return;
+
+            try
+            {
+                var spec = new OutputSpecification(value);
+                outputSpecifications.Add(spec);
+            }
+            catch (ArgumentException e)
+            {
+                ErrorMessages.Add(e.Message);
+            }
         }
 
         #endregion

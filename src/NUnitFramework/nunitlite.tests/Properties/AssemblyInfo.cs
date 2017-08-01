@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,7 @@ using System.Reflection;
 using NUnit.Framework;
 
 // Information about this assembly is defined by the following attributes. 
-// Change them to the _values specific to your project.
+// Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("NUnitLite Runner Tests")]
 

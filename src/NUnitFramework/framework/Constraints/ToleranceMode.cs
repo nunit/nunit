@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,16 +37,16 @@ namespace NUnit.Framework.Constraints
         Unset,
         /// <summary>
         /// The tolerance is used as a numeric range within which
-        /// two compared _values are considered to be equal.
+        /// two compared values are considered to be equal.
         /// </summary>
         Linear,
         /// <summary>
         /// Interprets the tolerance as the percentage by which
-        /// the two compared _values my deviate from each other.
+        /// the two compared values my deviate from each other.
         /// </summary>
         Percent,
         /// <summary>
-        /// Compares two _values based in their distance in
+        /// Compares two values based in their distance in
         /// representable numbers.
         /// </summary>
         Ulps

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -202,6 +202,25 @@ namespace NUnit.Framework.Constraints
         {
             builder.Append(new ExactCountOperator(expectedCount));
             return new ItemsConstraintExpression(builder);
+        }
+
+        #endregion
+
+        #region One
+       
+        /// <summary>
+        /// Returns a <see cref="ItemsConstraintExpression"/>, which will
+        /// apply the following constraint to a collection of length one, succeeding
+        /// only if exactly one of them succeeds.
+        /// </summary>
+        public ItemsConstraintExpression One
+        {
+            get
+            {
+                builder.Append(new ExactCountOperator(1));
+                return new ItemsConstraintExpression(builder);
+            }
+            
         }
 
         #endregion

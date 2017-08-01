@@ -4,8 +4,8 @@
     <id>NUnitLite</id>
     <title>NUnitLite</title>
     <version>$version$</version>
-    <authors>Charlie Poole</authors>
-    <owners>Charlie Poole</owners>
+    <authors>Charlie Poole, Rob Prouse</authors>
+    <owners>Charlie Poole, Rob Prouse</owners>
     <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
@@ -25,20 +25,27 @@ How to use this package:
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
-    <copyright>Copyright (c) 2017 Charlie Poole</copyright>
+    <copyright>Copyright (c) 2017 Charlie Poole, Rob Prouse</copyright>
     <dependencies>
-      <group>
+      <group targetFramework="net20">
         <dependency id="NUnit" version="[$version$]" />
       </group>
-      <group targetFramework="net20" />
-      <group targetFramework="net35" />
-      <group targetFramework="net40" />
-      <group targetFramework="net45" />
+      <group targetFramework="net35">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
+      <group targetFramework="net40">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
+      <group targetFramework="net45">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
       <group targetFramework="netstandard1.3">
+        <dependency id="NUnit" version="[$version$]" />
         <dependency id="NETStandard.Library" version="1.6.0" />
         <dependency id="System.Threading.Thread" version="4.3.0" />
       </group>
       <group targetFramework="netstandard1.6">
+        <dependency id="NUnit" version="[$version$]" />
         <dependency id="NETStandard.Library" version="1.6.0" />
         <dependency id="System.Runtime.Loader" version="4.3.0" />
         <dependency id="System.Threading.Thread" version="4.3.0" />

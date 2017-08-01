@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -58,6 +58,17 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(scope));
         }
 
+        [TestCaseSourceAttribute(nameof(Scopes))]
+        public void ApplyScopeToTestFixture(ParallelScope scope)
+        {
+            var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
+            var attr = new ParallelizableAttribute(scope);
+            attr.ApplyToTest(fixture);
+            if (scope == ParallelScope.Fixtures)
+                scope |= ParallelScope.Self;
+            Assert.That(fixture.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(scope));
+        }
+
         [TestCaseSource(nameof(Scopes))]
         public void ApplyScopeToContext(ParallelScope scope)
         {
@@ -77,5 +88,7 @@ namespace NUnit.Framework.Attributes
             ParallelScope.Self | ParallelScope.Children,
             ParallelScope.Self | ParallelScope.Fixtures
         };
+
+        public class FixtureClass { }
     }
 }
