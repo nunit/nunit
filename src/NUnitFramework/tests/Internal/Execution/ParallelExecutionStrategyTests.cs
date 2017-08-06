@@ -59,11 +59,11 @@ namespace NUnit.Framework.Internal.Execution
             work.InitializeContext(_context);
 
             // We use a string for expected because the ExecutionStrategy enum is internal and can't be an arg to a public method
-            Assert.That(ParallelWorkItemDispatcher.GetExecutionStrategy(work).ToString(), Is.EqualTo(expectedStrategy));
+            Assert.That(work.GetExecutionStrategy().ToString(), Is.EqualTo(expectedStrategy));
             
             // Make context single threaded - should always be direct
             _context.IsSingleThreaded = true;
-            Assert.That(ParallelWorkItemDispatcher.GetExecutionStrategy(work).ToString(), Is.EqualTo("Direct"));
+            Assert.That(work.GetExecutionStrategy().ToString(), Is.EqualTo("Direct"));
         }
 
         [TestCase(ParallelScope.Default, ParallelScope.Default, "NonParallel")]
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal.Execution
             work.InitializeContext(_context);
 
             // We use a string for expected because the ExecutionStrategy enum is internal and can't be an arg to a public method
-            Assert.That(ParallelWorkItemDispatcher.GetExecutionStrategy(work).ToString(), Is.EqualTo(expectedStrategy));
+            Assert.That(work.GetExecutionStrategy().ToString(), Is.EqualTo(expectedStrategy));
         }
 
         private void TestMethod() { }

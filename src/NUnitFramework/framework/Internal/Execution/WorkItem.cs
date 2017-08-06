@@ -284,7 +284,47 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-        #endregion
+#if PARALLEL
+        /// <summary>
+        /// Return the ParallelExecutionStrategy to be used for this work item
+        /// </summary>
+        /// <returns></returns>
+        public ParallelExecutionStrategy GetExecutionStrategy()
+        {
+            // If there is no fixture and so nothing to do but dispatch 
+            // grandchildren we run directly. This saves time that would 
+            // otherwise be spent enqueuing and dequeing items.
+            if (Test.TypeInfo == null)
+                return ParallelExecutionStrategy.Direct;
+
+            // If the context is single-threaded we are required to run
+            // the tests one by one on the same thread as the fixture.
+            if (Context.IsSingleThreaded)
+                return ParallelExecutionStrategy.Direct;
+
+            // Check if item is explicitly marked as non-parallel
+            if (ParallelScope.HasFlag(ParallelScope.None))
+                return ParallelExecutionStrategy.NonParallel;
+
+            // Check if item is explicitly marked as parallel
+            if (ParallelScope.HasFlag(ParallelScope.Self))
+                return ParallelExecutionStrategy.Parallel;
+
+            // Item is not explicitly marked, so check the inherited context
+            if (Context.ParallelScope.HasFlag(ParallelScope.Children) ||
+                Test is TestFixture && Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
+                return ParallelExecutionStrategy.Parallel;
+
+            // There is no scope specified either on the item itself or in the context.
+            // In that case, simple work items are test cases and just run on the same
+            // thread, while composite work items and teardowns are non-parallel.
+            return this is SimpleWorkItem
+                ? ParallelExecutionStrategy.Direct
+                : ParallelExecutionStrategy.NonParallel;
+        }
+#endif
+
+#endregion
 
         #region Protected Methods
 

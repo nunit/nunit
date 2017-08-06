@@ -346,6 +346,7 @@
     <Compile Include="Internal\Execution\EventPump.cs" />
     <Compile Include="Internal\Execution\EventQueue.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\ParallelExecutionStrategy.cs" />
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\QueuingEventListener.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
