@@ -66,7 +66,17 @@ namespace NUnit.Framework.Internal.Execution
 
         private ConcurrentQueue<WorkItem> _innerQueue = new ConcurrentQueue<WorkItem>();
 
-        private Stack<ConcurrentQueue<WorkItem>> _savedQueues = new Stack<ConcurrentQueue<WorkItem>>();
+        private class SavedState
+        {
+            public ConcurrentQueue<WorkItem> InnerQueue;
+
+            public SavedState(WorkItemQueue queue)
+            {
+                InnerQueue = queue._innerQueue;
+            }
+        }
+
+        private Stack<SavedState> _savedState = new Stack<SavedState>();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
@@ -259,7 +269,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            log.Info("{0}.{1} starting", Name, _savedQueues.Count);
+            log.Info("{0}.{1} starting", Name, _savedState.Count);
 
             if (Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Running, (int)WorkItemQueueState.Paused) == (int)WorkItemQueueState.Paused)
                 _mreAdd.Set();
@@ -270,7 +280,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            log.Info("{0}.{1} stopping - {2} WorkItems processed, max size {3}", Name, _savedQueues.Count, ItemsProcessed, MaxCount);
+            log.Info("{0}.{1} stopping - {2} WorkItems processed, max size {3}", Name, _savedState.Count, ItemsProcessed, MaxCount);
 
             if (Interlocked.Exchange(ref _state, (int)WorkItemQueueState.Stopped) != (int)WorkItemQueueState.Stopped)
                 _mreAdd.Set();
@@ -281,7 +291,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Pause()
         {
-            log.Debug("{0}.{1} pausing", Name, _savedQueues.Count);
+            log.Debug("{0}.{1} pausing", Name, _savedState.Count);
 
             Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Paused, (int)WorkItemQueueState.Running);
         }
@@ -294,7 +304,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             Pause();
 
-            _savedQueues.Push(_innerQueue);
+            _savedState.Push(new SavedState(this));
             _innerQueue = new ConcurrentQueue<WorkItem>();
 
             Start();
@@ -307,7 +317,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             Pause();
 
-            _innerQueue = _savedQueues.Pop();
+            _innerQueue = _savedState.Pop().InnerQueue;
 
             Start();
         }
