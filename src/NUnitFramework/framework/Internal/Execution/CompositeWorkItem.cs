@@ -435,6 +435,16 @@ namespace NUnit.Framework.Internal.Execution
                 get { return string.Format("{0} OneTimeTearDown", base.Name); }
             }
 
+#if PARALLEL
+            /// <summary>
+            /// The ExecutionStrategy for use in running this work item
+            /// </summary>
+            public override ParallelExecutionStrategy ExecutionStrategy
+            {
+                get { return _originalWorkItem.ExecutionStrategy; }
+            }
+#endif
+
             /// <summary>
             ///
             /// </summary>

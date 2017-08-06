@@ -160,7 +160,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            Dispatch(work, work.GetExecutionStrategy());
+            Dispatch(work, work.ExecutionStrategy);
         }
 
         // Separate method so it can be used by Start
