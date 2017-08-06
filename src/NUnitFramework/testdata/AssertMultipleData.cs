@@ -1,7 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
+
+#if ASYNC
+using System.Threading.Tasks;
+#if NET_4_0
+using Task = System.Threading.Tasks.TaskEx;
+#endif
+#endif
 
 namespace NUnit.TestData.AssertMultipleData
 {
@@ -260,6 +265,88 @@ namespace NUnit.TestData.AssertMultipleData
                 Assume.That(2 + 2 == 4);
             });
         }
+
+#if ASYNC
+        [Test]
+        public void ThreeAssertsSucceed_Async()
+        {
+            Assert.Multiple(async () =>
+            {
+                await Task.Delay(1000);
+                Assert.That(2 + 2, Is.EqualTo(4));
+                Assert.That(complex.RealPart, Is.EqualTo(5.2));
+                Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+            });
+        }
+
+        [Test]
+        public void NestedBlock_ThreeAssertsSucceed_Async()
+        {
+            Assert.Multiple(async () =>
+            {
+                await Task.Delay(500);
+                Assert.That(2 + 2, Is.EqualTo(4));
+
+                Assert.Multiple(async () =>
+                {
+                    await Task.Delay(200);
+                    Assert.That(complex.RealPart, Is.EqualTo(5.2));
+                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                });
+            });
+        }
+
+        [Test]
+        public void TwoNestedBlocks_ThreeAssertsSucceed_Async()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Multiple(async () =>
+                {
+                    await Task.Delay(200);
+                    Assert.That(2 + 2, Is.EqualTo(4));
+                });
+
+                Assert.Multiple(async () =>
+                {
+                    Assert.That(complex.RealPart, Is.EqualTo(5.2));
+                    await Task.Delay(100);
+                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                });
+            });
+        }
+
+        [Test]
+        public void TwoAsserts_BothAssertsFail_Async()
+        {
+            Assert.Multiple(async () =>
+            {
+                await Task.Delay(100);
+                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+            });
+        }
+
+        [Test]
+        public void TwoNestedBlocks_TwoAssertsFail_Async()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Multiple(async () =>
+                {
+                    await Task.Delay(100);
+                    Assert.That(2 + 2, Is.EqualTo(5));
+                });
+
+                Assert.Multiple(async () =>
+                {
+                    await Task.Delay(100);
+                    Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                    Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                });
+            });
+        }
+#endif
     }
 
     class ComplexNumber

@@ -341,9 +341,41 @@ namespace NUnit.Framework
                 throw new MultipleAssertException();
         }
 
-        #endregion
+#if ASYNC
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
+        public static void Multiple(AsyncTestDelegate testDelegate)
+        {
+            TestExecutionContext context = TestExecutionContext.CurrentContext;
+            Guard.OperationValid(context != null, "Assert.Multiple called outside of a valid TestExecutionContext");
 
-        #region Helper Methods
+            context.MultipleAssertLevel++;
+
+            try
+            {
+                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testDelegate))
+                {
+                    var result = testDelegate();
+                    region.WaitForPendingOperationsToComplete(result);
+                }
+            }
+            finally
+            {
+                context.MultipleAssertLevel--;
+            }
+
+            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
+                throw new MultipleAssertException();
+        }
+#endif
+
+#endregion
+
+#region Helper Methods
 
         private static void ReportFailure(ConstraintResult result, string message)
         {
@@ -386,6 +418,6 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.IncrementAssertCount();
         }
 
-        #endregion
+#endregion
     }
 }
