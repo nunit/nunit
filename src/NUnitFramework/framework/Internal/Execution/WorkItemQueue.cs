@@ -182,8 +182,6 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Public Methods
 
-        private Random _random = new Random();
-
         /// <summary>
         /// Enqueue a WorkItem to be processed
         /// </summary>
