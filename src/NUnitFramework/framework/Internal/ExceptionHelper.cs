@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if !NET_4_5 && !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NET45 && !NETSTANDARD1_3 && !NETSTANDARD1_6
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6
+#if NET45 || NETSTANDARD1_3 || NETSTANDARD1_6
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
 #else
             PreserveStackTrace(exception);

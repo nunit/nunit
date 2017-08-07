@@ -22,6 +22,7 @@
 //
 //
 
+#if NET20 || NET35
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -88,3 +89,4 @@ namespace System.Collections.Concurrent
 		void CopyTo (T[] array, int index);
 	}
 }
+#endif

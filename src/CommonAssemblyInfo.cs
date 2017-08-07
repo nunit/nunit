@@ -32,13 +32,13 @@ using System.Reflection;
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
 #if DEBUG
-#if NET_4_5
+#if NET45
 [assembly: AssemblyConfiguration(".NET 4.5 Debug")]
-#elif NET_4_0
+#elif NET40
 [assembly: AssemblyConfiguration(".NET 4.0 Debug")]
-#elif NET_3_5
+#elif NET35
 [assembly: AssemblyConfiguration(".NET 3.5 Debug")]
-#elif NET_2_0
+#elif NET20
 [assembly: AssemblyConfiguration(".NET 2.0 Debug")]
 #elif NETSTANDARD1_3
 [assembly: AssemblyConfiguration(".NET Standard 1.3 Debug")]
@@ -48,13 +48,13 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Debug")]
 #endif
 #else
-#if NET_4_5
+#if NET45
 [assembly: AssemblyConfiguration(".NET 4.5")]
-#elif NET_4_0
+#elif NET40
 [assembly: AssemblyConfiguration(".NET 4.0")]
-#elif NET_3_5
+#elif NET35
 [assembly: AssemblyConfiguration(".NET 3.5")]
-#elif NET_2_0
+#elif NET20
 [assembly: AssemblyConfiguration(".NET 2.0")]
 #elif NETSTANDARD1_3
 [assembly: AssemblyConfiguration(".NET Standard 1.3")]

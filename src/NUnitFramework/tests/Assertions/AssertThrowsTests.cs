@@ -51,7 +51,7 @@ namespace NUnit.Framework.Assertions
                     Throws.Exception.TypeOf<ArgumentException>());
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void ThrowsSucceedsWithLambda()
         {

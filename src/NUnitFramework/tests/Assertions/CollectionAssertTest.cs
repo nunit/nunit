@@ -31,7 +31,7 @@ using NUnit.TestUtilities.Comparers;
 using System.Data;
 #endif
 
-#if !NET_2_0
+#if !NET20
 using System.Linq;
 #endif
 
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Assertions
                                     Contains("But was:  2"));
         }
  
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AreEqual_UsingLinqQuery()
         {

@@ -10,7 +10,7 @@ namespace NUnitLite.Tests
     {
         public static int Main(string[] args)
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             return new AutoRun(Assembly.GetEntryAssembly()).Execute(args, new ColorConsoleWriter(), Console.In);
 #else
             return new AutoRun().Execute(args);

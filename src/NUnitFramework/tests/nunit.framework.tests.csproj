@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <AssemblyName>nunit.framework.tests</AssemblyName>
+    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
+    <TargetFrameworks>net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <IntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</IntermediateOutputPath>
+    <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>Properties\FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\Fakes.cs">
+      <Link>TestUtilities\Fakes.cs</Link>
+    </Compile>
+    <Compile Include="..\TestBuilder.cs">
+      <Link>TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\TestFile.cs">
+      <Link>TestUtilities\TestFile.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestImage1.jpg" />
+    <EmbeddedResource Include="TestImage2.jpg" />
+    <EmbeddedResource Include="TestText1.txt" />
+    <EmbeddedResource Include="TestText2.txt" />
+    <EmbeddedResource Include="TestListFile.txt" />
+    <EmbeddedResource Include="TestListFile2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\nunit.snk">
+      <Link>nunit.snk</Link>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
+    <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
+    <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework.csproj" />
+    <ProjectReference Include="..\slow-tests\slow-nunit-tests.csproj" />
+    <ProjectReference Include="..\testdata\nunit.testdata.csproj" />
+    <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+</Project>

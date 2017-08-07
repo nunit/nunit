@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
-#if !NETCOREAPP1_0
+#if !NETCOREAPP1_1
 using NUnit.Compatibility;
 #endif
 using NUnit.Framework.Interfaces;
@@ -34,7 +34,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
 
-#if NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_0
+#if NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_1
 using BindingFlags = NUnit.Compatibility.BindingFlags;
 #endif
 
@@ -45,7 +45,7 @@ namespace NUnit.TestUtilities
     /// </summary>
     public static class TestBuilder
     {
-#region Build Tests
+        #region Build Tests
 
         public static TestSuite MakeFixture(Type type)
         {
@@ -95,9 +95,9 @@ namespace NUnit.TestUtilities
             return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
         }
 
-#endregion
+        #endregion
 
-#region Run Tests
+        #region Run Tests
 
         public static ITestResult RunTestFixture(Type type)
         {
@@ -138,7 +138,7 @@ namespace NUnit.TestUtilities
             return RunTest(testMethod, fixture);
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_1
         public static ITestResult RunAsTestCase(Action action)
         {
             var method = action.Method;
@@ -185,18 +185,22 @@ namespace NUnit.TestUtilities
             return work.Result;
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static bool IsStaticClass(Type type)
         {
+#if NET40
+            return type.IsAbstract && type.IsSealed;
+#else
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
+#endif
         }
 
-#endregion
+        #endregion
 
-#region Nested TestDispatcher Class
+        #region Nested TestDispatcher Class
 
         /// <summary>
         /// SuperSimpleDispatcher merely executes the work item.
@@ -220,6 +224,6 @@ namespace NUnit.TestUtilities
                 throw new NotImplementedException();
             }
         }
-#endregion
+        #endregion
     }
 }

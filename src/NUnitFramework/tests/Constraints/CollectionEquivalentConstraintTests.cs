@@ -162,7 +162,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
         }
 
-#if (NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6)
+#if (NET40 || NET45 || NETSTANDARD1_3 || NETSTANDARD1_6)
         [Test]
         public void WorksWithHashSets()
         {

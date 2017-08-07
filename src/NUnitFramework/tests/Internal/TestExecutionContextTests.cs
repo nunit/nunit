@@ -998,7 +998,7 @@ namespace NUnit.Framework.Internal
 #if ASYNC
         private async Task YieldAsync()
         {
-#if NET_4_0
+#if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();
@@ -1007,7 +1007,7 @@ namespace NUnit.Framework.Internal
 
         private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
         {
-#if NET_4_0
+#if NET40
             return TaskEx.WhenAll(tasks);
 #else
             return Task.WhenAll(tasks);

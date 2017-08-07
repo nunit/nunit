@@ -239,7 +239,7 @@ namespace NUnit.Framework.Api
             return result.OuterXml;
         }
 
-#if !NET_2_0
+#if !NET20
 
         class ActionCallback : ICallbackEventHandler
         {

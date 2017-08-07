@@ -28,7 +28,7 @@ using NUnit.Framework.Constraints;
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET40
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Assertions
             Assume.That(2 + 2 == 4, "Not Equal to {0}", 4);
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AssumptionPasses_BooleanWithMessageStringFunc()
         {
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Assertions
             Assume.That(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AssumptionPasses_ActualAndConstraintWithMessageStringFunc()
         {
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Assertions
             Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("got 5"));
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void FailureThrowsInconclusiveException_BooleanWithMessageStringFunc()
         {
@@ -251,7 +251,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void FailureThrowsInconclusiveException_ActualAndConstraintWithMessageStringFunc()
         {
@@ -310,7 +310,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 4"));
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -380,13 +380,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumeThatError()
         {
-#if NET_4_5
+#if NET45
             var exception = 
 #endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if NET_4_5
+#if NET45
         Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }

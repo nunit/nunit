@@ -319,7 +319,7 @@ namespace NUnit.Framework.Internal.Execution
 
     #region ParallelScopeHelper Class
 
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
     static class ParallelScopeHelper
     {
         public static bool HasFlag(this ParallelScope scope, ParallelScope value)

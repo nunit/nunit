@@ -32,7 +32,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-#if NET_2_0
+#if NET20
 using NUnit.Compatibility;
 #endif
 using System.Threading;
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// ReaderWriterLock
         /// </summary>
-#if NET_2_0
+#if NET20
         protected ReaderWriterLock RwLock = new ReaderWriterLock();
 #else
         protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);

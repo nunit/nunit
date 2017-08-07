@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
         /// Instantiates a new instance of the <see cref="InvalidPlatformException"/> class.
         /// </summary>
         public InvalidPlatformException() : base() { }
-        
+
         /// <summary>
         /// Instantiates a new instance of the <see cref="InvalidPlatformException"/> class
         /// </summary>
@@ -55,13 +55,13 @@ namespace NUnit.Framework.Internal
         /// <param name="inner">The inner.</param>
         public InvalidPlatformException(string message, Exception inner) : base(message, inner) { }
 
-# if !NETSTANDARD_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Serialization constructor for the <see cref="InvalidPlatformException"/> class
         /// </summary>
         protected InvalidPlatformException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         { }
+#endif
     }
-# endif
 }

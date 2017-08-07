@@ -34,13 +34,13 @@ using System.Security;
                               "bee5e972a004ddd692dec8fa404ba4591e847a8cf35de21c2d3" +
                               "723bc8d775a66b594adeb967537729fe2a446b548cd57a6")]
 
-#if NET_4_5
+#if NET45
 [assembly: AssemblyTitle("NUnit Framework .NET 4.5")]
-#elif NET_4_0
+#elif NET40
 [assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
-#elif NET_3_5
+#elif NET35
 [assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
-#elif NET_2_0
+#elif NET20
 [assembly: AssemblyTitle("NUnit Framework .NET 2.0")]
 #elif NETSTANDARD1_3
 [assembly: AssemblyTitle("NUnit Framework .NET Standard 1.3")]

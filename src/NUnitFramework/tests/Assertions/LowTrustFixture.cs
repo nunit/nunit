@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,7 +101,7 @@ namespace NUnit.Framework.Assertions
 
             var strongNames = new HashSet<StrongName>();
 
-            // Grant full trust to NUnit.Framework assembly to enable use of NUnit assertions in sandboxed test code. 
+            // Grant full trust to NUnit.Framework assembly to enable use of NUnit assertions in sandboxed test code.
             strongNames.Add(GetStrongName(typeof(TestAttribute).Assembly));
             if (fullTrustAssemblies != null)
             {
@@ -241,4 +242,4 @@ namespace NUnit.Framework.Assertions
         #endregion
     }
 }
-
+#endif

@@ -32,11 +32,11 @@ using System.Runtime.CompilerServices;
                               "bee5e972a004ddd692dec8fa404ba4591e847a8cf35de21c2d3" +
                               "723bc8d775a66b594adeb967537729fe2a446b548cd57a6")]
 
-#if NET_4_5
+#if NET45
 [assembly: AssemblyTitle("NUnitLite Runner .NET 4.5")]
-#elif NET_4_0
+#elif NET40
 [assembly: AssemblyTitle("NUnitLite Runner .NET 4.0")]
-#elif NET_2_0
+#elif NET20
 [assembly: AssemblyTitle("NUnitLite Runner .NET 2.0")]
 #else
 [assembly: AssemblyTitle("NUnitLite Runner")]

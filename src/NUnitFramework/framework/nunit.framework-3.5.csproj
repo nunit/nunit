@@ -457,6 +457,5 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-    <None Include="nunit.framework-3.5.project.json" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-#if NET_4_0
+#if NET40
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 

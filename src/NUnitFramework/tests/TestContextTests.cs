@@ -341,7 +341,7 @@ namespace NUnit.Framework.Tests
 
         private async Task YieldAsync()
         {
-#if NET_4_0
+#if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();

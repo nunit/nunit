@@ -29,7 +29,7 @@ using System.Reflection;
 using System.Threading;
 using NUnit.Compatibility;
 
-#if !NET_4_0
+#if !NET40
 using System.Runtime.ExceptionServices;
 #endif
 
