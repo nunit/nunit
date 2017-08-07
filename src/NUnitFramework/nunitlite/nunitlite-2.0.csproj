@@ -11,15 +11,15 @@
     <AssemblyName>nunitlite</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\net20\</IntermediateOutputPath>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE;PARALLEL</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net20\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET20;NUNITLITE;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -27,8 +27,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;NET_2_0;NUNITLITE;PARALLEL</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\net20\</OutputPath>
+    <DefineConstants>TRACE;NET20;NUNITLITE;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -100,7 +100,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

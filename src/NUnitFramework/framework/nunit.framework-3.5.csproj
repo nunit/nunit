@@ -16,15 +16,15 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\net35\</IntermediateOutputPath>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_3_5;PARALLEL</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net35\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET35;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
@@ -33,15 +33,15 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_3_5;PARALLEL</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\net35\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET35;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
