@@ -249,6 +249,25 @@ namespace NUnit.Framework.Tests
         #region Result
 
         [Test]
+        public void TestCanAccessAssertCount()
+        {
+            var context = TestExecutionContext.CurrentContext;
+
+            // These are counted as asserts
+            Assert.That(context.AssertCount, Is.EqualTo(0));
+            Assert.AreEqual(4, 2 + 2);
+            Warn.Unless(2 + 2, Is.EqualTo(4));
+
+            // This one is counted below
+            Assert.That(context.AssertCount, Is.EqualTo(3));
+
+            // Assumptions are not counted are not counted
+            Assume.That(2 + 2, Is.EqualTo(4));
+
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(4));
+        }
+
+        [Test]
         public void TestCanAccessTestState_PassingTest()
         {
             TestStateRecordingFixture fixture = new TestStateRecordingFixture();

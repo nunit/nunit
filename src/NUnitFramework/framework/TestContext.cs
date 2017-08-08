@@ -172,9 +172,18 @@ namespace NUnit.Framework
             get { return _testExecutionContext.RandomGenerator; }
         }
 
-#endregion
+        /// <summary>
+        /// Gets the number of assertions executed
+        /// up to this point in the test.
+        /// </summary>
+        public int AssertCount
+        {
+            get { return _testExecutionContext.AssertCount; }
+        }
 
-#region Static Methods
+        #endregion
+
+        #region Static Methods
 
         /// <summary>Write the string representation of a boolean value to the current result</summary>
         public static void Write(bool value) { Out.Write(value); }
@@ -445,7 +454,8 @@ namespace NUnit.Framework
 #region Properties
 
             /// <summary>
-            /// Gets a ResultState representing the outcome of the test.
+            /// Gets a ResultState representing the outcome of the test
+            /// up to this point in its execution.
             /// </summary>
             public ResultState Outcome
             {
