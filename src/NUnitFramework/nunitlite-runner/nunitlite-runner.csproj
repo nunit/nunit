@@ -13,6 +13,10 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="nunitlite-runner-2.0.project.json" />
+    <None Remove="nunitlite-runner-3.5.project.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
