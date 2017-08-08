@@ -272,7 +272,7 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(async () =>
             {
-                await Task.Delay(1000);
+                await Task.Delay(100);
                 Assert.That(2 + 2, Is.EqualTo(4));
                 Assert.That(complex.RealPart, Is.EqualTo(5.2));
                 Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
@@ -284,12 +284,12 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(async () =>
             {
-                await Task.Delay(500);
+                await Task.Delay(100);
                 Assert.That(2 + 2, Is.EqualTo(4));
 
                 Assert.Multiple(async () =>
                 {
-                    await Task.Delay(200);
+                    await Task.Delay(100);
                     Assert.That(complex.RealPart, Is.EqualTo(5.2));
                     Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
                 });
@@ -303,7 +303,7 @@ namespace NUnit.TestData.AssertMultipleData
             {
                 Assert.Multiple(async () =>
                 {
-                    await Task.Delay(200);
+                    await Task.Delay(100);
                     Assert.That(2 + 2, Is.EqualTo(4));
                 });
 
