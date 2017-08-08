@@ -142,6 +142,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
+        [TestCaseSource("NonExistingSource")]
+        public void MethodWithNonExistingSource(object param)
+        {
+        }
+
         static IEnumerable exception_source
         {
             get
