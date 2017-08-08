@@ -463,6 +463,15 @@ namespace NUnit.Framework
             }
 
             /// <summary>
+            /// Gets a list of the assertion results generated
+            /// up to this point in the test.
+            /// </summary>
+            public IEnumerable<AssertionResult> Assertions
+            {
+                get { return _result.AssertionResults; }
+            }
+
+            /// <summary>
             /// Gets the message associated with a test
             /// failure or with not running the test
             /// </summary>
