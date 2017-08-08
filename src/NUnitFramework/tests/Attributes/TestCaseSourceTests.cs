@@ -304,6 +304,15 @@ namespace NUnit.Framework.Attributes
         {
         }
 
+        [Test]
+        public void TestMethodIsNotRunnableWhenSourceDoesNotExist()
+        {
+            TestSuite suiteToTest = TestBuilder.MakeParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithNonExistingSource");
+            
+            Assert.That(suiteToTest.Tests.Count == 1);
+            Assert.AreEqual(RunState.NotRunnable, suiteToTest.Tests[0].RunState);
+        }
+
         static object[] testCases =
         {
             new TestCaseData(
