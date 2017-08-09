@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 #if ASYNC
 using System.Threading.Tasks;
 #endif
@@ -125,35 +126,35 @@ namespace NUnit.Framework.Tests
 
     #endregion
 
-    #region Test
+        #region Test
 
-    #region Name
-
-    [Test]
-        public void ConstructorCanAccessFixtureName()
-        {
-            Assert.That(_name, Is.EqualTo("TestContextTests"));
-        }
+        #region Name
 
         [Test]
-        public void TestCanAccessItsOwnName()
-        {
-            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
-        }
+            public void ConstructorCanAccessFixtureName()
+            {
+                Assert.That(_name, Is.EqualTo("TestContextTests"));
+            }
 
-        [Test]
-        public void SetUpCanAccessTestName()
-        {
-            Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
-        }
+            [Test]
+            public void TestCanAccessItsOwnName()
+            {
+                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
+            }
 
-        [TestCase(5)]
-        public void TestCaseCanAccessItsOwnName(int x)
-        {
-            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
-        }
+            [Test]
+            public void SetUpCanAccessTestName()
+            {
+                Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
+            }
 
-        #endregion
+            [TestCase(5)]
+            public void TestCaseCanAccessItsOwnName(int x)
+            {
+                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
+            }
+
+            #endregion
 
         #region FullName
 
@@ -247,6 +248,41 @@ namespace NUnit.Framework.Tests
         #endregion
 
         #region Result
+
+        [Test]
+        public void TestCanAccessAssertCount()
+        {
+            var context = TestExecutionContext.CurrentContext;
+
+            // These are counted as asserts
+            Assert.That(context.AssertCount, Is.EqualTo(0));
+            Assert.AreEqual(4, 2 + 2);
+            Warn.Unless(2 + 2, Is.EqualTo(4));
+
+            // This one is counted below
+            Assert.That(context.AssertCount, Is.EqualTo(3));
+
+            // Assumptions are not counted are not counted
+            Assume.That(2 + 2, Is.EqualTo(4));
+
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(4));
+        }
+
+        [TestCase("ThreeAsserts_TwoFailed", AssertionStatus.Failed, AssertionStatus.Failed)]
+        [TestCase("WarningPlusFailedAssert", AssertionStatus.Warning, AssertionStatus.Failed)]
+        public void TestCanAccessAssertionResults(string testName, params AssertionStatus[] expectedStatus)
+        {
+            AssertionResultFixture fixture = new AssertionResultFixture();
+            TestBuilder.RunTestCase(fixture, testName);
+            var assertions = fixture.Assertions;
+
+            Assert.That(assertions.Select((o) => o.Status),
+                Is.EqualTo(expectedStatus));
+            Assert.That(assertions.Select((o) => o.Message),
+                Has.All.Contains("Expected: 5"));
+            Assert.That(assertions.Select((o) => o.StackTrace),
+                Has.All.Contains(testName));
+        }
 
         [Test]
         public void TestCanAccessTestState_PassingTest()
