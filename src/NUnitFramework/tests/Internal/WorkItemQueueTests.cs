@@ -109,51 +109,89 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void EnqueueBeforeDequeue()
         {
-            EnqueueWorkItems();
+            string[] names = new[] { "Test1", "Test2", "Test3" };
+
+            EnqueueWorkItems(names);
             _queue.Start();
-            VerifyQueueContents();
+            VerifyQueueContents(names);
         }
 
         [Test]
         public void DequeueBeforeEnqueue()
         {
             _queue.Start();
-            new Thread(new ThreadStart(EnqueueWorkItemsAfterWait)).Start();
-            VerifyQueueContents();
+            var names = new string[] { "Test1", "Test2", "Test3" };
+
+            new Thread(new ThreadStart(() => 
+            {
+                Thread.Sleep(10);
+                EnqueueWorkItems(names);
+            })).Start();
+
+            VerifyQueueContents(names);
         }
 
         [Test]
         public void EnqueueAndDequeueWhilePaused()
         {
-            EnqueueWorkItems();
-            new Thread(new ThreadStart(ReleasePauseAfterWait)).Start();
-            VerifyQueueContents();
+            string[] names = new[] { "Test1", "Test2", "Test3" };
+            EnqueueWorkItems(names);
+
+            new Thread(new ThreadStart(() =>
+            {
+                Thread.Sleep(10);
+                _queue.Start();
+            })).Start();
+
+            VerifyQueueContents(names);
         }
 
-        private void EnqueueWorkItems()
-        {
-            _queue.Enqueue(Fakes.GetWorkItem(this, "Test1"));
-            _queue.Enqueue(Fakes.GetWorkItem(this, "Test2"));
-            _queue.Enqueue(Fakes.GetWorkItem(this, "Test3"));
-        }
+        const int HIGH_PRIORITY = 0;
+        const int NORMAL_PRIORITY = 1;
 
-        private void EnqueueWorkItemsAfterWait()
+        [Test]
+        public void PriorityIsHonored()
         {
-            Thread.Sleep(10);
-            EnqueueWorkItems();
-        }
-
-        private void ReleasePauseAfterWait()
-        {
-            Thread.Sleep(10);
+            EnqueueWorkItem("Test1", NORMAL_PRIORITY);
+            EnqueueWorkItem("Test2", HIGH_PRIORITY);
+            EnqueueWorkItem("Test3", NORMAL_PRIORITY);
             _queue.Start();
+            VerifyQueueContents("Test2", "Test1", "Test3");
         }
 
-        private void VerifyQueueContents()
+        [Test]
+        public void OneTimeTearDownGetsPriority()
         {
-            Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo("Test1"));
-            Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo("Test2"));
-            Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo("Test3"));
+            var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
+            var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty) as CompositeWorkItem;
+            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem);
+            EnqueueWorkItem("Test1");
+            _queue.Enqueue(tearDown);
+            EnqueueWorkItem("Test2");
+            _queue.Start();
+            VerifyQueueContents("WorkItemQueueTests+MyFixture", "Test1", "Test2");
+        }
+
+        private void EnqueueWorkItems(params string[] names)
+        {
+            foreach (string name in names)
+                EnqueueWorkItem(name);
+        }
+
+        private void EnqueueWorkItem(string name)
+        {
+            _queue.Enqueue(Fakes.GetWorkItem(this, name));
+        }
+
+        private void EnqueueWorkItem(string name, int priority)
+        {
+            _queue.Enqueue(Fakes.GetWorkItem(this, name), priority);
+        }
+
+        private void VerifyQueueContents(params string[] names)
+        {
+            foreach (string name in names)
+                Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo(name));
         }
 
         private void Test1()
@@ -165,6 +203,10 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         private void Test3()
+        {
+        }
+
+        private class MyFixture
         {
         }
     }
