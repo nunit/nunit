@@ -1,7 +1,7 @@
 language: csharp
 sudo: false
 mono:
-  - 4.8.1
+  - 4.6.2 # in most common distros
   - latest
 os:
   - linux
@@ -11,7 +11,6 @@ matrix:
     - os: osx
       mono: latest
   allow_failures:
-    - os: osx
     - mono: latest
   fast_finish: true
 script:
