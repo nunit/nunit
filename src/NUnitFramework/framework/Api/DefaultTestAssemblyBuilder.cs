@@ -111,7 +111,7 @@ namespace NUnit.Framework.Api
             catch (Exception ex)
             {
                 testAssembly = new TestAssembly(assemblyName);
-                testAssembly.MakeInvalid(ExceptionHelper.BuildFriendlyMessage(ex));
+                testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
             return testAssembly;
@@ -174,7 +174,7 @@ namespace NUnit.Framework.Api
             catch (Exception ex)
             {
                 testAssembly = new TestAssembly(assemblyPath);
-                testAssembly.MakeInvalid(ExceptionHelper.BuildFriendlyMessage(ex));
+                testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
             return testAssembly;
