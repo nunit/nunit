@@ -7,6 +7,6 @@ matrix:
     - os: linux
       mono: latest
     - os: osx
-      mono: 4.6.2
+      mono: latest
 script:
   - ./build.sh --target "Travis"
