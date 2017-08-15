@@ -46,16 +46,13 @@ namespace NUnit.Framework.Constraints
             bool isSuccess)
             : base(constraint, actual, isSuccess)
         {
-            if (tallyResult == null)
-            {
-                throw new System.ArgumentNullException("Tally was null.");
-            }
+            Guard.ArgumentNotNull(tallyResult, "tallyResult");
 
             _tallyResult = tallyResult;
         }
 
         /// <summary>Write the custom failure message for this object's <see cref="CollectionEquivalentConstraint"/>.</summary>
-        /// <param name="writer"></param>
+        /// <param name="writer">The object to write the failure message to.</param>
         public override void WriteMessageTo(MessageWriter writer)
         {
             //Write the expected/actual message first.

@@ -73,6 +73,20 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void TestTwoExtraValues()
+        {
+            List<object> actualList = new List<object>() { "one", "two", "three", "four" };
+            ConstraintResult cr = _constraint.ApplyTo(actualList);
+            cr.WriteMessageTo(_writer);
+
+            string expectedMsg =
+                "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
+                "  But was:  < \"one\", \"two\", \"three\", \"four\" >" + Environment.NewLine +
+                "  Extra (2): < \"three\", \"four\" >" + Environment.NewLine;
+            Assert.AreEqual(expectedMsg, _writer.ToString());
+        }
+
+        [Test]
         public void TestOneExtraValue()
         {
             List<object> actualList = new List<object>() { "three", "one", "two" };
