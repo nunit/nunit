@@ -61,9 +61,23 @@ namespace NUnit.Framework.Constraints
         private readonly NUnitEqualityComparer comparer;
 
         /// <summary>
-        /// The result of the comparision between two collections.
+        /// The result of the comparision between the two collections.
         /// </summary>
-        public CollectionTallyResult Result { get; private set; } = new CollectionTallyResult();
+        public CollectionTallyResult Result
+        {
+            get
+            {
+                return new CollectionTallyResult()
+                {
+                    MissingItems = new List<object>(_missingItems),
+                    ExtraItems = new List<object>(_extraItems)
+                };
+            }
+        }
+
+        private List<object> _missingItems = new List<object>();
+
+        private List<object> _extraItems = new List<object>();
 
         /// <summary>
         /// Construct a CollectionTally object from a comparer and a collection
@@ -80,9 +94,8 @@ namespace NUnit.Framework.Constraints
 
             foreach (object o in c)
             {
-                Result.MissingItems.Add(o);
+                _missingItems.Add(o);
             }
-                
         }
 
         private bool ItemsEqual(object expected, object actual)
@@ -97,14 +110,14 @@ namespace NUnit.Framework.Constraints
         /// <param name="o">The object to remove</param>
         public void TryRemove(object o)
         {
-            for (int index = 0; index < Result.MissingItems.Count; index++)
-                if (ItemsEqual(Result.MissingItems[index], o))
+            for (int index = 0; index < _missingItems.Count; index++)
+                if (ItemsEqual(_missingItems[index], o))
                 {
-                    Result.MissingItems.RemoveAt(index);
+                    _missingItems.RemoveAt(index);
                     return;
                 }
 
-            Result.ExtraItems.Add(o);
+            _extraItems.Add(o);
         }
 
         /// <summary>
