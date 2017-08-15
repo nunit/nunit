@@ -89,22 +89,22 @@ namespace NUnit.Framework.Constraints
             //Write the expected/actual message first.
             base.WriteMessageTo(writer);
             
-            if (_tally.MissingItems.Count > 0)
+            if (_tally.Result.MissingItems.Count > 0)
             {
-                int missingItemsCount = _tally.MissingItems.Count;
+                int missingItemsCount = _tally.Result.MissingItems.Count;
 
                 string missingStr = $"Missing ({missingItemsCount}): ";
-                missingStr += MsgUtils.FormatCollection(_tally.MissingItems, 0, MaxDifferingElemsToWrite);
+                missingStr += MsgUtils.FormatCollection(_tally.Result.MissingItems, 0, MaxDifferingElemsToWrite);
 
                 writer.WriteMessageLine(missingStr);
             }
 
-            if (_tally.ExtraItems.Count > 0)
+            if (_tally.Result.ExtraItems.Count > 0)
             {
-                int extraItemsCount = _tally.ExtraItems.Count;
+                int extraItemsCount = _tally.Result.ExtraItems.Count;
 
                 string extraStr = $"Extra ({extraItemsCount}): ";
-                extraStr += MsgUtils.FormatCollection(_tally.ExtraItems, 0, MaxDifferingElemsToWrite);
+                extraStr += MsgUtils.FormatCollection(_tally.Result.ExtraItems, 0, MaxDifferingElemsToWrite);
 
                 writer.WriteMessageLine(extraStr);
             }

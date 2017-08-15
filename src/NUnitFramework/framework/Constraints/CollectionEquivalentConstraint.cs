@@ -75,8 +75,9 @@ namespace NUnit.Framework.Constraints
         {
             //Store the tally so the collection is only iterated over once.
             _lastPerformedTally = Tally(_expected);
+            _lastPerformedTally.TryRemove(actual);
 
-            return _lastPerformedTally.TryRemove(actual) && _lastPerformedTally.MissingItems.Count == 0;
+            return ((_lastPerformedTally.Result.ExtraItems.Count == 0) && (_lastPerformedTally.Result.MissingItems.Count == 0));
         }
 
         /// <summary>

@@ -33,30 +33,37 @@ namespace NUnit.Framework.Constraints
     public class CollectionTally
     {
         /// <summary>
-        /// Internal list used to keep track of items not yet tallied.
+        /// Provides the result of a <see cref="CollectionTally"/>.
         /// </summary>
-        private readonly List<object> _items = new List<object>();
-
-        /// <summary>
-        /// Items attempted to be tallied, but were not found in the original
-        /// <see cref="IEnumerable"/> provided at construction.
-        /// </summary>
-        public List<object> ExtraItems
+        public class CollectionTallyResult
         {
-            get;
-            private set;
-        } = new List<object>();
+            /// <summary>
+            /// Items that were not in the expected collection.
+            /// </summary>
+            public List<object> ExtraItems { get; set; }
 
-        /// <summary>
-        /// Provides the current list of items that have not been removed
-        /// from the tally.
-        /// </summary>
-        public List<object> MissingItems
-        {
-            get { return _items; }
+            /// <summary>
+            /// Items that were not accounted for in the expected collection.
+            /// </summary>
+            public List<object> MissingItems { get; set; }
+
+            /// <summary>
+            /// Construct a <see cref="CollectionTallyResult"/> to describe the comparison
+            /// results from a <see cref="CollectionTally"/>
+            /// </summary>
+            public CollectionTallyResult()
+            {
+                ExtraItems = new List<object>();
+                MissingItems = new List<object>();
+            }
         }
 
         private readonly NUnitEqualityComparer comparer;
+
+        /// <summary>
+        /// The result of the comparision between two collections.
+        /// </summary>
+        public CollectionTallyResult Result { get; private set; } = new CollectionTallyResult();
 
         /// <summary>
         /// Construct a CollectionTally object from a comparer and a collection
@@ -72,7 +79,10 @@ namespace NUnit.Framework.Constraints
             this.comparer = comparer;
 
             foreach (object o in c)
-                _items.Add(o);
+            {
+                Result.MissingItems.Add(o);
+            }
+                
         }
 
         private bool ItemsEqual(object expected, object actual)
@@ -85,39 +95,26 @@ namespace NUnit.Framework.Constraints
         /// Try to remove an object from the tally
         /// </summary>
         /// <param name="o">The object to remove</param>
-        /// <returns>True if successful, false if the object was not found</returns>
-        public bool TryRemove(object o)
+        public void TryRemove(object o)
         {
-            for (int index = 0; index < _items.Count; index++)
-                if (ItemsEqual(_items[index], o))
+            for (int index = 0; index < Result.MissingItems.Count; index++)
+                if (ItemsEqual(Result.MissingItems[index], o))
                 {
-                    _items.RemoveAt(index);
-                    return true;
+                    Result.MissingItems.RemoveAt(index);
+                    return;
                 }
 
-            ExtraItems.Add(o);
-
-            return false;
+            Result.ExtraItems.Add(o);
         }
 
         /// <summary>
         /// Try to remove a set of objects from the tally
         /// </summary>
         /// <param name="c">The objects to remove</param>
-        /// <returns>True if successful, false if any object was not found</returns>
-        public bool TryRemove(IEnumerable c)
+        public void TryRemove(IEnumerable c)
         {
-            bool allItemsWereFound = true;
-
             foreach (object o in c)
-            { 
-                if (!TryRemove(o))
-                {
-                    allItemsWereFound = false;
-                }
-            }
-
-            return allItemsWereFound;
+                TryRemove(o);
         }
     }
 }
