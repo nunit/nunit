@@ -24,87 +24,59 @@
 
 namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// Provides a <see cref="ConstraintResult"/> for the <see cref="CollectionEquivalentConstraint"/>.
-    /// </summary>
-    /// <remarks>
-    /// Assumes that a <see cref="CollectionTally"/> has been created and used to compare the expected
-    /// equivalent collections.
-    /// </remarks>
+    /// <summary>Provides a <see cref="ConstraintResult"/> for the <see cref="CollectionEquivalentConstraint"/>.</summary>
     public class CollectionEquivalentConstraintResult : ConstraintResult
     {
-        /// <summary>
-        /// Preprocessed <see cref="CollectionTally"/> of the collections to compare for equivalence.
-        /// </summary>
-        private CollectionTally _tally;
+        /// <summary>Result of a <see cref="CollectionTally"/> of the collections to compare for equivalence.</summary>
+        private CollectionTally.CollectionTallyResult _tallyResult;
 
-        /// <summary>
-        /// Maximum amount of elements to write to the <see cref="MessageWriter"/> if there are
-        /// extra/missing elements from the collection.
-        /// </summary>
+        /// <summary>Maximum amount of elements to write to the <see cref="MessageWriter"/> if there are
+        /// extra/missing elements from the collection.</summary>
         private const int MaxDifferingElemsToWrite = 10;
         
-        /// <summary>
-        /// Construct a <see cref="CollectionEquivalentConstraintResult"/> with a <see cref="CollectionTally"/>
-        /// already applied to the actual collection.
-        /// </summary>
-        /// <param name="Constraint">
-        /// Source <see cref="CollectionEquivalentConstraint"/>.
-        /// </param>
-        /// <param name="Tally">
-        /// Preprocessed <see cref="CollectionTally"/> for the collections to compare.
-        /// </param>
-        /// <param name="actual">
-        /// Collection to compare to the expected one.
-        /// </param>
-        /// <param name="isSuccess">
-        /// Whether or not the <see cref="CollectionEquivalentConstraint"/> succeeded.
-        /// </param>
-        /// <remarks>
-        /// The already processed <see cref="CollectionTally"/> is provided to reduce
-        /// unnecessary iterations over the collections to determine equivalence.
-        /// </remarks>
+        /// <summary>Construct a <see cref="CollectionEquivalentConstraintResult"/> using a <see cref="CollectionTally.CollectionTallyResult"/>.</summary>
+        /// <param name="constraint">Source <see cref="CollectionEquivalentConstraint"/>.</param>
+        /// <param name="tallyResult">Result of the collection comparison.</param>
+        /// <param name="actual">Actual collection to compare.</param>
+        /// <param name="isSuccess">Whether or not the <see cref="CollectionEquivalentConstraint"/> succeeded.</param>
         public CollectionEquivalentConstraintResult(
-            CollectionEquivalentConstraint Constraint,
-            CollectionTally Tally,
+            CollectionEquivalentConstraint constraint,
+            CollectionTally.CollectionTallyResult tallyResult,
             object actual,
             bool isSuccess)
-            : base(Constraint, actual, isSuccess)
+            : base(constraint, actual, isSuccess)
         {
-            if (Tally == null)
+            if (tallyResult == null)
             {
                 throw new System.ArgumentNullException("Tally was null.");
             }
 
-            _tally = Tally;
+            _tallyResult = tallyResult;
         }
 
-        /// <summary>
-        /// Write the custom failure message for this object's 
-        /// <see cref="CollectionEquivalentConstraint"/>.
-        /// </summary>
+        /// <summary>Write the custom failure message for this object's <see cref="CollectionEquivalentConstraint"/>.</summary>
         /// <param name="writer"></param>
         public override void WriteMessageTo(MessageWriter writer)
         {
             //Write the expected/actual message first.
             base.WriteMessageTo(writer);
             
-            if (_tally.Result.MissingItems.Count > 0)
+            if (_tallyResult.MissingItems.Count > 0)
             {
-                int missingItemsCount = _tally.Result.MissingItems.Count;
+                int missingItemsCount = _tallyResult.MissingItems.Count;
 
                 string missingStr = $"Missing ({missingItemsCount}): ";
-                missingStr += MsgUtils.FormatCollection(_tally.Result.MissingItems, 0, MaxDifferingElemsToWrite);
+                missingStr += MsgUtils.FormatCollection(_tallyResult.MissingItems, 0, MaxDifferingElemsToWrite);
 
                 writer.WriteMessageLine(missingStr);
             }
 
-            if (_tally.Result.ExtraItems.Count > 0)
+            if (_tallyResult.ExtraItems.Count > 0)
             {
-                int extraItemsCount = _tally.Result.ExtraItems.Count;
+                int extraItemsCount = _tallyResult.ExtraItems.Count;
 
                 string extraStr = $"Extra ({extraItemsCount}): ";
-                extraStr += MsgUtils.FormatCollection(_tally.Result.ExtraItems, 0, MaxDifferingElemsToWrite);
+                extraStr += MsgUtils.FormatCollection(_tallyResult.ExtraItems, 0, MaxDifferingElemsToWrite);
 
                 writer.WriteMessageLine(extraStr);
             }

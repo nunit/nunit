@@ -26,31 +26,20 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// CollectionTally counts (tallies) the number of
-    /// occurrences of each object in one or more enumerations.
-    /// </summary>
+    /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences 
+    /// of each object in one or more enumerations.</summary>
     public class CollectionTally
     {
-        /// <summary>
-        /// Provides the result of a <see cref="CollectionTally"/>.
-        /// </summary>
+        /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
         public class CollectionTallyResult
         {
-            /// <summary>
-            /// Items that were not in the expected collection.
-            /// </summary>
+            /// <summary>Items that were not in the expected collection.</summary>
             public List<object> ExtraItems { get; set; }
 
-            /// <summary>
-            /// Items that were not accounted for in the expected collection.
-            /// </summary>
+            /// <summary>Items that were not accounted for in the expected collection.</summary>
             public List<object> MissingItems { get; set; }
 
-            /// <summary>
-            /// Construct a <see cref="CollectionTallyResult"/> to describe the comparison
-            /// results from a <see cref="CollectionTally"/>
-            /// </summary>
+            /// <summary>Constructs an empty <see cref="CollectionTallyResult"/>.</summary>
             public CollectionTallyResult()
             {
                 ExtraItems = new List<object>();
@@ -60,9 +49,7 @@ namespace NUnit.Framework.Constraints
 
         private readonly NUnitEqualityComparer comparer;
 
-        /// <summary>
-        /// The result of the comparision between the two collections.
-        /// </summary>
+        /// <summary>The result of the comparision between the two collections.</summary>
         public CollectionTallyResult Result
         {
             get
@@ -79,23 +66,15 @@ namespace NUnit.Framework.Constraints
 
         private List<object> _extraItems = new List<object>();
 
-        /// <summary>
-        /// Construct a CollectionTally object from a comparer and a collection
-        /// </summary>
-        /// <param name="comparer">
-        /// The comparer to use for equality.
-        /// </param>
-        /// <param name="c">
-        /// The expected collection to compare against.
-        /// </param>
+        /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
+        /// <param name="comparer">The comparer to use for equality.</param>
+        /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
             this.comparer = comparer;
 
             foreach (object o in c)
-            {
                 _missingItems.Add(o);
-            }
         }
 
         private bool ItemsEqual(object expected, object actual)
@@ -104,10 +83,8 @@ namespace NUnit.Framework.Constraints
             return comparer.AreEqual(expected, actual, ref tolerance);
         }
 
-        /// <summary>
-        /// Try to remove an object from the tally
-        /// </summary>
-        /// <param name="o">The object to remove</param>
+        /// <summary>Try to remove an object from the tally.</summary>
+        /// <param name="o">The object to remove.</param>
         public void TryRemove(object o)
         {
             for (int index = 0; index < _missingItems.Count; index++)
@@ -120,10 +97,8 @@ namespace NUnit.Framework.Constraints
             _extraItems.Add(o);
         }
 
-        /// <summary>
-        /// Try to remove a set of objects from the tally
-        /// </summary>
-        /// <param name="c">The objects to remove</param>
+        /// <summary>Try to remove a set of objects from the tally.</summary>
+        /// <param name="c">The objects to remove.</param>
         public void TryRemove(IEnumerable c)
         {
             foreach (object o in c)

@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
             bool matchesResult = Matches(enumerable);
 
             return new CollectionEquivalentConstraintResult(
-                this, _lastPerformedTally, actual, matchesResult);
+                this, _lastPerformedTally.Result, actual, matchesResult);
         }
 
         /// <summary>
