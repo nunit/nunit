@@ -31,8 +31,7 @@ namespace NUnit.Framework.Attributes
         {
             var testSuite = TestBuilder.MakeFixture(candidateTypes);
 
-            var work = TestBuilder.PrepareWorkItem(testSuite, null) 
-                as CompositeWorkItem;
+            var work = TestBuilder.PrepareWorkItem(testSuite, null) as CompositeWorkItem;
 
             var fixtureWorkItems = 
                 ((work.Children[0] as CompositeWorkItem)
@@ -42,13 +41,17 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(candidateTypes.Count, fixtureWorkItems.Count);
             for (var i = 1; i < fixtureWorkItems.Count; i++)
             {
-                var previousTestOrder = int.Parse(fixtureWorkItems[i - 1]
-                    .Test.Properties.Get(PropertyNames.Order).ToString());
-                var currentTestOrder = int.Parse(fixtureWorkItems[i]
-                    .Test.Properties.Get(PropertyNames.Order).ToString());
+                var previousTestOrder = GetOrderAttributeValue(fixtureWorkItems[i - 1]);
+                var currentTestOrder = GetOrderAttributeValue(fixtureWorkItems[i]);
 
                 Assert.IsTrue(previousTestOrder < currentTestOrder);
             }
+        }
+
+        private static int GetOrderAttributeValue(WorkItem item)
+        {
+            var order = item.Test.Properties.Get(PropertyNames.Order);
+            return int.Parse(order.ToString());
         }
 
         private static readonly object[] Cases =

@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace NUnit.TestData
 {
     [TestFixture]
-    [Order(1)]
+    [Order(3)]
     public class TestCaseOrderAttributeFixture
     {
         [Test]
@@ -44,7 +44,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [Order(2)]
+    [Order(1)]
     public class AnotherTestCaseOrderAttributeFixture
     {
         [Test]
@@ -55,7 +55,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [Order(3)]
+    [Order(2)]
     public class ThirdTestCaseOrderAttributeFixture
     {
         [Test]
