@@ -33,16 +33,12 @@ namespace NUnit.Framework.Constraints
     {
         private readonly IEnumerable _expected;
 
-        /// <summary>
-        /// The <see cref="CollectionTally"/> of the last performed collection equivalence
-        /// comparison.
-        /// </summary>
-        private CollectionTally _lastPerformedTally;
+        /// <summary>The result of the <see cref="CollectionTally"/> from the collections
+        /// under comparison.</summary>
+        private CollectionTally.CollectionTallyResult _tallyResult;
 
-        /// <summary>
-        /// Construct a CollectionEquivalentConstraint
-        /// </summary>
-        /// <param name="expected"></param>
+        /// <summary>Construct a CollectionEquivalentConstraint</summary>
+        /// <param name="expected">Expected collection.</param>
         public CollectionEquivalentConstraint(IEnumerable expected)
             : base(expected)
         {
@@ -73,11 +69,14 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            //Store the tally so the collection is only iterated over once.
-            _lastPerformedTally = Tally(_expected);
-            _lastPerformedTally.TryRemove(actual);
+            CollectionTally ct = Tally(_expected);
+            ct.TryRemove(actual);
 
-            return ((_lastPerformedTally.Result.ExtraItems.Count == 0) && (_lastPerformedTally.Result.MissingItems.Count == 0));
+            //Store the CollectionTallyResult so the comparison between the two collections
+            //is only performed once.
+            _tallyResult = ct.Result;
+
+            return ((_tallyResult.ExtraItems.Count == 0) && (_tallyResult.MissingItems.Count == 0));
         }
 
         /// <summary>
@@ -103,7 +102,7 @@ namespace NUnit.Framework.Constraints
             bool matchesResult = Matches(enumerable);
 
             return new CollectionEquivalentConstraintResult(
-                this, _lastPerformedTally.Result, actual, matchesResult);
+                this, _tallyResult, actual, matchesResult);
         }
 
         /// <summary>

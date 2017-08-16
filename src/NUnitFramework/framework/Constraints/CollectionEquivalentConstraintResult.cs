@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>Write the custom failure message for this object's <see cref="CollectionEquivalentConstraint"/>.</summary>
-        /// <param name="writer">The object to write the failure message to.</param>
+        /// <param name="writer">The <see cref="MessageWriter"/> to write the failure message to.</param>
         public override void WriteMessageTo(MessageWriter writer)
         {
             //Write the expected/actual message first.
