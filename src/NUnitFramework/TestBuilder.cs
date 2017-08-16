@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
@@ -57,6 +58,28 @@ namespace NUnit.TestUtilities
             TestSuite suite = MakeFixture(fixture.GetType());
             suite.Fixture = fixture;
             return suite;
+        }
+
+        public static TestSuite MakeFixture(List<Type> types)
+        {
+            // following the pattern found in DefaultTestAssemblyBuilder
+            var fixtures = new List<Test>();
+            var defaultSuiteBuilder = new DefaultSuiteBuilder();
+            foreach (var type in types)
+            {
+                var typeInfo = new TypeWrapper(type);
+                var test = defaultSuiteBuilder.BuildFrom(typeInfo);
+                fixtures.Add(test);
+            }
+
+            var assembly = AssemblyHelper.Load("nunit.testdata");
+            var assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
+            TestSuite testSuite = new TestAssembly(assembly, assemblyPath);
+
+            var treeBuilder = new NamespaceTreeBuilder(testSuite);
+            treeBuilder.Add(fixtures);
+
+            return treeBuilder.RootSuite;
         }
 
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)

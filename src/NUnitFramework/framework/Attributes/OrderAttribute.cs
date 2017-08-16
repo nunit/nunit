@@ -30,7 +30,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Defines the order that the test will run in
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class OrderAttribute : NUnitAttribute, IApplyToTest
     {
           /// <summary>
