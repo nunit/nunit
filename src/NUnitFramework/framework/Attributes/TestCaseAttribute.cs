@@ -381,7 +381,7 @@ namespace NUnit.Framework
 #endif
                 bool convert = false;
 
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) ||
+                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
                     targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
                 {
                     convert = arg is int;
