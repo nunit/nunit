@@ -90,11 +90,13 @@
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Compatibility\ReflectionExtensionsTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintResultTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraintTests.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
+    <Compile Include="Internal\CollectionTallyTests.cs" />
     <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />

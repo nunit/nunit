@@ -87,6 +87,7 @@
     <Compile Include="Compatibility\System.Threading\LazyThreadSafetyMode.cs" />
     <Compile Include="Compatibility\System.Threading\SpinWait.cs" />
     <Compile Include="Compatibility\System\Lazy.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintResult.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\Comparers\ArraysComparer.cs" />
     <Compile Include="Constraints\Comparers\CharsComparer.cs" />

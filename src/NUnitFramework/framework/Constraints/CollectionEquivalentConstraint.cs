@@ -33,10 +33,12 @@ namespace NUnit.Framework.Constraints
     {
         private readonly IEnumerable _expected;
 
-        /// <summary>
-        /// Construct a CollectionEquivalentConstraint
-        /// </summary>
-        /// <param name="expected"></param>
+        /// <summary>The result of the <see cref="CollectionTally"/> from the collections
+        /// under comparison.</summary>
+        private CollectionTally.CollectionTallyResult _tallyResult;
+
+        /// <summary>Construct a CollectionEquivalentConstraint</summary>
+        /// <param name="expected">Expected collection.</param>
         public CollectionEquivalentConstraint(IEnumerable expected)
             : base(expected)
         {
@@ -67,13 +69,40 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            // This is just an optimization
-            if (_expected is ICollection && actual is ICollection)
-                if (((ICollection)actual).Count != ((ICollection)_expected).Count)
-                    return false;
+            CollectionTally ct = Tally(_expected);
+            ct.TryRemove(actual);
 
-            CollectionTally tally = Tally(_expected);
-            return tally.TryRemove(actual) && tally.Count == 0;
+            //Store the CollectionTallyResult so the comparison between the two collections
+            //is only performed once.
+            _tallyResult = ct.Result;
+
+            return ((_tallyResult.ExtraItems.Count == 0) && (_tallyResult.MissingItems.Count == 0));
+        }
+
+        /// <summary>
+        /// Test whether the collection is equivalent to the expected.
+        /// </summary>
+        /// <typeparam name="TActual">
+        /// Actual collection type.
+        /// </typeparam>
+        /// <param name="actual">
+        /// Actual collection to compare.
+        /// </param>
+        /// <returns>
+        /// A <see cref="CollectionEquivalentConstraintResult"/> indicating whether or not
+        /// the two collections are equivalent.
+        /// </returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            // TODO: Use an error result if actual is not IEnumerable
+            IEnumerable enumerable = actual as IEnumerable;
+            if (enumerable == null)
+                throw new ArgumentException("The actual value must be an IEnumerable", "actual");
+
+            bool matchesResult = Matches(enumerable);
+
+            return new CollectionEquivalentConstraintResult(
+                this, _tallyResult, actual, matchesResult);
         }
 
         /// <summary>
