@@ -114,6 +114,7 @@
     <Compile Include="Internal\Filters\TestFilterXmlTests.cs" />
     <Compile Include="Internal\Filters\TestNameFilterTests.cs" />
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
+    <Compile Include="Internal\NamespaceTreeBuilderTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\Results\TestAttachmentTests.cs" />

@@ -93,14 +93,17 @@ namespace NUnit.Framework.Internal
         /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class with no parent namespace
         /// as a 'virtual assembly' into which all it's sibling fixtures are inserted.
         /// </summary>
-        [NUnit.Framework.Test]
-        public void AssemblySetUpFixtureReplacesAssemblyNodeInTree()
+        [Test]
+        public void AssemblySetUpFixtureFollowsAssemblyNodeInTree()
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
-            var setupFixture = builder.Build(testAssembly, options) as SetUpFixture;
-            Assert.IsNotNull(setupFixture);
+            var rootSuite = builder.Build(testAssembly, options);
+            Assert.That(rootSuite, Is.TypeOf<TestAssembly>());
+            var setupFixture = rootSuite.Tests[0];
+            Assert.That(setupFixture, Is.TypeOf<SetUpFixture>());
 
-            var testFixture = TestFinder.Find("SomeFixture", setupFixture, false);
+            var testFixture = TestFinder.Find("SomeFixture", (SetUpFixture)setupFixture, false);
+            Assert.NotNull(testFixture);
             Assert.AreEqual(1, testFixture.Tests.Count);
         }
 
