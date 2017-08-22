@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETSTANDARD1_3
+
 using System;
 using System.Threading;
 using System.Collections.Generic;
@@ -74,6 +76,7 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().EqualTo(10).After(500).MilliSeconds;
         }
     }
+
 
     public class AfterTest_PropertyTest : SyntaxTest
     {
@@ -225,3 +228,5 @@ namespace NUnit.Framework.Syntax
         }
     }
 }
+
+#endif

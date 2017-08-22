@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if (NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6)
+#if (NET_4_0 || NET_4_5 || NETSTANDARD1_6)
 using System;
 using System.Threading.Tasks;
 
