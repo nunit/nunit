@@ -944,7 +944,6 @@ namespace NUnit.Framework.Constraints
 #endif
 
         #region InRange
-
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls 
         /// within a specified range.
@@ -952,22 +951,9 @@ namespace NUnit.Framework.Constraints
         /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
         /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
         /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
-        public RangeConstraint InRange(IComparable from, IComparable to)
+        public RangeConstraint InRange(object from, object to)
         {
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
-        }
-
-        /// <summary>
-        /// Returns a constraint that tests whether the actual value falls 
-        /// within a specified range.
-        /// </summary>
-        /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
-        /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
-        /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
-        /// <param name="comparer">Class that implements <seealso cref="IComparer"/> used to compare the objects.</param>
-        public RangeConstraint InRange(object from, object to, IComparer comparer)
-        {
-            return (RangeConstraint)this.Append(new RangeConstraint(from, to, comparer));
         }
 
         #endregion

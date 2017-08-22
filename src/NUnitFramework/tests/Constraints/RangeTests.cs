@@ -107,18 +107,41 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("InRangeObjectsWithNoIComparable")]
         public void InRangeNoIComparableTest(object testObj, object from, object to, ObjectToStringComparer comparer)
         {
-            Assert.That(testObj, Is.InRange(from, to,comparer));
+            Assert.That(testObj, Is.InRange(from, to).Using(comparer));
             Assert.AreEqual(comparer.WasCalled, true);
         }
 
         [Test, TestCaseSource("NotInRangeObjectsWithNoIComparable")]
         public void NotInRangeNoIComparableTest(object testObj, object from, object to, ObjectToStringComparer comparer)
         {
-            Assert.That(testObj, Is.Not.InRange(from, to, comparer));
+            Assert.That(testObj, Is.Not.InRange(from, to).Using(comparer));
             Assert.AreEqual(comparer.WasCalled, true);
+        }
+        [TestCaseSource("InRangeObjectsWithNoIComparableAndNotUsingComparerException")]
+        public void InRangeNoIComparableThrowsExceptionTest(object testObj, object from, object to)
+        {
+            Assert.Throws<ArgumentException>(() => Assert.That(testObj, Is.InRange(from, to)));
+        }
+        [TestCaseSource("InRangeObjectsWithNoIComparableAndNotUsingComparerException")]
+        public void NotInRangeNoIComparableThrowsExceptionTest(object testObj, object from, object to)
+        {
+            Assert.Throws<ArgumentException>(() => Assert.That(testObj, Is.Not.InRange(from, to)));
         }
 
         #region TestCaseSources
+        private static System.Collections.IEnumerable InRangeObjectsWithNoIComparableAndNotUsingComparerException()
+        {
+            var testObj = new NoComparer("M");
+            var from = new NoComparer("A");
+            var to = new NoComparer("Z");
+            var obj1 = new NoComparer(1);
+            var obj30 = new NoComparer(30);
+            var obj46 = new NoComparer(46);
+            yield return new object[] { testObj, from, to};
+            yield return new object[] { obj30, obj1, obj46 };
+            yield return new object[] { testObj, to, from };
+            yield return new object[] { obj30, obj46, obj1 };
+        }
         private static System.Collections.IEnumerable InRangeObjectsWithNoIComparable()
         {
             var objN7 = new NoComparer(-7);

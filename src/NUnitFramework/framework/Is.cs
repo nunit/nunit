@@ -537,22 +537,9 @@ namespace NUnit.Framework
         /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
         /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
         /// <returns></returns>
-        public static RangeConstraint InRange(IComparable from, IComparable to)
+        public static RangeConstraint InRange(object from, object to)
         {
             return new RangeConstraint(from, to);
-        }
-
-        /// <summary>
-        /// Returns a constraint that tests whether the actual value falls
-        /// inclusively within a specified range.
-        /// </summary>
-        /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
-        /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
-        /// <param name="comparer">Class that implements <seealso cref="IComparer"/> used to compare the objects.</param>
-        /// <returns></returns>
-        public static RangeConstraint InRange(object from, object to, IComparer comparer)
-        {
-            return new RangeConstraint(from, to, comparer);
         }
 
         #endregion
