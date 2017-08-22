@@ -437,7 +437,25 @@ namespace NUnit.Framework.Api
         {
             TNode setting = new TNode("setting");
             setting.AddAttribute("name", name);
-            setting.AddAttribute("value", value.ToString());
+
+            if (value is IDictionary)
+            {
+                var values = value as IDictionary;
+
+                var valueEntries = new List<string>();
+                foreach (var key in values.Keys)
+                {
+                    var settingValue = values[key];
+                    valueEntries.Add($"[{key}, {values[key]}]");
+                }
+
+                var valueString = string.Join(", ", valueEntries.ToArray());
+                setting.AddAttribute("value", valueString);
+            }
+            else
+            {
+                setting.AddAttribute("value", value.ToString());
+            }
 
             settingsNode.ChildNodes.Add(setting);
         }
