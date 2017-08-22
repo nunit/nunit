@@ -571,6 +571,14 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void IsEqualToTest()
+        {
+            var t1 = (object)new TestPoint(1, 2);
+            var t2 = (object)new TestPoint(1, 2);
+            Assert.That(t1, Is.EqualTo(t2));
+        }
+
         class IntEquatable : IEquatable<int>
         {
             int i;
@@ -583,6 +591,44 @@ namespace NUnit.Framework.Assertions
             public bool Equals(int other)
             {
                 return i.Equals(other);
+            }
+        }
+
+        public struct TestPoint : IEquatable<TestPoint>
+        {
+            public double X { get; set; }
+            public double Y { get; set; }
+
+            public TestPoint(double x, double y)
+                : this()
+            {
+                X = x;
+                Y = y;
+            }
+
+            public bool Equals(TestPoint other)
+            {
+                return X == other.X && Y == other.Y;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is TestPoint && Equals((TestPoint)obj);
+            }
+
+            public static bool operator ==(TestPoint x, TestPoint y)
+            {
+                return x.Equals(y);
+            }
+
+            public static bool operator !=(TestPoint x, TestPoint y)
+            {
+                return !(x == y);
+            }
+
+            public override int GetHashCode()
+            {
+                return X.GetHashCode() ^ Y.GetHashCode();
             }
         }
     }
