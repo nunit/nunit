@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.TestUtilities.Comparers;
+using System.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -87,5 +88,39 @@ namespace NUnit.Framework.Constraints
         {
             Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
         }
+        [Test]
+        public void ShouldThrowExceptionIfObjectHasNoComparer()
+        {
+            NoComparer from = new NoComparer(1), to = new NoComparer(10), testObj = new NoComparer(5);
+            Assert.Throws<ArgumentException>(() => new RangeConstraint(from, to).ApplyTo(testObj));
+        }
+        [Test]
+        public void ChangingComparerTest()
+        {
+            RangeConstraint test = new RangeConstraint(5, 42);
+            Comparison<int> rComparer = (x, y) => y.CompareTo(x);
+            Comparison<int> comparer = (x, y) => x.CompareTo(y);
+            Assert.DoesNotThrow(() => test.ApplyTo(7));
+            test.Using(rComparer);
+            Assert.Throws<ArgumentException>(() => test.ApplyTo(7));
+            Assert.Throws<ArgumentException>(() => test.Using(rComparer).ApplyTo(7));
+            Assert.DoesNotThrow(() => test.Using(comparer).ApplyTo(7));
+            test.Using(comparer);
+            Assert.DoesNotThrow(() => test.ApplyTo(7));
+        }
+        [TestCaseSource("NoIComparableTestCase")]
+        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj,object from, object to, System.Collections.IComparer comparer)
+        {
+            RangeConstraint test = new RangeConstraint(from, to);
+            test.Using(comparer);
+            test.ApplyTo(testObj);
+        }
+        private static IEnumerable NoIComparableTestCase()
+        {
+            IComparer comparer = new ObjectToStringComparer();
+            yield return new object[] { new NoComparer(110), new NoComparer(10), new NoComparer(120), comparer };
+            yield return new object[] { new NoComparer("M"), new NoComparer("A"), new NoComparer("Z"), comparer };
+        }
     }
+
 }

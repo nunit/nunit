@@ -476,11 +476,16 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// inclusively within a specified range.
         /// </summary>
+<<<<<<< HEAD
         /// <remarks>from must be less than or equal to true</remarks>
         /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
         /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
+=======
+        /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
+        /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
+>>>>>>> 04e94bc3e22f99bdcea6b949c42465e0b8227af7
         /// <returns></returns>
-        public static RangeConstraint InRange(IComparable from, IComparable to)
+        public static RangeConstraint InRange(object from, object to)
         {
             return new RangeConstraint(from, to);
         }
