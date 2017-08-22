@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <IntermediateOutputPath>obj\$(Configuration)\net20\</IntermediateOutputPath>
     <LangVersion>6</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,10 +41,6 @@
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NUnit.System.Linq, Version=0.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\NUnit.System.Linq.0.6.0\lib\net20\NUnit.System.Linq.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -66,9 +63,7 @@
     <Compile Include="Options.cs" />
     <Compile Include="OutputSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AutoRun.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="AutoRun.cs" />
     <Compile Include="DebugWriter.cs" />
     <Compile Include="NUnitLiteOptions.cs" />
     <Compile Include="OutputManager.cs" />
@@ -85,6 +80,9 @@
     <Compile Include="TextRunner.cs" />
     <Compile Include="TextUI.cs" />
     <Compile Include="Tokenizer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">

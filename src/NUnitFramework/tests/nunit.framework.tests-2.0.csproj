@@ -16,6 +16,7 @@
     <UpgradeBackupLocation />
     <IntermediateOutputPath>obj\$(Configuration)\net20\</IntermediateOutputPath>
     <LangVersion>6</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -262,9 +263,7 @@
     <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
-    <Compile Include="Internal\Filters\TestFilterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Internal\Filters\TestFilterTests.cs"/>
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestProgressReporterTests.cs" />
@@ -316,10 +315,6 @@
     <Compile Include="WorkItemTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="NUnit.System.Linq, Version=0.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.System.Linq.0.6.0\lib\net20\NUnit.System.Linq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -331,13 +326,14 @@
     <EmbeddedResource Include="TestImage2.jpg" />
     <EmbeddedResource Include="TestText1.txt" />
     <EmbeddedResource Include="TestText2.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TestListFile.txt" />
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
@@ -358,6 +354,5 @@
       <Link>nunit.snk</Link>
     </None>
     <None Include="nunit.framework.tests-2.0.project.json" />
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>
