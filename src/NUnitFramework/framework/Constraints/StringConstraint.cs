@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Modify the constraint to ignore case in matching.
         /// </summary>
-        public StringConstraint IgnoreCase
+        public virtual StringConstraint IgnoreCase
         {
             get { caseInsensitive = true; return this; }
         }
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Constraints
 
             return new ConstraintResult(this, actual, Matches(actualAsString));
         }
-
+               
         /// <summary>
         /// Test whether the constraint is satisfied by a given string
         /// </summary>

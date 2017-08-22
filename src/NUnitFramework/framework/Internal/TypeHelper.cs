@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if PORTABLE
-using System.Linq;
-#endif
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
@@ -252,11 +250,7 @@ namespace NUnit.Framework.Internal
             {
                 object arg = arglist[i];
 
-#if PORTABLE
-                if (arg != null)
-#else
                 if (arg != null && arg is IConvertible)
-#endif
                 {
                     Type argType = arg.GetType();
                     Type targetType = parameters[i].ParameterType;
@@ -297,20 +291,6 @@ namespace NUnit.Framework.Internal
         {
             Type[] typeParameters = type.GetGenericArguments();
 
-#if PORTABLE
-            Type[] argTypes = arglist.Select(a => a == null ? typeof(object) : a.GetType()).ToArray();
-            if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.GetTypeInfo().IsGenericType))
-                return false;
-            try
-            {
-                type = type.MakeGenericType(argTypes);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-#endif
-
             foreach (ConstructorInfo ctor in type.GetConstructors())
             {
                 ParameterInfo[] parameters = ctor.GetParameters();
@@ -346,26 +326,27 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the _values for an enumeration, using Enum.GetTypes
-        /// where available, otherwise through reflection.
+        /// Return the interfaces implemented by a Type.
         /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns></returns>
-        public static Array GetEnumValues(Type enumType)
+        /// <param name="type">The Type to be examined.</param>
+        /// <returns>An array of Types for the interfaces.</returns>
+        public static Type[] GetDeclaredInterfaces(Type type)
         {
-            return Enum.GetValues(enumType);
-        }
+            List<Type> interfaces = new List<Type>(type.GetInterfaces());
 
-        /// <summary>
-        /// Gets the ids of the _values for an enumeration, 
-        /// using Enum.GetNames where available, otherwise
-        /// through reflection.
-        /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns></returns>
-        public static string[] GetEnumNames(Type enumType)
-        {
-            return Enum.GetNames(enumType);
+            if (type.GetTypeInfo().BaseType == typeof(object))
+                return interfaces.ToArray();
+
+            List<Type> baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
+            List<Type> declaredInterfaces = new List<Type>();
+
+            foreach (Type interfaceType in interfaces)
+            {
+                if (!baseInterfaces.Contains(interfaceType))
+                    declaredInterfaces.Add(interfaceType);
+            }
+
+            return declaredInterfaces.ToArray();
         }
     }
 }

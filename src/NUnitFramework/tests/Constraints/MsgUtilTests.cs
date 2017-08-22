@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -126,17 +127,93 @@ namespace NUnit.Framework.Constraints
             Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123)), Is.EqualTo("2007-07-04 09:15:30.123"));
         }
 
-		[Test]
+        [Test]
         public static void FormatValue_DateTimeOffsetTest()
         {
             Assert.That(MsgUtils.FormatValue(new DateTimeOffset(2007, 7, 4, 9, 15, 30, 123, TimeSpan.FromHours(8))), Is.EqualTo("2007-07-04 09:15:30.123+08:00"));
         }
 
-#endregion
+        [TestCase('a', "'a'")]
+        [TestCase('h', "'h'")]
+        [TestCase('z', "'z'")]
+        public static void FormatValue_CharTest(char c, string expected)
+        {
+            Assert.That(MsgUtils.FormatValue(c), Is.EqualTo(expected));
+        }
 
-		#region EscapeControlChars
+        [TestCase(null, null, "[null, null]")]
+        [TestCase(null, "Second", "[null, \"Second\"]")]
+        [TestCase("First", null, "[\"First\", null]")]
+        [TestCase("First", "Second", "[\"First\", \"Second\"]")]
+        [TestCase(123, 'h', "[123, 'h']")]
+        public static void FormatValue_KeyValuePairTest(object key, object value, string expectedResult)
+        {
+            string s = MsgUtils.FormatValue(new KeyValuePair<object, object>(key, value));
+            Assert.That(s, Is.EqualTo(expectedResult));
+        }
 
-		[TestCase ("\n", "\\n")]
+#if NET_4_5
+        [Test]
+        public static void FormatValue_EmptyValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create());
+            Assert.That(s, Is.EqualTo("()"));
+        }
+
+        [Test]
+        public static void FormatValue_OneElementValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create("Hello"));
+            Assert.That(s, Is.EqualTo("(\"Hello\")"));
+        }
+
+        [Test]
+        public static void FormatValue_TwoElementsValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create("Hello", 123));
+            Assert.That(s, Is.EqualTo("(\"Hello\", 123)"));
+        }
+
+        [Test]
+        public static void FormatValue_ThreeElementsValueTupleTest()
+        {
+            string s = MsgUtils.FormatValue(ValueTuple.Create("Hello", 123, 'a'));
+            Assert.That(s, Is.EqualTo("(\"Hello\", 123, 'a')"));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsValueTupleTest()
+        {
+            var tuple = ValueTuple.Create(1, 2, 3, 4, 5, 6, 7, 8);
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8)"));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsValueTupleNestedTest()
+        {
+            var tuple = ValueTuple.Create(1, 2, 3, 4, 5, 6, 7, ValueTuple.Create(8, "9"));
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, (8, \"9\"))"));
+        }
+
+        [Test]
+        public static void FormatValue_FifteenElementsValueTupleTest()
+        {
+            var tupleLastElements = ValueTuple.Create(8, 9, 10, 11, "12", 13, 14, "15");
+            var tuple = new ValueTuple<int, int, int, int, int, int, int, ValueTuple<int, int, int, int, string, int, int, ValueTuple<string>>>
+                (1, 2, 3, 4, 5, 6, 7, tupleLastElements);
+
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, \"12\", 13, 14, \"15\")"));
+        }
+#endif
+
+        #endregion
+
+        #region EscapeControlChars
+
+        [TestCase("\n", "\\n")]
         [TestCase("\n\n", "\\n\\n")]
         [TestCase("\n\n\n", "\\n\\n\\n")]
         [TestCase("\r", "\\r")]
@@ -199,20 +276,12 @@ namespace NUnit.Framework.Constraints
         [TestCase(s52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
         public static void TestClipString(string input, int max, int start, string result)
         {
-#if !PORTABLE
             System.Console.WriteLine("input=  \"{0}\"", input);
             System.Console.WriteLine("result= \"{0}\"", result);
-#endif
             Assert.That(MsgUtils.ClipString(input, max, start), Is.EqualTo(result));
         }
 
 #endregion
-
-        //[TestCase('\0')]
-        //[TestCase('\r')]
-        //public void CharacterArgumentTest(char c)
-        //{
-        //}
 
 #region ClipExpectedAndActual
 

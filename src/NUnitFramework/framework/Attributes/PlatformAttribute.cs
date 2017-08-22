@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -20,7 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -56,12 +56,26 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (test.RunState != RunState.NotRunnable && 
-                test.RunState != RunState.Ignored && 
-                !platformHelper.IsPlatformSupported(this))
+            if (test.RunState != RunState.NotRunnable &&
+                test.RunState != RunState.Ignored)
             {
-                test.RunState = RunState.Skipped;
-                test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
+                bool platformIsSupported = false;
+                try
+                {
+                    platformIsSupported = platformHelper.IsPlatformSupported(this);
+                }
+                catch (InvalidPlatformException ex)
+                {
+                    test.RunState = RunState.NotRunnable;
+                    test.Properties.Add(PropertyNames.SkipReason, ex.Message);
+                    return;
+                }
+
+                if (!platformIsSupported)
+                {
+                    test.RunState = RunState.Skipped;
+                    test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
+                }
             }
         }
 

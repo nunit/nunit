@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.ComponentModel;
 
 namespace NUnit.Framework
 {
@@ -33,20 +34,52 @@ namespace NUnit.Framework
     public enum ParallelScope
     {
         /// <summary>
-        /// No Parallelism is permitted
+        /// No ParallelScope was specified on the test
         /// </summary>
-        None = 0,
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        Default = 0,
+
         /// <summary>
-        /// The test itself may be run in parallel with others at the same level
+        /// The test may be run in parallel with others at the same level.
+        /// Valid on classes and methods but not assemblies.
         /// </summary>
         Self = 1,
         /// <summary>
-        /// Descendants of the test may be run in parallel with one another
+        /// Test may not be run in parallel with any others. Valid on
+        /// classes and methods but not assemblies.
         /// </summary>
-        Children = 2,
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        None = 2,
         /// <summary>
-        /// Descendants of the test down to the level of TestFixtures may be run in parallel
+        /// Mask used to extract the flags that apply to the item on which a
+        /// ParallelizableAttribute has been placed, as opposed to descendants.
         /// </summary>
-        Fixtures = 4
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        ItemMask = Self + None,
+
+        /// <summary>
+        /// Descendants of the test may be run in parallel with one another.
+        /// Valid on assemblies and classes but not on methods.
+        /// </summary>
+        Children = 256,
+        /// <summary>
+        /// Descendants of the test down to the level of TestFixtures may be 
+        /// run in parallel with one another. Valid on assemblies and classes
+        /// but not on methods.
+        /// </summary>
+        Fixtures = 512,
+        /// <summary>
+        /// Mask used to extract all the flags that impact descendants of a 
+        /// test and place them in the TestExecutionContext.
+        /// </summary>
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        ContextMask = Children + Fixtures,
+
+        /// <summary>
+        /// The test and its descendants may be run in parallel with others at
+        /// the same level. Valid on classes and methods but not assemblies.
+        /// </summary>
+        All = Self + Children
     }
 }

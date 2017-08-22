@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -107,8 +107,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void IgnoreAttributeDoesNotAffectNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            test.Properties.Set(PropertyNames.SkipReason, "UNCHANGED");
+            test.MakeInvalid("UNCHANGED");
             new IgnoreAttribute("BECAUSE").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
@@ -207,8 +206,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ExplicitAttributeDoesNotAffectNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            test.Properties.Set(PropertyNames.SkipReason, "UNCHANGED");
+            test.MakeInvalid("UNCHANGED");
             new ExplicitAttribute("BECAUSE").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
@@ -353,11 +351,11 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void PlatformAttributeRunsTest()
         {
-            string myPlatform = GetMyPlatform();           
+            string myPlatform = GetMyPlatform();
             new PlatformAttribute(myPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
@@ -380,11 +378,23 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
+        [Test]
+        public void InvalidPlatformAttributeIsNotRunnable()
+        {
+            var invalidPlatform = "FakePlatform";
+            new PlatformAttribute(invalidPlatform).ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+                Does.StartWith("Invalid platform name"));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+                Does.Contain(invalidPlatform));
+        }
+
         string GetMyPlatform()
         {
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {
-                return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux"; 
+                return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux";
             }
             return "Win";
         }
@@ -411,7 +421,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 
         #region RequiresMTAAttribute
 
@@ -459,7 +469,7 @@ namespace NUnit.Framework.Attributes
 
         #region RequiresThreadAttribute
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -476,7 +486,7 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -508,7 +518,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 
         #region SetCultureAttribute
 

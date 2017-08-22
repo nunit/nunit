@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2016 Charlie Poole
+// Copyright (c) 2008-2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -103,35 +103,27 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { throw new ArgumentException("myMessage", "myParam"); });
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentException);
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
         }
 
         [Test]
@@ -142,35 +134,27 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }, TaskScheduler.Default); });
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException("myMessage", "myParam"); }, TaskScheduler.Default); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
         }
 
 

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,7 +28,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// RangeConstraint tests whether two _values are within a 
+    /// RangeConstraint tests whether two values are within a 
     /// specified range.
     /// </summary>
     public class RangeConstraint : Constraint
@@ -41,33 +41,16 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeConstraint"/> class.
         /// </summary>
-        /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
         /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
         /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
-        public RangeConstraint(IComparable from, IComparable to) : base( from, to )
+        public RangeConstraint(object from, object to) : base(from, to)
         {
-            // Issue #21 - https://github.com/nunit/nunit-framework/issues/21
-            // from must be less than or equal to to
-
             this.from = from;
             this.to = to;
-            CompareFromAndTo();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RangeConstraint"/> class for objects that did not implement <see cref="IComparable"/>.
-        /// </summary>
-        /// <remarks>The <paramref name="from"/> value must be less than or equal to the <paramref name="to"/> value.</remarks> 
-        /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
-        /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
-        /// <param name="comparer">Class that implements <seealso cref="IComparer"/> used to compare the objects.</param>
-        public RangeConstraint(object from, object to, IComparer comparer) : base(from, to)
-        {
-            // from must be less than or equal to to
-            this.comparer = ComparisonAdapter.For(comparer);
-            this.from = from;
-            this.to = to;
-            CompareFromAndTo();
+            if (from is IComparable && to is IComparable)
+            {
+                CompareFromAndTo();
+            }
         }
 
         /// <summary>
@@ -122,7 +105,7 @@ namespace NUnit.Framework.Constraints
         private void CompareFromAndTo()
         {
             if (comparer.Compare(from, to) > 0)
-                throw new ArgumentException("from must be less than to");
+                throw new ArgumentException("The from value must be less than or equal to the to value.");
         }
     }
 }

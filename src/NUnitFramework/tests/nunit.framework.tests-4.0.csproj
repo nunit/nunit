@@ -16,6 +16,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -43,7 +44,7 @@
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
@@ -69,6 +70,7 @@
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
+    <Compile Include="Assertions\AdhocTestExecutionTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Attributes\MaxTimeTests.cs" />
     <Compile Include="Attributes\OneTimeSetUpTearDownTests.cs" />
     <Compile Include="Attributes\PairwiseTests.cs" />
+    <Compile Include="Attributes\ParallelizableAttributeTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
     <Compile Include="Attributes\RandomAttributeTests.cs" />
@@ -135,9 +138,17 @@
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintResultTests.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
+    <Compile Include="Internal\CollectionTallyTests.cs" />
+    <Compile Include="Internal\EventListenerTextWriterTests.cs" />
+    <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
+    <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
+    <Compile Include="Internal\NamespaceTreeBuilderTests.cs" />
     <Compile Include="Internal\Results\AssertionResultTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentTests.cs" />
+    <Compile Include="Internal\Results\TestAttachmentXmlTests.cs" />
     <Compile Include="Internal\Results\TestResultFailureTests.cs" />
     <Compile Include="Internal\Results\TestResultGeneralTests.cs" />
     <Compile Include="Internal\Results\TestResultIgnoredTests.cs" />
@@ -147,6 +158,9 @@
     <Compile Include="Internal\Results\TestResultOutputTests.cs" />
     <Compile Include="Internal\Results\TestResultSuccessTests.cs" />
     <Compile Include="Internal\Results\TestResultTests.cs" />
+    <Compile Include="Internal\Results\TestResultWarningTests.cs" />
+    <Compile Include="Internal\ThreadUtilityTests.cs" />
+    <Compile Include="Internal\TestMethodTests.cs" />
     <Compile Include="TestParametersTests.cs" />
     <Compile Include="TestUtilities\AsyncTestDelegates.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
@@ -227,6 +241,7 @@
     <Compile Include="Internal\Filters\FullNameFilterTests.cs" />
     <Compile Include="Internal\Filters\IdFilterTests.cs" />
     <Compile Include="Internal\Filters\MethodNameFilterTests.cs" />
+    <Compile Include="Internal\Filters\NamespaceFilterTests.cs" />
     <Compile Include="Internal\Filters\NotFilterTests.cs" />
     <Compile Include="Internal\Filters\OrFilterTests.cs" />
     <Compile Include="Internal\Filters\TestFilterTests.cs" />
@@ -249,6 +264,7 @@
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestNameGeneratorTests.cs" />
     <Compile Include="Internal\TestNamingTests.cs" />
+    <Compile Include="Internal\TestProgressReporterTests.cs" />
     <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />

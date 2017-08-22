@@ -30,7 +30,7 @@ namespace System.Threading
     /// <summary>
     /// 
     /// </summary>
-	public struct SpinWait
+	internal struct SpinWait
 	{
 		// The number of step until SpinOnce yield on multicore machine
 		const           int  step = 10;

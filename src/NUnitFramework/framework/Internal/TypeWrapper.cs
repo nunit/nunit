@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return Type.GetTypeInfo().GetAttributes<T>(inherit).ToArray();
 #else
             return (T[])Type.GetCustomAttributes(typeof(T), inherit);
@@ -206,7 +206,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsDefined<T>(bool inherit)
         {
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return Type.GetTypeInfo().GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
 #else
             return Type.GetTypeInfo().IsDefined(typeof(T), inherit);

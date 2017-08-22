@@ -16,6 +16,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,6 +85,7 @@
     <Compile Include="SetUpData.cs" />
     <Compile Include="SetUpFixtureData.cs" />
     <Compile Include="SingleThreadedFixtureData.cs" />
+    <Compile Include="TestAttachmentsTests.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseOrderAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />

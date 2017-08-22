@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,29 +26,10 @@ namespace NUnit.Framework
     using System;
 
     /// <summary>
-    /// Attribute used to mark a class that contains one-time SetUp 
-    /// and/or TearDown methods that apply to all the tests in a
-    /// namespace or an assembly.
+    /// Attribute used to identify a method that is called 
+    /// immediately before each test is run.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class SetUpAttribute : NUnitAttribute
-    { }
-
-    /// <summary>
-    /// Attribute used to mark a class that contains one-time SetUp 
-    /// and/or TearDown methods that apply to all the tests in a
-    /// namespace or an assembly.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
-    public class PreTestAttribute : NUnitAttribute
-    { }
-
-    /// <summary>
-    /// Attribute used to mark a class that contains one-time SetUp 
-    /// and/or TearDown methods that apply to all the tests in a
-    /// namespace or an assembly.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
-    public class PostTestAttribute : NUnitAttribute
     { }
 }

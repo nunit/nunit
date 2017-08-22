@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using System.IO;
 using NUnit.Common;
 using NUnit.Framework;
@@ -30,6 +29,7 @@ namespace NUnitLite.Tests
 {
     public class MakeRunSettingsTests
     {
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void WhenTimeoutIsSpecified_RunSettingsIncludeIt()
         {
@@ -39,6 +39,7 @@ namespace NUnitLite.Tests
             Assert.That(settings.ContainsKey("DefaultTimeout"));
             Assert.AreEqual(50, settings["DefaultTimeout"]);
         }
+#endif
 
         [Test]
         public void WhenWorkDirectoryIsSpecified_RunSettingsIncludeIt()
@@ -71,4 +72,3 @@ namespace NUnitLite.Tests
         }
     }
 }
-#endif

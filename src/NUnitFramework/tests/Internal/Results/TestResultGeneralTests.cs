@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2010-2016 Charlie Poole
+// Copyright (c) 2010-2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 
@@ -161,7 +162,7 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.AreEqual(EXPECTED_START.ToString("u"), testNode.Attributes["start-time"]);
             Assert.AreEqual(EXPECTED_END.ToString("u"), testNode.Attributes["end-time"]);
-            Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000"), testNode.Attributes["duration"]);
+            Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture), testNode.Attributes["duration"]);
         }
 
         [Test]
@@ -200,7 +201,7 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.AreEqual(EXPECTED_START.ToString("u"), suiteNode.Attributes["start-time"]);
             Assert.AreEqual(EXPECTED_END.ToString("u"), suiteNode.Attributes["end-time"]);
-            Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000"), suiteNode.Attributes["duration"]);
+            Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture), suiteNode.Attributes["duration"]);
         }
     }
 }

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// The filter applies when running the test, after it has been
     /// loaded, since this is the only time an ITest exists.
     /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
     public abstract class TestFilter : ITestFilter
@@ -58,9 +58,9 @@ namespace NUnit.Framework.Internal
         public bool TopLevel { get; set; }
 
         /// <summary>
-        /// Determine if a particular test passes the filter criteria. The default 
+        /// Determine if a particular test passes the filter criteria. The default
         /// implementation checks the test itself, its parents and any descendants.
-        /// 
+        ///
         /// Derived classes may override this method or any of the Match methods
         /// to change the behavior of the filter.
         /// </summary>
@@ -125,6 +125,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestFilter FromXml(string xmlText)
         {
+            if (string.IsNullOrEmpty(xmlText))
+                xmlText = "<filter />";
+
             TNode topNode = TNode.FromXml(xmlText);
 
             if (topNode.Name != "filter")
@@ -169,7 +172,7 @@ namespace NUnit.Framework.Internal
                     return new NotFilter(FromXml(node.FirstChild));
 
                 case "id":
-                    return new IdFilter(node.Value); 
+                    return new IdFilter(node.Value);
 
                 case "test":
                     return new FullNameFilter(node.Value) { IsRegex = isRegex };
@@ -182,6 +185,9 @@ namespace NUnit.Framework.Internal
 
                 case "class":
                     return new ClassNameFilter(node.Value) { IsRegex = isRegex };
+
+                case "namespace":
+                    return new NamespaceFilter(node.Value) { IsRegex = isRegex };
 
                 case "cat":
                     return new CategoryFilter(node.Value) { IsRegex = isRegex };
@@ -200,7 +206,7 @@ namespace NUnit.Framework.Internal
         /// Nested class provides an empty filter - one that always
         /// returns true when called. It never matches explicitly.
         /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Serializable]
 #endif
         private class EmptyFilter : TestFilter

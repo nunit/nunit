@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2015 Charlie Poole
+// Copyright (c) 2007-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,6 +42,11 @@ namespace NUnit.Framework.Interfaces
         /// Gets the name of the test
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Gets the type of the test
+        /// </summary>
+        string TestType { get; }
 
         /// <summary>
         /// Gets the fully qualified name of the test
@@ -114,6 +119,11 @@ namespace NUnit.Framework.Interfaces
         /// Gets a fixture object for running this test.
         /// </summary>
         object Fixture { get; }
+
+        /// <summary>
+        /// The arguments to use in creating the test or empty array if none are required.
+        /// </summary>
+        object[] Arguments { get; }
     }
 }
 

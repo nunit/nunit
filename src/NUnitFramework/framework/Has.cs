@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -99,7 +99,24 @@ namespace NUnit.Framework
         {
             return new ConstraintExpression().Exactly(expectedCount);
         }
- 
+
+        #endregion
+
+        #region One
+
+        /// <summary>
+        /// Returns a <see cref="ItemsConstraintExpression"/> which will apply
+        /// the following constraint to only one member of the collection,
+        /// and fail if none or more than one match occurs.
+        /// </summary>
+        public static ItemsConstraintExpression One
+        {
+            get
+            {
+                return new ConstraintExpression().Exactly(1);
+            }
+        }
+
         #endregion
 
         #region Property

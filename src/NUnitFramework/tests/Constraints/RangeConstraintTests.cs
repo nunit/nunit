@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -88,34 +88,39 @@ namespace NUnit.Framework.Constraints
         {
             Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
         }
-
         [Test]
-        public void ThrowsExceptionOnApplyWithComparer()
+        public void ShouldThrowExceptionIfObjectHasNoComparer()
+        {
+            NoComparer from = new NoComparer(1), to = new NoComparer(10), testObj = new NoComparer(5);
+            Assert.Throws<ArgumentException>(() => new RangeConstraint(from, to).ApplyTo(testObj));
+        }
+        [Test]
+        public void ChangingComparerTest()
         {
             RangeConstraint test = new RangeConstraint(5, 42);
-            Comparison<int> comparer = (x, y) => x.CompareTo(y);
             Comparison<int> rComparer = (x, y) => y.CompareTo(x);
-            Assert.DoesNotThrow(()=> test.ApplyTo(7));
-            Assert.Throws<ArgumentException>(() => test.Using(rComparer).ApplyTo(7));
+            Comparison<int> comparer = (x, y) => x.CompareTo(y);
+            Assert.DoesNotThrow(() => test.ApplyTo(7));
+            test.Using(rComparer);
             Assert.Throws<ArgumentException>(() => test.ApplyTo(7));
+            Assert.Throws<ArgumentException>(() => test.Using(rComparer).ApplyTo(7));
+            Assert.DoesNotThrow(() => test.Using(comparer).ApplyTo(7));
             test.Using(comparer);
-            Assert.DoesNotThrow(() => test.ApplyTo(15));
+            Assert.DoesNotThrow(() => test.ApplyTo(7));
         }
-
         [TestCaseSource("NoIComparableTestCase")]
-        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object from, object to, System.Collections.IComparer comparer)
+        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj,object from, object to, System.Collections.IComparer comparer)
         {
-            Assert.Throws<ArgumentException>(() => new RangeConstraint(from, to, comparer));
+            RangeConstraint test = new RangeConstraint(from, to);
+            test.Using(comparer);
+            test.ApplyTo(testObj);
         }
-
-        private static IEnumerable NoIComparableTestCase() {
+        private static IEnumerable NoIComparableTestCase()
+        {
             IComparer comparer = new ObjectToStringComparer();
-            yield return new object[] {1, -5, comparer };
-            yield return new object[] { new NoComparer(110), new NoComparer(10), comparer };
-            yield return new object[] { new NoComparer("Z"), new NoComparer("A"), comparer };
-            yield return new object[] { new NoComparer("B"), new NoComparer(-111), comparer };
+            yield return new object[] { new NoComparer(110), new NoComparer(10), new NoComparer(120), comparer };
+            yield return new object[] { new NoComparer("M"), new NoComparer("A"), new NoComparer("Z"), comparer };
         }
-
     }
 
 }

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -301,7 +301,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void CanIncludePlatform()
         {
@@ -416,6 +416,13 @@ namespace NUnit.Framework.Attributes
 
         [TestCase(1)]
         public void CanConvertIntToNullableSByte(sbyte? x)
+        {
+            Assert.That(x.HasValue);
+            Assert.That(x.Value, Is.EqualTo(1));
+        }
+
+        [TestCase(1)]
+        public void CanConvertIntToNullableLong(long? x)
         {
             Assert.That(x.HasValue);
             Assert.That(x.Value, Is.EqualTo(1));

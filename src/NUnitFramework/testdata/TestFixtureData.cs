@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,13 +23,24 @@
 
 using System;
 using NUnit.Framework;
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Security.Principal;
+#endif
 
 namespace NUnit.TestData.TestFixtureTests
 {
     /// <summary>
     /// Classes used for testing NUnit
     /// </summary>
+
+    [TestFixture]
+    public class RegularFixtureWithOneTest
+    {
+        [Test]
+        public void OneTest()
+        {
+        }
+    }
 
     [TestFixture]
     public class NoDefaultCtorFixture
@@ -48,6 +59,20 @@ namespace NUnit.TestData.TestFixtureTests
     public class FixtureWithArgsSupplied
     {
         public FixtureWithArgsSupplied(int x, int y)
+        {
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+    }
+
+    [TestFixture(7, 3)]
+    [TestFixture(8, 4)]
+    public class FixtureWithMultipleArgsSupplied
+    {
+        public FixtureWithMultipleArgsSupplied(int x, int y)
         {
         }
 
@@ -91,6 +116,25 @@ namespace NUnit.TestData.TestFixtureTests
     {
         [TestCase(42)]
         public void SomeTest(int x)
+        {
+        }
+    }
+
+    [TestFixture]
+    public class FixtureWithParameterizedTestAndArgsSupplied
+    {
+        [TestCase(42, "abc")]
+        public void SomeTest(int x, string y)
+        {
+        }
+    }
+
+    [TestFixture]
+    public class FixtureWithParameterizedTestAndMultipleArgsSupplied
+    {
+        [TestCase(42, "abc")]
+        [TestCase(24, "cba")]
+        public void SomeTest(int x, string y)
         {
         }
     }
@@ -482,7 +526,7 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {

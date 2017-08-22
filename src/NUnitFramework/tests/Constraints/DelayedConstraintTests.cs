@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE && !NETSTANDARD1_6
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,7 +30,7 @@ using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<obje
 
 namespace NUnit.Framework.Constraints
 {
-    [TestFixture, Parallelizable(ParallelScope.None)]
+    [TestFixture, NonParallelizable]
     public class DelayedConstraintTests : ConstraintTestBase
     {
         // NOTE: This class tests the functioning of the DelayConstraint,
@@ -259,7 +258,7 @@ namespace NUnit.Framework.Constraints
 
         private static void Delay(int delay)
         {
-            waitEvent.WaitOne(delay, false);
+            waitEvent.WaitOne(delay);
         }
 
         private static void MethodSetsValues()
@@ -278,4 +277,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-#endif

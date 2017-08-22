@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole
+// Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -140,6 +140,12 @@ namespace NUnit.Framework.Attributes
         public void SourceMayReturnArgumentsAsIntArray(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
+        }
+
+        [Test, TestCaseSource("MyArrayData")]
+        public void SourceMayReturnArrayForArray(int[] array)
+        {
+            Assert.That(true);
         }
 
         [Test, TestCaseSource("EvenNumbers")]
@@ -294,16 +300,18 @@ namespace NUnit.Framework.Attributes
         private static IEnumerable<TestCaseData> ZeroTestCasesSource() => Enumerable.Empty<TestCaseData>();
 
         [TestCaseSource("ZeroTestCasesSource")]
-        public void TestWithZeroTestSourceCasesShouldNotBeRun()
-        {
-            Assert.Fail();
-        }
-
-        [TestCaseSource("ZeroTestCasesSource")]
         public void TestWithZeroTestSourceCasesShouldPassWithoutRequiringArguments(int requiredParameter)
         {
         }
 
+        [Test]
+        public void TestMethodIsNotRunnableWhenSourceDoesNotExist()
+        {
+            TestSuite suiteToTest = TestBuilder.MakeParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithNonExistingSource");
+            
+            Assert.That(suiteToTest.Tests.Count == 1);
+            Assert.AreEqual(RunState.NotRunnable, suiteToTest.Tests[0].RunState);
+        }
 
         static object[] testCases =
         {
@@ -337,6 +345,13 @@ namespace NUnit.Framework.Attributes
             new int[] { 12, 3, 4 },
             new int[] { 12, 4, 3 },
             new int[] { 12, 6, 2 } };
+
+        static object[] MyArrayData = new object[]
+        {
+            new int[] { 12 },
+            new int[] { 12, 4 },
+            new int[] { 12, 6, 2 }
+        };
 
         public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {

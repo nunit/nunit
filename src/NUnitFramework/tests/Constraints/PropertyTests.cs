@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    public class PropertyTest : ConstraintTestBase
+    public class PropertyTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -88,6 +88,55 @@ namespace NUnit.Framework.Constraints
 
             c = new PropertyConstraint("D", new EqualConstraint(105m).Within(0.1m));
             Assert.That(c.Description, Is.EqualTo("property D equal to 105m +/- 0.1m"));
+        }
+
+        [Test]
+        public void ChainedProperties()
+        {
+            var inputObject = new { Foo = new { Bar = "Baz" } };
+
+            // First test one thing at a time
+            Assert.That(inputObject, Has.Property("Foo"));
+            Assert.That(inputObject.Foo, Has.Property("Bar"));
+            Assert.That(inputObject.Foo.Bar, Is.EqualTo("Baz"));
+            Assert.That(inputObject.Foo.Bar, Has.Length.EqualTo(3));
+
+            // Chain the tests
+            Assert.That(inputObject, Has.Property("Foo").Property("Bar").EqualTo("Baz"));
+            Assert.That(inputObject, Has.Property("Foo").Property("Bar").Property("Length").EqualTo(3));
+            Assert.That(inputObject, Has.Property("Foo").With.Property("Bar").EqualTo("Baz"));
+            Assert.That(inputObject, Has.Property("Foo").With.Property("Bar").With.Property("Length").EqualTo(3));
+
+            // Failure message
+            var c = ((IResolveConstraint)Has.Property("Foo").Property("Bar").Length.EqualTo(5)).Resolve();
+            var r = c.ApplyTo(inputObject);
+            Assert.That(r.Status, Is.EqualTo(ConstraintStatus.Failure));
+            Assert.That(r.Description, Is.EqualTo("property Foo property Bar property Length equal to 5"));
+            Assert.That(r.ActualValue, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void MultipleProperties()
+        {
+            var inputObject = new { Foo = 42, Bar = "Baz" };
+
+            // First test one thing at a time
+            Assert.That(inputObject, Has.Property("Foo"));
+            Assert.That(inputObject, Has.Property("Bar"));
+            Assert.That(inputObject.Foo, Is.EqualTo(42));
+            Assert.That(inputObject.Bar, Is.EqualTo("Baz"));
+            Assert.That(inputObject.Bar, Has.Length.EqualTo(3));
+
+            // Combine the tests
+            Assert.That(inputObject, Has.Property("Foo").And.Property("Bar").EqualTo("Baz"));
+            Assert.That(inputObject, Has.Property("Foo").And.Property("Bar").With.Length.EqualTo(3));
+
+            // Failure message
+            var c = ((IResolveConstraint)Has.Property("Foo").And.Property("Bar").With.Length.EqualTo(5)).Resolve();
+            var r = c.ApplyTo(inputObject);
+            Assert.That(r.Status, Is.EqualTo(ConstraintStatus.Failure));
+            Assert.That(r.Description, Is.EqualTo("property Foo and property Bar property Length equal to 5"));
+            Assert.That(r.ActualValue, Is.EqualTo(inputObject));
         }
     }
 }

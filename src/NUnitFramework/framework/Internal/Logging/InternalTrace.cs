@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2013 Charlie Poole
+// Copyright (c) 2008-2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,14 +28,14 @@ namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// InternalTrace provides facilities for tracing the execution
-    /// of the NUnit framework. Tests and classes under test may make use 
+    /// of the NUnit framework. Tests and classes under test may make use
     /// of Console writes, System.Diagnostics.Trace or various loggers and
     /// NUnit itself traps and processes each of them. For that reason, a
     /// separate internal trace is needed.
-    /// 
+    ///
     /// Note:
     /// InternalTrace uses a global lock to allow multiple threads to write
-    /// trace messages. This can easily make it a bottleneck so it must be 
+    /// trace messages. This can easily make it a bottleneck so it must be
     /// used sparingly. Keep the trace Level as low as possible and only
     /// insert InternalTrace writes where they are needed.
     /// TODO: add some buffering and a separate writer thread as an option.
@@ -51,7 +51,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static bool Initialized { get; private set; }
 
-#if !PORTABLE
         /// <summary>
         /// Initialize the internal trace facility using the name of the log
         /// to be written to and the trace level.
@@ -75,7 +74,6 @@ namespace NUnit.Framework.Internal
             else
                 traceWriter.WriteLine("InternalTrace: Ignoring attempted re-initialization at level {0}", level);
         }
-#endif
 
         /// <summary>
         /// Initialize the internal trace using a provided TextWriter and level

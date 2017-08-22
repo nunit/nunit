@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,6 @@ using System;
 using NUnit.Common;
 using NUnit.Framework;
 
-#if !PORTABLE
 namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]
@@ -71,4 +70,3 @@ namespace NUnit.ConsoleRunner.Tests
         }
     }
 }
-#endif

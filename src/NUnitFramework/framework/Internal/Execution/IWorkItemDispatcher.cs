@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,6 +28,12 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public interface IWorkItemDispatcher
     {
+        /// <summary>
+        /// Start execution, performing any initialization. Sets
+        /// the top level work item and dispatches it.
+        /// </summary>
+        void Start(WorkItem topLevelWorkItem);
+
         /// <summary>
         /// Dispatch a single work item for execution. The first
         /// work item dispatched is saved as the top-level

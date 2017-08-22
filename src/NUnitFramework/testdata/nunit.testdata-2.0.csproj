@@ -15,6 +15,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,6 +56,7 @@
     </Compile>
     <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AssertMultipleData.cs" />
+    <Compile Include="TestAttachmentsTests.cs" />
     <Compile Include="WarningFixture.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />

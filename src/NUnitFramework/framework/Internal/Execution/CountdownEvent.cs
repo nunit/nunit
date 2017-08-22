@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NET_4_0 && !NET_4_5
+#if NET_2_0 || NET_3_5
+using System;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -71,6 +72,19 @@ namespace NUnit.Framework.Internal.Execution
             lock (_lock)
             {
                 if (--_remainingCount == 0)
+                    _event.Set();
+            }
+        }
+
+        /// <summary>
+        /// Decrement the count by the specified amount
+        /// </summary>
+        public void Signal(int signalCount)
+        {
+            lock (_lock)
+            {
+                _remainingCount = Math.Min(0, _remainingCount - signalCount);
+                if (_remainingCount <= 0)
                     _event.Set();
             }
         }

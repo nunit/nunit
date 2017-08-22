@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ( NET_4_0 || NET_4_5 ) && !PORTABLE
+#if (NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6)
 using System;
 using System.Threading.Tasks;
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints.Tests
 		[Test]
 		public void ConstraintError()
 		{
-			Assert.Throws<InvalidOperationException>(() => 
+			Assert.Throws<InvalidOperationException>(() =>
 				new DelayedConstraint(new EqualConstraint(1), 100).ApplyTo(new ActualValueDelegate<Task>(async () => await Throw())));
 		}
 
@@ -79,7 +79,10 @@ namespace NUnit.Framework.Constraints.Tests
 				Assert.That(async () => await One(), Is.EqualTo(2).After(100)));
 		}
 
-		[Test, Platform(Exclude="Linux", Reason="Intermittent failure under Linux")]
+		[Test]
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+        [Platform(Exclude="Linux", Reason="Intermittent failure under Linux")]
+#endif
 		public void SyntaxError()
 		{
 			Assert.Throws<InvalidOperationException>(() =>
@@ -95,10 +98,10 @@ namespace NUnit.Framework.Constraints.Tests
 
 		private static async Task<int> One()
 		{
-#if NET_4_5
+#if NET_4_0
+            return await TaskEx.Run(() => 1);
+#else
 			return await Task.Run(() => 1);
-#elif NET_4_0
-			return await TaskEx.Run(() => 1);
 #endif
 		}
 

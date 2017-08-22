@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012-2014 Charlie Poole
+// Copyright (c) 2012-2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
 using System.Windows.Forms;
@@ -47,11 +47,9 @@ namespace NUnit.Framework.Api
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
-#if !PORTABLE
         // Saved Console.Out and Console.Error
         private TextWriter _savedOut;
         private TextWriter _savedErr;
-#endif
 
 #if PARALLEL
         // Event Pump
@@ -186,6 +184,22 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
+        /// Explore the test cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>Test Assembly with test cases that matches the filter</returns>
+        public ITest ExploreTests(ITestFilter filter)
+        {
+            if(LoadedTest == null)
+                throw new InvalidOperationException("The ExploreTests method was called but no test has been loaded");
+
+            if(filter == TestFilter.Empty)
+                return LoadedTest;
+
+            return new TestAssembly(LoadedTest as TestAssembly, filter);
+        }
+
+        /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,
         /// and the listener interface is notified as it progresses.
         /// </summary>
@@ -218,7 +232,7 @@ namespace NUnit.Framework.Api
 
             CreateTestExecutionContext(listener);
 
-            TopLevelWorkItem = WorkItem.CreateWorkItem(LoadedTest, filter);
+            TopLevelWorkItem = WorkItemBuilder.CreateWorkItem(LoadedTest, filter, true);
             TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
@@ -232,11 +246,7 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
-#if !PORTABLE && !NETSTANDARD1_6
-            return _runComplete.WaitOne(timeout, false);
-#else
             return _runComplete.WaitOne(timeout);
-#endif
         }
 
         /// <summary>
@@ -264,14 +274,12 @@ namespace NUnit.Framework.Api
         /// </summary>
         private void StartRun(ITestListener listener)
         {
-#if !PORTABLE
             // Save Console.Out and Error for later restoration
             _savedOut = Console.Out;
             _savedErr = Console.Error;
 
             Console.SetOut(new TextCapture(Console.Out));
             Console.SetError(new EventListenerTextWriter("Error", Console.Error));
-#endif
 
 #if PARALLEL
             // Queue and pump events, unless settings have SynchronousEvents == false
@@ -288,16 +296,33 @@ namespace NUnit.Framework.Api
             if (!System.Diagnostics.Debugger.IsAttached &&
                 Settings.ContainsKey(FrameworkPackageSettings.DebugTests) &&
                 (bool)Settings[FrameworkPackageSettings.DebugTests])
-                System.Diagnostics.Debugger.Launch();
+            {
+                try
+                {
+                    System.Diagnostics.Debugger.Launch();
+                }
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+                catch (SecurityException)
+                {
+                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission is not set to start the debugger.");
+                    return;
+                }
+#endif
+                //System.Diagnostics.Debugger.Launch() not implemented on mono
+                catch (NotImplementedException)
+                {
+                    TopLevelWorkItem.MarkNotRunnable("Debugger unavailable on this platform.");
+                    return;
+                }
+            }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
-
 #endif
 
-            Context.Dispatcher.Dispatch(TopLevelWorkItem);
+            Context.Dispatcher.Start(TopLevelWorkItem);
         }
 
         /// <summary>
@@ -313,15 +338,6 @@ namespace NUnit.Framework.Api
                 Context.TestCaseTimeout = (int)Settings[FrameworkPackageSettings.DefaultTimeout];
             if (Settings.ContainsKey(FrameworkPackageSettings.StopOnError))
                 Context.StopOnError = (bool)Settings[FrameworkPackageSettings.StopOnError];
-
-            if (Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory))
-                Context.WorkDirectory = (string)Settings[FrameworkPackageSettings.WorkDirectory];
-            else
-#if PORTABLE
-                Context.WorkDirectory = @"\My Documents";
-#else
-                Context.WorkDirectory = Directory.GetCurrentDirectory();
-#endif
 
             // Apply attributes to the context
 
@@ -350,10 +366,8 @@ namespace NUnit.Framework.Api
                 _pump.Dispose();
 #endif
 
-#if !PORTABLE
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
-#endif
 
             _runComplete.Set();
         }
@@ -382,7 +396,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather

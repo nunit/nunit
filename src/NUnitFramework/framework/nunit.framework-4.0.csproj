@@ -16,6 +16,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -89,6 +90,8 @@
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\DefaultFloatingPointToleranceAttribute.cs" />
+    <Compile Include="Attributes\NonParallelizableAttribute.cs" />
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\SingleThreadedAttribute.cs" />
     <Compile Include="Attributes\TestAssemblyDirectoryResolveAttribute.cs" />
@@ -117,8 +120,6 @@
     <Compile Include="Attributes\RandomAttribute.cs" />
     <Compile Include="Attributes\RangeAttribute.cs" />
     <Compile Include="Attributes\RepeatAttribute.cs" />
-    <Compile Include="Attributes\RequiresMTAAtribute.cs" />
-    <Compile Include="Attributes\RequiresSTAAttribute.cs" />
     <Compile Include="Attributes\RequiresThreadAttribute.cs" />
     <Compile Include="Attributes\SequentialAttribute.cs" />
     <Compile Include="Attributes\SetCultureAttribute.cs" />
@@ -130,9 +131,7 @@
     <Compile Include="Attributes\TestCaseAttribute.cs" />
     <Compile Include="Attributes\TestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\TestFixtureAttribute.cs" />
-    <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSourceAttribute.cs" />
-    <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
     <Compile Include="Attributes\TheoryAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />
@@ -153,17 +152,32 @@
     <Compile Include="Constraints\CollectionConstraint.cs" />
     <Compile Include="Constraints\CollectionContainsConstraint.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraint.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintResult.cs" />
     <Compile Include="Constraints\CollectionItemsEqualConstraint.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraint.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraint.cs" />
+    <Compile Include="Constraints\Comparers\ArraysComparer.cs" />
+    <Compile Include="Constraints\Comparers\CharsComparer.cs" />
+    <Compile Include="Constraints\Comparers\DateTimeOffsetsComparer.cs" />
+    <Compile Include="Constraints\Comparers\DictionariesComparer.cs" />
+    <Compile Include="Constraints\Comparers\DictionaryEntriesComparer.cs" />
+    <Compile Include="Constraints\Comparers\DirectoriesComparer.cs" />
+    <Compile Include="Constraints\Comparers\EnumerablesComparer.cs" />
+    <Compile Include="Constraints\Comparers\EquatablesComparer.cs" />
+    <Compile Include="Constraints\Comparers\IChainComparer.cs" />
+    <Compile Include="Constraints\Comparers\KeyValuePairsComparer.cs" />
+    <Compile Include="Constraints\Comparers\NumericsComparer.cs" />
+    <Compile Include="Constraints\Comparers\StreamsComparer.cs" />
+    <Compile Include="Constraints\Comparers\StringsComparer.cs" />
+    <Compile Include="Constraints\Comparers\TimeSpanToleranceComparer.cs" />
+    <Compile Include="Constraints\Comparers\ValueTupleComparer.cs" />
     <Compile Include="Constraints\CollectionTally.cs" />
     <Compile Include="Constraints\ComparisonAdapter.cs" />
     <Compile Include="Constraints\ComparisonConstraint.cs" />
     <Compile Include="Constraints\Constraint.cs" />
     <Compile Include="Constraints\ConstraintBuilder.cs" />
     <Compile Include="Constraints\ConstraintExpression.cs" />
-    <Compile Include="Constraints\ConstraintFactory.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\ContainsConstraint.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />
@@ -265,7 +279,6 @@
     <Compile Include="Interfaces\IMethodInfo.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="FileAssert.cs" />
-    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IParameterInfo.cs" />
@@ -286,10 +299,10 @@
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
+    <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\TNode.cs" />
-    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
@@ -304,9 +317,16 @@
     <Compile Include="Internal\Builders\ParameterDataSourceProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
+    <Compile Include="Internal\Commands\AfterTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\AfterTestCommand.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
-    <Compile Include="Internal\Commands\CommandStage.cs" />
+    <Compile Include="Internal\Commands\BeforeAndAfterTestCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestActionCommand.cs" />
+    <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
+    <Compile Include="Internal\Commands\ConstructFixtureCommand.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
+    <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
+    <Compile Include="Internal\Commands\EmptyTestCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
@@ -318,15 +338,16 @@
     <Compile Include="Internal\Commands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
+    <Compile Include="Internal\Commands\TimeoutCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
-    <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Execution\EventPump.cs" />
     <Compile Include="Internal\Execution\EventQueue.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\ParallelExecutionStrategy.cs" />
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\QueuingEventListener.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
@@ -335,6 +356,7 @@
     <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
+    <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Internal\Execution\WorkShift.cs" />
@@ -345,6 +367,7 @@
     <Compile Include="Internal\Filters\FullNameFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\MethodNameFilter.cs" />
+    <Compile Include="Internal\Filters\NamespaceFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
@@ -352,6 +375,7 @@
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
+    <Compile Include="Internal\InvalidPlatformException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\Logging\ILogger.cs" />
     <Compile Include="Internal\Logging\InternalTrace.cs" />
@@ -372,6 +396,7 @@
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\TestCaseParameters.cs" />
+    <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestExecutionStatus.cs" />
     <Compile Include="Internal\TestFilter.cs" />
@@ -397,7 +422,6 @@
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ using System.Collections;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RangeAttribute is used to supply a range of _values to an
+    /// RangeAttribute is used to supply a range of values to an
     /// individual parameter of a parameterized test.
     /// </summary>
     public class RangeAttribute : ValuesAttribute

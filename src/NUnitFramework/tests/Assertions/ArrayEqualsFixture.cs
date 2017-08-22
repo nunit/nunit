@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -194,7 +194,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
-#if !PORTABLE
         private static int[] underlyingArray = new int[] { 1, 2, 3, 4, 5 };
 
         [Test]
@@ -238,6 +237,5 @@ namespace NUnit.Framework.Assertions
             Assume.That(ArraySegmentImplementsIEnumerable);
             Assert.That(new ArraySegment<int>(), Is.EqualTo(new ArraySegment<int>()));
         }
-#endif
     }
 }

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,49 +40,24 @@ namespace NUnit.Common
         public OutputSpecification(string spec)
         {
             if (spec == null)
-                throw new NullReferenceException("Output spec may not be null");
+                throw new ArgumentNullException(nameof(spec), "Output spec may not be null.");
 
             string[] parts = spec.Split(';');
+
+            if (parts.Length > 2)
+                throw new ArgumentException($"Invalid output spec: {spec}.");
+
             this.OutputPath = parts[0];
 
-            for (int i = 1; i < parts.Length; i++)
-            {
-                string[] opt = parts[i].Split('=');
+            if (parts.Length == 1)
+                return;
 
-                if (opt.Length != 2)
-                    throw new ArgumentException();
+            string[] opt = parts[1].Split('=');
 
-                switch (opt[0].Trim())
-                {
-                    case "format":
-                        string fmt = opt[1].Trim();
+            if (opt.Length != 2 || opt[0].Trim() != "format")
+                throw new ArgumentException($"Invalid output spec: {spec}.");
 
-                        if (this.Format != null && this.Format != fmt)
-                            throw new ArgumentException(
-                                string.Format("Conflicting format options: {0}", spec));
-
-                        this.Format = fmt;
-                        break;
-
-                    case "transform":
-                        string val = opt[1].Trim();
-
-                        if (this.Transform != null && this.Transform != val)
-                            throw new ArgumentException(
-                                string.Format("Conflicting transform options: {0}", spec));
-
-                        if (this.Format != null && this.Format != "user")
-                            throw new ArgumentException(
-                                string.Format("Conflicting format options: {0}", spec));
-
-                        this.Format = "user";
-                        this.Transform = opt[1].Trim();
-                        break;
-                }
-            }
-
-            if (Format == null)
-                Format = "nunit3";
+            this.Format = opt[1].Trim();
         }
 
         #endregion
@@ -92,17 +67,12 @@ namespace NUnit.Common
         /// <summary>
         /// Gets the path to which output will be written
         /// </summary>
-        public string OutputPath { get; private set; }
+        public string OutputPath { get; }
 
         /// <summary>
         /// Gets the name of the format to be used
         /// </summary>
-        public string Format { get; private set; }
-
-        /// <summary>
-        /// Gets the file name of a transform to be applied
-        /// </summary>
-        public string Transform { get; private set; }
+        public string Format { get; } = "nunit3";
 
         #endregion
     }

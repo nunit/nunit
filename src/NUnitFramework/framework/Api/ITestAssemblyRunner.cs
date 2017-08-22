@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
 {
@@ -92,6 +93,13 @@ namespace NUnit.Framework.Api
         /// <param name="filter">The filter to apply</param>
         /// <returns>The number of test cases found</returns>
         int CountTestCases(ITestFilter filter);
+
+        /// <summary>
+        /// Explore the test cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>Test Assembly with test cases that matches the filter</returns>
+        ITest ExploreTests(ITestFilter filter);
 
         /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,

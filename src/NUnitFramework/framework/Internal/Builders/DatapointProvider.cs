@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal.Builders
                 }
                 else if (parameterType.GetTypeInfo().IsEnum)
                 {
-                    foreach (object o in TypeHelper.GetEnumValues(parameterType))
+                    foreach (object o in Enum.GetValues(parameterType))
                     {
                         datapoints.Add(o);
                     }

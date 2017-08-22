@@ -16,6 +16,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -76,6 +77,7 @@
     <Compile Include="TeamCityEventListenerTests.cs" />
     <Compile Include="TestNameParserTests.cs" />
     <Compile Include="TestSelectionParserTests.cs" />
+    <Compile Include="TextUIReportTests.cs" />
     <Compile Include="TextUITests.cs" />
     <Compile Include="TokenizerTests.cs" />
   </ItemGroup>

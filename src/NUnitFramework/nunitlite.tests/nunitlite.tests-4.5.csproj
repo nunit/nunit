@@ -16,6 +16,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -79,6 +80,7 @@
     <Compile Include="TeamCityEventListenerTests.cs" />
     <Compile Include="TestNameParserTests.cs" />
     <Compile Include="TestSelectionParserTests.cs" />
+    <Compile Include="TextUIReportTests.cs" />
     <Compile Include="TextUITests.cs" />
     <Compile Include="TokenizerTests.cs" />
   </ItemGroup>

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
 {
     [TestFixture(typeof(List<int>))]
     [TestFixture(TypeArgs=new Type[] {typeof(List<object>)} )]
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [TestFixture(TypeArgs=new Type[] {typeof(ArrayList)} )]
 #endif
     public class GenericTestFixture_IList<T> where T : IList, new()

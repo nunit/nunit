@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2013 Charlie Poole
+// Copyright (c) 2008-2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,7 +33,6 @@ namespace NUnit.Framework.Internal
         TextWriter writer;
         object myLock = new object();
 
-#if !PORTABLE
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.
         /// </summary>
@@ -44,10 +43,9 @@ namespace NUnit.Framework.Internal
             streamWriter.AutoFlush = true;
             this.writer = streamWriter;
         }
-#endif
 
         /// <summary>
-        /// Construct an InternalTraceWriter that writes to a 
+        /// Construct an InternalTraceWriter that writes to a
         /// TextWriter provided by the caller.
         /// </summary>
         /// <param name="writer"></param>
@@ -95,7 +93,10 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
         public override void WriteLine(string value)
         {
-            writer.WriteLine(value);
+            lock (myLock)
+            {
+                writer.WriteLine(value);
+            }
         }
 
         /// <summary>

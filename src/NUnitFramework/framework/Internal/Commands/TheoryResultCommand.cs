@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,44 +29,26 @@ namespace NUnit.Framework.Internal.Commands
     /// TheoryResultCommand adjusts the result of a Theory so that
     /// it fails if all the results were inconclusive.
     /// </summary>
-    public class TheoryResultCommand : DelegatingTestCommand
+    public class TheoryResultCommand : AfterTestCommand
     {
         /// <summary>
         /// Constructs a TheoryResultCommand 
         /// </summary>
         /// <param name="command">The command to be wrapped by this one</param>
-        public TheoryResultCommand(TestCommand command) : base(command) { }
-
-        /// <summary>
-        /// Overridden to call the inner command and adjust the result
-        /// in case all chlid results were inconclusive.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override TestResult Execute(TestExecutionContext context)
+        public TheoryResultCommand(TestCommand command) : base(command)
         {
-            TestResult theoryResult = innerCommand.Execute(context);
-
-            if (theoryResult.ResultState == ResultState.Success)
+            AfterTest = (context) =>
             {
-                if (!theoryResult.HasChildren)
-                    theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
-                else
-                {
-                    bool wasInconclusive = true;
-                    foreach (TestResult childResult in theoryResult.Children)
-                        if (childResult.ResultState == ResultState.Success)
-                        {
-                            wasInconclusive = false;
-                            break;
-                        }
+                TestResult theoryResult = context.CurrentResult;
 
-                    if (wasInconclusive)
+                if (theoryResult.ResultState == ResultState.Inconclusive)
+                {
+                    if (!theoryResult.HasChildren)
+                        theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
+                    else
                         theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
                 }
-            }
-
-            return theoryResult;
+            };
         }
     }
 }

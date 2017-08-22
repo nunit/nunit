@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+// Copyright (c) 2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Filters
     /// ValueMatchFilter selects tests based on some value, which
     /// is expected to be contained in the test.
     /// </summary>
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
     public abstract class ValueMatchFilter : TestFilter

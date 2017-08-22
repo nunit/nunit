@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -20,7 +20,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-#if !PORTABLE
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -42,15 +41,15 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void TheoryWithNoDatapointsIsRunnable()
+        public void TheoryWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints");
+            TestAssert.IsRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints", ResultState.Failure);
         }
 
         [Test]
-        public void UnsupportedNullableTypeArgumentWithNoDatapointsAreRunnable()
+        public void UnsupportedNullableTypeArgumentWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints");
+            TestAssert.IsRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints", ResultState.Failure);
         }
 
         [Test]
@@ -113,7 +112,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void AllValuesMayBeSuppliedByAttributes()
-        {       
+        {
             // NOTE: This test was failing with a count of 8 because both
             // TheoryAttribute and CombinatorialAttribute were adding cases.
             // Solution is to make TheoryAttribute a CombiningAttribute so
@@ -161,7 +160,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.TestCaseCount, Is.EqualTo(2));
         }
 
-        [Theory]
+        [Test]
         public void TheoryFailsIfAllTestsAreInconclusive()
         {
             ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, "TestWithAllBadValues");
@@ -199,4 +198,3 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-#endif

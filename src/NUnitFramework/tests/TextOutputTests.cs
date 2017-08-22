@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole
+// Copyright (c) 2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,7 +40,6 @@ namespace NUnit.Framework.Tests
             get { return TestExecutionContext.CurrentContext.CurrentResult.Output; }
         }
 
-#if !PORTABLE
         [Test]
         public void ConsoleWrite_WritesToResult()
         {
@@ -129,7 +128,6 @@ namespace NUnit.Framework.Tests
             Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
             Assert.That(_testOutput.Stream, Is.EqualTo("Progress"));
         }
-#endif
 
         [Test]
         public void TestContextOut_WritesToResult()

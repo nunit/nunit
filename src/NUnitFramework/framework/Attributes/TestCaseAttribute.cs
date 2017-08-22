@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -225,7 +225,7 @@ namespace NUnit.Framework
             }
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>
@@ -372,7 +372,7 @@ namespace NUnit.Framework
 
                 if (targetType.IsAssignableFrom(arg.GetType()))
                     continue;
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                 if (arg is DBNull)
                 {
                     arglist[i] = null;
@@ -381,7 +381,7 @@ namespace NUnit.Framework
 #endif
                 bool convert = false;
 
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) ||
+                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
                     targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
                 {
                     convert = arg is int;
@@ -424,7 +424,7 @@ namespace NUnit.Framework
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             if (test.RunState != RunState.NotRunnable &&
                 test.RunState != RunState.Ignored)
             {

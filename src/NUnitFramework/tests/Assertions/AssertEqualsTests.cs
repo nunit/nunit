@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2004 Charlie Poole
+// Copyright (c) 2004 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,7 +28,6 @@ using System.IO;
 namespace NUnit.Framework.Assertions
 {
 	[TestFixture]
-    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
     public class AssertEqualsTests
     {
         [Test]
@@ -423,7 +422,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !PORTABLE
         [Test]
         public void DirectoryInfoEqual()
         {
@@ -444,7 +442,6 @@ namespace NUnit.Framework.Assertions
                 Assert.Throws<AssertionException>(() => Assert.AreEqual(one.Directory, two.Directory));
             }
         }
-#endif
 
         private enum MyEnum
         {
@@ -513,46 +510,24 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain( "+/- 0.001"));
         }
 
-        [Test]
+        [Test, DefaultFloatingPointTolerance(0.005)]
         public void DoubleNotEqualMessageDisplaysDefaultTolerance()
         {
             double d1 = 0.15;
             double d2 = 0.12;
 
-            var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
-
-            try
-            {
-                // TODO: Figure out a better way than changing this globally
-                GlobalSettings.DefaultFloatingPointTolerance = 0.005d;
-                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
-                Assert.That(ex.Message, Does.Contain("+/- 0.005"));
-            }
-            finally
-            {
-                GlobalSettings.DefaultFloatingPointTolerance = savedTolerance;
-            }
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
+            Assert.That(ex.Message, Does.Contain("+/- 0.005"));
         }
 
-        [Test]
+        [Test, DefaultFloatingPointTolerance(0.005)]
         public void DoubleNotEqualWithNanDoesNotDisplayDefaultTolerance()
         {
             double d1 = double.NaN;
             double d2 = 0.12;
 
-            var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
-
-            try
-            {
-                // TODO: Figure out a better way than changing this globally
-                GlobalSettings.DefaultFloatingPointTolerance = 0.005d;
-                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
-                Assert.That(ex.Message.IndexOf("+/-") == -1);
-            }
-            finally
-            {
-                GlobalSettings.DefaultFloatingPointTolerance = savedTolerance;
-            }
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
+            Assert.That(ex.Message.IndexOf("+/-") == -1);
         }
 
         [Test]

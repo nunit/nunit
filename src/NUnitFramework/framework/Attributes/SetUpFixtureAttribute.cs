@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,7 +30,9 @@ namespace NUnit.Framework
     using Internal;
 
     /// <summary>
-    /// SetUpFixtureAttribute is used to identify a SetUpFixture
+    /// Attribute used to identify a class that contains
+    /// <see cref="OneTimeSetUpAttribute" /> or <see cref="OneTimeTearDownAttribute" />
+    /// methods for all the test fixtures under a given namespace.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
@@ -51,10 +53,7 @@ namespace NUnit.Framework
             {
                 string reason = null;
                 if (!IsValidFixtureType(typeInfo, ref reason))
-                {
-                    fixture.RunState = RunState.NotRunnable;
-                    fixture.Properties.Set(PropertyNames.SkipReason, reason);
-                }
+                    fixture.MakeInvalid(reason);
             }
 
             return new TestSuite[] { fixture };
@@ -80,11 +79,8 @@ namespace NUnit.Framework
 
             var invalidAttributes = new Type[] { 
                 typeof(SetUpAttribute), 
-                typeof(TearDownAttribute),
-#pragma warning disable 618 // Obsolete Attributes
-                typeof(TestFixtureSetUpAttribute), 
-                typeof(TestFixtureTearDownAttribute) };
-#pragma warning restore
+                typeof(TearDownAttribute)
+            };
 
             foreach (Type invalidType in invalidAttributes)
                 if (typeInfo.HasMethodWithAttribute(invalidType))

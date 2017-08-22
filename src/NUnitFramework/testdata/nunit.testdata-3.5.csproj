@@ -15,6 +15,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,6 +80,7 @@
     <Compile Include="RepeatedTestFixture.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="SingleThreadedFixtureData.cs" />
+    <Compile Include="TestAttachmentsTests.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseOrderAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />

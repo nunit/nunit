@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2016 Charlie Poole
+// Copyright (c) 2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,12 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE
 using System.IO;
 using System.Reflection;
 using NUnit.Compatibility;
 
-namespace NUnit.Framework.Internal.Tests
+namespace NUnit.Framework.Internal
 {
     [TestFixture]
     public class AssemblyHelperTests
@@ -84,4 +83,3 @@ namespace NUnit.Framework.Internal.Tests
         }
     }
 }
-#endif

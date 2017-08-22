@@ -123,7 +123,7 @@
 //      p.Parse (new string[]{"-a-"});  // sets v == null
 //
 // The NUnit version of this file introduces conditional compilation for
-// building under a portable class library  (PORTABLE).
+// building under .NET Standard
 //
 // 11/5/2015 -
 // Change namespace to avoid conflict with user code use of mono.options
@@ -142,7 +142,7 @@ using System.Text.RegularExpressions;
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using NUnit.Compatibility;
 #else
 using System.Security.Permissions;
@@ -362,7 +362,7 @@ namespace Mono.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType &&
                 !tt.GetTypeInfo().IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
@@ -374,13 +374,13 @@ namespace Mono.Options
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 #endif
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -490,7 +490,7 @@ namespace Mono.Options
         }
     }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
     public class OptionException : Exception
@@ -513,7 +513,7 @@ namespace Mono.Options
             this.option = optionName;
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -525,7 +525,7 @@ namespace Mono.Options
             get {return this.option;}
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {

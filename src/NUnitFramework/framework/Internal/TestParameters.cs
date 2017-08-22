@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
         #region IApplyToTest Members
 
         /// <summary>
-        /// Applies ParameterSet _values to the test itself.
+        /// Applies ParameterSet values to the test itself.
         /// </summary>
         /// <param name="test">A test.</param>
         public void ApplyToTest(Test test)

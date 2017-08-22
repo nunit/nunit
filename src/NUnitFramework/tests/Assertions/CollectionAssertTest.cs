@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2006 Charlie Poole
+// Copyright (c) 2006 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Data;
 #endif
 
@@ -133,8 +133,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqual()
         {
-            var set1 = new SimpleObjectCollection("x", "y", "z");
-            var set2 = new SimpleObjectCollection("x", "y", "z");
+            var set1 = new SimpleEnumerable("x", "y", "z");
+            var set2 = new SimpleEnumerable("x", "y", "z");
 
             CollectionAssert.AreEqual(set1,set2);
             CollectionAssert.AreEqual(set1,set2,new TestComparer());
@@ -251,7 +251,22 @@ namespace NUnit.Framework.Assertions
                                     Contains("But was:  2"));
         }
 #endif
-        
+
+        [Test]
+        public void AreEqual_IEquatableImplementationIsIgnored()
+        {
+            var x = new Constraints.EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new Constraints.EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
+
+            // They are not equal using Assert
+            Assert.AreNotEqual(x, y, "Assert 1");
+            Assert.AreNotEqual(y, x, "Assert 2");
+
+            // Using CollectionAssert they are equal
+            CollectionAssert.AreEqual(x, y, "CollectionAssert 1");
+            CollectionAssert.AreEqual(y, x, "CollectionAssert 2");
+        }
+
         #endregion
 
         #region AreEquivalent
@@ -273,7 +288,9 @@ namespace NUnit.Framework.Assertions
 
             var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
-                "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine;
+                "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine +
+                "  Missing (1): < \"z\" >" + Environment.NewLine +
+                "  Extra (1): < \"x\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEquivalent(set1,set2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -287,7 +304,9 @@ namespace NUnit.Framework.Assertions
             
             var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"x\" >" + Environment.NewLine +
-                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  Missing (1): < \"x\" >" + Environment.NewLine +
+                "  Extra (1): < \"z\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEquivalent(set1,set2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -341,6 +360,21 @@ namespace NUnit.Framework.Assertions
 
             CollectionAssert.AreNotEqual(set1,set2);
             CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
+        }
+
+        [Test]
+        public void AreNotEqual_IEquatableImplementationIsIgnored()
+        {
+            var x = new Constraints.EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new Constraints.EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
+
+            // Equal using Assert
+            Assert.AreEqual(x, y, "Assert 1");
+            Assert.AreEqual(y, x, "Assert 2");
+
+            // Not equal using CollectionAssert
+            CollectionAssert.AreNotEqual(x, y, "CollectionAssert 1");
+            CollectionAssert.AreNotEqual(y, x, "CollectionAssert 2");
         }
 
         #endregion

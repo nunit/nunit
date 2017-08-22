@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -45,6 +45,11 @@ namespace NUnit.Framework.Assertions.Tests
         [TestCase("NestedBlock_ThreeAssertsSucceed", 3)]
         [TestCase("TwoNestedBlocks_ThreeAssertsSucceed", 3)]
         [TestCase("NestedBlocksInMethodCalls", 3)]
+#if ASYNC
+        [TestCase("ThreeAssertsSucceed_Async", 3)]
+        [TestCase("NestedBlock_ThreeAssertsSucceed_Async", 3)]
+        [TestCase("TwoNestedBlocks_ThreeAssertsSucceed_Async", 3)]
+#endif
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
             var result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
@@ -63,6 +68,10 @@ namespace NUnit.Framework.Assertions.Tests
         [TestCase("TwoNestedBlocks_TwoAssertsFail", "Expected: 5", "ImaginaryPart")]
         [TestCase("MethodCallsFail", "Message from Assert.Fail")]
         [TestCase("MethodCallsFailAfterTwoAssertsFail", "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
+#if ASYNC
+        [TestCase("TwoAsserts_BothAssertsFail_Async", "RealPart", "ImaginaryPart")]
+        [TestCase("TwoNestedBlocks_TwoAssertsFail_Async", "Expected: 5", "ImaginaryPart")]
+#endif
         public void AssertMultipleFails(string methodName, params string[] assertionMessageRegex)
         {
             CheckResult(methodName, ResultState.Failure, assertionMessageRegex);
@@ -129,7 +138,7 @@ namespace NUnit.Framework.Assertions.Tests
                     Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
                     Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
-#if !PORTABLE || NETSTANDARD1_6
+#if !NETSTANDARD1_3 || NETSTANDARD1_6
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.

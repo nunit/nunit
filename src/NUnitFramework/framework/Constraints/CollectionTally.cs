@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,34 +26,55 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// CollectionTally counts (tallies) the number of
-    /// occurrences of each object in one or more enumerations.
-    /// </summary>
+    /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences 
+    /// of each object in one or more enumerations.</summary>
     public class CollectionTally
     {
-        // Internal list used to track occurrences
-        private readonly List<object> list = new List<object>();
+        /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
+        public class CollectionTallyResult
+        {
+            /// <summary>Items that were not in the expected collection.</summary>
+            public List<object> ExtraItems { get; set; }
+
+            /// <summary>Items that were not accounted for in the expected collection.</summary>
+            public List<object> MissingItems { get; set; }
+
+            /// <summary>Constructs an empty <see cref="CollectionTallyResult"/>.</summary>
+            public CollectionTallyResult()
+            {
+                ExtraItems = new List<object>();
+                MissingItems = new List<object>();
+            }
+        }
 
         private readonly NUnitEqualityComparer comparer;
 
-        /// <summary>
-        /// Construct a CollectionTally object from a comparer and a collection
-        /// </summary>
+        /// <summary>The result of the comparision between the two collections.</summary>
+        public CollectionTallyResult Result
+        {
+            get
+            {
+                return new CollectionTallyResult()
+                {
+                    MissingItems = new List<object>(_missingItems),
+                    ExtraItems = new List<object>(_extraItems)
+                };
+            }
+        }
+
+        private List<object> _missingItems = new List<object>();
+
+        private List<object> _extraItems = new List<object>();
+
+        /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
+        /// <param name="comparer">The comparer to use for equality.</param>
+        /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
             this.comparer = comparer;
 
             foreach (object o in c)
-                list.Add(o);
-        }
-
-        /// <summary>
-        /// The number of objects remaining in the tally
-        /// </summary>
-        public int Count
-        {
-            get { return list.Count; }
+                _missingItems.Add(o);
         }
 
         private bool ItemsEqual(object expected, object actual)
@@ -62,35 +83,26 @@ namespace NUnit.Framework.Constraints
             return comparer.AreEqual(expected, actual, ref tolerance);
         }
 
-        /// <summary>
-        /// Try to remove an object from the tally
-        /// </summary>
-        /// <param name="o">The object to remove</param>
-        /// <returns>True if successful, false if the object was not found</returns>
-        public bool TryRemove(object o)
+        /// <summary>Try to remove an object from the tally.</summary>
+        /// <param name="o">The object to remove.</param>
+        public void TryRemove(object o)
         {
-            for (int index = 0; index < list.Count; index++)
-                if (ItemsEqual(list[index], o))
+            for (int index = 0; index < _missingItems.Count; index++)
+                if (ItemsEqual(_missingItems[index], o))
                 {
-                    list.RemoveAt(index);
-                    return true;
+                    _missingItems.RemoveAt(index);
+                    return;
                 }
 
-            return false;
+            _extraItems.Add(o);
         }
 
-        /// <summary>
-        /// Try to remove a set of objects from the tally
-        /// </summary>
-        /// <param name="c">The objects to remove</param>
-        /// <returns>True if successful, false if any object was not found</returns>
-        public bool TryRemove(IEnumerable c)
+        /// <summary>Try to remove a set of objects from the tally.</summary>
+        /// <param name="c">The objects to remove.</param>
+        public void TryRemove(IEnumerable c)
         {
             foreach (object o in c)
-                if (!TryRemove(o))
-                    return false;
-
-            return true;
+                TryRemove(o);
         }
     }
 }

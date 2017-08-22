@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Options;
+using System.Text;
 
 namespace NUnit.Common
 {
@@ -42,56 +43,45 @@ namespace NUnit.Common
     public class CommandLineOptions : OptionSet
     {
         private static readonly string DEFAULT_WORK_DIRECTORY =
-#if PORTABLE
-            @"\My Documents";
-#else
             Directory.GetCurrentDirectory();
-#endif
 
         private bool validated;
-#if !PORTABLE
         private bool noresult;
-#endif
 
-        #region Constructor
+        #region Constructors
 
-        internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, params string[] args)
+        // Currently used only by tests
+        internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, bool requireInputFile, params string[] args)
         {
             // Apply default options
             if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
 
             TeamCity = defaultOptionsProvider.TeamCity;
-            
-            ConfigureOptions();            
+
+            ConfigureOptions(requireInputFile);
             if (args != null)
                 Parse(PreParse(args));
         }
 
-        public CommandLineOptions(params string[] args)
+        public CommandLineOptions(bool requireInputFile, params string[] args)
         {
-            ConfigureOptions();
+            ConfigureOptions(requireInputFile);
             if (args != null)
                 Parse(PreParse(args));
         }
 
-#if !PORTABLE
         private int _nesting = 0;
-#endif
 
         internal IEnumerable<string> PreParse(IEnumerable<string> args)
         {
-#if PORTABLE
-            return args;
-#else
             if (++_nesting > 3)
             {
-                ErrorMessages.Add("@ nesting exceeds maximum depth of 3");
+                ErrorMessages.Add("@ nesting exceeds maximum depth of 3.");
                 --_nesting;
                 return args;
             }
 
             var listArgs = new List<string>();
-            var delim = ' ';
 
             foreach (var arg in args)
             {
@@ -103,64 +93,68 @@ namespace NUnit.Common
 
                 if (arg.Length == 1)
                 {
-                    ErrorMessages.Add("The file name should not be empty");
+                    ErrorMessages.Add("You must include a file name after @.");
                     continue;
                 }
 
-                var offset = 1;
-                if (arg.Length > 4 && arg[1] == '[' && arg[3] == ']')
-                {
-                    delim = arg[2];
-                    offset = 4;
-                }
-
-                var filename = arg.Substring(offset);
+                var filename = arg.Substring(1);
 
                 if (!File.Exists(filename))
                 {
-                    ErrorMessages.Add("The file \"" + filename + "\" was not found");
+                    ErrorMessages.Add("The file \"" + filename + "\" was not found.");
                     continue;
                 }
 
-                string contents;
                 try
-                    {
-#if NETCF
-                    using (var sr = new StreamReader (filename))
-                        {
-                        contents = sr.ReadToEnd ();
-                        }
-#else
-                    contents = File.ReadAllText (filename);
-#endif
-                    }
+                {
+                    listArgs.AddRange(PreParse(GetArgsFromFile(filename)));
+                }
                 catch (IOException ex)
-                    {
+                {
                     ErrorMessages.Add("Error reading \"" + filename + "\": " + ex.Message);
-                    continue;
-                    }
-
-                var newArgs = GetArgs(contents.Replace("\r", "").Replace('\n', delim));
-                listArgs.AddRange(PreParse(newArgs));
+                }
             }
 
             --_nesting;
             return listArgs;
-#endif
         }
 
-#if !PORTABLE
+        private static readonly Regex ArgsRegex = new Regex(@"\G(""((""""|[^""])+)""|(\S+)) *", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+        // Get args from a string of args
         internal static IEnumerable<string> GetArgs(string commandLine)
         {
-            const string re = @"\G(""((""""|[^""])+)""|(\S+)) *";
-            var ms = Regex.Matches(commandLine, re);
-            return ms.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @""""));
+            foreach (Match m in ArgsRegex.Matches(commandLine))
+                yield return Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @"""");
         }
-#endif
 
-#endregion
+        // Get args from an included file
+        private static IEnumerable<string> GetArgsFromFile(string filename)
+        {
+            var sb = new StringBuilder();
 
-#region Properties
+            foreach (var line in File.ReadAllLines(filename))
+            {
+                if (!string.IsNullOrEmpty(line) && line[0] != '#' && line.Trim().Length > 0)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(' ');
+                    sb.Append(line);
+                }
+            }
+
+            return GetArgs(sb.ToString());
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Indicates whether an input file is required on the command-line.
+        /// Note that multiple input files are never allowed.
+        /// </summary>
+        public bool InputFileRequired { get; set; }
 
         // Action to Perform
 
@@ -172,43 +166,34 @@ namespace NUnit.Common
 
         // Select tests
 
-        private List<string> inputFiles = new List<string>();
-        public IList<string> InputFiles { get { return inputFiles; } }
+        public string InputFile { get; private set; }
 
-        private List<string> testList = new List<string>();
-        public IList<string> TestList { get { return testList; } }
+        public IList<string> TestList { get; } = new List<string>();
 
-        private IDictionary<string, string> testParameters = new Dictionary<string, string>();
-        public IDictionary<string, string> TestParameters { get { return testParameters; } }
+        public IDictionary<string, string> TestParameters { get; } = new Dictionary<string, string>();
 
         public string WhereClause { get; private set; }
         public bool WhereClauseSpecified { get { return WhereClause != null; } }
 
-        private int defaultTimeout = -1;
-        public int DefaultTimeout { get { return defaultTimeout; } }
-        public bool DefaultTimeoutSpecified { get { return defaultTimeout >= 0; } }
+        public int DefaultTimeout { get; private set; } = -1;
+        public bool DefaultTimeoutSpecified { get { return DefaultTimeout >= 0; } }
 
-        private int randomSeed = -1;
-        public int RandomSeed { get { return randomSeed; } }
-        public bool RandomSeedSpecified { get { return randomSeed >= 0; } }
+        public int RandomSeed { get; private set; } = -1;
+        public bool RandomSeedSpecified { get { return RandomSeed >= 0; } }
 
         public string DefaultTestNamePattern { get; private set; }
 
-        private int numWorkers = -1;
-        public int NumberOfTestWorkers { get { return numWorkers; } }
-        public bool NumberOfTestWorkersSpecified { get { return numWorkers >= 0; } }
+        public int NumberOfTestWorkers { get; private set; } = -1;
+        public bool NumberOfTestWorkersSpecified { get { return NumberOfTestWorkers >= 0; } }
 
         public bool StopOnError { get; private set; }
 
         public bool WaitBeforeExit { get; private set; }
 
         // Output Control
-
         public bool NoHeader { get; private set; }
 
         public bool NoColor { get; private set; }
-
-        public bool Verbose { get; private set; }
 
         public bool TeamCity { get; private set; }
 
@@ -220,22 +205,16 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
-#if !PORTABLE
         private string workDirectory = null;
-        public string WorkDirectory 
+        public string WorkDirectory
         {
             get { return workDirectory ?? DEFAULT_WORK_DIRECTORY; }
         }
         public bool WorkDirectorySpecified { get { return workDirectory != null; } }
-#endif
 
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
 
-        /// <summary>Indicates whether a full report should be displayed.</summary>
-        public bool Full { get; private set; }
-
-#if !PORTABLE
         private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
@@ -251,17 +230,15 @@ namespace NUnit.Common
             }
         }
 
-        private List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
-        public IList<OutputSpecification> ExploreOutputSpecifications { get { return exploreOutputSpecifications; } }
-#endif
+        public IList<OutputSpecification> ExploreOutputSpecifications { get; } = new List<OutputSpecification>();
+
         // Error Processing
 
-        public List<string> errorMessages = new List<string>();
-        public IList<string> ErrorMessages { get { return errorMessages; } }
+        public IList<string> ErrorMessages { get; } = new List<string>();
 
-#endregion
-        
-#region Public Methods
+        #endregion
+
+        #region Public Methods
 
         public bool Validate()
         {
@@ -275,9 +252,9 @@ namespace NUnit.Common
             return ErrorMessages.Count == 0;
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         protected virtual void CheckOptionCombinations()
         {
@@ -340,22 +317,20 @@ namespace NUnit.Common
         {
             if (path == null) return null;
 
-#if PORTABLE
-            return Path.Combine(DEFAULT_WORK_DIRECTORY , path);
-#else
             return Path.GetFullPath(path);
-#endif
         }
 
-        protected virtual void ConfigureOptions()
+        protected virtual void ConfigureOptions(bool allowInputFile)
         {
+            InputFileRequired = allowInputFile;
+
             // NOTE: The order in which patterns are added
             // determines the display order for the help.
 
             // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
-#if !PORTABLE
+
             this.Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
                 v =>
                 {
@@ -388,7 +363,6 @@ namespace NUnit.Common
                     }
                 });
 
-#endif
             this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));
 
@@ -414,22 +388,22 @@ namespace NUnit.Common
                         }
                     }
                 });
-
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
-                v => defaultTimeout = RequiredInt(v, "--timeout"));
-
-            this.Add("seed=", "Set the random {SEED} used to generate test cases.",
-                v => randomSeed = RequiredInt(v, "--seed"));
-#if !PORTABLE
-            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
-                v => numWorkers = RequiredInt(v, "--workers"));
+                v => DefaultTimeout = RequiredInt(v, "--timeout"));
 #endif
+            this.Add("seed=", "Set the random {SEED} used to generate test cases.",
+                v => RandomSeed = RequiredInt(v, "--seed"));
+
+            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
+                v => NumberOfTestWorkers = RequiredInt(v, "--workers"));
+
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v != null);
 
             this.Add("wait", "Wait for input before closing console window.",
                 v => WaitBeforeExit = v != null);
-#if !PORTABLE
+
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
                 v => workDirectory = RequiredValue(v, "--work"));
@@ -440,24 +414,20 @@ namespace NUnit.Common
             this.Add("err=", "File {PATH} to contain error output from the tests.",
                 v => ErrFile = RequiredValue(v, "--err"));
 
-            this.Add("full", "Prints full report of all test results.",
-                v => Full = v != null);
-
-            this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.",
-                v => resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--resultxml"))));
+            this.Add("result=", "An output {SPEC} for saving the test results. This option may be repeated.",
+                v => ResolveOutputSpecification(RequiredValue(v, "--resultxml"), resultOutputSpecifications));
 
             this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v =>
             {
                 Explore = true;
-                if (v != null)
-                    ExploreOutputSpecifications.Add(new OutputSpecification(v));
+                ResolveOutputSpecification(v, ExploreOutputSpecifications);
             });
 
             this.Add("noresult", "Don't save any test results.",
                 v => noresult = v != null);
-#endif
+
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
-                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
+                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "Before", "After", "All"));
 
             this.Add("test-name-format=", "Non-standard naming pattern to use in generating test names.",
                 v => DefaultTestNamePattern = RequiredValue(v, "--test-name-format"));
@@ -465,7 +435,6 @@ namespace NUnit.Common
             this.Add("teamcity", "Turns on use of TeamCity service messages.",
                 v => TeamCity = v != null);
 
-#if !PORTABLE
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
@@ -474,9 +443,6 @@ namespace NUnit.Common
 
             this.Add("nocolor|noc", "Displays console output without color.",
                 v => NoColor = v != null);
-#endif
-            this.Add("verbose|v", "Display additional information as the test runs.",
-                v => Verbose = v != null);
 
             this.Add("help|h", "Display this message and exit.",
                 v => ShowHelp = v != null);
@@ -487,17 +453,39 @@ namespace NUnit.Common
             // Default
             this.Add("<>", v =>
             {
-#if PORTABLE
-                if (v.StartsWith("-") || v.StartsWith("/") && Environment.NewLine == "\r\n")
-#else
-                if (v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/')
-#endif
+                if (LooksLikeAnOption(v))
                     ErrorMessages.Add("Invalid argument: " + v);
+                else if (InputFileRequired)
+                    if (InputFile == null)
+                        InputFile = v;
+                    else
+                        ErrorMessages.Add("Multiple file names are not allowed on the command-line.\n    Invalid entry: " + v);
                 else
-                    InputFiles.Add(v);
+                    ErrorMessages.Add("Do not provide a file name when running a self-executing test.\n    Invalid entry: " + v);
             });
         }
 
-#endregion
+        private bool LooksLikeAnOption(string v)
+        {
+            return v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/';
+        }
+
+        private void ResolveOutputSpecification(string value, IList<OutputSpecification> outputSpecifications)
+        {
+            if (value == null)
+                return;
+
+            try
+            {
+                var spec = new OutputSpecification(value);
+                outputSpecifications.Add(spec);
+            }
+            catch (ArgumentException e)
+            {
+                ErrorMessages.Add(e.Message);
+            }
+        }
+
+        #endregion
     }
 }

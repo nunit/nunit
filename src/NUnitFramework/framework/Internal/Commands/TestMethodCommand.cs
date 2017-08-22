@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -56,7 +56,11 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="context">The execution context</param>
         public override TestResult Execute(TestExecutionContext context)
         {
-            // TODO: Decide if we should handle exceptions here
+            // NOTE: Things would be cleaner if we could handle
+            // exceptions in this command. However, that would
+            // make it impossible to write a wrapper command to
+            // implement ExpectedException, among other things.
+
             object result = RunTestMethod(context);
 
             if (testMethod.HasExpectedResult)

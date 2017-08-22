@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+// Copyright (c) 2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,7 +37,7 @@ namespace NUnit.TestUtilities.Comparers
         bool IEqualityComparer.Equals(object x, object y)
         {
             Called = true;
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             return Comparer<object>.Default.Compare(x, y) == 0;
 #else
             return Comparer.Default.Compare(x, y) == 0;

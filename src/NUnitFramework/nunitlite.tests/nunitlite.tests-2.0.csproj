@@ -15,6 +15,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -75,6 +76,7 @@
     <Compile Include="NUnit2XmlOutputWriterTests.cs" />
     <Compile Include="TestNameParserTests.cs" />
     <Compile Include="TestSelectionParserTests.cs" />
+    <Compile Include="TextUIReportTests.cs" />
     <Compile Include="TextUITests.cs">
       <SubType>Code</SubType>
     </Compile>
