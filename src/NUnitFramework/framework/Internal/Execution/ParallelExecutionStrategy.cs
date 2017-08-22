@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,22 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
-
-namespace NUnit.Framework
+#if PARALLEL
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
-    /// NonParallelizableAttribute is used to mark tests that should NOT be run in parallel.
+    /// Enumeration representing the strategy to follow in executing a work item.
+    /// The value is only relevant when running under the parallel dispatcher.
     /// </summary>
-    [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=true )]
-    public sealed class NonParallelizableAttribute : ParallelizableAttribute
+    public enum ParallelExecutionStrategy
     {
         /// <summary>
-        /// Construct a NonParallelizableAttribute.
+        /// Run directly on same thread
         /// </summary>
-        public NonParallelizableAttribute() : base(ParallelScope.None) { }
+        Direct,
+
+        /// <summary>
+        /// Enqueue for parallel execution
+        /// </summary>
+        Parallel,
+
+        /// <summary>
+        /// Enqueue for non-parallel execution
+        /// </summary>
+        NonParallel,
     }
 }
+#endif

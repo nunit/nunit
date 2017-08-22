@@ -288,7 +288,9 @@ namespace NUnit.Framework.Assertions
 
             var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
-                "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine;
+                "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine +
+                "  Missing (1): < \"z\" >" + Environment.NewLine +
+                "  Extra (1): < \"x\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEquivalent(set1,set2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -302,7 +304,9 @@ namespace NUnit.Framework.Assertions
             
             var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"x\" >" + Environment.NewLine +
-                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  Missing (1): < \"x\" >" + Environment.NewLine +
+                "  Extra (1): < \"z\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEquivalent(set1,set2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));

@@ -88,6 +88,7 @@
     <Compile Include="Compatibility\System.Threading\LazyThreadSafetyMode.cs" />
     <Compile Include="Compatibility\System.Threading\SpinWait.cs" />
     <Compile Include="Compatibility\System\Lazy.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintResult.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraint.cs" />
     <Compile Include="Constraints\Comparers\ArraysComparer.cs" />
     <Compile Include="Constraints\Comparers\CharsComparer.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
     <Compile Include="Internal\Commands\TimeoutCommand.cs" />
     <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
+    <Compile Include="Internal\Execution\ParallelExecutionStrategy.cs" />
     <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
     <Compile Include="Internal\Filters\CompositeFilter.cs" />
     <Compile Include="Internal\Filters\PropertyFilter.cs" />

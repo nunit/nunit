@@ -67,7 +67,10 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            return Tally(_expected).TryRemove( actual );
+            CollectionTally tally = Tally(_expected);
+            tally.TryRemove(actual);
+
+            return tally.Result.ExtraItems.Count == 0;
         }
 
 

@@ -45,6 +45,11 @@ namespace NUnit.Framework.Assertions.Tests
         [TestCase("NestedBlock_ThreeAssertsSucceed", 3)]
         [TestCase("TwoNestedBlocks_ThreeAssertsSucceed", 3)]
         [TestCase("NestedBlocksInMethodCalls", 3)]
+#if ASYNC
+        [TestCase("ThreeAssertsSucceed_Async", 3)]
+        [TestCase("NestedBlock_ThreeAssertsSucceed_Async", 3)]
+        [TestCase("TwoNestedBlocks_ThreeAssertsSucceed_Async", 3)]
+#endif
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
             var result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
@@ -63,6 +68,10 @@ namespace NUnit.Framework.Assertions.Tests
         [TestCase("TwoNestedBlocks_TwoAssertsFail", "Expected: 5", "ImaginaryPart")]
         [TestCase("MethodCallsFail", "Message from Assert.Fail")]
         [TestCase("MethodCallsFailAfterTwoAssertsFail", "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
+#if ASYNC
+        [TestCase("TwoAsserts_BothAssertsFail_Async", "RealPart", "ImaginaryPart")]
+        [TestCase("TwoNestedBlocks_TwoAssertsFail_Async", "Expected: 5", "ImaginaryPart")]
+#endif
         public void AssertMultipleFails(string methodName, params string[] assertionMessageRegex)
         {
             CheckResult(methodName, ResultState.Failure, assertionMessageRegex);

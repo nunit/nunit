@@ -226,6 +226,11 @@ namespace NUnit.Framework
                         data.Add(parms);
                     }
                 }
+                else
+                {
+                    data.Clear();
+                    data.Add(new TestCaseParameters(new Exception("The test case source could not be found.")));
+                }
             }
             catch (Exception ex)
             {

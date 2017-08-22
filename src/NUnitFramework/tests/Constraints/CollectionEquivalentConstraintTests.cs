@@ -86,6 +86,15 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void EquivalentFailsWithExtraItemsInActual()
+        {
+            ICollection set1 = new SimpleObjectCollection("x", "y");
+            ICollection set2 = new SimpleObjectCollection("x", "x", "y");
+
+            Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
+        }
+
+        [Test]
         public void EquivalentHandlesNull()
         {
             ICollection set1 = new SimpleObjectCollection(null, "x", null, "z");
@@ -164,6 +173,44 @@ namespace NUnit.Framework.Constraints
 
 #if (NET40 || NET45 || NETSTANDARD1_3 || NETSTANDARD1_6)
         [Test]
+        public void CheckCollectionEquivalentConstraintResultIsReturned()
+        {
+            IEnumerable<string> set1 = new List<string>() { "one" };
+            IEnumerable<string> set2 = new List<string>() { "two" };
+
+            Assert.IsInstanceOf(typeof(CollectionEquivalentConstraintResult),
+                new CollectionEquivalentConstraint(set1).ApplyTo(set2));
+        }
+
+        /// <summary>
+        /// A singular point test to ensure that the <see cref="ConstraintResult"/> returned by
+        /// <see cref="CollectionEquivalentConstraint"/> includes the feature of describing both
+        /// extra and missing elements when the collections are not equivalent.
+        /// </summary>
+        /// <remarks>
+        /// This is not intended to fully test the display of missing/extra elements, but to ensure
+        /// that the functionality is actually there.
+        /// </remarks>
+        [Test]
+        public void TestConstraintResultMessageDisplaysMissingAndExtraElements()
+        {
+            List<string> expectedCollection = new List<string>() { "one", "two" };
+            List<string> actualCollection = new List<string>() { "three", "one" };
+
+            ConstraintResult cr = new CollectionEquivalentConstraint(expectedCollection).ApplyTo(actualCollection);
+
+            TextMessageWriter writer = new TextMessageWriter();
+            cr.WriteMessageTo(writer);
+
+            string expectedMsg =
+                "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
+                "  But was:  < \"three\", \"one\" >" + Environment.NewLine +
+                "  Missing (1): < \"two\" >" + Environment.NewLine +
+                "  Extra (1): < \"three\" >" + Environment.NewLine;
+            Assert.AreEqual(expectedMsg, writer.ToString());
+        }
+
+        [Test]
         public void WorksWithHashSets()
         {
             var hash1 = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
@@ -204,10 +251,14 @@ namespace NUnit.Framework.Constraints
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
-            Assert.That(writer.ToString(), Is.EqualTo(
+
+            var expectedMessage =
                 "  Expected: equivalent to < \"presto\", \"abracadabra\", \"hocuspocus\" >" + Environment.NewLine +
-                "  But was:  < \"abracadabra\", \"presto\", \"hocusfocus\" >" + Environment.NewLine));
-            //Console.WriteLine(writer.ToString());
+                "  But was:  < \"abracadabra\", \"presto\", \"hocusfocus\" >" + Environment.NewLine +
+                "  Missing (1): < \"hocuspocus\" >" + Environment.NewLine +
+                "  Extra (1): < \"hocusfocus\" >" + Environment.NewLine;
+
+            Assert.That(writer.ToString(), Is.EqualTo(expectedMessage));
         }
 #endif
     }
