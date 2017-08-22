@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole
+// Copyright (c) 2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             IMethodInfo method = new MethodWrapper(typeof(DummyFixture), "DummyTest");
             ITest test = new TestMethod(method);
-            _workItem = WorkItem.CreateWorkItem(test, TestFilter.Empty);
+            _workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty);
 
             _context = new TestExecutionContext();
             _workItem.InitializeContext(_context);
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         Thread _thread;
 
         private void StartExecution()
@@ -92,12 +92,8 @@ namespace NUnit.Framework.Internal.Execution
 
             public static void DummyTest()
             {
-#if !PORTABLE && !NETSTANDARD1_6
                 if (Delay > 0)
                     Thread.Sleep(Delay);
-#else
-                System.Threading.Tasks.Task.Delay(Delay);
-#endif
             }
         }
     }

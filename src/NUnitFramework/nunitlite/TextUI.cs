@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@ using NUnit.Common;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
@@ -40,29 +40,29 @@ namespace NUnitLite
     {
         public ExtendedTextWriter Writer { get; private set; }
 
-        private TextReader _reader;
-        private NUnitLiteOptions _options;
+        private readonly TextReader _reader;
+        private readonly NUnitLiteOptions _options;
 
-        #region Constructors
+        private readonly bool _displayBeforeTest;
+        private readonly bool _displayAfterTest;
+        private readonly bool _displayBeforeOutput;
+
+        #region Constructor
 
         public TextUI(ExtendedTextWriter writer, TextReader reader, NUnitLiteOptions options)
         {
             Writer = writer;
             _reader = reader;
             _options = options;
+
+            string labelsOption = options.DisplayTestLabels?.ToUpperInvariant() ?? "ON";
+
+            _displayBeforeTest = labelsOption == "ALL" || labelsOption == "BEFORE";
+            _displayAfterTest = labelsOption == "AFTER";
+            _displayBeforeOutput = _displayBeforeTest || _displayAfterTest || labelsOption == "ON";
         }
 
-        public TextUI(ExtendedTextWriter writer, TextReader reader)
-            : this(writer, reader, new NUnitLiteOptions()) { }
-
-        public TextUI(ExtendedTextWriter writer)
-#if PORTABLE
-            : this(writer, null, new NUnitLiteOptions()) { }
-#else
-            : this(writer, Console.In, new NUnitLiteOptions()) { }
-#endif
-
-    #endregion
+        #endregion
 
         #region Public Methods
 
@@ -76,7 +76,7 @@ namespace NUnitLite
             Assembly executingAssembly = GetType().GetTypeInfo().Assembly;
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
-            string copyright = "Copyright (C) 2017, Charlie Poole";
+            string copyright = "Copyright (C) 2017 Charlie Poole, Rob Prouse";
             string build = "";
 
             var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
@@ -112,17 +112,16 @@ namespace NUnitLite
 
         public void DisplayHelp()
         {
-            WriteHeader("Usage: NUNITLITE [assembly] [options]");
+            WriteHeader("Usage: NUNITLITE-RUNNER assembly [options]");
+            WriteHeader("       USER-EXECUTABLE [options]");
             Writer.WriteLine();
             WriteHelpLine("Runs a set of NUnitLite tests from the console.");
             Writer.WriteLine();
 
             WriteSectionHeader("Assembly:");
-            WriteHelpLine("      An alternate assembly from which to execute tests. Normally, the tests");
-            WriteHelpLine("      contained in the executable test assembly itself are run. An alternate");
-            WriteHelpLine("      assembly is specified using the assembly name, without any path or.");
-            WriteHelpLine("      extension. It must be in the same in the same directory as the executable");
-            WriteHelpLine("      or on the probing path.");
+            WriteHelpLine("      File name or path of the assembly from which to execute tests. Required");
+            WriteHelpLine("      when using the nunitlite-runner executable to run the tests. Not allowed");
+            WriteHelpLine("      when running a self-executing user test assembly.");
             Writer.WriteLine();
 
             WriteSectionHeader("Options:");
@@ -148,14 +147,13 @@ namespace NUnitLite
             WriteHelpLine("      the following forms:");
             WriteHelpLine("          --OPTION:filename");
             WriteHelpLine("          --OPTION:filename;format=formatname");
-            WriteHelpLine("          --OPTION:filename;transform=xsltfile");
             Writer.WriteLine();
             WriteHelpLine("      The --result option may use any of the following formats:");
-            WriteHelpLine("          nunit3 - the native XML format for NUnit 3.0");
+            WriteHelpLine("          nunit3 - the native XML format for NUnit 3");
             WriteHelpLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
             Writer.WriteLine();
             WriteHelpLine("      The --explore option may use any of the following formats:");
-            WriteHelpLine("          nunit3 - the native XML format for NUnit 3.0");
+            WriteHelpLine("          nunit3 - the native XML format for NUnit 3");
             WriteHelpLine("          cases  - a text file listing the full names of all test cases.");
             WriteHelpLine("      If --explore is used without any specification following, a list of");
             WriteHelpLine("      test cases is output to the console.");
@@ -171,9 +169,8 @@ namespace NUnitLite
         /// </summary>
         public void DisplayRuntimeEnvironment()
         {
-#if !PORTABLE
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
             Writer.WriteLabelLine("   OS Version: ", RuntimeInformation.OSDescription);
             Writer.WriteLabelLine("  CLR Version: ", RuntimeInformation.FrameworkDescription);
 #else
@@ -181,7 +178,6 @@ namespace NUnitLite
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
 #endif
             Writer.WriteLine();
-#endif
         }
 
         #endregion
@@ -224,10 +220,7 @@ namespace NUnitLite
                     : Math.Max(Environment.ProcessorCount, 2));
 #endif
 
-#if !PORTABLE
             Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Directory.GetCurrentDirectory());
-#endif
-
             Writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
 
             if (_options.TeamCity)
@@ -238,30 +231,38 @@ namespace NUnitLite
 
         #endregion
 
+        #region TestStarted
+
+        public void TestStarted(ITest test)
+        {
+            if (_displayBeforeTest && !test.IsSuite)
+                WriteLabelLine(test.FullName);
+        }
+
+        #endregion
+
         #region TestFinished
 
         private bool _testCreatedOutput = false;
+        private bool _needsNewLine = false;
 
         public void TestFinished(ITestResult result)
         {
-            bool isSuite = result.Test.IsSuite;
-
-            var labels = "ON";
-
-            if (_options.DisplayTestLabels != null)
-                labels = _options.DisplayTestLabels.ToUpperInvariant();
-
-            if (!isSuite && labels == "ALL" || !isSuite && labels == "ON" && result.Output.Length > 0)
-            {
-                WriteLabelLine(result.Test.FullName);
-            }
-
             if (result.Output.Length > 0)
             {
-                WriteOutputLine(result.Output);
+                if (_displayBeforeOutput)
+                    WriteLabelLine(result.Test.FullName);
+
+                WriteOutput(result.Output);
 
                 if (!result.Output.EndsWith("\n"))
                     Writer.WriteLine();
+            }
+
+            if (!result.Test.IsSuite)
+            {
+                if (_displayAfterTest)
+                    WriteLabelLineAfterTest(result.Test.FullName, result.ResultState);
             }
 
             if (result.Test is TestAssembly && _testCreatedOutput)
@@ -277,16 +278,10 @@ namespace NUnitLite
 
         public void TestOutput(TestOutput output)
         {
-            var labels = "ON";
+            if (_displayBeforeOutput && output.TestName != null)
+                WriteLabelLine(output.TestName);
 
-            if (_options.DisplayTestLabels != null)
-                labels = _options.DisplayTestLabels.ToUpperInvariant();
-
-            if (labels == "ON" || labels == "All")
-                if (output.TestName != null)
-                    WriteLabelLine(output.TestName);
-
-            WriteOutputLine(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
+            WriteOutput(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
         }
 
         #endregion
@@ -502,7 +497,7 @@ namespace NUnitLite
             string reportID = (++_reportIndex).ToString();
             int numAsserts = result.AssertionResults.Count;
 
-#if PORTABLE && !NETSTANDARD1_6
+#if NETSTANDARD1_3 && !NETSTANDARD1_6
             ColorStyle style = GetColorStyle(resultState);
             string status = GetResultStatus(resultState);
             DisplayTestResult(style, reportID, status, fullName, message, stackTrace);
@@ -647,27 +642,71 @@ namespace NUnitLite
         {
             if (label != _currentLabel)
             {
+                WriteNewLineIfNeeded();
+
                 Writer.WriteLine(ColorStyle.SectionHeader, "=> " + label);
+
                 _testCreatedOutput = true;
                 _currentLabel = label;
             }
         }
 
-        private void WriteOutputLine(string text)
+        private void WriteLabelLineAfterTest(string label, ResultState resultState)
         {
-            WriteOutputLine(ColorStyle.Output, text);
+            WriteNewLineIfNeeded();
+
+            string status = string.IsNullOrEmpty(resultState.Label)
+                ? resultState.Status.ToString()
+                : resultState.Label;
+
+            Writer.Write(GetColorForResultStatus(status), status);
+            Writer.WriteLine(ColorStyle.SectionHeader, " => " + label);
+
+            _currentLabel = label;
         }
 
-        private void WriteOutputLine(ColorStyle color, string text)
+        private void WriteNewLineIfNeeded()
+        {
+            if (_needsNewLine)
+            {
+                Writer.WriteLine();
+                _needsNewLine = false;
+            }
+        }
+
+        private void WriteOutput(string text)
+        {
+            WriteOutput(ColorStyle.Output, text);
+        }
+
+        private void WriteOutput(ColorStyle color, string text)
         {
             Writer.Write(color, text);
 
-            if (!text.EndsWith(Environment.NewLine))
-                Writer.WriteLine();
-
             _testCreatedOutput = true;
+            _needsNewLine = !text.EndsWith("\n");
         }
 
-#endregion
+         private static ColorStyle GetColorForResultStatus(string status)
+        {
+            switch (status)
+            {
+                case "Passed":
+                    return ColorStyle.Pass;
+                case "Failed":
+                    return ColorStyle.Failure;
+                case "Error":
+                case "Invalid":
+                case "Cancelled":
+                    return ColorStyle.Error;
+                case "Warning":
+                case "Ignored":
+                    return ColorStyle.Warning;
+                default:
+                    return ColorStyle.Output;
+            }
+        }
+
+        #endregion
     }
 }

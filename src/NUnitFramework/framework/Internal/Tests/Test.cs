@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012-2015 Charlie Poole
+// Copyright (c) 2012-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -40,16 +42,6 @@ namespace NUnit.Framework.Internal
         /// uninitialized ids will stand out.
         /// </summary>
         private static int _nextID = 1000;
-
-        /// <summary>
-        /// The SetUp methods.
-        /// </summary>
-        protected MethodInfo[] setUpMethods;
-
-        /// <summary>
-        /// The teardown methods
-        /// </summary>
-        protected MethodInfo[] tearDownMethods;
 
         /// <summary>
         /// Used to cache the declaring type for this MethodInfo
@@ -123,6 +115,8 @@ namespace NUnit.Framework.Internal
             Id = GetNextId();
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
+            SetUpMethods = new MethodInfo[0];
+            TearDownMethods = new MethodInfo[0];
         }
 
         private static string GetNextId()
@@ -186,6 +180,11 @@ namespace NUnit.Framework.Internal
         {
             get { return null; }
         }
+
+        /// <summary>
+        /// The arguments to use in creating the test or empty array if none required.
+        /// </summary>
+        public abstract object[] Arguments { get; }
 
         /// <summary>
         /// Gets the TypeInfo of the fixture used in running this test
@@ -266,7 +265,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
-        public abstract System.Collections.Generic.IList<ITest> Tests { get; }
+        public abstract IList<ITest> Tests { get; }
 
         /// <summary>
         /// Gets or sets a fixture object for running this test.
@@ -289,11 +288,40 @@ namespace NUnit.Framework.Internal
         /// <value></value>
         public int Seed { get; set; }
 
-        #endregion
+        /// <summary>
+        /// The SetUp methods.
+        /// </summary>
+        public MethodInfo[] SetUpMethods { get; protected set; }
+
+        /// <summary>
+        /// The teardown methods
+        /// </summary>
+        public MethodInfo[] TearDownMethods { get; protected set; }
+
+        #endregion 
 
         #region Internal Properties
 
         internal bool RequiresThread { get; set; }
+
+        private ITestAction[] _actions;
+
+        internal ITestAction[] Actions
+        {
+            get
+            {
+                if (_actions == null)
+                {
+                    // For fixtures, we use special rules to get actions
+                    // Otherwise we just get the attributes
+                    _actions = Method == null && TypeInfo != null
+                        ? GetActionsForType(TypeInfo.Type)
+                        : GetCustomAttributes<ITestAction>(false);
+                }
+
+                return _actions;
+            }
+        }
         
         #endregion
 
@@ -305,7 +333,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
-#if PORTABLE || NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
@@ -349,6 +377,36 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        /// <summary>
+        /// Mark the test as Invalid (not runnable) specifying a reason
+        /// </summary>
+        /// <param name="reason">The reason the test is not runnable</param>
+        public void MakeInvalid(string reason)
+        {
+            Guard.ArgumentNotNullOrEmpty(reason, "reason");
+
+            RunState = RunState.NotRunnable;
+            Properties.Add(PropertyNames.SkipReason, reason);
+        }
+
+        /// <summary>
+        /// Get custom attributes applied to a test
+        /// </summary>
+        public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
+        {
+            if (Method != null)
+#if NETSTANDARD1_3 || NETSTANDARD1_6
+                return Method.GetCustomAttributes<TAttr>(inherit).ToArray();
+#else
+                return (TAttr[])Method.MethodInfo.GetCustomAttributes(typeof(TAttr), inherit);
+#endif
+
+            if (TypeInfo != null)
+                return TypeInfo.GetCustomAttributes<TAttr>(inherit).ToArray();
+
+            return new TAttr[0];
+        }
+
         #endregion
 
         #region Protected Methods
@@ -371,6 +429,34 @@ namespace NUnit.Framework.Internal
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static ITestAction[] GetActionsForType(Type type)
+        {
+            var actions = new List<ITestAction>();
+
+            if (type != null && type != typeof(object))
+            {
+                actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
+
+#if NETSTANDARD1_3 || NETSTANDARD1_6
+                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
+                    actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false).ToArray());
+
+                actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false).ToArray());
+#else
+                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
+                    actions.AddRange((ITestAction[])interfaceType.GetTypeInfo().GetCustomAttributes(typeof(ITestAction), false));
+
+                actions.AddRange((ITestAction[])type.GetTypeInfo().GetCustomAttributes(typeof(ITestAction), false));
+#endif
+            }
+
+            return actions.ToArray();
         }
 
         #endregion

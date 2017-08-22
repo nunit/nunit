@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,8 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
 
@@ -50,6 +51,20 @@ namespace NUnit.TestData
         {
             while (true) { }
         }
+
+
+        [Test, Timeout(500)]
+        public void TimeoutWithMessagePumpShouldAbort()
+        {
+            // Simulate System.Windows.Forms.Application.Run or .ShowDialog,
+            // or System.Windows.Threading.Dispatcher.PushFrame,
+            // which block on native calls to WaitMessage or MsgWaitForMultipleObjectsEx.
+            while (true)
+                WaitMessage();
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool WaitMessage();
     }
 
     public class TimeoutFixtureWithTimeoutInSetUp : TimeoutFixture
@@ -82,9 +97,9 @@ namespace NUnit.TestData
         [Test]
         public void Test1() { }
         [Test]
-        public void Test2WithInfiniteLoop() 
-        { 
-            while (true) { } 
+        public void Test2WithInfiniteLoop()
+        {
+            while (true) { }
         }
         [Test]
         public void Test3() { }
@@ -93,8 +108,8 @@ namespace NUnit.TestData
     public class TimeoutTestCaseFixture
     {
         const int TIME_OUT_TIME = 100;
-        const int NOT_TIMEOUTED_TIME = 50;
-        const int TIMEOUTED_TIME = 150;
+        const int NOT_TIMEOUTED_TIME = 10;
+        const int TIMEOUTED_TIME = 500;
 
         [Test]
         [Timeout(TIME_OUT_TIME)]

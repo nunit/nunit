@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2014 Charlie Poole
+// Copyright (c) 2009-2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,30 +34,28 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
 namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// FrameworkController provides a facade for use in loading, browsing 
-    /// and running tests without requiring a reference to the NUnit 
+    /// FrameworkController provides a facade for use in loading, browsing
+    /// and running tests without requiring a reference to the NUnit
     /// framework. All calls are encapsulated in constructors for
     /// this class and its nested classes, which only require the
     /// types of the Common Type System as arguments.
-    /// 
+    ///
     /// The controller supports four actions: Load, Explore, Count and Run.
     /// They are intended to be called by a driver, which should allow for
-    /// proper sequencing of calls. Load must be called before any of the 
+    /// proper sequencing of calls. Load must be called before any of the
     /// other actions. The driver may support other actions, such as
     /// reload on run, by combining these calls.
     /// </summary>
     public class FrameworkController : LongLivedMarshalByRefObject
     {
-#if !PORTABLE
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
-#endif
 
         // Pre-loaded test assembly, if passed in constructor
         private Assembly _testAssembly;
@@ -128,13 +126,11 @@ namespace NUnit.Framework.Api
             _testAssembly = assembly;
         }
 
-#if !PORTABLE
-        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
-        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-#endif   
         private void Initialize(string assemblyPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyPath;
@@ -148,21 +144,19 @@ namespace NUnit.Framework.Api
 
                 if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)Settings[FrameworkPackageSettings.InternalTraceWriter], traceLevel);
-#if !PORTABLE
                 else
                 {
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-#if NETSTANDARD1_6
-                    var id = DateTime.Now.ToString("o");
-#else      
+#if NETSTANDARD1_3 || NETSTANDARD1_6
+                    var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+#else
                     var id = Process.GetCurrentProcess().Id;
 #endif
                     var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
-#endif
             }
         }
 
@@ -199,7 +193,7 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-        #region Public Action methods Used by nunit.driver for running portable tests
+        #region Public Action methods Used by nunit.driver for running tests
 
         /// <summary>
         /// Loads the tests in the assembly
@@ -222,13 +216,10 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of exploring the tests</returns>
         public string ExploreTests(string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             if (Runner.LoadedTest == null)
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
-            // TODO: Make use of the filter
-            return Runner.LoadedTest.ToXml(true).OuterXml;
+            return Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true).OuterXml;
         }
 
         /// <summary>
@@ -238,20 +229,12 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of the test run</returns>
         public string RunTests(string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE
             InsertEnvironmentElement(result);
-#endif
-
-            // Ensure that the CallContext of the thread is not polluted
-            // by our TestExecutionContext, which is not serializable.
-            TestExecutionContext.ClearCurrentContext();
 
             return result.OuterXml;
         }
@@ -288,8 +271,6 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of the test run</returns>
         public string RunTests(Action<string> callback, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             var handler = new ActionCallback(callback);
 
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
@@ -297,13 +278,7 @@ namespace NUnit.Framework.Api
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE
             InsertEnvironmentElement(result);
-#endif
-
-            // Ensure that the CallContext of the thread is not polluted
-            // by our TestExecutionContext, which is not serializable.
-            TestExecutionContext.ClearCurrentContext();
 
             return result.OuterXml;
         }
@@ -315,8 +290,6 @@ namespace NUnit.Framework.Api
         /// <param name="filter">A string containing the XML representation of the filter to use</param>
         private void RunAsync(Action<string> callback, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             var handler = new ActionCallback(callback);
 
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
@@ -339,8 +312,6 @@ namespace NUnit.Framework.Api
         /// <returns>The number of tests</returns>
         public int CountTests(string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             return Runner.CountTestCases(TestFilter.FromXml(filter));
         }
 
@@ -355,39 +326,26 @@ namespace NUnit.Framework.Api
 
         private void ExploreTests(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             if (Runner.LoadedTest == null)
                 throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
-            // TODO: Make use of the filter
-            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
+            handler.RaiseCallbackEvent(Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true).OuterXml);
         }
 
         private void RunTests(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
             // Insert elements as first child in reverse order
             if (Settings != null) // Some platforms don't have settings
                 InsertSettingsElement(result, Settings);
-#if !PORTABLE
             InsertEnvironmentElement(result);
-#endif
-
-            // Ensure that the CallContext of the thread is not polluted
-            // by our TestExecutionContext, which is not serializable.
-            TestExecutionContext.ClearCurrentContext();
 
             handler.RaiseCallbackEvent(result.OuterXml);
         }
 
         private void RunAsync(ICallbackEventHandler handler, string filter)
         {
-            Guard.ArgumentNotNull(filter, "filter");
-
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
 
@@ -401,13 +359,12 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
         }
 
-#if !PORTABLE
         /// <summary>
         /// Inserts environment element
         /// </summary>
         /// <param name="targetNode">Target node</param>
         /// <returns>The new node</returns>
-#if NETSTANDARD1_6
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
@@ -415,18 +372,19 @@ namespace NUnit.Framework.Api
 
             var assemblyName = AssemblyHelper.GetAssemblyName(typeof(FrameworkController).GetTypeInfo().Assembly);
             env.AddAttribute("framework-version", assemblyName.Version.ToString());
-            env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
-            env.AddAttribute("os-version", RuntimeInformation.OSDescription);
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
-            env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
+            env.AddAttribute("os-version", RuntimeInformation.OSDescription);
+#if !NETSTANDARD1_3
+            env.AddAttribute("machine-name", Environment.MachineName);
+#endif
             env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
-
             return env;
         }
 #else
-        public static TNode InsertEnvironmentElement(TNode targetNode)
+            public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
             targetNode.ChildNodes.Insert(0, env);
@@ -450,7 +408,6 @@ namespace NUnit.Framework.Api
         {
             return IntPtr.Size == 8 ? "x64" : "x86";
         }
-#endif
 #endif
 
         /// <summary>

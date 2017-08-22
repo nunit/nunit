@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
@@ -34,7 +35,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
 
-#if PORTABLE && !NETSTANDARD1_6 && !NETCOREAPP1_0
+#if NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_0
 using BindingFlags = NUnit.Compatibility.BindingFlags;
 #endif
 
@@ -57,6 +58,28 @@ namespace NUnit.TestUtilities
             TestSuite suite = MakeFixture(fixture.GetType());
             suite.Fixture = fixture;
             return suite;
+        }
+
+        public static TestSuite MakeFixture(List<Type> types)
+        {
+            // following the pattern found in DefaultTestAssemblyBuilder
+            var fixtures = new List<Test>();
+            var defaultSuiteBuilder = new DefaultSuiteBuilder();
+            foreach (var type in types)
+            {
+                var typeInfo = new TypeWrapper(type);
+                var test = defaultSuiteBuilder.BuildFrom(typeInfo);
+                fixtures.Add(test);
+            }
+
+            var assembly = AssemblyHelper.Load("nunit.testdata");
+            var assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
+            TestSuite testSuite = new TestAssembly(assembly, assemblyPath);
+
+            var treeBuilder = new NamespaceTreeBuilder(testSuite);
+            treeBuilder.Add(fixtures);
+
+            return treeBuilder.RootSuite;
         }
 
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
@@ -138,7 +161,7 @@ namespace NUnit.TestUtilities
             return RunTest(testMethod, fixture);
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         public static ITestResult RunAsTestCase(Action action)
         {
             var method = action.Method;
@@ -166,7 +189,7 @@ namespace NUnit.TestUtilities
             context.TestObject = testObject;
             context.Dispatcher = new SuperSimpleDispatcher();
 
-            var work = WorkItem.CreateWorkItem(test, TestFilter.Empty);
+            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
             work.InitializeContext(context);
 
             return work;
@@ -179,11 +202,7 @@ namespace NUnit.TestUtilities
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
             {
-#if PORTABLE || NETSTANDARD1_6
-                System.Threading.Tasks.Task.Delay(1);
-#else
                 Thread.Sleep(1);
-#endif
             }
 
             return work.Result;
@@ -209,6 +228,11 @@ namespace NUnit.TestUtilities
         /// </summary>
         class SuperSimpleDispatcher : IWorkItemDispatcher
         {
+            public void Start(WorkItem topLevelWorkItem)
+            {
+                topLevelWorkItem.Execute();
+            }
+
             public void Dispatch(WorkItem work)
             {
                 work.Execute();

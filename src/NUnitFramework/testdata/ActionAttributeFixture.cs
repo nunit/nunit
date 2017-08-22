@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -72,6 +72,18 @@ namespace NUnit.TestData.ActionAttributeTests
         public static void ClearResults()
         {
             Events.Clear();
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            Events.Add(string.Format("{0}.SetUpTearDown.Before.Test", TestContext.CurrentContext.Test.Name));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Events.Add(string.Format("{0}.SetUpTearDown.After.Test", TestContext.CurrentContext.Test.Name));
         }
 
         [TestCase("One", TestName="CaseOne")]

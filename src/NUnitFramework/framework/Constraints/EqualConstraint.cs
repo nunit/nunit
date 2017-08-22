@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -31,8 +31,8 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// EqualConstraint is able to compare an actual value with the
-    /// expected value provided in its constructor. Two objects are 
-    /// considered equal if both are null, or if both have the same 
+    /// expected value provided in its constructor. Two objects are
+    /// considered equal if both are null, or if both have the same
     /// value. NUnit has special semantics for some object types.
     /// </summary>
     public class EqualConstraint : Constraint
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// NUnitEqualityComparer used to test equality.
         /// </summary>
-        private NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
+        private NUnitEqualityComparer _comparer = NUnitEqualityComparer.Default;
 
         #endregion
 
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
 
         #region Properties
 
-        // TODO: Remove public properties 
+        // TODO: Remove public properties
         // They are only used by EqualConstraintResult
         // EqualConstraint should inject them into the constructor.
 
@@ -128,7 +128,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Flag the constraint to suppress string clipping 
+        /// Flag the constraint to suppress string clipping
         /// and return self.
         /// </summary>
         public EqualConstraint NoClip
@@ -177,8 +177,8 @@ namespace NUnit.Framework.Constraints
         /// </remarks>
         public EqualConstraint WithSameOffset
         {
-            get 
-            { 
+            get
+            {
                 _comparer.WithSameOffset = true;
                 return this;
             }
@@ -186,13 +186,13 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
-        /// a distance in representable _values (see remarks).
+        /// a distance in representable values (see remarks).
         /// </summary>
         /// <returns>Self.</returns>
         /// <remarks>
         /// Ulp stands for "unit in the last place" and describes the minimum
         /// amount a given value can change. For any integers, an ulp is 1 whole
-        /// digit. For floating point _values, the accuracy of which is better
+        /// digit. For floating point values, the accuracy of which is better
         /// for smaller numbers and worse for larger numbers, an ulp depends
         /// on the size of the number. Using ulps for comparison of floating
         /// point results instead of fixed tolerances is safer because it will
@@ -209,7 +209,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
-        /// a percentage that the actual _values is allowed to deviate from
+        /// a percentage that the actual values is allowed to deviate from
         /// the expected value.
         /// </summary>
         /// <returns>Self</returns>
@@ -376,14 +376,14 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get 
-            { 
+            get
+            {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected));
 
                 if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
                 {
                     sb.Append(" +/- ");
-                    sb.Append(MsgUtils.FormatValue(_tolerance.Value));
+                    sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
                     if (_tolerance.Mode != ToleranceMode.Linear)
                     {
                         sb.Append(" ");
@@ -406,7 +406,6 @@ namespace NUnit.Framework.Constraints
         // null array reference. Others could be added in the future.
         private void AdjustArgumentIfNeeded<T>(ref T arg)
         {
-#if !PORTABLE
             if (arg != null)
             {
                 Type argType = arg.GetType();
@@ -420,7 +419,6 @@ namespace NUnit.Framework.Constraints
                     arg = (T)ctor.Invoke(new object[] { array });
                 }
             }
-#endif
         }
 
         #endregion

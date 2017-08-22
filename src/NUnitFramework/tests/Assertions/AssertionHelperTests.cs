@@ -5,11 +5,10 @@ using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Syntax
 {
+    [Obsolete("Test of Obsolete AssertionHelper class")]
     class AssertionHelperTests : AssertionHelper
     {
-#if !PORTABLE
         private static readonly string DEFAULT_PATH_CASE = Path.DirectorySeparatorChar == '\\' ? "ignorecase" : "respectcase";
-#endif
 
         #region Not
 
@@ -183,7 +182,6 @@ namespace NUnit.Framework.Syntax
 
         #region Attribute
 
-#if !PORTABLE
         [Test]
         public void AttributeExistsTest()
         {
@@ -223,7 +221,6 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<AttributeConstraint>());
             Expect(constraint.ToString(), EqualTo("<attribute NUnit.Framework.TestFixtureAttribute <property Description <not <null>>>>"));
         }
-#endif
 
         #endregion
 
@@ -313,7 +310,7 @@ namespace NUnit.Framework.Syntax
 
         #region After
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void After()
         {
@@ -611,7 +608,6 @@ namespace NUnit.Framework.Syntax
 
         #region SamePath
 
-#if !PORTABLE
         [Test]
         public void SamePath()
         {
@@ -656,13 +652,11 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<NotConstraint>());
             Expect(constraint.ToString(), EqualTo(@"<not <samepath ""/path/to/match"" respectcase>>"));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region SamePathOrUnder
+        #region SamePathOrUnder
 
-#if !PORTABLE
         [Test]
         public void SamePathOrUnder()
         {
@@ -707,13 +701,12 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<NotConstraint>());
             Expect(constraint.ToString(), EqualTo(@"<not <samepathorunder ""/path/to/match"" respectcase>>"));
         }
-#endif
 
         #endregion
 
         #region BinarySerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void BinarySerializableConstraint()
         {
@@ -727,7 +720,7 @@ namespace NUnit.Framework.Syntax
 
         #region XmlSerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void XmlSerializableConstraint()
         {

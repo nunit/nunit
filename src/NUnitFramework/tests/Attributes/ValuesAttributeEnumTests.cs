@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014 Charlie Poole, Rob Prouse
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -46,14 +46,14 @@ namespace NUnit.Framework.Tests.Attributes
         private int _countBools;
 
         [OneTimeSetUp]
-        public void TestFixtureSetup()
+        public void OneTimeSetUp()
         {
             _countEnums = 0;
             _countBools = 0;
         }
 
         [OneTimeTearDown]
-        public void TestFixtureTeardown()
+        public void OneTimeTearDown()
         {
             Assert.That(_countEnums, Is.EqualTo(5), "The TestEnumValues method should have been called 5 times");
             Assert.That(_countBools, Is.EqualTo(2), "The TestBoolValues method should have been called twice");

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -97,7 +97,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Positive
- 
+
         /// <summary>
         /// Returns a constraint that tests for a positive value
         /// </summary>
@@ -105,11 +105,11 @@ namespace NUnit.Framework
         {
             get { return new GreaterThanConstraint(0); }
         }
- 
+
         #endregion
- 
+
         #region Negative
- 
+
         /// <summary>
         /// Returns a constraint that tests for a negative value
         /// </summary>
@@ -159,7 +159,7 @@ namespace NUnit.Framework
         #region Unique
 
         /// <summary>
-        /// Returns a constraint that tests whether a collection 
+        /// Returns a constraint that tests whether a collection
         /// contains all unique items.
         /// </summary>
         public static UniqueItemsConstraint Unique
@@ -171,7 +171,7 @@ namespace NUnit.Framework
 
         #region BinarySerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -185,7 +185,7 @@ namespace NUnit.Framework
 
         #region XmlSerializable
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -383,7 +383,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the actual value
-        /// is a collection containing the same elements as the 
+        /// is a collection containing the same elements as the
         /// collection supplied as an argument.
         /// </summary>
         public static CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
@@ -431,67 +431,10 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region StringContaining
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("Deprecated, use Does.Contain")]
-        public static SubstringConstraint StringContaining(string expected)
-        {
-            return new SubstringConstraint(expected);
-        }
-
-        #endregion
-
-        #region StringStarting
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value starts with the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("Deprecated, use Does.StartWith")]
-        public static StartsWithConstraint StringStarting(string expected)
-        {
-            return new StartsWithConstraint(expected);
-        }
-
-        #endregion
-
-        #region StringEnding
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value ends with the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("Deprecated, use Does.EndWith")]
-        public static EndsWithConstraint StringEnding(string expected)
-        {
-            return new EndsWithConstraint(expected);
-        }
-
-        #endregion
-
-        #region StringMatching
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value matches the regular expression supplied as an argument.
-        /// </summary>
-        [Obsolete("Deprecated, use Does.Match")]
-        public static RegexConstraint StringMatching(string pattern)
-        {
-            return new RegexConstraint(pattern);
-        }
-
-        #endregion
-        
-#if !PORTABLE
         #region SamePath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same as an expected path after canonicalization.
         /// </summary>
         public static SamePathConstraint SamePath(string expected)
@@ -504,7 +447,7 @@ namespace NUnit.Framework
         #region SubPath
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is a subpath of the expected path after canonicalization.
         /// </summary>
         public static SubPathConstraint SubPathOf(string expected)
@@ -517,7 +460,7 @@ namespace NUnit.Framework
         #region SamePathOrUnder
 
         /// <summary>
-        /// Returns a constraint that tests whether the path provided 
+        /// Returns a constraint that tests whether the path provided
         /// is the same path or under an expected path after canonicalization.
         /// </summary>
         public static SamePathOrUnderConstraint SamePathOrUnder(string expected)
@@ -526,7 +469,6 @@ namespace NUnit.Framework
         }
 
         #endregion
-#endif
 
         #region InRange
 
@@ -534,8 +476,14 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// inclusively within a specified range.
         /// </summary>
+<<<<<<< HEAD
+        /// <remarks>from must be less than or equal to true</remarks>
+        /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
+        /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
+=======
         /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
         /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
+>>>>>>> 04e94bc3e22f99bdcea6b949c42465e0b8227af7
         /// <returns></returns>
         public static RangeConstraint InRange(object from, object to)
         {

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,7 +24,10 @@
 using System;
 using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -55,7 +58,7 @@ namespace NUnit.Framework.Constraints
         private const string ELLIPSIS = "...";
 
         /// <summary>
-        /// Formatting strings used for expected and actual _values
+        /// Formatting strings used for expected and actual values
         /// </summary>
         private static readonly string Fmt_Null = "null";
         private static readonly string Fmt_EmptyString = "<string.Empty>";
@@ -95,7 +98,11 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
 
-            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));            
+            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
+
+            AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
+
+            AddFormatter(next => val => TryFormatValueTuple(val) ?? next(val));
         }
 
         /// <summary>
@@ -198,6 +205,74 @@ namespace NUnit.Framework.Constraints
             }
 
             return sb.ToString();
+        }
+
+        private static string TryFormatKeyValuePair(object value)
+        {
+            if (value == null)
+                return null;
+
+            Type valueType = value.GetType();
+            if (!valueType.GetTypeInfo().IsGenericType)
+                return null;
+
+            Type baseValueType = valueType.GetGenericTypeDefinition();
+            if (baseValueType != typeof(KeyValuePair<,>))
+                return null;
+
+            object k = valueType.GetProperty("Key").GetValue(value, null);
+            object v = valueType.GetProperty("Value").GetValue(value, null);
+
+            return FormatKeyValuePair(k, v);
+        }
+
+        private static string FormatKeyValuePair(object key, object value)
+        {
+            return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
+        }
+
+        private static string TryFormatValueTuple(object value)
+        {
+            if (value == null)
+                return null;
+
+            Type valueType = value.GetType();
+            string typeName = GetTypeNameWithoutGenerics(valueType.FullName);
+            if (typeName != "System.ValueTuple")
+                return null;
+
+            return FormatValueTuple(value, true);
+        }
+
+        private static string FormatValueTuple(object value, bool printParentheses)
+        {
+            Type valueType = value.GetType();
+            int numberOfGenericArgs = valueType.GetGenericArguments().Length;
+
+            StringBuilder sb = new StringBuilder();
+            if (printParentheses)
+                sb.Append("(");
+
+            for (int i = 0; i < numberOfGenericArgs; i++)
+            {
+                if (i > 0) sb.Append(", ");
+
+                bool notLastElement = i < 7;
+                string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
+                object itemValue = valueType.GetField(propertyName).GetValue(value);
+                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatValueTuple(itemValue, false);
+                sb.Append(formattedValue);
+            }
+            if (printParentheses)
+                sb.Append(")");
+
+            return sb.ToString();
+        }
+
+        private static string GetTypeNameWithoutGenerics(string fullTypeName)
+        {
+            int index = fullTypeName.IndexOf('`');
+            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
         }
 
         private static string FormatString(string s)

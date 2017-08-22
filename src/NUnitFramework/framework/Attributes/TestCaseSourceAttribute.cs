@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -134,8 +134,24 @@ namespace NUnit.Framework
         /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
+            int count = 0;
+
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
+            {
+                count++;
                 yield return _builder.BuildTestMethod(method, suite, parms);
+            }
+
+            // If count > 0, error messages will be shown for each case
+            // but if it's 0, we need to add an extra "test" to show the message.
+            if (count == 0 && method.GetParameters().Length == 0)
+            {
+                var parms = new TestCaseParameters();
+                parms.RunState = RunState.NotRunnable;
+                parms.Properties.Set(PropertyNames.SkipReason, "TestCaseSourceAttribute may not be used on a method without parameters");
+                    
+                yield return _builder.BuildTestMethod(method, suite, parms);
+            }
         }
 
         #endregion
@@ -173,48 +189,29 @@ namespace NUnit.Framework
 
                         if (parms == null)
                         {
+                            object[] args = null;
+
                             // 3. An array was passed, it may be an object[]
                             //    or possibly some other kind of array, which
                             //    TestCaseSource can accept.
-                            var args = item as object[];
-                            if (args == null && item is Array)
+                            var array = item as Array;
+                            if (array != null)
                             {
-                                Array array = item as Array;
-                                int numParameters = method.GetParameters().Length;
-                                if (array != null && array.Rank == 1 && array.Length == numParameters)
+                                // If array has the same number of elements as parameters
+                                // and it does not fit exactly into single existing parameter
+                                // we believe that this array contains arguments, not is a bare
+                                // argument itself.
+                                var parameters = method.GetParameters();
+                                var argsNeeded = parameters.Length;
+                                if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
                                 {
-                                    // Array is something like int[] - convert it to
-                                    // an object[] for use as the argument array.
                                     args = new object[array.Length];
-                                    for (int i = 0; i < array.Length; i++)
+                                    for (var i = 0; i < array.Length; i++)
                                         args[i] = array.GetValue(i);
                                 }
                             }
 
-                            // Check again if we have an object[]
-                            if (args != null)
-                            {
-                                var parameters = method.GetParameters();
-                                var argsNeeded = parameters.Length;
-                                var argsProvided = args.Length;
-               
-                                // If only one argument is needed, our array may actually
-                                // be the bare argument. If it is, we should wrap it in
-                                // an outer object[] representing the list of arguments.
-                                if (argsNeeded == 1)
-                                {
-                                    var singleParmType = parameters[0].ParameterType;
-                                    
-                                    if (argsProvided == 0 || typeof(object[]).IsAssignableFrom(singleParmType))
-                                    {
-                                        if (argsProvided > 1 || singleParmType.IsAssignableFrom(args.GetType()))
-                                        {
-                                            args = new object[] { item };
-                                        }
-                                    }
-                                }
-                            }
-                            else // It may be a scalar or a multi-dimensioned array. Wrap it in object[]
+                            if (args == null)
                             {
                                 args = new object[] { item };
                             }
@@ -228,6 +225,11 @@ namespace NUnit.Framework
 
                         data.Add(parms);
                     }
+                }
+                else
+                {
+                    data.Clear();
+                    data.Add(new TestCaseParameters(new Exception("The test case source could not be found.")));
                 }
             }
             catch (Exception ex)

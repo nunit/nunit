@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,6 +32,17 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="LessThanConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public LessThanConstraint(object expected) : base(expected, true, false, false, "less than") { }
+        public LessThanConstraint(object expected) : base(expected)
+        {
+            Description = "less than " + MsgUtils.FormatValue(expected);
+        }
+
+        /// <summary>
+        /// Perform the comparison
+        /// </summary>
+        protected override bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance)
+        {
+            return comparer.Compare(actual, tolerance.ApplyToValue(expected).UpperBound) < 0;
+        }
     }
 }

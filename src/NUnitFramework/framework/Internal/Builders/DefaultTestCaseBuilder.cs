@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2014 Charlie Poole
+// Copyright (c) 2008-2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -142,10 +142,10 @@ namespace NUnit.Framework.Internal.Builders
             foreach (var attr in builders)
             {
                 foreach (var test in attr.BuildFrom(method, parentSuite))
-                    tests.Add(test);
+                    tests.Add(test); 
             }
 
-            return hasBuildersSpecified || tests.Count > 0
+            return hasBuildersSpecified && method.GetParameters().Length > 0 || tests.Count > 0
                 ? BuildParameterizedMethodSuite(method, tests)
                 : BuildSingleTestMethod(method, parentSuite);
         }

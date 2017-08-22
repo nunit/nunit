@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
-    /// ParameterDataSourceProvider supplies individual argument _values for
+    /// ParameterDataSourceProvider supplies individual argument values for
     /// single parameters using attributes implementing IParameterDataSource.
     /// </summary>
     public class ParameterDataSourceProvider : IParameterDataProvider

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -73,7 +73,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-#if !PORTABLE
     [TestFixture]
     public class AttributeTest : SyntaxTest
     {
@@ -97,7 +96,6 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().Attribute(typeof(TestFixtureAttribute)).Property("Description").Not.Null;
         }
     }
-#endif
 
     [TestFixture]
     public class ExactTypeTest_Generic : SyntaxTest
@@ -147,7 +145,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-#if !PORTABLE
     [TestFixture]
     public class AttributeTest_Generic : SyntaxTest
     {
@@ -159,5 +156,4 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().Attribute<TestFixtureAttribute>();
         }
     }
-#endif
 }

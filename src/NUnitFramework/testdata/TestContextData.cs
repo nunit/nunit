@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,8 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.TestData.TestContextData
 {
@@ -62,6 +63,36 @@ namespace NUnit.TestData.TestContextData
         public void TearDown()
         {
             stateList += "=>" + TestContext.CurrentContext.Result.Outcome;
+        }
+    }
+
+    public class AssertionResultFixture
+    {
+        public IEnumerable<AssertionResult> Assertions;
+
+        public void ThreeAsserts_TwoFailed()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(2 + 2, Is.EqualTo(5));
+                Assert.That(2 + 2, Is.EqualTo(4));
+                Assert.That(2 + 2, Is.EqualTo(5));
+
+                Assertions = TestContext.CurrentContext.Result.Assertions;
+            });
+        }
+
+        public void WarningPlusFailedAssert()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(5));
+
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(2 + 2, Is.EqualTo(5));
+
+                Assertions = TestContext.CurrentContext.Result.Assertions;
+            });
         }
     }
 

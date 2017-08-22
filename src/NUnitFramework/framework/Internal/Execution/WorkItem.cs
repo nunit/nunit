@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,11 +24,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    using Commands;
+
     /// <summary>
     /// A WorkItem may be an individual test case, a fixture or
     /// a higher level grouping of tests. All WorkItems inherit
@@ -44,42 +48,57 @@ namespace NUnit.Framework.Internal.Execution
     {
         static Logger log = InternalTrace.GetLogger("WorkItem");
 
-        #region Static Factory Method
-
-        /// <summary>
-        /// Creates a work item.
-        /// </summary>
-        /// <param name="test">The test for which this WorkItem is being created.</param>
-        /// <param name="filter">The filter to be used in selecting any child Tests.</param>
-        /// <returns></returns>
-        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter)
-        {
-            TestSuite suite = test as TestSuite;
-            if (suite != null)
-                return new CompositeWorkItem(suite, filter);
-            else
-                return new SimpleWorkItem((TestMethod)test, filter);
-        }
-
-        #endregion
-
         #region Construction and Initialization
 
         /// <summary>
         /// Construct a WorkItem for a particular test.
         /// </summary>
         /// <param name="test">The test that the WorkItem will run</param>
-        public WorkItem(Test test)
+        /// <param name="filter">Filter used to include or exclude child items</param>
+        public WorkItem(Test test, ITestFilter filter)
         {
             Test = test;
+            Filter = filter;
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
-            Actions = new List<ITestAction>();
-#if !PORTABLE && !NETSTANDARD1_6
+
+            ParallelScope = Test.Properties.ContainsKey(PropertyNames.ParallelScope)
+                ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
+                : ParallelScope.Default;
+
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
                 ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
                 : ApartmentState.Unknown;
 #endif
+
+            State = WorkItemState.Ready;
+        }
+
+        /// <summary>
+        /// Construct a work Item that wraps another work Item.
+        /// Wrapper items are used to represent independently
+        /// dispatched tasks, which form part of the execution
+        /// of a single test, such as OneTimeTearDown.
+        /// </summary>
+        /// <param name="wrappedItem">The WorkItem being wrapped</param>
+        public WorkItem(WorkItem wrappedItem)
+        {
+            // Use the same Test, Result, Actions, Context, ParallelScope
+            // and TargetApartment as the item being wrapped.
+            Test = wrappedItem.Test;
+            Result = wrappedItem.Result;
+            Context = wrappedItem.Context;
+            ParallelScope = wrappedItem.ParallelScope;
+#if PARALLEL
+            TestWorker = wrappedItem.TestWorker;
+#endif
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+            TargetApartment = wrappedItem.TargetApartment;
+#endif
+
+            // State is independent of the wrapped item
+            State = WorkItemState.Ready;
         }
 
         /// <summary>
@@ -98,13 +117,6 @@ namespace NUnit.Framework.Internal.Execution
             Guard.OperationValid(Context == null, "The context has already been initialized");
 
             Context = context;
-
-            if (Test is TestAssembly)
-                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((TestAssembly)Test).Assembly));
-            else if (Test is ParameterizedMethodSuite)
-                Actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(Test.Method.MethodInfo));
-            else if (Test.TypeInfo != null)
-                Actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.TypeInfo.Type));
         }
 
         #endregion
@@ -127,58 +139,42 @@ namespace NUnit.Framework.Internal.Execution
         public Test Test { get; private set; }
 
         /// <summary>
+        /// The name of the work item - defaults to the Test name.
+        /// </summary>
+        public virtual string Name
+        {
+            get { return Test.Name; }
+        }
+
+        /// <summary>
+        /// Filter used to include or exclude child tests
+        /// </summary>
+        public ITestFilter Filter { get; private set; }
+
+        /// <summary>
         /// The execution context
         /// </summary>
         public TestExecutionContext Context { get; private set; }
 
-        /// <summary>
-        /// The unique id of the worker executing this item.
-        /// </summary>
-        public string WorkerId {get; internal set;}
-
-        /// <summary>
-        /// The test actions to be performed before and after this test
-        /// </summary>
-        public List<ITestAction> Actions { get; private set; }
-
 #if PARALLEL
         /// <summary>
-        /// Indicates whether this WorkItem may be run in parallel
+        /// The worker executing this item.
         /// </summary>
-        public bool IsParallelizable
+        public TestWorker TestWorker { get; internal set; }
+
+        private ParallelExecutionStrategy? _executionStrategy;
+
+        /// <summary>
+        /// The ParallelExecutionStrategy to use for this work item
+        /// </summary>
+        public virtual ParallelExecutionStrategy ExecutionStrategy
         {
             get
             {
-                ParallelScope scope = ParallelScope.None;
+                if (!_executionStrategy.HasValue)
+                    _executionStrategy = GetExecutionStrategy();
 
-                if (Test.Properties.ContainsKey(PropertyNames.ParallelScope))
-                {
-                    scope = (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope);
-
-                    if ((scope & ParallelScope.Self) != 0)
-                        return true;
-                }
-                else
-                {
-                    scope = Context.ParallelScope;
-
-                    if ((scope & ParallelScope.Children) != 0)
-                        return true;
-                }
-
-                if (Test is TestFixture && (scope & ParallelScope.Fixtures) != 0)
-                    return true;
-
-                // Special handling for the top level TestAssembly.
-                // If it has any scope specified other than None,
-                // we will use the parallel queue. This heuristic
-                // is intended to minimize creation of unneeded
-                // queues and workers, since the assembly and
-                // namespace level tests can easily run in any queue.
-                if (Test is TestAssembly && scope != ParallelScope.None)
-                    return true;
-
-                return false;
+                return _executionStrategy.Value;
             }
         }
 #endif
@@ -188,23 +184,16 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestResult Result { get; protected set; }
 
-#if !PORTABLE && !NETSTANDARD1_6
+        /// <summary>
+        /// Gets the ParallelScope associated with the test, if any,
+        /// otherwise returning ParallelScope.Default;
+        /// </summary>
+        public ParallelScope ParallelScope { get; private set; }
+
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
-
-        #endregion
-
-        #region OwnThreadReason Enumeration
-
-        [Flags]
-        private enum OwnThreadReason
-        {
-            NotNeeded = 0,
-            RequiresThread = 1,
-            Timeout = 2,
-            DifferentApartment = 4
-        }
 
         #endregion
 
@@ -216,150 +205,57 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-            // Timeout set at a higher level
-            int timeout = Context.TestCaseTimeout;
-
-            // Timeout set on this test
-            if (Test.Properties.ContainsKey(PropertyNames.Timeout))
-                timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
-
-            // Unless the context is single threaded, a supplementary thread 
-            // is created on the various platforms...
-            // 1. If the test used the RequiresThreadAttribute.
-            // 2. If a test method has a timeout.
-            // 3. If the test needs to run in a different apartment.
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+            // A supplementary thread is required in two conditions...
             //
-            // NOTE: We want to eliminate or significantly reduce 
-            //       cases 2 and 3 in the future.
+            // 1. If the test used the RequiresThreadAttribute. This
+            // is at the discretion of the user.
             //
-            // Case 2 requires the ability to stop and start test workers
-            // dynamically. We would cancel the worker thread, dispose of
-            // the worker and start a new worker on a new thread.
-            //
-            // Case 3 occurs when using either dispatcher whenever a
-            // child test calls for a different apartment from the one
-            // used by it's parent. It routinely occurs under the simple
-            // dispatcher (--workers=0 option). Under the parallel dispatcher
-            // it is needed when test cases are not enabled for parallel
-            // execution. Currently, test cases are always run sequentially,
-            // so this continues to apply fairly generally.
+            // 2. If the test needs to run in a different apartment.
+            // This should not normally occur when using the parallel
+            // dispatcher because tests are dispatches to a queue that
+            // matches the requested apartment. Under the SimpleDispatcher
+            // (--workers=0 option) it occurs routinely whenever a
+            // different apartment is requested.
 
-            var ownThreadReason = OwnThreadReason.NotNeeded;
-
-#if !PORTABLE
-            if (Test.RequiresThread)
-                ownThreadReason |= OwnThreadReason.RequiresThread;
-            if (timeout > 0 && Test is TestMethod)
-                ownThreadReason |= OwnThreadReason.Timeout;
-#if !NETSTANDARD1_6
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
-            if (CurrentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
-                ownThreadReason |= OwnThreadReason.DifferentApartment;
-#endif
-#endif
+            var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
 
-            if (ownThreadReason == OwnThreadReason.NotNeeded)
-                RunTest();
-            else if (Context.IsSingleThreaded)
+            if (Test.RequiresThread || targetApartment != CurrentApartment)
             {
-                var msg = "Test is not runnable in single-threaded context. " + ownThreadReason;
-                log.Error(msg);
-                Result.SetResult(ResultState.NotRunnable, msg);
-                WorkItemComplete();
+                // Handle error conditions in a single threaded fixture
+                if (Context.IsSingleThreaded)
+                {
+                    string msg = Test.RequiresThread
+                        ? "RequiresThreadAttribute may not be specified on a test within a single-SingleThreadedAttribute fixture."
+                        : "Tests in a single-threaded fixture may not specify a different apartment";
+
+                    log.Error(msg);
+                    Result.SetResult(ResultState.NotRunnable, msg);
+                    WorkItemComplete();
+                    return;
+                }
+
+                log.Debug("Running on separate thread because {0} is specified.",
+                    Test.RequiresThread ? "RequiresThread" : "different Apartment");
+
+                RunOnSeparateThread(targetApartment);
             }
             else
-            {
-                log.Debug("Running test on own thread. " + ownThreadReason);
-#if !PORTABLE && !NETSTANDARD1_6
-                var apartment = (ownThreadReason | OwnThreadReason.DifferentApartment) != 0
-                    ? TargetApartment
-                    : CurrentApartment;
-                RunTestOnOwnThread(timeout, apartment);
+                RunOnCurrentThread();
+#else
+            RunOnCurrentThread();
 #endif
-            }
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
-        private Thread thread;
-
-        private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
+        /// <summary>
+        /// Marks the WorkItem as NotRunnable.
+        /// </summary>
+        /// <param name="reason">Reason for test being NotRunnable.</param>
+        public void MarkNotRunnable(string reason)
         {
-            thread = new Thread(new ThreadStart(RunTest));
-            thread.SetApartmentState(apartment);
-            RunThread(timeout);
-        }
-#endif
-
-#if !PORTABLE && !NETSTANDARD1_6
-        private void RunThread(int timeout)
-        {
-            thread.CurrentCulture = Context.CurrentCulture;
-            thread.CurrentUICulture = Context.CurrentUICulture;
-            thread.Start();
-            
-            if (timeout <= 0)
-                timeout = Timeout.Infinite;
-
-            if (!thread.Join(timeout))
-            {
-                // Don't enforce timeout when debugger is attached.
-                // We perform this check after the initial timeout has passed to 
-                // give the user additional time to attach a debugger 
-                // after the test has started execution
-                if (Debugger.IsAttached)
-                {
-                    thread.Join();
-                    return;
-                }
-
-                Thread tThread;
-                lock (threadLock)
-                {
-                    if (thread == null)
-                        return;
-
-                    tThread = thread;
-                    thread = null;
-                }
-
-                if (Context.ExecutionStatus == TestExecutionStatus.AbortRequested)
-                    return;
-
-                log.Debug("Killing thread {0}, which exceeded timeout", tThread.ManagedThreadId);
-                ThreadUtility.Kill(tThread);
-
-                // NOTE: Without the use of Join, there is a race condition here.
-                // The thread sets the result to Cancelled and our code below sets
-                // it to Failure. In order for the result to be shown as a failure,
-                // we need to ensure that the following code executes after the
-                // thread has terminated. There is a risk here: the test code might
-                // refuse to terminate. However, it's more important to deal with
-                // the normal rather than a pathological case.
-                tThread.Join();
-
-                log.Debug("Changing result from {0} to Timeout Failure", Result.ResultState);
-
-                Result.SetResult(ResultState.Failure,
-                    string.Format("Test exceeded Timeout value of {0}ms", timeout));
-
-                WorkItemComplete();
-            }
-        }
-#endif
-
-        private void RunTest()
-        {
-            Context.CurrentTest = this.Test;
-            Context.CurrentResult = this.Result;
-            Context.Listener.TestStarted(this.Test);
-            Context.StartTime = DateTime.UtcNow;
-            Context.StartTicks = Stopwatch.GetTimestamp();
-            Context.WorkerId = this.WorkerId;
-            Context.EstablishExecutionEnvironment();
-
-            State = WorkItemState.Running;
-
-            PerformWork();
+            Result.SetResult(ResultState.NotRunnable, reason);
+            WorkItemComplete();
         }
 
         private object threadLock = new object();
@@ -373,38 +269,38 @@ namespace NUnit.Framework.Internal.Execution
             if (Context != null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
-            if (!force)
-                return;
-
-#if !PORTABLE && !NETSTANDARD1_6
-            Thread tThread;
-
-            lock (threadLock)
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+            if (force)
             {
-                if (thread == null)
-                    return;
+                Thread tThread;
+                int tNativeThreadId;
 
-                tThread = thread;
-                thread = null;
-            }
+                lock (threadLock)
+                {
+                    if (thread == null)
+                        return;
 
-            if (!tThread.Join(0))
-            {
-                log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
-                ThreadUtility.Kill(tThread);
+                    tThread = thread;
+                    tNativeThreadId = nativeThreadId;
+                    thread = null;
+                }
 
-                tThread.Join();
+                if (!tThread.Join(0))
+                {
+                    log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
+                    ThreadUtility.Kill(tThread, tNativeThreadId);
 
-                log.Debug("Changing result from {0} to Cancelled", Result.ResultState);
+                    tThread.Join();
 
-                Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                    ChangeResult(ResultState.Cancelled, "Cancelled by user");
 
-                WorkItemComplete();
+                    WorkItemComplete();
+                }
             }
 #endif
         }
 
-        #endregion
+#endregion
 
         #region Protected Methods
 
@@ -448,6 +344,169 @@ namespace NUnit.Framework.Internal.Execution
             Test.Fixture = null;
         }
 
-#endregion
+        /// <summary>
+        /// Builds the set up tear down list.
+        /// </summary>
+        /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
+        /// <param name="tearDownMethods">Unsorted array of teardown MethodInfos.</param>
+        /// <returns>A list of SetUpTearDownItems</returns>
+        protected List<SetUpTearDownItem> BuildSetUpTearDownList(MethodInfo[] setUpMethods, MethodInfo[] tearDownMethods)
+        {
+            Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
+            Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
+
+            var list = new List<SetUpTearDownItem>();
+
+            Type fixtureType = Test.TypeInfo?.Type;
+            if (fixtureType == null)
+                return list;
+
+            while (fixtureType != null && !fixtureType.Equals(typeof(object)))
+            {
+                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
+                if (node.HasMethods)
+                    list.Add(node);
+
+                fixtureType = fixtureType.GetTypeInfo().BaseType;
+            }
+
+            return list;
+        }
+
+        // This method builds a list of nodes that can be used to
+        // run setup and teardown according to the NUnit specs.
+        // We need to execute setup and teardown methods one level
+        // at a time. However, we can't discover them by reflection
+        // one level at a time, because that would cause overridden
+        // methods to be called twice, once on the base class and
+        // once on the derived class.
+        //
+        // For that reason, we start with a list of all setup and
+        // teardown methods, found using a single reflection call,
+        // and then descend through the inheritance hierarchy,
+        // adding each method to the appropriate level as we go.
+        private static SetUpTearDownItem BuildNode(Type fixtureType, IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        {
+            // Create lists of methods for this level only.
+            // Note that FindAll can't be used because it's not
+            // available on all the platforms we support.
+            var mySetUpMethods = SelectMethodsByDeclaringType(fixtureType, setUpMethods);
+            var myTearDownMethods = SelectMethodsByDeclaringType(fixtureType, tearDownMethods);
+
+            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods);
+        }
+
+        private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<MethodInfo> methods)
+        {
+            var list = new List<MethodInfo>();
+
+            foreach (var method in methods)
+                if (method.DeclaringType == type)
+                    list.Add(method);
+
+            return list;
+        }
+
+        /// <summary>
+        /// Changes the result of the test, logging the old and new states
+        /// </summary>
+        /// <param name="resultState">The new ResultState</param>
+        /// <param name="message">The new message</param>
+        protected void ChangeResult(ResultState resultState, string message)
+        {
+            log.Debug("Changing result from {0} to {1}", Result.ResultState, resultState);
+
+            Result.SetResult(resultState, message);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+        private Thread thread;
+        private int nativeThreadId;
+
+        private void RunOnSeparateThread(ApartmentState apartment)
+        {
+            thread = new Thread(() =>
+            {
+                lock (threadLock)
+                    nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
+                RunOnCurrentThread();
+            });
+            thread.SetApartmentState(apartment);
+            thread.CurrentCulture = Context.CurrentCulture;
+            thread.CurrentUICulture = Context.CurrentUICulture;
+            thread.Start();
+            thread.Join();
+        }
+#endif
+
+        private void RunOnCurrentThread()
+        {
+            Context.CurrentTest = this.Test;
+            Context.CurrentResult = this.Result;
+            Context.Listener.TestStarted(this.Test);
+            Context.StartTime = DateTime.UtcNow;
+            Context.StartTicks = Stopwatch.GetTimestamp();
+#if PARALLEL
+            Context.TestWorker = this.TestWorker;
+#endif
+
+            Context.EstablishExecutionEnvironment();
+
+            State = WorkItemState.Running;
+
+            PerformWork();
+        }
+
+#if PARALLEL
+        private ParallelExecutionStrategy GetExecutionStrategy()
+        {
+            // If there is no fixture and so nothing to do but dispatch 
+            // grandchildren we run directly. This saves time that would 
+            // otherwise be spent enqueuing and dequeing items.
+            if (Test.TypeInfo == null)
+                return ParallelExecutionStrategy.Direct;
+
+            // If the context is single-threaded we are required to run
+            // the tests one by one on the same thread as the fixture.
+            if (Context.IsSingleThreaded)
+                return ParallelExecutionStrategy.Direct;
+
+            // Check if item is explicitly marked as non-parallel
+            if (ParallelScope.HasFlag(ParallelScope.None))
+                return ParallelExecutionStrategy.NonParallel;
+
+            // Check if item is explicitly marked as parallel
+            if (ParallelScope.HasFlag(ParallelScope.Self))
+                return ParallelExecutionStrategy.Parallel;
+
+            // Item is not explicitly marked, so check the inherited context
+            if (Context.ParallelScope.HasFlag(ParallelScope.Children) ||
+                Test is TestFixture && Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
+                return ParallelExecutionStrategy.Parallel;
+
+            // There is no scope specified either on the item itself or in the context.
+            // In that case, simple work items are test cases and just run on the same
+            // thread, while composite work items and teardowns are non-parallel.
+            return this is SimpleWorkItem
+                ? ParallelExecutionStrategy.Direct
+                : ParallelExecutionStrategy.NonParallel;
+        }
+#endif
+
+        #endregion
     }
+
+#if NET_2_0 || NET_3_5
+    static class ActionTargetsExtensions
+    {
+        public static bool HasFlag(this ActionTargets targets, ActionTargets value)
+        {
+            return (targets & value) != 0;
+        }
+    }
+#endif
 }

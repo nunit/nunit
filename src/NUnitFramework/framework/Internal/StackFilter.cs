@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class StackFilter
     {
-        private const string DEFAULT_TOP_OF_STACK_PATTERN = @" NUnit\.Framework\.Ass(ert|ume)\.";
+        private const string DEFAULT_TOP_OF_STACK_PATTERN = @" NUnit\.Framework\.(Assert|Assume|Warn|CollectionAssert|StringAssert|FileAssert|DirectoryAssert)\.";
         private const string DEFAULT_BOTTOM_OF_STACK_PATTERN = @" System\.R(eflection|untimeMethodHandle)\.";
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal
                     if (_bottomOfStackRegex != null && _bottomOfStackRegex.IsMatch(line))
                         break;
 
-                    sw.WriteLine(line.Trim());
+                    sw.WriteLine(line);
                     line = sr.ReadLine();
                 }
             }

@@ -11,3 +11,8 @@
 # Monodevelop on Linux uses CRLF for these files
 *.sln	text	eol=crlf
 packages/repositories.config	text	eol=crlf
+
+# Allows checking out and developing in Windows
+# while mounting and running tests in Linux
+*.sh    text eol=lf
+build   text eol=lf

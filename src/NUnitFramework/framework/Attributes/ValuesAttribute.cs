@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -96,7 +96,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the collection of _values to be used as arguments
+        /// Get the collection of values to be used as arguments
         /// </summary>
         public IEnumerable GetData(IParameterInfo parameter)
         {
@@ -104,7 +104,7 @@ namespace NUnit.Framework
 
             if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
             {
-                return TypeHelper.GetEnumValues(targetType);
+                return Enum.GetValues(targetType);
             }
             if (targetType == typeof(bool) && data.Length == 0)
             {
@@ -122,17 +122,10 @@ namespace NUnit.Framework
                 if (arg == null)
                     continue;
 
-                if (arg.GetType().FullName == "NUnit.Framework.SpecialValue" &&
-                    arg.ToString() == "Null")
-                {
-                    data[i] = null;
-                    continue;
-                }
-
                 if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
                     continue;
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
                 if (arg is DBNull)
                 {
                     data[i] = null;

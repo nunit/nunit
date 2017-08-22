@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -79,6 +79,15 @@ namespace NUnit.Framework.Attributes
             TestFixtureAttribute attr = new TestFixtureAttribute(combinedArgs);
             Assert.That(attr.Arguments, Is.EqualTo(combinedArgs));
             Assert.That(attr.TypeArgs.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ConstructWithWeakTypedNullArgument()
+        {
+            TestFixtureAttribute attr = new TestFixtureAttribute(null);
+            Assert.That(attr.Arguments, Is.Not.Null);
+            Assert.That(attr.Arguments[0], Is.Null);
+            Assert.That(attr.TypeArgs, Is.Not.Null);
         }
     }
 }

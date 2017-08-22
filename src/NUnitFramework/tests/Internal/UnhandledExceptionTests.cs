@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // Enable these tests if you need to debug unhandled exceptions
-#if !PORTABLE && false
+#if !NETSTANDARD1_3 && false
 using System;
 using System.Collections;
 using System.Text;

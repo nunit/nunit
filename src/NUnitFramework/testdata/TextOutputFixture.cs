@@ -1,5 +1,5 @@
 ﻿// **********************************************************************************
-// Copyright (c) 2016 Charlie Poole
+// Copyright (c) 2016 Charlie Poole, Rob Prouse
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,6 @@
 // 
 // **********************************************************************************
 
-#if !PORTABLE
 using System;
 using NUnit.Framework;
 
@@ -55,5 +54,4 @@ namespace NUnit.TestData
         }
     }
 }
-#endif
 

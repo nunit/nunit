@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole
+// Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -139,6 +139,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         [TestCaseSource("exception_source")]
         public void MethodWithSourceThrowingException(string lhs, string rhs)
+        {
+        }
+
+        [TestCaseSource("NonExistingSource")]
+        public void MethodWithNonExistingSource(object param)
         {
         }
 

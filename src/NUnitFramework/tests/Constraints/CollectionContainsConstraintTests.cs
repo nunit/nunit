@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(list, new CollectionContainsConstraint(item));
         }
 
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test, TestCaseSource("testValidKVCases")]
         public void DictionaryTestValidKeyPair(KeyValuePair<object, object> kvTest)
         {

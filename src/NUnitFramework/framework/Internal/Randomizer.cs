@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2013-2015 Charlie Poole
+// Copyright (c) 2013-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@ using System.Text;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Randomizer returns a set of random _values in a repeatable
+    /// Randomizer returns a set of random values in a repeatable
     /// way, to allow re-running of tests if necessary. It extends
     /// the .NET Random class, providing random values for a much
     /// wider range of types.
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get a Randomizer for a particular member, returning
         /// one that has already been created if it exists.
-        /// This ensures that the same _values are generated
+        /// This ensures that the same values are generated
         /// each time the tests are reloaded.
         /// </summary>
         public static Randomizer GetRandomizer(MemberInfo member)
@@ -487,7 +487,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object NextEnum(Type type)
         {
-            Array enums = TypeHelper.GetEnumValues(type);
+            Array enums = Enum.GetValues(type);
             return enums.GetValue(Next(0, enums.Length));
         }
 
@@ -609,6 +609,25 @@ namespace NUnit.Framework.Internal
             while (raw > limit);
 
             return unchecked(raw % range + min);
+        }
+
+        #endregion 
+
+        #region Guid
+
+        /// <summary>
+        /// Generates a valid version 4 <see cref="Guid"/>.
+        /// </summary>
+        public Guid NextGuid()
+        {
+            //We use the algorithm described in https://tools.ietf.org/html/rfc4122#section-4.4
+            var b = new byte[16];
+            NextBytes(b);
+            //set the version to 4
+            b[7] = (byte)((b[7] & 0x0f) | 0x40);
+            //set the 2-bits indicating the variant to 1 and 0
+            b[8] = (byte)((b[8] & 0x3f) | 0x80);
+            return new Guid(b);
         }
 
         #endregion

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 #if ASYNC
 using System.Threading.Tasks;
 #endif
@@ -41,19 +42,32 @@ namespace NUnit.Framework.Tests
 
         private string _name;
 
-#if !PORTABLE
         private string _testDirectory;
-#endif
         private string _workDirectory;
+
+        private string _tempFilePath;
+
+        private const string TempFileName = "TestContextTests.tmp";
 
         public TestContextTests()
         {
             _name = TestContext.CurrentContext.Test.Name;
 
-#if !PORTABLE
             _testDirectory = TestContext.CurrentContext.TestDirectory;
-#endif
             _workDirectory = TestContext.CurrentContext.WorkDirectory;
+        }
+
+        [OneTimeSetUp]
+        public void CreateTempFile()
+        {
+            _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName);
+            File.Create(_tempFilePath).Dispose();
+        }
+
+        [OneTimeTearDown]
+        public void RemoveTempFile()
+        {
+            File.Delete(_tempFilePath);
         }
 
         [SetUp]
@@ -62,24 +76,28 @@ namespace NUnit.Framework.Tests
             _setupContext = TestContext.CurrentContext;
         }
 
-#if !PORTABLE
+        #region TestDirectory
+
         [Test]
         public void ConstructorCanAccessTestDirectory()
         {
             Assert.That(_testDirectory, Is.Not.Null);
         }
 
-        [TestCaseSource("MySource")]
+        [TestCaseSource("TestDirectorySource")]
         public void TestCaseSourceCanAccessTestDirectory(string testDirectory)
         {
             Assert.That(testDirectory, Is.EqualTo(_testDirectory));
         }
 
-        static IEnumerable<string> MySource()
+        static IEnumerable<string> TestDirectorySource()
         {
             yield return TestContext.CurrentContext.TestDirectory;
         }
-#endif
+
+        #endregion
+
+        #region WorkDirectory
 
         [Test]
         public void ConstructorAccessWorkDirectory()
@@ -88,28 +106,57 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void TestCanAccessItsOwnName()
+        public void TestCanAccessWorkDirectory()
         {
-            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
+            string workDirectory = TestContext.CurrentContext.WorkDirectory;
+            Assert.NotNull(workDirectory);
+            Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
         }
+
+        [TestCaseSource("WorkDirectorySource")]
+        public void TestCaseSourceCanAccessWorkDirectory(string workDirectory)
+        {
+            Assert.That(workDirectory, Is.EqualTo(_workDirectory));
+        }
+
+        static IEnumerable<string> WorkDirectorySource()
+        {
+            yield return TestContext.CurrentContext.WorkDirectory;
+        }
+
+    #endregion
+
+        #region Test
+
+        #region Name
 
         [Test]
-        public void ConstructorCanAccessFixtureName()
-        {
-            Assert.That(_name, Is.EqualTo("TestContextTests"));
-        }
+            public void ConstructorCanAccessFixtureName()
+            {
+                Assert.That(_name, Is.EqualTo("TestContextTests"));
+            }
 
-        [Test]
-        public void SetUpCanAccessTestName()
-        {
-            Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
-        }
+            [Test]
+            public void TestCanAccessItsOwnName()
+            {
+                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
+            }
 
-        [TestCase(5)]
-        public void TestCaseCanAccessItsOwnName(int x)
-        {
-            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
-        }
+            [Test]
+            public void SetUpCanAccessTestName()
+            {
+                Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
+            }
+
+            [TestCase(5)]
+            public void TestCaseCanAccessItsOwnName(int x)
+            {
+                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
+            }
+
+            #endregion
+
+        #region FullName
 
         [Test]
         public void SetUpCanAccessTestFullName()
@@ -131,6 +178,10 @@ namespace NUnit.Framework.Tests
                 Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
         }
 
+        #endregion
+
+        #region MethodName
+
         [Test]
         public void SetUpCanAccessTestMethodName()
         {
@@ -149,6 +200,10 @@ namespace NUnit.Framework.Tests
             Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCaseCanAccessItsOwnMethodName"));
         }
 
+        #endregion
+
+        #region Id
+
         [Test]
         public void TestCanAccessItsOwnId()
         {
@@ -161,6 +216,10 @@ namespace NUnit.Framework.Tests
             Assert.That(_setupContext.Test.ID, Is.EqualTo(TestContext.CurrentContext.Test.ID));
         }
 
+        #endregion
+
+        #region Properties
+
         [Test]
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()
@@ -168,15 +227,61 @@ namespace NUnit.Framework.Tests
             Assert.That(TestContext.CurrentContext.Test.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
-        [Test]
-        public void TestCanAccessWorkDirectory()
+        #endregion
+
+        #region Arguments
+
+        [TestCase(24, "abc")]
+        public void TestCanAccessItsOwnArguments(int x, string s)
         {
-            string workDirectory = TestContext.CurrentContext.WorkDirectory;
-            Assert.NotNull(workDirectory);
-            // SL tests may be running on the desktop
-#if !PORTABLE
-            Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
-#endif
+            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(new object[] { 24, "abc" }));
+        }
+
+        [Test]
+        public void TestCanAccessEmptyArgumentsArrayWhenDoesNotHaveArguments()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(new object[0]));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Result
+
+        [Test]
+        public void TestCanAccessAssertCount()
+        {
+            var context = TestExecutionContext.CurrentContext;
+
+            // These are counted as asserts
+            Assert.That(context.AssertCount, Is.EqualTo(0));
+            Assert.AreEqual(4, 2 + 2);
+            Warn.Unless(2 + 2, Is.EqualTo(4));
+
+            // This one is counted below
+            Assert.That(context.AssertCount, Is.EqualTo(3));
+
+            // Assumptions are not counted are not counted
+            Assume.That(2 + 2, Is.EqualTo(4));
+
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(4));
+        }
+
+        [TestCase("ThreeAsserts_TwoFailed", AssertionStatus.Failed, AssertionStatus.Failed)]
+        [TestCase("WarningPlusFailedAssert", AssertionStatus.Warning, AssertionStatus.Failed)]
+        public void TestCanAccessAssertionResults(string testName, params AssertionStatus[] expectedStatus)
+        {
+            AssertionResultFixture fixture = new AssertionResultFixture();
+            TestBuilder.RunTestCase(fixture, testName);
+            var assertions = fixture.Assertions;
+
+            Assert.That(assertions.Select((o) => o.Status),
+                Is.EqualTo(expectedStatus));
+            Assert.That(assertions.Select((o) => o.Message),
+                Has.All.Contains("Expected: 5"));
+            Assert.That(assertions.Select((o) => o.StackTrace),
+                Has.All.Contains(testName));
         }
 
         [Test]
@@ -237,68 +342,20 @@ namespace NUnit.Framework.Tests
             Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(fixture.StackTrace, Is.Null);
         }
-#if ASYNC
 
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
+        #endregion
+
+        #region Out
+
+#if ASYNC
         [Test]
         public async Task TestContextOut_ShouldFlowWithAsyncExecution()
         {
             var expected = TestContext.Out;
             await YieldAsync();
-            Assert.AreSame(expected, TestContext.Out);
+            Assert.AreEqual(expected, TestContext.Out);
         }
 
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
-        [Test]
-        public async Task TestExecutionContextCurrentContext_ShouldFlowWithAsyncExecution()
-        {
-            var expected = TestExecutionContext.CurrentContext;
-            await YieldAsync();
-            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
-        }
-
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
-        [Test]
-        public async Task TestExecutionContextCurrentContext_ShouldFlowWithParallelAsyncExecution()
-        {
-            var expected = TestExecutionContext.CurrentContext;
-            var parallelResult = await WhenAllAsync(YieldAndReturnContext(), YieldAndReturnContext());
-
-            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
-            Assert.AreSame(expected, parallelResult[0]);
-            Assert.AreSame(expected, parallelResult[1]);
-        }
-
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
-        [Test]
-        public async Task TestExecutionContext_ShouldFlowWithAsyncExecution_ExecutedInParallel()
-        {
-            Func<Task<TestExecutionContext>> functionWithSeparateContext = async () =>
-            {
-                await YieldAsync(); //to start both functions
-                TestExecutionContext.ClearCurrentContext(); //establish new context
-                var expected = TestExecutionContext.CurrentContext;
-                await DelayAsync(300);
-                Assert.AreSame(expected, TestExecutionContext.CurrentContext); //ensure that is still the same within given function call
-                return expected;
-            };
-
-            var results = await WhenAllAsync(functionWithSeparateContext(), functionWithSeparateContext());
-            // both calls have to be successful but have different context
-            Assert.AreNotSame(results[0], results[1]);
-        }
-
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
         [Test]
         public async Task TestContextWriteLine_ShouldNotThrow_WhenExecutedFromAsyncMethod()
         {
@@ -307,9 +364,6 @@ namespace NUnit.Framework.Tests
             Assert.DoesNotThrow(TestContext.WriteLine);
         }
 
-#if PORTABLE
-        [Ignore("Not implemented yet as TestExecutionContext uses TLS in portable implementation")]
-#endif
         [Test]
         public void TestContextOut_ShouldBeAvailableFromOtherThreads()
         {
@@ -329,31 +383,40 @@ namespace NUnit.Framework.Tests
             await Task.Yield();
 #endif
         }
-
-        private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
-        {
-#if NET_4_0
-            return TaskEx.WhenAll(tasks);
-#else
-            return Task.WhenAll(tasks);
 #endif
+
+        #endregion
+
+        #region Test Attachments
+
+        [Test]
+        public void FilePathOnlyDoesNotThrow()
+        {
+            Assert.That(() => TestContext.AddTestAttachment(_tempFilePath), Throws.Nothing);
         }
 
-        private Task DelayAsync(int milliseconds)
+        [Test]
+        public void FilePathAndDescriptionDoesNotThrow()
         {
-#if NET_4_0
-            return TaskEx.Delay(milliseconds);
-#else
-            return Task.Delay(milliseconds);
-#endif
+            Assert.That(() => TestContext.AddTestAttachment(_tempFilePath, "Description"), Throws.Nothing);
         }
 
-        private async Task<TestExecutionContext> YieldAndReturnContext()
-        {
-            await YieldAsync();
-            return TestExecutionContext.CurrentContext;
-        }
+        [TestCase(null)]
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+        [TestCase("bad<>path.png", IncludePlatform = "Win")]
 #endif
+        public void InvalidFilePathsThrowsArgumentException(string filePath)
+        {
+            Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public void NoneExistentFileThrowsFileNotFoundException()
+        {
+            Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
+        }
+
+        #endregion
     }
 
     [TestFixture]
@@ -378,10 +441,8 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
-#if !PORTABLE
             Assert.That(context.TestDirectory, Is.Not.Null);
             Assert.That(context.WorkDirectory, Is.Not.Null);
-#endif
         }
     }
 

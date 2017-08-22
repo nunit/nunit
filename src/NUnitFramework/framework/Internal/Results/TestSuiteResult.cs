@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -220,74 +220,60 @@ namespace NUnit.Framework.Internal
         public virtual void AddResult(ITestResult result)
         {
 #if PARALLEL
-            var childrenAsConcurrentQueue = Children as ConcurrentQueue<ITestResult>;
-            if (childrenAsConcurrentQueue != null)
-                childrenAsConcurrentQueue.Enqueue(result);
-            else
-#endif
-            {
-                var childrenAsIList = Children as IList<ITestResult>;
-                if (childrenAsIList != null)
-                    childrenAsIList.Add(result);
-                else
-                    throw new NotSupportedException("cannot add results to Children");
-
-            }
-
-#if PARALLEL
+            _children.Enqueue(result);
             RwLock.EnterWriteLock();
-#endif
             try
             {
-                // If this result is marked cancelled, don't change it
-                if (ResultState != ResultState.Cancelled)
-                {
-                    switch (result.ResultState.Status)
-                    {
-                        case TestStatus.Passed:
-
-                            if (ResultState.Status == TestStatus.Inconclusive)
-                                SetResult(ResultState.Success);
-
-                            break;
-
-                        case TestStatus.Warning:
-
-                            if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
-                                SetResult(result.ResultState, CHILD_WARNINGS_MESSAGE);
-
-                            break;
-
-                        case TestStatus.Failed:
-
-
-                            if (ResultState.Status != TestStatus.Failed)
-                                SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
-
-                            break;
-
-                        case TestStatus.Skipped:
-
-                            if (result.ResultState.Label == "Ignored")
-                                if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
-                                    SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
-
-                            break;
-                    }
-                }
-
-                InternalAssertCount += result.AssertCount;
-                _passCount += result.PassCount;
-                _failCount += result.FailCount;
-                _warningCount += result.WarningCount;
-                _skipCount += result.SkipCount;
-                _inconclusiveCount += result.InconclusiveCount;
+                MergeChildResult(result);
             }
             finally
             {
-#if PARALLEL
                 RwLock.ExitWriteLock();
+            }
+#else
+            _children.Add(result);
+            MergeChildResult(result);
 #endif
+        }
+
+        private void MergeChildResult(ITestResult childResult)
+        {
+            // If this result is marked cancelled, don't change it
+            if (ResultState != ResultState.Cancelled)
+                UpdateResultState(childResult.ResultState);
+
+            InternalAssertCount += childResult.AssertCount;
+            _passCount += childResult.PassCount;
+            _failCount += childResult.FailCount;
+            _warningCount += childResult.WarningCount;
+            _skipCount += childResult.SkipCount;
+            _inconclusiveCount += childResult.InconclusiveCount;
+        }
+
+        private void UpdateResultState(ResultState childResultState)
+        {
+            switch (childResultState.Status)
+            {
+                case TestStatus.Passed:
+                    if (ResultState.Status == TestStatus.Inconclusive)
+                        SetResult(ResultState.Success);
+                    break;
+
+                case TestStatus.Warning:
+                    if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                        SetResult(childResultState, CHILD_WARNINGS_MESSAGE);
+                    break;
+
+                case TestStatus.Failed:
+                    if (ResultState.Status != TestStatus.Failed)
+                        SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
+                    break;
+
+                case TestStatus.Skipped:
+                    if (childResultState.Label == "Ignored")
+                        if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                            SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
+                    break;
             }
         }
 

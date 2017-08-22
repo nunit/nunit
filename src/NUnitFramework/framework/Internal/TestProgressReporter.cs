@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -63,12 +63,13 @@ namespace NUnit.Framework.Internal
             try
             {
                 string report = string.Format(
-                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\"/>",
+                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\" type=\"{5}\"/>",
                     startElement,
                     test.Id,
                     parent != null ? parent.Id : string.Empty,
                     FormatAttributeValue(test.Name),
-                    FormatAttributeValue(test.FullName));
+                    FormatAttributeValue(test.FullName),
+                    test.TestType);
 
                 handler.RaiseCallbackEvent(report);
             }
@@ -139,7 +140,7 @@ namespace NUnit.Framework.Internal
         /// corresponding xml representations.
         /// </summary>
         /// <param name="original">The string to be used</param>
-        /// <returns>A new string with the _values replaced</returns>
+        /// <returns>A new string with the values replaced</returns>
         private static string FormatAttributeValue(string original)
         {
             return original

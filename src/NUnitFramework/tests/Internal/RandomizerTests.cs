@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2013-2015 Charlie Poole
+// Copyright (c) 2013-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -683,6 +683,29 @@ namespace NUnit.Framework.Internal
         public void RandomEnum_Generic()
         {
             UniqueValues.Check(() => _randomizer.NextEnum<AttributeTargets>(), 5, 50);
+        }
+
+        #endregion
+
+        #region Guids
+
+        [Test]
+        [Description("Test that all generated Guids are unique")]
+        public void RandomGuidsAreUnique()
+        {
+            UniqueValues.Check(() => _randomizer.NextGuid(), 10, 10);
+        }
+
+        [Test]
+        [Description("Test that generated Guids are version 4 variant 1 Guids")]
+        public void RandomGuidsAreV4()
+        {
+            Guid guid = _randomizer.NextGuid();
+            byte[] bytes = guid.ToByteArray();
+            //check the version
+            Assert.That(bytes[7] & 0xf0, Is.EqualTo(0x40));
+            //check the variant
+            Assert.That(bytes[8] & 0xc0, Is.EqualTo(0x80));
         }
 
         #endregion

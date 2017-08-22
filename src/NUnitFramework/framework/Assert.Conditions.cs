@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -830,7 +830,7 @@ namespace NUnit.Framework
         #region Ints
 
         /// <summary>
-        /// Asserts that an int is negative.
+        /// Asserts that an int is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(int actual)
@@ -839,7 +839,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an int is negative.
+        /// Asserts that an int is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -854,7 +854,7 @@ namespace NUnit.Framework
         #region UnsignedInts
 
         /// <summary>
-        /// Asserts that an unsigned int is negative.
+        /// Asserts that an unsigned int is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -864,7 +864,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned int is negative.
+        /// Asserts that an unsigned int is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -880,7 +880,7 @@ namespace NUnit.Framework
         #region Longs
 
         /// <summary>
-        /// Asserts that a Long is negative.
+        /// Asserts that a Long is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(long actual)
@@ -889,7 +889,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a Long is negative.
+        /// Asserts that a Long is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -904,7 +904,7 @@ namespace NUnit.Framework
         #region UnsignedLongs
 
         /// <summary>
-        /// Asserts that an unsigned Long is negative.
+        /// Asserts that an unsigned Long is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -914,7 +914,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned Long is negative.
+        /// Asserts that an unsigned Long is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -930,7 +930,7 @@ namespace NUnit.Framework
         #region Decimals
 
         /// <summary>
-        /// Asserts that a decimal is negative.
+        /// Asserts that a decimal is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(decimal actual)
@@ -939,7 +939,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a decimal is negative.
+        /// Asserts that a decimal is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -954,7 +954,7 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Asserts that a double is negative.
+        /// Asserts that a double is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(double actual)
@@ -963,7 +963,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a double is negative.
+        /// Asserts that a double is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -978,7 +978,7 @@ namespace NUnit.Framework
         #region Floats
 
         /// <summary>
-        /// Asserts that a float is negative.
+        /// Asserts that a float is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(float actual)
@@ -987,7 +987,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a float is negative.
+        /// Asserts that a float is positive.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -49,10 +49,10 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
     [TestFixture]
@@ -122,7 +122,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
     }
 
-    [TestFixture,Explicit]
+    [TestFixture, Explicit]
     public class ExplicitSetUpAndTearDownFixture
     {
         public int setUpCount = 0;
@@ -141,20 +141,20 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
     [TestFixture]
     public class InheritSetUpAndTearDown : SetUpAndTearDownFixture
     {
         [Test]
-        public void AnotherTest(){}
+        public void AnotherTest() { }
 
         [Test]
-        public void YetAnotherTest(){}
+        public void YetAnotherTest() { }
     }
 
     [TestFixture]
@@ -285,6 +285,17 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     }
 
     [TestFixture]
+    public class FixtureWithParallelizableOnOneTimeSetUp
+    {
+        [OneTimeSetUp]
+        [Parallelizable]
+        public void BadOneTimeSetup() { }
+
+        [Test]
+        public void Test() { }
+    }
+
+    [TestFixture]
     public class MisbehavingFixture 
     {
         public bool blowUpInSetUp = false;
@@ -347,7 +358,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [OneTimeSetUp]
         public void SetUpCallsIgnore() 
         {
-            Assert.Ignore( "TestFixtureSetUp called Ignore" );
+            Assert.Ignore("OneTimeSetUp called Ignore");
         }
 
         [Test]
@@ -363,13 +374,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         public int tearDownCount = 0;
 
         [OneTimeSetUp]
-        public virtual void TestFixtureSetUp()
+        public virtual void OneTimeSetUp()
         {
             setUpCount++;
         }
 
         [OneTimeTearDown]
-        public virtual void TestFixtureTearDown()
+        public virtual void OneTimeTearDown()
         {
             tearDownCount++;
         }
@@ -429,12 +440,26 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class DisposableFixture : IDisposable
     {
         public int disposeCalled = 0;
+        public List<String> Actions = new List<String>();
+        
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Actions.Add("OneTimeSetUp");
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Actions.Add("OneTimeTearDown");
+        }
 
         [Test]
         public void OneTest() { }
 
         public void Dispose()
         {
+            Actions.Add("Dispose");
             disposeCalled++;
         }
     }

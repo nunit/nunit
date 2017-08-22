@@ -33,7 +33,7 @@ namespace System.Threading
     /// <summary>
     /// 
     /// </summary>
-	public enum LazyThreadSafetyMode
+	internal enum LazyThreadSafetyMode
 	{
         /// <summary>
         /// 

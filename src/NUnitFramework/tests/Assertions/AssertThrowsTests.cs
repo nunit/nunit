@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2016 Charlie Poole
+// Copyright (c) 2008-2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -80,9 +80,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             CheckForSpuriousAssertionResults();
         }
@@ -95,9 +93,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Does.StartWith("myMessage"));
-#if !PORTABLE
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-#endif
 
             CheckForSpuriousAssertionResults();
         }

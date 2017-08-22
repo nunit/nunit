@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -36,8 +36,8 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void SetUp()
         {
-            _queue = new WorkItemQueue("TestQ");
-            _worker = new TestWorker(_queue, "TestQ_Worker", ApartmentState.MTA);
+            _queue = new WorkItemQueue("TestQ", true, ApartmentState.MTA);
+            _worker = new TestWorker(_queue, "TestQ_Worker");
         }
 
         [TearDown]

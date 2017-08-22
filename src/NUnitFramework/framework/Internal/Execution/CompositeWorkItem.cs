@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,24 +42,13 @@ namespace NUnit.Framework.Internal.Execution
 
         private TestSuite _suite;
         private TestSuiteResult _suiteResult;
-        private ITestFilter _childFilter;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
-        private List<WorkItem> _children;
 
         /// <summary>
         /// List of Child WorkItems
         /// </summary>
-        public List<WorkItem> Children
-        {
-            get { return _children; }
-            private set { _children = value; }
-        }
-
-        /// <summary>
-        /// A count of how many tests in the work item have a value for the Order Property
-        /// </summary>
-        private int _countOrder;
+        public List<WorkItem> Children { get; } = new List<WorkItem>();
 
         private CountdownEvent _childTestCountdown;
 
@@ -70,28 +59,21 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="suite">The TestSuite to be executed</param>
         /// <param name="childFilter">A filter used to select child tests</param>
         public CompositeWorkItem(TestSuite suite, ITestFilter childFilter)
-            : base(suite)
+            : base(suite, childFilter)
         {
             _suite = suite;
             _suiteResult = Result as TestSuiteResult;
-            _childFilter = childFilter;
-            _countOrder = 0;
         }
 
         /// <summary>
         /// Method that actually performs the work. Overridden
-        /// in CompositeWorkItem to do setup, run all child
-        /// items and then do teardown.
+        /// in CompositeWorkItem to do one-time setup, run all child
+        /// items and then dispatch the one-time teardown work item.
         /// </summary>
         protected override void PerformWork()
         {
-            // Initialize actions, setup and teardown
-            // We can't do this in the constructor because
-            // the context is not available at that point.
-            InitializeSetUpAndTearDownCommands();
-
             if (!CheckForCancellation())
-                if (Test.RunState == RunState.Explicit && !_childFilter.IsExplicitMatch(Test))
+                if (Test.RunState == RunState.Explicit && !Filter.IsExplicitMatch(Test))
                     SkipFixture(ResultState.Explicit, GetSkipReason(), null);
                 else
                     switch (Test.RunState)
@@ -99,15 +81,14 @@ namespace NUnit.Framework.Internal.Execution
                         default:
                         case RunState.Runnable:
                         case RunState.Explicit:
-                            // Assume success, since the result will be inconclusive
-                            // if there is no setup method to run or if the
-                            // context initialization fails.
+                            // Assume success, since the result will otherwise
+                            // default to inconclusive.
                             Result.SetResult(ResultState.Success);
 
-                            CreateChildWorkItems();
-
-                            if (_children.Count > 0)
+                            if (Children.Count > 0)
                             {
+                                InitializeSetUpAndTearDownCommands();
+
                                 PerformOneTimeSetUp();
 
                                 if (!CheckForCancellation())
@@ -119,12 +100,12 @@ namespace NUnit.Framework.Internal.Execution
                                             RunChildren();
                                             return;
                                         // Just return: completion event will take care
-                                        // of TestFixtureTearDown when all tests are done.
+                                        // of OneTimeTearDown when all tests are done.
 
                                         case TestStatus.Skipped:
                                         case TestStatus.Inconclusive:
                                         case TestStatus.Failed:
-                                            SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                                            SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
                                             break;
                                     }
                                 }
@@ -135,6 +116,8 @@ namespace NUnit.Framework.Internal.Execution
                                 if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
                                     PerformOneTimeTearDown();
                             }
+                            else if (Test.TestType == "Theory")
+                                Result.SetResult(ResultState.Failure, "No test cases were provided");
                             break;
 
                         case RunState.Skipped:
@@ -153,7 +136,6 @@ namespace NUnit.Framework.Internal.Execution
             // Fall through in case nothing was run.
             // Otherwise, this is done in the completion event.
             WorkItemComplete();
-
         }
 
         #region Helper Methods
@@ -171,13 +153,16 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeSetUpAndTearDownCommands()
         {
-            List<SetUpTearDownItem> setUpTearDownItems = _suite.TypeInfo != null
-                ? CommandBuilder.BuildSetUpTearDownList(_suite.TypeInfo.Type, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute))
-                : new List<SetUpTearDownItem>();
+            List<SetUpTearDownItem> setUpTearDownItems =
+                BuildSetUpTearDownList(_suite.OneTimeSetUpMethods, _suite.OneTimeTearDownMethods);
 
             var actionItems = new List<TestActionItem>();
-            foreach (ITestAction action in Actions)
+            foreach (ITestAction action in Test.Actions)
             {
+                // We need to go through all the actions on the test to determine which ones
+                // will be used immediately and which will go into the context for use by
+                // lower level tests.
+                //
                 // Special handling here for ParameterizedMethodSuite is a bit ugly. However,
                 // it is needed because Tests are not supposed to know anything about Action
                 // Attributes (or any attribute) and Attributes don't know where they were
@@ -186,10 +171,10 @@ namespace NUnit.Framework.Internal.Execution
                 // ParameterizedMethodSuites and individual test cases both use the same
                 // MethodInfo as a source of attributes. We handle the Test and Default targets
                 // in the test case, so we don't want to doubly handle it here.
-                bool applyToSuite = (action.Targets & ActionTargets.Suite) == ActionTargets.Suite
+                bool applyToSuite =  action.Targets.HasFlag(ActionTargets.Suite)
                     || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
 
-                bool applyToTest = (action.Targets & ActionTargets.Test) == ActionTargets.Test
+                bool applyToTest = action.Targets.HasFlag(ActionTargets.Test)
                     && !(Test is ParameterizedMethodSuite);
 
                 if (applyToSuite)
@@ -199,8 +184,60 @@ namespace NUnit.Framework.Internal.Execution
                     Context.UpstreamActions.Add(action);
             }
 
-            _setupCommand = CommandBuilder.MakeOneTimeSetUpCommand(_suite, setUpTearDownItems, actionItems);
-            _teardownCommand = CommandBuilder.MakeOneTimeTearDownCommand(_suite, setUpTearDownItems, actionItems);
+            _setupCommand = MakeOneTimeSetUpCommand(setUpTearDownItems, actionItems);
+
+            _teardownCommand = MakeOneTimeTearDownCommand(setUpTearDownItems, actionItems);
+        }
+
+        private TestCommand MakeOneTimeSetUpCommand(List<SetUpTearDownItem> setUpTearDown, List<TestActionItem> actions)
+        {
+            TestCommand command = new EmptyTestCommand(Test);
+
+            // Add Action Commands
+            int index = actions.Count;
+            while (--index >= 0)
+                command = new BeforeTestActionCommand(command, actions[index]);
+
+            if (Test.TypeInfo != null)
+            {
+                // Build the OneTimeSetUpCommands
+                foreach (SetUpTearDownItem item in setUpTearDown)
+                    command = new OneTimeSetUpCommand(command, item);
+
+                // Construct the fixture if necessary
+                if (!Test.TypeInfo.IsStaticClass)
+                    command = new ConstructFixtureCommand(command);
+            }
+
+            // Prefix with any IApplyToContext items from attributes
+            foreach (var attr in Test.GetCustomAttributes<IApplyToContext>(true))
+                command = new ApplyChangesToContextCommand(command, attr);
+
+            return command;
+        }
+
+        private TestCommand MakeOneTimeTearDownCommand(List<SetUpTearDownItem> setUpTearDownItems, List<TestActionItem> actions)
+        {
+            TestCommand command = new EmptyTestCommand(Test);
+
+            // For Theories, follow with TheoryResultCommand to adjust result as needed
+            if (Test.TestType == "Theory")
+                command = new TheoryResultCommand(command);
+
+            // Create the AfterTestAction commands
+            int index = actions.Count;
+            while (--index >= 0)
+                command = new AfterTestActionCommand(command, actions[index]);
+
+            // Create the OneTimeTearDown commands
+            foreach (SetUpTearDownItem item in setUpTearDownItems)
+                command = new OneTimeTearDownCommand(command, item);
+
+            // Dispose of fixture if necessary
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
+                command = new DisposeFixtureCommand(command);
+
+            return command;
         }
 
         private void PerformOneTimeSetUp()
@@ -223,117 +260,62 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunChildren()
         {
-            int childCount = _children.Count;
+            if (Test.TestType == "Theory")
+                Result.SetResult(ResultState.Inconclusive);
+
+            int childCount = Children.Count;
             if (childCount == 0)
                 throw new InvalidOperationException("RunChildren called but item has no children");
 
             _childTestCountdown = new CountdownEvent(childCount);
 
-            foreach (WorkItem child in _children)
+            foreach (WorkItem child in Children)
             {
                 if (CheckForCancellation())
                     break;
 
-                child.Completed += new EventHandler(OnChildCompleted);
+                child.Completed += new EventHandler(OnChildItemCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
+
+#if PARALLEL
+                // In case we run directly, on same thread
+                child.TestWorker = TestWorker;
+#endif
 
                 Context.Dispatcher.Dispatch(child);
                 childCount--;
             }
 
+            // If run was cancelled, reduce countdown by number of
+            // child items not yet staged and check if we are done.
             if (childCount > 0)
-            {
-                while (childCount-- > 0)
-                    CountDownChildTest();
-            }
-        }
-
-        private void CreateChildWorkItems()
-        {
-            _children = new List<WorkItem>();
-
-            foreach (ITest test in _suite.Tests)
-            {
-                if (_childFilter.Pass(test))
+                lock(_childCompletionLock)
                 {
-                    var child = WorkItem.CreateWorkItem(test, _childFilter);
-                    child.WorkerId = this.WorkerId;
-
-#if !PORTABLE && !NETSTANDARD1_6
-                    if (child.TargetApartment == ApartmentState.Unknown && TargetApartment != ApartmentState.Unknown)
-                        child.TargetApartment = TargetApartment;
-#endif
-
-                    if (test.Properties.ContainsKey(PropertyNames.Order))
-                    {
-                        _children.Insert(0, child);
-                        _countOrder++;
-                    }
-                    else
-                    {
-                        _children.Add(child);
-                    }
+                    _childTestCountdown.Signal(childCount);
+                    if (_childTestCountdown.CurrentCount == 0)
+                        OnAllChildItemsCompleted();
                 }
-            }
-
-            if (_countOrder !=0) SortChildren();
-        }
-
-        private class WorkItemOrderComparer : IComparer<WorkItem>
-        {
-            /// <summary>
-            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
-            /// </summary>
-            /// <returns>
-            /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>, as shown in the following table.Value Meaning Less than zero<paramref name="x"/> is less than <paramref name="y"/>.Zero<paramref name="x"/> equals <paramref name="y"/>.Greater than zero<paramref name="x"/> is greater than <paramref name="y"/>.
-            /// </returns>
-            /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param>
-            public int Compare(WorkItem x, WorkItem y)
-            {
-                var xKey = int.MaxValue;
-                var yKey = int.MaxValue;
-
-                if (x.Test.Properties.ContainsKey(PropertyNames.Order))
-                    xKey =(int)x.Test.Properties[PropertyNames.Order][0];
-
-                if (y.Test.Properties.ContainsKey(PropertyNames.Order))
-                    yKey =(int)y.Test.Properties[PropertyNames.Order][0];
-
-                return xKey.CompareTo(yKey);
-            }
-        }
-
-        /// <summary>
-        /// Sorts tests under this suite.
-        /// </summary>
-        private void SortChildren()
-        {
-            _children.Sort(0, _countOrder, new WorkItemOrderComparer());
         }
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
-            SkipChildren(_suite, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
+            SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
         }
 
-        private void SkipChildren(TestSuite suite, ResultState resultState, string message)
+        private void SkipChildren(CompositeWorkItem workItem, ResultState resultState, string message)
         {
-            foreach (Test child in suite.Tests)
+            foreach (WorkItem child in workItem.Children)
             {
-                if (_childFilter.Pass(child))
-                {
-                    TestResult childResult = child.MakeTestResult();
-                    childResult.SetResult(resultState, message);
-                    _suiteResult.AddResult(childResult);
+                child.Result.SetResult(resultState, message);
+                _suiteResult.AddResult(child.Result);
 
-                    // Some runners may depend on getting the TestFinished event
-                    // even for tests that have been skipped at a higher level.
-                    Context.Listener.TestFinished(childResult);
+                // Some runners may depend on getting the TestFinished event
+                // even for tests that have been skipped at a higher level.
+                Context.Listener.TestFinished(child.Result);
 
-                    if (child.IsSuite)
-                        SkipChildren((TestSuite)child, resultState, message);
-                }
+                if (child is CompositeWorkItem)
+                    SkipChildren((CompositeWorkItem)child, resultState, message);
             }
         }
 
@@ -358,44 +340,40 @@ namespace NUnit.Framework.Internal.Execution
             return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
 
-        private object _completionLock = new object();
+        private object _childCompletionLock = new object();
 
-        private void OnChildCompleted(object sender, EventArgs e)
+        private void OnChildItemCompleted(object sender, EventArgs e)
         {
-            lock (_completionLock)
+            // Since child tests may be run on various threads, this
+            // method may be called simultaneously by different children.
+            // The lock is a member of the parent item and thereore
+            // only blocks its own children.
+            lock (_childCompletionLock)
             {
                 WorkItem childTask = sender as WorkItem;
                 if (childTask != null)
                 {
-                    childTask.Completed -= new EventHandler(OnChildCompleted);
+                    childTask.Completed -= new EventHandler(OnChildItemCompleted);
                     _suiteResult.AddResult(childTask.Result);
 
                     if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
                         Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
                     // Check to see if all children completed
-                    CountDownChildTest();
+                    _childTestCountdown.Signal();
+                    if (_childTestCountdown.CurrentCount == 0)
+                        OnAllChildItemsCompleted();
                 }
             }
         }
 
-        private void CountDownChildTest()
+        /// <summary>
+        ///
+        /// </summary>
+        private void OnAllChildItemsCompleted()
         {
-            _childTestCountdown.Signal();
-            if (_childTestCountdown.CurrentCount == 0)
-            {
-                if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                    PerformOneTimeTearDown();
-
-                foreach (var childResult in _suiteResult.Children)
-                    if (childResult.ResultState == ResultState.Cancelled)
-                    {
-                        this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
-                        break;
-                    }
-
-                WorkItemComplete();
-            }
+            var teardown = new OneTimeTearDownWorkItem(this);
+            Context.Dispatcher.Dispatch(teardown);
         }
 
         private static bool IsStaticClass(Type type)
@@ -413,10 +391,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (cancelLock)
             {
-                if (_children == null)
-                    return;
-
-                foreach (var child in _children)
+                foreach (var child in Children)
                 {
                     var ctx = child.Context;
                     if (ctx != null)
@@ -429,5 +404,81 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         #endregion
+
+        #region Nested OneTimeTearDownWorkItem Class
+
+        /// <summary>
+        /// OneTimeTearDownWorkItem represents the cleanup
+        /// and one-time teardown phase of a CompositeWorkItem
+        /// </summary>
+        public class OneTimeTearDownWorkItem : WorkItem
+        {
+            private CompositeWorkItem _originalWorkItem;
+
+            private object _teardownLock = new object();
+
+            /// <summary>
+            /// Construct a OneTimeTearDownWOrkItem wrapping a CompositeWorkItem
+            /// </summary>
+            /// <param name="originalItem">The CompositeWorkItem being wrapped</param>
+            public OneTimeTearDownWorkItem(CompositeWorkItem originalItem)
+                : base(originalItem)
+            {
+                _originalWorkItem = originalItem;
+            }
+
+            /// <summary>
+            /// The WorkItem name, overridden to indicate this is the teardown.
+            /// </summary>
+            public override string Name
+            {
+                get { return string.Format("{0} OneTimeTearDown", base.Name); }
+            }
+
+#if PARALLEL
+            /// <summary>
+            /// The ExecutionStrategy for use in running this work item
+            /// </summary>
+            public override ParallelExecutionStrategy ExecutionStrategy
+            {
+                get { return _originalWorkItem.ExecutionStrategy; }
+            }
+#endif
+
+            /// <summary>
+            ///
+            /// </summary>
+            public override void Execute()
+            {
+                lock (_teardownLock)
+                {
+                    //if (Test.Parent != null && Test.Parent.Name.EndsWith("nunit.framework.tests.dll"))
+                    //    System.Diagnostics.Debugger.Launch();
+
+                    if (Test.TestType == "Theory" && Result.ResultState == ResultState.Success && Result.PassCount == 0)
+                        Result.SetResult(ResultState.Failure, "No test cases were provided");
+
+                    if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                        _originalWorkItem.PerformOneTimeTearDown();
+
+                    foreach (var childResult in Result.Children)
+                        if (childResult.ResultState == ResultState.Cancelled)
+                        {
+                            this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                            break;
+                        }
+
+                    _originalWorkItem.WorkItemComplete();
+                }
+            }
+
+            /// <summary>
+            /// PerformWork is not used in CompositeWorkItem
+            /// </summary>
+            protected override void PerformWork() { }
+        }
+
+        #endregion
     }
 }
+

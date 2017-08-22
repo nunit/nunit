@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,12 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Framework.Interfaces;
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TODO: Documentation needed for class
+    /// DelegatingTestCommand wraps an inner TestCommand.
+    /// Derived classes may do what they like before or
+    /// after running the inner command.
     /// </summary>
     public abstract class DelegatingTestCommand : TestCommand
     {

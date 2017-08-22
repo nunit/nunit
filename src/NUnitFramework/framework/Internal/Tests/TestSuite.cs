@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -56,6 +56,8 @@ namespace NUnit.Framework.Internal
         public TestSuite(string name) : base(name)
         {
             Arguments = new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
         }
 
         /// <summary>
@@ -67,16 +69,21 @@ namespace NUnit.Framework.Internal
             : base(parentSuiteName, name)
         {
             Arguments = new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestSuite(ITypeInfo fixtureType)
+        /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
+        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
             : base(fixtureType)
         {
-            Arguments = new object[0];
+            Arguments = arguments ?? new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
         }
 
         /// <summary>
@@ -87,6 +94,39 @@ namespace NUnit.Framework.Internal
             : base(new TypeWrapper(fixtureType))
         {
             Arguments = new object[0];
+            OneTimeSetUpMethods = new MethodInfo[0];
+            OneTimeTearDownMethods = new MethodInfo[0];
+        }
+
+        /// <summary>
+        /// Copy constructor style to create a filtered copy of the given test suite
+        /// </summary>
+        /// <param name="suite">Test Suite to copy</param>
+        /// <param name="filter">Filter to be applied</param>
+        public TestSuite(TestSuite suite, ITestFilter filter)
+            : base(suite.Name)
+        {
+            this.FullName = suite.FullName;
+            this.Method   = suite.Method;
+            this.RunState = suite.RunState;
+            this.Fixture  = suite.Fixture;
+
+            foreach(var child in suite.tests)
+            {
+                if(filter.Pass(child))
+                {
+                    if(child.IsSuite)
+                    {
+                        TestSuite childSuite = new TestSuite(child as TestSuite, filter);
+                        childSuite.Parent    = this;
+                        this.tests.Add(childSuite);
+                    }
+                    else
+                    {
+                        this.tests.Add(child);
+                    }
+                }
+            }
         }
 
         #endregion
@@ -172,14 +212,24 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// The arguments to use in creating the fixture
+        /// The arguments to use in creating the fixture, or empty array if none are provided.
         /// </summary>
-        public object[] Arguments { get; internal set; }
+        public override object[] Arguments { get; }
 
         /// <summary>
         /// Set to true to suppress sorting this suite's contents
         /// </summary>
         protected bool MaintainTestOrder { get; set; }
+
+        /// <summary>
+        /// OneTimeSetUp methods for this suite
+        /// </summary>
+        public MethodInfo[] OneTimeSetUpMethods { get; protected set; }
+
+        /// <summary>
+        /// OneTimeTearDown methods for this suite
+        /// </summary>
+        public MethodInfo[] OneTimeTearDownMethods { get; protected set; }
 
         #endregion
 
@@ -246,10 +296,10 @@ namespace NUnit.Framework.Internal
         /// Check that setup and teardown methods marked by certain attributes
         /// meet NUnit's requirements and mark the tests not runnable otherwise.
         /// </summary>
-        /// <param name="attrType">The attribute type to check for</param>
-        protected void CheckSetUpTearDownMethods(Type attrType)
+        /// <param name="methods">A list of methodinfos to check</param>
+        protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
         {
-            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(TypeInfo.Type, attrType, true))
+            foreach (MethodInfo method in methods)
                 if (method.IsAbstract ||
                      !method.IsPublic && !method.IsFamily ||
                      method.GetParameters().Length > 0 ||
@@ -260,14 +310,10 @@ namespace NUnit.Framework.Internal
 #endif
                     )
                 {
-                    this.Properties.Set(
-                        PropertyNames.SkipReason,
-                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    this.RunState = RunState.NotRunnable;
+                    this.MakeInvalid(string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
                     break;
                 }
         }
-
         #endregion
     }
 }

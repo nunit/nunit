@@ -16,13 +16,9 @@ NUnitAttribute
 	FixtureBuilderAttribute
 		TestFixtureAttribute          : IFixtureBuilder, IApplyToTest
 	SetUpAttribute                    : 
-	PreTestAttribute                  : 
-	PostTestAttribute                 : 
 	SetUpFixtureAttribute         
 	SuiteAttribute                
 	TearDownAttribute             
-	TestFixtureSetUpAttribute      
-	TestFixtureTearDownAttribute   
 	CategoryAttribute			      : IApplyToTest
 	ExplicitAttribute	              : IApplyToTest
 	IgnoreAttribute			          : IApplyToTest
@@ -33,8 +29,6 @@ NUnitAttribute
 		DescriptionAttribute
 		MaxTimeAttribute              : ICommandDecorator
 		RepeatAttribute			      : ICommandDecorator
-		RequiresMTAAttribute 
-		RequiresSTAAttribute 
 		RequiresThreadAttribute 
 		SetCultureAttribute           : ICommandDecorator
 		SetUICultureAttribute         : ICommandDecorator

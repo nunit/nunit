@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,7 +26,6 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Syntax
 {
-    [Parallelizable(ParallelScope.None)] // Uses GlobalSettings
     public class EqualToTest : SyntaxTest
     {
         [SetUp]
@@ -132,22 +131,12 @@ namespace NUnit.Framework.Syntax
                 "ulong actual, int expected, int tolerance");
         }
 
-        [Test]
+        [Test, DefaultFloatingPointTolerance(0.05)]
         public void EqualityTestsUsingDefaultFloatingPointTolerance()
         {
-            var savedTolerance = GlobalSettings.DefaultFloatingPointTolerance;
-            GlobalSettings.DefaultFloatingPointTolerance = 0.05d;
-
-            try
-            {
-                Assert.That(4.99d, Is.EqualTo(5.0d));
-                Assert.That(4.0d, Is.Not.EqualTo(5.0d));
-                Assert.That(4.99f, Is.EqualTo(5.0f));
-            }
-            finally
-            {
-                GlobalSettings.DefaultFloatingPointTolerance = savedTolerance;
-            }
+            Assert.That(4.99d, Is.EqualTo(5.0d));
+            Assert.That(4.0d, Is.Not.EqualTo(5.0d));
+            Assert.That(4.99f, Is.EqualTo(5.0f));
         }
     }
 }

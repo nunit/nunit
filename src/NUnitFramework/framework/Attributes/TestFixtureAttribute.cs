@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole
+// Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -53,7 +53,7 @@ namespace NUnit.Framework
         public TestFixtureAttribute(params object[] arguments)
         {
             RunState = RunState.Runnable;
-            Arguments = arguments;
+            Arguments = arguments ?? new object[] { null };
             TypeArgs = new Type[0];
             Properties = new PropertyBag();
         }

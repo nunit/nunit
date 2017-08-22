@@ -1,14 +1,12 @@
 language: csharp
 sudo: false
-mono:
-  - latest
-  - 4.2.4
-os:
-  - linux
-  - osx
 matrix:
-  allow_failures:
-    - mono: latest
-  fast_finish: true
+  include:
+    - os: linux
+      mono: 4.6.2
+    - os: linux
+      mono: latest
+    - os: osx
+      mono: latest
 script:
   - ./build.sh --target "Travis"

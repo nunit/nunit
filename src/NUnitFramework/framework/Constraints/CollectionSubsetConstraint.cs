@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -67,7 +67,10 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            return Tally(_expected).TryRemove( actual );
+            CollectionTally tally = Tally(_expected);
+            tally.TryRemove(actual);
+
+            return tally.Result.ExtraItems.Count == 0;
         }
 
 

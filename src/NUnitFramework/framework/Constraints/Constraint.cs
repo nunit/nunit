@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
 
     /// <summary>
     /// The Constraint class is the base of all built-in constraints
-    /// within NUnit. It provides the operator overloads used to combine 
+    /// within NUnit. It provides the operator overloads used to combine
     /// constraints.
     /// </summary>
     public abstract class Constraint : IConstraint
@@ -107,9 +107,9 @@ namespace NUnit.Framework.Constraints
         public abstract ConstraintResult ApplyTo<TActual>(TActual actual);
 
         /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns 
-        /// the value to be tested. The default implementation simply evaluates 
-        /// the delegate but derived classes may override it to provide for 
+        /// Applies the constraint to an ActualValueDelegate that returns
+        /// the value to be tested. The default implementation simply evaluates
+        /// the delegate but derived classes may override it to provide for
         /// delayed processing.
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
@@ -200,7 +200,7 @@ namespace NUnit.Framework.Constraints
         #region Operator Overloads
 
         /// <summary>
-        /// This operator creates a constraint that is satisfied only if both 
+        /// This operator creates a constraint that is satisfied only if both
         /// argument constraints are satisfied.
         /// </summary>
         public static Constraint operator &(Constraint left, Constraint right)
@@ -211,7 +211,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// This operator creates a constraint that is satisfied if either 
+        /// This operator creates a constraint that is satisfied if either
         /// of the argument constraints is satisfied.
         /// </summary>
         public static Constraint operator |(Constraint left, Constraint right)
@@ -222,7 +222,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// This operator creates a constraint that is satisfied if the 
+        /// This operator creates a constraint that is satisfied if the
         /// argument constraint is not satisfied.
         /// </summary>
         public static Constraint operator !(Constraint constraint)
@@ -290,7 +290,6 @@ namespace NUnit.Framework.Constraints
 
         #region After Modifier
 
-#if !PORTABLE && !NETSTANDARD1_6
         /// <summary>
         /// Returns a DelayedConstraint.WithRawDelayInterval with the specified delay time.
         /// </summary>
@@ -317,7 +316,6 @@ namespace NUnit.Framework.Constraints
                 delayInMilliseconds,
                 pollingInterval);
         }
-#endif
 
         #endregion
 

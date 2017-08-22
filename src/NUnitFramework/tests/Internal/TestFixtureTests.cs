@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
@@ -91,13 +92,11 @@ namespace NUnit.Framework.Internal
             CanConstructFrom(typeof(FixtureWithoutTestFixtureAttributeContainingTestCaseSource));
         }
 
-#if !PORTABLE
         [Test]
         public void ConstructFromTypeWithoutTestFixtureAttributeContainingTheory()
         {
             CanConstructFrom(typeof(FixtureWithoutTestFixtureAttributeContainingTheory));
         }
-#endif
 
         [Test]
         public void CannotRunConstructorWithArgsNotSupplied()
@@ -109,6 +108,37 @@ namespace NUnit.Framework.Internal
         public void CanRunConstructorWithArgsSupplied()
         {
             TestAssert.IsRunnable(typeof(FixtureWithArgsSupplied));
+        }
+
+        [Test]
+        public void CapturesArgumentsForConstructorWithArgsSupplied()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(FixtureWithArgsSupplied));
+            Assert.That(fixture.Arguments, Is.EqualTo(new[] { 7, 3 }));
+        }
+
+        [Test]
+        public void CapturesNoArgumentsForConstructorWithoutArgsSupplied()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(RegularFixtureWithOneTest));
+            Assert.That(fixture.Arguments, Is.EqualTo(new object[0]));
+        }
+
+        [Test]
+        public void CapturesArgumentsForConstructorWithMultipleArgsSupplied()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(FixtureWithMultipleArgsSupplied));
+            Assert.True(fixture.HasChildren);
+
+            var expectedArgumentSeries = new[]
+            {
+                new object[] {8, 4},
+                new object[] {7, 3}
+            };
+
+            var actualArgumentSeries = fixture.Tests.Select(x => x.Arguments).ToArray();
+
+            Assert.That(actualArgumentSeries, Is.EquivalentTo(expectedArgumentSeries));
         }
 
         [Test]
@@ -154,11 +184,20 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
         }
 
-//		[Test]
-//		public void CannotRunAbstractFixture()
-//		{
-//            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
-//		}
+        [Test]
+        public void FixtureWithParallelizableOnOneTimeSetUpIsInvalid()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureWithParallelizableOnOneTimeSetUp));
+            Assert.AreEqual(RunState.NotRunnable, suite.RunState);
+            Assert.AreEqual("ParallelizableAttribute is only allowed on test methods and fixtures", 
+                suite.Properties.Get(PropertyNames.SkipReason));
+        }
+
+        //		[Test]
+        //		public void CannotRunAbstractFixture()
+        //		{
+        //            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
+        //		}
 
         [Test]
         public void CanRunFixtureDerivedFromAbstractTestFixture()
@@ -187,13 +226,13 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanRunMultipleTestFixtureSetUp()
+        public void CanRunMultipleOneTimeSetUp()
         {
             TestAssert.IsRunnable(typeof(MultipleFixtureSetUpAttributes));
         }
 
         [Test]
-        public void CanRunMultipleTestFixtureTearDown()
+        public void CanRunMultipleOneTimeTearDown()
         {
             TestAssert.IsRunnable(typeof(MultipleFixtureTearDownAttributes));
         }
@@ -337,7 +376,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region TestFixtureSetUp Signature
+        #region OneTimeSetUp Signature
 
         [Test]
         public void CannotRunPrivateFixtureSetUp()
@@ -371,7 +410,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region TestFixtureTearDown Signature
+        #region OneTimeTearDown Signature
 
         [Test]
         public void CannotRunPrivateFixtureTearDown()

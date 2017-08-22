@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2016 Charlie Poole
+// Copyright (c) 2007-2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -20,14 +20,14 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-#if !PORTABLE && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System;
 using System.Linq;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// PlatformHelper class is used by the PlatformAttribute class to 
+    /// PlatformHelper class is used by the PlatformAttribute class to
     /// determine whether a platform is supported.
     /// </summary>
     public class PlatformHelper
@@ -118,23 +118,15 @@ namespace NUnit.Framework.Internal
 
         private bool IsPlatformSupported(string include, string exclude)
         {
-            try
+            if (include != null && !IsPlatformSupported(include))
             {
-                if (include != null && !IsPlatformSupported(include))
-                {
-                    _reason = string.Format("Only supported on {0}", include);
-                    return false;
-                }
-
-                if (exclude != null && IsPlatformSupported(exclude))
-                {
-                    _reason = string.Format("Not supported on {0}", exclude);
-                    return false;
-                }
+                _reason = string.Format("Only supported on {0}", include);
+                return false;
             }
-            catch (Exception ex)
+
+            if (exclude != null && IsPlatformSupported(exclude))
             {
-                _reason = ex.Message;
+                _reason = string.Format("Not supported on {0}", exclude);
                 return false;
             }
 
@@ -142,8 +134,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Test to determine if the a particular platform or comma-
-        /// delimited set of platforms is in use.
+        /// Test to determine if a particular platform or comma-delimited set of platforms is in use.
         /// </summary>
         /// <param name="platform">Name of the platform or comma-separated list of platform ids</param>
         /// <returns>True if the platform is in use on the system</returns>
@@ -154,15 +145,6 @@ namespace NUnit.Framework.Internal
 
             string platformName = platform.Trim();
             bool isSupported;
-
-//			string versionSpecification = null;
-//
-//			string[] parts = platformName.Split( new char[] { '-' } );
-//			if ( parts.Length == 2 )
-//			{
-//				platformName = parts[0];
-//				versionSpecification = parts[1];
-//			}
 
             switch( platformName.ToUpper() )
             {
@@ -322,7 +304,7 @@ namespace NUnit.Framework.Internal
                     return IsRuntimeSupported(RuntimeType.MonoTouch, versionSpecification);
 
                 default:
-                    throw new ArgumentException("Invalid platform name", platformName);
+                    throw new InvalidPlatformException("Invalid platform name: " + platformName);
             }
         }
 
