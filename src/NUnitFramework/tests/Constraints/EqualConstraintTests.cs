@@ -632,6 +632,13 @@ namespace NUnit.Framework.Constraints
                     return obj.Length.GetHashCode();
                 }
             }
+
+            [Test]
+            public void HasMemberHonorsUsingWhenCollectionsAreOfDifferentTypes()
+            {
+                ICollection strings = new List<string> { "1", "2", "3" };
+                Assert.That(strings, Has.Member(2).Using<string, int>((s, i) => i.ToString() == s));
+            }
         }
 
         #endregion

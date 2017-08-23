@@ -355,6 +355,17 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        /// <summary>
+        /// Flag the constraint to use the supplied predicate function
+        /// </summary>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public EqualConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        {
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
+            return this;
+        }
+
         #endregion
 
         #region Public Methods
