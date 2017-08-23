@@ -288,6 +288,8 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+#if !NETSTANDARD1_3
+
         #region After Modifier
 
         /// <summary>
@@ -319,7 +321,9 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-        #region IResolveConstraint Members
+#endif
+
+#region IResolveConstraint Members
 
         /// <summary>
         /// Resolves any pending operators and returns the resolved constraint.
@@ -329,6 +333,6 @@ namespace NUnit.Framework.Constraints
             return Builder == null ? this : Builder.Resolve();
         }
 
-        #endregion
+#endregion
     }
 }
