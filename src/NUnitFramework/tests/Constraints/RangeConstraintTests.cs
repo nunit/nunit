@@ -81,13 +81,6 @@ namespace NUnit.Framework.Constraints
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
             Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
         }
-
-        // Test on Issue #21 - https://github.com/nunit/nunit-framework/issues/21
-        [Test]
-        public void ShouldThrowExceptionIfFromIsLessThanTo()
-        {
-            Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
-        }
         [Test]
         public void ShouldThrowExceptionIfObjectHasNoComparer()
         {

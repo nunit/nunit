@@ -41,16 +41,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeConstraint"/> class.
         /// </summary>
-        /// <param name="from">Must be less than or equal to the <paramref name="to"/> value.</param>
-        /// <param name="to">Must be greater than or equal to the <paramref name="from"/> value.</param>
+        /// <param name="from">Inclusive beginning of the range.</param>
+        /// <param name="to">Inclusive end of the range.</param>
         public RangeConstraint(object from, object to) : base(from, to)
         {
             this.from = from;
             this.to = to;
-            if (from is IComparable && to is IComparable)
-            {
-                CompareFromAndTo();
-            }
         }
 
         /// <summary>
