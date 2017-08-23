@@ -440,17 +440,7 @@ namespace NUnit.Framework.Api
 
             if (value is IDictionary)
             {
-                var values = value as IDictionary;
-
-                var valueEntries = new List<string>();
-                foreach (var key in values.Keys)
-                {
-                    var settingValue = values[key];
-                    valueEntries.Add($"[{key}, {values[key]}]");
-                }
-
-                var valueString = string.Join(", ", valueEntries.ToArray());
-                setting.AddAttribute("value", valueString);
+                AddDictionaryEntries(setting, value as IDictionary);
             }
             else
             {
@@ -458,6 +448,18 @@ namespace NUnit.Framework.Api
             }
 
             settingsNode.ChildNodes.Add(setting);
+        }
+
+        private static void AddDictionaryEntries(TNode settingNode, IDictionary entries)
+        {
+            foreach(var key in entries.Keys)
+            {
+                var value = entries[key];
+                var entryNode = new TNode("entry");
+                entryNode.AddAttribute("name", key.ToString());
+                entryNode.AddAttribute("value", value?.ToString() ?? "");
+                settingNode.ChildNodes.Add(entryNode);
+            }
         }
 
         #endregion

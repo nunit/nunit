@@ -91,6 +91,42 @@ namespace NUnit.Framework.Api
             _handler = new CallbackEventHandler();
         }
 
+        #region SettingsElement Tests
+
+        [Test]
+        public void InsertSettingsElement_SettingIsDictionary_CreatesEntriesForDictionaryElements()
+        {
+            var outerNode = new TNode("test");
+            var testSettings = new Dictionary<string, object>();
+            testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", "value1" }, { "key2", "value2" } });
+
+            var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
+            var settingNode = inserted.FirstChild;
+
+            Assert.AreEqual(2, settingNode.ChildNodes.Count);
+        }
+
+        [Test]
+        public void InsertSettingsElement_SettingIsDictionary_CreatesEntriesWithKeysAndValuesFromDictionary()
+        {
+            var outerNode = new TNode("test");
+            var testSettings = new Dictionary<string, object>();
+            testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", "value1" }, { "key2", "value2" } });
+
+            var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
+            var settingNode = inserted.FirstChild;
+
+            var key1Node = settingNode.ChildNodes[0];
+            Assert.AreEqual("key1", key1Node.Attributes["name"]);
+            Assert.AreEqual("value1", key1Node.Attributes["value"]);
+
+            var key2Node = settingNode.ChildNodes[1];
+            Assert.AreEqual("key2", key2Node.Attributes["name"]);
+            Assert.AreEqual("value2", key2Node.Attributes["value"]);
+        }
+
+        #endregion
+
         #region Construction Test
         [Test]
         public void ConstructController()
