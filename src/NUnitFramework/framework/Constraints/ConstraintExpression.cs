@@ -961,12 +961,13 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region InRange
-
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls
-        /// within a specified range.
+        /// inclusively within a specified range.
         /// </summary>
-        public RangeConstraint InRange(IComparable from, IComparable to)
+        /// <param name="from">Inclusive beginning of the range.</param>
+        /// <param name="to">Inclusive end of the range.</param>
+        public RangeConstraint InRange(object from, object to)
         {
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
         }
