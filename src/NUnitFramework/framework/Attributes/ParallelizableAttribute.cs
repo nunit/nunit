@@ -34,8 +34,6 @@ namespace NUnit.Framework
     [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=true )]
     public class ParallelizableAttribute : PropertyAttribute, IApplyToContext
     {
-        private ParallelScope _scope;
-
         /// <summary>
         /// Construct a ParallelizableAttribute using default ParallelScope.Self.
         /// </summary>
@@ -47,10 +45,15 @@ namespace NUnit.Framework
         /// <param name="scope">The ParallelScope associated with this attribute.</param>
         public ParallelizableAttribute(ParallelScope scope) : base()
         { 
-            _scope = scope;
+            Scope = scope;
 
             Properties.Set(PropertyNames.ParallelScope, scope);
         }
+
+        /// <summary>
+        /// Defines the degree to which this test and its descendants may be run in parallel
+        /// </summary>
+        public ParallelScope Scope { get; }
 
         /// <summary>
         /// Overridden to check for invalid combinations of settings
@@ -59,18 +62,18 @@ namespace NUnit.Framework
         public override void ApplyToTest(Test test)
         {
             // Adjust property to include ParallelScope.Self if a fixture has ParallelScope.Fixtures on it
-            if (test is TestFixture && _scope.HasFlag(ParallelScope.Fixtures))
-                Properties.Set(PropertyNames.ParallelScope, _scope | ParallelScope.Self);
+            if (test is TestFixture && Scope.HasFlag(ParallelScope.Fixtures))
+                Properties.Set(PropertyNames.ParallelScope, Scope | ParallelScope.Self);
 
             base.ApplyToTest(test);
 
             if (test.RunState == RunState.NotRunnable)
                 return;
 
-            if (_scope.HasFlag(ParallelScope.Self) && _scope.HasFlag(ParallelScope.None))
+            if (Scope.HasFlag(ParallelScope.Self) && Scope.HasFlag(ParallelScope.None))
                 test.MakeInvalid("Test may not be both parallel and non-parallel");
 
-            if (test is TestMethod && _scope.HasFlag(ParallelScope.ContextMask))
+            if (test is TestMethod && Scope.HasFlag(ParallelScope.ContextMask))
                 test.MakeInvalid("ParallelScope of a test method may not specify Children or Fixtures");
         }
 
@@ -84,7 +87,7 @@ namespace NUnit.Framework
         {
             // Don't reflect Self in the context, since it will be
             // used for descendant tests.
-            context.ParallelScope = _scope & ParallelScope.ContextMask;
+            context.ParallelScope = Scope & ParallelScope.ContextMask;
         }
 
         #endregion
