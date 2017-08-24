@@ -107,17 +107,16 @@ namespace NUnit.Framework.Api
 
 #if PARALLEL
             // in parallel, an additional node is added with number of test workers
-            Assert.AreEqual(3, inserted.ChildNodes.Count);
+            Assert.That(3, Is.EqualTo(inserted.ChildNodes.Count));
 #else
-            Assert.AreEqual(2, inserted.ChildNodes.Count);
+            Assert.That(2, Is.EqualTo(inserted.ChildNodes.Count));
 #endif
-            Assert.AreEqual("key1", inserted.ChildNodes[0].Attributes["name"]);
-            Assert.AreEqual("value1", inserted.ChildNodes[0].Attributes["value"]);
+            Assert.That("key1", Is.EqualTo(inserted.ChildNodes[0].Attributes["name"]));
+            Assert.That("value1", Is.EqualTo(inserted.ChildNodes[0].Attributes["value"]));
 
-            Assert.AreEqual(1, inserted.ChildNodes[1].ChildNodes.Count);
             var innerNode = inserted.ChildNodes[1].FirstChild;
-            Assert.AreEqual("innerkey", innerNode.Attributes["name"]);
-            Assert.AreEqual("innervalue", innerNode.Attributes["value"]);
+            Assert.That("innerkey", Is.EqualTo(innerNode.Attributes["name"]));
+            Assert.That("innervalue", Is.EqualTo(innerNode.Attributes["value"]));
         }
 
         [Test]
@@ -134,9 +133,9 @@ namespace NUnit.Framework.Api
 
 #if PARALLEL
             // in parallel, an additional node is added with number of test workers
-            Assert.AreEqual(3, inserted.ChildNodes.Count);
+            Assert.That(3, Is.EqualTo(inserted.ChildNodes.Count));
 #else
-            Assert.AreEqual(2, inserted.ChildNodes.Count);
+            Assert.That(2, Is.EqualTo(inserted.ChildNodes.Count));
 #endif
         }
 
@@ -151,11 +150,12 @@ namespace NUnit.Framework.Api
             };
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
+            
+            Assert.That("key1", Is.EqualTo(inserted.ChildNodes[0].Attributes["name"]));
+            Assert.That("value1", Is.EqualTo(inserted.ChildNodes[0].Attributes["value"]));
 
-            Assert.AreEqual("key1", inserted.ChildNodes[0].Attributes["name"]);
-            Assert.AreEqual("value1", inserted.ChildNodes[0].Attributes["value"]);
-            Assert.AreEqual("key2", inserted.ChildNodes[1].Attributes["name"]);
-            Assert.AreEqual("value2", inserted.ChildNodes[1].Attributes["value"]);
+            Assert.That("key2", Is.EqualTo(inserted.ChildNodes[1].Attributes["name"]));
+            Assert.That("value2", Is.EqualTo(inserted.ChildNodes[1].Attributes["value"]));
         }
 
         [Test]
@@ -169,8 +169,8 @@ namespace NUnit.Framework.Api
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
             var settingNode = inserted.FirstChild;
-
-            Assert.AreEqual(2, settingNode.ChildNodes.Count);
+            
+            Assert.That(2, Is.EqualTo(settingNode.ChildNodes.Count));
         }
 
         [Test]
@@ -184,12 +184,12 @@ namespace NUnit.Framework.Api
             var settingNode = inserted.FirstChild;
 
             var key1Node = settingNode.ChildNodes[0];
-            Assert.AreEqual("key1", key1Node.Attributes["name"]);
-            Assert.AreEqual("value1", key1Node.Attributes["value"]);
+            Assert.That("key1", Is.EqualTo(key1Node.Attributes["name"]));
+            Assert.That("value1", Is.EqualTo(key1Node.Attributes["value"]));
 
             var key2Node = settingNode.ChildNodes[1];
-            Assert.AreEqual("key2", key2Node.Attributes["name"]);
-            Assert.AreEqual("value2", key2Node.Attributes["value"]);
+            Assert.That("key2", Is.EqualTo(key2Node.Attributes["name"]));
+            Assert.That("value2", Is.EqualTo(key2Node.Attributes["value"]));
         }
 
         #endregion
