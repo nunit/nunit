@@ -24,8 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="nunit.testdata-2.0.project.json" />
-    <None Remove="nunit.testdata-3.5.project.json" />
+    <None Remove="packages.config" />
   </ItemGroup>
 
   <ItemGroup>

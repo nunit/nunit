@@ -23,8 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="nunit.framework.tests-2.0.project.json" />
-    <None Remove="nunit.framework.tests-3.5.project.json" />
+    <None Remove="packages.config" />
   </ItemGroup>
 
   <ItemGroup>

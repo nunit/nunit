@@ -14,10 +14,6 @@
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="slow-nunit-tests-2.0.project.json" />
-    <None Remove="slow-nunit-tests-3.5.project.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">

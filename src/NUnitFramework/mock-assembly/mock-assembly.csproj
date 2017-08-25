@@ -14,10 +14,6 @@
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="mock-assembly-2.0.project.json" />
-    <None Remove="mock-assembly-3.5.project.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">

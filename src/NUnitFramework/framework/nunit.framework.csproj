@@ -28,12 +28,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="nunit.framework-2.0.project.json" />
-    <None Remove="nunit.framework-3.5.project.json" />
-    <None Remove="packages.config" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>

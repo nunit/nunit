@@ -14,11 +14,6 @@
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;NUNITLITE</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="nunitlite.tests-2.0.project.json" />
-    <None Remove="nunitlite.tests-3.5.project.json" />
-    <None Remove="packages.config" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
