@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>nunit.testdata</AssemblyName>
     <RootNamespace>NUnit.TestData</RootNamespace>
-    <TargetFrameworks>net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</IntermediateOutputPath>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
@@ -14,6 +14,15 @@
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>TRACE;ASYNC</DefineConstants>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net20' OR '$(TargetFramework)' == 'net35'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35'">
+    <DefineConstants>TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="nunit.testdata-2.0.project.json" />
     <None Remove="nunit.testdata-3.5.project.json" />

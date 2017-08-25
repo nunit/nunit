@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>nunit.framework.tests</AssemblyName>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
-    <TargetFrameworks>net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</IntermediateOutputPath>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
@@ -12,8 +12,16 @@
     <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net20' OR '$(TargetFramework)' == 'net35'">
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35'">
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;ASYNC</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="nunit.framework.tests-2.0.project.json" />
     <None Remove="nunit.framework.tests-3.5.project.json" />
@@ -50,14 +58,18 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.ValueTuple" version="4.3.1" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net20'">
+    <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
     <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
     <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35'">
+    <PackageReference Include="System.ValueTuple" version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">

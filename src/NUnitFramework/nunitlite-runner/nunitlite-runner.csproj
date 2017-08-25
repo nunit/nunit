@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>nunitlite-runner</AssemblyName>
     <RootNamespace>NUnitLite</RootNamespace>
-    <TargetFrameworks>net40;net45;netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</IntermediateOutputPath>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>

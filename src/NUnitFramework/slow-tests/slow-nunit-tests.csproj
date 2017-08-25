@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>slow-nunit-tests</AssemblyName>
     <RootNamespace>NUnit.Tests</RootNamespace>
-    <TargetFrameworks>net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</IntermediateOutputPath>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
