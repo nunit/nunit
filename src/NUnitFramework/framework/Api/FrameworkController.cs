@@ -455,8 +455,8 @@ namespace NUnit.Framework.Api
             foreach(var key in entries.Keys)
             {
                 var value = entries[key];
-                var entryNode = new TNode("entry");
-                entryNode.AddAttribute("name", key.ToString());
+                var entryNode = new TNode("item");
+                entryNode.AddAttribute("key", key.ToString());
                 entryNode.AddAttribute("value", value?.ToString() ?? "");
                 settingNode.ChildNodes.Add(entryNode);
             }
