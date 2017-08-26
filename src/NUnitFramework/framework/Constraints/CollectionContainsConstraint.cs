@@ -36,6 +36,7 @@ namespace NUnit.Framework.Constraints
         /// Construct a CollectionContainsConstraint
         /// </summary>
         /// <param name="expected"></param>
+        [Obsolete("Deprecated, use 'new SomeItemsConstraint(new EqualConstraint(expected))' or 'Has.Some.EqualTo(expected)' instead.")]
         public CollectionContainsConstraint(object expected)
             : base(expected)
         {

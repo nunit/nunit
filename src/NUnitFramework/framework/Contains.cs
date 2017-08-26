@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -36,12 +34,12 @@ namespace NUnit.Framework
         #region Item
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="EqualConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static CollectionContainsConstraint Item(object expected)
+        public static EqualConstraint Item(object expected)
         {
-            return new CollectionContainsConstraint(expected);
+            return Has.Some.EqualTo(expected);
         }
 
         #endregion

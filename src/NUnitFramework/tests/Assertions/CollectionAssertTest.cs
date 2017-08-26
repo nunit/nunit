@@ -435,7 +435,7 @@ namespace NUnit.Framework.Assertions
             var list = new SimpleObjectList("x", "y", "z");
 
             var expectedMessage =
-                "  Expected: collection containing \"a\"" + Environment.NewLine +
+                "  Expected: some item equal to \"a\"" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(list,"a"));
@@ -448,7 +448,7 @@ namespace NUnit.Framework.Assertions
             var collection = new SimpleObjectCollection("x", "y", "z");
 
             var expectedMessage =
-                "  Expected: collection containing \"a\"" + Environment.NewLine +
+                "  Expected: some item equal to \"a\"" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(collection,"a"));
@@ -461,7 +461,7 @@ namespace NUnit.Framework.Assertions
             var list = new SimpleObjectList();
 
             var expectedMessage =
-                "  Expected: collection containing \"x\"" + Environment.NewLine +
+                "  Expected: some item equal to \"x\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(list,"x"));
@@ -474,7 +474,7 @@ namespace NUnit.Framework.Assertions
             var ca = new SimpleObjectCollection(new object[0]);
 
             var expectedMessage =
-                "  Expected: collection containing \"x\"" + Environment.NewLine +
+                "  Expected: some item equal to \"x\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(ca,"x"));
@@ -516,8 +516,8 @@ namespace NUnit.Framework.Assertions
         {
             var list = new SimpleObjectList("x", "y", "z");
 
-            var expectedMessage = 
-                "  Expected: not collection containing \"y\"" + Environment.NewLine +
+            var expectedMessage =
+                "  Expected: not some item equal to \"y\"" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.DoesNotContain(list,"y"));
