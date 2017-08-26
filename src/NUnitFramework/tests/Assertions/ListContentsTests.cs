@@ -46,7 +46,7 @@ namespace NUnit.Framework.Assertions
         public void ArrayFails()
         {
             var expectedMessage =
-                "  Expected: collection containing \"def\"" + Environment.NewLine + 
+                "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;	
             var ex = Assert.Throws<AssertionException>(() => Assert.Contains("def", testArray));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Assertions
         public void EmptyArrayFails()
         {
             var expectedMessage =
-                "  Expected: collection containing \"def\"" + Environment.NewLine + 
+                "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;	
             var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new object[0] ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Assertions
         public void ArrayListFails()
         {
             var expectedMessage =
-                "  Expected: collection containing \"def\"" + Environment.NewLine + 
+                "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new SimpleObjectList( testArray ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
