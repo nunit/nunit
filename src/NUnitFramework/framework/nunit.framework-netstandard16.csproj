@@ -425,6 +425,8 @@
     <Compile Include="Internal\Tests\TestSuite.cs" />
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
+    <Compile Include="Internal\TypeNameDifferenceResolver.cs" />
+    <Compile Include="Internal\TypeNameDifferenceResolverUtils.cs" />
     <Compile Include="Internal\TypeWrapper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ITestAction.cs" />

@@ -274,6 +274,8 @@
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\ThreadUtilityTests.cs" />
     <Compile Include="Internal\TypeHelperTests.cs" />
+    <Compile Include="Internal\TypeNameDifferenceResolverUtilsTests.cs" />
+    <Compile Include="Internal\TypeNameDifferenceTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="Internal\UnexpectedExceptionTests.cs" />
     <Compile Include="Internal\UnhandledExceptionTests.cs" />

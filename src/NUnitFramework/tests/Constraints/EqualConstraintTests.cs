@@ -666,6 +666,66 @@ namespace NUnit.Framework.Constraints
             Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL);
         }
 
+        class Dummy
+        {
+            internal readonly int value;
+
+            public Dummy(int value)
+            {
+                this.value = value;
+            }
+
+            public override string ToString()
+            {
+                return "Dummy " + value;
+            }
+        }
+
+        class Dummy1
+        {
+            internal readonly int value;
+
+            public Dummy1(int value)
+            {
+                this.value = value;
+            }
+
+            public override string ToString()
+            {
+                return "Dummy " + value;
+            }
+        }
+
+        class DummyTemplatedClass<T>
+        {
+            private object _obj;
+            public DummyTemplatedClass(object obj)
+            {
+                _obj = obj;
+            }
+
+            public override string ToString()
+            {
+                return _obj.ToString();
+            }
+        }
+
+        [Test]
+        public void TestSameValueDifferentTypeUsingGenericTypes()
+        {
+            var d1 = new Dummy(12);
+            var d2 = new Dummy1(12);
+            var dc1 = new DummyTemplatedClass<Dummy>(d1);
+            var dc2 = new DummyTemplatedClass<Dummy1>(d2);
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dc1, dc2));
+            var expectedMsg =
+                "  Expected: <Dummy 12> (EqualConstraintTests+DummyTemplatedClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
+                "  But was:  <Dummy 12> (EqualConstraintTests+DummyTemplatedClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
+
+            Assert.AreEqual(expectedMsg, ex.Message);
+        }
+
         [Test]
         public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
         {
