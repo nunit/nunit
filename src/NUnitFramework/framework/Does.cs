@@ -77,15 +77,15 @@ namespace NUnit.Framework
         public static ContainsConstraint Contain(string expected) =>
             new ContainsConstraint(expected);
 
-    #endregion
+        #endregion
 
-    #region DictionaryContain
-    /// <summary>
-    /// Returns a new DictionaryContainsKeyConstraint checking for the
-    /// presence of a particular key in the Dictionary key collection.
-    /// </summary>
-    /// <param name="expected">The key to be matched in the Dictionary key collection</param>
-    public static DictionaryContainsKeyConstraint ContainKey(object expected)
+        #region DictionaryContain
+        /// <summary>
+        /// Returns a new DictionaryContainsKeyConstraint checking for the
+        /// presence of a particular key in the Dictionary key collection.
+        /// </summary>
+        /// <param name="expected">The key to be matched in the Dictionary key collection</param>
+        public static DictionaryContainsKeyConstraint ContainKey(object expected)
         {
             return Contains.Key(expected);
         }
