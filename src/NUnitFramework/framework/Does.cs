@@ -63,10 +63,8 @@ namespace NUnit.Framework
         /// Returns a new <see cref="EqualConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static ContainsConstraint Contain(object expected)
-        {
-            return new ContainsConstraint(expected);
-        }
+        public static ContainsConstraint Contain(object expected) =>
+            new ContainsConstraint(expected);
 
         #endregion
 
