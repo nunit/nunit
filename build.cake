@@ -397,7 +397,8 @@ var FrameworkFiles = new FilePath[]
     "Microsoft.Threading.Tasks.Extensions.dll",
     "System.IO.dll",
     "System.Runtime.dll",
-    "System.Threading.Tasks.dll"
+    "System.Threading.Tasks.dll",
+    "System.ValueTuple.dll"
 };
 
 Task("CreateImage")
