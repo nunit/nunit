@@ -17,7 +17,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.8.0";
+var version = "3.9.0";
 var modifier = "";
 
 var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
@@ -397,7 +397,8 @@ var FrameworkFiles = new FilePath[]
     "Microsoft.Threading.Tasks.Extensions.dll",
     "System.IO.dll",
     "System.Runtime.dll",
-    "System.Threading.Tasks.dll"
+    "System.Threading.Tasks.dll",
+    "System.ValueTuple.dll"
 };
 
 Task("CreateImage")
