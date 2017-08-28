@@ -92,30 +92,30 @@ namespace NUnit.Framework.Api
         }
 
         #region SettingsElement Tests
-        
-        [Test]
-        public void InsertSettingsElement_MixedSettings_CreatesCorrectSubNodes()
+
+        [TestCaseSource(nameof(SettingsData))]
+        public void InsertSettingsElement_MixedSettings_CreatesCorrectSubNodes(string value)
         {
             var outerNode = new TNode("test");
             var testSettings = new Dictionary<string, object>
             {
                 ["key1"] = "value1",
-                ["key2"] = new Dictionary<string, object> { ["innerkey"] = "innervalue" }
+                ["key2"] = new Dictionary<string, object> { ["innerkey"] = value }
             };
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
 #if PARALLEL
             // in parallel, an additional node is added with number of test workers
-            Assert.That(3, Is.EqualTo(inserted.ChildNodes.Count));
+            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(3));
 #else
-            Assert.That(2, Is.EqualTo(inserted.ChildNodes.Count));
+            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(2));
 #endif
-            Assert.That("key1", Is.EqualTo(inserted.ChildNodes[0].Attributes["name"]));
-            Assert.That("value1", Is.EqualTo(inserted.ChildNodes[0].Attributes["value"]));
+            Assert.That(inserted.ChildNodes[0].Attributes["name"], Is.EqualTo("key1"));
+            Assert.That(inserted.ChildNodes[0].Attributes["value"], Is.EqualTo("value1"));
 
             var innerNode = inserted.ChildNodes[1].FirstChild;
-            Assert.That("innerkey", Is.EqualTo(innerNode.Attributes["key"]));
-            Assert.That("innervalue", Is.EqualTo(innerNode.Attributes["value"]));
+            Assert.That(innerNode.Attributes["key"], Is.EqualTo("innerkey"));
+            Assert.That(innerNode.Attributes["value"], Is.EqualTo(value));
         }
 
         [Test]
@@ -132,63 +132,89 @@ namespace NUnit.Framework.Api
 
 #if PARALLEL
             // in parallel, an additional node is added with number of test workers
-            Assert.That(3, Is.EqualTo(inserted.ChildNodes.Count));
+            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(3));
 #else
-            Assert.That(2, Is.EqualTo(inserted.ChildNodes.Count));
+            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(2));
 #endif
         }
 
-        [Test]
-        public void InsertSettingsElement_SettingIsValue_SetsKeyAndValueAsAttributes()
+        [TestCaseSource(nameof(SettingsData))]
+        public void InsertSettingsElement_SettingIsValue_SetsKeyAndValueAsAttributes(string value)
         {
             var outerNode = new TNode("test");
             var testSettings = new Dictionary<string, object>
             {
                 ["key1"] = "value1",
-                ["key2"] = "value2"
+                ["key2"] = value
             };
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
 
-            Assert.That("key1", Is.EqualTo(inserted.ChildNodes[0].Attributes["name"]));
-            Assert.That("value1", Is.EqualTo(inserted.ChildNodes[0].Attributes["value"]));
+            Assert.That(inserted.ChildNodes[0].Attributes["name"], Is.EqualTo("key1"));
+            Assert.That(inserted.ChildNodes[0].Attributes["value"], Is.EqualTo("value1"));
 
-            Assert.That("key2", Is.EqualTo(inserted.ChildNodes[1].Attributes["name"]));
-            Assert.That("value2", Is.EqualTo(inserted.ChildNodes[1].Attributes["value"]));
+            Assert.That(inserted.ChildNodes[1].Attributes["name"], Is.EqualTo("key2"));
+            Assert.That(inserted.ChildNodes[1].Attributes["value"], Is.EqualTo(value));
         }
 
-        [Test]
-        public void InsertSettingsElement_SettingIsDictionary_CreatesEntriesForDictionaryElements()
+        [TestCaseSource(nameof(SettingsData))]
+        public void InsertSettingsElement_SettingIsDictionary_CreatesEntriesForDictionaryElements(string value)
         {
             var outerNode = new TNode("test");
             var testSettings = new Dictionary<string, object>
             {
-                ["outerkey"] = new Dictionary<string, object> { { "key1", "value1" }, { "key2", "value2" } } 
+                ["outerkey"] = new Dictionary<string, object> { { "key1", "value1" }, { "key2", value } }
             };
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
             var settingNode = inserted.FirstChild;
-            
-            Assert.That(2, Is.EqualTo(settingNode.ChildNodes.Count));
+
+            Assert.That(settingNode.ChildNodes.Count, Is.EqualTo(2));
         }
 
-        [Test]
-        public void InsertSettingsElement_SettingIsDictionary_CreatesEntriesWithKeysAndValuesFromDictionary()
+        [TestCaseSource(nameof(SettingsData))]
+        public void InsertSettingsElement_SettingIsDictionary_CreatesValueAttributeForDictionaryElements(string value)
+        {
+            var outerNode = new TNode("test");
+            var testSettings = new Dictionary<string, object>
+            {
+                ["outerkey"] = new Dictionary<string, object> { { "key1", "value1" }, { "key2", value } }
+            };
+
+            var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
+            var settingNode = inserted.FirstChild;
+
+            Assert.That(settingNode.ChildNodes.Count, Is.EqualTo(2));
+            Assert.That(settingNode.Attributes["value"], Is.EqualTo($"[key1, value1], [key2, {value}]"));
+        }
+
+        [TestCaseSource(nameof(SettingsData))]
+        public void InsertSettingsElement_SettingIsDictionary_CreatesEntriesWithKeysAndValuesFromDictionary(string value)
         {
             var outerNode = new TNode("test");
             var testSettings = new Dictionary<string, object>();
-            testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", "value1" }, { "key2", "value2" } });
+            testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", "value1" }, { "key2", value } });
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
             var settingNode = inserted.FirstChild;
 
             var key1Node = settingNode.ChildNodes[0];
-            Assert.That("key1", Is.EqualTo(key1Node.Attributes["key"]));
-            Assert.That("value1", Is.EqualTo(key1Node.Attributes["value"]));
+            Assert.That(key1Node.Attributes["key"], Is.EqualTo("key1"));
+            Assert.That(key1Node.Attributes["value"], Is.EqualTo("value1"));
 
             var key2Node = settingNode.ChildNodes[1];
-            Assert.That("key2", Is.EqualTo(key2Node.Attributes["key"]));
-            Assert.That("value2", Is.EqualTo(key2Node.Attributes["value"]));
+            Assert.That(key2Node.Attributes["key"], Is.EqualTo("key2"));
+            Assert.That(key2Node.Attributes["value"], Is.EqualTo(value));
+        }
+
+        public static IEnumerable SettingsData()
+        {
+            yield return new TestCaseData("value");
+            yield return new TestCaseData("");
+            yield return new TestCaseData("<value>");
+            yield return new TestCaseData("\"value\"");
+            yield return new TestCaseData("'value'");
+            yield return new TestCaseData("value1;value2");
         }
 
         #endregion
