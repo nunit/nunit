@@ -60,21 +60,32 @@ namespace NUnit.Framework
         #region Contain
 
         /// <summary>
-        /// Returns a new <see cref="EqualConstraint"/> checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static ContainsConstraint Contain(object expected) =>
+        public static SomeItemsConstraint Contain(object expected) =>
+            new SomeItemsConstraint(new EqualConstraint(expected));
+
+        /// <summary>
+        /// Returns a new <see cref="ContainsConstraint"/>. This constraint
+        /// will, in turn, make use of the appropriate second-level
+        /// constraint, depending on the type of the actual argument.
+        /// This overload is only used if the item sought is a string,
+        /// since any other type implies that we are looking for a
+        /// collection member.
+        /// </summary>
+        public static ContainsConstraint Contain(string expected) =>
             new ContainsConstraint(expected);
 
-        #endregion
+    #endregion
 
-        #region DictionaryContain
-        /// <summary>
-        /// Returns a new DictionaryContainsKeyConstraint checking for the
-        /// presence of a particular key in the Dictionary key collection.
-        /// </summary>
-        /// <param name="expected">The key to be matched in the Dictionary key collection</param>
-        public static DictionaryContainsKeyConstraint ContainKey(object expected)
+    #region DictionaryContain
+    /// <summary>
+    /// Returns a new DictionaryContainsKeyConstraint checking for the
+    /// presence of a particular key in the Dictionary key collection.
+    /// </summary>
+    /// <param name="expected">The key to be matched in the Dictionary key collection</param>
+    public static DictionaryContainsKeyConstraint ContainKey(object expected)
         {
             return Contains.Key(expected);
         }
