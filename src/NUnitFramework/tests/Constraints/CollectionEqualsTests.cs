@@ -25,9 +25,13 @@ namespace NUnit.Framework.Constraints
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [Test]
         public void CanMatchTwoLists()
         {
-            //IList expected = new List<int>();
+            IList expected = new List<int> { 1, 2, 3 };
+            IList actual = new List<int> { 1, 2, 3 };
+
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -54,7 +58,6 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
         }
 
-        [Test]
         [TestCaseSource( "IgnoreCaseData" )]
         public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
         {
@@ -72,5 +75,32 @@ namespace NUnit.Framework.Constraints
             new object[] {new List<string> {"a", "b", "c"}, new List<string> {"A", "B", "C"}},
         };
 
+        [Test]
+        public void DoesContainMultipleItemsString()
+        {
+            var collection = new[] { "test1", "test2", "test3" };
+            Assert.That(collection, Does.Contain("test1").And.Contains("test2").And.Contains("test3"));
+        }
+
+        [Test]
+        public void ContainsMultipleItemsString()
+        {
+            var collection = new[] { "test1", "test2", "test3" };
+            Assert.That(collection, Contains.Item("test1").And.Contains("test2").And.Contains("test3"));
+        }
+
+        [Test]
+        public void DoesContainMultipleItemsInt()
+        {
+            var collection = new[] { 1, 2, 3 };
+            Assert.That(collection, Does.Contain(1).And.Contains(2).And.Contains(3));
+        }
+
+        [Test]
+        public void ContainsMultipleItemsInt()
+        {
+            var collection = new[] { 1, 2, 3 };
+            Assert.That(collection, Contains.Item(1).And.Contains(2).And.Contains(3));
+        }
     }
 }

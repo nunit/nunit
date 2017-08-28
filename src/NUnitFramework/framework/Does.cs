@@ -1,6 +1,6 @@
 ﻿// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -63,20 +63,7 @@ namespace NUnit.Framework
         /// Returns a new <see cref="EqualConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static EqualConstraint Contain(object expected)
-        {
-            return new ConstraintExpression().Some.EqualTo(expected);
-        }
-
-        /// <summary>
-        /// Returns a new ContainsConstraint. This constraint
-        /// will, in turn, make use of the appropriate second-level
-        /// constraint, depending on the type of the actual argument. 
-        /// This overload is only used if the item sought is a string,
-        /// since any other type implies that we are looking for a 
-        /// collection member.
-        /// </summary>
-        public static ContainsConstraint Contain(string expected)
+        public static ContainsConstraint Contain(object expected)
         {
             return new ContainsConstraint(expected);
         }
