@@ -438,9 +438,11 @@ namespace NUnit.Framework.Api
             TNode setting = new TNode("setting");
             setting.AddAttribute("name", name);
 
-            if (value is IDictionary)
+            var dict = value as IDictionary;
+            if (dict != null)
             {
-                AddDictionaryEntries(setting, value as IDictionary);
+                AddDictionaryEntries(setting, dict);
+                AddBackwardsCompatibleDictionaryEntries(setting, dict);
             }
             else
             {
@@ -448,6 +450,16 @@ namespace NUnit.Framework.Api
             }
 
             settingsNode.ChildNodes.Add(setting);
+        }
+
+        private static void AddBackwardsCompatibleDictionaryEntries(TNode settingsNode, IDictionary entries)
+        {
+            var pairs = new List<string>(entries.Count);
+            foreach (var key in entries.Keys)
+            {
+                pairs.Add($"[{key}, {entries[key]}]");
+            }
+            settingsNode.AddAttribute("value", string.Join(", ", pairs.ToArray()));
         }
 
         private static void AddDictionaryEntries(TNode settingNode, IDictionary entries)
