@@ -1,3 +1,14 @@
+### NUnit 3.8.1 - August 28, 2017
+
+This release fixes two critical regressions in the 3.8 release. The first caused the console
+runner to crash if you are using multiple test parameters. The second issue caused collection
+constraints checking for multiple items in a collection to fail.
+
+#### Issues Resolved
+
+ * 2386 Contains.Item() fails for collections in NUnit 3.8
+ * 2390 Missing value attribute in test parameters setting causes NullReferenceException in console
+
 ### NUnit 3.8 - August 27, 2017
 
 This release removes several methods and attributes that were marked obsolete in the
