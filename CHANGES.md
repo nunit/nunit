@@ -15,7 +15,7 @@ This release removes several methods and attributes that were marked obsolete in
 original 3.0 release. Support for iOS and Android has been improved.
 
 An issue that caused unit tests to run slower was addressed as was a bug that prevented
-the use of Asset.Multiple in async code.
+the use of Assert.Multiple in async code.
 
 The Order attribute can now also be applied to the class level to set the order
 that test fixtures will be run.
