@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,13 +34,11 @@ namespace NUnit.Framework
         #region Item
 
         /// <summary>
-        /// Returns a new <see cref="EqualConstraint"/> checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static EqualConstraint Item(object expected)
-        {
-            return Has.Some.EqualTo(expected);
-        }
+        public static SomeItemsConstraint Item(object expected) =>
+            new SomeItemsConstraint(new EqualConstraint(expected));
 
         #endregion
 
