@@ -34,7 +34,15 @@ namespace NUnit.Framework.Internal
                 else
                     ThreadUtility.Abort(thread, nativeId);
 
-                Assert.That(thread.Join(1000), "Native message pump was not able to be interrupted to enable a managed thread abort.");
+                // When not under CPU load, we expect the thread to take between 100 and 200 ms to abort.
+                // However we get spurious failures in CI if we only wait 1000 ms.
+                // Using AbortOrKillThreadWithMessagePump_StressTest (times: 1000, maxParallelism: 20),
+                // I measured timer callbacks to be firing around ten times later than the 100 ms requested.
+                // All this number does is manage how long we can tolerate waiting for a build if a bug
+                // is introduced and the thread never aborts.
+                const int waitTime = 15000;
+
+                Assert.That(thread.Join(waitTime), "Native message pump was not able to be interrupted to enable a managed thread abort.");
             }
         }
 
