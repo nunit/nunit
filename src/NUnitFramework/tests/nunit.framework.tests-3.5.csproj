@@ -307,6 +307,7 @@
     <Compile Include="TestUtilities\Comparers\ObjectToStringComparer.cs" />
     <Compile Include="TestUtilities\Comparers\TestComparer.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
+    <Compile Include="TestUtilities\StressUtility.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestDirectory.cs" />

@@ -2,6 +2,7 @@
 
 using System.Runtime.InteropServices;
 using System.Threading;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,6 +36,16 @@ namespace NUnit.Framework.Internal
 
                 Assert.That(thread.Join(1000), "Native message pump was not able to be interrupted to enable a managed thread abort.");
             }
+        }
+
+        [Platform("Win")]
+        [Test, Explicit("For diagnostic purposes; slow")]
+        public void AbortOrKillThreadWithMessagePump_StressTest()
+        {
+            StressUtility.RunParallel(
+                () => AbortOrKillThreadWithMessagePump(kill: true),
+                times: 1000,
+                maxParallelism: 20);
         }
 
         [DllImport("user32.dll")]

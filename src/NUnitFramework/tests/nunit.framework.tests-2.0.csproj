@@ -307,6 +307,7 @@
     <Compile Include="TestUtilities\Comparers\ObjectEqualityComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectComparer.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
+    <Compile Include="TestUtilities\StressUtility.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
     <Compile Include="TestUtilities\Comparers\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
