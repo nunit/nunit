@@ -29,49 +29,22 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <c>Tuple</c>s.
     /// </summary>
-    internal class TupleComparer : IChainComparer
+    internal class TupleComparer : TupleComparerBase
     {
         const string nameofTuple = "System.Tuple";
-        private readonly NUnitEqualityComparer _equalityComparer;
 
         internal TupleComparer(NUnitEqualityComparer equalityComparer)
+            : base(equalityComparer)
+        { }
+
+        protected override string NameOfType
         {
-            _equalityComparer = equalityComparer;
+            get { return nameofTuple; }
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        protected override object GetValue(Type type, string propertyName, object obj)
         {
-            Type xType = x.GetType();
-            Type yType = y.GetType();
-
-            string xTypeName = GetTypeNameWithoutGenerics(xType.FullName);
-            string yTypeName = GetTypeNameWithoutGenerics(yType.FullName);
-            if (xTypeName != nameofTuple || yTypeName != nameofTuple)
-                return null;
-
-            int numberOfGenericArgs = xType.GetGenericArguments().Length;
-
-            if (numberOfGenericArgs != yType.GetGenericArguments().Length)
-                return false;
-
-            for (int i = 0; i < numberOfGenericArgs; i++)
-            {
-                string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
-                object xItem = xType.GetProperty(propertyName).GetValue(x, null);
-                object yItem = yType.GetProperty(propertyName).GetValue(y, null);
-
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance);
-                if (!comparison)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private string GetTypeNameWithoutGenerics(string fullTypeName)
-        {
-            int index = fullTypeName.IndexOf('`');
-            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
+            return type.GetProperty(propertyName).GetValue(obj, null);
         }
     }
 }

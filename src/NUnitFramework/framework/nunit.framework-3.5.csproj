@@ -103,6 +103,7 @@
     <Compile Include="Constraints\Comparers\StringsComparer.cs" />
     <Compile Include="Constraints\Comparers\TimeSpanToleranceComparer.cs" />
     <Compile Include="Constraints\Comparers\TupleComparer.cs" />
+    <Compile Include="Constraints\Comparers\TupleComparerBase.cs" />
     <Compile Include="Constraints\Comparers\ValueTupleComparer.cs" />
     <Compile Include="Constraints\DictionaryContainsValueConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />

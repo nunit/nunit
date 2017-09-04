@@ -102,9 +102,9 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
 
-            AddFormatter(next => val => TryFormatTuple(val) ?? next(val));
+            AddFormatter(next => val => TryFormatTuple(val, "System.Tuple", GetValueFromTuple) ?? next(val));
 
-            AddFormatter(next => val => TryFormatValueTuple(val) ?? next(val));
+            AddFormatter(next => val => TryFormatTuple(val, "System.ValueTuple", GetValueFromValueTuple) ?? next(val));
         }
 
         /// <summary>
@@ -233,20 +233,30 @@ namespace NUnit.Framework.Constraints
             return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
         }
 
-        private static string TryFormatTuple(object value)
+        private static object GetValueFromTuple(Type type, string propertyName, object obj)
+        {
+            return type.GetProperty(propertyName).GetValue(obj, null);
+        }
+
+        private static object GetValueFromValueTuple(Type type, string propertyName, object obj)
+        {
+            return type.GetField(propertyName).GetValue(obj);
+        }
+
+        private static string TryFormatTuple(object value, string tupleType, Func<Type, string, object, object> getValue)
         {
             if (value == null)
                 return null;
 
             Type valueType = value.GetType();
             string typeName = GetTypeNameWithoutGenerics(valueType.FullName);
-            if (typeName != "System.Tuple")
+            if (typeName != tupleType)
                 return null;
 
-            return FormatTuple(value, true);
+            return FormatTuple(value, true, getValue);
         }
 
-        private static string FormatTuple(object value, bool printParentheses)
+        private static string FormatTuple(object value, bool printParentheses, Func<Type, string, object, object> getValue)
         {
             Type valueType = value.GetType();
             int numberOfGenericArgs = valueType.GetGenericArguments().Length;
@@ -261,46 +271,8 @@ namespace NUnit.Framework.Constraints
 
                 bool notLastElement = i < 7;
                 string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
-                object itemValue = valueType.GetProperty(propertyName).GetValue(value, null);
-                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatTuple(itemValue, false);
-                sb.Append(formattedValue);
-            }
-            if (printParentheses)
-                sb.Append(")");
-
-            return sb.ToString();
-        }
-
-        private static string TryFormatValueTuple(object value)
-        {
-            if (value == null)
-                return null;
-
-            Type valueType = value.GetType();
-            string typeName = GetTypeNameWithoutGenerics(valueType.FullName);
-            if (typeName != "System.ValueTuple")
-                return null;
-
-            return FormatValueTuple(value, true);
-        }
-
-        private static string FormatValueTuple(object value, bool printParentheses)
-        {
-            Type valueType = value.GetType();
-            int numberOfGenericArgs = valueType.GetGenericArguments().Length;
-
-            StringBuilder sb = new StringBuilder();
-            if (printParentheses)
-                sb.Append("(");
-
-            for (int i = 0; i < numberOfGenericArgs; i++)
-            {
-                if (i > 0) sb.Append(", ");
-
-                bool notLastElement = i < 7;
-                string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
-                object itemValue = valueType.GetField(propertyName).GetValue(value);
-                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatValueTuple(itemValue, false);
+                object itemValue = getValue(valueType, propertyName, value);
+                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatTuple(itemValue, false, getValue);
                 sb.Append(formattedValue);
             }
             if (printParentheses)
