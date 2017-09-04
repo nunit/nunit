@@ -226,6 +226,7 @@
     <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
     <Compile Include="Constraints\ToleranceTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
+    <Compile Include="Constraints\TupleEqualityTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />

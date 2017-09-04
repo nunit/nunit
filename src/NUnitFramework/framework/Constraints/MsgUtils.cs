@@ -102,6 +102,8 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
 
+            AddFormatter(next => val => TryFormatTuple(val) ?? next(val));
+
             AddFormatter(next => val => TryFormatValueTuple(val) ?? next(val));
         }
 
@@ -229,6 +231,44 @@ namespace NUnit.Framework.Constraints
         private static string FormatKeyValuePair(object key, object value)
         {
             return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
+        }
+
+        private static string TryFormatTuple(object value)
+        {
+            if (value == null)
+                return null;
+
+            Type valueType = value.GetType();
+            string typeName = GetTypeNameWithoutGenerics(valueType.FullName);
+            if (typeName != "System.Tuple")
+                return null;
+
+            return FormatTuple(value, true);
+        }
+
+        private static string FormatTuple(object value, bool printParentheses)
+        {
+            Type valueType = value.GetType();
+            int numberOfGenericArgs = valueType.GetGenericArguments().Length;
+
+            StringBuilder sb = new StringBuilder();
+            if (printParentheses)
+                sb.Append("(");
+
+            for (int i = 0; i < numberOfGenericArgs; i++)
+            {
+                if (i > 0) sb.Append(", ");
+
+                bool notLastElement = i < 7;
+                string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
+                object itemValue = valueType.GetProperty(propertyName).GetValue(value, null);
+                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatTuple(itemValue, false);
+                sb.Append(formattedValue);
+            }
+            if (printParentheses)
+                sb.Append(")");
+
+            return sb.ToString();
         }
 
         private static string TryFormatValueTuple(object value)
