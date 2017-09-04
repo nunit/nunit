@@ -79,6 +79,7 @@ namespace NUnit.Framework.Constraints
                 new DateTimeOffsetsComparer(this),
                 new TimeSpanToleranceComparer(),
                 new EquatablesComparer(this),
+                new TupleComparer(this),
                 new ValueTupleComparer(this),
                 _enumerablesComparer
             };

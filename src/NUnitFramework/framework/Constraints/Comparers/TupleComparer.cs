@@ -27,24 +27,24 @@ using NUnit.Compatibility;
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Comparator for two <c>ValueTuple</c>s.
+    /// Comparator for two <c>Tuple</c>s.
     /// </summary>
-    internal class ValueTupleComparer : TupleComparerBase
+    internal class TupleComparer : TupleComparerBase
     {
-        const string nameofValueTuple = "System.ValueTuple";
+        const string nameofTuple = "System.Tuple";
 
-        internal ValueTupleComparer(NUnitEqualityComparer equalityComparer)
+        internal TupleComparer(NUnitEqualityComparer equalityComparer)
             : base(equalityComparer)
         { }
 
         protected override string NameOfType
         {
-            get { return nameofValueTuple; }
+            get { return nameofTuple; }
         }
 
         protected override object GetValue(Type type, string propertyName, object obj)
         {
-            return type.GetField(propertyName).GetValue(obj);
+            return type.GetProperty(propertyName).GetValue(obj, null);
         }
     }
 }
