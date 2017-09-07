@@ -162,7 +162,6 @@
     <Compile Include="Internal\Results\TestResultWarningTests.cs" />
     <Compile Include="Internal\ThreadUtilityTests.cs" />
     <Compile Include="Internal\TestMethodTests.cs" />
-    <Compile Include="Internal\TypeNameDifferenceResolverUtilsTests.cs" />
     <Compile Include="Internal\TypeNameDifferenceTests.cs" />
     <Compile Include="TestParametersTests.cs" />
     <Compile Include="TestUtilities\AsyncTestDelegates.cs" />

@@ -380,5 +380,114 @@ namespace NUnit.Framework.Internal
                "GenA`1[GenC`2[String,GenC`2[String,Int32]]]",
                "GenC`2[GenA`1[List`1[Int32]],GenC`2[String,GenC`2[String,Int32]]]");
         }
+
+        [Test]
+        public void TestIsObjectInstanceGeneric()
+        {
+            var notGeneric = new DifferingNamespace1.Dummy(1);
+
+            Assert.False(_differenceGetter.IsTypeGeneric(notGeneric.GetType()));
+
+            var generic = new DifferingNamespace1.DummyGeneric<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1));
+
+            Assert.That(_differenceGetter.IsTypeGeneric(generic.GetType()));
+        }
+
+        [Test]
+        public void TestGetTopLevelGenericName()
+        {
+            var generic = new DifferingNamespace1.DummyGeneric<int>(1).GetType();
+
+            var expected = "NUnit.Framework.Internal.DifferingNamespace1.DummyGeneric`1";
+
+            var actual = _differenceGetter.GetGenericTypeName(generic);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestGetTopLevelGenericNameThrowsWhenNotGeneric()
+        {
+            var notGeneric = new object().GetType();
+
+            Assert.Throws<ArgumentException>(() => _differenceGetter.GetGenericTypeName(notGeneric));
+        }
+
+        [Test]
+        public void TestReconstructShortenedGenericTypeName()
+        {
+            var expected = "KeyValuePair`2[String,Int32]";
+
+            var actual = _differenceGetter.ReconstructGenericTypeName(
+                "KeyValuePair`2",
+                new List<string>() { "String", "Int32" });
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        private void TestShortenTypeNames(object objA, object objB, string shortenedA, string shortenedB)
+        {
+            string actualA, actualB;
+
+            _differenceGetter.ShortenTypeNames(objA.GetType(), objB.GetType(), out actualA, out actualB);
+
+            Assert.AreEqual(shortenedA, actualA);
+            Assert.AreEqual(shortenedB, actualB);
+        }
+
+        [Test]
+        public void TestShortenTypeNamesDifferingNamespace()
+        {
+            TestShortenTypeNames(
+               new DifferingNamespace1.Dummy(1),
+               new DifferingNamespace2.Dummy(1),
+               "DifferingNamespace1.Dummy",
+               "DifferingNamespace2.Dummy");
+        }
+
+        private void TestShortenGenericTopLevelTypeNames(object objA, object objB, string shortenedA, string shortenedB)
+        {
+            string actualA, actualB;
+
+            _differenceGetter.GetShortenedGenericTypes(objA.GetType(), objB.GetType(), out actualA, out actualB);
+
+            Assert.AreEqual(shortenedA, actualA);
+            Assert.AreEqual(shortenedB, actualB);
+        }
+
+        [Test]
+        public void TestShortenGenericTopLevelTypes()
+        {
+            TestShortenGenericTopLevelTypeNames(
+                new A.GenA<int>(),
+                new B.GenA<int>(),
+                "A.GenA`1",
+                "B.GenA`1");
+
+            TestShortenGenericTopLevelTypeNames(
+                new KeyValuePair<string, int>(),
+                new KeyValuePair<int, string>(),
+                "KeyValuePair`2",
+                "KeyValuePair`2");
+        }
+
+        private void TestFullyShortenTypeName(Type type, string expectedOutput)
+        {
+            string actual = _differenceGetter.FullyShortenTypeName(type);
+
+            Assert.AreEqual(expectedOutput, actual);
+        }
+
+        [Test]
+        public void TestFullyShortenTypeName()
+        {
+            TestFullyShortenTypeName(
+                new A.GenA<A.GenA<int>>().GetType(),
+                "GenA`1[GenA`1[Int32]]");
+
+            TestFullyShortenTypeName(
+                new A.GenC<B.GenA<int>, A.GenA<int>>().GetType(),
+                "GenC`2[GenA`1[Int32],GenA`1[Int32]]");
+        }
     }
 }

@@ -184,7 +184,6 @@
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestNameGenerator.cs" />
     <Compile Include="Internal\TypeNameDifferenceResolver.cs" />
-    <Compile Include="Internal\TypeNameDifferenceResolverUtils.cs" />
     <Compile Include="Internal\TypeWrapper.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="DirectoryAssert.cs" />
