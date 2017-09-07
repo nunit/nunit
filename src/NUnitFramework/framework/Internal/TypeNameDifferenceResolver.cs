@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -94,8 +95,8 @@ namespace NUnit.Framework.Internal
         /// <param name="shortenedParamsActual">Shortened generic parameters of the actual <see cref="Type"/>.</param>
         private void GetShortenedGenericParams(Type expectedFullType, Type actualFullType, out List<string> shortenedParamsExpected, out List<string> shortenedParamsActual)
         {
-            List<Type> templateParamsExpected = _utils.GetGenericParams(expectedFullType);
-            List<Type> templateParamsActual = _utils.GetGenericParams(actualFullType);
+            List<Type> templateParamsExpected = new List<Type>(expectedFullType.GetGenericArguments());
+            List<Type> templateParamsActual = new List<Type>(actualFullType.GetGenericArguments());
 
             shortenedParamsExpected = new List<string>();
             shortenedParamsActual = new List<string>();

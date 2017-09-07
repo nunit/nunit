@@ -68,38 +68,6 @@ namespace NUnit.Framework.Internal
             Assert.Throws<ArgumentException>(() => _differenceHelper.GetGenericTypeName(notGeneric));
         }
 
-
-
-        [Test]
-        public void TestGetFullyQualifiedGenericParametersOfObjectSingleGenericParam()
-        {
-            var generic = new List<int>();
-
-            var expected = new List<Type>() { typeof(int) };
-            var actual = _differenceHelper.GetGenericParams(generic.GetType());
-
-            CollectionAssert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void TestGetFullyQualifiedGenericParametersOfObjectDoubleGenericParam()
-        {
-            var generic = new KeyValuePair<string, int>();
-
-            var expected = new List<Type>() { typeof(string), typeof(int) };
-            var actual = _differenceHelper.GetGenericParams(generic.GetType());
-
-            CollectionAssert.AreEqual(expected, actual);
-        }
-
-        private void TestGetTopLevelFullyQualifiedGenericParams(Type FullyQualifiedGenericTypeName, List<Type> ExpectedOutput)
-        {
-            var actual = _differenceHelper.GetGenericParams(FullyQualifiedGenericTypeName);
-
-            CollectionAssert.AreEqual(ExpectedOutput, actual);
-        }
-
-
         [Test]
         public void TestReconstructShortenedGenericTypeName()
         {
@@ -176,16 +144,5 @@ namespace NUnit.Framework.Internal
                 new A.GenC<B.GenA<int>, A.GenA<int>>().GetType(),
                 "GenC`2[GenA`1[Int32],GenA`1[Int32]]");
         }
-
-        [Test]
-        public void TestGetFullyQualifiedGenericParametersOfObjectNestedGenerics()
-        {
-            TestGetTopLevelFullyQualifiedGenericParams(
-                new KeyValuePair<int, KeyValuePair<int, string>>().GetType(),
-                new List<Type>() { typeof(int), typeof(KeyValuePair<int, string>) });
-        }
-
-
-
     }
 }

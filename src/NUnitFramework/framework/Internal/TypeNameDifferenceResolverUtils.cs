@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
             {
                 string genericType = GenericType.GetGenericTypeDefinition().Name;
 
-                List<Type> genericParams = GetGenericParams(GenericType);
+                List<Type> genericParams = new List<Type>(GenericType.GetGenericArguments());
                 List<string> shortenedGenericParams = new List<string>();
                 genericParams.ForEach(x => shortenedGenericParams.Add(FullyShortenTypeName(x)));
 
@@ -57,13 +57,13 @@ namespace NUnit.Framework.Internal
         /// Shorten the given <see cref="Type"/> names by only including the relevant differing namespaces/types, if they differ.
         /// </summary>
         /// <param name="expectedType">The expected <see cref="Type"/>.</param>
-        /// <param name="actuallType">The actual <see cref="Type"/>.</param>
+        /// <param name="actualType">The actual <see cref="Type"/>.</param>
         /// <param name="expectedTypeShortened">The shortened expected <see cref="Type"/> name.</param>
         /// <param name="actualTypeShortened">The shortened actual <see cref="Type"/> name.</param>
-        public void ShortenTypeNames(Type expectedType, Type actuallType, out string expectedTypeShortened, out string actualTypeShortened)
+        public void ShortenTypeNames(Type expectedType, Type actualType, out string expectedTypeShortened, out string actualTypeShortened)
         {
             string[] expectedOriginalType = expectedType.FullName.Split('.');
-            string[] actualOriginalType = actuallType.FullName.Split('.');
+            string[] actualOriginalType = actualType.FullName.Split('.');
 
             bool diffDetected = false;
             int actualStart = 0, expectStart = 0;
@@ -101,16 +101,6 @@ namespace NUnit.Framework.Internal
             Guard.ArgumentNotNull(type, nameof(type));
 
             return type.GetGenericArguments().Length > 0;
-        }
-
-        /// <summary>
-        /// Get the generic parameters of a given <see cref="Type"/>.
-        /// </summary>
-        public List<Type> GetGenericParams(Type type)
-        {
-            Guard.ArgumentNotNull(type, nameof(type));
-
-            return new List<Type>(type.GetGenericArguments());
         }
 
         /// <summary>

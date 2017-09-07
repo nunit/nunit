@@ -148,10 +148,10 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        class DummyTemplatedClass<T>
+        class DummyGenericClass<T>
         {
             private object _obj;
-            public DummyTemplatedClass(object obj)
+            public DummyGenericClass(object obj)
             {
                 _obj = obj;
             }
@@ -227,64 +227,64 @@ namespace NUnit.Framework.Internal
         public void TestResolveTypeNameDifferenceGeneric()
         {
             TestShortenedNameDifference(
-                new DummyTemplatedClass<Dummy1>(new Dummy(1)),
-                new DummyTemplatedClass<Dummy>(new Dummy(1)),
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[TypeNameDifferenceTests+Dummy1]",
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[TypeNameDifferenceTests+Dummy]");
+                new DummyGenericClass<Dummy1>(new Dummy(1)),
+                new DummyGenericClass<Dummy>(new Dummy(1)),
+                "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy1]",
+                "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]");
         }
 
         [Test]
         public void TestResolveTypeNameDifferenceGenericDifferingNamespaces()
         {
             TestShortenedNameDifference(
-                new DummyTemplatedClass<Dummy>(new Dummy(1)),
-                new DummyTemplatedClass<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1)),
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[TypeNameDifferenceTests+Dummy]",
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[Dummy]");
+                new DummyGenericClass<Dummy>(new Dummy(1)),
+                new DummyGenericClass<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1)),
+                "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]",
+                "TypeNameDifferenceTests+DummyGenericClass`1[Dummy]");
 
             TestShortenedNameDifference(
-                new DummyTemplatedClass<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1)),
-                new DummyTemplatedClass<Dummy>(new Dummy(1)),
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[Dummy]",
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[TypeNameDifferenceTests+Dummy]");
+                new DummyGenericClass<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1)),
+                new DummyGenericClass<Dummy>(new Dummy(1)),
+                "TypeNameDifferenceTests+DummyGenericClass`1[Dummy]",
+                "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]");
 
             TestShortenedNameDifference(
-                new DummyTemplatedClass<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1)),
-                new DummyTemplatedClass<DifferingNamespace2.Dummy>(new DifferingNamespace2.Dummy(1)),
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[DifferingNamespace1.Dummy]",
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[DifferingNamespace2.Dummy]");
+                new DummyGenericClass<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1)),
+                new DummyGenericClass<DifferingNamespace2.Dummy>(new DifferingNamespace2.Dummy(1)),
+                "TypeNameDifferenceTests+DummyGenericClass`1[DifferingNamespace1.Dummy]",
+                "TypeNameDifferenceTests+DummyGenericClass`1[DifferingNamespace2.Dummy]");
         }
 
         [Test]
         public void TestResolveTypeNameDifferenceGenericDifferentAmountGenericParams()
         {
             TestShortenedNameDifference(
-                new DummyTemplatedClass<Dummy>(new Dummy(1)),
+                new DummyGenericClass<Dummy>(new Dummy(1)),
                 new KeyValuePair<int, string>(1, ""),
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[TypeNameDifferenceTests+Dummy]",
+                "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]",
                 "KeyValuePair`2[Int32,String]");
 
             TestShortenedNameDifference(
                 new KeyValuePair<int, string>(1, ""),
-                new DummyTemplatedClass<Dummy>(new Dummy(1)),
+                new DummyGenericClass<Dummy>(new Dummy(1)),
                 "KeyValuePair`2[Int32,String]",
-                "TypeNameDifferenceTests+DummyTemplatedClass`1[TypeNameDifferenceTests+Dummy]");
+                "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]");
         }
 
         [Test]
         public void TestResolveNameDifferenceOneIsGenericOtherIsNot()
         {
             TestShortenedNameDifference(
-                new DummyTemplatedClass<Dummy>(new Dummy(1)),
+                new DummyGenericClass<Dummy>(new Dummy(1)),
                 new Dummy(1),
-                "DummyTemplatedClass`1[Dummy]",
+                "DummyGenericClass`1[Dummy]",
                 "Dummy");
 
             TestShortenedNameDifference(
                 new Dummy(1),
-                new DummyTemplatedClass<Dummy>(new Dummy(1)),
+                new DummyGenericClass<Dummy>(new Dummy(1)),
                 "Dummy",
-                "DummyTemplatedClass`1[Dummy]");
+                "DummyGenericClass`1[Dummy]");
 
             TestShortenedNameDifference(
                 new KeyValuePair<string, int>("str", 0),

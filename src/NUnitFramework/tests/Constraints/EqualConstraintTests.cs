@@ -696,10 +696,10 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class DummyTemplatedClass<T>
+        class DummyGenericClass<T>
         {
             private object _obj;
-            public DummyTemplatedClass(object obj)
+            public DummyGenericClass(object obj)
             {
                 _obj = obj;
             }
@@ -715,13 +715,13 @@ namespace NUnit.Framework.Constraints
         {
             var d1 = new Dummy(12);
             var d2 = new Dummy1(12);
-            var dc1 = new DummyTemplatedClass<Dummy>(d1);
-            var dc2 = new DummyTemplatedClass<Dummy1>(d2);
+            var dc1 = new DummyGenericClass<Dummy>(d1);
+            var dc2 = new DummyGenericClass<Dummy1>(d2);
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dc1, dc2));
             var expectedMsg =
-                "  Expected: <Dummy 12> (EqualConstraintTests+DummyTemplatedClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
-                "  But was:  <Dummy 12> (EqualConstraintTests+DummyTemplatedClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
+                "  Expected: <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
+                "  But was:  <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
 
             Assert.AreEqual(expectedMsg, ex.Message);
         }
