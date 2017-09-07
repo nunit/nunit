@@ -26,6 +26,46 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
+    public static class PropertyConstraintTests
+    {
+        [TestCase("PublicProperty")]
+        [TestCase("PrivateProperty")]
+        [TestCase("PublicPropertyPrivateShadow")]
+        public static void PropertyExists_ShadowingPropertyOfDifferentType(string propertyName)
+        {
+            var instance = new DerivedClassWithoutProperty();
+            Assert.That(instance, Has.Property(propertyName));
+        }
+
+        [TestCase("PublicProperty", true)]
+        [TestCase("PrivateProperty", true)]
+        [TestCase("PublicPropertyPrivateShadow", false)]
+        public static void PropertyValue_ShadowingPropertyOfDifferentType(string propertyName, bool shouldUseShadowingProperty)
+        {
+            var instance = new DerivedClassWithoutProperty();
+            Assert.That(instance, Has.Property(propertyName).EqualTo(shouldUseShadowingProperty ? 2 : 1));
+        }
+
+        public class BaseClass
+        {
+            public object PublicProperty => 1;
+            // Private members can't be shadowed
+            protected object PrivateProperty => 1;
+            public object PublicPropertyPrivateShadow => 1;
+        }
+
+        public class ClassWithShadowingProperty : BaseClass
+        {
+            public new int PublicProperty => 2;
+            private new int PrivateProperty => 2;
+            private new int PublicPropertyPrivateShadow => 2;
+        }
+
+        public class DerivedClassWithoutProperty : ClassWithShadowingProperty
+        {
+        }
+    }
+
     public class PropertyExistsTests : ConstraintTestBase
     {
         [SetUp]
