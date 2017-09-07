@@ -21,10 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-// TODO: Remove conditional code
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
