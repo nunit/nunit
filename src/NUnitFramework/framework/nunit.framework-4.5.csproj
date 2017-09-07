@@ -106,6 +106,7 @@
     <Compile Include="Interfaces\TestAttachment.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\InvalidPlatformException.cs" />
+    <Compile Include="Internal\TypeNameDifferenceResolver.cs" />
     <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />

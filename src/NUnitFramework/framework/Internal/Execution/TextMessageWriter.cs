@@ -135,20 +135,11 @@ namespace NUnit.Framework.Internal
         /// <param name="expectedType">Output of the unique type name for expected</param>
         /// <param name="actualType">Output of the unique type name for actual</param>
         private void ResolveTypeNameDifference(object expected, object actual, out string expectedType, out string actualType) {
-            string[] expectedOriginalType = expected.GetType().ToString().Split('.');
-            string[] actualOriginalType = actual.GetType().ToString().Split('.');
-            int actualStart = 0, expectStart = 0;
-            for (int expectLen = expectedOriginalType.Length - 1,actualLen = actualOriginalType.Length - 1;
-                expectLen >= 0 && actualLen >= 0;
-                expectLen--, actualLen--) {
-                if (expectedOriginalType[expectLen] != actualOriginalType[actualLen]) {
-                    actualStart = actualLen;
-                    expectStart = expectLen;
-                    break;
-                }
-            }
-            expectedType = " ("+String.Join(".", expectedOriginalType, expectStart, expectedOriginalType.Length- expectStart)+")";
-            actualType = " (" + String.Join(".", actualOriginalType, actualStart, actualOriginalType.Length- actualStart) + ")";
+            TypeNameDifferenceResolver resolver = new TypeNameDifferenceResolver();
+            resolver.ResolveTypeNameDifference(expected, actual, out expectedType, out actualType);
+
+            expectedType = $" ({expectedType})";
+            actualType = $" ({actualType})";
         }
 
         /// <summary>

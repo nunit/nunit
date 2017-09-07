@@ -138,6 +138,7 @@
     <Compile Include="Internal\TestNamingTests.cs" />
     <Compile Include="Internal\ThreadUtilityTests.cs" />
     <Compile Include="Internal\TypeHelperTests.cs" />
+    <Compile Include="Internal\TypeNameDifferenceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
