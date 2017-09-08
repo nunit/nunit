@@ -23,7 +23,11 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Internal;
+
+#if NETSTANDARD1_3
 using NUnit.Compatibility;
+#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -61,7 +65,7 @@ namespace NUnit.Framework.Constraints
             if (actualType == null)
                 actualType = actual.GetType();
 
-            PropertyInfo property = actualType.GetProperty(name,
+            PropertyInfo property = Reflect.GetUltimateShadowingProperty(actualType, name,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             // TODO: Use an error result here
