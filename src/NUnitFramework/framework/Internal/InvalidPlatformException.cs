@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal
         /// <param name="inner">The inner.</param>
         public InvalidPlatformException(string message, Exception inner) : base(message, inner) { }
 
-# if !NETSTANDARD_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         /// <summary>
         /// Serialization constructor for the <see cref="InvalidPlatformException"/> class
         /// </summary>
@@ -63,5 +63,5 @@ namespace NUnit.Framework.Internal
             : base(info, context)
         { }
     }
-# endif
+#endif
 }
