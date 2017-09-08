@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         Failure,
 
         /// <summary>
-        /// An error occured in applying the constraint (reserved for future use)
+        /// An error occurred in applying the constraint (reserved for future use)
         /// </summary>
         Error
     }
@@ -138,7 +138,7 @@ namespace NUnit.Framework.Constraints
         /// then displays the constraint description and the value.
         /// 
         /// Constraints that need to provide additional details,
-        /// such as where the error occured can override this.
+        /// such as where the error occurred, can override this.
         /// </summary>
         /// <param name="writer">The MessageWriter on which to display the message</param>
         public virtual void WriteMessageTo(MessageWriter writer)
