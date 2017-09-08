@@ -30,13 +30,10 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// Sets the current Culture for the duration of a test.
-    /// </summary>
-    /// <remarks>
+    /// <para />
     /// It may be specified at the level of a test or a fixture.
     /// The culture remains set until the test or fixture completes and is then reset to its original value.
-    /// <para />
-    /// If you wish to use the current culture setting to decide whether to run a test, use the <see cref="CultureAttribute"/> instead of this one.
-    /// </remarks>
+    /// </summary>
     /// <seealso cref="SetUICultureAttribute"/>
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=true)]
     public class SetCultureAttribute : PropertyAttribute, IApplyToContext
