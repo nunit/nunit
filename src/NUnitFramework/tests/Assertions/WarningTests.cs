@@ -163,6 +163,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
 #if !NETSTANDARD1_3
             Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
+            Assert.That(result.AssertionResults[0].StackTrace.Split(new char[] { '\n' }).Length, Is.LessThan(3));
 #endif
 
             if (expectedMessage != null)
@@ -170,7 +171,6 @@ namespace NUnit.Framework.Assertions
                 Assert.That(result.Message, Does.Contain(expectedMessage));
                 Assert.That(result.AssertionResults[0].Message, Does.Contain(expectedMessage));
             }
-
         }
 
 #if !NET_2_0
@@ -227,6 +227,15 @@ namespace NUnit.Framework.Assertions
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }
+
+#if NET_4_5
+        [Test]
+        public async Task DisplayWarning()
+        {
+            await Task.Delay(100);
+            Assert.Warn("This is your last warning!");
+        }
+#endif
 
         [Test]
         public void WarnIf_Async_Error()

@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
     public class StackFilter
     {
         private const string DEFAULT_TOP_OF_STACK_PATTERN = @" NUnit\.Framework\.(Assert|Assume|Warn|CollectionAssert|StringAssert|FileAssert|DirectoryAssert)\.";
-        private const string DEFAULT_BOTTOM_OF_STACK_PATTERN = @" System\.R(eflection|untimeMethodHandle)\.";
+        private const string DEFAULT_BOTTOM_OF_STACK_PATTERN = @" System\.(Reflection|RuntimeMethodHandle|Threading\.ExecutionContext)\.";
 
         /// <summary>
         /// Single instance of our default filter
