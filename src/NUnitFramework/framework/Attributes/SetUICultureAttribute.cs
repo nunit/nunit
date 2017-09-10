@@ -29,8 +29,13 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Summary description for SetUICultureAttribute.
+    /// Sets the current UI Culture for the duration of a test.
+    /// <para>
+    /// It may be specified at the level of a test or a fixture.
+    /// The UI culture remains set until the test or fixture completes and is then reset to its original value.
+    /// </para>
     /// </summary>
+    /// <seealso cref="SetCultureAttribute"/>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
     public class SetUICultureAttribute : PropertyAttribute, IApplyToContext
     {
