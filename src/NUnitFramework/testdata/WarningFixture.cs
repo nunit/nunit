@@ -660,7 +660,6 @@ namespace NUnit.TestData
             }
         }
 
-#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
         [Test]
         public static void WarningInThreadPoolQueueUserWorkItem()
         {
@@ -681,7 +680,6 @@ namespace NUnit.TestData
                 finished.WaitOne();
             }
         }
-#endif
 
 #if ASYNC
         [Test]

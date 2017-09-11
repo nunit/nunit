@@ -259,10 +259,8 @@ namespace NUnit.Framework.Assertions
         // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
-#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4)]
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
-#endif
 #if ASYNC
         [TestCase(nameof(WarningFixture.WarningInTaskRun), 4)]
         [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 3)]
