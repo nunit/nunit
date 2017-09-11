@@ -253,5 +253,32 @@ namespace NUnit.Framework.Assertions
             throw new InvalidOperationException();
         }
 #endif
+
+        // We decided to trim ExecutionContext and below because ten lines per warning adds up
+        // and makes it hard to read build logs.
+        // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
+        [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
+        [TestCase(nameof(WarningFixture.WarningInThreadStart), 1)]
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 3)]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 1)]
+#endif
+#if ASYNC
+        [TestCase(nameof(WarningFixture.WarningInTaskRun), 2)]
+        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 1)]
+#endif
+        public static void StackTracesAreFiltered(string methodName, int maxLineCount)
+        {
+            var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
+            if (result.FailCount != 0 && result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName))
+            {
+                return; // BeginInvoke causes PlatformNotSupportedException on .NET Core 
+            }
+
+            var warningStackTrace = result.AssertionResults[0].StackTrace;
+            var lineCount = warningStackTrace.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
+
+            Assert.That(lineCount, Is.LessThanOrEqualTo(maxLineCount));
+        }
     }
 }
