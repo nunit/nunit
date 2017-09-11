@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
@@ -618,5 +619,86 @@ namespace NUnit.TestData
 #endif
 
         #endregion
+
+        #region Stack filter tests
+
+        [Test]
+        public static void WarningSynchronous()
+        {
+            Assert.Warn("(Warning message)");
+        }
+
+#if NET_2_0
+        private delegate void Action();
+#endif
+        [Test]
+        public static void WarningInBeginInvoke()
+        {
+            new Action(() => Assert.Warn("(Warning message)"))
+                .BeginInvoke(null, null)
+                .AsyncWaitHandle.WaitOne();
+        }
+
+        [Test]
+        public static void WarningInThreadStart()
+        {
+            using (var finished = new ManualResetEvent(false))
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        Assert.Warn("(Warning message)");
+                    }
+                    finally
+                    {
+                        finished.Set();
+                    }
+                }).Start();
+
+                finished.WaitOne();
+            }
+        }
+
+#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+        [Test]
+        public static void WarningInThreadPoolQueueUserWorkItem()
+        {
+            using (var finished = new ManualResetEvent(false))
+            {
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    try
+                    {
+                        Assert.Warn("(Warning message)");
+                    }
+                    finally
+                    {
+                        finished.Set();
+                    }
+                });
+
+                finished.WaitOne();
+            }
+        }
+#endif
+
+#if ASYNC
+        [Test]
+        public static void WarningInTaskRun()
+        {
+            Task.Run(() => Assert.Warn("(Warning message)")).Wait();
+        }
+
+        [Test]
+        public static async System.Threading.Tasks.Task WarningAfterAwaitTaskDelay()
+        {
+            await Task.Delay(1);
+            Assert.Warn("(Warning message)");
+        }
+#endif
+
+        #endregion
     }
+
 }
