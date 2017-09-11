@@ -258,21 +258,21 @@ namespace NUnit.Framework.Assertions
         // and makes it hard to read build logs.
         // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
-        [TestCase(nameof(WarningFixture.WarningInThreadStart), 1)]
+        [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
 #if !(NETSTANDARD1_3 || NETSTANDARD1_6)
-        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 3)]
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 1)]
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4)]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
 #endif
 #if ASYNC
-        [TestCase(nameof(WarningFixture.WarningInTaskRun), 2)]
-        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 1)]
+        [TestCase(nameof(WarningFixture.WarningInTaskRun), 4)]
+        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 3)]
 #endif
         public static void StackTracesAreFiltered(string methodName, int maxLineCount)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
             if (result.FailCount != 0 && result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName))
             {
-                return; // BeginInvoke causes PlatformNotSupportedException on .NET Core 
+                return; // BeginInvoke causes PlatformNotSupportedException on .NET Core
             }
 
             var warningStackTrace = result.AssertionResults[0].StackTrace;
