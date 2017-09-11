@@ -273,6 +273,11 @@ namespace NUnit.Framework.Assertions
                 return; // BeginInvoke causes PlatformNotSupportedException on .NET Core
             }
 
+            if (result.AssertionResults.Count != 1 || result.AssertionResults[0].Status != AssertionStatus.Warning)
+            {
+                Assert.Fail("Expected a single warning assertion. Message: " + result.Message);
+            }
+
             var warningStackTrace = result.AssertionResults[0].StackTrace;
             var lineCount = warningStackTrace.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
 
