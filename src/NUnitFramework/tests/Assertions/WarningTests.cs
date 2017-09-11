@@ -228,15 +228,6 @@ namespace NUnit.Framework.Assertions
 #endif
         }
 
-#if NET_4_5
-        [Test]
-        public async Task DisplayWarning()
-        {
-            await Task.Delay(100);
-            Assert.Warn("This is your last warning!");
-        }
-#endif
-
         [Test]
         public void WarnIf_Async_Error()
         {
