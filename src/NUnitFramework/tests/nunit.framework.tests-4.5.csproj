@@ -98,6 +98,7 @@
     <Compile Include="Assertions\FileAssertTests.cs" />
     <Compile Include="Assertions\GreaterEqualFixture.cs" />
     <Compile Include="Assertions\GreaterFixture.cs" />
+    <Compile Include="Assertions\HasTests.cs" />
     <Compile Include="Assertions\LessEqualFixture.cs" />
     <Compile Include="Assertions\LessFixture.cs" />
     <Compile Include="Assertions\ListContentsTests.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSupersetConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
+    <Compile Include="Constraints\ConstraintExpressionTests.cs" />
     <Compile Include="Constraints\ConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\DictionaryContainsKeyConstraintTests.cs" />

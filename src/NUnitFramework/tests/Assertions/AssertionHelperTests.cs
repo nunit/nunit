@@ -432,6 +432,46 @@ namespace NUnit.Framework.Syntax
             Expect(constraint.ToString(), EqualTo("<unresolved <equal 42>>"));
         }
 
+        [Test]
+        public void ContainsConstraintWithOr()
+        {
+            var constraint = Contains(5).Or.Contains(7);
+            var collection1 = new[] { 3, 5, 1, 8 };
+            var collection2 = new[] { 2, 7, 9, 2 };
+            Assert.That(collection1, constraint);
+            Assert.That(collection2, constraint);
+        }
+
+        [Test]
+        public void ContainsConstraintWithUsing()
+        {
+            Func<int, int, bool> myIntComparer = (x, y) => x == y;
+            var constraint = Contains(5).Using(myIntComparer);
+            var collection = new[] { 3, 5, 1, 8 };
+            Assert.That(collection, constraint);
+        }
+
+        #endregion
+
+        #region Member
+
+        [Test]
+        public void MemberConstraintWithAnd()
+        {
+            var constraint = Member(1).And.Member(7);
+            var collection = new[] { 2, 1, 7, 4 };
+            Assert.That(collection, constraint);
+        }
+
+        [Test]
+        public void MemberConstraintWithUsing()
+        {
+            Func<int, int, bool> myIntComparer = (x, y) => x == y;
+            var constraint = Member(1).Using(myIntComparer);
+            var collection = new[] { 2, 1, 7, 4 };
+            Assert.That(collection, constraint);
+        }
+
         #endregion
 
         #region SubsetOf

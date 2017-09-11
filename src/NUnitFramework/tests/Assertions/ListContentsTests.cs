@@ -37,9 +37,9 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraySucceeds()
         {
-            Assert.Contains( "abc", testArray );
-            Assert.Contains( 123, testArray );
-            Assert.Contains( "xyz", testArray );
+            Assert.Contains("abc", testArray);
+            Assert.Contains(123, testArray);
+            Assert.Contains("xyz", testArray, "expected array containing '{0}'", "xyz");
         }
 
         [Test]
@@ -116,10 +116,44 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void DoesContainAnd()
+        {
+            var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var constraint = Does.Contain(7).And.Member(2);
+            Assert.That(collection1, constraint);
+        }
+
+        [Test]
+        public void DoesContainUsing()
+        {
+            Func<int, int, bool> myIntComparer = (x, y) => x == y;
+            var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var constraint = Does.Contain(7).Using(myIntComparer);
+            Assert.That(collection1, constraint);
+        }
+
+        [Test]
         public void ContainsMultipleItemsInt()
         {
             var collection = new[] { 1, 2, 3 };
             Assert.That(collection, Contains.Item(1).And.Contains(2).And.Contains(3));
+        }
+
+        [Test]
+        public void ContainsItemAnd()
+        {
+            var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var constraint = Contains.Item(7).And.Member(3);
+            Assert.That(collection1, constraint);
+        }
+
+        [Test]
+        public void ContainsItemUsing()
+        {
+            Func<int, int, bool> myIntComparer = (x, y) => x == y;
+            var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var constraint = Contains.Item(7).Using(myIntComparer);
+            Assert.That(collection1, constraint);
         }
     }
 }
