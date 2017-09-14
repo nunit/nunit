@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -634,9 +634,22 @@ namespace NUnit.TestData
         [Test]
         public static void WarningInBeginInvoke()
         {
-            new Action(() => Assert.Warn("(Warning message)"))
-                .BeginInvoke(null, null)
-                .AsyncWaitHandle.WaitOne();
+            using (var finished = new ManualResetEvent(false))
+            {
+                new Action(() =>
+                {
+                    try
+                    {
+                        Assert.Warn("(Warning message)");
+                    }
+                    finally
+                    {
+                        finished.Set();
+                    }
+                }).BeginInvoke(ar => { }, null);
+
+                if (!finished.WaitOne(10000)) Assert.Fail("Timeout while waiting for BeginInvoke to execute.");
+            }
         }
 
         [Test]
@@ -656,11 +669,11 @@ namespace NUnit.TestData
                     }
                 }).Start();
 
-                finished.WaitOne();
+                if (!finished.WaitOne(10000))
+                    Assert.Fail("Timeout while waiting for threadstart to execute.");
             }
         }
 
-#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
         [Test]
         public static void WarningInThreadPoolQueueUserWorkItem()
         {
@@ -678,16 +691,17 @@ namespace NUnit.TestData
                     }
                 });
 
-                finished.WaitOne();
+                if (!finished.WaitOne(10000))
+                    Assert.Fail("Timeout while waiting for Threadpool.QueueUserWorkItem to execute.");
             }
         }
-#endif
 
 #if ASYNC
         [Test]
         public static void WarningInTaskRun()
         {
-            Task.Run(() => Assert.Warn("(Warning message)")).Wait();
+            if (!Task.Run(() => Assert.Warn("(Warning message)")).Wait(10000))
+                Assert.Fail("Timeout while waiting for Task.Run to execute.");
         }
 
         [Test]
