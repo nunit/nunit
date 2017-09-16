@@ -122,7 +122,7 @@ Setup(context =>
         AppVeyor.UpdateBuildVersion(packageVersion);
     }
 
-    Information("Building version {0} of NUnit.", packageVersion);
+    Information("Building {0} version {1} of NUnit.", configuration, packageVersion);
 
     isDotNetCoreInstalled = CheckIfDotNetCoreInstalled();
 });
