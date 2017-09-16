@@ -9,4 +9,4 @@ matrix:
     - os: osx
       mono: latest
 script:
-  - ./build.sh --target "Travis"
+  - ./build.sh --target "Travis" --configuration "Release"
