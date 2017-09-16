@@ -78,7 +78,7 @@ namespace NUnit.Framework
         /// Modifies a test by adding a description, if not already set.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(Test test)
+        public virtual void ApplyToTest(Test test)
         {
             if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
                 test.Properties.Set(PropertyNames.Description, Description);
@@ -124,7 +124,7 @@ namespace NUnit.Framework
         /// <param name="method">The method for which a test is to be constructed.</param>
         /// <param name="suite">The suite to which the test will be added.</param>
         /// <returns>A TestMethod</returns>
-        public TestMethod BuildFrom(IMethodInfo method, Test suite)
+        public virtual TestMethod BuildFrom(IMethodInfo method, Test suite)
         {
             TestCaseParameters parms = null;
 

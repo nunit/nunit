@@ -83,7 +83,7 @@ namespace NUnit.Framework
         /// Modify the context to be used for child tests
         /// </summary>
         /// <param name="context">The current TestExecutionContext</param>
-        public void ApplyToContext(TestExecutionContext context)
+        public virtual void ApplyToContext(TestExecutionContext context)
         {
             // Don't reflect Self in the context, since it will be
             // used for descendant tests.

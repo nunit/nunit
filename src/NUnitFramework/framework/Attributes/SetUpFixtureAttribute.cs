@@ -45,7 +45,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <returns>A SetUpFixture object as a TestSuite.</returns>
-        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
+        public virtual IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
             SetUpFixture fixture = new SetUpFixture(typeInfo);
 

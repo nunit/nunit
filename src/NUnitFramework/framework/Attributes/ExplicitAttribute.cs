@@ -60,7 +60,7 @@ namespace NUnit.Framework
         /// Modifies a test by marking it as explicit.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(Test test)
+        public virtual void ApplyToTest(Test test)
         {
             if (test.RunState != RunState.NotRunnable && test.RunState != RunState.Ignored)
             {

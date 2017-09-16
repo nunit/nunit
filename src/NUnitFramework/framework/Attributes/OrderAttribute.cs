@@ -51,7 +51,7 @@ namespace NUnit.Framework
          /// Modifies a test as defined for the specific attribute.
          /// </summary>
          /// <param name="test">The test to modify</param>
-         public void ApplyToTest(Test test)
+         public virtual void ApplyToTest(Test test)
         {
             if (!test.Properties.ContainsKey(PropertyNames.Order))
                 test.Properties.Set(PropertyNames.Order, Order);

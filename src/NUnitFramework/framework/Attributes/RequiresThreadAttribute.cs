@@ -50,7 +50,8 @@ namespace NUnit.Framework
             this.Properties.Add(PropertyNames.ApartmentState, apartment);
         }
 
-        void IApplyToTest.ApplyToTest(Test test)
+        /// <inheritdoc />
+        public override void ApplyToTest(Test test)
         {
             test.RequiresThread = true;
             base.ApplyToTest(test);

@@ -79,7 +79,7 @@ namespace NUnit.Framework
         /// Modifies a test by adding a category to it.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(Test test)
+        public virtual void ApplyToTest(Test test)
         {
             test.Properties.Add(PropertyNames.Category, this.Name);
 

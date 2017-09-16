@@ -222,7 +222,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <returns>A an IEnumerable holding one TestFixture object.</returns>
-        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
+        public virtual IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
             yield return _builder.BuildFrom(typeInfo, this);
         }

@@ -420,7 +420,7 @@ namespace NUnit.Framework
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
+        public virtual IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 

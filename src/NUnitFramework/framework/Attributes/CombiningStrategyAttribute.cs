@@ -77,7 +77,7 @@ namespace NUnit.Framework
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
+        public virtual IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             List<TestMethod> tests = new List<TestMethod>();
             
@@ -117,7 +117,7 @@ namespace NUnit.Framework
         /// to the properties.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(Test test)
+        public virtual void ApplyToTest(Test test)
         {
             var joinType = _strategy.GetType().Name;
             if (joinType.EndsWith("Strategy"))

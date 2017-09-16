@@ -60,7 +60,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="command">The command to be wrapped</param>
         /// <returns>The wrapped command</returns>
-        public TestCommand Wrap(TestCommand command)
+        public virtual TestCommand Wrap(TestCommand command)
         {
             return new RepeatedTestCommand(command, _count);
         }

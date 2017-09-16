@@ -52,7 +52,8 @@ namespace NUnit.Framework
 
         #region IApplyToContext Members
 
-        void IApplyToContext.ApplyToContext(TestExecutionContext context)
+        /// <inheritdoc />
+        public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.TestCaseTimeout = _timeout;
         }
