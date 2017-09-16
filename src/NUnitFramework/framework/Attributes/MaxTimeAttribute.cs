@@ -32,7 +32,7 @@ namespace NUnit.Framework
     /// Specifies the maximum time (in milliseconds) for a test case to succeed.
     /// </summary>
     [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-    public sealed class MaxTimeAttribute : PropertyAttribute, IWrapSetUpTearDown
+    public class MaxTimeAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
         private int _milliseconds;
         /// <summary>
@@ -47,7 +47,8 @@ namespace NUnit.Framework
 
         #region ICommandWrapper Members
 
-        TestCommand ICommandWrapper.Wrap(TestCommand command)
+        /// <inheritdoc />
+        public virtual TestCommand Wrap(TestCommand command)
         {
             return new MaxTimeCommand(command, _milliseconds);
         }

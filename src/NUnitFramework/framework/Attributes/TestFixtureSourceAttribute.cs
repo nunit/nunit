@@ -107,7 +107,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
         /// <returns>One or more TestFixtures as TestSuite</returns>
-        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
+        public virtual IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
             Type sourceType = SourceType ?? typeInfo.Type;
 
@@ -125,7 +125,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The type for which data is needed.</param>
         /// <returns></returns>
-        public IEnumerable<ITestFixtureData> GetParametersFor(Type sourceType)
+        public virtual IEnumerable<ITestFixtureData> GetParametersFor(Type sourceType)
         {
             List<ITestFixtureData> data = new List<ITestFixtureData>();
 

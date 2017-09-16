@@ -151,7 +151,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of values to be used as arguments.
         /// </summary>
-        public IEnumerable GetData(IParameterInfo parameter)
+        public virtual IEnumerable GetData(IParameterInfo parameter)
         {
             // Since a separate Randomizer is used for each parameter,
             // we can't fill in the data in the constructor of the

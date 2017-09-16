@@ -88,7 +88,7 @@ namespace NUnit.Framework
         /// <returns>
         /// An enumeration containing individual data items
         /// </returns>
-        public IEnumerable GetData(IParameterInfo parameter)
+        public virtual IEnumerable GetData(IParameterInfo parameter)
         {
             return GetDataSource(parameter);
         }

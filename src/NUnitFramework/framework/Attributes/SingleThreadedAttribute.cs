@@ -43,7 +43,7 @@ namespace NUnit.Framework
         /// Apply changes to the TestExecutionContext
         /// </summary>
         /// <param name="context">The TestExecutionContext</param>
-        public void ApplyToContext(TestExecutionContext context)
+        public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.IsSingleThreaded = true;
         }

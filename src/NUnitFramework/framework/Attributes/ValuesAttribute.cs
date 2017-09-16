@@ -98,7 +98,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of values to be used as arguments
         /// </summary>
-        public IEnumerable GetData(IParameterInfo parameter)
+        public virtual IEnumerable GetData(IParameterInfo parameter)
         {
             Type targetType = parameter.ParameterType;
 

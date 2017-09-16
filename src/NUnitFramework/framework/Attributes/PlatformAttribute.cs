@@ -54,7 +54,7 @@ namespace NUnit.Framework
         /// Causes a test to be skipped if this PlatformAttribute is not satisfied.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(Test test)
+        public virtual void ApplyToTest(Test test)
         {
             if (test.RunState != RunState.NotRunnable &&
                 test.RunState != RunState.Ignored)
