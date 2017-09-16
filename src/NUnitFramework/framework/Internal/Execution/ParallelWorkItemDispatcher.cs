@@ -71,7 +71,7 @@ namespace NUnit.Framework.Internal.Execution
 
             ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "Worker#STA"));
 
-            var worker = new TestWorker(NonParallelQueue, "Worker#STA_NP");
+            var worker = new TestWorker(NonParallelQueue, "Worker#NP");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelShift.Assign(worker);
 

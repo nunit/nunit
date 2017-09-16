@@ -85,6 +85,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         private Stack<SavedState> _savedState = new Stack<SavedState>();
+        private object saveLock = new object();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
@@ -322,13 +323,14 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         internal void Save()
         {
-            Pause();
+            lock (saveLock)
+            {
+                Pause();
+                _savedState.Push(new SavedState(this));
 
-            _savedState.Push(new SavedState(this));
-
-            InitializeQueues();
-
-            Start();
+                InitializeQueues();
+                Start();
+            }
         }
 
         /// <summary>
