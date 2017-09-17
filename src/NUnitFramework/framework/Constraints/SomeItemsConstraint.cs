@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -32,6 +33,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SomeItemsConstraint : PrefixConstraint
     {
+        private EqualConstraint equalConstraint = null;
+
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
         /// </summary>
@@ -39,6 +42,9 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint(IConstraint itemConstraint)
             : base(itemConstraint)
         {
+            var equalConstraint = itemConstraint as EqualConstraint;
+            if (equalConstraint != null)
+                this.equalConstraint = equalConstraint;
             DescriptionPrefix = "some item";
         }
 
@@ -66,6 +72,90 @@ namespace NUnit.Framework.Constraints
                     return new ConstraintResult(this, actual, ConstraintStatus.Success);
 
             return new ConstraintResult(this, actual, ConstraintStatus.Failure);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied <see cref="Func{TCollectionType, TMemberType, Boolean}"/> object.
+        /// </summary>
+        /// <typeparam name="TCollectionType">The type of the elements in the collection.</typeparam>
+        /// <typeparam name="TMemberType">The type of the member.</typeparam>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public SomeItemsConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        {
+            CheckPrecondition(nameof(comparison));
+            equalConstraint.Using(comparison);
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied <see cref="IComparer"/> object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public SomeItemsConstraint Using(IComparer comparer)
+        {
+            CheckPrecondition(nameof(comparer));
+            equalConstraint.Using(comparer);
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied <see cref="IComparer{T}"/> object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public SomeItemsConstraint Using<T>(IComparer<T> comparer)
+        {
+            CheckPrecondition(nameof(comparer));
+            equalConstraint.Using(comparer);
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied <see cref="Comparison{T}"/> object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public SomeItemsConstraint Using<T>(Comparison<T> comparer)
+        {
+            CheckPrecondition(nameof(comparer));
+            equalConstraint.Using(comparer);
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied <see cref="IEqualityComparer"/> object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public SomeItemsConstraint Using(IEqualityComparer comparer)
+        {
+            CheckPrecondition(nameof(comparer));
+            equalConstraint.Using(comparer);
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied <see cref="IEqualityComparer{T}"/> object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public SomeItemsConstraint Using<T>(IEqualityComparer<T> comparer)
+        {
+            CheckPrecondition(nameof(comparer));
+            equalConstraint.Using(comparer);
+            return this;
+        }
+
+        private void CheckPrecondition(string argument)
+        {
+            if (equalConstraint == null)
+            {
+                var message =
+                    "Using can only be called when the underlying constraint is an instance of " + nameof(EqualConstraint);
+                throw new ArgumentException(message, argument);
+            }
         }
     }
 }

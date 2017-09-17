@@ -428,8 +428,8 @@ namespace NUnit.Framework.Syntax
         public void ContainsConstraint()
         {
             var constraint = Contains(42);
-            Expect(constraint, TypeOf<EqualConstraint>());
-            Expect(constraint.ToString(), EqualTo("<unresolved <equal 42>>"));
+            Expect(constraint, TypeOf<SomeItemsConstraint>());
+            Expect(constraint.ToString(), EqualTo("<some <equal 42>>"));
         }
 
         [Test]
