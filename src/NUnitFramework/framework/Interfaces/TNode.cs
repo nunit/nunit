@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Interfaces
     /// <summary>
     /// TNode represents a single node in the XML representation
     /// of a Test or TestResult. It replaces System.Xml.XmlNode and
-    /// System.Xml.Linq.XElement, providing a minimal set of methods 
+    /// System.Xml.Linq.XElement, providing a minimal set of methods
     /// for operating on the XML in a platform-independent manner.
     /// </summary>
     public class TNode
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Interfaces
                 var stringWriter = new System.IO.StringWriter();
                 var settings = new XmlWriterSettings();
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
-                
+
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))
                 {
                     WriteTo(xmlWriter);
@@ -230,7 +230,7 @@ namespace NUnit.Framework.Interfaces
 
             return ApplySelection(nodeList, xpath);
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the node to an XmlWriter
         /// </summary>
@@ -318,7 +318,7 @@ namespace NUnit.Framework.Interfaces
                 : resultNodes;
         }
 
-        private static readonly Regex InvalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])");
+        private static readonly Regex InvalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])", RegexOptions.Compiled);
         private static string EscapeInvalidXmlCharacters(string str)
         {
             if (str == null) return null;
@@ -369,7 +369,7 @@ namespace NUnit.Framework.Interfaces
             public NodeFilter(string xpath)
             {
                 _nodeName = xpath;
-                
+
                 int lbrack = xpath.IndexOf('[');
                 if (lbrack >= 0)
                 {
@@ -392,10 +392,10 @@ namespace NUnit.Framework.Interfaces
             {
                 if (node.Name != _nodeName)
                     return false;
-                
+
                 if (_propName == null)
                     return true;
-                
+
                 return node.Attributes[_propName] == _propValue;
             }
         }
