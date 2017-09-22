@@ -493,6 +493,8 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
+            Guard.ArgumentNotNull(ex, "ex");
+
             if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
                 ex = ex.InnerException;
 
@@ -532,6 +534,8 @@ namespace NUnit.Framework.Internal
         /// <param name="site">The FailureSite to use in the result</param>
         public void RecordException(Exception ex, FailureSite site)
         {
+            Guard.ArgumentNotNull(ex, nameof(ex));
+
             if (ex is NUnitException)
                 ex = ex.InnerException;
 

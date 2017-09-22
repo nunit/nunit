@@ -78,6 +78,8 @@ namespace NUnit.Framework.Internal
         /// <returns>A combined message string.</returns>
         public static string BuildMessage(Exception exception, bool excludeExceptionNames=false)
         {
+            Guard.ArgumentNotNull(exception, "exception");
+
             StringBuilder sb = new StringBuilder();
             if (!excludeExceptionNames)
                 sb.AppendFormat("{0} : ", exception.GetType());
