@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -283,9 +284,19 @@ namespace NUnit.Framework.Assertions
             }
 
             var warningStackTrace = result.AssertionResults[0].StackTrace;
-            var lineCount = warningStackTrace.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            var lines = warningStackTrace.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            Assert.That(lineCount, Is.LessThanOrEqualTo(maxLineCount));
+            if (maxLineCount < lines.Length)
+            {
+                Assert.Fail(
+                    $"Expected the number of lines to be no more than {maxLineCount}, but it was {lines.Length}:" + Environment.NewLine
+                    + Environment.NewLine
+                    + string.Concat(lines.Select((line, i) => $" {i + 1}. {line.Trim()}" + Environment.NewLine))
+                    + "(end)");
+
+                 // ^ Most of that is to differentiate it from the current method's stack trace
+                 // reported directly underneath at the same level of indentation.
+            }
         }
     }
 }
