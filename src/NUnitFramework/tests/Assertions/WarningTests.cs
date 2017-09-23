@@ -268,7 +268,7 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
 #if ASYNC
         [TestCase(nameof(WarningFixture.WarningInTaskRun), 4)]
-        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 3)]
+        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 5)]
 #endif
         public static void StackTracesAreFiltered(string methodName, int maxLineCount)
         {
