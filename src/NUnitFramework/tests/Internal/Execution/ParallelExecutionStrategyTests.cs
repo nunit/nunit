@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal.Execution
         public void SetUp()
         {
             _context = new TestExecutionContext();
-            _testMethod = Fakes.GetTestMethod(GetType(), "TestMethod");
+            _testMethod = new FakeTestMethod(GetType(), "TestMethod");
             _testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
         }
 

@@ -55,8 +55,14 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Fakes.cs">
-      <Link>TestUtilities\Fakes.cs</Link>
+    <Compile Include="..\FakeTestMethod.cs">
+      <Link>TestUtilities\FakeTestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\FakeTestSuite.cs">
+      <Link>TestUtilities\FakeTestSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\FakeWorkItem.cs">
+      <Link>TestUtilities\FakeWorkItem.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
@@ -380,6 +386,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

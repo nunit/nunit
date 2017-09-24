@@ -23,6 +23,7 @@
 
 using System.Linq;
 using NUnit.Framework.Interfaces;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Results
 {
@@ -38,7 +39,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _result = TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
+            _result = new FakeTestMethod(this, nameof(FakeMethod)).MakeTestResult();
         }
 
         [Test]

@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal.Execution
         public void BusyExecuteIdleEventsCalledInSequence()
         {
             StringBuilder sb = new StringBuilder();
-            FakeWorkItem work = Fakes.GetWorkItem(this, "FakeMethod");
+            FakeWorkItem work = new FakeWorkItem(new FakeTestMethod(this, "FakeMethod"));
 
             _worker.Busy += (s, ea) => { sb.Append("Busy"); };
             work.Executed += (s, ea) => { sb.Append("Exec"); };

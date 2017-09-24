@@ -60,28 +60,6 @@ namespace NUnit.TestUtilities
             return suite;
         }
 
-        public static TestSuite MakeFixture(List<Type> types)
-        {
-            // following the pattern found in DefaultTestAssemblyBuilder
-            var fixtures = new List<Test>();
-            var defaultSuiteBuilder = new DefaultSuiteBuilder();
-            foreach (var type in types)
-            {
-                var typeInfo = new TypeWrapper(type);
-                var test = defaultSuiteBuilder.BuildFrom(typeInfo);
-                fixtures.Add(test);
-            }
-
-            var assembly = AssemblyHelper.Load("nunit.testdata");
-            var assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-            TestSuite testSuite = new TestAssembly(assembly, assemblyPath);
-
-            var treeBuilder = new NamespaceTreeBuilder(testSuite);
-            treeBuilder.Add(fixtures);
-
-            return treeBuilder.RootSuite;
-        }
-
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
         {
             var suite = MakeTestFromMethod(type, methodName) as TestSuite;
@@ -89,22 +67,12 @@ namespace NUnit.TestUtilities
             return suite;
         }
 
-        public static TestSuite MakeParameterizedMethodSuite(object fixture, string methodName)
-        {
-            var test = MakeTestFromMethod(fixture.GetType(), methodName) as ParameterizedMethodSuite;
-            Assert.That(test, Is.TypeOf<ParameterizedMethodSuite>());
-
-            TestSuite suite = test as TestSuite;
-            suite.Fixture = fixture;
-            return suite;
-        }
-
         public static TestMethod MakeTestCase(Type type, string methodName)
         {
-            var test = MakeTestFromMethod(type, methodName);
-            Assert.That(test, Is.TypeOf<TestMethod>());
+            var test = MakeTestFromMethod(type, methodName) as TestMethod;
+            Assert.NotNull(test, "Unable to create TestMethod from {0}", methodName);
 
-            return (TestMethod)test;
+            return test;
         }
 
         // Will return either a ParameterizedMethodSuite or an NUnitTestMethod
@@ -160,15 +128,6 @@ namespace NUnit.TestUtilities
 
             return RunTest(testMethod, fixture);
         }
-
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-        public static ITestResult RunAsTestCase(Action action)
-        {
-            var method = action.Method;
-            var testMethod = MakeTestCase(method.DeclaringType, method.Name);
-            return RunTest(testMethod);
-        }
-#endif
 
         public static ITestResult RunTest(Test test)
         {

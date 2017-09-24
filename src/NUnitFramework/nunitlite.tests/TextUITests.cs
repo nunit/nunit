@@ -112,7 +112,7 @@ namespace NUnitLite.Tests
         [TestCase("After", "")]
         public void TestStarted(string labels, string expected)
         {
-            var test = Fakes.GetTestMethod(this, "MyFakeMethod");
+            var test = new FakeTestMethod(this, "MyFakeMethod");
             CreateTextUI(labels).TestStarted(test);
 
             Assert.That(Report, Is.EqualTo(expected));
@@ -185,7 +185,7 @@ namespace NUnitLite.Tests
             "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nFirst line of output\nAnother line of output\nWarning => NUnitLite.Tests.TextUITests.MyFakeMethod\n")]
         public void TestFinished(string labelsOption, TestStatus resultStatus, string resultLabel, string output, string expected)
         {
-            var result = new TestCaseResult(Fakes.GetTestMethod(this, "MyFakeMethod"));
+            var result = new TestCaseResult(new FakeTestMethod(this, "MyFakeMethod"));
             result.SetResult(new ResultState(resultStatus, resultLabel));
 
             foreach (var line in output.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
@@ -203,7 +203,7 @@ namespace NUnitLite.Tests
         [TestCase("After", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nABC+XYZ\nPassed => NUnitLite.Tests.TextUITests.MyFakeMethod\n")]
         public void TestWritesSingleCharacters(string labels, string expected)
         {
-            var result = new TestCaseResult(Fakes.GetTestMethod(this, "MyFakeMethod"));
+            var result = new TestCaseResult(new FakeTestMethod(this, "MyFakeMethod"));
             result.SetResult(ResultState.Success);
 
             result.OutWriter.Write(new [] { 'A', 'B', 'C' });
@@ -312,7 +312,7 @@ namespace NUnitLite.Tests
         [TestCase("After", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nOUTPUT\nPassed => NUnitLite.Tests.TextUITests.MyFakeMethod\n")]
         public void SingleTest_StartAndFinish(string labels, string expected)
         {
-            var test = Fakes.GetTestMethod(this, "MyFakeMethod");
+            var test = new FakeTestMethod(this, "MyFakeMethod");
             var result = new TestCaseResult(test);
             result.SetResult(ResultState.Success);
             var textUI = CreateTextUI(labels);
@@ -331,7 +331,7 @@ namespace NUnitLite.Tests
         [TestCase("After", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\nIMMEDIATE OUTPUT\nNORMAL OUTPUT\nPassed => NUnitLite.Tests.TextUITests.MyFakeMethod\n")]
         public void SingleTest_ImmediateOutput(string labels, string expected)
         {
-            var test = Fakes.GetTestMethod(this, "MyFakeMethod");
+            var test = new FakeTestMethod(this, "MyFakeMethod");
             var result = new TestCaseResult(test);
             result.SetResult(ResultState.Success);
             var textUI = CreateTextUI(labels);
@@ -369,11 +369,11 @@ namespace NUnitLite.Tests
             "Passed => NUnitLite.Tests.TextUITests.AnotherFakeMethod\n")]
         public void TwoTests_SequentialExecution(string labels, string expected)
         {
-            var test1 = Fakes.GetTestMethod(this, "MyFakeMethod");
+            var test1 = new FakeTestMethod(this, "MyFakeMethod");
             var result1 = new TestCaseResult(test1);
             result1.SetResult(ResultState.Failure);
 
-            var test2 = Fakes.GetTestMethod(this, "AnotherFakeMethod");
+            var test2 = new FakeTestMethod(this, "AnotherFakeMethod");
             var result2 = new TestCaseResult(test2);
             result2.SetResult(ResultState.Success);
 
@@ -443,11 +443,11 @@ namespace NUnitLite.Tests
             "Passed => NUnitLite.Tests.TextUITests.AnotherFakeMethod\n")]
         public void TwoTests_InterleavedExecution(string labels, string expected)
         {
-            var test1 = Fakes.GetTestMethod(this, "MyFakeMethod");
+            var test1 = new FakeTestMethod(this, "MyFakeMethod");
             var result1 = new TestCaseResult(test1);
             result1.SetResult(ResultState.Failure);
 
-            var test2 = Fakes.GetTestMethod(this, "AnotherFakeMethod");
+            var test2 = new FakeTestMethod(this, "AnotherFakeMethod");
             var result2 = new TestCaseResult(test2);
             result2.SetResult(ResultState.Success);
 
@@ -516,11 +516,11 @@ namespace NUnitLite.Tests
             "Failed => NUnitLite.Tests.TextUITests.MyFakeMethod\n")]
         public void TwoTests_NestedExecution(string labels, string expected)
         {
-            var test1 = Fakes.GetTestMethod(this, "MyFakeMethod");
+            var test1 = new FakeTestMethod(this, "MyFakeMethod");
             var result1 = new TestCaseResult(test1);
             result1.SetResult(ResultState.Failure);
 
-            var test2 = Fakes.GetTestMethod(this, "AnotherFakeMethod");
+            var test2 = new FakeTestMethod(this, "AnotherFakeMethod");
             var result2 = new TestCaseResult(test2);
             result2.SetResult(ResultState.Success);
 

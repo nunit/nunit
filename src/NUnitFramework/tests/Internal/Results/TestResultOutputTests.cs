@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Results
 {
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _result = TestUtilities.Fakes.GetTestMethod(this, "FakeMethod").MakeTestResult();
+            _result = new FakeTestMethod(this, "FakeMethod").MakeTestResult();
         }
 
         [Test]

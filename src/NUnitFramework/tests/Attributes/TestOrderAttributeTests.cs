@@ -29,14 +29,11 @@ namespace NUnit.Framework.Attributes
         [TestCaseSource(nameof(Cases))]
         public void CheckClassOrderIsCorrect(List<Type> candidateTypes)
         {
-            var testSuite = TestBuilder.MakeFixture(candidateTypes);
+            var testSuite = new FakeTestSuite("dummy").Containing(candidateTypes);
 
             var work = TestBuilder.PrepareWorkItem(testSuite, null) as CompositeWorkItem;
 
-            var fixtureWorkItems = 
-                ((work.Children[0] as CompositeWorkItem)
-                .Children[0] as CompositeWorkItem)
-                .Children;
+            var fixtureWorkItems = work.Children;
 
             Assert.AreEqual(candidateTypes.Count, fixtureWorkItems.Count);
             for (var i = 1; i < fixtureWorkItems.Count; i++)
