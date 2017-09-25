@@ -570,6 +570,14 @@ namespace NUnit.Framework.Constraints
             }
 
             [Test]
+            public void UsesProvidedGenericEqualityComparison()
+            {
+                var comparer = new GenericEqualityComparison<int>();
+                Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
             public void UsesProvidedLambda_IntArgs()
             {
                 Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));

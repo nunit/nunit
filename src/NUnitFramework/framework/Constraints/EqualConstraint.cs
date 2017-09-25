@@ -323,6 +323,17 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to use the supplied (T, T) => bool object.
+        /// </summary>
+        /// <param name="comparer">The (T, T) => bool object to use.</param>
+        /// <returns>Self.</returns>
+        public EqualConstraint Using<T>(Func<T, T, bool> comparer)
+        {
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            return this;
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
