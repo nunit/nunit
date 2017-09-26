@@ -578,6 +578,12 @@ namespace NUnit.Framework.Constraints
             }
 
             [Test]
+            public void UsesBooleanReturningDelegate()
+            {
+                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.Equals(y)));
+            }
+
+            [Test]
             public void UsesProvidedLambda_IntArgs()
             {
                 Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));

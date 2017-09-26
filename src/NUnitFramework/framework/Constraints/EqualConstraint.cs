@@ -323,9 +323,9 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Flag the constraint to use the supplied (T, T) => bool object.
+        /// Flag the constraint to use the supplied boolean-returning delegate.
         /// </summary>
-        /// <param name="comparer">The (T, T) => bool object to use.</param>
+        /// <param name="comparer">The boolean-returning delegate to use.</param>
         /// <returns>Self.</returns>
         public EqualConstraint Using<T>(Func<T, T, bool> comparer)
         {
