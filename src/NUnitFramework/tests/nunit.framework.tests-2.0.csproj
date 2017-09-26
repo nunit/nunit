@@ -305,6 +305,7 @@
     <Compile Include="TestUtilities\Comparers\GenericComparison.cs" />
     <Compile Include="TestUtilities\Comparers\GenericEqualityComparer.cs" />
     <Compile Include="TestUtilities\Comparers\GenericComparer.cs" />
+    <Compile Include="TestUtilities\Comparers\GenericEqualityComparison.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectToStringComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectEqualityComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectComparer.cs" />
