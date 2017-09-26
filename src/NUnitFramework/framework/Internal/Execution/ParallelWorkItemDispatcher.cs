@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -71,7 +72,7 @@ namespace NUnit.Framework.Internal.Execution
 
             ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "Worker#STA"));
 
-            var worker = new TestWorker(NonParallelQueue, "Worker#STA_NP");
+            var worker = new TestWorker(NonParallelQueue, "Worker#NP");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelShift.Assign(worker);
 
@@ -220,9 +221,10 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Remove isolated queues and restore old ones
         /// </summary>
-        private void RestoreQueues()
+        internal void RestoreQueues()
         {
-            Guard.OperationValid(_isolationLevel > 0, $"Internal Error: Called {nameof(RestoreQueues)} with no saved queues!");
+            Guard.OperationValid(_isolationLevel > 0, $"Internal Error: Called {nameof(RestoreQueues)} with no saved queues.");
+            Guard.OperationValid(Queues.All(q => q.IsEmpty), $"Internal Error: Called {nameof(RestoreQueues)} with non-empty queues.");
 
             // Keep lock until we can remove for both methods
             lock (_queueLock)
@@ -242,7 +244,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnEndOfShift(object sender, EventArgs ea)
         {
-            if (_isolationLevel > 0)
+            if (_isolationLevel > 0 && Shifts.All(q => !q.HasWork))
                 RestoreQueues();
 
             // Shift has ended but all work may not yet be done

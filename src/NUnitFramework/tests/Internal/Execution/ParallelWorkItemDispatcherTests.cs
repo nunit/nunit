@@ -24,6 +24,7 @@
 #if PARALLEL
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -71,6 +72,19 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(shifts[2].Queues.Count, Is.EqualTo(1));
             Assert.That(shifts[2].Queues[0].Name, Is.EqualTo("NonParallelSTAQueue"));
             Assert.That(shifts[2].Workers.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void QueuesCannotBeRestoredWhenContainWork()
+        {
+            var workItem = Fakes.GetWorkItem(this, nameof(FakeMethod));
+            _dispatcher.IsolateQueues(workItem);
+            _dispatcher.Dispatch(workItem);
+            Assert.That(() => _dispatcher.RestoreQueues(), Throws.InvalidOperationException.With.Message.Contains("non-empty queues"));
+        }
+
+        private void FakeMethod()
+        {
         }
     }
 }
