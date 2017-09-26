@@ -242,6 +242,11 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnEndOfShift(object sender, EventArgs ea)
         {
+            // This shift ended, so see if there is work in any other
+            // TODO: Temp fix - revisit later when object model is redesigned.
+            if (StartNextShift())
+                return;
+
             if (_isolationLevel > 0)
                 RestoreQueues();
 
