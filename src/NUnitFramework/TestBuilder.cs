@@ -136,18 +136,38 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTest(Test test, object testObject)
         {
-            return ExecuteWorkItem(PrepareWorkItem(test, testObject));
+            return ExecuteWorkItem(CreateWorkItem(test, testObject));
         }
 
-        // NOTE: The following two methods are separate in order to support
-        // tests that need to access the WorkItem before or after execution.
+        public static CompositeWorkItem CreateWorkItem(Type type)
+        {
+            return CreateWorkItem(MakeFixture(type)) as CompositeWorkItem;
+        }
 
-        public static WorkItem PrepareWorkItem(Test test, object testObject)
+        public static WorkItem CreateWorkItem(Type type, string methodName)
+        {
+            return CreateWorkItem(MakeTestFromMethod(type, methodName));
+        }
+
+        public static WorkItem CreateWorkItem(Test test)
+        {
+            var context = new TestExecutionContext();
+            context.Dispatcher = new SuperSimpleDispatcher();
+
+            return CreateWorkItem(test, context);
+        }
+
+        public static WorkItem CreateWorkItem(Test test, object testObject)
         {
             var context = new TestExecutionContext();
             context.TestObject = testObject;
             context.Dispatcher = new SuperSimpleDispatcher();
 
+            return CreateWorkItem(test, context);
+        }
+
+        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context)
+        {
             var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
             work.InitializeContext(context);
 
