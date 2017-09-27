@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SomeItemsConstraint : PrefixConstraint
     {
-        private EqualConstraint equalConstraint = null;
+        private EqualConstraint _equalConstraint = null;
 
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
@@ -42,9 +42,7 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint(IConstraint itemConstraint)
             : base(itemConstraint)
         {
-            var equalConstraint = itemConstraint as EqualConstraint;
-            if (equalConstraint != null)
-                this.equalConstraint = equalConstraint;
+            _equalConstraint = itemConstraint as EqualConstraint;
             DescriptionPrefix = "some item";
         }
 
@@ -84,7 +82,7 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
         {
             CheckPrecondition(nameof(comparison));
-            equalConstraint.Using(comparison);
+            _equalConstraint.Using(comparison);
             return this;
         }
 
@@ -96,7 +94,7 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint Using(IComparer comparer)
         {
             CheckPrecondition(nameof(comparer));
-            equalConstraint.Using(comparer);
+            _equalConstraint.Using(comparer);
             return this;
         }
 
@@ -108,7 +106,7 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint Using<T>(IComparer<T> comparer)
         {
             CheckPrecondition(nameof(comparer));
-            equalConstraint.Using(comparer);
+            _equalConstraint.Using(comparer);
             return this;
         }
 
@@ -120,7 +118,7 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint Using<T>(Comparison<T> comparer)
         {
             CheckPrecondition(nameof(comparer));
-            equalConstraint.Using(comparer);
+            _equalConstraint.Using(comparer);
             return this;
         }
 
@@ -132,7 +130,7 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint Using(IEqualityComparer comparer)
         {
             CheckPrecondition(nameof(comparer));
-            equalConstraint.Using(comparer);
+            _equalConstraint.Using(comparer);
             return this;
         }
 
@@ -144,16 +142,15 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint Using<T>(IEqualityComparer<T> comparer)
         {
             CheckPrecondition(nameof(comparer));
-            equalConstraint.Using(comparer);
+            _equalConstraint.Using(comparer);
             return this;
         }
 
         private void CheckPrecondition(string argument)
         {
-            if (equalConstraint == null)
+            if (_equalConstraint == null)
             {
-                var message =
-                    "Using can only be called when the underlying constraint is an instance of " + nameof(EqualConstraint);
+                var message = "Using may only be used with constraints that check the equality of the items";
                 throw new ArgumentException(message, argument);
             }
         }

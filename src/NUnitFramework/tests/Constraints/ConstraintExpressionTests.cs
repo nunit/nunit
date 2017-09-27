@@ -68,7 +68,6 @@ namespace NUnit.Framework.Constraints
         public void ConstraintExpressionContainsUsing()
         {
             var constraintExpression = new ConstraintExpression();
-            // DOES NOT COMPILE: There is no Using on SomeItemsConstraint
             var constraint = constraintExpression.Contains(4).Using(myIntComparer);
             var collection1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             Assert.That(collection1, constraint);

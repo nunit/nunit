@@ -189,6 +189,7 @@
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StartsWithConstraintTests.cs" />
     <Compile Include="Constraints\StringConstraintTest.cs" />
+    <Compile Include="Constraints\SomeItemsConstraintTests.cs" />
     <Compile Include="Constraints\SubstringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
