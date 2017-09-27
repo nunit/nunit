@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -222,7 +223,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void RestoreQueues()
         {
-            Guard.OperationValid(_isolationLevel > 0, $"Internal Error: Called {nameof(RestoreQueues)} with no saved queues!");
+            Guard.OperationValid(_isolationLevel > 0, $"Internal Error: Called {nameof(RestoreQueues)} with no saved queues.");
+            Guard.OperationValid(Queues.All(q => q.IsEmpty), $"Internal Error: Called {nameof(RestoreQueues)} with non-empty queues.");
 
             // Keep lock until we can remove for both methods
             lock (_queueLock)
