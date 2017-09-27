@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal.Execution
             var q = new WorkItemQueue("test", true, ApartmentState.MTA);
             _shift.AddQueue(q);
             Assert.False(_shift.HasWork, "Should not have work initially");
-            q.Enqueue(Fakes.GetWorkItem(this, "Test1"));
+            q.Enqueue(new FakeWorkItem(new FakeTestMethod(this, "Test1")));
             Assert.That(_shift.HasWork, "Should have work after enqueue");
             _shift.Start();
             Assert.That(_shift.HasWork, "Should have work after starting");

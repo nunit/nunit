@@ -65,17 +65,17 @@ namespace NUnit.Framework.Internal.Execution
             // TODO: Avoid creating all the workers till needed
             for (int i = 1; i <= levelOfParallelism; i++)
             {
-                string name = string.Format("Worker#" + i.ToString());
+                string name = string.Format("ParallelWorker#" + i.ToString());
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
-            ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "Worker#STA"));
+            ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "ParallelSTAWorker"));
 
-            var worker = new TestWorker(NonParallelQueue, "Worker#STA_NP");
+            var worker = new TestWorker(NonParallelQueue, "NonParallelWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelShift.Assign(worker);
 
-            worker = new TestWorker(NonParallelSTAQueue, "Worker#NP_STA");
+            worker = new TestWorker(NonParallelSTAQueue, "NonParallelSTAWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelSTAShift.Assign(worker);
         }
@@ -242,6 +242,11 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnEndOfShift(object sender, EventArgs ea)
         {
+            if (StartNextShift())
+                return;
+
+            // Shift has ended. It's an error to restore queues,
+            // however, if there is work in any of them.
             if (_isolationLevel > 0)
                 RestoreQueues();
 

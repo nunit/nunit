@@ -69,7 +69,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TestStarted()
         {
-            _teamCity.TestStarted(Fakes.GetTestMethod(this, "FakeTestMethod"));
+            _teamCity.TestStarted(new FakeTestMethod(this, "FakeTestMethod"));
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testStarted name='FakeTestMethod' captureStandardOutput='true']" + NL));
@@ -78,7 +78,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TestFinished_Passed()
         {
-            var result = Fakes.GetTestMethod(this, "FakeTestMethod").MakeTestResult();
+            var result = new FakeTestMethod(this, "FakeTestMethod").MakeTestResult();
             result.SetResult(ResultState.Success);
             result.Duration = 1.234;
             _teamCity.TestFinished(result);
@@ -90,7 +90,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TestFinished_Inconclusive()
         {
-            var result = Fakes.GetTestMethod(this, "FakeTestMethod").MakeTestResult();
+            var result = new FakeTestMethod(this, "FakeTestMethod").MakeTestResult();
             result.SetResult(ResultState.Inconclusive);
             _teamCity.TestFinished(result);
 
@@ -101,7 +101,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TestFinished_Ignored()
         {
-            var result = Fakes.GetTestMethod(this, "FakeTestMethod").MakeTestResult();
+            var result = new FakeTestMethod(this, "FakeTestMethod").MakeTestResult();
             result.SetResult(ResultState.Ignored, "Just because");
             _teamCity.TestFinished(result);
 
@@ -112,7 +112,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TestFinished_Failed()
         {
-            var result = Fakes.GetTestMethod(this, "FakeTestMethod").MakeTestResult();
+            var result = new FakeTestMethod(this, "FakeTestMethod").MakeTestResult();
             result.SetResult(ResultState.Failure, "Error message", "Stack trace");
             result.Duration = 1.234;
             _teamCity.TestFinished(result);

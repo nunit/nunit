@@ -55,8 +55,14 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Fakes.cs">
-      <Link>TestUtilities\Fakes.cs</Link>
+    <Compile Include="..\FakeTestMethod.cs">
+      <Link>TestUtilities\FakeTestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\FakeTestSuite.cs">
+      <Link>TestUtilities\FakeTestSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\FakeWorkItem.cs">
+      <Link>TestUtilities\FakeWorkItem.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>Properties\FrameworkVersion.cs</Link>
@@ -362,4 +368,5 @@
     <None Include="nunit.framework.tests-3.5.project.json" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

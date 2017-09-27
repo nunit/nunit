@@ -180,12 +180,12 @@ namespace NUnit.Framework.Internal.Execution
 
         private void EnqueueWorkItem(string name)
         {
-            _queue.Enqueue(Fakes.GetWorkItem(this, name));
+            _queue.Enqueue(new FakeWorkItem(new FakeTestMethod(this, name)));
         }
 
         private void EnqueueWorkItem(string name, int priority)
         {
-            _queue.Enqueue(Fakes.GetWorkItem(this, name), priority);
+            _queue.Enqueue(new FakeWorkItem(new FakeTestMethod(this, name)), priority);
         }
 
         private void VerifyQueueContents(params string[] names)
