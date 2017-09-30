@@ -22,6 +22,7 @@
 // ***********************************************************************
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
@@ -233,9 +234,68 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.AreEqual(shouldFind, result != null);
         }
 
-        public void CanGetStaticMethodsOnBase(BindingFlags flags)
+        [Test]
+        public void CanGetDerivedMethodsOnly()
         {
-            var result = typeof(DerivedTestClass).GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            var result = typeof(DerivedTestClass).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+            var methodNames = result.Select(m => m.Name);
+            CollectionAssert.AreEquivalent(methodNames, new string[] { "Hello", "Hello", "DerivedInstanceMethod" });
+        }
+
+        [TestCase(BindingFlags.Instance | BindingFlags.Public,
+            new[] { "DerivedInstanceMethod", "InstanceMethod" },
+            new[] { "DerivedProtectedInstanceMethod", "DerivedPrivateInstanceMethod", "ProtectedInstanceMethod", "PrivateInstanceMethod" })]
+        [TestCase(BindingFlags.Instance | BindingFlags.NonPublic,
+            new[] { "DerivedProtectedInstanceMethod", "DerivedPrivateInstanceMethod", "ProtectedInstanceMethod" },
+            new[] { "DerivedInstanceMethod", "InstanceMethod", "PrivateInstanceMethod" })]
+        [TestCase(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly,
+            new[] { "DerivedInstanceMethod" },
+            new[] { "DerivedProtectedInstanceMethod", "DerivedPrivateInstanceMethod", "InstanceMethod", "ProtectedInstanceMethod", "PrivateInstanceMethod" })]
+        [TestCase(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly,
+            new[] { "DerivedProtectedInstanceMethod", "DerivedPrivateInstanceMethod" },
+            new[] { "InstanceMethod", "DerivedInstanceMethod", "ProtectedInstanceMethod", "PrivateInstanceMethod" })]
+        public void InstanceCanGetMethodsFromCurrentAndFromBaseClass(BindingFlags flags, string[] containElements, string[] wrongElements)
+        {
+            var result = typeof(DerivedTestClass).GetMethods(flags);
+            var methodNames = result.Select(m => m.Name);
+
+            CollectionAssert.IsSubsetOf(containElements, methodNames);
+            foreach (var wrongElement in wrongElements)
+            {
+                Assert.That(methodNames, Does.Not.Contain(wrongElement));
+            }
+        }
+
+        [TestCase(
+            BindingFlags.Static | BindingFlags.Public,
+            new[] { "DerivedStaticMethod" },
+            new[] { "DerivedProtectedStaticMethod", "DerivedPrivateStaticMethod" })]
+        [TestCase(
+            BindingFlags.Static | BindingFlags.NonPublic,
+            new[] { "DerivedProtectedStaticMethod", "DerivedPrivateStaticMethod" },
+            new[] { "DerivedStaticMethod" })]
+        [TestCase(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy,
+            new[] { "DerivedStaticMethod", "StaticMethod", },
+            new[] { "DerivedProtectedStaticMethod", "ProtectedStaticMethod" })]
+        [TestCase(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy,
+            new[] { "DerivedProtectedStaticMethod", "DerivedPrivateStaticMethod", "ProtectedStaticMethod" },
+            new[] { "DerivedStaticMethod", "StaticMethod" })]
+        public void StaticCanGetMethodsFromCurrentAndFromBaseClass(BindingFlags flags, string[] containElements, string[] wrongElements)
+        {
+            var result = typeof(DerivedTestClass).GetMethods(flags);
+            var methodNames = result.Select(m => m.Name);
+
+            CollectionAssert.IsSubsetOf(containElements, methodNames);
+            foreach (var wrongElement in wrongElements)
+            {
+                Assert.That(methodNames, Does.Not.Contain(wrongElement));
+            }
+        }
+
+        [Test]
+        public void CanGetStaticMethodsOnBase()
+        {
+            var result = typeof(DerivedTestClass).GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
             foreach(var info in result)
             {
                 if (info.Name == "StaticMethod")
@@ -308,7 +368,17 @@ namespace NUnit.Framework.Tests.Compatibility
 
         public virtual void Hello(string msg) { }
 
+        public void InstanceMethod() { }
+
+        protected void ProtectedInstanceMethod() { }
+
+        private void PrivateInstanceMethod() { }
+
         public static void StaticMethod() { }
+
+        protected static void ProtectedStaticMethod() { }
+
+        private static void PrivateStaticMethod() { }
 
         private void Goodbye(double d) { }
 
@@ -331,6 +401,18 @@ namespace NUnit.Framework.Tests.Compatibility
         public DerivedTestClass(double d) : this(d.ToString()) { }
 
         private DerivedTestClass(StringBuilder name) : this(name.ToString()) { }
+
+        public void DerivedInstanceMethod() { }
+
+        protected void DerivedProtectedInstanceMethod() { }
+
+        private void DerivedPrivateInstanceMethod() { }
+
+        public static void DerivedStaticMethod() { }
+
+        protected static void DerivedProtectedStaticMethod() { }
+
+        private static void DerivedPrivateStaticMethod() { }
 
         public override void Hello() { }
 
