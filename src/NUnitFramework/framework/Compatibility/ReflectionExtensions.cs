@@ -332,7 +332,7 @@ namespace NUnit.Compatibility
             if (type != null)
             {
                 var baseMethods = type.GetAllMethods(includeBaseStatic)
-                    .Where(b => b.IsPublic && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b));
+                    .Where(b => !b.IsPrivate && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b));
                 methods.AddRange(baseMethods);
             }
 
@@ -363,7 +363,7 @@ namespace NUnit.Compatibility
             bool pub = flags.HasFlag(BindingFlags.Public);
             bool priv = flags.HasFlag(BindingFlags.NonPublic);
             if (priv && !pub)
-                infos = infos.Where(m => m.IsPrivate);
+                infos = infos.Where(m => !m.IsPublic);
             else if (pub && !priv)
                 infos = infos.Where(m => m.IsPublic);
 
