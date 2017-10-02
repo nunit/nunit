@@ -229,9 +229,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return a 
+        /// Implemented to use in place of Environment.OSVersion.ToString()
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A representation of the platform ID and version in an approximation of the format used by Environment.OSVersion.ToString()</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
