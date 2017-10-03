@@ -26,6 +26,7 @@ using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Text;
 
 namespace NUnit.Framework.Internal
 {
@@ -225,6 +226,37 @@ namespace NUnit.Framework.Internal
         public PlatformID Platform
         {
             get { return _platform; }
+        }
+
+        /// <summary>
+        /// Implemented to use in place of Environment.OSVersion.ToString()
+        /// </summary>
+        /// <returns>A representation of the platform ID and version in an approximation of the format used by Environment.OSVersion.ToString()</returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            
+            switch (Platform)
+            {
+                case PlatformID.Win32NT:
+                    sb.Append("Microsoft Windows NT");
+                    break;
+                case PlatformID.Win32Windows:
+                    sb.Append("Microsoft Windows 95/98");
+                    break;
+                case PlatformID.Win32S:
+                    sb.Append("Microsoft Windows Win32s");
+                    break;
+                case PlatformID.WinCE:
+                    sb.Append("Microsoft Windows CE");
+                    break;
+                default:
+                    sb.Append(Platform);
+                    break;
+            }
+
+            sb.Append(" ").Append(Version);
+            return sb.ToString();
         }
 
         /// <summary>
