@@ -226,5 +226,89 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+#if NETSTANDARD1_3
+        /// <summary>
+        /// <para>
+        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
+        /// rather than throwing <see cref="AmbiguousMatchException"/>
+        /// for properties that shadow properties of a different property type.
+        /// </para>
+        /// <para>
+        /// If you request both public and nonpublic properties, every public property is preferred
+        /// over every nonpublic property. It would violate the principle of least surprise for a
+        /// derived class’s implementation detail to be chosen over the public API for a type.
+        /// </para>
+        /// </summary>
+#elif NETSTANDARD1_6
+        /// <summary>
+        /// <para>
+        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
+        /// rather than throwing <see cref="AmbiguousMatchException"/>
+        /// for properties that shadow properties of a different property type
+        /// which is what <see cref="TypeInfo.GetProperty(string, BindingFlags)"/> does.
+        /// </para>
+        /// <para>
+        /// If you request both public and nonpublic properties, every public property is preferred
+        /// over every nonpublic property. It would violate the principle of least surprise for a
+        /// derived class’s implementation detail to be chosen over the public API for a type.
+        /// </para>
+        /// </summary>
+        /// <param name="type">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
+        /// <param name="name">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
+        /// <param name="bindingFlags">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
+#else
+        /// <summary>
+        /// <para>
+        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
+        /// rather than throwing <see cref="AmbiguousMatchException"/>
+        /// for properties that shadow properties of a different property type
+        /// which is what <see cref="Type.GetProperty(string, BindingFlags)"/> does.
+        /// </para>
+        /// <para>
+        /// If you request both public and nonpublic properties, every public property is preferred
+        /// over every nonpublic property. It would violate the principle of least surprise for a
+        /// derived class’s implementation detail to be chosen over the public API for a type.
+        /// </para>
+        /// </summary>
+        /// <param name="type">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
+        /// <param name="name">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
+        /// <param name="bindingFlags">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
+#endif
+        public static PropertyInfo GetUltimateShadowingProperty(Type type, string name, BindingFlags bindingFlags)
+        {
+            Guard.ArgumentNotNull(type, nameof(type));
+            Guard.ArgumentNotNull(name, nameof(name));
+
+            if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
+            {
+                // If you're asking us to search a hierarchy but only want properties declared in the given type,
+                // you're in the wrong place but okay:
+                return type.GetProperty(name, bindingFlags);
+            }
+
+            if ((bindingFlags & (BindingFlags.Public | BindingFlags.NonPublic)) == (BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                // If we're searching for both public and nonpublic properties, search for only public first
+                // because chances are if there is a public property, it would be very surprising to detect the private shadowing property.
+
+                for (var publicSearchType = type; publicSearchType != null; publicSearchType = publicSearchType.GetTypeInfo().BaseType)
+                {
+                    var property = publicSearchType.GetProperty(name, (bindingFlags | BindingFlags.DeclaredOnly) & ~BindingFlags.NonPublic);
+                    if (property != null) return property;
+                }
+
+                // There is no public property, so may as well not ask to include them during the second search.
+                bindingFlags &= ~BindingFlags.Public;
+            }
+
+            for (var searchType = type; searchType != null; searchType = searchType.GetTypeInfo().BaseType)
+            {
+                var property = searchType.GetProperty(name, bindingFlags | BindingFlags.DeclaredOnly);
+                if (property != null) return property;
+            }
+
+            return null;
+        }
     }
 }
