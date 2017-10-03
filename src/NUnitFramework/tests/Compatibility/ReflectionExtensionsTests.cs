@@ -193,6 +193,11 @@ namespace NUnit.Framework.Tests.Compatibility
         [TestCase(typeof(DerivedTestClass), "PubPriv", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, true)]
         [TestCase(typeof(BaseTestClass), "PubPriv", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, false)]
         [TestCase(typeof(DerivedTestClass), "PubPriv", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, false)]
+
+        [TestCase(typeof(DerivedTestClass), "Protected", BindingFlags.NonPublic | BindingFlags.Instance, true)]
+        [TestCase(typeof(DerivedTestClass), "Internal", BindingFlags.NonPublic | BindingFlags.Instance, true)]
+        [TestCase(typeof(BaseTestClass), "Protected", BindingFlags.NonPublic | BindingFlags.Instance, true)]
+        [TestCase(typeof(BaseTestClass), "Internal", BindingFlags.NonPublic | BindingFlags.Instance, true)]
         public void CanGetPropertyWithBindingFlags(Type type, string name, BindingFlags flags, bool shouldFind)
         {
             var result = type.GetProperty(name, flags);
@@ -353,6 +358,8 @@ namespace NUnit.Framework.Tests.Compatibility
         public static string StaticString { get; set; }
 
         protected string Protected { get; set; }
+
+        internal string Internal { get; set; }
 
         public string Name { get; set; }
 

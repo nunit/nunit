@@ -346,7 +346,7 @@ namespace NUnit.Compatibility
             if (pub && !priv)
                 infos = infos.Where(p => (p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic));
             if (priv && !pub)
-                infos = infos.Where(p => (p.GetMethod == null || p.GetMethod.IsPrivate) && (p.SetMethod == null || p.SetMethod.IsPrivate));
+                infos = infos.Where(p => (p.GetMethod == null || !(p.GetMethod.IsPublic)) && (p.SetMethod == null || !(p.SetMethod.IsPublic)));
 
             bool stat = flags.HasFlag(BindingFlags.Static);
             bool inst = flags.HasFlag(BindingFlags.Instance);
