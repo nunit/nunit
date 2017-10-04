@@ -250,7 +250,9 @@ namespace NUnit.Compatibility
         /// <returns></returns>
         public static PropertyInfo GetProperty(this Type type, string name, BindingFlags flags)
         {
+            bool declaredOnly = flags.HasFlag(BindingFlags.DeclaredOnly);
             return type.GetRuntimeProperties()
+                .Where(prop => declaredOnly ? prop.DeclaringType.Equals(type) : true)
                 .ApplyBindingFlags(flags)
                 .Where(p => p.Name == name)
                 .FirstOrDefault();
