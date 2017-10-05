@@ -209,12 +209,12 @@ namespace NUnit.Framework
         #region Member
 
         /// <summary>
-        /// Returns a new <see cref="EqualConstraint"/> checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static EqualConstraint Member(object expected)
+        public static SomeItemsConstraint Member(object expected)
         {
-            return Some.EqualTo(expected);
+            return new SomeItemsConstraint(new EqualConstraint(expected));
         }
 
         #endregion

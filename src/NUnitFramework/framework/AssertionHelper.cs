@@ -686,21 +686,21 @@ namespace NUnit.Framework
         #region Member
 
         /// <summary>
-        /// Returns a new <see cref="EqualConstraint"/> checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public EqualConstraint Member(object expected)
+        public SomeItemsConstraint Member(object expected)
         {
-            return Has.Some.EqualTo(expected);
+            return new SomeItemsConstraint(new EqualConstraint(expected));
         }
 
         /// <summary>
-        /// Returns a new <see cref="EqualConstraint"/> checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public EqualConstraint Contains(object expected)
+        public SomeItemsConstraint Contains(object expected)
         {
-            return Has.Some.EqualTo(expected);
+            return new SomeItemsConstraint(new EqualConstraint(expected));
         }
 
         #endregion
