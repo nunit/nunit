@@ -250,7 +250,9 @@ namespace NUnit.Compatibility
         /// <returns></returns>
         public static PropertyInfo GetProperty(this Type type, string name, BindingFlags flags)
         {
+            bool declaredOnly = flags.HasFlag(BindingFlags.DeclaredOnly);
             return type.GetRuntimeProperties()
+                .Where(prop => declaredOnly ? prop.DeclaringType.Equals(type) : true)
                 .ApplyBindingFlags(flags)
                 .Where(p => p.Name == name)
                 .FirstOrDefault();
@@ -346,7 +348,7 @@ namespace NUnit.Compatibility
             if (pub && !priv)
                 infos = infos.Where(p => (p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic));
             if (priv && !pub)
-                infos = infos.Where(p => (p.GetMethod == null || p.GetMethod.IsPrivate) && (p.SetMethod == null || p.SetMethod.IsPrivate));
+                infos = infos.Where(p => (p.GetMethod == null || !(p.GetMethod.IsPublic)) && (p.SetMethod == null || !(p.SetMethod.IsPublic)));
 
             bool stat = flags.HasFlag(BindingFlags.Static);
             bool inst = flags.HasFlag(BindingFlags.Instance);
