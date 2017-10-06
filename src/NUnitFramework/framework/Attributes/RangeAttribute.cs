@@ -63,10 +63,10 @@ namespace NUnit.Framework
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
             int count = (to - from) / step + 1;
-            this._data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (int val = from; index < count; val += step)
-                this._data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -94,10 +94,10 @@ namespace NUnit.Framework
             Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
 
             uint count = (to - from) / step + 1;
-            this._data = new object[count];
+            _data = new object[count];
             uint index = 0;
             for (uint val = from; index < count; val += step)
-                this._data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -123,10 +123,10 @@ namespace NUnit.Framework
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
             long count = (to - from) / step + 1;
-            this._data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (long val = from; index < count; val += step)
-                this._data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -154,10 +154,10 @@ namespace NUnit.Framework
             Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
 
             ulong count = (to - from) / step + 1;
-            this._data = new object[count];
+            _data = new object[count];
             ulong index = 0;
             for (ulong val = from; index < count; val += step)
-                this._data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -178,10 +178,10 @@ namespace NUnit.Framework
             double aStep = Math.Abs(step);
             double tol = aStep / 1000;
             int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
-            this._data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (double val = from; index < count; val += step)
-                this._data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -202,10 +202,10 @@ namespace NUnit.Framework
             float aStep = Math.Abs(step);
             float tol = aStep / 1000;
             int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
-            this._data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (float val = from; index < count; val += step)
-                this._data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
