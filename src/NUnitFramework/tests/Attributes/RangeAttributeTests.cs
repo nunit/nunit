@@ -414,9 +414,9 @@ namespace NUnit.Framework.Attributes
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
 #if NETSTANDARD1_3 || NETSTANDARD1_6
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
 #else
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
 #endif
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
         }
@@ -426,9 +426,9 @@ namespace NUnit.Framework.Attributes
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
 #if NETSTANDARD1_3 || NETSTANDARD1_6
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
 #else
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
 #endif
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), 
                 Is.EqualTo(expected).Within(0.000001));

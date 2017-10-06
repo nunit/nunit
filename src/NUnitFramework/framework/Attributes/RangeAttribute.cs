@@ -23,6 +23,10 @@
 
 using System;
 using System.Collections;
+using System.Reflection;
+
+using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework
 {
@@ -30,8 +34,14 @@ namespace NUnit.Framework
     /// RangeAttribute is used to supply a range of values to an
     /// individual parameter of a parameterized test.
     /// </summary>
-    public class RangeAttribute : ValuesAttribute
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
+    public class RangeAttribute : DataAttribute, IParameterDataSource
     {
+        // We use an object[] so that the individual
+        // elements may have their type changed in GetData
+        // if necessary
+        // TODO: This causes a lot of boxing so we should eliminate it
+        private object[] _data;
         #region Ints
 
         /// <summary>
@@ -53,10 +63,10 @@ namespace NUnit.Framework
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
             int count = (to - from) / step + 1;
-            this.data = new object[count];
+            this._data = new object[count];
             int index = 0;
             for (int val = from; index < count; val += step)
-                this.data[index++] = val;
+                this._data[index++] = val;
         }
 
         #endregion
@@ -84,10 +94,10 @@ namespace NUnit.Framework
             Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
 
             uint count = (to - from) / step + 1;
-            this.data = new object[count];
+            this._data = new object[count];
             uint index = 0;
             for (uint val = from; index < count; val += step)
-                this.data[index++] = val;
+                this._data[index++] = val;
         }
 
         #endregion
@@ -113,10 +123,10 @@ namespace NUnit.Framework
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
             long count = (to - from) / step + 1;
-            this.data = new object[count];
+            this._data = new object[count];
             int index = 0;
             for (long val = from; index < count; val += step)
-                this.data[index++] = val;
+                this._data[index++] = val;
         }
 
         #endregion
@@ -144,10 +154,10 @@ namespace NUnit.Framework
             Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
 
             ulong count = (to - from) / step + 1;
-            this.data = new object[count];
+            this._data = new object[count];
             ulong index = 0;
             for (ulong val = from; index < count; val += step)
-                this.data[index++] = val;
+                this._data[index++] = val;
         }
 
         #endregion
@@ -168,10 +178,10 @@ namespace NUnit.Framework
             double aStep = Math.Abs(step);
             double tol = aStep / 1000;
             int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
-            this.data = new object[count];
+            this._data = new object[count];
             int index = 0;
             for (double val = from; index < count; val += step)
-                this.data[index++] = val;
+                this._data[index++] = val;
         }
 
         #endregion
@@ -192,12 +202,76 @@ namespace NUnit.Framework
             float aStep = Math.Abs(step);
             float tol = aStep / 1000;
             int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
-            this.data = new object[count];
+            this._data = new object[count];
             int index = 0;
             for (float val = from; index < count; val += step)
-                this.data[index++] = val;
+                this._data[index++] = val;
         }
 
         #endregion
+
+        /// <summary>
+        /// Get the range of values to be used as arguments
+        /// </summary>
+        public IEnumerable GetData(IParameterInfo parameter)
+        {
+            Type tartgetType = parameter.ParameterType;
+
+            if (tartgetType.GetTypeInfo().IsEnum && _data.Length == 0)
+            {
+                return Enum.GetValues(tartgetType);
+            }
+
+            if (tartgetType == typeof(bool) && _data.Length == 0)
+            {
+                return new object[] { true, false };
+            }
+
+            return GetData(tartgetType);
+        }
+
+        private IEnumerable GetData(Type targetType)
+        {
+            for (int i = 0; i < _data.Length; i++)
+            {
+                object arg = _data[i];
+
+                if (arg == null)
+                {
+                    continue;
+                }
+
+                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
+                {
+                    continue;
+                }
+
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+                if (arg is DBNull)
+                {
+                    _data[i] = null;
+                    continue;
+                }
+#endif
+
+                var convert = false;
+
+                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
+                {
+                    convert = arg is int;
+                }
+                else if (targetType == typeof(decimal))
+                {
+                    convert = arg is double || arg is int;
+                }
+
+                if (convert)
+                {
+                    _data[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
+                }
+            }
+
+            return _data;
+        }
     }
 }
