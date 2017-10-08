@@ -391,7 +391,7 @@ namespace NUnit.Framework.Api
 
             env.AddAttribute("framework-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             env.AddAttribute("clr-version", Environment.Version.ToString());
-            env.AddAttribute("os-version", Environment.OSVersion.ToString());
+            env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
             env.AddAttribute("cwd", Environment.CurrentDirectory);
             env.AddAttribute("machine-name", Environment.MachineName);
