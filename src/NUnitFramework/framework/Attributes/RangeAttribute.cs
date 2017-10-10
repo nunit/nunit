@@ -27,6 +27,7 @@ using System.Reflection;
 
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -34,7 +35,7 @@ namespace NUnit.Framework
     /// RangeAttribute is used to supply a range of values to an
     /// individual parameter of a parameterized test.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]
     public class RangeAttribute : DataAttribute, IParameterDataSource
     {
         // We use an object[] so that the individual
@@ -215,63 +216,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable GetData(IParameterInfo parameter)
         {
-            Type tartgetType = parameter.ParameterType;
-
-            if (tartgetType.GetTypeInfo().IsEnum && _data.Length == 0)
-            {
-                return Enum.GetValues(tartgetType);
-            }
-
-            if (tartgetType == typeof(bool) && _data.Length == 0)
-            {
-                return new object[] { true, false };
-            }
-
-            return GetData(tartgetType);
-        }
-
-        private IEnumerable GetData(Type targetType)
-        {
-            for (int i = 0; i < _data.Length; i++)
-            {
-                object arg = _data[i];
-
-                if (arg == null)
-                {
-                    continue;
-                }
-
-                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
-                {
-                    continue;
-                }
-
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-                if (arg is DBNull)
-                {
-                    _data[i] = null;
-                    continue;
-                }
-#endif
-
-                var convert = false;
-
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
-                {
-                    convert = arg is int;
-                }
-                else if (targetType == typeof(decimal))
-                {
-                    convert = arg is double || arg is int;
-                }
-
-                if (convert)
-                {
-                    _data[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
-                }
-            }
-
-            return _data;
+            return ParamNumberConversions.ConvertDataToNumeric(_data, parameter.ParameterType);
         }
     }
 }
