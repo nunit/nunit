@@ -248,11 +248,11 @@ namespace NUnitLite
 
         public void TestFinished(ITestResult result)
         {
+            if (_displayBeforeOutput)
+                WriteLabelLine(result.Test.FullName);
+                
             if (result.Output.Length > 0)
             {
-                if (_displayBeforeOutput)
-                    WriteLabelLine(result.Test.FullName);
-
                 WriteOutput(result.Output);
 
                 if (!result.Output.EndsWith("\n"))
