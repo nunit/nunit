@@ -448,6 +448,8 @@ namespace NUnitLite
         {
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
+
+            _textUI.TestStarted(test);
         }
 
         /// <summary>
