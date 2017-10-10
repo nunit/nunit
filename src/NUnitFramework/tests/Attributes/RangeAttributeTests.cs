@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
@@ -100,6 +101,14 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithIntRangeAndNegativeStep_Reversed([Range(15, 11, -2)] int x) { }
 
+        [Test]
+        public void IntRangeWithMultipleAttributes()
+        {
+            CheckValuesWithMultipleAttributes("MethodWithMultipleIntRange", 1, 2, 3, 10, 11, 12);
+        }
+
+        private void MethodWithMultipleIntRange([Range(1, 3)][Range(10, 12)]int x) { }
+
         #endregion
 
         #region Unsigned Ints
@@ -151,6 +160,14 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithUintRangeAndStep_Reversed([Range(15u, 11u, 2u)] uint x) { }
+
+        [Test]
+        public void UnsignedIntRangeWithMultipleAttributes()
+        {
+            CheckValuesWithMultipleAttributes("MethodWithMultipleUnsignedIntRange", 1u, 2u, 3u, 10u, 11u, 12u);
+        }
+
+        private void MethodWithMultipleUnsignedIntRange([Range(1u, 3u)] [Range(10u, 12u)] uint x) { }
 
         #endregion
 
@@ -220,6 +237,14 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithLongRangeAndNegativeStep_Reversed([Range(15L, 11L, -2L)] long x) { }
 
+        [Test]
+        public void LongRangeWithMultipleAttributes()
+        {
+            CheckValuesWithMultipleAttributes("MethodWithMultipleLongRange", 1L, 2L, 3L, 10L, 11L, 12L);
+        }
+
+        private void MethodWithMultipleLongRange([Range(1L, 3L)] [Range(10L, 12L)] long x) { }
+
         #endregion
 
         #region Unsigned Longs
@@ -272,6 +297,14 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithUlongRangeAndStep_Reversed([Range(15ul, 11ul, 2ul)] ulong x) { }
 
+        [Test]
+        public void UnsignedLongRangeWithMultipleAttributes()
+        {
+            CheckValuesWithMultipleAttributes("MethodWithMultipleUnsignedLongRange", 1ul, 2ul, 3ul, 10ul, 11ul, 12ul);
+        }
+
+        private void MethodWithMultipleUnsignedLongRange([Range(1ul, 3ul)] [Range(10ul, 12ul)] ulong x) { }
+
         #endregion
 
         #region Doubles
@@ -316,6 +349,14 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithDoubleRangeAndNegativeStep_Reversed([Range(1.2, 0.7, -0.2)] double x) { }
 
+        [Test]
+        public void DoubleRangeWithMultipleAttributes()
+        {
+            CheckValuesWithinToleranceWithMultipleAttributes("MethodWithMultipleDoubleRange", 1.0, 2.0, 3.0, 10.0, 11.0, 12.0);
+        }
+
+        private void MethodWithMultipleDoubleRange([Range(1.0, 3.0, 1.0)] [Range(10.0, 12.0, 1.0)] double x) { }
+
         #endregion
 
         #region Floats
@@ -359,6 +400,14 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithFloatRangeAndNegativeStep_Reversed([Range(1.2f, 0.7, -0.2f)] float x) { }
+
+        [Test]
+        public void FloatRangeWithMultipleAttributes()
+        {
+            CheckValuesWithMultipleAttributes("MethodWithMultipleFloatRange", 1.0f, 2.0f, 3.0f, 10.0f, 11.0f, 12.0f);
+        }
+
+        private void MethodWithMultipleFloatRange([Range(1.0f, 3.0f, 1.0f)] [Range(10.0f, 12.0f, 1.0f)] float x) { }
 
         #endregion
 
@@ -419,6 +468,43 @@ namespace NUnit.Framework.Attributes
             var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
 #endif
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
+        }
+
+        private void CheckValuesWithMultipleAttributes(string methodName, params object[] expected)
+        {
+            var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var param = method.GetParameters()[0];
+
+            var values = new List<object>();
+            foreach (var attr in param.GetCustomAttributes(typeof(RangeAttribute), false))
+            {
+                var rangeAttribute = attr as RangeAttribute;
+                foreach (var item in rangeAttribute.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)))
+                {
+                    values.Add(item);
+                }
+            }
+
+            Assert.That(values, Is.EqualTo(expected));
+        }
+
+        private void CheckValuesWithinToleranceWithMultipleAttributes(string methodName, params object[] expected)
+        {
+            var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var param = method.GetParameters()[0];
+
+            var values = new List<object>();
+            foreach (var attr in param.GetCustomAttributes(typeof(RangeAttribute), false))
+            {
+                var rangeAttribute = attr as RangeAttribute;
+                foreach (var item in rangeAttribute.GetData(
+                    new ParameterWrapper(new MethodWrapper(GetType(), method), param)))
+                {
+                    values.Add(item);
+                }
+            }
+
+            Assert.That(values, Is.EqualTo(expected).Within(0.000001));
         }
 
         private void CheckValuesWithinTolerance(string methodName, params object[] expected)
