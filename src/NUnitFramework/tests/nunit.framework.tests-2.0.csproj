@@ -119,7 +119,7 @@
     <Compile Include="Internal\GenericMethodHelperTests.cs" />
     <Compile Include="Internal\NamespaceTreeBuilderTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
-    <Compile Include="Internal\ParamNumberConversionsTests.cs" />
+    <Compile Include="Internal\ParamAttributeTypeConversionTests.cs" />
     <Compile Include="Internal\RealAsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\Results\TestAttachmentTests.cs" />
     <Compile Include="Internal\Results\TestAttachmentXmlTests.cs" />

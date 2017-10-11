@@ -244,6 +244,7 @@
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\NamespaceTreeBuilderTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
+    <Compile Include="Internal\ParamAttributeTypeConversionTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />

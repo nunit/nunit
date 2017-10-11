@@ -100,7 +100,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable GetData(IParameterInfo parameter)
         {
-            return ParamNumberConversions.ConvertDataToNumeric(data, parameter.ParameterType);
+            return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
         }
     }
 }

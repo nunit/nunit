@@ -7,7 +7,7 @@ NUnitAttribute
 	DataAttribute
 		ValuesAttribute               : IParameterDataSource
 			RandomAttribute           : IParameterDataSource
-		RangeAttribute
+		RangeAttribute                : IParameterDataSource
 		ValueSourceAttribute          : IParameterDataSource
 	DatapointAttribute
 	DatapointSourceAttribute

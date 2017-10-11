@@ -394,8 +394,8 @@
     <Compile Include="Internal\MethodWrapper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
+    <Compile Include="Internal\ParamAttributeTypeConversions.cs" />
     <Compile Include="Internal\ParameterWrapper.cs" />
-    <Compile Include="Internal\ParamNumberConversions.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
