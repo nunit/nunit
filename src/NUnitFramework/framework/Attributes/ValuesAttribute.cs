@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Compatibility;
+
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -100,55 +100,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable GetData(IParameterInfo parameter)
         {
-            Type targetType = parameter.ParameterType;
-
-            if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
-            {
-                return Enum.GetValues(targetType);
-            }
-            if (targetType == typeof(bool) && data.Length == 0)
-            {
-                return new object[] {true, false};
-            }
-            return GetData(targetType);
-        }
-
-        private IEnumerable GetData(Type targetType)
-        {
-            for (int i = 0; i < data.Length; i++)
-            {
-                object arg = data[i];
-
-                if (arg == null)
-                    continue;
-
-                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
-                    continue;
-
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-                if (arg is DBNull)
-                {
-                    data[i] = null;
-                    continue;
-                }
-#endif
-
-                bool convert = false;
-
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
-                    convert = arg is int;
-                else
-                    if (targetType == typeof(decimal))
-                        convert = arg is double || arg is string || arg is int;
-                    else
-                        if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
-                            convert = arg is string;
-
-                if (convert)
-                    data[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
-            }
-
-            return data;
+            return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
         }
     }
 }

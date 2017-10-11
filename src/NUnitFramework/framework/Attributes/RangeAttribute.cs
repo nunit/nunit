@@ -23,6 +23,11 @@
 
 using System;
 using System.Collections;
+using System.Reflection;
+
+using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -30,8 +35,14 @@ namespace NUnit.Framework
     /// RangeAttribute is used to supply a range of values to an
     /// individual parameter of a parameterized test.
     /// </summary>
-    public class RangeAttribute : ValuesAttribute
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]
+    public class RangeAttribute : DataAttribute, IParameterDataSource
     {
+        // We use an object[] so that the individual
+        // elements may have their type changed in GetData
+        // if necessary
+        // TODO: This causes a lot of boxing so we should eliminate it
+        private object[] _data;
         #region Ints
 
         /// <summary>
@@ -53,10 +64,10 @@ namespace NUnit.Framework
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
             int count = (to - from) / step + 1;
-            this.data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (int val = from; index < count; val += step)
-                this.data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -84,10 +95,10 @@ namespace NUnit.Framework
             Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
 
             uint count = (to - from) / step + 1;
-            this.data = new object[count];
+            _data = new object[count];
             uint index = 0;
             for (uint val = from; index < count; val += step)
-                this.data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -113,10 +124,10 @@ namespace NUnit.Framework
                 "Step must be positive with to >= from or negative with to <= from", "step");
 
             long count = (to - from) / step + 1;
-            this.data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (long val = from; index < count; val += step)
-                this.data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -144,10 +155,10 @@ namespace NUnit.Framework
             Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
 
             ulong count = (to - from) / step + 1;
-            this.data = new object[count];
+            _data = new object[count];
             ulong index = 0;
             for (ulong val = from; index < count; val += step)
-                this.data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -168,10 +179,10 @@ namespace NUnit.Framework
             double aStep = Math.Abs(step);
             double tol = aStep / 1000;
             int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
-            this.data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (double val = from; index < count; val += step)
-                this.data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
@@ -192,12 +203,20 @@ namespace NUnit.Framework
             float aStep = Math.Abs(step);
             float tol = aStep / 1000;
             int count = (int)(Math.Abs(to - from) / aStep + tol + 1);
-            this.data = new object[count];
+            _data = new object[count];
             int index = 0;
             for (float val = from; index < count; val += step)
-                this.data[index++] = val;
+                _data[index++] = val;
         }
 
         #endregion
+
+        /// <summary>
+        /// Get the range of values to be used as arguments
+        /// </summary>
+        public IEnumerable GetData(IParameterInfo parameter)
+        {
+            return ParamAttributeTypeConversions.ConvertData(_data, parameter.ParameterType);
+        }
     }
 }

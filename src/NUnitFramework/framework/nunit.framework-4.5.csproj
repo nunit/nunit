@@ -104,6 +104,7 @@
     <Compile Include="Internal\Execution\ParallelExecutionStrategy.cs" />
     <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
     <Compile Include="Interfaces\TestAttachment.cs" />
+    <Compile Include="Internal\ParamAttributeTypeConversions.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\InvalidPlatformException.cs" />
     <Compile Include="Internal\TypeNameDifferenceResolver.cs" />

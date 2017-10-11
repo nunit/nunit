@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities;
 
 #if NETSTANDARD1_3 || NETSTANDARD1_6
 using System.Linq;
@@ -100,6 +101,16 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithIntRangeAndNegativeStep_Reversed([Range(15, 11, -2)] int x) { }
 
+        [Test]
+        public void IntRangeWithMultipleAttributes()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleIntRange");
+
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
+        private void MethodWithMultipleIntRange([Range(1, 3)][Range(10, 12)]int x) { }
+
         #endregion
 
         #region Unsigned Ints
@@ -151,6 +162,16 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithUintRangeAndStep_Reversed([Range(15u, 11u, 2u)] uint x) { }
+
+        [Test]
+        public void UnsignedIntRangeWithMultipleAttributes()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleUnsignedIntRange");
+
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
+        private void MethodWithMultipleUnsignedIntRange([Range(1u, 3u)] [Range(10u, 12u)] uint x) { }
 
         #endregion
 
@@ -220,6 +241,16 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithLongRangeAndNegativeStep_Reversed([Range(15L, 11L, -2L)] long x) { }
 
+        [Test]
+        public void LongRangeWithMultipleAttributes()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleLongRange");
+
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
+        private void MethodWithMultipleLongRange([Range(1L, 3L)] [Range(10L, 12L)] long x) { }
+
         #endregion
 
         #region Unsigned Longs
@@ -272,6 +303,16 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithUlongRangeAndStep_Reversed([Range(15ul, 11ul, 2ul)] ulong x) { }
 
+        [Test]
+        public void UnsignedLongRangeWithMultipleAttributes()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleUnsignedLongRange");
+
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
+        private void MethodWithMultipleUnsignedLongRange([Range(1ul, 3ul)] [Range(10ul, 12ul)] ulong x) { }
+
         #endregion
 
         #region Doubles
@@ -316,6 +357,16 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithDoubleRangeAndNegativeStep_Reversed([Range(1.2, 0.7, -0.2)] double x) { }
 
+        [Test]
+        public void DoubleRangeWithMultipleAttributes()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleDoubleRange");
+
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
+        private void MethodWithMultipleDoubleRange([Range(1.0, 3.0, 1.0)] [Range(10.0, 12.0, 1.0)] double x) { }
+
         #endregion
 
         #region Floats
@@ -359,6 +410,16 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithFloatRangeAndNegativeStep_Reversed([Range(1.2f, 0.7, -0.2f)] float x) { }
+
+        [Test]
+        public void FloatRangeWithMultipleAttributes()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleFloatRange");
+
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
+        private void MethodWithMultipleFloatRange([Range(1.0f, 3.0f, 1.0f)] [Range(10.0f, 12.0f, 1.0f)] float x) { }
 
         #endregion
 
@@ -414,9 +475,9 @@ namespace NUnit.Framework.Attributes
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
 #if NETSTANDARD1_3 || NETSTANDARD1_6
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
 #else
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
 #endif
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
         }
@@ -426,9 +487,9 @@ namespace NUnit.Framework.Attributes
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
 #if NETSTANDARD1_3 || NETSTANDARD1_6
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
 #else
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
+            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
 #endif
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), 
                 Is.EqualTo(expected).Within(0.000001));

@@ -179,6 +179,7 @@
     <Compile Include="Internal\MethodWrapper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\ParamAttributeTypeConversions.cs" />
     <Compile Include="Internal\ParameterWrapper.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\TestNameGenerator.cs" />
