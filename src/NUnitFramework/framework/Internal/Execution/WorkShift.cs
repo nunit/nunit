@@ -162,6 +162,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     // Quick check first using Interlocked.Decrement
                     if (Interlocked.Decrement(ref _busyCount) == 0 && !HasWork)
+                    {
                         lock (_syncRoot)
                         {
                             // Check again under the lock. If there is no work
@@ -171,6 +172,7 @@ namespace NUnit.Framework.Internal.Execution
                                 EndShift();
                             }
                         }
+                    }
                 };
 
                 worker.Start();

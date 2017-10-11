@@ -34,12 +34,14 @@ namespace NUnit.TestData.ParallelExecutionData
         public void RunOneTimeSetUp()
         {
             TestContext.Progress.Write("OneTimeSetUp running on " + TestContext.CurrentContext.WorkerId);
+            Thread.Sleep(1000);
         }
 
         [OneTimeTearDown]
         public void RunOneTimeTearDown()
         {
             TestContext.Progress.Write("OneTimeTearDown running on " + TestContext.CurrentContext.WorkerId);
+            Thread.Sleep(1000);
         }
     }
 

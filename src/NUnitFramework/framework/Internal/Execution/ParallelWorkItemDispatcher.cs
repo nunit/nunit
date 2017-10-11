@@ -68,11 +68,15 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="levelOfParallelism">Number of workers to use</param>
         public ParallelWorkItemDispatcher(int levelOfParallelism)
         {
-            // Create Shifts
-            ParallelShift = new WorkShift("Parallel");
-            NonParallelShift = new WorkShift("NonParallel");
-            NonParallelSTAShift = new WorkShift("NonParallelSTA");
+            log.Info("Initializing with {0} workers", levelOfParallelism);
 
+            LevelOfParallelism = levelOfParallelism;
+
+            InitializeShifts();
+        }
+
+        private void InitializeShifts()
+        {
             foreach (var shift in Shifts)
                 shift.EndOfShift += OnEndOfShift;
 
@@ -84,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
 
             // Create workers and assign to shifts and queues
             // TODO: Avoid creating all the workers till needed
-            for (int i = 1; i <= levelOfParallelism; i++)
+            for (int i = 1; i <= LevelOfParallelism; i++)
             {
                 string name = string.Format("ParallelWorker#" + i.ToString());
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
@@ -105,13 +109,18 @@ namespace NUnit.Framework.Internal.Execution
         {
             // This captures the startup of TestFixtures and SetUpFixtures,
             // but not their teardown items, which are not composite items
-            if (work is CompositeWorkItem && work.Test.TypeInfo != null)
+            if (work.IsolateChildTests)
                 IsolateQueues(work);
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Number of parallel worker threads
+        /// </summary>
+        public int LevelOfParallelism { get; }
 
         /// <summary>
         /// Enumerates all the shifts supported by the dispatcher
@@ -142,9 +151,9 @@ namespace NUnit.Framework.Internal.Execution
 
         // WorkShifts - Dispatcher processes tests in three non-overlapping shifts.
         // See comment in Workshift.cs for a more detailed explanation.
-        private WorkShift ParallelShift { get; }
-        private WorkShift NonParallelShift { get; }
-        private WorkShift NonParallelSTAShift { get; }
+        private WorkShift ParallelShift { get; } = new WorkShift("Parallel");
+        private WorkShift NonParallelShift { get; } = new WorkShift("NonParallel");
+        private WorkShift NonParallelSTAShift { get; } = new WorkShift("NonParallelSTA");
 
         // WorkItemQueues
         private WorkItemQueue ParallelQueue { get; } = new WorkItemQueue("ParallelQueue", true, ApartmentState.MTA);
@@ -268,6 +277,7 @@ namespace NUnit.Framework.Internal.Execution
         private void OnEndOfShift(object sender, EventArgs ea)
         {
             ShiftFinished?.Invoke(sender as WorkShift);
+
             WorkShift nextShift = null;
 
             // Shift has ended but all work may not yet be done

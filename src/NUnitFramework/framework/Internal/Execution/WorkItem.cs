@@ -177,6 +177,11 @@ namespace NUnit.Framework.Internal.Execution
                 return _executionStrategy.Value;
             }
         }
+
+        /// <summary>
+        /// Indicates whether this work item should use a separate dispatcher.
+        /// </summary>
+        public virtual bool IsolateChildTests { get; } = false;
 #endif
 
         /// <summary>
@@ -246,6 +251,16 @@ namespace NUnit.Framework.Internal.Execution
 #else
             RunOnCurrentThread();
 #endif
+        }
+
+        private ManualResetEvent _completionEvent = new ManualResetEvent(false);
+
+        /// <summary>
+        /// Wait until the execution of this item is complete
+        /// </summary>
+        public void WaitForCompletion()
+        {
+            _completionEvent.WaitOne();
         }
 
         /// <summary>
@@ -336,8 +351,8 @@ namespace NUnit.Framework.Internal.Execution
 
             Context.Listener.TestFinished(Result);
 
-            if (Completed != null)
-                Completed(this, EventArgs.Empty);
+            Completed?.Invoke(this, EventArgs.Empty);
+            _completionEvent.Set();
 
             //Clear references to test objects to reduce memory usage
             Context.TestObject = null;

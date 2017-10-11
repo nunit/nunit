@@ -71,11 +71,8 @@ namespace NUnit.Framework.Internal.Execution
 
             var workItem = TestBuilder.CreateWorkItem(_testSuite, context);
 
-            var run_complete = new ManualResetEvent(false);
-            workItem.Completed += (s, e) => { run_complete.Set(); };
-
             dispatcher.Start(workItem);
-            run_complete.WaitOne(Timeout.Infinite);
+            workItem.WaitForCompletion();
 
             _result = workItem.Result;
         }
@@ -129,6 +126,11 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
+        [Test]
+        public void ListEvents()
+        {
+            Console.WriteLine(DumpEvents("Events Received:"));
+        }
         #region Test Data
 
         static IEnumerable<TestFixtureData> GetParallelSuites()

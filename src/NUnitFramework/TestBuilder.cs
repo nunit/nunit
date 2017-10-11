@@ -215,6 +215,8 @@ namespace NUnit.TestUtilities
         /// </summary>
         class SuperSimpleDispatcher : IWorkItemDispatcher
         {
+            public int LevelOfParallelism { get { return 0; } }
+
             public void Start(WorkItem topLevelWorkItem)
             {
                 topLevelWorkItem.Execute();

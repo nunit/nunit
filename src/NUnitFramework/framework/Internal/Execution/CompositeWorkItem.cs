@@ -50,6 +50,16 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public List<WorkItem> Children { get; } = new List<WorkItem>();
 
+#if PARALLEL
+        /// <summary>
+        /// Indicates whether this work item should use a separate dispatcher.
+        /// </summary>
+        public override bool IsolateChildTests
+        {
+            get { return ExecutionStrategy == ParallelExecutionStrategy.NonParallel && Context.Dispatcher.LevelOfParallelism > 0; }
+        }
+#endif
+
         private CountdownEvent _childTestCountdown;
 
         /// <summary>
