@@ -161,11 +161,11 @@ namespace NUnit.Framework.Internal.Execution
                 worker.Idle += (s, ea) =>
                 {
                     // Quick check first using Interlocked.Decrement
-                    if (Interlocked.Decrement(ref _busyCount) == 0)
+                    if (Interlocked.Decrement(ref _busyCount) == 0 && !HasWork)
                         lock (_syncRoot)
                         {
-                            // Check busy count again under the lock. If there is no work
-                            // try to restore any saved queues and end the shift.
+                            // Check again under the lock. If there is no work
+                            // we can end the shift.
                             if (_busyCount == 0 && !HasWork)
                             {
                                 EndShift();

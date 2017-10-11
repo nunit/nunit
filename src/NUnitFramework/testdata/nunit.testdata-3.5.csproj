@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_3_5</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_3_5;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -31,7 +31,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5</DefineConstants>
+    <DefineConstants>TRACE;NET_3_5;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -58,6 +58,7 @@
     <Compile Include="AssertMultipleData.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
+    <Compile Include="ParallelExecutionData.cs" />
     <Compile Include="RepeatingTestsFixtureBase.cs" />
     <Compile Include="RetryFixture.cs" />
     <Compile Include="GenericTestMethodData.cs" />

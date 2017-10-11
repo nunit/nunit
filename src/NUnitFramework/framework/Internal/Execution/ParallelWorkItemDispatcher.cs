@@ -40,6 +40,26 @@ namespace NUnit.Framework.Internal.Execution
 
         private WorkItem _topLevelWorkItem;
 
+        #region Events
+        
+        /// <summary>
+        /// Handler for ShiftChange events.
+        /// </summary>
+        /// <param name="shift">The shift that is starting or ending.</param>
+        public delegate void ShiftChangeEventHandler(WorkShift shift);
+
+        /// <summary>
+        /// Event raised whenever a shift is starting.
+        /// </summary>
+        public event ShiftChangeEventHandler ShiftStarting;
+
+        /// <summary>
+        /// Event raised whenever a shift has ended.
+        /// </summary>
+        public event ShiftChangeEventHandler ShiftFinished;
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -66,17 +86,17 @@ namespace NUnit.Framework.Internal.Execution
             // TODO: Avoid creating all the workers till needed
             for (int i = 1; i <= levelOfParallelism; i++)
             {
-                string name = string.Format("Worker#" + i.ToString());
+                string name = string.Format("ParallelWorker#" + i.ToString());
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
-            ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "Worker#STA"));
+            ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "ParallelSTAWorker"));
 
-            var worker = new TestWorker(NonParallelQueue, "Worker#STA_NP");
+            var worker = new TestWorker(NonParallelQueue, "NonParallelWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelShift.Assign(worker);
 
-            worker = new TestWorker(NonParallelSTAQueue, "Worker#NP_STA");
+            worker = new TestWorker(NonParallelSTAQueue, "NonParallelSTAWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelSTAShift.Assign(worker);
         }
@@ -149,8 +169,11 @@ namespace NUnit.Framework.Internal.Execution
                 : ParallelExecutionStrategy.Parallel;
 
             Dispatch(topLevelWorkItem, strategy);
-          
-            StartNextShift();
+
+            var shift = SelectNextShift();
+
+            ShiftStarting?.Invoke(shift);
+            shift.Start();
         }
 
         /// <summary>
@@ -244,41 +267,45 @@ namespace NUnit.Framework.Internal.Execution
 
         private void OnEndOfShift(object sender, EventArgs ea)
         {
-            // This shift ended, so see if there is work in any other
-            // TODO: Temp fix - revisit later when object model is redesigned.
-            if (StartNextShift())
-                return;
-
-            if (_isolationLevel > 0)
-                RestoreQueues();
+            ShiftFinished?.Invoke(sender as WorkShift);
+            WorkShift nextShift = null;
 
             // Shift has ended but all work may not yet be done
             while (_topLevelWorkItem.State != WorkItemState.Complete)
             {
-                // This will fail if there is no work - all queues empty.
-                // In that case, we just continue the loop until either
-                // a shift is started or all the work is complete.
-                if (StartNextShift())
-                    return;
+                // This will return if all queues are empty.
+                nextShift = SelectNextShift();
+                if (nextShift != null)
+                    break;
+
+                // If the shift has ended for an isolated queue and there
+                // is no more work, we restore the queues and keep trying.
+                if (_isolationLevel > 0)
+                    RestoreQueues();
+
+                // We are at level zero - just continue to wait
             }
 
-            // All work is complete, so shutdown.
-            foreach (var shift in Shifts)
-                shift.ShutDown();
+            // If we have a shift to start, do it
+            if (nextShift != null)
+            {
+                ShiftStarting?.Invoke(nextShift);
+                nextShift.Start();
+            }
+            else // otherwise, shutdown.
+            {
+                foreach (var shift in Shifts)
+                    shift.ShutDown();
+            }
         }
 
-        private bool StartNextShift()
+        private WorkShift SelectNextShift()
         {
             foreach (var shift in Shifts)
-            {
                 if (shift.HasWork)
-                {
-                    shift.Start();
-                    return true;
-                }
-            }
+                    return shift;
 
-            return false;
+            return null;
         }
 
 #endregion
