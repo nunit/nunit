@@ -13,7 +13,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CheckOrderIsCorrect()
         {
-            var work = TestBuilder.CreateWorkItem(typeof(TestCaseOrderAttributeFixture));
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(typeof(TestCaseOrderAttributeFixture));
 
             // This triggers sorting
             TestBuilder.ExecuteWorkItem(work);

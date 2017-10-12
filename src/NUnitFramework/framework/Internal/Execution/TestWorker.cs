@@ -129,7 +129,7 @@ namespace NUnit.Framework.Internal.Execution
                     Busy(this, _currentWorkItem);
 
                     // Because we execute the current item AFTER the queue state
-                    // is saved, it's children end up in the new queue set.
+                    // is saved, its children end up in the new queue set.
                     _currentWorkItem.Execute();
 
                     // This call may result in the queues being restored. There

@@ -57,8 +57,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             Name = name;
             IsActive = false;
-            Queues = new List<WorkItemQueue>();
-            Workers = new List<TestWorker>();
         }
 
         #region Public Events and Properties
@@ -78,16 +76,21 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsActive { get; private set; }
 
+        #endregion
+
+        #region Internal Properties
+
         /// <summary>
         /// Gets a list of the queues associated with this shift.
         /// </summary>
-        /// <remarks>Used for testing</remarks>
-        public IList<WorkItemQueue> Queues { get; }
+        /// <remarks>Internal for testing - immutable once initialized</remarks>
+        internal IList<WorkItemQueue> Queues { get; } = new List<WorkItemQueue>();
 
         /// <summary>
         /// Gets the list of workers associated with this shift.
         /// </summary>
-        public IList<TestWorker> Workers { get; }
+        /// <remarks>Internal for testing - immutable once initialized</remarks>
+        internal IList<TestWorker> Workers { get; } = new List<TestWorker>();
 
         /// <summary>
         /// Gets a bool indicating whether this shift has any work to do

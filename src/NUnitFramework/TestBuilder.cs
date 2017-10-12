@@ -46,7 +46,8 @@ namespace NUnit.TestUtilities
     /// </summary>
     public static class TestBuilder
     {
-#region Build Tests
+        #region Build Tests
+
         public static TestSuite MakeSuite(string name)
         {
             return new TestSuite(name);
@@ -90,9 +91,48 @@ namespace NUnit.TestUtilities
             return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
         }
 
-#endregion
+        #endregion
 
-#region Run Tests
+        #region Create WorkItems
+
+        public static WorkItem CreateWorkItem(Type type)
+        {
+            return CreateWorkItem(MakeFixture(type));
+        }
+
+        public static WorkItem CreateWorkItem(Type type, string methodName)
+        {
+            return CreateWorkItem(MakeTestFromMethod(type, methodName));
+        }
+
+        public static WorkItem CreateWorkItem(Test test)
+        {
+            var context = new TestExecutionContext();
+            context.Dispatcher = new SuperSimpleDispatcher();
+
+            return CreateWorkItem(test, context);
+        }
+
+        public static WorkItem CreateWorkItem(Test test, object testObject)
+        {
+            var context = new TestExecutionContext();
+            context.TestObject = testObject;
+            context.Dispatcher = new SuperSimpleDispatcher();
+
+            return CreateWorkItem(test, context);
+        }
+
+        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context)
+        {
+            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
+            work.InitializeContext(context);
+
+            return work;
+        }
+
+        #endregion
+
+        #region Run Tests
 
         public static ITestResult RunTestFixture(Type type)
         {
@@ -141,41 +181,6 @@ namespace NUnit.TestUtilities
         public static ITestResult RunTest(Test test, object testObject)
         {
             return ExecuteWorkItem(CreateWorkItem(test, testObject));
-        }
-
-        public static CompositeWorkItem CreateWorkItem(Type type)
-        {
-            return CreateWorkItem(MakeFixture(type)) as CompositeWorkItem;
-        }
-
-        public static WorkItem CreateWorkItem(Type type, string methodName)
-        {
-            return CreateWorkItem(MakeTestFromMethod(type, methodName));
-        }
-
-        public static WorkItem CreateWorkItem(Test test)
-        {
-            var context = new TestExecutionContext();
-            context.Dispatcher = new SuperSimpleDispatcher();
-
-            return CreateWorkItem(test, context);
-        }
-
-        public static WorkItem CreateWorkItem(Test test, object testObject)
-        {
-            var context = new TestExecutionContext();
-            context.TestObject = testObject;
-            context.Dispatcher = new SuperSimpleDispatcher();
-
-            return CreateWorkItem(test, context);
-        }
-
-        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context)
-        {
-            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
-            work.InitializeContext(context);
-
-            return work;
         }
 
         public static ITestResult ExecuteWorkItem(WorkItem work)
