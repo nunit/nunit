@@ -11,8 +11,7 @@ root = true
 indent_style = space
 indent_size = 4
 insert_final_newline = true
-# VS 15.0–15.2 misinterpret as utf-8-bom https://developercommunity.visualstudio.com/content/problem/22922
-# charset = utf-8
+charset = utf-8
 
 [*.{proj,csproj,vcxproj,xproj,json,config,nuspec,xml}]
 indent_size = 2
