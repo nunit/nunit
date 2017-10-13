@@ -67,6 +67,15 @@ namespace NUnit.Framework.Constraints
             new TestCaseData(
                 new[] { "x", "x", "z" },
                 Is.Ordered),
+            new TestCaseData(
+                new[] { null, "x", "y" },
+                Is.Ordered),
+            new TestCaseData(
+                new[] {"y", "x", null},
+                Is.Ordered.Descending),
+            new TestCaseData(
+                new[] { "x", null, "y" },
+                Is.Not.Ordered),
             // Ordered By Single Property
             new TestCaseData(
                 new[] { new TestClass1(1), new TestClass1(2), new TestClass1(3) },
@@ -237,9 +246,9 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void IsOrdered_ThrowsOnNull()
+        public void IsOrderedByProperty_ThrowsOnNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(new[] { "x", null, "z" }, Is.Ordered));
+            var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(new[] { new TestClass4("x"), null, new TestClass4("z") }, Is.Ordered.By("Value")));
             Assert.That(ex.Message, Does.Contain("index 1"));
         }
 
