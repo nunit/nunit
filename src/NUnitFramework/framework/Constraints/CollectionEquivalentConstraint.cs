@@ -94,6 +94,9 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
+            if (actual == null)
+                throw new ArgumentException("Expected: IEnumerable But was: null", "actual");
+
             // TODO: Use an error result if actual is not IEnumerable
             IEnumerable enumerable = actual as IEnumerable;
             if (enumerable == null)
