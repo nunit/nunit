@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework;
 using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
@@ -45,6 +46,20 @@ namespace NUnit.TestUtilities
         {
             foreach (var test in tests)
                 theSuite.Add(test);
+
+            return theSuite;
+        }
+
+        public static TestSuite Parallelizable(this TestSuite theSuite)
+        {
+            theSuite.Properties.Set(PropertyNames.ParallelScope, ParallelScope.Self);
+
+            return theSuite;
+        }
+
+        public static TestSuite NonParallelizable(this TestSuite theSuite)
+        {
+            theSuite.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
 
             return theSuite;
         }

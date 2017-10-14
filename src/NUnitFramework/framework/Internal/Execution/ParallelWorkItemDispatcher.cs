@@ -43,12 +43,6 @@ namespace NUnit.Framework.Internal.Execution
         #region Events
         
         /// <summary>
-        /// Handler for ShiftChange events.
-        /// </summary>
-        /// <param name="shift">The shift that is starting or ending.</param>
-        public delegate void ShiftChangeEventHandler(WorkShift shift);
-
-        /// <summary>
         /// Event raised whenever a shift is starting.
         /// </summary>
         public event ShiftChangeEventHandler ShiftStarting;
@@ -274,9 +268,9 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Helper Methods
 
-        private void OnEndOfShift(object sender, EventArgs ea)
+        private void OnEndOfShift(WorkShift endingShift)
         {
-            ShiftFinished?.Invoke(sender as WorkShift);
+            ShiftFinished?.Invoke(endingShift);
 
             WorkShift nextShift = null;
 

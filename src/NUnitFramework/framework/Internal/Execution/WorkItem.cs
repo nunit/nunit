@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Execution
     /// and is responsible for re-establishing that context in the
     /// current thread before it begins or resumes execution.
     /// </summary>
-    public abstract class WorkItem
+    public abstract class WorkItem : IDisposable
     {
         static Logger log = InternalTrace.GetLogger("WorkItem");
 
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-        private ManualResetEvent _completionEvent = new ManualResetEvent(false);
+        private readonly ManualResetEvent _completionEvent = new ManualResetEvent(false);
 
         /// <summary>
         /// Wait until the execution of this item is complete
@@ -315,9 +315,35 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Standard Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Standard Dispose implementation
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_completionEvent != null)
+#if NET_2_0 || NET_3_5
+                _completionEvent.Close();
+#else
+                _completionEvent.Dispose();
+#endif
+        }
+
 #endregion
 
-        #region Protected Methods
+#region Protected Methods
 
         /// <summary>
         /// Method that performs actually performs the work. It should
@@ -434,9 +460,9 @@ namespace NUnit.Framework.Internal.Execution
             Result.SetResult(resultState, message);
         }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
         private Thread thread;
@@ -510,9 +536,10 @@ namespace NUnit.Framework.Internal.Execution
                 ? ParallelExecutionStrategy.Direct
                 : ParallelExecutionStrategy.NonParallel;
         }
+
 #endif
 
-        #endregion
+#endregion
     }
 
 #if NET_2_0 || NET_3_5

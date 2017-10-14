@@ -29,6 +29,12 @@ using System.Threading;
 namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
+    /// Handler for ShiftChange events.
+    /// </summary>
+    /// <param name="shift">The shift that is starting or ending.</param>
+    public delegate void ShiftChangeEventHandler(WorkShift shift);
+
+    /// <summary>
     /// The dispatcher needs to do different things at different,
     /// non-overlapped times. For example, non-parallel tests may
     /// not be run at the same time as parallel tests. We model
@@ -64,7 +70,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Event that fires when the shift has ended
         /// </summary>
-        public event EventHandler EndOfShift;
+        public event ShiftChangeEventHandler EndOfShift;
         
         /// <summary>
         /// The Name of this shift
@@ -75,6 +81,21 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets a flag indicating whether the shift is currently active
         /// </summary>
         public bool IsActive { get; private set; }
+
+        /// <summary>
+        /// Gets a bool indicating whether this shift has any work to do
+        /// </summary>
+        public bool HasWork
+        {
+            get
+            {
+                foreach (var q in Queues)
+                    if (!q.IsEmpty)
+                        return true;
+
+                return false;
+            }
+        }
 
         #endregion
 
@@ -91,21 +112,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <remarks>Internal for testing - immutable once initialized</remarks>
         internal IList<TestWorker> Workers { get; } = new List<TestWorker>();
-
-        /// <summary>
-        /// Gets a bool indicating whether this shift has any work to do
-        /// </summary>
-        public bool HasWork
-        {
-            get
-            {
-                foreach (var q in Queues)
-                    if (!q.IsEmpty)
-                        return true;
-
-                return false;
-            }
-        }
 
         #endregion
 
@@ -197,7 +203,7 @@ namespace NUnit.Framework.Internal.Execution
                 q.Pause();
 
             // Signal the dispatcher that shift ended
-            EndOfShift?.Invoke(this, EventArgs.Empty);
+            EndOfShift?.Invoke(this);
         }
 
         /// <summary>

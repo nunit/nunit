@@ -35,13 +35,11 @@ namespace NUnit.Framework.Internal.Execution
     [TestFixtureSource(nameof(GetParallelSuites))]
     public class ParallelExecutionTests : ITestListener
     {
-        private TestSuite _testSuite;
-        private int _numCases;
+        private readonly TestSuite _testSuite;
+        private readonly int _numCases;
 
         private List<string> _events;
         private TestResult _result;
-
-        private static readonly string NL = Environment.NewLine;
 
         public ParallelExecutionTests(TestSuite testSuite, int numCases)
         {
@@ -92,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void AllTestsRan()
         {
-            if(_result.PassCount != _numCases)
+            if (_result.PassCount != _numCases)
                 Assert.Fail(DumpEvents("Incorrect number of test cases"));
         }
 
@@ -131,22 +129,26 @@ namespace NUnit.Framework.Internal.Execution
         {
             Console.WriteLine(DumpEvents("Events Received:"));
         }
+
         #region Test Data
 
         static IEnumerable<TestFixtureData> GetParallelSuites()
         {
             yield return new TestFixtureData(
-                TestBuilder.MakeSuite("NUnit.TestData.ParallelExecutionData")
-                    .Containing(TestBuilder.MakeFixture(typeof(TestSetUpFixture))
-                        .Containing(typeof(TestFixture1), typeof(TestFixture2), typeof(TestFixture3))),
-                3);
-
-            yield return new TestFixtureData(
-                TestBuilder.MakeSuite("NUnit")
-                    .Containing(TestBuilder.MakeSuite("TestData")
-                        .Containing(TestBuilder.MakeSuite("ParallelExecutionData")
-                            .Containing(TestBuilder.MakeFixture(typeof(TestSetUpFixture))
-                                .Containing(typeof(TestFixture1), typeof(TestFixture2), typeof(TestFixture3))))),
+                TestBuilder.MakeSuite("fake-assembly.dll")
+                    .Containing(TestBuilder.MakeSuite("NUnit")
+                        .Containing(TestBuilder.MakeSuite("TestData")
+                            .Containing(TestBuilder.MakeSuite("ParallelExecutionData")
+                                .Containing(TestBuilder.MakeFixture(typeof(TestSetUpFixture)).Parallelizable()
+                                    .Containing(
+                                        TestBuilder.MakeFixture(typeof(TestFixture1)).Parallelizable(), 
+                                        TestBuilder.MakeFixture(typeof(TestFixture2)), 
+                                        TestBuilder.MakeFixture(typeof(TestFixture3)).Parallelizable()
+                                    )
+                                )
+                            )
+                        )
+                    ),
                 3);
         }
 
@@ -181,12 +183,11 @@ namespace NUnit.Framework.Internal.Execution
 
         private string DumpEvents(string message)
         {
-            var sb = new StringBuilder(message + NL);
+            var sb = new StringBuilder().AppendLine(message);
+
             foreach (string @event in _events)
-            {
-                sb.Append(@event);
-                sb.Append(NL);
-            }
+                sb.AppendLine(@event);
+
             return sb.ToString();
         }
 
