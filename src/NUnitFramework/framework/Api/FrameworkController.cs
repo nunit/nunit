@@ -438,15 +438,22 @@ namespace NUnit.Framework.Api
             TNode setting = new TNode("setting");
             setting.AddAttribute("name", name);
 
-            var dict = value as IDictionary;
-            if (dict != null)
+            if (value != null)
             {
-                AddDictionaryEntries(setting, dict);
-                AddBackwardsCompatibleDictionaryEntries(setting, dict);
+                var dict = value as IDictionary;
+                if (dict != null)
+                {
+                    AddDictionaryEntries(setting, dict);
+                    AddBackwardsCompatibleDictionaryEntries(setting, dict);
+                }
+                else
+                {
+                    setting.AddAttribute("value", value.ToString());
+                }
             }
             else
             {
-                setting.AddAttribute("value", value.ToString());
+                setting.AddAttribute("value", null);
             }
 
             settingsNode.ChildNodes.Add(setting);
