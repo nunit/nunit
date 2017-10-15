@@ -628,10 +628,9 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void IsOrdered_Handles_null()
         {
-            var list = new SimpleObjectList("x", null, "z");
+            var list = new SimpleObjectList(null, "x", "z");
 
-            var ex = Assert.Throws<ArgumentNullException>(() => CollectionAssert.IsOrdered(list));
-            Assert.That(ex.Message, Does.Contain("index 1"));
+            Assert.That(list, Is.Ordered);
         }
 
         [Test]
