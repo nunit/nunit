@@ -95,7 +95,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            IEnumerable enumerable = ConstraintUtil.RequireActual<IEnumerable>(actual, nameof(actual));
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
             bool matchesResult = Matches(enumerable);
 
             return new CollectionEquivalentConstraintResult(

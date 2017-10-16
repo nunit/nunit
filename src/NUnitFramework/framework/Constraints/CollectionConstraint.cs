@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            IEnumerable enumerable = ConstraintUtil.RequireActual<IEnumerable>(actual, nameof(actual));
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
             return new ConstraintResult(this, actual, Matches(enumerable));
         }
 

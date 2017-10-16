@@ -253,7 +253,7 @@
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
-    <Compile Include="Internal\ConstraintUtil.cs" />
+    <Compile Include="Internal\ConstraintUtils.cs" />
     <Compile Include="Internal\TestFixtureParameters.cs" />
     <Compile Include="Internal\TestParameters.cs" />
     <Compile Include="Internal\TestExecutionStatus.cs" />
