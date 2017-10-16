@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
 
@@ -212,6 +213,17 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EquivalentTo(expected), message, args);
         }
+
+		/// <summary>
+		/// Asserts that expected and actual are equivalent, containing matching objects but the match may be in any order.
+		/// </summary>
+		/// <param name="expected">The first IEnumerable of objects to be considered</param>
+		/// <param name="actual">The second IEnumerable of objects to be considered</param>
+		/// <param name="equalityComparer">The EqualityComparer which will be used for matching</param>
+		public static void AreEquivalent<T>(IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> equalityComparer)
+		{
+			Assert.That((object)actual, new CollectionEquivalentConstraint(expected).Using(equalityComparer));
+		}
         #endregion
 
         #region AreNotEqual
