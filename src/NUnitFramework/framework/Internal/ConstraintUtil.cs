@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// Provides methods to support consistent checking for constaints methods.
     /// </summary>
-    internal class ConstraintUtil
+    internal static class ConstraintUtil
     {
         /// <summary>
         /// Require that the provided object is actually of the type required,
