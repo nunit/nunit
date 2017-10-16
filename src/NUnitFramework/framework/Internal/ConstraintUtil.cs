@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,11 +34,11 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Require that the provided object is actually of the type required,
         /// and that it is not null.
-        /// <param name="actual">The object to verify</param>
-        /// <param name="paramName">Name of the parameter as passed into the checking method.</param>
-        /// <typeparam name="T">The type to require</typeparam>  
-        /// <returns>A properly typed object, or throws. Never null.</returns>
         /// </summary>
+        /// <param name="actual">The object to verify.</param>
+        /// <param name="paramName">Name of the parameter as passed into the checking method.</param>
+        /// <typeparam name="T">The type to require.</typeparam>  
+        /// <returns>A properly typed object, or throws. Never null.</returns>
         public static T RequireActual<T>(object actual, string paramName)
         {
             if (actual is T) return (T)actual;
