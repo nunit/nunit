@@ -188,6 +188,7 @@
     <Compile Include="Constraints\LessThanConstraintTests.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\MsgUtilTests.cs" />
+    <Compile Include="Constraints\NoItemConstraintTests.cs" />
     <Compile Include="Constraints\NotConstraintTests.cs" />
     <Compile Include="Constraints\NumericsTest.cs" />
     <Compile Include="Constraints\NUnitComparerTests.cs" />
