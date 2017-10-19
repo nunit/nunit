@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -69,10 +70,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override bool Matches(IEnumerable actual)
         {
-            IDictionary dictionary = actual as IDictionary;
-
-            if (dictionary == null)
-                throw new ArgumentException("The actual value must be an IDictionary", "actual");
+            var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
 
             foreach (object obj in dictionary.Values)
                 if (ItemsEqual(obj, Expected))

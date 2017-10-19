@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Comparers;
 
@@ -114,10 +113,19 @@ namespace NUnit.Framework.Constraints
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
+        [Test]
         public void WorksOnICollection()
         {
             var c = new NUnit.TestUtilities.Collections.SimpleObjectCollection(1, 2, 3);
             Assert.That(c, Is.All.Not.Null);
+        }
+        
+        [Test]
+        public void FailsWhenNotUsedAgainstAnEnumerable()
+        {
+            var notEnumerable = 42;
+            TestDelegate act = () => Assert.That(notEnumerable, new AllItemsConstraint(new RangeConstraint(10, 100)));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IEnumerable"));
         }
     }
 }

@@ -22,10 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using NUnit.Framework.Assertions;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -130,6 +127,14 @@ namespace NUnit.Framework.Constraints
         public void ExactlyTwoItemsNoopMatch()
         {
             Assert.That(names, Has.Exactly(2).Items.EqualTo("Charlie"));
+        }
+        
+        [Test]
+        public void FailsWhenNotUsedAgainstAnEnumerable()
+        {
+            var notEnumerable = 42;
+            TestDelegate act = () => Assert.That(notEnumerable, new ExactCountConstraint(1));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IEnumerable"));
         }
     }
 }

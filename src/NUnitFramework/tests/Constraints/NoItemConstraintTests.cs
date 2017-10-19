@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
+﻿// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,28 +22,31 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
-namespace  NUnit.Framework.Tests.Constraints
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    class SomeItemsConstraintTests
-    {
+    public class NoItemConstraintTests
+    {   
+        private readonly string NL = Environment.NewLine;
+        
         [Test]
-        public void EqualConstraintUsingDoesNotThrow()
+        public void NoItemsAreNotNull()
         {
-            var constraint = new SomeItemsConstraint(new EqualConstraint("42"));
-            Assert.DoesNotThrow(() => constraint.Using((IComparer<string>)Comparer<string>.Default));
+            object[] c = new object[] { 1, "hello", 3, Environment.NewLine };
+            Assert.That(c, new NoItemConstraint(Is.Null));
         }
 
         [Test]
-        public void AnotherConstraintUsingThrows()
+        public void NoItemsAreNotNullFails()
         {
-            var constraint = new SomeItemsConstraint(new EmptyCollectionConstraint());
-            Assert.Throws<ArgumentException>(() => constraint.Using((IComparer<string>)Comparer<string>.Default));
+            object[] c = new object[] { 1, "hello", null, 3 };
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "no item null" + NL +
+                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new NoItemConstraint(Is.Null)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
         
         [Test]
