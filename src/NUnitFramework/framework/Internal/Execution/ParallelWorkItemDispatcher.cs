@@ -167,16 +167,22 @@ namespace NUnit.Framework.Internal.Execution
         {
             _topLevelWorkItem = topLevelWorkItem;
 
-            var strategy = topLevelWorkItem.ParallelScope.HasFlag(ParallelScope.None)
-                ? ParallelExecutionStrategy.NonParallel
-                : ParallelExecutionStrategy.Parallel;
-
-            Dispatch(topLevelWorkItem, strategy);
+            Dispatch(topLevelWorkItem, InitialExecutionStrategy(topLevelWorkItem));
 
             var shift = SelectNextShift();
 
             ShiftStarting?.Invoke(shift);
             shift.Start();
+        }
+
+        // Initial strategy for the top level item is solely determined
+        // by the ParallelScope of that item. While other approaches are
+        // possible, this one gives the user a predictable result.
+        private static ParallelExecutionStrategy InitialExecutionStrategy(WorkItem workItem)
+        {
+            return workItem.ParallelScope == ParallelScope.Default || workItem.ParallelScope == ParallelScope.None
+                ? ParallelExecutionStrategy.NonParallel
+                : ParallelExecutionStrategy.Parallel;
         }
 
         /// <summary>

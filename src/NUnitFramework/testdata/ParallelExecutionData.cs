@@ -27,7 +27,7 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.ParallelExecutionData
 {
-    [SetUpFixture, Parallelizable]
+    [SetUpFixture]
     public class TestSetUpFixture
     {
         [OneTimeSetUpAttribute]
@@ -45,7 +45,6 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 
-    [Parallelizable]
     public class TestFixture1
     {
         [Test]
@@ -56,7 +55,6 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 
-    [NonParallelizable]
     public class TestFixture2
     {
         [Test]
@@ -67,7 +65,6 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 
-    [Parallelizable]
     public class TestFixture3
     {
         [Test]

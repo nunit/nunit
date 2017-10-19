@@ -24,6 +24,7 @@
 #if PARALLEL
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -37,14 +38,16 @@ namespace NUnit.Framework.Internal.Execution
     {
         private readonly TestSuite _testSuite;
         private readonly int _numCases;
+        private readonly string _expectedShifts;
 
         private List<string> _events;
         private TestResult _result;
 
-        public ParallelExecutionTests(TestSuite testSuite, int numCases)
+        public ParallelExecutionTests(TestSuite testSuite, int numCases, string expectedShifts)
         {
             _testSuite = testSuite;
             _numCases = numCases;
+            _expectedShifts = expectedShifts;
         }
 
         [OneTimeSetUp]
@@ -59,12 +62,14 @@ namespace NUnit.Framework.Internal.Execution
 
             dispatcher.ShiftStarting += (shift) =>
             {
-                AddEvent("ShiftStarted " + shift.Name);
+                lock (_events)
+                    _events.Add("ShiftStarted " + shift.Name);
             };
 
             dispatcher.ShiftFinished += (shift) =>
             {
-                AddEvent("ShiftFinished " + shift.Name);
+                lock (_events)
+                    _events.Add("ShiftFinished " + shift.Name);
             };
 
             var workItem = TestBuilder.CreateWorkItem(_testSuite, context);
@@ -94,40 +99,42 @@ namespace NUnit.Framework.Internal.Execution
                 Assert.Fail(DumpEvents("Incorrect number of test cases"));
         }
 
+        // NOTE: The Shift events come directly to the test,
+        // while the test listener events are added to a queue
+        // and arrive a bit more slowly. SO it's possible for
+        // the ShiftFinished event to arrive early, making it
+        // appear that some other events ran outside of any
+        // shift. For that reason, the following test is the
+        // only one that uses the ShiftFinished event. 
+
         [Test]
         public void OnlyOneShiftMayBeActive()
         {
             int count = 0;
-            foreach (var @event in _events)
+            lock (_events)
             {
-                if (@event.StartsWith("ShiftStarted") && ++count > 1)
-                    Assert.Fail(DumpEvents("Shift started while another shift was active"));
+                foreach (var @event in _events)
+                {
+                    if (@event.StartsWith("ShiftStarted") && ++count > 1)
+                        Assert.Fail(DumpEvents("Shift started while another shift was active"));
 
-                if (@event.StartsWith("ShiftFinished"))
-                    --count;               
+                    if (@event.StartsWith("ShiftFinished"))
+                        --count;
+                }           
             }
         }
 
         [Test]
-        public void AllTestsAreWithinShifts()
+        public void ExpectedShiftsAreRun()
         {
-            bool inShift = false;
-            foreach (var @event in _events)
+            lock (_events)
             {
-                if (@event.StartsWith("ShiftStarted"))
-                    inShift = true;
-                else if (@event.StartsWith("ShiftFinished"))
-                    inShift = false;
-                else
-                    if(!inShift)
-                        Assert.Fail(DumpEvents("Test event received outside of any shift"));
-            }
-        }
+                var shifts = String.Join("+",
+                    _events.FindAll(e => e.StartsWith("ShiftStarted")).Select(e => e.Substring(13)).ToArray());
 
-        [Test]
-        public void ListEvents()
-        {
-            Console.WriteLine(DumpEvents("Events Received:"));
+                if (shifts != _expectedShifts)
+                    Assert.Fail(DumpEvents("Expected " + _expectedShifts + " but was " + shifts));
+            }
         }
 
         #region Test Data
@@ -135,21 +142,91 @@ namespace NUnit.Framework.Internal.Execution
         static IEnumerable<TestFixtureData> GetParallelSuites()
         {
             yield return new TestFixtureData(
-                TestBuilder.MakeSuite("fake-assembly.dll")
-                    .Containing(TestBuilder.MakeSuite("NUnit")
-                        .Containing(TestBuilder.MakeSuite("TestData")
-                            .Containing(TestBuilder.MakeSuite("ParallelExecutionData")
-                                .Containing(TestBuilder.MakeFixture(typeof(TestSetUpFixture)).Parallelizable()
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("Tests")
+                            .Containing(Fixture(typeof(TestFixture1))))),
+                1,
+                "NonParallel")
+                .SetName("SingleFixture_Default");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("Tests")
+                            .Containing(Fixture(typeof(TestFixture1)).NonParallelizable()))),
+                1,
+                "NonParallel" )
+                .SetName("SingleFixture_NonParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("Tests")
+                            .Containing(Fixture(typeof(TestFixture1)).Parallelizable()))),
+                1, // Assert
+                "NonParallel+Parallel" )
+                .SetName("SingleFixture_Parallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll").NonParallelizable()
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("Tests")
+                            .Containing(Fixture(typeof(TestFixture1))))),
+                1,
+                "NonParallel")
+                .SetName("SingleFixture_AssemblyNonParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll").Parallelizable()
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("Tests")
+                            .Containing(Fixture(typeof(TestFixture1))))),
+                1,
+                "Parallel+NonParallel" )
+                .SetName("SingleFixture_AssemblyParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("TestData")
+                            .Containing(Suite("ParallelExecutionData")
+                                .Containing(Fixture(typeof(TestSetUpFixture))
                                     .Containing(
-                                        TestBuilder.MakeFixture(typeof(TestFixture1)).Parallelizable(), 
-                                        TestBuilder.MakeFixture(typeof(TestFixture2)), 
-                                        TestBuilder.MakeFixture(typeof(TestFixture3)).Parallelizable()
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                3);
+                                        Fixture(typeof(TestFixture1)),
+                                        Fixture(typeof(TestFixture2)),
+                                        Fixture(typeof(TestFixture3))))))),
+                3,
+                "NonParallel+NonParallel+NonParallel" ) // TODO: SHould just be one shift!
+                .SetName("ThreeFixtures_SetUpFixture_Default");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("TestData")
+                            .Containing(Suite("ParallelExecutionData")
+                                .Containing(Fixture(typeof(TestSetUpFixture))
+                                    .Containing(
+                                        Fixture(typeof(TestFixture1)).Parallelizable(),
+                                        Fixture(typeof(TestFixture2)),
+                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
+                3,
+                "NonParallel+Parallel+NonParallel" ) // TODO: Sometimes get one or two extra NonParallelizable at end
+                .SetName("ThreeFixtures_TwoParallelizable_SetUpFixture");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("TestData")
+                            .Containing(Suite("ParallelExecutionData")
+                                .Containing(Fixture(typeof(TestSetUpFixture)).Parallelizable()
+                                    .Containing(
+                                        Fixture(typeof(TestFixture1)).Parallelizable(),
+                                        Fixture(typeof(TestFixture2)),
+                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
+                3,
+                "NonParallel+Parallel+NonParallel+Parallel" ) // TODO: Sometimes get P+P+NP+P
+                .SetName("ThreeFixtures_TwoParallelizable_ParallelizableSetUpFixture");
         }
 
         #endregion
@@ -158,28 +235,25 @@ namespace NUnit.Framework.Internal.Execution
 
         public void TestStarted(ITest test)
         {
-            AddEvent("TestStarted " + test.FullName);
+            lock (_events)
+                _events.Add("TestStarted " + test.FullName);
         }
 
         public void TestFinished(ITestResult result)
         {
-            AddEvent("TestFinished " + result.FullName + " " + result.ResultState);
+            lock (_events)
+                _events.Add("TestFinished " + result.FullName + " " + result.ResultState);
         }
 
         public void TestOutput(TestOutput output)
         {
-            AddEvent(output.Stream + " " + output.Text.TrimEnd('\r', '\n'));
+            lock (_events)
+                _events.Add(output.Stream + " " + output.Text.TrimEnd('\r', '\n'));
         }
 
         #endregion
 
         #region Helper Methods
-
-        private void AddEvent(string @event)
-        {
-            lock (_events)
-                _events.Add(@event);
-        }
 
         private string DumpEvents(string message)
         {
@@ -190,6 +264,9 @@ namespace NUnit.Framework.Internal.Execution
 
             return sb.ToString();
         }
+
+        public static TestSuite Suite(string name) { return TestBuilder.MakeSuite(name); }
+        public static TestSuite Fixture(Type type) { return TestBuilder.MakeFixture(type); }
 
         #endregion
     }
