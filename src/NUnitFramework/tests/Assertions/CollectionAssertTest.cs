@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
@@ -125,6 +126,23 @@ namespace NUnit.Framework.Assertions
             Assert.Throws<AssertionException>(
                 () => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z")));
         }
+
+#if !NET_2_0
+        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
+        static readonly IList<int> LIST = new List<int>(RANGE);
+
+        // Using very short max time so it always fails and displays timing
+        [Test, MaxTime(10), Explicit("Performance test")]
+        public void PerformanceTest1()
+        {
+            CollectionAssert.AllItemsAreUnique(RANGE);
+        }
+        [Test, MaxTime(1), Explicit("Performance test")]
+        public void PerformanceTest2()
+        {
+            CollectionAssert.AllItemsAreUnique(LIST);
+        }
+#endif
 
         #endregion
 

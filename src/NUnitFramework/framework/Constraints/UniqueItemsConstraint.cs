@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -48,6 +49,9 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
+            if (actual is IEnumerable<int>)
+                return Matches((IEnumerable<int>)actual);
+
             var list = new List<object>();
 
             foreach (object o1 in actual)
@@ -56,6 +60,28 @@ namespace NUnit.Framework.Constraints
                     if (ItemsEqual(o1, o2))
                         return false;
                 list.Add(o1);
+            }
+
+            return true;
+        }
+
+        private bool Matches<T>(IEnumerable<T> actual)
+        {
+            // This algorithm handles a range of 100000 ints,
+            // which previously took 105 seconds in 24 to 35
+            // milliseconds on my laptop (Debug). However,
+            // it does not use NUnit equality at all, so 
+            // may give different results if the members
+            // of the enumerable are handled specially by
+            // NUnitEqualityComparer.
+            var hash = new HashSet<T>();
+
+            foreach (T item in actual)
+            {
+                if (hash.Contains(item))
+                    return false;
+
+                hash.Add(item);
             }
 
             return true;
