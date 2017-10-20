@@ -217,7 +217,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding only if a specified number of them succeed.
         /// </summary>
-        public static ConstraintExpression Exactly(int expectedCount)
+        public static ItemsConstraintExpression Exactly(int expectedCount)
         {
             return Has.Exactly(expectedCount);
         }
@@ -943,7 +943,7 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// within a specified range.
         /// </summary>
-        public RangeConstraint InRange(IComparable from, IComparable to)
+        public RangeConstraint InRange(object from, object to)
         {
             return new RangeConstraint(from, to);
         }
