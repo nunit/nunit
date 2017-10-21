@@ -129,18 +129,21 @@ namespace NUnit.Framework.Assertions
 
 #if !NET_2_0
         static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
-        static readonly IList<int> LIST = new List<int>(RANGE);
+
+        static readonly IEnumerable[] PerformanceData =
+        {
+            RANGE,
+            new List<int>(RANGE),
+            new List<double>(RANGE.Select(v => (double)v)),
+            new List<string>(RANGE.Select(v => v.ToString()))
+        };
 
         // Using very short max time so it always fails and displays timing
-        [Test, MaxTime(10), Explicit("Performance test")]
-        public void PerformanceTest1()
+        [MaxTime(1), Explicit("Performance test")]
+        [TestCaseSource(nameof(PerformanceData))]
+        public void PerformanceTests(IEnumerable values)
         {
-            CollectionAssert.AllItemsAreUnique(RANGE);
-        }
-        [Test, MaxTime(1), Explicit("Performance test")]
-        public void PerformanceTest2()
-        {
-            CollectionAssert.AllItemsAreUnique(LIST);
+            CollectionAssert.AllItemsAreUnique(values);
         }
 #endif
 

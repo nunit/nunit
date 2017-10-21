@@ -24,6 +24,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Compatibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 { 
@@ -49,9 +52,11 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            if (actual is IEnumerable<int>)
-                return Matches((IEnumerable<int>)actual);
+            return TryFastAlgorithm(actual) ?? OriginalAlgorithm(actual);
+        }
 
+        private bool OriginalAlgorithm(IEnumerable actual)
+        {
             var list = new List<object>();
 
             foreach (object o1 in actual)
@@ -65,15 +70,49 @@ namespace NUnit.Framework.Constraints
             return true;
         }
 
-        private bool Matches<T>(IEnumerable<T> actual)
+        private bool? TryFastAlgorithm(IEnumerable actual)
         {
-            // This algorithm handles a range of 100000 ints,
-            // which previously took 105 seconds in 24 to 35
-            // milliseconds on my laptop (Debug). However,
-            // it does not use NUnit equality at all, so 
-            // may give different results if the members
-            // of the enumerable are handled specially by
-            // NUnitEqualityComparer.
+            // If the user specified any external comparer with Using, exit
+            if (UsingExternalComparer)
+                return null;
+
+            // If IEnumerable<T> is not implemented exit,
+            // Otherwise return value is the Type of T
+            Type memberType = GetGenericTypeArgument(actual);
+            if (memberType == null)
+                return null;
+
+            string methodName = nameof(ItemsUnique);
+            bool makeGeneric = true;
+
+            // Special handling for ignore case with strings and chars
+            if (IgnoringCase)
+            {
+                if (memberType == typeof(string))
+                {
+                    methodName = nameof(StringsUniqueIgnoringCase);
+                    makeGeneric = false;
+                }
+                else
+                if (memberType == typeof(char))
+                {
+                    methodName = nameof(CharsUniqueIgnoringCase);
+                    makeGeneric = false;
+                }
+        }
+
+        MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+            if (method == null)
+                throw new InvalidOperationException("Internal error - Method not found: " + methodName);
+            
+            if (makeGeneric)
+                method = method.MakeGenericMethod(memberType);
+
+            return (bool)method.Invoke(null, new object[] { actual });
+        }
+
+        private static bool ItemsUnique<T>(IEnumerable<T> actual)
+        {
             var hash = new HashSet<T>();
 
             foreach (T item in actual)
@@ -85,6 +124,55 @@ namespace NUnit.Framework.Constraints
             }
 
             return true;
+        }
+
+        private static bool StringsUniqueIgnoringCase(IEnumerable<string> actual)
+        {
+            var hash = new HashSet<string>();
+
+            foreach (string item in actual)
+            {
+                string s = item.ToLower();
+                if (hash.Contains(s))
+                    return false;
+
+                hash.Add(s);
+            }
+
+            return true;
+        }
+
+        private static bool CharsUniqueIgnoringCase(IEnumerable<char> actual)
+        {
+            var hash = new HashSet<char>();
+
+            foreach (char item in actual)
+            {
+                char ch = char.ToLower(item);
+                if (hash.Contains(ch))
+                    return false;
+
+                hash.Add(ch);
+            }
+
+            return true;
+        }
+
+        private Type GetGenericTypeArgument(IEnumerable actual)
+        {
+            foreach (var type in actual.GetType().GetInterfaces())
+            {
+                if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1"))
+                {
+#if NET_2_0 || NET_3_5 || NET_4_0
+                    return type.GetGenericArguments()[0];
+#else
+                    return type.GenericTypeArguments[0];
+#endif
+                }
+            }
+
+            return null;
         }
     }
 }
