@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -201,6 +201,25 @@ namespace NUnit.Framework.Api
             var key1Node = settingNode.ChildNodes[0];
             Assert.That(key1Node.Attributes["key"], Is.EqualTo("key1"));
             Assert.That(key1Node.Attributes["value"], Is.EqualTo("value1"));
+
+            var key2Node = settingNode.ChildNodes[1];
+            Assert.That(key2Node.Attributes["key"], Is.EqualTo("key2"));
+            Assert.That(key2Node.Attributes["value"], Is.EqualTo(value));
+        }
+
+        [TestCaseSource(nameof(SettingsData))]
+        public void InsertSettingsElement_SettingIsDictionaryHasNull_CreatesEntriesWithKeysAndValuesFromDictionary(string value)
+        {
+            var outerNode = new TNode("test");
+            var testSettings = new Dictionary<string, object>();
+            testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", null }, { "key2", value } });
+
+            var inserted = FrameworkController.InsertSettingsElement(outerNode, null);
+            var settingNode = inserted.FirstChild;
+
+            var key1Node = settingNode.ChildNodes[0];
+            Assert.That(key1Node.Attributes["key"], Is.EqualTo("key1"));
+            Assert.That(key1Node.Attributes["value"], Is.Null);
 
             var key2Node = settingNode.ChildNodes[1];
             Assert.That(key2Node.Attributes["key"], Is.EqualTo("key2"));
