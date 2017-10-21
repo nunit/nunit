@@ -329,9 +329,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
         /// <param name="formatter">The ValueFormatter delegate</param>
-        public static void AddFormatter<TSUPPORTED>(ValueFormatter formatter)
+        public static void AddFormatter<TSUPPORTED>(Func<TSUPPORTED, string> formatter)
         {
-            AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
+            AddFormatter(next => val => (val is TSUPPORTED) ? formatter((TSUPPORTED) val) : next(val));
         }
 
 #endregion
