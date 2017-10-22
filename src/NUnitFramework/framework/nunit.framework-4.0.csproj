@@ -207,6 +207,7 @@
     <Compile Include="Constraints\ItemsConstraintExpression.cs" />
     <Compile Include="Constraints\LessThanConstraint.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraint.cs" />
+    <Compile Include="Constraints\MaxTimeConstraint.cs" />
     <Compile Include="Constraints\MessageWriter.cs" />
     <Compile Include="Constraints\MsgUtils.cs" />
     <Compile Include="Constraints\NaNConstraint.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Constraints\Operators\BinaryOperator.cs" />
     <Compile Include="Constraints\Operators\CollectionOperator.cs" />
     <Compile Include="Constraints\Operators\ConstraintOperator.cs" />
+    <Compile Include="Constraints\Operators\MaxTimeOperator.cs" />
     <Compile Include="Constraints\Operators\NoneOperator.cs" />
     <Compile Include="Constraints\Operators\NotOperator.cs" />
     <Compile Include="Constraints\Operators\OrOperator.cs" />
@@ -375,7 +377,9 @@
     <Compile Include="Internal\Filters\PropertyFilter.cs" />
     <Compile Include="Internal\Filters\TestNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
+    <Compile Include="Internal\GenericInvocationDescriptor.cs" />
     <Compile Include="Internal\GenericMethodHelper.cs" />
+    <Compile Include="Internal\IInvocationDescriptor.cs" />
     <Compile Include="Internal\InvalidDataSourceException.cs" />
     <Compile Include="Internal\InvalidPlatformException.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
@@ -421,6 +425,7 @@
     <Compile Include="Internal\TypeHelper.cs" />
     <Compile Include="Internal\TypeNameDifferenceResolver.cs" />
     <Compile Include="Internal\TypeWrapper.cs" />
+    <Compile Include="Internal\VoidInvocationDescriptor.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ITestAction.cs" />
     <Compile Include="Iz.cs" />

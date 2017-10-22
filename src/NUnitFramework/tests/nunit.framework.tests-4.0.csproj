@@ -140,6 +140,7 @@
     <Compile Include="Attributes\TestExpectedResult.cs" />
     <Compile Include="Attributes\TestOrderAttributeTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintResultTests.cs" />
+    <Compile Include="Constraints\MaxTimeConstraintTests.cs" />
     <Compile Include="Constraints\NoItemConstraintTests.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\CollectionTallyTests.cs" />

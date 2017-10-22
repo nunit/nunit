@@ -154,7 +154,7 @@ namespace NUnit.Framework.Constraints
 
             internal static Exception Intercept(object invocation)
             {
-                var invocationDescriptor = GetInvocationDescriptor(invocation);
+                var invocationDescriptor = InvocationDescriptorExtensions.GetInvocationDescriptor(invocation);
 
 #if ASYNC
                 if (AsyncInvocationRegion.IsAsyncOperation(invocationDescriptor.Delegate))
@@ -191,92 +191,9 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            private static IInvocationDescriptor GetInvocationDescriptor(object actual)
-            {
-                var invocationDescriptor = actual as IInvocationDescriptor;
-
-                if (invocationDescriptor == null)
-                {
-                    var testDelegate = actual as TestDelegate;
-
-                    if (testDelegate != null)
-                    {
-                        invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
-                    }
-
-#if ASYNC
-                    else
-                    {
-                        var asyncTestDelegate = actual as AsyncTestDelegate;
-                        if (asyncTestDelegate != null)
-                        {
-                            invocationDescriptor = new GenericInvocationDescriptor<System.Threading.Tasks.Task>(() => asyncTestDelegate());
-                        }
-                    }
-#endif
-                }
-                if (invocationDescriptor == null)
-                    throw new ArgumentException(
-                        String.Format(
-                            "The actual value must be a TestDelegate or AsyncTestDelegate but was {0}",
-                            actual.GetType().Name),
-                        "actual");
-
-                return invocationDescriptor;
-            }
         }
 
 #endregion
 
-#region InvocationDescriptor
-
-        internal class GenericInvocationDescriptor<T> : IInvocationDescriptor
-        {
-            private readonly ActualValueDelegate<T> _del;
-
-            public GenericInvocationDescriptor(ActualValueDelegate<T> del)
-            {
-                _del = del;
-            }
-
-            public object Invoke()
-            {
-                return _del();
-            }
-
-            public Delegate Delegate
-            {
-                get { return _del; }
-            }
-        }
-
-        private interface IInvocationDescriptor
-        {
-            Delegate Delegate { get; }
-            object Invoke();
-        }
-
-        private class VoidInvocationDescriptor : IInvocationDescriptor
-        {
-            private readonly TestDelegate _del;
-
-            public VoidInvocationDescriptor(TestDelegate del)
-            {
-                _del = del;
-            }
-
-            public object Invoke()
-            {
-                _del();
-                return null;
-            }
-
-            public Delegate Delegate
-            {
-                get { return _del; }
-            }
-        }
-
-#endregion
     }
 }

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -63,7 +64,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            return ApplyTo(new ThrowsConstraint.GenericInvocationDescriptor<TActual>(del));
+            return ApplyTo(new GenericInvocationDescriptor<TActual>(del));
         }
     }
 }

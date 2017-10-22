@@ -187,6 +187,7 @@
     <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
     <Compile Include="Constraints\LessThanConstraintTests.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
+    <Compile Include="Constraints\MaxTimeConstraintTests.cs" />
     <Compile Include="Constraints\MsgUtilTests.cs" />
     <Compile Include="Constraints\NoItemConstraintTests.cs" />
     <Compile Include="Constraints\NotConstraintTests.cs" />

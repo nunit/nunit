@@ -92,6 +92,8 @@
     <Compile Include="Attributes\NonTestAssemblyAttribute.cs" />
     <Compile Include="Attributes\NonParallelizableAttribute.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintResult.cs" />
+    <Compile Include="Constraints\MaxTimeConstraint.cs" />
+    <Compile Include="Constraints\Operators\MaxTimeOperator.cs" />
     <Compile Include="Internal\Commands\AfterTestCommand.cs" />
     <Compile Include="Internal\Commands\BeforeTestCommand.cs" />
     <Compile Include="Internal\Commands\DisposeFixtureCommand.cs" />
@@ -104,10 +106,13 @@
     <Compile Include="Internal\Execution\ParallelExecutionStrategy.cs" />
     <Compile Include="Internal\Execution\WorkItemBuilder.cs" />
     <Compile Include="Interfaces\TestAttachment.cs" />
+    <Compile Include="Internal\GenericInvocationDescriptor.cs" />
+    <Compile Include="Internal\IInvocationDescriptor.cs" />
     <Compile Include="Internal\ParamAttributeTypeConversions.cs" />
     <Compile Include="Internal\TestCaseTimeoutException.cs" />
     <Compile Include="Internal\InvalidPlatformException.cs" />
     <Compile Include="Internal\TypeNameDifferenceResolver.cs" />
+    <Compile Include="Internal\VoidInvocationDescriptor.cs" />
     <Compile Include="Warn.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\ApartmentAttribute.cs" />

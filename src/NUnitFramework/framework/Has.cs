@@ -219,5 +219,20 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region MaxTime
+
+        /// <summary>
+        /// Returns a ConstraintExpression, which will test if the
+        /// operation is terminated within the specified time.
+        /// </summary>
+        public static ResolvableConstraintExpression MaxTime(int milliseconds) => MaxTime(TimeSpan.FromMilliseconds(milliseconds));
+
+        /// <summary>
+        /// Returns a ConstraintExpression, which will test if the
+        /// operation is terminated within the specified time.
+        /// </summary>
+        public static ResolvableConstraintExpression MaxTime(TimeSpan maxTime) => new ConstraintExpression().Append(new MaxTimeOperator(maxTime));
+
+        #endregion
     }
 }
