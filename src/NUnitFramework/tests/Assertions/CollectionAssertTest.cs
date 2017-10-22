@@ -24,17 +24,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
-
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-using System.Data;
-#endif
-
-#if !NET_2_0
-using System.Linq;
-#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -127,8 +120,7 @@ namespace NUnit.Framework.Assertions
                 () => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z")));
         }
 
-#if !NET_2_0
-        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
+        static readonly IEnumerable<int> RANGE = new RangeOfInt(0, 10000);
 
         static readonly IEnumerable[] PerformanceData =
         {
@@ -138,14 +130,12 @@ namespace NUnit.Framework.Assertions
             new List<string>(RANGE.Select(v => v.ToString()))
         };
 
-        // Using very short max time so it always fails and displays timing
-        [MaxTime(1), Explicit("Performance test")]
+        [MaxTime(100)]
         [TestCaseSource(nameof(PerformanceData))]
         public void PerformanceTests(IEnumerable values)
         {
             CollectionAssert.AllItemsAreUnique(values);
         }
-#endif
 
         #endregion
 

@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
@@ -53,5 +56,26 @@ namespace NUnit.Framework.Constraints
             new object[] {new[] {'A', 'B', 'C', 'c'}},
             new object[] {new[] {"a", "b", "c", "C"}}
         };
+
+        static readonly IEnumerable<int> RANGE = new RangeOfInt(0, 10000);
+
+        static readonly TestCaseData[] PerformanceData =
+        {
+            new TestCaseData(RANGE, false),
+            new TestCaseData(new List<int>(RANGE), false),
+            new TestCaseData(new List<double>(RANGE.Select(v => (double)v)), false),
+            new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), false),
+            new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), true)
+        };
+
+        [MaxTime(100)]
+        [TestCaseSource(nameof(PerformanceData))]
+        public void PerformanceTests(IEnumerable values, bool ignoreCase)
+        {
+            if (ignoreCase)
+                Assert.That(values, Is.Unique.IgnoreCase);
+            else
+                Assert.That(values, Is.Unique);
+        }
     }
 }

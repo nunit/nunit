@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
             Type memberType = GetGenericTypeArgument(actual);
-            if (memberType == null)
+            if (memberType == null || IsHandledSpeciallyByNUnit(memberType))
                 return null;
 
             string methodName = nameof(ItemsUnique);
@@ -99,9 +99,9 @@ namespace NUnit.Framework.Constraints
                     methodName = nameof(CharsUniqueIgnoringCase);
                     makeGeneric = false;
                 }
-        }
+            }
 
-        MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
             if (method == null)
                 throw new InvalidOperationException("Internal error - Method not found: " + methodName);
             
@@ -156,6 +156,19 @@ namespace NUnit.Framework.Constraints
             }
 
             return true;
+        }
+
+        // Return true if NUnitEqualityHandler has special logic for Type
+        private static bool IsHandledSpeciallyByNUnit(Type type)
+        {
+            if (type == typeof(string)) return false; // even though it's IEnumerable
+
+            return type.IsArray
+                || type == typeof(IEnumerable) // Covers lists, collections, dictionaries as well
+                || type == typeof(System.IO.Stream)
+                || type == typeof(System.IO.DirectoryInfo)
+                || type.FullName == "System.Tuple"
+                || type.FullName == "System.ValueTuple";
         }
 
         private Type GetGenericTypeArgument(IEnumerable actual)
