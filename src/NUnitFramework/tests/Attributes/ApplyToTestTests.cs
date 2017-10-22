@@ -42,16 +42,23 @@ namespace NUnit.Framework.Attributes
 
         #region CategoryAttribute
 
-        [TestCase(',')]
         [TestCase('!')]
         [TestCase('+')]
-        [TestCase('-')]
         public void CategoryAttributeFailsOnSpecialCharacters(char specialCharacter)
         {
             var categoryName = new string(specialCharacter, 5);
             new CategoryAttribute(categoryName).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Category name must not contain ',', '!', '+' or '-'"));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Category name must not contain '!' or '+'"));
+        }
+
+        [TestCase(',')]
+        [TestCase('-')]
+        public void CategoryAttributePassesOnSpecialCharacters(char specialCharacter)
+        {
+            var categoryName = new string(specialCharacter, 5);
+            new CategoryAttribute(categoryName).ApplyToTest(test);
+            Assert.That(test.Properties.Get(PropertyNames.Category), Is.EqualTo(categoryName));
         }
 
         [Test]
