@@ -223,10 +223,6 @@ namespace NUnit.Framework.Internal
                 {
                     throw new NUnitException("Rethrown", e);
                 }
-                catch
-                {
-                    throw new NUnitException("Rethrown", new Exception("Unknown Native exception thrown."));
-                }
             }
 
             return null;
