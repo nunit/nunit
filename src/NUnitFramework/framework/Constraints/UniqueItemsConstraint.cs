@@ -82,34 +82,22 @@ namespace NUnit.Framework.Constraints
             if (memberType == null || IsHandledSpeciallyByNUnit(memberType))
                 return null;
 
-            string methodName = nameof(ItemsUnique);
-            bool makeGeneric = true;
-
             // Special handling for ignore case with strings and chars
             if (IgnoringCase)
             {
                 if (memberType == typeof(string))
-                {
-                    methodName = nameof(StringsUniqueIgnoringCase);
-                    makeGeneric = false;
-                }
-                else
-                if (memberType == typeof(char))
-                {
-                    methodName = nameof(CharsUniqueIgnoringCase);
-                    makeGeneric = false;
-                }
+                    return StringsUniqueIgnoringCase((IEnumerable<string>)actual);
+                else if (memberType == typeof(char))
+                    return CharsUniqueIgnoringCase((IEnumerable<char>)actual);
             }
 
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
-            if (method == null)
-                throw new InvalidOperationException("Internal error - Method not found: " + methodName);
-            
-            if (makeGeneric)
-                method = method.MakeGenericMethod(memberType);
+            MethodInfo method = GetType().GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
-            return (bool)method.Invoke(null, new object[] { actual });
+            return (bool)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
         }
+
+        private static readonly MethodInfo ItemsUniqueMethod = 
+            typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static bool ItemsUnique<T>(IEnumerable<T> actual)
         {
@@ -117,10 +105,8 @@ namespace NUnit.Framework.Constraints
 
             foreach (T item in actual)
             {
-                if (hash.Contains(item))
+                if (!hash.Add(item))
                     return false;
-
-                hash.Add(item);
             }
 
             return true;
@@ -133,10 +119,9 @@ namespace NUnit.Framework.Constraints
             foreach (string item in actual)
             {
                 string s = item.ToLower();
-                if (hash.Contains(s))
-                    return false;
 
-                hash.Add(s);
+                if (!hash.Add(s))
+                    return false;
             }
 
             return true;
@@ -149,10 +134,9 @@ namespace NUnit.Framework.Constraints
             foreach (char item in actual)
             {
                 char ch = char.ToLower(item);
-                if (hash.Contains(ch))
-                    return false;
 
-                hash.Add(ch);
+                if (!hash.Add(ch))
+                    return false;
             }
 
             return true;
@@ -164,7 +148,7 @@ namespace NUnit.Framework.Constraints
             if (type == typeof(string)) return false; // even though it's IEnumerable
 
             return type.IsArray
-                || type == typeof(IEnumerable) // Covers lists, collections, dictionaries as well
+                || typeof(IEnumerable).IsAssignableFrom(type) // Covers lists, collections, dictionaries as well
                 || type == typeof(System.IO.Stream)
                 || type == typeof(System.IO.DirectoryInfo)
                 || type.FullName == "System.Tuple"
