@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -58,10 +59,9 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if (!(actual is IEnumerable))
-                throw new ArgumentException("The actual value must be an IEnumerable", "actual");
+            var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
-            foreach (object item in (IEnumerable)actual)
+            foreach (object item in enumerable)
                 if (BaseConstraint.ApplyTo(item).IsSuccess)
                     return new ConstraintResult(this, actual, ConstraintStatus.Failure);
 

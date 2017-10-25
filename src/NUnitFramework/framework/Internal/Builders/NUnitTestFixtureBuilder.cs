@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal.Builders
             if (typeInfo.ContainsGenericParameters)
             {
                 Type[] typeArgs = testFixtureData.TypeArgs;
-                if (typeArgs.Length == 0)
+                if (typeArgs == null || typeArgs.Length == 0)
                 {
                     int cnt = 0;
                     foreach (object o in arguments)

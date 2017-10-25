@@ -250,7 +250,9 @@ namespace NUnit.Compatibility
         /// <returns></returns>
         public static PropertyInfo GetProperty(this Type type, string name, BindingFlags flags)
         {
+            bool declaredOnly = flags.HasFlag(BindingFlags.DeclaredOnly);
             return type.GetRuntimeProperties()
+                .Where(prop => declaredOnly ? prop.DeclaringType.Equals(type) : true)
                 .ApplyBindingFlags(flags)
                 .Where(p => p.Name == name)
                 .FirstOrDefault();
@@ -332,7 +334,7 @@ namespace NUnit.Compatibility
             if (type != null)
             {
                 var baseMethods = type.GetAllMethods(includeBaseStatic)
-                    .Where(b => b.IsPublic && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b));
+                    .Where(b => !b.IsPrivate && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b));
                 methods.AddRange(baseMethods);
             }
 
@@ -346,7 +348,7 @@ namespace NUnit.Compatibility
             if (pub && !priv)
                 infos = infos.Where(p => (p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic));
             if (priv && !pub)
-                infos = infos.Where(p => (p.GetMethod == null || p.GetMethod.IsPrivate) && (p.SetMethod == null || p.SetMethod.IsPrivate));
+                infos = infos.Where(p => (p.GetMethod == null || !(p.GetMethod.IsPublic)) && (p.SetMethod == null || !(p.SetMethod.IsPublic)));
 
             bool stat = flags.HasFlag(BindingFlags.Static);
             bool inst = flags.HasFlag(BindingFlags.Instance);
@@ -363,7 +365,7 @@ namespace NUnit.Compatibility
             bool pub = flags.HasFlag(BindingFlags.Public);
             bool priv = flags.HasFlag(BindingFlags.NonPublic);
             if (priv && !pub)
-                infos = infos.Where(m => m.IsPrivate);
+                infos = infos.Where(m => !m.IsPublic);
             else if (pub && !priv)
                 infos = infos.Where(m => m.IsPublic);
 

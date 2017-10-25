@@ -28,9 +28,17 @@ Supported platforms:
       <group targetFramework="net35" />
       <group targetFramework="net40" />
       <group targetFramework="net45" />
+      <group targetFramework="Xamarin.iOS">
+        <dependency id="NETStandard.Library" version="1.6.0" />
+      </group>
+      <group targetFramework="MonoAndroid">
+        <dependency id="NETStandard.Library" version="1.6.0" />
+      </group>
+      <group targetFramework="uap">
+        <dependency id="NETStandard.Library" version="1.6.0" />
+      </group>
       <group targetFramework="netstandard1.3">
         <dependency id="NETStandard.Library" version="1.6.0" />
-        <dependency id="System.Threading.Thread" version="4.3.0" />
       </group>
       <group targetFramework="netstandard1.6">
         <dependency id="NETStandard.Library" version="1.6.0" />
@@ -52,6 +60,12 @@ Supported platforms:
     <file src="bin/net-4.0/nunit.framework.xml" target="lib\net40" />
     <file src="bin/net-4.5/nunit.framework.dll" target="lib\net45" />
     <file src="bin/net-4.5/nunit.framework.xml" target="lib\net45" />
+    <file src="bin/netstandard13/nunit.framework.dll" target="lib\xamarin.ios" />
+    <file src="bin/netstandard13/nunit.framework.xml" target="lib\xamarin.ios" />
+    <file src="bin/netstandard13/nunit.framework.dll" target="lib\monoandroid" />
+    <file src="bin/netstandard13/nunit.framework.xml" target="lib\monoandroid" />
+    <file src="bin/netstandard13/nunit.framework.dll" target="lib\uap" />
+    <file src="bin/netstandard13/nunit.framework.xml" target="lib\uap" />
     <file src="bin/netstandard13/nunit.framework.dll" target="lib\netstandard1.3" />
     <file src="bin/netstandard13/nunit.framework.xml" target="lib\netstandard1.3" />
     <file src="bin/netstandard16/nunit.framework.dll" target="lib\netstandard1.6" />

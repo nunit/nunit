@@ -391,7 +391,7 @@ namespace NUnit.Framework.Api
 
             env.AddAttribute("framework-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             env.AddAttribute("clr-version", Environment.Version.ToString());
-            env.AddAttribute("os-version", Environment.OSVersion.ToString());
+            env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
             env.AddAttribute("cwd", Environment.CurrentDirectory);
             env.AddAttribute("machine-name", Environment.MachineName);
@@ -437,9 +437,41 @@ namespace NUnit.Framework.Api
         {
             TNode setting = new TNode("setting");
             setting.AddAttribute("name", name);
-            setting.AddAttribute("value", value.ToString());
+
+            var dict = value as IDictionary;
+            if (dict != null)
+            {
+                AddDictionaryEntries(setting, dict);
+                AddBackwardsCompatibleDictionaryEntries(setting, dict);
+            }
+            else
+            {
+                setting.AddAttribute("value", value.ToString());
+            }
 
             settingsNode.ChildNodes.Add(setting);
+        }
+
+        private static void AddBackwardsCompatibleDictionaryEntries(TNode settingsNode, IDictionary entries)
+        {
+            var pairs = new List<string>(entries.Count);
+            foreach (var key in entries.Keys)
+            {
+                pairs.Add($"[{key}, {entries[key]}]");
+            }
+            settingsNode.AddAttribute("value", string.Join(", ", pairs.ToArray()));
+        }
+
+        private static void AddDictionaryEntries(TNode settingNode, IDictionary entries)
+        {
+            foreach(var key in entries.Keys)
+            {
+                var value = entries[key];
+                var entryNode = new TNode("item");
+                entryNode.AddAttribute("key", key.ToString());
+                entryNode.AddAttribute("value", value?.ToString() ?? "");
+                settingNode.ChildNodes.Add(entryNode);
+            }
         }
 
         #endregion

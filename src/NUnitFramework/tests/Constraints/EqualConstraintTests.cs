@@ -570,6 +570,20 @@ namespace NUnit.Framework.Constraints
             }
 
             [Test]
+            public void UsesProvidedGenericEqualityComparison()
+            {
+                var comparer = new GenericEqualityComparison<int>();
+                Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesBooleanReturningDelegate()
+            {
+                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.Equals(y)));
+            }
+
+            [Test]
             public void UsesProvidedLambda_IntArgs()
             {
                 Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));
@@ -632,6 +646,13 @@ namespace NUnit.Framework.Constraints
                     return obj.Length.GetHashCode();
                 }
             }
+
+            [Test]
+            public void HasMemberHonorsUsingWhenCollectionsAreOfDifferentTypes()
+            {
+                ICollection strings = new List<string> { "1", "2", "3" };
+                Assert.That(strings, Has.Member(2).Using<string, int>((s, i) => i.ToString() == s));
+            }
         }
 
         #endregion
@@ -657,6 +678,66 @@ namespace NUnit.Framework.Constraints
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(0, new System.IntPtr(0)));
             Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL);
+        }
+
+        class Dummy
+        {
+            internal readonly int value;
+
+            public Dummy(int value)
+            {
+                this.value = value;
+            }
+
+            public override string ToString()
+            {
+                return "Dummy " + value;
+            }
+        }
+
+        class Dummy1
+        {
+            internal readonly int value;
+
+            public Dummy1(int value)
+            {
+                this.value = value;
+            }
+
+            public override string ToString()
+            {
+                return "Dummy " + value;
+            }
+        }
+
+        class DummyGenericClass<T>
+        {
+            private object _obj;
+            public DummyGenericClass(object obj)
+            {
+                _obj = obj;
+            }
+
+            public override string ToString()
+            {
+                return _obj.ToString();
+            }
+        }
+
+        [Test]
+        public void TestSameValueDifferentTypeUsingGenericTypes()
+        {
+            var d1 = new Dummy(12);
+            var d2 = new Dummy1(12);
+            var dc1 = new DummyGenericClass<Dummy>(d1);
+            var dc2 = new DummyGenericClass<Dummy1>(d2);
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dc1, dc2));
+            var expectedMsg =
+                "  Expected: <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
+                "  But was:  <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
+
+            Assert.AreEqual(expectedMsg, ex.Message);
         }
 
         [Test]

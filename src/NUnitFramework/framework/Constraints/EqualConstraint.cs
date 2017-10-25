@@ -323,6 +323,17 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to use the supplied boolean-returning delegate.
+        /// </summary>
+        /// <param name="comparer">The boolean-returning delegate to use.</param>
+        /// <returns>Self.</returns>
+        public EqualConstraint Using<T>(Func<T, T, bool> comparer)
+        {
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            return this;
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
@@ -352,6 +363,17 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint Using<T>(IEqualityComparer<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied predicate function
+        /// </summary>
+        /// <param name="comparison">The comparison function to use.</param>
+        /// <returns>Self.</returns>
+        public EqualConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        {
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
             return this;
         }
 

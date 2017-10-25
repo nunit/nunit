@@ -217,7 +217,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding only if a specified number of them succeed.
         /// </summary>
-        public static ConstraintExpression Exactly(int expectedCount)
+        public static ItemsConstraintExpression Exactly(int expectedCount)
         {
             return Has.Exactly(expectedCount);
         }
@@ -686,21 +686,21 @@ namespace NUnit.Framework
         #region Member
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Member(object expected)
+        public SomeItemsConstraint Member(object expected)
         {
-            return new CollectionContainsConstraint(expected);
+            return new SomeItemsConstraint(new EqualConstraint(expected));
         }
 
         /// <summary>
-        /// Returns a new CollectionContainsConstraint checking for the
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Contains(object expected)
+        public SomeItemsConstraint Contains(object expected)
         {
-            return new CollectionContainsConstraint(expected);
+            return new SomeItemsConstraint(new EqualConstraint(expected));
         }
 
         #endregion
@@ -943,7 +943,7 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value falls
         /// within a specified range.
         /// </summary>
-        public RangeConstraint InRange(IComparable from, IComparable to)
+        public RangeConstraint InRange(object from, object to)
         {
             return new RangeConstraint(from, to);
         }

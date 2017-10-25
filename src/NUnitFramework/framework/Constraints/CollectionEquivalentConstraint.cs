@@ -22,6 +22,7 @@
 // ***********************************************************************
 using System;
 using System.Collections;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -94,11 +95,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            // TODO: Use an error result if actual is not IEnumerable
-            IEnumerable enumerable = actual as IEnumerable;
-            if (enumerable == null)
-                throw new ArgumentException("The actual value must be an IEnumerable", "actual");
-
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
             bool matchesResult = Matches(enumerable);
 
             return new CollectionEquivalentConstraintResult(

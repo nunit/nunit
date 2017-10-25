@@ -1,3 +1,74 @@
+### NUnit 3.8.1 - August 28, 2017
+
+This release fixes two critical regressions in the 3.8 release. The first caused the console
+runner to crash if you are using test parameters. The second issue caused collection
+constraints checking for multiple items in a collection to fail.
+
+#### Issues Resolved
+
+ * 2386 Contains.Item() fails for collections in NUnit 3.8
+ * 2390 Missing value attribute in test parameters setting causes NullReferenceException in console
+
+### NUnit 3.8 - August 27, 2017
+
+This release removes several methods and attributes that were marked obsolete in the
+original 3.0 release. Support for iOS and Android has been improved.
+
+An issue that caused unit tests to run slower was addressed as was a bug that prevented
+the use of Assert.Multiple in async code.
+
+The Order attribute can now also be applied to the class level to set the order
+that test fixtures will be run.
+
+#### Issues Resolved
+
+ * 345  Order of Fixture Execution
+ * 1151 Include differences in output for Is.EquivalentTo
+ * 1324 Remove CollectionContainsConstraint
+ * 1670 Attaching files to the test result
+ * 1674 InRange-Constraint must work with object
+ * 1851 TestCaseSource unable to pass one element byte array
+ * 1996 Timeout does not work if native code is running at the time
+ * 2004 Has.One as synonym for Has.Exactly(1).Items
+ * 2062 TestCaseSource attribute causes test to pass when source is not defined
+ * 2144 Allow option on RandomAttribute to produce distinct values
+ * 2179 Some NUnit project's tests fail on systems with CultureInfo other than en
+ * 2195 Contains.Substring with custom StringComparison
+ * 2196 Expose ParallelizableAttribute (and other attribute) constructor arguments as properties
+ * 2201 Invalid platform name passed to PlatformAttribute should mark test NotRunnable
+ * 2208 StackFIlter trims leading spaces from each line
+ * 2213 SetCultureAttribute: CultureInfo ctor should use default culture settings
+ * 2217 Console runner performance varies wildly depending on environmental characteristics
+ * 2219 Remove Obsolete Attributes
+ * 2225 OneTimeTearDown and Dispose Ordering
+ * 2237 System.Runtime.Loader not available for iOS/Android
+ * 2242 Running tests directly should never surface a NullReferenceException
+ * 2244 Add KeyValuePair<TKey, TValue> to the default formatters
+ * 2251 Randomizer.NextGuid()
+ * 2253 Parallelizable(ParallelScope.Fixtures) doesn't work on a TestFixture
+ * 2254 EqualTo on ValueTuple with Nullable unexpected
+ * 2261 When an assembly is marked with ParallelScope.None and there are Parallelizable tests Nunit hangs
+ * 2269 Parallelizable and NonParallelizable attributes on setup and teardown silently ignored
+ * 2276 Intermittent test failures in Travic CI: TestContextTests
+ * 2281 Add type constraint for Throws and any method requiring Exception
+ * 2288 Killing thread cancels test run
+ * 2292 Is.Ordered.By() with a field throws NullReferenceException
+ * 2298 Write TestParametersDictionary to xml result file in readable format
+ * 2299 NUnitLite NuGet package no longer installs NUnit NuGet package
+ * 2304 Revert accidental doc removal
+ * 2305 Correct misprint ".con" -> ".com"
+ * 2312 Prevent crash on invalid --result parsing in NUnitLite
+ * 2313 Incorrect xmldoc on RetryAttribute
+ * 2332 Update build script to use NUnitConsoleRunner v3.7.0
+ * 2335 Execute OneTimeTearDown as early as possible when running fixtures in parallel
+ * 2342 Remove deprecated Is.String* Constraints
+ * 2348 Can't use Assert.Multiple with async code
+ * 2353 Provide additional Result information through TestContext
+ * 2358 Get framework to build under Mono 5.0
+ * 2360 Obsolete CollectionContainsConstraint Constructors
+ * 2361 NUnit Parallelizable and OneTimeSetUp with no namespace results in single-threaded test execution
+ * 2370 TestCaseAttribute can't convert int to nullable long
+
 ### NUnit 3.7.1 - June 6, 2017
 
 This is a hotfix release that addresses occasional hangs when using test parallization

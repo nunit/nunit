@@ -23,7 +23,11 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Internal;
+
+#if NETSTANDARD1_3
 using NUnit.Compatibility;
+#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -52,7 +56,6 @@ namespace NUnit.Framework.Constraints
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             // TODO: Use an error result for null
@@ -62,7 +65,7 @@ namespace NUnit.Framework.Constraints
             if (actualType == null)
                 actualType = actual.GetType();
 
-            PropertyInfo property = actualType.GetProperty(name,
+            PropertyInfo property = Reflect.GetUltimateShadowingProperty(actualType, name,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             // TODO: Use an error result here
@@ -77,7 +80,6 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the string representation of the constraint.
         /// </summary>
-        /// <returns></returns>
         protected override string GetStringRepresentation()
         {
             return string.Format("<property {0} {1}>", name, BaseConstraint);

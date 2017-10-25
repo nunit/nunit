@@ -209,6 +209,56 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
+#if !NET20 && !NET35
+        [Test]
+        public static void FormatValue_OneElementTupleTest()
+        {
+            string s = MsgUtils.FormatValue(Tuple.Create("Hello"));
+            Assert.That(s, Is.EqualTo("(\"Hello\")"));
+        }
+
+        [Test]
+        public static void FormatValue_TwoElementsTupleTest()
+        {
+            string s = MsgUtils.FormatValue(Tuple.Create("Hello", 123));
+            Assert.That(s, Is.EqualTo("(\"Hello\", 123)"));
+        }
+
+        [Test]
+        public static void FormatValue_ThreeElementsTupleTest()
+        {
+            string s = MsgUtils.FormatValue(Tuple.Create("Hello", 123, 'a'));
+            Assert.That(s, Is.EqualTo("(\"Hello\", 123, 'a')"));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsTupleTest()
+        {
+            var tuple = Tuple.Create(1, 2, 3, 4, 5, 6, 7, 8);
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8)"));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsTupleNestedTest()
+        {
+            var tuple = Tuple.Create(1, 2, 3, 4, 5, 6, 7, Tuple.Create(8, "9"));
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, (8, \"9\"))"));
+        }
+
+        [Test]
+        public static void FormatValue_FifteenElementsTupleTest()
+        {
+            var tupleLastElements = Tuple.Create(8, 9, 10, 11, "12", 13, 14, "15");
+            var tuple = new Tuple<int, int, int, int, int, int, int, Tuple<int, int, int, int, string, int, int, Tuple<string>>>
+                (1, 2, 3, 4, 5, 6, 7, tupleLastElements);
+
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, \"12\", 13, 14, \"15\")"));
+        }
+#endif
+
         #endregion
 
         #region EscapeControlChars

@@ -2,8 +2,8 @@ branches:
   except:
     - /travis-.*/
 
-build_script: 
-  - ps: .\build.ps1 -Target "Appveyor"
+build_script:
+  - ps: .\build.ps1 -Target "Appveyor" -Configuration "Release"
 
 # disable built-in tests.
 test: off

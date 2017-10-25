@@ -25,9 +25,13 @@ namespace NUnit.Framework.Constraints
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [Test]
         public void CanMatchTwoLists()
         {
-            //IList expected = new List<int>();
+            IList expected = new List<int> { 1, 2, 3 };
+            IList actual = new List<int> { 1, 2, 3 };
+
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -54,7 +58,6 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
         }
 
-        [Test]
         [TestCaseSource( "IgnoreCaseData" )]
         public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
         {
@@ -71,6 +74,5 @@ namespace NUnit.Framework.Constraints
             new object[] {new List<char> {'A', 'B', 'C'}, new List<char> {'a', 'b', 'c'}},
             new object[] {new List<string> {"a", "b", "c"}, new List<string> {"A", "B", "C"}},
         };
-
     }
 }

@@ -21,10 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
+using System;
 using System.Runtime.Serialization;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -32,9 +31,7 @@ namespace NUnit.Framework.Internal
     /// InvalidPlatformException is thrown when the platform name supplied
     /// to a test is not recognized.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
-#endif
     class InvalidPlatformException : ArgumentException
     {
         /// <summary>
@@ -65,3 +62,4 @@ namespace NUnit.Framework.Internal
 #endif
     }
 }
+#endif

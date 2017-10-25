@@ -24,6 +24,7 @@
 using System.Collections;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using System;
 
 namespace NUnit.TestData.TestFixtureSourceData
 {
@@ -304,6 +305,26 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return "Internet Explorer";
         }
     }
+
+    public class GenericFixtureSource
+    {
+        public static readonly Type[] Source = new Type[]
+        {
+            typeof(short),
+            typeof(int),
+            typeof(long)
+        };
+    }
+
+    [TestFixtureSource(typeof(GenericFixtureSource), "Source")]
+    public class GenericFixtureSourceWithProperArgsProvided<T>
+    {
+        [Test]
+        public void SomeTest()
+        {
+        }
+    }
+
 
     #region Source Data Classes
 

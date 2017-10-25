@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -163,6 +164,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
 #if !NETSTANDARD1_3
             Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
+            Assert.That(result.AssertionResults[0].StackTrace.Split(new char[] { '\n' }).Length, Is.LessThan(3));
 #endif
 
             if (expectedMessage != null)
@@ -170,7 +172,6 @@ namespace NUnit.Framework.Assertions
                 Assert.That(result.Message, Does.Contain(expectedMessage));
                 Assert.That(result.AssertionResults[0].Message, Does.Contain(expectedMessage));
             }
-
         }
 
 #if !NET20
@@ -253,5 +254,49 @@ namespace NUnit.Framework.Assertions
             throw new InvalidOperationException();
         }
 #endif
+
+        // We decided to trim ExecutionContext and below because ten lines per warning adds up
+        // and makes it hard to read build logs.
+        // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
+        [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
+        [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
+#if NETSTANDARD1_3 || NETSTANDARD1_6
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4)]
+#else
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
+#endif
+#if ASYNC
+        [TestCase(nameof(WarningFixture.WarningInTaskRun), 4)]
+        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 5)]
+#endif
+        public static void StackTracesAreFiltered(string methodName, int maxLineCount)
+        {
+            var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
+            if (result.FailCount != 0 && result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName))
+            {
+                return; // BeginInvoke causes PlatformNotSupportedException on .NET Core
+            }
+
+            if (result.AssertionResults.Count != 1 || result.AssertionResults[0].Status != AssertionStatus.Warning)
+            {
+                Assert.Fail("Expected a single warning assertion. Message: " + result.Message);
+            }
+
+            var warningStackTrace = result.AssertionResults[0].StackTrace;
+            var lines = warningStackTrace.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (maxLineCount < lines.Length)
+            {
+                Assert.Fail(
+                    $"Expected the number of lines to be no more than {maxLineCount}, but it was {lines.Length}:" + Environment.NewLine
+                    + Environment.NewLine
+                    + string.Concat(lines.Select((line, i) => $" {i + 1}. {line.Trim()}" + Environment.NewLine))
+                    + "(end)");
+
+                 // ^ Most of that is to differentiate it from the current method's stack trace
+                 // reported directly underneath at the same level of indentation.
+            }
+        }
     }
 }

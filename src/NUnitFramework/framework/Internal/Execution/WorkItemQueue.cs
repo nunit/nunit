@@ -322,13 +322,16 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         internal void Save()
         {
-            Pause();
+            bool isRunning = State == WorkItemQueueState.Running;
+            if (isRunning)
+                Pause();
 
             _savedState.Push(new SavedState(this));
 
             InitializeQueues();
 
-            Start();
+            if (isRunning)
+                Start();
         }
 
         /// <summary>

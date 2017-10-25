@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
     public class StackFilter
     {
         private const string DEFAULT_TOP_OF_STACK_PATTERN = @" NUnit\.Framework\.(Assert|Assume|Warn|CollectionAssert|StringAssert|FileAssert|DirectoryAssert)\.";
-        private const string DEFAULT_BOTTOM_OF_STACK_PATTERN = @" System\.R(eflection|untimeMethodHandle)\.";
+        private const string DEFAULT_BOTTOM_OF_STACK_PATTERN = @" System\.(Reflection|RuntimeMethodHandle|Threading\.ExecutionContext)\.";
 
         /// <summary>
         /// Single instance of our default filter
@@ -53,9 +53,9 @@ namespace NUnit.Framework.Internal
         public StackFilter(string topOfStackPattern, string bottomOfStackPattern)
         {
             if (topOfStackPattern != null)
-                _topOfStackRegex = new Regex(topOfStackPattern);
+                _topOfStackRegex = new Regex(topOfStackPattern, RegexOptions.Compiled);
             if (bottomOfStackPattern != null)
-                _bottomOfStackRegex = new Regex(bottomOfStackPattern);
+                _bottomOfStackRegex = new Regex(bottomOfStackPattern, RegexOptions.Compiled);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal
                         line = sr.ReadLine();
 
                 // Copy lines down to the line that invoked the failing method.
-                // This is actually only needed for the compact framework, but 
+                // This is actually only needed for the compact framework, but
                 // we do it on all platforms for simplicity. Desktop platforms
                 // won't have any System.Reflection lines.
                 while (line != null)

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,49 +29,22 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <c>ValueTuple</c>s.
     /// </summary>
-    internal class ValueTupleComparer : IChainComparer
+    internal class ValueTupleComparer : TupleComparerBase
     {
         const string nameofValueTuple = "System.ValueTuple";
-        private readonly NUnitEqualityComparer _equalityComparer;
 
         internal ValueTupleComparer(NUnitEqualityComparer equalityComparer)
+            : base(equalityComparer)
+        { }
+
+        protected override string NameOfType
         {
-            _equalityComparer = equalityComparer;
+            get { return nameofValueTuple; }
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        protected override object GetValue(Type type, string propertyName, object obj)
         {
-            Type xType = x.GetType();
-            Type yType = y.GetType();
-
-            string xTypeName = GetTypeNameWithoutGenerics(xType.FullName);
-            string yTypeName = GetTypeNameWithoutGenerics(yType.FullName);
-            if (xTypeName != nameofValueTuple || yTypeName != nameofValueTuple)
-                return null;
-
-            int numberOfGenericArgs = xType.GetGenericArguments().Length;
-
-            if (numberOfGenericArgs != yType.GetGenericArguments().Length)
-                return false;
-
-            for (int i = 0; i < numberOfGenericArgs; i++)
-            {
-                string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
-                object xItem = xType.GetField(propertyName).GetValue(x);
-                object yItem = yType.GetField(propertyName).GetValue(y);
-
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance);
-                if (!comparison)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private string GetTypeNameWithoutGenerics(string fullTypeName)
-        {
-            int index = fullTypeName.IndexOf('`');
-            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
+            return type.GetField(propertyName).GetValue(obj);
         }
     }
 }

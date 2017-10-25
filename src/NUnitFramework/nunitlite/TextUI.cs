@@ -174,7 +174,7 @@ namespace NUnitLite
             Writer.WriteLabelLine("   OS Version: ", RuntimeInformation.OSDescription);
             Writer.WriteLabelLine("  CLR Version: ", RuntimeInformation.FrameworkDescription);
 #else
-            Writer.WriteLabelLine("   OS Version: ", Environment.OSVersion);
+            Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
 #endif
             Writer.WriteLine();

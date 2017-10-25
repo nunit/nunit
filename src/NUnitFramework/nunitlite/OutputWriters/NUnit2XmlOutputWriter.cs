@@ -140,7 +140,7 @@ namespace NUnitLite
             xmlWriter.WriteAttributeString("clr-version",
                                            Environment.Version.ToString());
             xmlWriter.WriteAttributeString("os-version",
-                                           Environment.OSVersion.ToString());
+                                           OSPlatform.CurrentPlatform.ToString());
             xmlWriter.WriteAttributeString("platform",
                                            Environment.OSVersion.Platform.ToString());
             xmlWriter.WriteAttributeString("cwd",

@@ -33,24 +33,18 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class RangeConstraint : Constraint
     {
-        private readonly IComparable from;
-        private readonly IComparable to;
+        private readonly object from;
+        private readonly object to;
 
         private ComparisonAdapter comparer = ComparisonAdapter.Default;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeConstraint"/> class.
         /// </summary>
-        /// <remarks>from must be less than or equal to true</remarks> 
-        /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
-        /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
-        public RangeConstraint(IComparable from, IComparable to) : base( from, to )
+        /// <param name="from">Inclusive beginning of the range.</param>
+        /// <param name="to">Inclusive end of the range.</param>
+        public RangeConstraint(object from, object to) : base(from, to)
         {
-            // Issue #21 - https://github.com/nunit/nunit-framework/issues/21
-            // from must be less than or equal to to
-            if (comparer.Compare(from, to) > 0)
-                throw new ArgumentException( "from must be less than to" );
-
             this.from = from;
             this.to = to;
         }
@@ -72,7 +66,7 @@ namespace NUnit.Framework.Constraints
         {
             if ( from == null || to == null || actual == null)
                 throw new ArgumentException( "Cannot compare using a null reference", "actual" );
-
+            CompareFromAndTo();
             bool isInsideRange = comparer.Compare(from, actual) <= 0 && comparer.Compare(to, actual) >= 0;
             return new ConstraintResult(this, actual, isInsideRange);
         }
@@ -102,6 +96,12 @@ namespace NUnit.Framework.Constraints
         {
             this.comparer = ComparisonAdapter.For(comparer);
             return this;
+        }
+
+        private void CompareFromAndTo()
+        {
+            if (comparer.Compare(from, to) > 0)
+                throw new ArgumentException("The from value must be less than or equal to the to value.");
         }
     }
 }
