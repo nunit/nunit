@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////
 
 var target = Argument("target", "Default");
-var configuration = Argument("configuration", "Debug");
+var configuration = Argument("configuration", "Release");
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -28,13 +28,8 @@ var packageVersion = version + modifier + dbgSuffix;
 // SUPPORTED FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-var WindowsFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0", "netstandard13", "netstandard16" };
-
-var LinuxFrameworks = new string[] {
-    "net-4.5", "net-4.0", "net-3.5", "net-2.0" };
-
-var AllFrameworks = IsRunningOnWindows() ? WindowsFrameworks : LinuxFrameworks;
+var AllFrameworks = new string[] {
+    "net45", "net40", "net35", "net20", "netstandard1.3", "netstandard1.6" };
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -45,9 +40,7 @@ var PACKAGE_DIR = PROJECT_DIR + "package/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
-var SOLUTION_FILE = IsRunningOnWindows()
-    ? "./nunit.sln"
-    : "./nunit.linux.sln";
+var SOLUTION_FILE = "./nunit.sln";
 
 // Package sources for nuget restore
 var PACKAGE_SOURCE = new string[]
@@ -65,8 +58,6 @@ var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
 
 // Packages
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
-
-bool isDotNetCoreInstalled = false;
 
 var packages = new string[]{
     "src/NUnitFramework/framework/packages.config",
@@ -123,8 +114,6 @@ Setup(context =>
     }
 
     Information("Building {0} version {1} of NUnit.", configuration, packageVersion);
-
-    isDotNetCoreInstalled = CheckIfDotNetCoreInstalled();
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -138,133 +127,20 @@ Task("Clean")
         CleanDirectory(BIN_DIR);
     });
 
-
-//////////////////////////////////////////////////////////////////////
-// INITIALIZE FOR BUILD
-//////////////////////////////////////////////////////////////////////
-
-Task("InitializeBuild")
-    .Description("Initializes the build")
-    .Does(() =>
-    {
-        foreach(var package in packages)
-        {
-            Information("Restoring NuGet package " + package);
-            NuGetRestore(package, new NuGetRestoreSettings
-            {
-                PackagesDirectory = "./packages/",
-                Source = PACKAGE_SOURCE
-            });
-        }
-
-        if(isDotNetCoreInstalled)
-        {
-            Information("Restoring .NET Core packages");
-            StartProcess("dotnet", new ProcessSettings
-            {
-                Arguments = "restore"
-            });
-        }
-    });
-
 //////////////////////////////////////////////////////////////////////
 // BUILD FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-Task("Build45")
-    .Description("Builds the .NET 4.5 version of the framework")
+Task("Build")
+    .Description("Builds the Solution")
     .Does(() =>
     {
-        BuildProject("src/NUnitFramework/framework/nunit.framework-4.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-4.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-4.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-4.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-4.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-4.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-4.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-4.5.csproj", configuration);
-    });
-
-Task("Build40")
-    .Description("Builds the .NET 4.0 version of the framework")
-    .Does(() =>
-    {
-        BuildProject("src/NUnitFramework/framework/nunit.framework-4.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-4.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-4.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-4.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-4.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-4.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-4.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-4.0.csproj", configuration);
-    });
-
-Task("Build35")
-    .Description("Builds the .NET 3.5 version of the framework")
-    .Does(() =>
-    {
-        BuildProject("src/NUnitFramework/framework/nunit.framework-3.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-3.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-3.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-3.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-3.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-3.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-3.5.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-3.5.csproj", configuration);
-    });
-
-Task("Build20")
-    .Description("Builds the .NET 2.0 version of the framework")
-    .Does(() =>
-    {
-        BuildProject("src/NUnitFramework/framework/nunit.framework-2.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-2.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-2.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-2.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-2.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-2.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-2.0.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-2.0.csproj", configuration);
-    });
-
-Task("BuildNetStandard13")
-    .Description("Builds the .NET Standard 1.3 version of the framework")
-    .WithCriteria(IsRunningOnWindows())
-    .Does(() =>
-    {
-        if(!isDotNetCoreInstalled)
-        {
-            Warning(".NET Standard 1.3 was not built because .NET Core SDK is not installed");
-            return;
-        }
-        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard13.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard13.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard13.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard13.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard13.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard13.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard13.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard13.csproj", configuration);
-    });
-
-Task("BuildNetStandard16")
-    .Description("Builds the .NET Standard 1.6 version of the framework")
-    .WithCriteria(IsRunningOnWindows())
-    .Does(() =>
-    {
-        if(!isDotNetCoreInstalled)
-        {
-            Warning(".NET Standard 1.6 was not built because .NET Core SDK is not installed");
-            return;
-        }
-        BuildProject("src/NUnitFramework/framework/nunit.framework-netstandard16.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite/nunitlite-netstandard16.csproj", configuration);
-        BuildProject("src/NUnitFramework/mock-assembly/mock-assembly-netstandard16.csproj", configuration);
-        BuildProject("src/NUnitFramework/testdata/nunit.testdata-netstandard16.csproj", configuration);
-        BuildProject("src/NUnitFramework/slow-tests/slow-nunit-tests-netstandard16.csproj", configuration);
-        BuildProject("src/NUnitFramework/tests/nunit.framework.tests-netstandard16.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite.tests/nunitlite.tests-netstandard16.csproj", configuration);
-        BuildProject("src/NUnitFramework/nunitlite-runner/nunitlite-runner-netstandard16.csproj", configuration);
+        MSBuild("./nunit.sln", new MSBuildSettings {
+            Verbosity = Verbosity.Minimal,
+            ToolVersion = MSBuildToolVersion.VS2017,
+            Configuration = configuration,
+            PlatformTarget = PlatformTarget.MSIL
+            });
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -281,11 +157,11 @@ Task("CheckForError")
 
 Task("Test45")
     .Description("Tests the .NET 4.5 version of the framework")
-    .IsDependentOn("Build45")
+    .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "net-4.5";
+        var runtime = "net45";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -293,11 +169,11 @@ Task("Test45")
 
 Task("Test40")
     .Description("Tests the .NET 4.0 version of the framework")
-    .IsDependentOn("Build40")
+    .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "net-4.0";
+        var runtime = "net40";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -305,11 +181,11 @@ Task("Test40")
 
 Task("Test35")
     .Description("Tests the .NET 3.5 version of the framework")
-    .IsDependentOn("Build35")
+    .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "net-3.5";
+        var runtime = "net35";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -317,11 +193,11 @@ Task("Test35")
 
 Task("Test20")
     .Description("Tests the .NET 2.0 version of the framework")
-    .IsDependentOn("Build20")
+    .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "net-2.0";
+        var runtime = "net20";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -330,16 +206,11 @@ Task("Test20")
 Task("TestNetStandard13")
     .Description("Tests the .NET Standard 1.3 version of the framework")
     .WithCriteria(IsRunningOnWindows())
-    .IsDependentOn("BuildNetStandard13")
+    .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        if(!isDotNetCoreInstalled)
-        {
-            Warning(".NET Standard was not tested because .NET Core SDK is not installed");
-            return;
-        }
-        var runtime = "netstandard13";
+        var runtime = "netstandard1.3";
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -348,16 +219,11 @@ Task("TestNetStandard13")
 Task("TestNetStandard16")
     .Description("Tests the .NET Standard 1.6 version of the framework")
     .WithCriteria(IsRunningOnWindows())
-    .IsDependentOn("BuildNetStandard16")
+    .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        if(!isDotNetCoreInstalled)
-        {
-            Warning(".NET Standard was not tested because .NET Core SDK is not installed");
-            return;
-        }
-        var runtime = "netstandard16";
+        var runtime = "netstandard1.6";
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
@@ -464,12 +330,12 @@ Task("PackageZip")
 
         var zipFiles =
             GetFiles(currentImageDir + "*.*") +
-            GetFiles(currentImageDir + "bin/net-2.0/*.*") +
-            GetFiles(currentImageDir + "bin/net-3.5/*.*") +
-            GetFiles(currentImageDir + "bin/net-4.0/*.*") +
-            GetFiles(currentImageDir + "bin/net-4.5/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard13/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard16/*.*");
+            GetFiles(currentImageDir + "bin/net20/*.*") +
+            GetFiles(currentImageDir + "bin/net35/*.*") +
+            GetFiles(currentImageDir + "bin/net40/*.*") +
+            GetFiles(currentImageDir + "bin/net45/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard1.3/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard1.6/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
@@ -496,24 +362,6 @@ Teardown(context => CheckForError(ref ErrorDetail));
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
 
-bool CheckIfDotNetCoreInstalled()
-{
-    try
-    {
-        Information("Checking if .NET Core SDK is installed");
-        StartProcess("dotnet", new ProcessSettings
-        {
-            Arguments = "--version"
-        });
-    }
-    catch(Exception)
-    {
-        Warning(".NET Core SDK is not installed. It can be installed from https://www.microsoft.com/net/core");
-        return false;
-    }
-    return true;
-}
-
 void RunGitCommand(string arguments)
 {
     StartProcess("git", new ProcessSettings()
@@ -538,20 +386,6 @@ void CheckForError(ref List<string> errorDetail)
         throw new Exception("One or more unit tests failed, breaking the build.\n"
                               + copyError.Aggregate((x,y) => x + "\n" + y));
     }
-}
-
-//////////////////////////////////////////////////////////////////////
-// HELPER METHODS - BUILD
-//////////////////////////////////////////////////////////////////////
-
-void BuildProject(string projectPath, string configuration)
-{
-    DotNetBuild(projectPath, settings =>
-        settings.SetConfiguration(configuration)
-        .SetVerbosity(Verbosity.Minimal)
-        .WithTarget("Build")
-        .WithProperty("NodeReuse", "false")
-		.WithProperty("Platform", "AnyCPU"));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -625,17 +459,6 @@ Task("Rebuild")
     .IsDependentOn("Clean")
     .IsDependentOn("Build");
 
-Task("Build")
-    .Description("Builds all versions of the framework")
-    .IsDependentOn("InitializeBuild")
-    .IsDependentOn("Build45")
-    .IsDependentOn("Build40")
-    .IsDependentOn("Build35")
-    .IsDependentOn("Build20")
-// NOTE: The following tasks use Criteria and will be skipped on Linux
-    .IsDependentOn("BuildNetStandard13")
-    .IsDependentOn("BuildNetStandard16");
-
 Task("Test")
     .Description("Builds and tests all versions of the framework")
     .IsDependentOn("Build")
@@ -643,7 +466,6 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
-// NOTE: The following tasks use Criteria and will be skipped on Linux
     .IsDependentOn("TestNetStandard13")
     .IsDependentOn("TestNetStandard16");
 
