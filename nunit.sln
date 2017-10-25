@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework", "src\NUnitFramework\framework\nunit.framework.csproj", "{B7753E96-F76B-4E9B-9071-47B16DB90FD6}"
 EndProject
@@ -16,7 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		BUILDING.md = BUILDING.md
 		CHANGES.md = CHANGES.md
 		CONTRIBUTING.md = CONTRIBUTING.md
-		global.json = global.json
 		LICENSE.txt = LICENSE.txt
 		NOTICES.txt = NOTICES.txt
 		NuGet.config = NuGet.config
