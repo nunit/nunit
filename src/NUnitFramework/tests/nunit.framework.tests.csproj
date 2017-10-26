@@ -1,10 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>nunit.framework.tests</AssemblyName>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
     <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <IntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</IntermediateOutputPath>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -15,11 +14,15 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net20' OR '$(TargetFramework)' == 'net35'">
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;NUNITLITE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35'">
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;ASYNC</DefineConstants>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NUNITLITE;ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;NUNITLITE;ASYNC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

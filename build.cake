@@ -128,19 +128,31 @@ Task("Clean")
     });
 
 //////////////////////////////////////////////////////////////////////
+// NUGET RESTORE
+//////////////////////////////////////////////////////////////////////
+
+Task("NuGetRestore")
+    .Description("Restores NuGet Packages")
+    .Does(() =>
+    {
+        DotNetCoreRestore(SOLUTION_FILE);
+    });
+
+//////////////////////////////////////////////////////////////////////
 // BUILD FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
 Task("Build")
     .Description("Builds the Solution")
+    .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        MSBuild("./nunit.sln", new MSBuildSettings {
+        MSBuild(SOLUTION_FILE, new MSBuildSettings {
             Verbosity = Verbosity.Minimal,
             ToolVersion = MSBuildToolVersion.VS2017,
             Configuration = configuration,
             PlatformTarget = PlatformTarget.MSIL
-            });
+        });
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -211,8 +223,8 @@ Task("TestNetStandard13")
     .Does(() =>
     {
         var runtime = "netstandard1.3";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        var dir = BIN_DIR + "netcoreapp1.1" + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, "../" + runtime + "/" + FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
@@ -224,8 +236,8 @@ Task("TestNetStandard16")
     .Does(() =>
     {
         var runtime = "netstandard1.6";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        var dir = BIN_DIR + "netcoreapp1.1" + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, "../" + runtime + "/" + FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 

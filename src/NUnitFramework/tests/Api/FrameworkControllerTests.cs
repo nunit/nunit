@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -37,11 +37,7 @@ namespace NUnit.Framework.Api
     // Functional tests of the FrameworkController and all subordinate classes
     public class FrameworkControllerTests
     {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
-#else
-        private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
-#endif
         private const string BAD_FILE = "mock-assembly.pdb";
         private const string MISSING_FILE = "junk.dll";
         private const string MISSING_NAME = "junk";
