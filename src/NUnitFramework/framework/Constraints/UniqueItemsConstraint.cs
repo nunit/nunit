@@ -91,8 +91,6 @@ namespace NUnit.Framework.Constraints
                     return CharsUniqueIgnoringCase((IEnumerable<char>)actual);
             }
 
-            MethodInfo method = GetType().GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
-
             return (bool)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
         }
 
