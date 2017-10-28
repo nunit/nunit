@@ -222,6 +222,13 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
+        public void CategoryFilterWithSpecialCharacters_ToXml()
+        {
+            TestFilter filter = new CategoryFilter("Special,Character-Fixture+!");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat>Special,Character-Fixture+!</cat>"));
+        }
+
+        [Test]
         public void CategoryFilter_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
@@ -248,6 +255,13 @@ namespace NUnit.Framework.Internal.Filters
         {
             TestFilter filter = new CategoryFilter("CATEGORY") { IsRegex = true };
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat re=\"1\">CATEGORY</cat>"));
+        }
+
+        [Test]
+        public void CategoryFilterWithSpecialCharacters_ToXml_Regex()
+        {
+            TestFilter filter = new CategoryFilter("Special,Character-Fixture+!") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat re=\"1\">Special,Character-Fixture+!</cat>"));
         }
 
         #endregion
