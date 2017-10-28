@@ -99,12 +99,11 @@ namespace NUnit.Framework.Internal.Filters
         }
 
 
-        [Category("Special,Character-Fixture")]
+        [Category("Special,Character-Fixture+!")]
         private class SpecialCharactersFixture
         {
             [Test]
             public void Test() { }
-
         }
 
         [Category("Another"), Property("Priority", "Low"), Author("Fred Smith")]

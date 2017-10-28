@@ -207,7 +207,7 @@ namespace NUnit.Framework.Internal.Filters
         public void CategoryFilterWithSpecialCharacters_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
-                "<filter><cat>Special,Character-Fixture</cat></filter>");
+                "<filter><cat>Special,Character-Fixture+!</cat></filter>");
 
             Assert.That(filter, Is.TypeOf<CategoryFilter>());
             Assert.That(filter.Match(_specialFixture));
@@ -236,7 +236,7 @@ namespace NUnit.Framework.Internal.Filters
         public void CategoryFilterWithSpecialCharacters_FromXml_Regex()
         {
             TestFilter filter = TestFilter.FromXml(
-                "<filter><cat re='1'>Special,Character-Fixture</cat></filter>");
+                @"<filter><cat re='1'>Special,Character-Fixture\+!</cat></filter>");
 
             Assert.That(filter, Is.TypeOf<CategoryFilter>());
             Assert.That(filter.Match(_specialFixture));

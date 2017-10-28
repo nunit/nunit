@@ -42,11 +42,8 @@ namespace NUnit.TestData.CategoryAttributeData
         [TestCaseSource("Test3Data")]
         public void Test3(int x) { }
 
-        [Test, Category("A-B"), Category("A,B")]
+        [Test, Category("A-B"), Category("A,B"), Category("A!B"), Category("A+B")]
         public void TestValidSpecialChars() { }
-        
-        [Test, Category("A!B"), Category("A+B")]
-        public void TestInvalidSpecialChars() { }
 
 #pragma warning disable 414
         private static TestCaseData[] Test3Data = new TestCaseData[] {
