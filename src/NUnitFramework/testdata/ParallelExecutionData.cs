@@ -33,14 +33,12 @@ namespace NUnit.TestData.ParallelExecutionData
         [OneTimeSetUpAttribute]
         public void RunOneTimeSetUp()
         {
-            TestContext.Progress.Write("OneTimeSetUp running on " + TestContext.CurrentContext.WorkerId);
             Thread.Sleep(1000);
         }
 
         [OneTimeTearDown]
         public void RunOneTimeTearDown()
         {
-            TestContext.Progress.Write("OneTimeTearDown running on " + TestContext.CurrentContext.WorkerId);
             Thread.Sleep(1000);
         }
     }
@@ -50,7 +48,6 @@ namespace NUnit.TestData.ParallelExecutionData
         [Test]
         public void TestFixture1_Test()
         {
-            TestContext.Progress.WriteLine("Test1 running on " + TestContext.CurrentContext.WorkerId);
             Thread.Sleep(1000);
         }
     }
@@ -60,7 +57,6 @@ namespace NUnit.TestData.ParallelExecutionData
         [Test]
         public void TestFixture2_Test()
         {
-            TestContext.Progress.WriteLine("Test2 running on " + TestContext.CurrentContext.WorkerId);
             Thread.Sleep(1000);
         }
     }
@@ -70,7 +66,6 @@ namespace NUnit.TestData.ParallelExecutionData
         [Test]
         public void TestFixture3_Test()
         {
-            TestContext.Progress.WriteLine("Test3 running on " + TestContext.CurrentContext.WorkerId);
             Thread.Sleep(1000);
         }
     }

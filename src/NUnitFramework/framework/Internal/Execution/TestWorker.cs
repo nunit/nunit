@@ -126,6 +126,9 @@ namespace NUnit.Framework.Internal.Execution
                     // This gives us a new set of queues, which are initially 
                     // empty. The intention is that only children of the current
                     // executing item should make use of the new set of queues.
+                    // TODO: If we had a separate NonParallelTestWOrker, it 
+                    // could simply create the isolated queue without  any
+                    // worrying about competing workers.
                     Busy(this, _currentWorkItem);
 
                     // Because we execute the current item AFTER the queue state

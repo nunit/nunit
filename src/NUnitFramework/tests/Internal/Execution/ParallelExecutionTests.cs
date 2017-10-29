@@ -23,6 +23,7 @@
 
 #if PARALLEL
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,42 +35,56 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Internal.Execution
 {
     [TestFixtureSource(nameof(GetParallelSuites))]
+    [NonParallelizable]
     public class ParallelExecutionTests : ITestListener
     {
         private readonly TestSuite _testSuite;
-        private readonly int _numCases;
-        private readonly string _expectedShifts;
+        private readonly Expectations _expectations;
 
-        private List<string> _events;
+        private ConcurrentQueue<TestEvent> _events;
         private TestResult _result;
 
-        public ParallelExecutionTests(TestSuite testSuite, int numCases, string expectedShifts)
+        private IEnumerable<TestEvent> AllEvents { get { return _events.AsEnumerable();  } }    
+        private IEnumerable<TestEvent> ShiftEvents {  get { return AllEvents.Where(e => e.Action == TestAction.ShiftStarted || e.Action == TestAction.ShiftFinished);  } }
+        private IEnumerable<TestEvent> TestEvents {  get { return AllEvents.Where(e => e.Action == TestAction.TestStarting || e.Action == TestAction.TestFinished); } }
+
+        public ParallelExecutionTests(TestSuite testSuite)
         {
             _testSuite = testSuite;
-            _numCases = numCases;
-            _expectedShifts = expectedShifts;
         }
 
+        public ParallelExecutionTests(TestSuite testSuite, Expectations expectations)
+        {
+            _testSuite = testSuite;
+            _expectations = expectations;
+        }
+        
         [OneTimeSetUp]
         public void RunTestSuite()
         {
-            _events = new List<string>();
+            _events = new ConcurrentQueue<TestEvent>();
 
             var dispatcher = new ParallelWorkItemDispatcher(4);
             var context = new TestExecutionContext();
             context.Dispatcher = dispatcher;
             context.Listener = this;
-
+            
             dispatcher.ShiftStarting += (shift) =>
             {
-                lock (_events)
-                    _events.Add("ShiftStarted " + shift.Name);
+                _events.Enqueue(new TestEvent()
+                {
+                    Action = TestAction.ShiftStarted,
+                    ShiftName = shift.Name
+                });
             };
 
             dispatcher.ShiftFinished += (shift) =>
             {
-                lock (_events)
-                    _events.Add("ShiftFinished " + shift.Name);
+                _events.Enqueue(new TestEvent()
+                {
+                    Action = TestAction.ShiftFinished,
+                    ShiftName = shift.Name
+                });
             };
 
             var workItem = TestBuilder.CreateWorkItem(_testSuite, context);
@@ -80,6 +95,7 @@ namespace NUnit.Framework.Internal.Execution
             _result = workItem.Result;
         }
 
+
         // NOTE: The following tests use Assert.Fail under control of an
         // if statement to avoid evaluating DumpEvents unnecessarily.
         // Unfortunately, we can't use the form of Assert that takes
@@ -88,53 +104,48 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void AllTestsPassed()
         {
-            if (_result.ResultState != ResultState.Success)
+            if (_result.ResultState != ResultState.Success || _result.PassCount != _testSuite.TestCaseCount)
                 Assert.Fail(DumpEvents("Not all tests passed"));
         }
 
         [Test]
-        public void AllTestsRan()
-        {
-            if (_result.PassCount != _numCases)
-                Assert.Fail(DumpEvents("Incorrect number of test cases"));
-        }
-
-        // NOTE: The Shift events come directly to the test,
-        // while the test listener events are added to a queue
-        // and arrive a bit more slowly. SO it's possible for
-        // the ShiftFinished event to arrive early, making it
-        // appear that some other events ran outside of any
-        // shift. For that reason, the following test is the
-        // only one that uses the ShiftFinished event. 
-
-        [Test]
-        public void OnlyOneShiftMayBeActive()
+        public void OnlyOneShiftIsActiveAtSameTime()
         {
             int count = 0;
-            lock (_events)
+            foreach (var e in _events)
             {
-                foreach (var @event in _events)
-                {
-                    if (@event.StartsWith("ShiftStarted") && ++count > 1)
-                        Assert.Fail(DumpEvents("Shift started while another shift was active"));
+                if (e.Action == TestAction.ShiftStarted && ++count > 1)
+                    Assert.Fail(DumpEvents("Shift started while another shift was active"));
 
-                    if (@event.StartsWith("ShiftFinished"))
-                        --count;
-                }           
-            }
+                if (e.Action == TestAction.ShiftFinished)
+                    --count;
+            }           
         }
 
         [Test]
-        public void ExpectedShiftsAreRun()
+        public void CorrectInitialShift()
         {
-            lock (_events)
+            string expected = "NonParallel";
+            if (_testSuite.Properties.ContainsKey(PropertyNames.ParallelScope))
             {
-                var shifts = String.Join("+",
-                    _events.FindAll(e => e.StartsWith("ShiftStarted")).Select(e => e.Substring(13)).ToArray());
-
-                if (shifts != _expectedShifts)
-                    Assert.Fail(DumpEvents("Expected " + _expectedShifts + " but was " + shifts));
+                var scope = (ParallelScope)_testSuite.Properties.Get(PropertyNames.ParallelScope);
+                if ((scope & ParallelScope.Self) != 0)
+                    expected = "Parallel";
             }
+
+            var e = _events.First();
+            Assert.That(e.Action, Is.EqualTo(TestAction.ShiftStarted));
+            Assert.That(e.ShiftName, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void TestsRunOnExpectedWorkers()
+        {
+            Assert.Multiple(() =>
+            {
+                foreach (var e in TestEvents)
+                    _expectations.Verify(e);
+            });
         }
 
         #region Test Data
@@ -146,8 +157,12 @@ namespace NUnit.Framework.Internal.Execution
                     .Containing(Suite("NUnit")
                         .Containing(Suite("Tests")
                             .Containing(Fixture(typeof(TestFixture1))))),
-                1,
-                "NonParallel")
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("NUnit").RunsOn("NonParallelWorker"),
+                    That("Tests").RunsOn("NonParallelWorker"),
+                    That("TestFixture1").RunsOn("NonParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("NonParallelWorker")))
                 .SetName("SingleFixture_Default");
 
             yield return new TestFixtureData(
@@ -155,8 +170,12 @@ namespace NUnit.Framework.Internal.Execution
                     .Containing(Suite("NUnit")
                         .Containing(Suite("Tests")
                             .Containing(Fixture(typeof(TestFixture1)).NonParallelizable()))),
-                1,
-                "NonParallel" )
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("NUnit").RunsOn("NonParallelWorker"),
+                    That("Tests").RunsOn("NonParallelWorker"),
+                    That("TestFixture1").RunsOn("NonParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("NonParallelWorker")))
                 .SetName("SingleFixture_NonParallelizable");
 
             yield return new TestFixtureData(
@@ -164,8 +183,12 @@ namespace NUnit.Framework.Internal.Execution
                     .Containing(Suite("NUnit")
                         .Containing(Suite("Tests")
                             .Containing(Fixture(typeof(TestFixture1)).Parallelizable()))),
-                1, // Assert
-                "NonParallel+Parallel" )
+                Expecting(
+                    That("fake-assembly.dll").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
+                    That("NUnit").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
+                    That("Tests").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker")))
                 .SetName("SingleFixture_Parallelizable");
 
             yield return new TestFixtureData(
@@ -173,8 +196,12 @@ namespace NUnit.Framework.Internal.Execution
                     .Containing(Suite("NUnit")
                         .Containing(Suite("Tests")
                             .Containing(Fixture(typeof(TestFixture1))))),
-                1,
-                "NonParallel")
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("NUnit").RunsOn("NonParallelWorker"),
+                    That("Tests").RunsOn("NonParallelWorker"),
+                    That("TestFixture1").RunsOn("NonParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("NonParallelWorker")))
                 .SetName("SingleFixture_AssemblyNonParallelizable");
 
             yield return new TestFixtureData(
@@ -182,50 +209,91 @@ namespace NUnit.Framework.Internal.Execution
                     .Containing(Suite("NUnit")
                         .Containing(Suite("Tests")
                             .Containing(Fixture(typeof(TestFixture1))))),
-                1,
-                "Parallel+NonParallel" )
+                Expecting(
+                    That("fake-assembly.dll").StartsOn("ParallelWorker").FinishesOn("NonParallelWorker"),
+                    That("NUnit").StartsOn("ParallelWorker").FinishesOn("NonParallelWorker"),
+                    That("Tests").StartsOn("ParallelWorker").FinishesOn("NonParallelWorker"),
+                    That("TestFixture1").RunsOn("NonParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("NonParallelWorker")))
                 .SetName("SingleFixture_AssemblyParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll").Parallelizable()
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("Tests")
+                            .Containing(Fixture(typeof(TestFixture1)).Parallelizable()))),
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("ParallelWorker"),
+                    That("NUnit").RunsOn("ParallelWorker"),
+                    That("Tests").RunsOn("ParallelWorker"),
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker")))
+                .SetName("SingleFixture_AssemblyAndFixtureParallelizable");
 
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll")
                     .Containing(Suite("NUnit")
                         .Containing(Suite("TestData")
-                            .Containing(Suite("ParallelExecutionData")
-                                .Containing(Fixture(typeof(TestSetUpFixture))
-                                    .Containing(
-                                        Fixture(typeof(TestFixture1)),
-                                        Fixture(typeof(TestFixture2)),
-                                        Fixture(typeof(TestFixture3))))))),
-                3,
-                "NonParallel+NonParallel+NonParallel" ) // TODO: SHould just be one shift!
+                            .Containing(Fixture(typeof(TestSetUpFixture))
+                                .Containing(
+                                    Fixture(typeof(TestFixture1)),
+                                    Fixture(typeof(TestFixture2)),
+                                    Fixture(typeof(TestFixture3)))))),
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("NUnit").RunsOn("NonParallelWorker"),
+                    That("TestData").RunsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("NonParallelWorker"), // TestSetUpFixture
+                    That("TestFixture1").RunsOn("NonParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture3").RunsOn("NonParallelWorker"),
+                    That("TestFixture3_Test").RunsOn("NonParallelWorker")))
                 .SetName("ThreeFixtures_SetUpFixture_Default");
 
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll")
                     .Containing(Suite("NUnit")
                         .Containing(Suite("TestData")
-                            .Containing(Suite("ParallelExecutionData")
-                                .Containing(Fixture(typeof(TestSetUpFixture))
-                                    .Containing(
-                                        Fixture(typeof(TestFixture1)).Parallelizable(),
-                                        Fixture(typeof(TestFixture2)),
-                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
-                3,
-                "NonParallel+Parallel+NonParallel" ) // TODO: Sometimes get one or two extra NonParallelizable at end
+                            .Containing(Fixture(typeof(TestSetUpFixture))
+                                .Containing(
+                                    Fixture(typeof(TestFixture1)).Parallelizable(),
+                                    Fixture(typeof(TestFixture2)),
+                                    Fixture(typeof(TestFixture3)).Parallelizable())))),
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("NUnit").RunsOn("NonParallelWorker"),
+                    That("TestData").RunsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("NonParallelWorker"), // TestSetUpFixture
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture3").RunsOn("ParallelWorker"),
+                    That("TestFixture3_Test").RunsOn("ParallelWorker")))
                 .SetName("ThreeFixtures_TwoParallelizable_SetUpFixture");
 
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll")
                     .Containing(Suite("NUnit")
                         .Containing(Suite("TestData")
-                            .Containing(Suite("ParallelExecutionData")
-                                .Containing(Fixture(typeof(TestSetUpFixture)).Parallelizable()
-                                    .Containing(
-                                        Fixture(typeof(TestFixture1)).Parallelizable(),
-                                        Fixture(typeof(TestFixture2)),
-                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
-                3,
-                "NonParallel+Parallel+NonParallel+Parallel" ) // TODO: Sometimes get P+P+NP+P
+                            .Containing(Fixture(typeof(TestSetUpFixture)).Parallelizable()
+                                .Containing(
+                                    Fixture(typeof(TestFixture1)).Parallelizable(),
+                                    Fixture(typeof(TestFixture2)),
+                                    Fixture(typeof(TestFixture3)).Parallelizable())))),
+                Expecting(
+                    That("fake-assembly.dll").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
+                    That("NUnit").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
+                    That("TestData").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("ParallelWorker"), // TestSetUpFixture
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture3").RunsOn("ParallelWorker"),
+                    That("TestFixture3_Test").RunsOn("ParallelWorker")))
                 .SetName("ThreeFixtures_TwoParallelizable_ParallelizableSetUpFixture");
         }
 
@@ -235,38 +303,154 @@ namespace NUnit.Framework.Internal.Execution
 
         public void TestStarted(ITest test)
         {
-            lock (_events)
-                _events.Add("TestStarted " + test.FullName);
+            _events.Enqueue(new TestEvent()
+            {
+                Action = TestAction.TestStarting,
+                TestName = test.Name,
+                ThreadName = Thread.CurrentThread.Name
+            });
         }
 
         public void TestFinished(ITestResult result)
         {
-            lock (_events)
-                _events.Add("TestFinished " + result.FullName + " " + result.ResultState);
+            _events.Enqueue(new TestEvent()
+            {
+                Action = TestAction.TestFinished,
+                TestName = result.Name,
+                Result = result.ResultState.ToString(),
+                ThreadName = Thread.CurrentThread.Name
+            });
         }
 
         public void TestOutput(TestOutput output)
         {
-            lock (_events)
-                _events.Add(output.Stream + " " + output.Text.TrimEnd('\r', '\n'));
+
         }
 
         #endregion
 
         #region Helper Methods
 
+        private static TestSuite Suite(string name)
+        {
+            return TestBuilder.MakeSuite(name);
+        }
+
+        private static TestSuite Fixture(Type type)
+        {
+            return TestBuilder.MakeFixture(type);
+        }
+
+        private static Expectations Expecting(params Expectation[] expectations)
+        {
+            return new Expectations(expectations);
+        }
+
+        private static Expectation That(string TestName)
+        {
+            return new Expectation(TestName, null);
+        }
+
         private string DumpEvents(string message)
         {
             var sb = new StringBuilder().AppendLine(message);
 
-            foreach (string @event in _events)
-                sb.AppendLine(@event);
+            foreach (var e in _events)
+                sb.AppendLine(e.ToString());
 
             return sb.ToString();
         }
 
-        public static TestSuite Suite(string name) { return TestBuilder.MakeSuite(name); }
-        public static TestSuite Fixture(Type type) { return TestBuilder.MakeFixture(type); }
+        #endregion
+
+        #region Nested Types
+
+        public enum TestAction
+        {
+            ShiftStarted,
+            ShiftFinished,
+            TestStarting,
+            TestFinished
+        }
+
+        public class TestEvent
+        {
+            public TestAction Action;
+            public string TestName;
+            public string ThreadName;
+            public string ShiftName;
+            public string Result;
+
+            public override string ToString()
+            {
+                switch (Action)
+                {
+                    case TestAction.ShiftStarted:
+                        return $"{Action} {ShiftName}";
+
+                    default:
+                    case TestAction.TestStarting:
+                        return $"{Action} {TestName} [{ThreadName}]";
+
+                    case TestAction.TestFinished:
+                        return $"{Action} {TestName} {Result} [{ThreadName}]";
+                }
+            }
+        }
+
+        public class Expectation
+        {
+            public string TestName { get; }
+            public string StartWorker { get; private set; }
+            public string FinishWorker { get; private set; }
+
+            public Expectation(string testName, string workerType)
+            {
+                TestName = testName;
+                StartWorker = workerType;
+            }
+
+            public Expectation RunsOn(string worker)
+            {
+                StartWorker = FinishWorker = worker;
+                return this;
+            }
+
+            public Expectation StartsOn(string worker)
+            {
+                StartWorker = worker;
+                return this;
+            }
+
+            public Expectation FinishesOn(string worker)
+            {
+                FinishWorker = worker;
+                return this;
+            }
+
+            public void Verify(TestEvent e)
+            {
+                var worker = e.Action == TestAction.TestStarting ? StartWorker : FinishWorker;
+                Assert.That(e.ThreadName, Does.StartWith(worker), $"{e.Action} {e.TestName} running on wrong type of worker thread.");
+            }
+        }
+
+        public class Expectations
+        {
+            private Dictionary<string, Expectation> _expectations = new Dictionary<string, Expectation>();
+
+            public Expectations(params Expectation[] expectations)
+            {
+                foreach (var expectation in expectations)
+                    _expectations.Add(expectation.TestName, expectation);
+            }
+
+            public void Verify(TestEvent e)
+            {
+                Assert.That(_expectations, Does.ContainKey(e.TestName), $"The test {e.TestName} is not in the dictionary.");
+                _expectations[e.TestName].Verify(e);
+            }
+        }
 
         #endregion
     }

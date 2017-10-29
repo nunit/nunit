@@ -39,9 +39,10 @@ namespace NUnit.Framework.Internal.Execution
         private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
 
         private WorkItem _topLevelWorkItem;
+        private Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
 
         #region Events
-        
+
         /// <summary>
         /// Event raised whenever a shift is starting.
         /// </summary>
@@ -246,6 +247,9 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (WorkItemQueue queue in Queues)
                     queue.Save();
 
+                _savedWorkItems.Push(_topLevelWorkItem);
+                _topLevelWorkItem = work;
+
                 _isolationLevel++;
             }
         }
@@ -255,9 +259,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void RestoreQueues()
         {
-            Guard.OperationValid(_isolationLevel > 0, $"Internal Error: Called {nameof(RestoreQueues)} with no saved queues.");
-            Guard.OperationValid(Queues.All(q => q.IsEmpty), $"Internal Error: Called {nameof(RestoreQueues)} with non-empty queues.");
-
+            Guard.OperationValid(_isolationLevel > 0, $"Called {nameof(RestoreQueues)} with no saved queues.");
+            
             // Keep lock until we can remove for both methods
             lock (_queueLock)
             {
@@ -265,6 +268,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 foreach (WorkItemQueue queue in Queues)
                     queue.Restore();
+                _topLevelWorkItem = _savedWorkItems.Pop();
 
                 _isolationLevel--;
             }
@@ -280,6 +284,7 @@ namespace NUnit.Framework.Internal.Execution
 
             WorkShift nextShift = null;
 
+#if false
             // Shift has ended but all work may not yet be done
             while (_topLevelWorkItem.State != WorkItemState.Complete)
             {
@@ -307,6 +312,34 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var shift in Shifts)
                     shift.ShutDown();
             }
+#else
+            while (true)
+            {
+                // Shift has ended but all work may not yet be done
+                while (_topLevelWorkItem.State != WorkItemState.Complete)
+                {
+                    // This will return if all queues are empty.
+                    nextShift = SelectNextShift();
+                    if (nextShift != null)
+                    {
+                        ShiftStarting?.Invoke(nextShift);
+                        nextShift.Start();
+                        return;
+                    }
+                }
+
+                // If the shift has ended for an isolated queue, restore
+                // the queues and keep trying. Otherwise, we are done.
+                if (_isolationLevel > 0)
+                    RestoreQueues();
+                else
+                    break;
+            }
+
+            // All done - shutdown all shifts
+            foreach (var shift in Shifts)
+                shift.ShutDown();
+#endif
         }
 
         private WorkShift SelectNextShift()
@@ -321,7 +354,7 @@ namespace NUnit.Framework.Internal.Execution
 #endregion
     }
 
-    #region ParallelScopeHelper Class
+#region ParallelScopeHelper Class
 
 #if NET_2_0 || NET_3_5
     static class ParallelScopeHelper
@@ -333,6 +366,6 @@ namespace NUnit.Framework.Internal.Execution
     }
 #endif
 
-    #endregion
+#endregion
 }
 #endif
