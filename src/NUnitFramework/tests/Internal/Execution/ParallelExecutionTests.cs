@@ -233,8 +233,24 @@ namespace NUnit.Framework.Internal.Execution
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll")
                     .Containing(Suite("NUnit")
+                        .Containing(Suite("Tests")
+                            .Containing(Fixture(typeof(TestFixtureWithParallelParameterizedTest))))),
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("NUnit").RunsOn("NonParallelWorker"),
+                    That("Tests").RunsOn("NonParallelWorker"),
+                    That("TestFixtureWithParallelParameterizedTest").RunsOn("NonParallelWorker"),
+                    That("ParameterizedTest").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
+                    That("ParameterizedTest(1)").RunsOn("ParallelWorker"),
+                    That("ParameterizedTest(2)").RunsOn("ParallelWorker"),
+                    That("ParameterizedTest(3)").RunsOn("ParallelWorker")))
+                .SetName("SingleFixture_ParameterizedTest");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
                         .Containing(Suite("TestData")
-                            .Containing(Fixture(typeof(TestSetUpFixture))
+                            .Containing(Fixture(typeof(SetUpFixture1))
                                 .Containing(
                                     Fixture(typeof(TestFixture1)),
                                     Fixture(typeof(TestFixture2)),
@@ -243,7 +259,7 @@ namespace NUnit.Framework.Internal.Execution
                     That("fake-assembly.dll").RunsOn("NonParallelWorker"),
                     That("NUnit").RunsOn("NonParallelWorker"),
                     That("TestData").RunsOn("NonParallelWorker"),
-                    That("ParallelExecutionData").RunsOn("NonParallelWorker"), // TestSetUpFixture
+                    That("ParallelExecutionData").RunsOn("NonParallelWorker"), // SetUpFixture1
                     That("TestFixture1").RunsOn("NonParallelWorker"),
                     That("TestFixture1_Test").RunsOn("NonParallelWorker"),
                     That("TestFixture2").RunsOn("NonParallelWorker"),
@@ -256,7 +272,7 @@ namespace NUnit.Framework.Internal.Execution
                 Suite("fake-assembly.dll")
                     .Containing(Suite("NUnit")
                         .Containing(Suite("TestData")
-                            .Containing(Fixture(typeof(TestSetUpFixture))
+                            .Containing(Fixture(typeof(SetUpFixture1))
                                 .Containing(
                                     Fixture(typeof(TestFixture1)).Parallelizable(),
                                     Fixture(typeof(TestFixture2)),
@@ -265,7 +281,7 @@ namespace NUnit.Framework.Internal.Execution
                     That("fake-assembly.dll").RunsOn("NonParallelWorker"),
                     That("NUnit").RunsOn("NonParallelWorker"),
                     That("TestData").RunsOn("NonParallelWorker"),
-                    That("ParallelExecutionData").RunsOn("NonParallelWorker"), // TestSetUpFixture
+                    That("ParallelExecutionData").RunsOn("NonParallelWorker"), // SetUpFixture1
                     That("TestFixture1").RunsOn("ParallelWorker"),
                     That("TestFixture1_Test").RunsOn("ParallelWorker"),
                     That("TestFixture2").RunsOn("NonParallelWorker"),
@@ -278,16 +294,16 @@ namespace NUnit.Framework.Internal.Execution
                 Suite("fake-assembly.dll")
                     .Containing(Suite("NUnit")
                         .Containing(Suite("TestData")
-                            .Containing(Fixture(typeof(TestSetUpFixture)).Parallelizable()
+                            .Containing(Fixture(typeof(SetUpFixture1)).Parallelizable()
                                 .Containing(
                                     Fixture(typeof(TestFixture1)).Parallelizable(),
                                     Fixture(typeof(TestFixture2)),
                                     Fixture(typeof(TestFixture3)).Parallelizable())))),
                 Expecting(
-                    That("fake-assembly.dll").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
-                    That("NUnit").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
-                    That("TestData").StartsOn("NonParallelWorker").FinishesOn("ParallelWorker"),
-                    That("ParallelExecutionData").RunsOn("ParallelWorker"), // TestSetUpFixture
+                    That("fake-assembly.dll").StartsOn("NonParallelWorker"),
+                    That("NUnit").StartsOn("NonParallelWorker"),
+                    That("TestData").StartsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("ParallelWorker"), // SetUpFixture1
                     That("TestFixture1").RunsOn("ParallelWorker"),
                     That("TestFixture1_Test").RunsOn("ParallelWorker"),
                     That("TestFixture2").RunsOn("NonParallelWorker"),
@@ -295,6 +311,98 @@ namespace NUnit.Framework.Internal.Execution
                     That("TestFixture3").RunsOn("ParallelWorker"),
                     That("TestFixture3_Test").RunsOn("ParallelWorker")))
                 .SetName("ThreeFixtures_TwoParallelizable_ParallelizableSetUpFixture");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("TestData")
+                            .Containing(Fixture(typeof(SetUpFixture1)).Parallelizable()
+                                .Containing(Fixture(typeof(SetUpFixture2)).Parallelizable()
+                                    .Containing(
+                                        Fixture(typeof(TestFixture1)).Parallelizable(),
+                                        Fixture(typeof(TestFixture2)),
+                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
+                Expecting(
+                    That("fake-assembly.dll").StartsOn("NonParallelWorker"),
+                    That("NUnit").StartsOn("NonParallelWorker"),
+                    That("TestData").StartsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("ParallelWorker"), // SetUpFixture1 && SetUpFixture2
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture3").RunsOn("ParallelWorker"),
+                    That("TestFixture3_Test").RunsOn("ParallelWorker")))
+                .SetName("ThreeFixtures_TwoSetUpFixturesInSameNamespace_BothParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("TestData")
+                            .Containing(Fixture(typeof(SetUpFixture1))
+                                .Containing(Fixture(typeof(SetUpFixture2))
+                                    .Containing(
+                                        Fixture(typeof(TestFixture1)).Parallelizable(),
+                                        Fixture(typeof(TestFixture2)),
+                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("NUnit").RunsOn("NonParallelWorker"),
+                    That("TestData").RunsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("*"), // SetUpFixture1 && SetUpFixture2
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture3").RunsOn("ParallelWorker"),
+                    That("TestFixture3_Test").RunsOn("ParallelWorker")))
+                .SetName("ThreeFixtures_TwoSetUpFixturesInSameNamespace_NeitherParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("TestData")
+                            .Containing(Fixture(typeof(SetUpFixture1)).Parallelizable()
+                                .Containing(Fixture(typeof(SetUpFixture2))
+                                    .Containing(
+                                        Fixture(typeof(TestFixture1)).Parallelizable(),
+                                        Fixture(typeof(TestFixture2)),
+                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
+                Expecting(
+                    That("fake-assembly.dll").StartsOn("NonParallelWorker"),
+                    That("NUnit").StartsOn("NonParallelWorker"),
+                    That("TestData").StartsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("*"), // SetUpFixture1 && SetUpFixture2 (we can't distinguish the two)
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture3").RunsOn("ParallelWorker"),
+                    That("TestFixture3_Test").RunsOn("ParallelWorker")))
+                .SetName("ThreeFixtures_TwoSetUpFixturesInSameNamespace_FirstOneParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("NUnit")
+                        .Containing(Suite("TestData")
+                            .Containing(Fixture(typeof(SetUpFixture1))
+                                .Containing(Fixture(typeof(SetUpFixture2)).Parallelizable()
+                                    .Containing(
+                                        Fixture(typeof(TestFixture1)).Parallelizable(),
+                                        Fixture(typeof(TestFixture2)),
+                                        Fixture(typeof(TestFixture3)).Parallelizable()))))),
+                Expecting(
+                    That("fake-assembly.dll").StartsOn("NonParallelWorker"),
+                    That("NUnit").StartsOn("NonParallelWorker"),
+                    That("TestData").StartsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("*"), // SetUpFixture1 && SetUpFixture2 (we can't distinguish the two)
+                    That("TestFixture1").RunsOn("ParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("ParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker"),
+                    That("TestFixture3").RunsOn("ParallelWorker"),
+                    That("TestFixture3_Test").RunsOn("ParallelWorker")))
+                .SetName("ThreeFixtures_TwoSetUpFixturesInSameNamespace_SecondOneParallelizable");
         }
 
         #endregion
@@ -346,9 +454,9 @@ namespace NUnit.Framework.Internal.Execution
             return new Expectations(expectations);
         }
 
-        private static Expectation That(string TestName)
+        private static Expectation That(string testName)
         {
-            return new Expectation(TestName, null);
+            return new Expectation(testName);
         }
 
         private string DumpEvents(string message)
@@ -404,34 +512,48 @@ namespace NUnit.Framework.Internal.Execution
             public string StartWorker { get; private set; }
             public string FinishWorker { get; private set; }
 
-            public Expectation(string testName, string workerType)
+            public Expectation(string testName)
             {
                 TestName = testName;
-                StartWorker = workerType;
+                StartWorker = FinishWorker = "*";
             }
 
+            // THe RunsOn method specifies that the work item will
+            // run entirely on a particular worker. In the case of
+            // a composite work item, this doesn't include its
+            // children, which may run on a different thread.
             public Expectation RunsOn(string worker)
             {
                 StartWorker = FinishWorker = worker;
                 return this;
             }
 
+            // Sometimes, the thread used to complete a composite work item
+            // is unimportant because there is no actual user code to run.
+            // In that case, we can just specify which worker is used to
+            // initially run the item using StartsOn
             public Expectation StartsOn(string worker)
             {
                 StartWorker = worker;
                 return this;
             }
 
+            // FinishesOn may be used if we know that the work item
+            // starts and finishes on different threads and we want
+            // to specify both of them. In most cases, this amounts
+            // to over-specification since we usually don't care.
             public Expectation FinishesOn(string worker)
             {
                 FinishWorker = worker;
                 return this;
             }
 
+            // Verify that a particular TestEvent meets all expectations
             public void Verify(TestEvent e)
             {
                 var worker = e.Action == TestAction.TestStarting ? StartWorker : FinishWorker;
-                Assert.That(e.ThreadName, Does.StartWith(worker), $"{e.Action} {e.TestName} running on wrong type of worker thread.");
+                if (worker != "*")
+                    Assert.That(e.ThreadName, Does.StartWith(worker), $"{e.Action} {e.TestName} running on wrong type of worker thread.");
             }
         }
 
