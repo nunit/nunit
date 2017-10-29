@@ -120,7 +120,7 @@ namespace NUnit.Framework.Assertions
                 () => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z")));
         }
 
-        static readonly IEnumerable<int> RANGE = new RangeOfInt(0, 10000);
+        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
 
         static readonly IEnumerable[] PerformanceData =
         {

@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
             new object[] {new[] {"a", "b", "c", "C"}}
         };
 
-        static readonly IEnumerable<int> RANGE = new RangeOfInt(0, 10000);
+        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
 
         static readonly TestCaseData[] PerformanceData =
         {
