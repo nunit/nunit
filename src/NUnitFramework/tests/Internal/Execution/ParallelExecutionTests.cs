@@ -403,6 +403,24 @@ namespace NUnit.Framework.Internal.Execution
                     That("TestFixture3").RunsOn("ParallelWorker"),
                     That("TestFixture3_Test").RunsOn("ParallelWorker")))
                 .SetName("ThreeFixtures_TwoSetUpFixturesInSameNamespace_SecondOneParallelizable");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll")
+                    .Containing(Suite("SomeNamespace")
+                        .Containing(Fixture(typeof(SetUpFixture1)))
+                            .Containing(Fixture(typeof(TestFixture1))))
+                    .Containing(Suite("OtherNamespace")
+                        .Containing(Fixture(typeof(TestFixture2)))),
+                Expecting(
+                    That("fake-assembly.dll").RunsOn("NonParallelWorker"),
+                    That("SomeNamespace").RunsOn("NonParallelWorker"),
+                    That("ParallelExecutionData").RunsOn("NonParallelWorker"), // SetUpFixture1
+                    That("TestFixture1").RunsOn("NonParallelWorker"),
+                    That("TestFixture1_Test").RunsOn("NonParallelWorker"),
+                    That("OtherNamespace").RunsOn("NonParallelWorker"),
+                    That("TestFixture2").RunsOn("NonParallelWorker"),
+                    That("TestFixture2_Test").RunsOn("NonParallelWorker")))
+                .SetName("Issue-2464");
         }
 
         #endregion
