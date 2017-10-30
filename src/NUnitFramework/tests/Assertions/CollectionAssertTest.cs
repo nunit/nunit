@@ -220,6 +220,62 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.AreEqual(array, CountToThree());
         }
 
+        [Test]
+        public void AreEqualFails_ObjsUsingIEquatable()
+        {
+            IEnumerable set1 = new SimpleEnumerableWithIEquatable("x", "y", "z");
+            IEnumerable set2 = new SimpleEnumerableWithIEquatable("x", "z", "z");
+
+            Assert.AreNotEqual(set1, set2);
+
+            Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2));
+        }
+
+        [Test]
+        public void IEnumerablesAreEqualWithCollectionsObjectsImplemetingIEquatable()
+        {
+            IEnumerable set1 = new SimpleEnumerable(new SimpleIEquatableObj());
+            IEnumerable set2 = new SimpleEnumerable(new SimpleIEquatableObj());
+
+            CollectionAssert.AreEqual(set1, set2);
+        }
+
+        //[Test]
+        //public void IEnumerablesAreNotEqualWithCollectionsObjectsImplemetingIEquatableDiffNumberingElems()
+        //{
+        //    IEnumerable set1 = new SimpleEnumerable(new SimpleIEquatableObj());
+        //    IEnumerable set2 = new SimpleEnumerable(new SimpleIEquatableObj(), new SimpleIEquatableObj());
+
+        //    CollectionAssert.AreNotEqual(set1, set2);
+        //}
+
+        //[Test]
+        //public void IEnumerablesAreEqualWithCollectionObjectsImplementingOverridenEqualsDiffNumberingElems()
+        //{
+        //    IEnumerable set1 = new SimpleEnumerable(new SimpleOverridenEqualsObj());
+        //    IEnumerable set2 = new SimpleEnumerable(new SimpleOverridenEqualsObj());
+
+        //    CollectionAssert.AreEqual(set1, set2);
+        //}
+
+        //[Test]
+        //public void IEnumerablesAreNotEqualWithCollectionObjectsImplementingOverridenEquals()
+        //{
+        //    IEnumerable set1 = new SimpleEnumerable(new SimpleOverridenEqualsObj());
+        //    IEnumerable set2 = new SimpleEnumerable(new SimpleOverridenEqualsObj(), new SimpleOverridenEqualsObj());
+
+        //    CollectionAssert.AreNotEqual(set1, set2);
+        //}
+
+        [Test]
+        public void ArraysAreEqualWithCollectionsObjectsImplemetingIEquatable()
+        {
+            SimpleIEquatableObj[] set1 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
+            SimpleIEquatableObj[] set2 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
+
+            CollectionAssert.AreEqual(set1, set2);
+        }
+
         IEnumerable CountToThree()
         {
             yield return 1;

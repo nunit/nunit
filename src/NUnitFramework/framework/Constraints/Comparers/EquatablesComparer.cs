@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool? Equal(object x, object y, ref Tolerance tolerance)
         {
-            if (_equalityComparer.CompareAsCollection)
+            if (_equalityComparer.CompareAsCollection && _equalityComparer.TopLevelComparison)
                 return null;
 
             Type xType = x.GetType();

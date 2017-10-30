@@ -54,4 +54,69 @@ namespace NUnit.TestUtilities.Collections
 
         #endregion
     }
+
+    class SimpleEnumerableWithIEquatable : IEnumerable, IEquatable<IEnumerable<object>>
+    {
+        private readonly List<object> _contents = new List<object>();
+
+        public SimpleEnumerableWithIEquatable(IEnumerable<object> source)
+        {
+            _contents = new List<object>(source);
+        }
+
+        public SimpleEnumerableWithIEquatable(params object[] source)
+        {
+            _contents = new List<object>(source);
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _contents.GetEnumerator();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is IEnumerable<object>)
+            {
+                List<object> other = new List<object>((IEnumerable<object>)obj);
+
+                return other[0].Equals(_contents[0]);
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public bool Equals(IEnumerable<object> other)
+        {
+            List<object> otherList = new List<object>(other);
+
+            return _contents[0] == otherList[0];
+        }
+    }
+
+    class SimpleIEquatableObj : IEquatable<SimpleIEquatableObj>
+    {
+        public bool Equals(SimpleIEquatableObj other)
+        {
+            return true;
+        }
+    }
+
+    class SimpleOverridenEqualsObj
+    {
+        public override bool Equals(object obj)
+        {
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+    }
 }

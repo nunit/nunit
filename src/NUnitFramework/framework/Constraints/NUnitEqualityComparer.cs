@@ -60,6 +60,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private readonly List<IChainComparer> _comparers;
 
+        private bool _topLevelComparison = true;
+
         #endregion
 
         internal NUnitEqualityComparer()
@@ -83,6 +85,11 @@ namespace NUnit.Framework.Constraints
                 new ValueTupleComparer(this),
                 _enumerablesComparer
             };
+        }
+
+        internal NUnitEqualityComparer(NUnitEqualityComparer copy)
+        {
+
         }
 
         #region Properties
@@ -112,6 +119,16 @@ namespace NUnit.Framework.Constraints
         {
             get { return compareAsCollection; }
             set { compareAsCollection = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets a flag whether or not the current comparison
+        /// is the top level comparison.
+        /// </summary>
+        internal bool TopLevelComparison
+        {
+            get { return _topLevelComparison; }
+            set { _topLevelComparison = value; }
         }
 
         /// <summary>
