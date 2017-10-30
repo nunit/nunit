@@ -421,6 +421,15 @@ namespace NUnit.Framework.Internal.Execution
                     That("TestFixture2").RunsOn("NonParallelWorker"),
                     That("TestFixture2_Test").RunsOn("NonParallelWorker")))
                 .SetName("Issue-2464");
+
+            yield return new TestFixtureData(
+                Suite("fake-assembly.dll").Parallelizable()
+                    .Containing(Fixture(typeof(STAFixture)).Parallelizable()),
+                Expecting(
+                    That("fake-assembly.dll").StartsOn("ParallelWorker"),
+                    That("STAFixture").RunsOn("ParallelSTAWorker"),
+                    That("STAFixture_Test").RunsOn("ParallelSTAWorker")))
+                .SetName("Issue-2467");
         }
 
         #endregion

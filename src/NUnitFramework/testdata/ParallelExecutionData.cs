@@ -86,6 +86,16 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 
+    [Apartment(ApartmentState.STA)]
+    public class STAFixture
+    {
+        [Test]
+        public void STAFixture_Test()
+        {
+            Thread.Sleep(100);
+        }
+    }
+
     public class TestFixtureWithParallelParameterizedTest
     {
         [TestCase(1)]
