@@ -207,9 +207,10 @@ namespace NUnit.Framework.Api
             Assert.That(key2Node.Attributes["value"], Is.EqualTo(value));
         }
 
-        [TestCaseSource(nameof(SettingsData))]
-        public void InsertSettingsElement_SettingIsDictionaryHasNull_CreatesEntriesWithKeysAndValuesFromDictionary(string value)
+        [Test]
+        public void InsertSettingsElement_SettingIsDictionaryHasNull_CreatesEntriesWithKeysAndValuesFromDictionary()
         {
+            string value = "test";
             var outerNode = new TNode("test");
             var testSettings = new Dictionary<string, object>();
             testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", null }, { "key2", value } });
