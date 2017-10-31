@@ -39,15 +39,13 @@ namespace NUnit.Framework.Internal
         private const int STRING_LIMIT = STRING_MAX - 3;
         private const string THREE_DOTS = "...";
 
-        internal sealed class NonmatchingTypeClass
-        {
-        }
+        internal sealed class NonmatchingTypeClass { }
 
         /// <summary>
         /// A special value, which is used to indicate that BestCommonType() method
         /// was unable to find a common type for the specified arguments.
         /// </summary>
-        public static readonly Type NonmatchingType = typeof( NonmatchingTypeClass );
+        public static readonly Type NonmatchingType = typeof(NonmatchingTypeClass);
 
         /// <summary>
         /// Gets the display name for a Type as used by NUnit.
@@ -66,7 +64,7 @@ namespace NUnit.Framework.Internal
                 if (index >= 0) name = name.Substring(0, index);
 
                 index = name.LastIndexOf('.');
-                if (index >= 0) name = name.Substring(index+1);
+                if (index >= 0) name = name.Substring(index + 1);
 
                 var genericArguments = type.GetGenericArguments();
                 var currentArgument = 0;
@@ -106,8 +104,8 @@ namespace NUnit.Framework.Internal
             }
 
             int lastdot = type.FullName.LastIndexOf('.');
-            return lastdot >= 0 
-                ? type.FullName.Substring(lastdot+1)
+            return lastdot >= 0
+                ? type.FullName.Substring(lastdot + 1)
                 : type.FullName;
         }
 
@@ -123,7 +121,7 @@ namespace NUnit.Framework.Internal
             if (arglist == null || arglist.Length == 0)
                 return baseName;
 
-            StringBuilder sb = new StringBuilder( baseName );
+            StringBuilder sb = new StringBuilder(baseName);
 
             sb.Append("(");
             for (int i = 0; i < arglist.Length; i++)
@@ -165,8 +163,8 @@ namespace NUnit.Framework.Internal
         /// <returns>Either type1 or type2, depending on which is more general.</returns>
         public static Type BestCommonType(Type type1, Type type2)
         {
-            if ( type1 == TypeHelper.NonmatchingType ) return TypeHelper.NonmatchingType;
-            if ( type2 == TypeHelper.NonmatchingType ) return TypeHelper.NonmatchingType;
+            if (type1 == TypeHelper.NonmatchingType) return TypeHelper.NonmatchingType;
+            if (type2 == TypeHelper.NonmatchingType) return TypeHelper.NonmatchingType;
 
             if (type1 == type2) return type1;
             if (type1 == null) return type2;
@@ -208,8 +206,8 @@ namespace NUnit.Framework.Internal
                 if (type2 == typeof(sbyte)) return type2;
             }
 
-            if ( type1.IsAssignableFrom( type2 ) ) return type1;
-            if ( type2.IsAssignableFrom( type1 ) ) return type2;
+            if (type1.IsAssignableFrom(type2)) return type1;
+            if (type2.IsAssignableFrom(type1)) return type2;
 
             return TypeHelper.NonmatchingType;
         }
@@ -224,16 +222,16 @@ namespace NUnit.Framework.Internal
         public static bool IsNumeric(Type type)
         {
             return type == typeof(double) ||
-                    type == typeof(float) ||
-                    type == typeof(decimal) ||
-                    type == typeof(Int64) ||
-                    type == typeof(Int32) ||
-                    type == typeof(Int16) ||
-                    type == typeof(UInt64) ||
-                    type == typeof(UInt32) ||
-                    type == typeof(UInt16) ||
-                    type == typeof(byte) ||
-                    type == typeof(sbyte);
+                   type == typeof(float) ||
+                   type == typeof(decimal) ||
+                   type == typeof(Int64) ||
+                   type == typeof(Int32) ||
+                   type == typeof(Int16) ||
+                   type == typeof(UInt64) ||
+                   type == typeof(UInt32) ||
+                   type == typeof(UInt16) ||
+                   type == typeof(byte) ||
+                   type == typeof(sbyte);
         }
 
         /// <summary>
@@ -262,12 +260,10 @@ namespace NUnit.Framework.Internal
                         {
                             if (targetType == typeof(double) || targetType == typeof(float))
                                 convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
-                            else
-                                if (targetType == typeof(long))
-                                    convert = arg is int || arg is short || arg is byte || arg is sbyte;
-                                else
-                                    if (targetType == typeof(short))
-                                        convert = arg is byte || arg is sbyte;
+                            else if (targetType == typeof(long))
+                                convert = arg is int || arg is short || arg is byte || arg is sbyte;
+                            else if (targetType == typeof(short))
+                                convert = arg is byte || arg is sbyte;
                         }
                     }
 
@@ -304,8 +300,8 @@ namespace NUnit.Framework.Internal
                     {
                         if (typeParameters[i].IsGenericParameter || parameters[j].ParameterType.Equals(typeParameters[i]))
                             typeArgs[i] = TypeHelper.BestCommonType(
-                                              typeArgs[i],
-                                              arglist[j].GetType());
+                                typeArgs[i],
+                                arglist[j].GetType());
                     }
 
                     if (typeArgs[i] == null)
@@ -347,6 +343,43 @@ namespace NUnit.Framework.Internal
             }
 
             return declaredInterfaces.ToArray();
+        }
+
+        /// <summary>
+        /// Return whether or not the given type is a ValueTuple.
+        /// </summary>
+        /// <param name="type">Type.</param>
+        /// <returns>Whether or not the given type is a ValueTuple.</returns>
+        public static bool IsValueTuple(Type type)
+        {
+            return IsTupleInternal(type, "System.ValueTuple");
+        }
+
+        /// <summary>
+        /// Return whether or not the given type is a Tuple.
+        /// </summary>
+        /// <param name="type">Type.</param>
+        /// <returns>Whether or not the given type is a Tuple.</returns>
+        public static bool IsTuple(Type type)
+        {
+            return IsTupleInternal(type, "System.Tuple");
+        }
+
+        private static bool IsTupleInternal(Type type, string tupleName)
+        {
+            string typeName = type.FullName;
+            
+            if (typeName.EndsWith("[]"))
+                return false;
+
+            string typeNameWithoutGenerics = GetTypeNameWithoutGenerics(typeName);
+            return typeNameWithoutGenerics == tupleName;
+        }
+
+        private static string GetTypeNameWithoutGenerics(string fullTypeName)
+        {
+            int index = fullTypeName.IndexOf('`');
+            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
         }
     }
 }

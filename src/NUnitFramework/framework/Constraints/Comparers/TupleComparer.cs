@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Compatibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -31,15 +32,13 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal class TupleComparer : TupleComparerBase
     {
-        const string nameofTuple = "System.Tuple";
-
         internal TupleComparer(NUnitEqualityComparer equalityComparer)
             : base(equalityComparer)
         { }
 
-        protected override string NameOfType
+        protected override bool IsCorrectType(Type type)
         {
-            get { return nameofTuple; }
+            return TypeHelper.IsTuple(type);
         }
 
         protected override object GetValue(Type type, string propertyName, object obj)
