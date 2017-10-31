@@ -284,41 +284,12 @@ namespace NUnit.Framework.Internal.Execution
 
             WorkShift nextShift = null;
 
-#if false
-            // Shift has ended but all work may not yet be done
-            while (_topLevelWorkItem.State != WorkItemState.Complete)
-            {
-                // This will return if all queues are empty.
-                nextShift = SelectNextShift();
-                if (nextShift != null)
-                    break;
-
-                // If the shift has ended for an isolated queue and there
-                // is no more work, we restore the queues and keep trying.
-                if (_isolationLevel > 0)
-                    RestoreQueues();
-
-                // We are at level zero - just continue to wait
-            }
-
-            // If we have a shift to start, do it
-            if (nextShift != null)
-            {
-                ShiftStarting?.Invoke(nextShift);
-                nextShift.Start();
-            }
-            else // otherwise, shutdown.
-            {
-                foreach (var shift in Shifts)
-                    shift.ShutDown();
-            }
-#else
             while (true)
             {
                 // Shift has ended but all work may not yet be done
                 while (_topLevelWorkItem.State != WorkItemState.Complete)
                 {
-                    // This will return if all queues are empty.
+                    // This will return null if all queues are empty.
                     nextShift = SelectNextShift();
                     if (nextShift != null)
                     {
@@ -339,7 +310,6 @@ namespace NUnit.Framework.Internal.Execution
             // All done - shutdown all shifts
             foreach (var shift in Shifts)
                 shift.ShutDown();
-#endif
         }
 
         private WorkShift SelectNextShift()

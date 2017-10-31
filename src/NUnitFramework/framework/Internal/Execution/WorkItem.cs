@@ -324,15 +324,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Standard Dispose implementation
-        /// </summary>
-        protected virtual void Dispose(bool disposing)
-        {
             if (_completionEvent != null)
 #if NET_2_0 || NET_3_5
                 _completionEvent.Close();

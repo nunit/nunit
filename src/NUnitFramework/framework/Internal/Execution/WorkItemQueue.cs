@@ -339,6 +339,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         internal void Restore()
         {
+            // TODO: Originally, the following Guard statement was used. In theory, no queues should be running
+            // when we are doing a restore. It appears, however, that we end the shift, pausing queues, buy that
+            // a thread may then sneak in and restart some of them. My tests pass without the guard but I'm still
+            // concerned to understand what is happening and why. I'm leaving this commented out so that somebody
+            // else can take a look at it later on.
             //Guard.OperationValid(State != WorkItemQueueState.Running, $"Attempted to restore state of {Name} while queue was running.");
 
             var savedQueues = _savedState.Pop().InnerQueues;
