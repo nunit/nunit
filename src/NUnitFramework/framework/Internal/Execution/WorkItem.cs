@@ -67,9 +67,15 @@ namespace NUnit.Framework.Internal.Execution
                 : ParallelScope.Default;
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
-            TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
-                ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
-                : ApartmentState.Unknown;
+            /*
+            if ((ApartmentState) (Test.Properties.Get(PropertyNames.ApartmentState) ?? ApartmentState.Unknown) == ApartmentState.Unknown &&
+                (ApartmentState) (Test.Parent?.Properties?.Get(PropertyNames.ApartmentState) ?? ApartmentState.Unknown) != ApartmentState.Unknown)
+            {
+                Test.Properties.Set(PropertyNames.ApartmentState, 
+                    Test.Parent?.Properties?.Get(PropertyNames.ApartmentState));
+            }
+            */
+            TargetApartment = (ApartmentState)(Test.Properties.Get(PropertyNames.ApartmentState) ?? ApartmentState.Unknown);
 #endif
 
             State = WorkItemState.Ready;
@@ -90,9 +96,11 @@ namespace NUnit.Framework.Internal.Execution
             Result = wrappedItem.Result;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
+/*
 #if PARALLEL
             TestWorker = wrappedItem.TestWorker;
 #endif
+*/
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TargetApartment = wrappedItem.TargetApartment;
 #endif
@@ -488,12 +496,8 @@ namespace NUnit.Framework.Internal.Execution
                 Test is TestFixture && Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
                 return ParallelExecutionStrategy.Parallel;
 
-            // There is no scope specified either on the item itself or in the context.
-            // In that case, simple work items are test cases and just run on the same
-            // thread, while composite work items and teardowns are non-parallel.
-            return this is SimpleWorkItem
-                ? ParallelExecutionStrategy.Direct
-                : ParallelExecutionStrategy.NonParallel;
+            // If all else fails, run on same thread
+            return ParallelExecutionStrategy.Direct;
         }
 #endif
 
