@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2012-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -67,15 +67,9 @@ namespace NUnit.Framework.Internal.Execution
                 : ParallelScope.Default;
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
-            /*
-            if ((ApartmentState) (Test.Properties.Get(PropertyNames.ApartmentState) ?? ApartmentState.Unknown) == ApartmentState.Unknown &&
-                (ApartmentState) (Test.Parent?.Properties?.Get(PropertyNames.ApartmentState) ?? ApartmentState.Unknown) != ApartmentState.Unknown)
-            {
-                Test.Properties.Set(PropertyNames.ApartmentState, 
-                    Test.Parent?.Properties?.Get(PropertyNames.ApartmentState));
-            }
-            */
-            TargetApartment = (ApartmentState)(Test.Properties.Get(PropertyNames.ApartmentState) ?? ApartmentState.Unknown);
+            TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
+                ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
+                : ApartmentState.Unknown;
 #endif
 
             State = WorkItemState.Ready;
@@ -96,11 +90,11 @@ namespace NUnit.Framework.Internal.Execution
             Result = wrappedItem.Result;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
-/*
+
 #if PARALLEL
             TestWorker = wrappedItem.TestWorker;
 #endif
-*/
+
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
             TargetApartment = wrappedItem.TargetApartment;
 #endif
