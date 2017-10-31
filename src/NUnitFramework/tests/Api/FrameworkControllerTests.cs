@@ -215,7 +215,7 @@ namespace NUnit.Framework.Api
             var testSettings = new Dictionary<string, object>();
             testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", null }, { "key2", value } });
 
-            var inserted = FrameworkController.InsertSettingsElement(outerNode, null);
+            var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
             var settingNode = inserted.FirstChild;
 
             var key1Node = settingNode.ChildNodes[0];
