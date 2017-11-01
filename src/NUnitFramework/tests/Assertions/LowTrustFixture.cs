@@ -61,6 +61,15 @@ namespace NUnit.Framework.Assertions
             });
         }
 
+        [Test]
+        public void AssertEqualityWithToleranceInLowTrustSandBox()
+        {
+            _sandBox.Run(() =>
+            {
+                Assert.That(10.5, Is.EqualTo(10.5));
+            });
+        }
+
         [Test, Platform(Exclude="Mono,MonoTouch", Reason= "Mono does not implement Code Access Security")]
         public void AssertThrowsInLowTrustSandBox()
         {
