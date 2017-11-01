@@ -40,8 +40,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="test">The test for which this WorkItem is being created.</param>
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
+        /// <param name="parentWorkItem">Parent Work Item</param>
         /// <returns></returns>
-        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
+        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false, WorkItem parentWorkItem = null)
         {
             TestSuite suite = test as TestSuite;
             if (suite == null)
@@ -57,11 +58,12 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     if (filter.Pass(childTest))
                     {
-                        var childItem = CreateWorkItem(childTest, filter, recursive);
+                        var childItem = CreateWorkItem(childTest, filter, recursive, work);
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
-                        if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
-                            childItem.TargetApartment = work.TargetApartment;
+                        if (childItem.TargetApartment == ApartmentState.Unknown && 
+                           (parentWorkItem?.TargetApartment ?? ApartmentState.Unknown) != ApartmentState.Unknown)
+                            childItem.TargetApartment = parentWorkItem.TargetApartment;
 #endif
 
                         if (childTest.Properties.ContainsKey(PropertyNames.Order))
