@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
@@ -89,6 +91,56 @@ namespace NUnit.Framework.Attributes
             ParallelScope.Self | ParallelScope.Fixtures
         };
 
+        [Test]
+        public void MayNotCombineParallelScopeSelfAndParallelScopeNone()
+        {
+            var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
+            var attr = new ParallelizableAttribute(ParallelScope.Self | ParallelScope.None);
+            attr.ApplyToTest(fixture);
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        [Test]
+        public void MayNotUseParallelScopeFixturesOnTestMethod()
+        {
+            var test = TestBuilder.MakeTestCase(GetType(), "DummyMethod");
+            var attr = new ParallelizableAttribute(ParallelScope.Fixtures);
+            attr.ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        [Test]
+        public void MayNotUseParallelScopeFixturesOnParameterizedTestMethod()
+        {
+            var test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "DummyTestCase");
+            var attr = new ParallelizableAttribute(ParallelScope.Fixtures);
+            attr.ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        [Test]
+        public void MayNotUseParallelScopeChildrenOnTestMethod()
+        {
+            var test = TestBuilder.MakeTestCase(GetType(), "DummyMethod");
+            var attr = new ParallelizableAttribute(ParallelScope.Children);
+            attr.ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        [Test]
+        public void OkTotUseParallelScopeChildrenOnParameterizedTestMethod()
+        {
+            var test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "DummyTestCase");
+            var attr = new ParallelizableAttribute(ParallelScope.Children);
+            attr.ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+        }
+
         public class FixtureClass { }
+
+        public void DummyMethod() { }
+
+        [TestCase(1)]
+        public void DummyTestCase(int i) { }
     }
 }

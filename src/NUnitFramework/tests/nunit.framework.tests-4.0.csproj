@@ -67,6 +67,9 @@
     <Compile Include="..\TestFile.cs">
       <Link>TestUtilities\TestFile.cs</Link>
     </Compile>
+    <Compile Include="..\TestSuiteExtensions.cs">
+      <Link>TestUtilities\TestSuiteExtensions.cs</Link>
+    </Compile>
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
@@ -145,6 +148,7 @@
     <Compile Include="Internal\CollectionTallyTests.cs" />
     <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
+    <Compile Include="Internal\Execution\ParallelExecutionTests.cs" />
     <Compile Include="Internal\Execution\ParallelWorkItemDispatcherTests.cs" />
     <Compile Include="Internal\Filters\MockTestFilter.cs" />
     <Compile Include="Internal\NamespaceTreeBuilderTests.cs" />

@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_2_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -31,7 +31,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;NET_2_0</DefineConstants>
+    <DefineConstants>TRACE;NET_2_0;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AssertMultipleData.cs" />
+    <Compile Include="ParallelExecutionData.cs" />
     <Compile Include="TestAttachmentsTests.cs" />
     <Compile Include="WarningFixture.cs" />
     <Compile Include="AsyncDummyFixture.cs" />

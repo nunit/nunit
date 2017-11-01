@@ -70,6 +70,7 @@
     <Compile Include="MaxTimeFixture.cs" />
     <Compile Include="OneTimeSetUpTearDownData.cs" />
     <Compile Include="OptionalTestParametersFixture.cs" />
+    <Compile Include="ParallelExecutionData.cs" />
     <Compile Include="ParameterizedTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyAttributeTests.cs" />

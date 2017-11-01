@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Execution
     /// and is responsible for re-establishing that context in the
     /// current thread before it begins or resumes execution.
     /// </summary>
-    public abstract class WorkItem
+    public abstract class WorkItem : IDisposable
     {
         static Logger log = InternalTrace.GetLogger("WorkItem");
 
@@ -177,6 +177,11 @@ namespace NUnit.Framework.Internal.Execution
                 return _executionStrategy.Value;
             }
         }
+
+        /// <summary>
+        /// Indicates whether this work item should use a separate dispatcher.
+        /// </summary>
+        public virtual bool IsolateChildTests { get; } = false;
 #endif
 
         /// <summary>
@@ -248,6 +253,16 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
+        private readonly ManualResetEvent _completionEvent = new ManualResetEvent(false);
+
+        /// <summary>
+        /// Wait until the execution of this item is complete
+        /// </summary>
+        public void WaitForCompletion()
+        {
+            _completionEvent.WaitOne();
+        }
+
         /// <summary>
         /// Marks the WorkItem as NotRunnable.
         /// </summary>
@@ -300,9 +315,26 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Standard Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            if (_completionEvent != null)
+#if NET_2_0 || NET_3_5
+                _completionEvent.Close();
+#else
+                _completionEvent.Dispose();
+#endif
+        }
+
 #endregion
 
-        #region Protected Methods
+#region Protected Methods
 
         /// <summary>
         /// Method that performs actually performs the work. It should
@@ -336,8 +368,8 @@ namespace NUnit.Framework.Internal.Execution
 
             Context.Listener.TestFinished(Result);
 
-            if (Completed != null)
-                Completed(this, EventArgs.Empty);
+            Completed?.Invoke(this, EventArgs.Empty);
+            _completionEvent.Set();
 
             //Clear references to test objects to reduce memory usage
             Context.TestObject = null;
@@ -419,9 +451,9 @@ namespace NUnit.Framework.Internal.Execution
             Result.SetResult(resultState, message);
         }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
         private Thread thread;
@@ -495,9 +527,10 @@ namespace NUnit.Framework.Internal.Execution
                 ? ParallelExecutionStrategy.Direct
                 : ParallelExecutionStrategy.NonParallel;
         }
+
 #endif
 
-        #endregion
+#endregion
     }
 
 #if NET_2_0 || NET_3_5

@@ -127,13 +127,18 @@ namespace NUnit.Framework.Internal.Builders
 
             var fixture = new TestFixture(typeInfo, arguments);
 
-            if (arguments != null && arguments.Length > 0)
+            string name = fixture.Name;
+            if (testFixtureData.TestName != null)
+                fixture.Name = testFixtureData.TestName;
+            else if (arguments != null && arguments.Length > 0)
+                fixture.Name = typeInfo.GetDisplayName(arguments);
+
+            if (fixture.Name != name) // name was changed
             {
-                string name = fixture.Name = typeInfo.GetDisplayName(arguments);
                 string nspace = typeInfo.Namespace;
                 fixture.FullName = nspace != null && nspace != ""
-                    ? nspace + "." + name
-                    : name;
+                    ? nspace + "." + fixture.Name
+                    : fixture.Name;
             }
 
             if (fixture.RunState != RunState.NotRunnable)

@@ -122,10 +122,22 @@ namespace NUnit.Framework.Internal.Execution
 
                     _currentWorkItem.TestWorker = this;
 
+                    // During this Busy call, the queue state may be saved.
+                    // This gives us a new set of queues, which are initially 
+                    // empty. The intention is that only children of the current
+                    // executing item should make use of the new set of queues.
+                    // TODO: If we had a separate NonParallelTestWOrker, it 
+                    // could simply create the isolated queue without  any
+                    // worrying about competing workers.
                     Busy(this, _currentWorkItem);
 
+                    // Because we execute the current item AFTER the queue state
+                    // is saved, its children end up in the new queue set.
                     _currentWorkItem.Execute();
 
+                    // This call may result in the queues being restored. There
+                    // is a potential race condition here. We should not restore
+                    // the queues unless all child items have finished.
                     Idle(this, _currentWorkItem);
 
                     ++_workItemCount;
@@ -138,15 +150,15 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Start processing work items.
+        /// Create thread and start processing work items.
         /// </summary>
         public void Start()
         {
-            log.Info("{0} starting ", Name);
-
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
             _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+
+            log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
         }
 

@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
@@ -55,6 +57,8 @@ namespace NUnit.Framework
                 if (!IsValidFixtureType(typeInfo, ref reason))
                     fixture.MakeInvalid(reason);
             }
+
+            fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
 
             return new TestSuite[] { fixture };
         }
