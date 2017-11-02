@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -36,10 +36,11 @@ namespace NUnit.Framework.Constraints.Comparers
         /// <param name="x">The first object to compare.</param>
         /// <param name="y">The second object to compare.</param>
         /// <param name="tolerance">The tolerance to use when comparing the objects.</param>
+        /// <param name="topLevelComparison">Flag indicating whether or not this is the top level comparison.</param>
         /// <returns>
         ///     <c>null</c> if the objects cannot be compared using the method.
         ///     Otherwise the result of the comparison is returned.
         /// </returns>
-        bool? Equal(object x, object y, ref Tolerance tolerance);
+        bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true);
     }
 }

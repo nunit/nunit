@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
             if (!(x is IEnumerable) || !(y is IEnumerable))
                 return null;
@@ -48,9 +48,6 @@ namespace NUnit.Framework.Constraints.Comparers
 
             IEnumerator expectedEnum = null;
             IEnumerator actualEnum = null;
-
-            bool prevTopLevelComparison = _equalityComparer.TopLevelComparison;
-            _equalityComparer.TopLevelComparison = false;
 
             try
             {
@@ -65,11 +62,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
                     if (!expectedHasData && !actualHasData)
                         return true;
-
                     
-
                     if (expectedHasData != actualHasData ||
-                        !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                        !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, false))
                     {
                         NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
                         fp.Position = count;
@@ -91,8 +86,6 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 var actualDisposable = actualEnum as IDisposable;
                 if (actualDisposable != null) actualDisposable.Dispose();
-
-                _equalityComparer.TopLevelComparison = prevTopLevelComparison;
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -40,9 +40,9 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
-            if (_equalityComparer.CompareAsCollection && _equalityComparer.TopLevelComparison)
+            if (_equalityComparer.CompareAsCollection && topLevelComparison)
                 return null;
 
             Type xType = x.GetType();
