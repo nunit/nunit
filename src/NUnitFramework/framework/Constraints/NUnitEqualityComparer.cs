@@ -85,11 +85,6 @@ namespace NUnit.Framework.Constraints
             };
         }
 
-        internal NUnitEqualityComparer(NUnitEqualityComparer copy)
-        {
-
-        }
-
         #region Properties
 
         /// <summary>
