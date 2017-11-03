@@ -55,17 +55,24 @@ namespace NUnit.Framework.Internal.Execution
         /// setting the top level work  and dispatching it.
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
-        {
+        { 
 #if NETSTANDARD1_3 || NETSTANDARD1_6
             Dispatch(topLevelWorkItem);
 #else
-            _topLevelWorkItem = topLevelWorkItem;
-            _runnerThread = new Thread(RunnerThreadProc);
+            if (topLevelWorkItem.RunsOnMainThread)
+            {
+                Dispatch(topLevelWorkItem);
+            }
+            else
+            {
+                _topLevelWorkItem = topLevelWorkItem;
+                _runnerThread = new Thread(RunnerThreadProc);
 
-            if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
-                _runnerThread.SetApartmentState(ApartmentState.STA);
+                if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
+                    _runnerThread.SetApartmentState(ApartmentState.STA);
 
-            _runnerThread.Start();
+                _runnerThread.Start();
+            }
 #endif
         }
 

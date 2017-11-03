@@ -115,6 +115,11 @@ namespace NUnit
         /// </summary>
         public const string TestParametersDictionary = "TestParametersDictionary";
 
+        /// <summary>
+        /// Parameters to be passed on to the tests, already parsed into an IDictionary&lt;string, string>. Replaces <see cref="TestParameters"/>.
+        /// </summary>
+        public const string RunOnMainThread = "RunOnMainThread";
+
         #endregion
     }
 }

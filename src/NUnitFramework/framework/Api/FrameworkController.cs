@@ -138,6 +138,12 @@ namespace NUnit.Framework.Api
             var newSettings = settings as IDictionary<string, object>;
             Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
 
+            if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
+                (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
+            {
+                Settings[FrameworkPackageSettings.NumberOfTestWorkers] = 0;
+            }
+
             if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceLevel))
             {
                 var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)Settings[FrameworkPackageSettings.InternalTraceLevel], true);
