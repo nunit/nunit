@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Filters
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
-    public class FullNameFilter : ValueMatchFilter
+    internal class FullNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a FullNameFilter for a single name

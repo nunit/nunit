@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Filters
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
-    public class MethodNameFilter : ValueMatchFilter
+    internal class MethodNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a MethodNameFilter for a single name

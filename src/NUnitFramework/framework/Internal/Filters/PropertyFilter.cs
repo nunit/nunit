@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal.Filters
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
-    public class PropertyFilter : ValueMatchFilter
+    internal class PropertyFilter : ValueMatchFilter
     {
         private string _propertyName;
 

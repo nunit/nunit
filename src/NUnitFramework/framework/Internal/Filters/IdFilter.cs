@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Filters
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
-    public class IdFilter : ValueMatchFilter
+    internal class IdFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct an IdFilter for a single value

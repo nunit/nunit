@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal.Filters
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
     [Serializable]
 #endif
-    public class CategoryFilter : ValueMatchFilter
+    internal class CategoryFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a CategoryFilter using a single category name
