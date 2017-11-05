@@ -30,9 +30,6 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// IdFilter selects tests based on their id
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
     internal class IdFilter : ValueMatchFilter
     {
         /// <summary>

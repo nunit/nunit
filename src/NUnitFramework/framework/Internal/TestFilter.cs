@@ -33,9 +33,6 @@ namespace NUnit.Framework.Internal
     /// The filter applies when running the test, after it has been
     /// loaded, since this is the only time an ITest exists.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
     public abstract class TestFilter : ITestFilter
     {
         /// <summary>

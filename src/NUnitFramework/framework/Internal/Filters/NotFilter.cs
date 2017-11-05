@@ -29,9 +29,6 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// NotFilter negates the operation of another filter
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
     internal class NotFilter : TestFilter
     {
         /// <summary>
