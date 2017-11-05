@@ -240,35 +240,8 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.AreEqual(set1, set2);
         }
 
-        //[Test]
-        //public void IEnumerablesAreNotEqualWithCollectionsObjectsImplemetingIEquatableDiffNumberingElems()
-        //{
-        //    IEnumerable set1 = new SimpleEnumerable(new SimpleIEquatableObj());
-        //    IEnumerable set2 = new SimpleEnumerable(new SimpleIEquatableObj(), new SimpleIEquatableObj());
-
-        //    CollectionAssert.AreNotEqual(set1, set2);
-        //}
-
-        //[Test]
-        //public void IEnumerablesAreEqualWithCollectionObjectsImplementingOverridenEqualsDiffNumberingElems()
-        //{
-        //    IEnumerable set1 = new SimpleEnumerable(new SimpleOverridenEqualsObj());
-        //    IEnumerable set2 = new SimpleEnumerable(new SimpleOverridenEqualsObj());
-
-        //    CollectionAssert.AreEqual(set1, set2);
-        //}
-
-        //[Test]
-        //public void IEnumerablesAreNotEqualWithCollectionObjectsImplementingOverridenEquals()
-        //{
-        //    IEnumerable set1 = new SimpleEnumerable(new SimpleOverridenEqualsObj());
-        //    IEnumerable set2 = new SimpleEnumerable(new SimpleOverridenEqualsObj(), new SimpleOverridenEqualsObj());
-
-        //    CollectionAssert.AreNotEqual(set1, set2);
-        //}
-
         [Test]
-        public void ArraysAreEqualWithCollectionsObjectsImplemetingIEquatable()
+        public void ArraysAreEqualWithCollectionsObjectsImplementingIEquatable()
         {
             SimpleIEquatableObj[] set1 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
             SimpleIEquatableObj[] set2 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
