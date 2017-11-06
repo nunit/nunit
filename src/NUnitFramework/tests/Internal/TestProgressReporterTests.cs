@@ -27,7 +27,7 @@ using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureTests;
 
-namespace NUnit.Framework.Internal.Tests
+namespace NUnit.Framework.Internal
 {
 	public class TestProgressReporterTests
 	{

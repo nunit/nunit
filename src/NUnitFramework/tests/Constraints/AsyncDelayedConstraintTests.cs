@@ -25,7 +25,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
 	[TestFixture]
 	public class AsyncDelayedConstraintTests

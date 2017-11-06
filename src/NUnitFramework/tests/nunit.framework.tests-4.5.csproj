@@ -6,7 +6,7 @@
     <ProjectGuid>{5B8B0EAB-3E74-48BB-8231-26E73B2019DC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
+    <RootNamespace>NUnit.Framework</RootNamespace>
     <AssemblyName>nunit.framework.tests</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -330,7 +330,6 @@
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
     <Compile Include="TextOutputTests.cs" />
-    <Compile Include="ThrowsTests.cs" />
     <Compile Include="WorkItemTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -345,16 +344,6 @@
     <Reference Include="System.ValueTuple">
       <HintPath>..\..\..\packages\System.ValueTuple.4.3.1\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestImage1.jpg" />
-    <EmbeddedResource Include="TestImage2.jpg" />
-    <EmbeddedResource Include="TestText1.txt" />
-    <EmbeddedResource Include="TestText2.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestListFile.txt" />
-    <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
@@ -381,5 +370,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="nunit.framework.tests-4.5.project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestImage1.jpg" />
+    <EmbeddedResource Include="TestImage2.jpg" />
+    <EmbeddedResource Include="TestListFile.txt" />
+    <EmbeddedResource Include="TestListFile2.txt" />
+    <EmbeddedResource Include="TestText1.txt" />
+    <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
 </Project>

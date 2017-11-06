@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes.Tests
+namespace NUnit.Framework.Attributes
 {
     public class CommandWrapperTests
     {

@@ -32,7 +32,7 @@ using NUnit.TestUtilities;
 
 #endregion
 
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     [Author("Rob Prouse", "rob@prouse.org")]
