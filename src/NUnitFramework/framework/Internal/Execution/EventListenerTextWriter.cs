@@ -68,14 +68,8 @@ namespace NUnit.Framework.Internal.Execution
             if (context == null || context.Listener == null)
                 return false;
 
-            string testName = null;
-            string testId = null;
-            if (context.CurrentTest != null)
-            {
-                testName = context.CurrentTest.FullName;
-                testId = context.CurrentTest.Id;
-            }
-            context.Listener.TestOutput(new TestOutput(text, _streamName, testId, testName));
+            var test = context.CurrentTest ?? null;
+            context.Listener.TestOutput(new TestOutput(text, _streamName, test?.Id, test?.FullName));
             return true;
         }
 

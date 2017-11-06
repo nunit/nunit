@@ -538,29 +538,6 @@ namespace NUnitLite.Tests
 
             Assert.That(Report, Is.EqualTo(expected));
         }
-
-        [TestCase("text", "stream", "testId", "testName")]
-        [TestCase("text", "stream", null, "testName")]
-        [TestCase("text", "stream", "testId", null)]
-        public void TestOutputToXml_IncludeAttributesInProperFormatting(string text, string stream, string testId, string testName)
-        {
-            var testOutput = new TestOutput(text, stream, testId, testName);
-            var expected = new StringBuilder();
-            expected.AppendFormat("<test-output stream=\"{0}\"", stream);
-
-            if (testId != null)
-            {
-                expected.AppendFormat(" testid=\"{0}\"", testId);
-            }
-
-            if (testName != null)
-            {
-                expected.AppendFormat(" testname=\"{0}\"", testName);
-            }
-
-            expected.AppendFormat("><![CDATA[{0}]]></test-output>", text);
-            Assert.That(testOutput.ToXml(), Is.EqualTo(expected.ToString()));
-        }
         #region Private Properties and Methods
 
         private void MyFakeMethod() { }
