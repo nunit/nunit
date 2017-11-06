@@ -194,6 +194,7 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+	<Compile Include="Interfaces\TestOutputTests.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\EventListenerTextWriterTests.cs" />
     <Compile Include="Internal\Execution\ParallelExecutionStrategyTests.cs" />
