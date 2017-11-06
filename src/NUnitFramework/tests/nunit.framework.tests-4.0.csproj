@@ -239,6 +239,7 @@
     <Compile Include="Constraints\TupleEqualityTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+	<Compile Include="Interfaces\TestOutputTests.cs" />
     <Compile Include="Internal\AsyncSetupTeardownTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
