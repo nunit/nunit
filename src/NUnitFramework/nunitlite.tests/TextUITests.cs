@@ -538,6 +538,7 @@ namespace NUnitLite.Tests
 
             Assert.That(Report, Is.EqualTo(expected));
         }
+        
         #region Private Properties and Methods
 
         private void MyFakeMethod() { }
