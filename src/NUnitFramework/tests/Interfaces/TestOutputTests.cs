@@ -27,7 +27,7 @@ using System.Text;
 namespace NUnit.Framework.Tests.Interfaces
 {
     [TestFixture]
-    class TestOutpuTests
+    class TestOutputTests
     {
         [TestCase("text", "stream", "testId", "testName")]
         [TestCase("text", "stream", null, "testName")]
