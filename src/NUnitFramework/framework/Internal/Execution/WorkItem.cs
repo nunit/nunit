@@ -67,9 +67,7 @@ namespace NUnit.Framework.Internal.Execution
                 : ParallelScope.Default;
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
-            TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
-                ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
-                : ApartmentState.Unknown;
+            TargetApartment = GetTargetApartment(Test);
 #endif
 
             State = WorkItemState.Ready;
@@ -496,8 +494,8 @@ namespace NUnit.Framework.Internal.Execution
 #if PARALLEL
         private ParallelExecutionStrategy GetExecutionStrategy()
         {
-            // If there is no fixture and so nothing to do but dispatch 
-            // grandchildren we run directly. This saves time that would 
+            // If there is no fixture and so nothing to do but dispatch
+            // grandchildren we run directly. This saves time that would
             // otherwise be spent enqueuing and dequeing items.
             if (Test.TypeInfo == null)
                 return ParallelExecutionStrategy.Direct;
@@ -527,7 +525,24 @@ namespace NUnit.Framework.Internal.Execution
                 ? ParallelExecutionStrategy.Direct
                 : ParallelExecutionStrategy.NonParallel;
         }
+#endif
 
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+        /// <summary>
+        /// Recursively walks up the test hierarchy to see if the
+        /// <see cref="ApartmentState"/> has been set on any of the parent tests.
+        /// </summary>
+        static ApartmentState GetTargetApartment(ITest test)
+        {
+            var apartment = test.Properties.ContainsKey(PropertyNames.ApartmentState)
+                ? (ApartmentState)test.Properties.Get(PropertyNames.ApartmentState)
+                : ApartmentState.Unknown;
+
+            if (apartment == ApartmentState.Unknown && test.Parent != null)
+                return GetTargetApartment(test.Parent);
+
+            return apartment;
+        }
 #endif
 
 #endregion
