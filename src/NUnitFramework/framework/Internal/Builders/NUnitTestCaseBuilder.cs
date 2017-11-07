@@ -75,19 +75,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if (parms != null)
             {
-                parms.ApplyToTest(testMethod);
-
-                if (parms.TestName != null)
-                {
-                    // The test is simply for efficiency
-                    testMethod.Name = parms.TestName.Contains("{")
-                        ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
-                        : parms.TestName;
-                }
-                else
-                {
-                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
-                }
+                parms.ApplyToTest(testMethod, _nameGenerator);
             }
             else
             {
@@ -134,7 +122,7 @@ namespace NUnit.Framework.Internal.Builders
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
             {
-                // IsOptional is supported since .NET 1.1 
+                // IsOptional is supported since .NET 1.1
                 if (!parameter.IsOptional)
                     minArgsNeeded++;
             }

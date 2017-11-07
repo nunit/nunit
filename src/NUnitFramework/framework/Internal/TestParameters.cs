@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
     /// TestParameters is the abstract base class for all classes
     /// that know how to provide data for constructing a test.
     /// </summary>
-    public abstract class TestParameters : ITestData, IApplyToTest
+    public abstract class TestParameters : ITestData
     {
         #region Constructors
 
@@ -123,23 +123,29 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region IApplyToTest Members
-
         /// <summary>
-        /// Applies ParameterSet values to the test itself.
+        /// Applies the encapsulated parameters to the test method.
         /// </summary>
-        /// <param name="test">A test.</param>
-        public void ApplyToTest(Test test)
+        public void ApplyToTest(TestMethod test, TestNameGenerator defaultTestNameGenerator)
         {
-            if (this.RunState != RunState.Runnable)
-                test.RunState = this.RunState;
+            if (RunState != RunState.Runnable)
+                test.RunState = RunState;
 
             foreach (string key in Properties.Keys)
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
-        }
 
-        #endregion
+            if (TestName == null)
+            {
+                test.Name = defaultTestNameGenerator.GetDisplayName(test, OriginalArguments);
+            }
+            else
+            {
+                test.Name = TestName.Contains("{")
+                    ? new TestNameGenerator(TestName).GetDisplayName(test, OriginalArguments)
+                    : TestName;
+            }
+        }
 
         #region Other Public Properties
 
