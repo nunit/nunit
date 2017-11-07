@@ -139,6 +139,27 @@ namespace NUnit.Framework.Attributes
                 Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
             }
         }
+
+        [TestFixture]
+        [Apartment(ApartmentState.STA)]
+        [Parallelizable(ParallelScope.Children)]
+        public class ParallelStaFixtureWithMtaTests
+        {
+            [Test]
+            [Apartment(ApartmentState.MTA)]
+            public void TestMethodsShouldRespectTheirApartment()
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            }
+
+            [TestCase(1)]
+            [TestCase(2)]
+            [Apartment(ApartmentState.MTA)]
+            public void TestCasesShouldRespectTheirApartment(int n)
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            }
+        }
     }
 }
 #endif
