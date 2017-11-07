@@ -32,6 +32,7 @@ using System.Security.Policy;
 namespace NUnit.Framework.Assertions
 {
     [TestFixture]
+    [Platform(Exclude = "Mono,MonoTouch", Reason = "Mono does not implement Code Access Security")]
     public class LowTrustFixture
     {
         private TestSandBox _sandBox;
@@ -61,7 +62,16 @@ namespace NUnit.Framework.Assertions
             });
         }
 
-        [Test, Platform(Exclude="Mono,MonoTouch", Reason= "Mono does not implement Code Access Security")]
+        [Test]
+        public void AssertEqualityWithToleranceInLowTrustSandBox()
+        {
+            _sandBox.Run(() =>
+            {
+                Assert.That(10.5, Is.EqualTo(10.5));
+            });
+        }
+
+        [Test]
         public void AssertThrowsInLowTrustSandBox()
         {
             _sandBox.Run(() =>
