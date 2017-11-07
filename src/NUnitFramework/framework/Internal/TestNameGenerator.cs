@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -73,16 +73,22 @@ namespace NUnit.Framework.Internal
         /// <returns>The display name</returns>
         public string GetDisplayName(TestMethod testMethod)
         {
-            return GetDisplayName(testMethod, null);
+            return GetDisplayName(testMethod, null, null);
         }
 
         /// <summary>
         /// Get the display name for a TestMethod and its arguments
         /// </summary>
         /// <param name="testMethod">A TestMethod</param>
-        /// <param name="args">Arguments to be used</param>
-        /// <returns>The display name</returns>
-        public string GetDisplayName(TestMethod testMethod, object[] args)
+        /// <param name="argDisplayNames">
+        /// Overrides argument list display.
+        /// The strings in this list are already display names and will be rendered as is, without quotes.
+        /// </param>
+        /// <param name="args">
+        /// Arguments to be used if <paramref name="argDisplayNames"/> is <see langword="null"/>.
+        /// A string in this list will be rendered with quotes.
+        /// </param>
+        public string GetDisplayName(TestMethod testMethod, string[] argDisplayNames, object[] args)
         {
             if (_fragments == null)
                 _fragments = BuildFragmentList(_pattern);
@@ -90,7 +96,7 @@ namespace NUnit.Framework.Internal
             var result = new StringBuilder();
 
             foreach (var fragment in _fragments)
-                result.Append(fragment.GetText(testMethod, args));
+                result.Append(fragment.GetText(testMethod, argDisplayNames ?? args, argDisplayNames != null));
 
             return result.ToString();
         }
@@ -206,12 +212,12 @@ namespace NUnit.Framework.Internal
         {
             private const string THREE_DOTS = "...";
 
-            public virtual string GetText(TestMethod testMethod, object[] args)
+            public virtual string GetText(TestMethod testMethod, object[] args, bool argsAreDisplayNames)
             {
-                return GetText(testMethod.Method.MethodInfo, args);
+                return GetText(testMethod.Method.MethodInfo, args, argsAreDisplayNames);
             }
 
-            public abstract string GetText(MethodInfo method, object[] args);
+            public abstract string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames);
 
             protected static void AppendGenericTypeNames(StringBuilder sb, MethodInfo method)
             {
@@ -387,7 +393,7 @@ namespace NUnit.Framework.Internal
 
                 return EscapeControlChar(c);
             }
-            
+
             private static string EscapeControlChar(char c)
             {
                 switch (c)
@@ -424,12 +430,12 @@ namespace NUnit.Framework.Internal
 
         private class TestIDFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
                 return "{i}"; // No id available using MethodInfo
             }
 
-            public override string GetText(TestMethod testMethod, object[] args)
+            public override string GetText(TestMethod testMethod, object[] args, bool argsAreDisplayNames)
             {
                 return testMethod.Id;
             }
@@ -444,7 +450,7 @@ namespace NUnit.Framework.Internal
                 _text = text;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
                 return _text;
             }
@@ -452,7 +458,7 @@ namespace NUnit.Framework.Internal
 
         private class MethodNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
                 var sb = new StringBuilder();
 
@@ -467,7 +473,7 @@ namespace NUnit.Framework.Internal
 
         private class NamespaceFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
                 return method.DeclaringType.Namespace;
             }
@@ -475,7 +481,7 @@ namespace NUnit.Framework.Internal
 
         private class MethodFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
                 var sb = new StringBuilder();
 
@@ -492,7 +498,7 @@ namespace NUnit.Framework.Internal
 
         private class ClassNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
                 return method.DeclaringType.Name;
             }
@@ -500,7 +506,7 @@ namespace NUnit.Framework.Internal
 
         private class ClassFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
                 return method.DeclaringType.FullName;
             }
@@ -515,7 +521,7 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] arglist)
+            public override string GetText(MethodInfo method, object[] arglist, bool argsAreDisplayNames)
             {
                 var sb = new StringBuilder();
 
@@ -526,9 +532,9 @@ namespace NUnit.Framework.Internal
                     for (int i = 0; i < arglist.Length; i++)
                     {
                         if (i > 0) sb.Append(",");
-                        sb.Append(GetDisplayString(arglist[i], _maxStringLength));
+                        sb.Append(argsAreDisplayNames ? (string)arglist[i] : GetDisplayString(arglist[i], _maxStringLength));
                     }
-                    
+
                     sb.Append(')');
                 }
 
@@ -547,11 +553,11 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(MethodInfo method, object[] args, bool argsAreDisplayNames)
             {
-                return _index < args.Length
-                    ? GetDisplayString(args[_index], _maxStringLength)
-                    : string.Empty;
+                return args.Length <= _index ? string.Empty :
+                    argsAreDisplayNames ? (string)args[_index] :
+                    GetDisplayString(args[_index], _maxStringLength);
             }
         }
 

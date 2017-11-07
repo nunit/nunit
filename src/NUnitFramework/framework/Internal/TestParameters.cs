@@ -117,6 +117,11 @@ namespace NUnit.Framework.Internal
         public string TestName { get; set; }
 
         /// <summary>
+        /// If not <see langword="null"/>, overrides the list of argument display names to be used when generating a test name.
+        /// </summary>
+        protected string[] ArgNames { private get; set; }
+
+        /// <summary>
         /// Gets the property dictionary for this test
         /// </summary>
         public IPropertyBag Properties { get; private set; }
@@ -137,12 +142,12 @@ namespace NUnit.Framework.Internal
 
             if (TestName == null)
             {
-                test.Name = defaultTestNameGenerator.GetDisplayName(test, OriginalArguments);
+                test.Name = defaultTestNameGenerator.GetDisplayName(test, ArgNames, ArgNames != null ? null : OriginalArguments);
             }
             else
             {
                 test.Name = TestName.Contains("{")
-                    ? new TestNameGenerator(TestName).GetDisplayName(test, OriginalArguments)
+                    ? new TestNameGenerator(TestName).GetDisplayName(test, ArgNames, ArgNames != null ? null : OriginalArguments)
                     : TestName;
             }
         }

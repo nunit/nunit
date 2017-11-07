@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Internal
             ExpectedResult = "TestMethod(\"Now is the time f...\")")]
         public string ParameterizedTests(string pattern, object[] args)
         {
-            return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);
+            return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, null, args);
         }
 
         [TestCase("FIXED", ExpectedResult="FIXED")]
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Internal
         [TestCase(sbyte.MinValue, ExpectedResult = "sbyte.MinValue")]
         public string SpecialNamedValues(object arg)
         {
-            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg } );
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, null, new[] { arg } );
         }
 
         #region Methods Used as Data
