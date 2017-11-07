@@ -29,7 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NUnit.Framework.Tests.Constraints
+namespace NUnit.Framework.Constraints
 {
     public class ExactlyOneConstraintTests
     {

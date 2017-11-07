@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     public class TestExpectedResult

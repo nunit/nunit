@@ -7,7 +7,7 @@
     <ProjectGuid>{50312845-30A1-492E-9DC1-C04951931E32}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
+    <RootNamespace>NUnit.Framework</RootNamespace>
     <AssemblyName>nunit.framework.tests</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
@@ -319,7 +319,6 @@
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
     <Compile Include="TextOutputTests.cs" />
-    <Compile Include="ThrowsTests.cs" />
     <Compile Include="WorkItemTests.cs" />
   </ItemGroup>
   <ItemGroup>

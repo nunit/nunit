@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework
 {
     public class TestParametersTests
     {
