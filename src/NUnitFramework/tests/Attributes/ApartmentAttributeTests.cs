@@ -120,6 +120,25 @@ namespace NUnit.Framework.Attributes
                     "RequiresMTAAttribute was not inherited from the base class");
             }
         }
+
+        [TestFixture]
+        [Apartment(ApartmentState.STA)]
+        [Parallelizable(ParallelScope.Children)]
+        public class ParallelStaFixture
+        {
+            [Test]
+            public void TestMethodsShouldInheritApartmentFromFixture()
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+            }
+
+            [TestCase(1)]
+            [TestCase(2)]
+            public void TestCasesShouldInheritApartmentFromFixture(int n)
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+            }
+        }
     }
 }
 #endif
