@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// A base class for multi-part filters
     /// </summary>
-    public abstract class CompositeFilter : TestFilter
+    internal abstract class CompositeFilter : TestFilter
     {
         /// <summary>
         /// Constructs an empty CompositeFilter

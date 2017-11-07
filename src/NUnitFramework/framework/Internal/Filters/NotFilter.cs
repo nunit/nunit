@@ -29,10 +29,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// NotFilter negates the operation of another filter
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
-    public class NotFilter : TestFilter
+    internal class NotFilter : TestFilter
     {
         /// <summary>
         /// Construct a not filter on another filter
