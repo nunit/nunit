@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 
@@ -100,6 +101,113 @@ namespace NUnit.Framework.Internal.Execution
                 System.Threading.Tasks.Task.Delay(Delay);
 #endif
             }
-}
+        }
+
+
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+
+        [TestCaseSource(nameof(GetTargetApartmentTestData))]
+        public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)
+        {
+            var work = new FakeWorkItem(test, TestFilter.Empty);
+
+            Assert.That(work.TargetApartment, Is.EqualTo(expected));
+        }
+
+        [TestCaseSource(nameof(GetTargetApartmentTestData))]
+        public void GetsTargetApartmentFromParentTestsInWrappedTests(Test test, ApartmentState expected)
+        {
+            var work = new FakeWorkItem(test, TestFilter.Empty);
+            var wrapped = new FakeWorkItem(work);
+
+            Assert.That(wrapped.TargetApartment, Is.EqualTo(expected));
+        }
+
+        public static IEnumerable<TestCaseData> GetTargetApartmentTestData()
+        {
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.Unknown, ApartmentState.Unknown), ApartmentState.Unknown);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.Unknown, ApartmentState.STA), ApartmentState.STA);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.STA, ApartmentState.Unknown), ApartmentState.STA);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.STA, ApartmentState.Unknown, ApartmentState.Unknown), ApartmentState.STA);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.Unknown, ApartmentState.MTA), ApartmentState.MTA);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.MTA, ApartmentState.Unknown), ApartmentState.MTA);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.MTA, ApartmentState.Unknown, ApartmentState.Unknown), ApartmentState.MTA);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.STA, ApartmentState.MTA, ApartmentState.Unknown), ApartmentState.MTA);
+            yield return new TestCaseData(CreateFakeTests(ApartmentState.MTA, ApartmentState.STA, ApartmentState.Unknown), ApartmentState.STA);
+        }
+
+        static ITest CreateFakeTests(ApartmentState assemblyApartment, ApartmentState fixtureApartment, ApartmentState methodApartment) =>
+            new FakeTest("Method", methodApartment)
+            {
+                Parent = new FakeTest("Fixture", fixtureApartment)
+                {
+                    Parent  = new FakeTest("Assembly", assemblyApartment)
+                }
+            };
+
+        class FakeTest : Test
+        {
+            public FakeTest(string name, ApartmentState apartmentState) : base(name)
+            {
+                if (apartmentState != ApartmentState.Unknown)
+                    Properties.Add(PropertyNames.ApartmentState, apartmentState);
+            }
+
+            public override object[] Arguments
+            {
+                get { throw new System.NotImplementedException(); }
+            }
+
+            public override string XmlElementName => "MockTest";
+
+            public override bool HasChildren => Tests.Count > 0;
+
+            public override IList<ITest> Tests => new List<ITest>();
+
+            public override TNode AddToXml(TNode parentNode, bool recursive)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public override TestResult MakeTestResult() => new FakeTestResult(this);
+        }
+
+        class FakeTestResult : TestResult
+        {
+            public FakeTestResult(ITest test) : base(test)
+            {
+            }
+
+            public override int FailCount => 0;
+
+            public override int WarningCount => 0;
+
+            public override int PassCount => 1;
+
+            public override int SkipCount => 0;
+
+            public override int InconclusiveCount => 0;
+
+            public override bool HasChildren => false;
+
+            public override IEnumerable<ITestResult> Children => null;
+        }
+
+        class FakeWorkItem : WorkItem
+        {
+            public FakeWorkItem(WorkItem wrappedItem) : base(wrappedItem)
+            {
+            }
+
+            public FakeWorkItem(Test test, ITestFilter filter) : base(test, filter)
+            {
+            }
+
+            protected override void PerformWork()
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+#endif
     }
 }
