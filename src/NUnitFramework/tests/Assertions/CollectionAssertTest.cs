@@ -226,7 +226,7 @@ namespace NUnit.Framework.Assertions
             IEnumerable set1 = new SimpleEnumerableWithIEquatable("x", "y", "z");
             IEnumerable set2 = new SimpleEnumerableWithIEquatable("x", "z", "z");
 
-            Assert.AreNotEqual(set1, set2);
+            CollectionAssert.AreNotEqual(set1, set2);
 
             Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2));
         }

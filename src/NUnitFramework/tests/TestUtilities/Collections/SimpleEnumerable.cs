@@ -55,23 +55,18 @@ namespace NUnit.TestUtilities.Collections
         #endregion
     }
 
-    class SimpleEnumerableWithIEquatable : IEnumerable, IEquatable<IEnumerable<object>>
+    class SimpleEnumerableWithIEquatable : IEnumerable<object>, IEquatable<SimpleEnumerableWithIEquatable>
     {
-        private readonly List<object> _contents = new List<object>();
+        public List<object> Contents { get; private set; } = new List<object>();
 
         public SimpleEnumerableWithIEquatable(IEnumerable<object> source)
         {
-            _contents = new List<object>(source);
+            Contents = new List<object>(source);
         }
 
         public SimpleEnumerableWithIEquatable(params object[] source)
         {
-            _contents = new List<object>(source);
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _contents.GetEnumerator();
+            Contents = new List<object>(source);
         }
 
         public override bool Equals(object obj)
@@ -80,7 +75,7 @@ namespace NUnit.TestUtilities.Collections
             {
                 List<object> other = new List<object>((IEnumerable<object>)obj);
 
-                return other[0].Equals(_contents[0]);
+                return other[0].Equals(Contents[0]);
             }
 
             return base.Equals(obj);
@@ -91,11 +86,19 @@ namespace NUnit.TestUtilities.Collections
             return base.GetHashCode();
         }
 
-        public bool Equals(IEnumerable<object> other)
+        public bool Equals(SimpleEnumerableWithIEquatable other)
         {
-            List<object> otherList = new List<object>(other);
+            return Contents[0] == other.Contents[0];
+        }
 
-            return _contents[0] == otherList[0];
+        IEnumerator<object> IEnumerable<object>.GetEnumerator()
+        {
+            return Contents.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Contents.GetEnumerator();
         }
     }
 
@@ -104,19 +107,6 @@ namespace NUnit.TestUtilities.Collections
         public bool Equals(SimpleIEquatableObj other)
         {
             return true;
-        }
-    }
-
-    class SimpleOverridenEqualsObj
-    {
-        public override bool Equals(object obj)
-        {
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
     }
 }
