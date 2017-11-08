@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -25,6 +25,7 @@ using System.Collections;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.TestData.TestFixtureSourceData
 {
@@ -90,7 +91,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 
     [TestFixtureSource("StaticProperty")]
-    public class StaticProperty_InheritedClass : StaticProperty_SameClass 
+    public class StaticProperty_InheritedClass : StaticProperty_SameClass
     {
         public StaticProperty_InheritedClass (string arg) : base(arg, "StaticPropertyInClass") { }
     }
@@ -247,6 +248,46 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return new TestFixtureData("GoodData");
             yield return new TestFixtureData("ExplicitData").Explicit("Runs long");
             yield return new TestFixtureData("MoreExplicitData").Explicit();
+        }
+    }
+
+    [TestFixtureSource(nameof(NamedData))]
+    public sealed class IndividualInstanceNameTestDataFixture
+    {
+        public IndividualInstanceNameTestDataFixture(params object[] args)
+        {
+        }
+
+        [Test]
+        public void Test() { }
+
+        public static IEnumerable<TestFixtureData> NamedData()
+        {
+            yield return CreateTestFixtureData(null, new object[] { "argValue" }, null, typeof(IndividualInstanceNameTestDataFixture).Name + "(\"argValue\")");
+
+            yield return CreateTestFixtureData(null, new object[] { "argValue" }, new[] { "argName" }, typeof(IndividualInstanceNameTestDataFixture).Name + "(argName)");
+
+            yield return CreateTestFixtureData("a", new object[] { "argValue" }, new[] { "argName" }, "a");
+
+            yield return CreateTestFixtureData("{a}", new object[] { "argValue" }, null, "(\"argValue\")");
+
+            yield return CreateTestFixtureData("{a}", new object[] { "argValue" }, new[] { "argName" }, "(argName)");
+
+            yield return CreateTestFixtureData("{a}", new object[] { "argValue1", "argValue2" }, new[] { "argName" }, "(argName)");
+
+            yield return CreateTestFixtureData("{a}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "(argName1,argName2)");
+
+            yield return CreateTestFixtureData("{0}, {1}", new object[] { "argValue1", "argValue2" }, new[] { "argName" }, "argName, ");
+
+            yield return CreateTestFixtureData("{0}, {1}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "argName1, argName2");
+        }
+
+        private static TestFixtureData CreateTestFixtureData(string testName, object[] args, string[] argNames, string expectedFixtureName)
+        {
+            var data = new TestFixtureData(args) { Properties = { ["ExpectedFixtureName"] = { expectedFixtureName } } };
+            if (testName != null) data.SetName(testName);
+            if (argNames != null) data.SetArgNames(argNames);
+            return data;
         }
     }
 

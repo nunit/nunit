@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,10 +22,9 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Filters;
 using NUnit.TestData.TestFixtureSourceData;
 using NUnit.TestUtilities;
 
@@ -86,6 +85,34 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.Tests[1].Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Runs long"));
             Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Explicit));
         }
+
+
+        public static IEnumerable<TestCaseData> IndividualInstanceNameTestDataSource()
+        {
+            var suite = (ParameterizedFixtureSuite)TestBuilder.MakeFixture(typeof(IndividualInstanceNameTestDataFixture));
+
+            foreach (var testFixture in suite.Tests)
+            {
+                var expectedName = (string)testFixture.Properties.Get("ExpectedFixtureName");
+
+                yield return new TestCaseData((TestFixture)testFixture, expectedName)
+                    .SetArgNames(expectedName); // SetArgNames (here) is purely cosmetic for the purposes of these tests
+            }
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceName(TestFixture testFixture, string expectedName)
+        {
+            Assert.That(testFixture.Name, Is.EqualTo(expectedName));
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceFullName(TestFixture testFixture, string expectedName)
+        {
+            var expectedFullName = typeof(IndividualInstanceNameTestDataFixture).Namespace + "." + expectedName;
+            Assert.That(testFixture.FullName, Is.EqualTo(expectedFullName));
+        }
+
 
         [Test]
         public void Issue1118()

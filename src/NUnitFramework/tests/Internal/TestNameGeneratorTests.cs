@@ -84,6 +84,19 @@ namespace NUnit.Framework.Internal
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, null, args);
         }
 
+        [TestCase("{a}", new[] { "1", "2" }, ExpectedResult = "(1,2)")]
+        [TestCase("{a}", new[] { ",", " " }, ExpectedResult = "(,, )")]
+        [TestCase("{a}", new string[0], ExpectedResult = "()")]
+        [TestCase("{0}", new[] { "1", "2" }, ExpectedResult = "1")]
+        [TestCase("{0}{1}", new[] { "1", "2" }, ExpectedResult = "12")]
+        [TestCase("{0},{1},{2}", new[] { "1", "2" }, ExpectedResult = "1,2,")]
+        [TestCase("{0:20}", new[] { "Now is the time for all good men to come to the aid of their country." }, ExpectedResult = "Now is the time f...")]
+        [TestCase("{a:20}", new[] { "42", "Now is the time for all good men to come to the aid of their country." }, ExpectedResult = "(42,Now is the time f...)")]
+        public string ArgumentDisplayNames(string pattern, string[] argDisplayNames)
+        {
+            return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, argDisplayNames, new object[] { 1, 2, 3 });
+        }
+
         [TestCase("FIXED", ExpectedResult="FIXED")]
         [TestCase("{m}",   ExpectedResult="GenericTest<T,U,V>")]
         [TestCase("{n}", ExpectedResult = "NUnit.Framework.Internal")]

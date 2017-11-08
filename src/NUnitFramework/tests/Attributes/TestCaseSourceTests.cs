@@ -335,6 +335,38 @@ namespace NUnit.Framework.Attributes
 
         static string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
 
+        #region Test name tests
+
+        public static IEnumerable<TestCaseData> IndividualInstanceNameTestDataSource()
+        {
+            var suite = (ParameterizedMethodSuite)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture),
+                nameof(TestCaseSourceAttributeFixture.TestCaseNameTestDataMethod));
+
+            foreach (var test in suite.Tests)
+            {
+                var expectedName = (string)test.Properties.Get("ExpectedTestName");
+
+                yield return new TestCaseData(test, expectedName)
+                    .SetArgNames(expectedName); // SetArgNames (here) is purely cosmetic for the purposes of these tests
+            }
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceName(ITest test, string expectedName)
+        {
+            Assert.That(test.Name, Is.EqualTo(expectedName));
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceFullName(ITest test, string expectedName)
+        {
+            var expectedFullName = typeof(TestCaseSourceAttributeFixture).FullName + "." + expectedName;
+            Assert.That(test.FullName, Is.EqualTo(expectedFullName));
+        }
+
+        #endregion
+
         #region Sources used by the tests
         static object[] MyData = new object[] {
             new object[] { 12, 3, 4 },
