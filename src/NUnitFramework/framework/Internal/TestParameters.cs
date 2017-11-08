@@ -129,9 +129,9 @@ namespace NUnit.Framework.Internal
         #endregion
 
         /// <summary>
-        /// Applies the encapsulated parameters to the test method.
+        /// Applies the encapsulated parameters to the test.
         /// </summary>
-        public void ApplyToTest(TestMethod test, TestNameGenerator defaultTestNameGenerator)
+        public void ApplyToTest(Test test, TestNameGenerator defaultTestNameGenerator)
         {
             if (RunState != RunState.Runnable)
                 test.RunState = RunState;
