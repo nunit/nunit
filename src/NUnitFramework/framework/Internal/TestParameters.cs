@@ -119,7 +119,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// If not <see langword="null"/>, overrides the list of argument display names to be used when generating a test name.
         /// </summary>
-        protected string[] ArgNames { private get; set; }
+        // TODO: use private protected as soon as the codebase supports C# 7.2
+        internal string[] ArgNames { private get; set; }
 
         /// <summary>
         /// Gets the property dictionary for this test
