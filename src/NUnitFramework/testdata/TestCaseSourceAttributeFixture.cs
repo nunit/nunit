@@ -206,11 +206,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             yield return CreateTestCaseData("{0}, {1}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "argName1, argName2");
         }
 
-        private static TestCaseData CreateTestCaseData(string testName, object[] args, string[] argNames, string expectedTestName)
+        private static TestCaseData CreateTestCaseData(string testName, object[] args, string[] argDisplayNames, string expectedTestName)
         {
             var data = new TestCaseData(args) { Properties = { ["ExpectedTestName"] = { expectedTestName } } };
             if (testName != null) data.SetName(testName);
-            if (argNames != null) data.SetArgNames(argNames);
+            if (argDisplayNames != null) data.SetArgDisplay(argDisplayNames);
             return data;
         }
 

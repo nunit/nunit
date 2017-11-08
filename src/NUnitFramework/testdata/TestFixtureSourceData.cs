@@ -282,11 +282,11 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return CreateTestFixtureData("{0}, {1}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "argName1, argName2");
         }
 
-        private static TestFixtureData CreateTestFixtureData(string testName, object[] args, string[] argNames, string expectedFixtureName)
+        private static TestFixtureData CreateTestFixtureData(string testName, object[] args, string[] argDisplayNames, string expectedFixtureName)
         {
             var data = new TestFixtureData(args) { Properties = { ["ExpectedFixtureName"] = { expectedFixtureName } } };
             if (testName != null) data.SetName(testName);
-            if (argNames != null) data.SetArgNames(argNames);
+            if (argDisplayNames != null) data.SetArgDisplay(argDisplayNames);
             return data;
         }
     }

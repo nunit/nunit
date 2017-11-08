@@ -348,7 +348,7 @@ namespace NUnit.Framework.Attributes
                 var expectedName = (string)test.Properties.Get("ExpectedTestName");
 
                 yield return new TestCaseData(test, expectedName)
-                    .SetArgNames(expectedName); // SetArgNames (here) is purely cosmetic for the purposes of these tests
+                    .SetArgDisplay(expectedName); // SetArgNames (here) is purely cosmetic for the purposes of these tests
             }
         }
 

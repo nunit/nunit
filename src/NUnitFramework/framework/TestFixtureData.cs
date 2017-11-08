@@ -92,9 +92,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the list of display names to use as the parameters in the test name.
         /// </summary>
-        public TestFixtureData SetArgNames(params string[] displayNames)
+        public TestFixtureData SetArgDisplay(params string[] displayNames)
         {
-            ArgNames = displayNames;
+            ArgDisplayNames = displayNames;
             return this;
         }
 
