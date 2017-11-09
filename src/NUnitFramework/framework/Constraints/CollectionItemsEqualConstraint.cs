@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Constraints
         {
             get { return _comparer.IgnoreCase; }
         }
-        
+
         /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
         /// </summary>
@@ -134,6 +134,16 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
+        {
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied boolean-returning delegate.
+        /// </summary>
+        /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
+        public CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
