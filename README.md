@@ -69,4 +69,4 @@ NUnit is made up of several projects. When reporting issues, please try to repor
 - [NUnit 2 Result Writer](https://github.com/nunit/nunit-v2-result-writer) - Writes test results in the legacy NUnit 2 format
 - [Visual Studio Project Loader](https://github.com/nunit/vs-project-loader) - Loads and parses Visual Studio projects and solutions
 - [NUnit Project Loader](https://github.com/nunit/nunit-project-loader) - Loads NUnit projects
-- [TeamCity Event Listenter](https://github.com/nunit/teamcity-event-listener) - Allows you to run and integrate NUnit tests into TeamCity
+- [TeamCity Event Listener](https://github.com/nunit/teamcity-event-listener) - Allows you to run and integrate NUnit tests into TeamCity
