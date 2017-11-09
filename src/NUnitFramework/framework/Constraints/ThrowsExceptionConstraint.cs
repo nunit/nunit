@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,7 +22,11 @@
 // ***********************************************************************
 
 using System;
+
+#if ASYNC
+using System.Threading.Tasks;
 using NUnit.Framework.Internal;
+#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -90,13 +94,17 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns the ActualValueDelegate itself as the value to be tested.
+        /// Applies the constraint to an ActualValueDelegate that returns
+        /// the value to be tested. The default implementation simply evaluates
+        /// the delegate but derived classes may override it to provide for
+        /// delayed processing.
         /// </summary>
-        /// <param name="del">A delegate representing the code to be tested</param>
-        /// <returns>The delegate itself</returns>
-        protected override object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            return new TestDelegate(() => del());
+#if ASYNC
+            if (typeof(TActual) == typeof(Task)) return ApplyTo(new AsyncTestDelegate(() => (Task)(object)del.Invoke()));
+#endif
+            return ApplyTo(new TestDelegate(() => del.Invoke()));
         }
 
         #region Nested Result Class
