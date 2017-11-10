@@ -220,7 +220,7 @@ namespace NUnit.Framework.Api
 
             var key1Node = settingNode.ChildNodes[0];
             Assert.That(key1Node.Attributes["key"], Is.EqualTo("key1"));
-            Assert.That(key1Node.Attributes["value"], s.EqualTo(string.Empty));
+            Assert.That(key1Node.Attributes["value"], Is.EqualTo(string.Empty));
 
             var key2Node = settingNode.ChildNodes[1];
             Assert.That(key2Node.Attributes["key"], Is.EqualTo("key2"));
