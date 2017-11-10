@@ -1,3 +1,63 @@
+### NUnit 3.9 - November 10, 2017
+
+This release addresses numerous parallelization issues that were introduced in 3.8
+when method level parallelization was added. Most of the parallelization issues
+resolved were tests never completing when using some combinations of parallel tests
+and `ApartmentState` not being properly applied to tests in all cases.
+
+#### Issues Resolved
+
+ * 893 Inconsistent Tuple behavior.
+ * 1239 NUnit3 sometimes hangs if SetUpFixtures are run in parallel
+ * 1346 NullReferenceException when [TestFixtureSource] refers to data in a generic class.
+ * 1473 Allow Is.Ordered to Compare Null Values
+ * 1899 Constraint Throws.Exception does not catch exception with async lambdas
+ * 1905 SetupFixture without namespace will make assembly-level Parallelable attribute useless
+ * 2091 When a native exception of corrupted state is thrown, nunit test thread crashes and the nunit-console process hangs
+ * 2102 NUnitLite incorrectly reports Win 10 OS name
+ * 2271 When CollectionAssert.AreEqual do compare each element, it will ignore the IEquatable of the element too
+ * 2289 ResolveTypeNameDifference does not handle generic types well
+ * 2311 Resolve test projects' namespace situation
+ * 2319 Add .editorconfig to set file encodings so that people don't have to think about it
+ * 2364 Parallelizable attribute not invalidating invalid parallel scope combinations
+ * 2372 Create testing for compounded ConstraintFilters
+ * 2388 Parallelization causes test cases to stop respecting fixture's apartment state
+ * 2395 NUnit 3.8+ does not finish running tests
+ * 2398 NUnit CI spurious failures, NUnit.Framework.Internal.ThreadUtilityTests.Kill
+ * 2402 --labels=All doesn't show anything in console output executing NUnitLite Console Runner
+ * 2406 Summary descriptions replaced by more detailed ones
+ * 2411 And constraint on Has.Member throws
+ * 2412 Using fluent syntax unintentionally removed in 3.8
+ * 2418 Support equality comparison delegate
+ * 2422 Has.Property causes AmbiguousMatchException for shadowing properties
+ * 2425 XML doc typo fix
+ * 2426 Regression in 3.8.1: ApartmentAttribute no longer works when applied to an assembly
+ * 2428 Fix NullReferenceExceptions caused by WorkItemQueue not being thread-safe
+ * 2429 Stack trace shown for Assert.Warn
+ * 2438 [Parallelizable] hangs after a few tests
+ * 2441 Allows to override load-time/execution-time interfaces in built-in tests attributes
+ * 2446 CI failure in mono Warning tests
+ * 2448 Inherited Test SetUp, TearDown, etc. are not executed in .NET Core if they are not public
+ * 2451 Compile RegEx to improve performance
+ * 2454 SetUpFixture not respecting NonParallelizable tag on TestFixtures.
+ * 2459 [Parallelizable(ParallelScope.Children)] Unable to finish tests
+ * 2465 Possible wrong properties are returned by reflection in ReflectionExtensions.cs
+ * 2467 Test execution hangs when using [SetUpFixture] with NUnit 3.8.x
+ * 2469 Allow RangeAttribute to be specified multiple times for the same argument
+ * 2471 Parametrized testcases not running in parallel
+ * 2475 Framework incorrectly identifies Win 10 in xml results
+ * 2478 Attributes on SetUpFixture are not applied
+ * 2486 Message when asserting null with Is.EquivalentTo could be more helpful
+ * 2497 Use ConstraintUtils.RequireActual through out the codebase
+ * 2504 Support changing test display name on TestFixtureData
+ * 2508 Correct divergence from shadowed Is / Has members.
+ * 2516 When test writes something to the stdErr there is no guaranteed way to link a test-output event to a target test using ITestEventListener
+ * 2525 Remove unwanted space from comment
+ * 2526 SerializationException in low trust floating point equality test
+ * 2533 Matches<T>(Predicate<T>) throws ArgumentException or Fails when actual is null
+ * 2534 SetUpFixture causes NUnit to lock with Apartment( STA )
+ * 2551 CollectionItemsEqualConstraint is missing Using(Func<T, T, bool>)
+
 ### NUnit 3.8.1 - August 28, 2017
 
 This release fixes two critical regressions in the 3.8 release. The first caused the console
