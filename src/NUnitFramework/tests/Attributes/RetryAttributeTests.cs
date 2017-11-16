@@ -45,7 +45,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(RetryErrorOnSecondTryFixture), "Failed(Child)", 2)]
         [TestCase(typeof(RetryErrorOnThirdTryFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RetryTestCaseFixture), "Failed(Child)", 3)]
-        public void RetryWorksAsExpected(Type fixtureType, string outcome, int nTries)
+        public void RetryWorksAsExpectedOnFixturesWithSetupAndTeardown(Type fixtureType, string outcome, int nTries)
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
@@ -57,6 +57,17 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(nTries, fixture.TeardownCount);
             Assert.AreEqual(nTries, fixture.Count);
         }
+
+        [TestCase(typeof(RetryWithoutSetUpOrTearDownFixture), "Passed", 3)]
+        public void RetryWorksAsExpectedOnFixturesWithoutSetupOrTeardown(Type fixtureType, string outcome, int nTries)
+        {
+            var fixture = (RetryWithoutSetUpOrTearDownFixture)Reflect.Construct(fixtureType);
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+            Assert.AreEqual(nTries, fixture.Count);
+        }
+
 
         [Test]
         public void CategoryWorksWithRetry()
