@@ -58,11 +58,12 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(nTries, fixture.Count);
         }
 
-        [TestCase(typeof(RetryWithoutSetUpOrTearDownFixture), "Passed", 3)]
-        public void RetryWorksAsExpectedOnFixturesWithoutSetupOrTeardown(Type fixtureType, string outcome, int nTries)
+        [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.SucceedsOnThirdTry), "Passed", 3)]
+        [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.FailsEveryTime), "Failed", 3)]
+        public void RetryWorksAsExpectedOnFixturesWithoutSetupOrTeardown(string methodName, string outcome, int nTries)
         {
-            var fixture = (RetryWithoutSetUpOrTearDownFixture)Reflect.Construct(fixtureType);
-            ITestResult result = TestBuilder.RunTestFixture(fixture);
+            var fixture = (RetryWithoutSetUpOrTearDownFixture)Reflect.Construct(typeof(RetryWithoutSetUpOrTearDownFixture));
+            ITestResult result = TestBuilder.RunTestCase(fixture, methodName);
 
             Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
             Assert.AreEqual(nTries, fixture.Count);

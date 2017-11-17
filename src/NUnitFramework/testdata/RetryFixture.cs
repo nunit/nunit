@@ -42,7 +42,7 @@ namespace NUnit.TestData.RepeatingTests
         public void FailsEveryTime()
         {
             count++;
-            Assert.IsFalse (true);
+            Assert.IsFalse(true);
         }
     }
 
@@ -187,6 +187,13 @@ namespace NUnit.TestData.RepeatingTests
 
             if (Count < 3)
                 Assert.Fail();
+        }
+
+        [Test, Retry(3)]
+        public void FailsEveryTime()
+        {
+            Count++;
+            Assert.Fail();
         }
     }
 }
