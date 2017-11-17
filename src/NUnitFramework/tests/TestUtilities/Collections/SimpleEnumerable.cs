@@ -57,7 +57,7 @@ namespace NUnit.TestUtilities.Collections
 
     class SimpleEnumerableWithIEquatable : IEnumerable<object>, IEquatable<SimpleEnumerableWithIEquatable>
     {
-        public List<object> Contents { get; private set; } = new List<object>();
+        public List<object> Contents { get; }
 
         public SimpleEnumerableWithIEquatable(IEnumerable<object> source)
         {
