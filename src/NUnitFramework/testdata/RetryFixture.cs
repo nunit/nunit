@@ -195,5 +195,12 @@ namespace NUnit.TestData.RepeatingTests
             Count++;
             Assert.Fail();
         }
+
+        [Test, Retry(3)]
+        public void ErrorsOnFirstTry()
+        {
+            Count++;
+            throw new Exception("Deliberate exception");
+        }
     }
 }
