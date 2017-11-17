@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -54,27 +54,21 @@ namespace NUnit.Framework.Internal.Commands
 
             try
             {
-                BeforeTest(context);
-
-                context.CurrentResult = innerCommand.Execute(context);
-            }
-            catch (Exception ex)
-            {
-#if !NETSTANDARD1_6
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-                context.CurrentResult.RecordException(ex);
+                context.ExecuteWithExceptionHandling(c =>
+                {
+                    BeforeTest?.Invoke(c);
+                    c.CurrentResult = innerCommand.Execute(c);
+                });
             }
             finally
             {
                 if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                    AfterTest(context);
+                    context.ExecuteWithExceptionHandling(AfterTest);
             }
 
             return context.CurrentResult;
         }
-        
+
         /// <summary>
         /// Perform the before test action
         /// </summary>

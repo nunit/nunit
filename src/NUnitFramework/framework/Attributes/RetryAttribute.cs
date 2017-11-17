@@ -91,16 +91,10 @@ namespace NUnit.Framework
 
                 while (count-- > 0)
                 {
-                    try
-                    {
-                        context.CurrentResult = innerCommand.Execute(context);
+                    innerCommand.ExecuteAndSetCurrentResult(context);
 
-                        if (context.CurrentResult.ResultState != ResultState.Failure)
-                            break;
-                    }
-                    catch when (count > 0)
-                    {
-                    }
+                    if (context.CurrentResult.ResultState.Status != TestStatus.Failed) break;
+                    if (context.CurrentResult.ResultState.Label == ResultState.Error.Label) break;
 
                     // Clear result for retry
                     if (count > 0)

@@ -56,22 +56,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                Result = MakeTestCommand().Execute(Context);
-            }
-            catch (Exception ex)
-            {
-                // Currently, if there are no command wrappers, test 
-                // actions, setup or teardown, we have to catch any
-                // exception from the test here. In addition, since
-                // users may create their own command wrappers, etc.
-                // we have to protect against unhandled exceptions.
-
-#if !NETSTANDARD1_6
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-
-                Context.CurrentResult.RecordException(ex);
+                MakeTestCommand().ExecuteAndSetCurrentResult(Context);
                 Result = Context.CurrentResult;
             }
             finally

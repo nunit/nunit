@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
+using System;
+using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -55,11 +58,22 @@ namespace NUnit.Framework.Internal.Commands
         public Test Test { get; private set; }
 
         /// <summary>
-        /// Runs the test in a specified context, returning a TestResult.
+        /// Runs the test in a specified context, returning a <see cref="TestResult"/>.
         /// </summary>
-        /// <param name="context">The TestExecutionContext to be used for running the test.</param>
-        /// <returns>A TestResult</returns>
+        /// <param name="context">The <see cref="TestExecutionContext"/> to be used for running the test.</param>
         public abstract TestResult Execute(TestExecutionContext context);
+
+        /// <summary>
+        /// Runs the test in a specified context, either setting <see cref="TestExecutionContext.CurrentResult"/> to the result or handling the exception.
+        /// </summary>
+        /// <param name="context">The <see cref="TestExecutionContext"/> to be used for running the test.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="context"/> is <see langword="null"/></exception>
+        public void ExecuteAndSetCurrentResult(TestExecutionContext context)
+        {
+            Guard.ArgumentNotNull(context, nameof(context));
+
+            context.ExecuteWithExceptionHandling(c => c.CurrentResult = Execute(c));
+        }
 
         #endregion
     }
