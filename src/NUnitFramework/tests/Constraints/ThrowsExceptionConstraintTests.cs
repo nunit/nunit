@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,9 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
+
+#if ASYNC
+using System;
+using System.Threading.Tasks;
+#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -59,5 +63,21 @@ namespace NUnit.Framework.Constraints
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
         };
+
+#if ASYNC
+        [Test]
+        public static void CatchesAsyncException()
+        {
+            Assert.That(async () =>
+            {
+#if NET_4_0
+                await TaskEx.Yield();
+#else
+                await Task.Yield();
+#endif
+                throw new Exception();
+            }, Throws.Exception);
+        }
+#endif
     }
 }

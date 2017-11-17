@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
         protected abstract object GetValue(Type type, string propertyName, object obj);
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
             Type xType = x.GetType();
             Type yType = y.GetType();
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 object xItem = GetValue(xType, propertyName, x);
                 object yItem = GetValue(yType, propertyName, y);
 
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance);
+                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, false);
                 if (!comparison)
                     return false;
             }

@@ -33,7 +33,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.ActionAttributeTests;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework
 {
     [TestFixture, NonParallelizable]
     public class ActionAttributeTests

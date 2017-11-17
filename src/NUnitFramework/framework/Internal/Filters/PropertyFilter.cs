@@ -33,11 +33,7 @@ namespace NUnit.Framework.Internal.Filters
     /// PropertyFilter is able to select or exclude tests
     /// based on their properties.
     /// </summary>
-    /// 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
-    public class PropertyFilter : ValueMatchFilter
+    internal class PropertyFilter : ValueMatchFilter
     {
         private string _propertyName;
 

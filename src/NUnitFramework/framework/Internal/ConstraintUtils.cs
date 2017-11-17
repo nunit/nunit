@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Globalization;
 
 namespace NUnit.Framework.Internal
 {
@@ -32,16 +31,18 @@ namespace NUnit.Framework.Internal
     internal static class ConstraintUtils
     {
         /// <summary>
-        /// Require that the provided object is actually of the type required,
-        /// and that it is not null.
+        /// Requires that the provided object is actually of the type required.
         /// </summary>
         /// <param name="actual">The object to verify.</param>
         /// <param name="paramName">Name of the parameter as passed into the checking method.</param>
-        /// <typeparam name="T">The type to require.</typeparam>  
-        /// <returns>A properly typed object, or throws. Never null.</returns>
-        public static T RequireActual<T>(object actual, string paramName)
+        /// <param name="allowNull">
+        /// If <see langword="true"/> and <typeparamref name="T"/> can be null, returns null rather than throwing when <paramref name="actual"/> is null.
+        /// If <typeparamref name="T"/> cannot be null, this parameter is ignored.</param>
+        /// <typeparam name="T">The type to require.</typeparam>
+        public static T RequireActual<T>(object actual, string paramName, bool allowNull = false)
         {
             if (actual is T) return (T)actual;
+            if (allowNull && actual == null && default(T) == null) return default(T);
 
             var actualDisplay = actual == null ? "null" : actual.GetType().Name;
             throw new ArgumentException($"Expected: {typeof(T).Name} But was: {actualDisplay}", paramName);

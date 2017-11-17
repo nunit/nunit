@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -172,6 +173,20 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public static void UsesProvidedGenericEqualityComparison()
+        {
+            var comparer = new GenericEqualityComparison<int>();
+            Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>(comparer.Delegate));
+            Assert.That(comparer.WasCalled, "Comparer was not called");
+        }
+
+        [Test]
+        public static void UsesBooleanReturningDelegateWithImplicitParameterTypes()
+        {
+            Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>((x, y) => x.Equals(y)));
+        }
+
+        [Test]
         public void CheckCollectionEquivalentConstraintResultIsReturned()
         {
             IEnumerable<string> set1 = new List<string>() { "one" };
@@ -252,7 +267,7 @@ namespace NUnit.Framework.Constraints
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
 
-            var expectedMessage = 
+            var expectedMessage =
                 "  Expected: equivalent to < \"presto\", \"abracadabra\", \"hocuspocus\" >" + Environment.NewLine +
                 "  But was:  < \"abracadabra\", \"presto\", \"hocusfocus\" >" + Environment.NewLine +
                 "  Missing (1): < \"hocuspocus\" >" + Environment.NewLine +

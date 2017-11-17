@@ -37,11 +37,13 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="text">Text to be output</param>
         /// <param name="stream">Name of the stream or channel to which the text should be written</param>
+        /// <param name="testId">Id of the test that produced the output</param>
         /// <param name="testName">FullName of test that produced the output</param>
-		public TestOutput(string text, string stream, string testName)
+        public TestOutput(string text, string stream, string testId, string testName)
         {
             Text = text;
             Stream = stream;
+            TestId = testId;
             TestName = testName;
         }
 
@@ -70,6 +72,11 @@ namespace NUnit.Framework.Interfaces
         public string TestName { get; private set; }
 
         /// <summary>
+        /// Get the id of the test that created the output
+        /// </summary>
+        public string TestId { get; private set; }
+
+        /// <summary>
         /// Convert the TestOutput object to an XML string
         /// </summary>
         public string ToXml()
@@ -77,6 +84,9 @@ namespace NUnit.Framework.Interfaces
             TNode tnode = new TNode("test-output", Text, true);
 
             tnode.AddAttribute("stream", Stream);
+            if (TestId != null)
+                tnode.AddAttribute("testid", TestId);
+
             if (TestName != null)
                 tnode.AddAttribute("testname", TestName);
 

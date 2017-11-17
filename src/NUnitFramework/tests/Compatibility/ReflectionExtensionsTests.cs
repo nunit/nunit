@@ -27,7 +27,7 @@ using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
 
-namespace NUnit.Framework.Tests.Compatibility
+namespace NUnit.Framework.Compatibility
 {
     /// <summary>
     /// A series of unit tests to ensure that the type extensions in the .NET Standard

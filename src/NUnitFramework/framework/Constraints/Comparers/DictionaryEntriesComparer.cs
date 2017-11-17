@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
             // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
             if (!(x is DictionaryEntry) || !(y is DictionaryEntry))
@@ -47,8 +47,8 @@ namespace NUnit.Framework.Constraints.Comparers
             DictionaryEntry yDictionaryEntry = (DictionaryEntry)y;
 
             var keyTolerance = Tolerance.Exact;
-            return _equalityComparer.AreEqual(xDictionaryEntry.Key, yDictionaryEntry.Key, ref keyTolerance) 
-                && _equalityComparer.AreEqual(xDictionaryEntry.Value, yDictionaryEntry.Value, ref tolerance);
+            return _equalityComparer.AreEqual(xDictionaryEntry.Key, yDictionaryEntry.Key, ref keyTolerance, false) 
+                && _equalityComparer.AreEqual(xDictionaryEntry.Value, yDictionaryEntry.Value, ref tolerance, false);
         }
     }
 }

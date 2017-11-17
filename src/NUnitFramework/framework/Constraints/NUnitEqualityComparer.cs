@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -153,7 +153,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
-        public bool AreEqual(object x, object y, ref Tolerance tolerance)
+        public bool AreEqual(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
             this.failurePoints = new List<FailurePoint>();
 
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Constraints
 
             foreach (IChainComparer comparer in _comparers)
             {
-                bool? result = comparer.Equal(x, y, ref tolerance);
+                bool? result = comparer.Equal(x, y, ref tolerance, topLevelComparison);
                 if (result.HasValue)
                     return result.Value;
             }
