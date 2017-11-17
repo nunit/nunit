@@ -72,6 +72,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
 
                 Context.CurrentResult.RecordException(ex);
+                Result = Context.CurrentResult;
             }
             finally
             {
