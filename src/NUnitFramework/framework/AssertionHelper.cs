@@ -31,7 +31,8 @@ namespace NUnit.Framework
     /// AssertionHelper is an optional base class for user tests,
     /// allowing the use of shorter names in making asserts.
     /// </summary>
-    [Obsolete("The AssertionHelper class will be removed in a coming release.")]
+    [Obsolete("The AssertionHelper class will be removed in a coming release. " +
+              "Consider using the NUnit.StaticExpect NuGet package as a replacement.")]
     public class AssertionHelper
     {
         #region Expect
