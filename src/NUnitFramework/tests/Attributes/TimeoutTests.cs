@@ -167,7 +167,6 @@ namespace NUnit.Framework.Attributes
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Is.EqualTo("Test exceeded Timeout value of 500ms"));
-            Assert.That(result.Duration, Is.EqualTo(0.5).Within(0.2));
         }
     }
 }

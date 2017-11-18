@@ -45,6 +45,7 @@
     <Compile Include="..\TestFile.cs">
       <Link>TestUtilities\TestFile.cs</Link>
     </Compile>
+    <Compile Include="..\TestSuiteExtensions.cs" Link="TestUtilities\TestSuiteExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />

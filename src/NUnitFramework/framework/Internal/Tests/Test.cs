@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="pathName">The parent tests full name</param>
         /// <param name="name">The name of the test</param>
-        protected Test( string pathName, string name ) 
+        protected Test( string pathName, string name )
         {
             Initialize(name);
 
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         }
 
         private static string GetNextId()
-        {            
+        {
             return IdPrefix + unchecked(_nextID++);
         }
 
@@ -231,9 +231,9 @@ namespace NUnit.Framework.Internal
         /// Gets a count of test cases represented by
         /// or contained under this test.
         /// </summary>
-        public virtual int TestCaseCount 
-        { 
-            get { return 1; } 
+        public virtual int TestCaseCount
+        {
+            get { return 1; }
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public MethodInfo[] TearDownMethods { get; protected set; }
 
-        #endregion 
+        #endregion
 
         #region Internal Properties
 
@@ -322,7 +322,7 @@ namespace NUnit.Framework.Internal
                 return _actions;
             }
         }
-        
+
         #endregion
 
         #region Other Public Methods
@@ -338,7 +338,7 @@ namespace NUnit.Framework.Internal
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
         /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are 
+        /// but may not be in some instances. The attributes retrieved are
         /// saved for use in subsequent operations.
         /// </summary>
         /// <param name="provider">An object deriving from MemberInfo</param>
@@ -352,7 +352,7 @@ namespace NUnit.Framework.Internal
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
         /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are 
+        /// but may not be in some instances. The attributes retrieved are
         /// saved for use in subsequent operations.
         /// </summary>
         /// <param name="provider">An object deriving from MemberInfo</param>
@@ -366,7 +366,7 @@ namespace NUnit.Framework.Internal
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
         /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are 
+        /// but may not be in some instances. The attributes retrieved are
         /// saved for use in subsequent operations.
         /// </summary>
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>

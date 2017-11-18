@@ -113,6 +113,9 @@ namespace NUnit.TestUtilities
     {
         public event System.EventHandler Executed;
 
+        public FakeWorkItem(Test test)
+            : this(test, new TestExecutionContext()) { }
+
         public FakeWorkItem(Test test, TestExecutionContext context)
             : base(test, TestFilter.Empty)
         {

@@ -46,6 +46,11 @@ namespace NUnit.Framework.Internal.Execution
         #region IWorkItemDispatcher Members
 
         /// <summary>
+        ///  The level of parallelism supported
+        /// </summary>
+        public int LevelOfParallelism { get { return 0; } }
+
+        /// <summary>
         /// Start execution, creating the execution thread,
         /// setting the top level work  and dispatching it.
         /// </summary>

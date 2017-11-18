@@ -13,8 +13,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CheckOrderIsCorrect()
         {
-            var fixture = TestBuilder.MakeFixture(typeof (TestCaseOrderAttributeFixture));
-            var work = TestBuilder.PrepareWorkItem(fixture, null) as CompositeWorkItem;
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(typeof(TestCaseOrderAttributeFixture));
 
             // This triggers sorting
             TestBuilder.ExecuteWorkItem(work);
@@ -27,18 +26,15 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         [TestCaseSource(nameof(Cases))]
-        public void CheckClassOrderIsCorrect(List<Type> candidateTypes)
+        public void CheckClassOrderIsCorrect(Type[] candidateTypes)
         {
-            var testSuite = TestBuilder.MakeFixture(candidateTypes);
+            var testSuite = new TestSuite("dummy").Containing(candidateTypes);
 
-            var work = TestBuilder.PrepareWorkItem(testSuite, null) as CompositeWorkItem;
+            var work = TestBuilder.CreateWorkItem(testSuite) as CompositeWorkItem;
 
-            var fixtureWorkItems = 
-                ((work.Children[0] as CompositeWorkItem)
-                .Children[0] as CompositeWorkItem)
-                .Children;
+            var fixtureWorkItems = work.Children;
 
-            Assert.AreEqual(candidateTypes.Count, fixtureWorkItems.Count);
+            Assert.AreEqual(candidateTypes.Length, fixtureWorkItems.Count);
             for (var i = 1; i < fixtureWorkItems.Count; i++)
             {
                 var previousTestOrder = GetOrderAttributeValue(fixtureWorkItems[i - 1]);
@@ -56,17 +52,17 @@ namespace NUnit.Framework.Attributes
 
         private static readonly object[] Cases =
         {
-            new List<Type>
+            new Type[]
             {
                 typeof(TestCaseOrderAttributeFixture),
                 typeof(ThirdTestCaseOrderAttributeFixture)
             },
-            new List<Type>
+            new Type[]
             {
                 typeof(TestCaseOrderAttributeFixture),
                 typeof(AnotherTestCaseOrderAttributeFixture)
             },
-            new List<Type>
+            new Type[]
             {
                 typeof(TestCaseOrderAttributeFixture),
                 typeof(AnotherTestCaseOrderAttributeFixture),

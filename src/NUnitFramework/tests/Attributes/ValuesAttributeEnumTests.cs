@@ -28,7 +28,7 @@ using NUnit.Framework;
 
 #endregion
 
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     public enum EnumValues
     {

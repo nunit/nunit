@@ -104,7 +104,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void IntRangeWithMultipleAttributes()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleIntRange");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "MethodWithMultipleIntRange");
 
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
@@ -166,7 +166,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void UnsignedIntRangeWithMultipleAttributes()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleUnsignedIntRange");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "MethodWithMultipleUnsignedIntRange");
 
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void LongRangeWithMultipleAttributes()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleLongRange");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "MethodWithMultipleLongRange");
 
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
@@ -306,7 +306,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void UnsignedLongRangeWithMultipleAttributes()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleUnsignedLongRange");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "MethodWithMultipleUnsignedLongRange");
 
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
@@ -360,7 +360,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void DoubleRangeWithMultipleAttributes()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleDoubleRange");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "MethodWithMultipleDoubleRange");
 
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
@@ -414,7 +414,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void FloatRangeWithMultipleAttributes()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(this, "MethodWithMultipleFloatRange");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "MethodWithMultipleFloatRange");
 
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }

@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Execution
     /// and is responsible for re-establishing that context in the
     /// current thread before it begins or resumes execution.
     /// </summary>
-    public abstract class WorkItem
+    public abstract class WorkItem : IDisposable
     {
         static Logger log = InternalTrace.GetLogger("WorkItem");
 
@@ -67,9 +67,7 @@ namespace NUnit.Framework.Internal.Execution
                 : ParallelScope.Default;
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
-            TargetApartment = Test.Properties.ContainsKey(PropertyNames.ApartmentState)
-                ? (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState)
-                : ApartmentState.Unknown;
+            TargetApartment = GetTargetApartment(Test);
 #endif
 
             State = WorkItemState.Ready;
@@ -177,6 +175,11 @@ namespace NUnit.Framework.Internal.Execution
                 return _executionStrategy.Value;
             }
         }
+
+        /// <summary>
+        /// Indicates whether this work item should use a separate dispatcher.
+        /// </summary>
+        public virtual bool IsolateChildTests { get; } = false;
 #endif
 
         /// <summary>
@@ -248,6 +251,16 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
+        private readonly ManualResetEvent _completionEvent = new ManualResetEvent(false);
+
+        /// <summary>
+        /// Wait until the execution of this item is complete
+        /// </summary>
+        public void WaitForCompletion()
+        {
+            _completionEvent.WaitOne();
+        }
+
         /// <summary>
         /// Marks the WorkItem as NotRunnable.
         /// </summary>
@@ -300,9 +313,26 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Standard Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            if (_completionEvent != null)
+#if NET20 || NET35
+                _completionEvent.Close();
+#else
+                _completionEvent.Dispose();
+#endif
+        }
+
 #endregion
 
-        #region Protected Methods
+#region Protected Methods
 
         /// <summary>
         /// Method that performs actually performs the work. It should
@@ -336,8 +366,8 @@ namespace NUnit.Framework.Internal.Execution
 
             Context.Listener.TestFinished(Result);
 
-            if (Completed != null)
-                Completed(this, EventArgs.Empty);
+            Completed?.Invoke(this, EventArgs.Empty);
+            _completionEvent.Set();
 
             //Clear references to test objects to reduce memory usage
             Context.TestObject = null;
@@ -419,9 +449,9 @@ namespace NUnit.Framework.Internal.Execution
             Result.SetResult(resultState, message);
         }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
 #if !NETSTANDARD1_3 && !NETSTANDARD1_6
         private Thread thread;
@@ -464,8 +494,8 @@ namespace NUnit.Framework.Internal.Execution
 #if PARALLEL
         private ParallelExecutionStrategy GetExecutionStrategy()
         {
-            // If there is no fixture and so nothing to do but dispatch 
-            // grandchildren we run directly. This saves time that would 
+            // If there is no fixture and so nothing to do but dispatch
+            // grandchildren we run directly. This saves time that would
             // otherwise be spent enqueuing and dequeing items.
             if (Test.TypeInfo == null)
                 return ParallelExecutionStrategy.Direct;
@@ -497,7 +527,25 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-        #endregion
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+        /// <summary>
+        /// Recursively walks up the test hierarchy to see if the
+        /// <see cref="ApartmentState"/> has been set on any of the parent tests.
+        /// </summary>
+        static ApartmentState GetTargetApartment(ITest test)
+        {
+            var apartment = test.Properties.ContainsKey(PropertyNames.ApartmentState)
+                ? (ApartmentState)test.Properties.Get(PropertyNames.ApartmentState)
+                : ApartmentState.Unknown;
+
+            if (apartment == ApartmentState.Unknown && test.Parent != null)
+                return GetTargetApartment(test.Parent);
+
+            return apartment;
+        }
+#endif
+
+#endregion
     }
 
 #if NET20 || NET35

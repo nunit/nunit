@@ -339,14 +339,65 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         internal void Restore()
         {
-            Pause();
+            // TODO: Originally, the following Guard statement was used. In theory, no queues should be running
+            // when we are doing a restore. It appears, however, that we end the shift, pausing queues, buy that
+            // a thread may then sneak in and restart some of them. My tests pass without the guard but I'm still
+            // concerned to understand what is happening and why. I'm leaving this commented out so that somebody
+            // else can take a look at it later on.
+            //Guard.OperationValid(State != WorkItemQueueState.Running, $"Attempted to restore state of {Name} while queue was running.");
 
-            _innerQueues = _savedState.Pop().InnerQueues;
+            var savedQueues = _savedState.Pop().InnerQueues;
 
-            Start();
+            // If there are any queued items, copy to the next lower level
+            for (int i = 0; i < PRIORITY_LEVELS; i++)
+            {
+                WorkItem work;
+                while (_innerQueues[i].TryDequeue(out work))
+                    savedQueues[i].Enqueue(work);
+            }
+
+            _innerQueues = savedQueues;
         }
 
-        #endregion
+#endregion
+
+#region Internal Methods for Testing
+
+        internal string DumpContents()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"Contents of {Name} at isolation level {_savedState.Count}");
+
+            if (IsEmpty)
+                sb.AppendLine("  <empty>");
+            else
+                for (int priority = 0; priority < PRIORITY_LEVELS; priority++)
+                {
+                    foreach (WorkItem work in _innerQueues[priority])
+                        sb.AppendLine($"pri-{priority}: {work.Name}");
+                }
+
+            int level = 0;
+            foreach (var state in _savedState)
+            {
+                sb.AppendLine($"Saved State {level++}");
+                bool isEmpty = true;
+                for (int priority = 0; priority < PRIORITY_LEVELS; priority++)
+                {
+                    foreach (WorkItem work in state.InnerQueues[priority])
+                    {
+                        sb.AppendLine($"pri-{priority}: {work.Name}");
+                        isEmpty = false;
+                    }
+                }
+                if (isEmpty)
+                    sb.AppendLine("  <empty>");
+            }
+
+            return sb.ToString();
+        }
+
+#endregion
     }
 
 #if NET20 || NET35

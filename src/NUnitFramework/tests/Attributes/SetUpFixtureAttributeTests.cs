@@ -31,6 +31,32 @@ namespace NUnit.Framework.Attributes
 {
     public class SetUpFixtureAttributeTests
     {
+        [Test]
+        public void SetUpFixtureCanBeIgnored()
+        {
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(typeof(IgnoredSetUpFixture)));
+            foreach (var fixture in fixtures)
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Ignored));
+        }
+
+        [Ignore("Just Because")]
+        private class IgnoredSetUpFixture
+        {
+        }
+
+        [Test]
+        public void SetUpFixtureMayBeParallelizable()
+        {
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(typeof(ParallelizableSetUpFixture)));
+            foreach (var fixture in fixtures)
+                Assert.That(fixture.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(ParallelScope.Self));
+        }
+
+        [Parallelizable]
+        private class ParallelizableSetUpFixture
+        {
+        }
+
         [TestCase(typeof(TestSetupClass))]
         [TestCase(typeof(TestTearDownClass))]
         public void CertainAttributesAreNotAllowed(Type type)

@@ -15,11 +15,15 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net20' OR '$(TargetFramework)' == 'net35'">
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;PARALLEL</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">
     <DefineConstants>TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
+    <DefineConstants>TRACE;PARALLEL;ASYNC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

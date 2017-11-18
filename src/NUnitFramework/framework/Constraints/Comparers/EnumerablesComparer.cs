@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
             if (!(x is IEnumerable) || !(y is IEnumerable))
                 return null;
@@ -62,9 +62,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
                     if (!expectedHasData && !actualHasData)
                         return true;
-
+                    
                     if (expectedHasData != actualHasData ||
-                        !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance))
+                        !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, topLevelComparison: false))
                     {
                         NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
                         fp.Position = count;
@@ -86,7 +86,6 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 var actualDisposable = actualEnum as IDisposable;
                 if (actualDisposable != null) actualDisposable.Dispose();
-
             }
         }
     }

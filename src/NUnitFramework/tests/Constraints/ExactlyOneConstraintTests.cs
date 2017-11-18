@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Tests.Constraints
+namespace NUnit.Framework.Constraints
 {
     public class ExactlyOneConstraintTests
     {

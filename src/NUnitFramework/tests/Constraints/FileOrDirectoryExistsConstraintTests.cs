@@ -28,7 +28,7 @@ using NUnit.Framework.Assertions;
 using NUnit.Framework.Constraints;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests.Constraints
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class FileOrDirectoryExistsConstraintTests

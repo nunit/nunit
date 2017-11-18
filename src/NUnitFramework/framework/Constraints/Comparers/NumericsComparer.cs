@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal class NumericsComparer : IChainComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
             if (!Numerics.IsNumericType(x) || !Numerics.IsNumericType(y))
                 return null;

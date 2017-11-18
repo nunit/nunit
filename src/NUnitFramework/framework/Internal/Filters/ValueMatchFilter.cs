@@ -32,10 +32,7 @@ namespace NUnit.Framework.Internal.Filters
     /// ValueMatchFilter selects tests based on some value, which
     /// is expected to be contained in the test.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
-    public abstract class ValueMatchFilter : TestFilter
+    internal abstract class ValueMatchFilter : TestFilter
     {
         /// <summary>
         /// Returns the value matched by the filter - used for testing

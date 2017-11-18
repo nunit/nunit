@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
+﻿// ***********************************************************************
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,29 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using NUnit.Framework.Interfaces;
+using System.Text;
 
-namespace NUnit.Framework.Constraints.Comparers
+namespace NUnit.Framework.Tests.Interfaces
 {
-    /// <summary>
-    /// Comparator for two <see cref="DateTime"/>s or <see cref="TimeSpan"/>s.
-    /// </summary>
-    internal class TimeSpanToleranceComparer : IChainComparer
+    [TestFixture]
+    class TestOutputTests
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        [TestCase("text", "stream", "testId", "testName")]
+        [TestCase("text", "stream", null, "testName")]
+        [TestCase("text", "stream", "testId", null)]
+        public void ToXml_IncludeAttributesInProperFormatting(string text, string stream, string testId, string testName)
         {
-            if (tolerance == null || !(tolerance.Amount is TimeSpan))
-                return null;
+            var testOutput = new TestOutput(text, stream, testId, testName);
+            var expected = new StringBuilder();
+            expected.AppendFormat("<test-output stream=\"{0}\"", stream);
 
-            TimeSpan amount = (TimeSpan)tolerance.Amount;
+            if (testId != null)
+            {
+                expected.AppendFormat(" testid=\"{0}\"", testId);
+            }
 
-            if (x is DateTime && y is DateTime)
-                return ((DateTime)x - (DateTime)y).Duration() <= amount;
+            if (testName != null)
+            {
+                expected.AppendFormat(" testname=\"{0}\"", testName);
+            }
 
-            if (x is TimeSpan && y is TimeSpan)
-                return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
-
-            return null;
+            expected.AppendFormat("><![CDATA[{0}]]></test-output>", text);
+            Assert.That(testOutput.ToXml(), Is.EqualTo(expected.ToString()));
         }
     }
 }

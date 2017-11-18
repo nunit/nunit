@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -24,7 +24,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
+#if !NET20 && !NET35 && !NETSTANDARD1_3 && !NETSTANDARD1_6
+using System.Runtime.ExceptionServices;
+#endif
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
@@ -35,12 +39,12 @@ using System.Linq;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Helper methods for inspecting a type by reflection. 
-    /// 
-    /// Many of these methods take ICustomAttributeProvider as an 
-    /// argument to avoid duplication, even though certain attributes can 
+    /// Helper methods for inspecting a type by reflection.
+    ///
+    /// Many of these methods take ICustomAttributeProvider as an
+    /// argument to avoid duplication, even though certain attributes can
     /// only appear on specific types of members, like MethodInfo or Type.
-    /// 
+    ///
     /// In the case where a type is being examined for the presence of
     /// an attribute, interface or named member, the Reflect methods
     /// operate with the full name of the member being sought. This
@@ -59,7 +63,7 @@ namespace NUnit.Framework.Internal
         #region Get Methods of a type
 
         /// <summary>
-        /// Examine a fixture type and return an array of methods having a 
+        /// Examine a fixture type and return an array of methods having a
         /// particular attribute. The array is order with base methods first.
         /// </summary>
         /// <param name="fixtureType">The type to examine</param>
@@ -69,7 +73,7 @@ namespace NUnit.Framework.Internal
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
             List<MethodInfo> list = new List<MethodInfo>();
-            
+
             var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
             foreach (MethodInfo method in fixtureType.GetMethods(flags))
             {
@@ -100,7 +104,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Examine a fixture type and return true if it has a method with
-        /// a particular attribute. 
+        /// a particular attribute.
         /// </summary>
         /// <param name="fixtureType">The type to examine</param>
         /// <param name="attributeType">The attribute Type to look for</param>
@@ -185,7 +189,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="method">A MethodInfo for the method to be invoked</param>
         /// <param name="fixture">The object on which to invoke the method</param>
-        public static object InvokeMethod( MethodInfo method, object fixture ) 
+        public static object InvokeMethod( MethodInfo method, object fixture )
         {
             return InvokeMethod(method, fixture, null);
         }
@@ -197,6 +201,9 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
+#if !NET20 && !NET35 && !NETSTANDARD1_3 && !NETSTANDARD1_6
+        [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
+#endif
         public static object InvokeMethod( MethodInfo method, object fixture, params object[] args )
         {
             if(method != null)

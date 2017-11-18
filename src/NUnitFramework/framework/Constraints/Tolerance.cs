@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -32,6 +32,9 @@ namespace NUnit.Framework.Constraints
     /// type that supports taking a difference between two 
     /// objects and comparing that difference to a value.
     /// </summary>
+#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+    [Serializable]
+#endif
     public class Tolerance
     {
         #region Constants and Static Properties

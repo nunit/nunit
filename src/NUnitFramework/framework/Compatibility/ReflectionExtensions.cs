@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -68,6 +68,20 @@ namespace NUnit.Compatibility
         {
             T[] attrs = (T[])assembly.GetCustomAttributes(typeof(T), false);
             return attrs.Length > 0 ? attrs[0] : null;
+        }
+    }
+
+    /// <summary>
+    /// Extensions for MethodInfo that are not available in pre-4.5 .NET releases
+    /// </summary>
+    public static class MethodInfoExtensions
+    {
+        /// <summary>
+        /// See <see cref="Delegate.CreateDelegate(Type, MethodInfo)"/>.
+        /// </summary>
+        public static Delegate CreateDelegate(this MethodInfo method, Type type)
+        {
+            return Delegate.CreateDelegate(type, method);
         }
     }
 

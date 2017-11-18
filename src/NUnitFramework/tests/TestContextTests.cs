@@ -33,7 +33,7 @@ using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework
 {
     [TestFixture]
     public class TestContextTests
@@ -168,14 +168,14 @@ namespace NUnit.Framework.Tests
         public void TestCanAccessItsOwnFullName()
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.TestContextTests.TestCanAccessItsOwnFullName"));
         }
 
         [TestCase(42)]
         public void TestCaseCanAccessItsOwnFullName(int x)
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
+                Is.EqualTo("NUnit.Framework.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
         }
 
         #endregion

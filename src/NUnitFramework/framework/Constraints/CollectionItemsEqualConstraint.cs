@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,7 +34,10 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class CollectionItemsEqualConstraint : CollectionConstraint
     {
-        private readonly NUnitEqualityComparer comparer = NUnitEqualityComparer.Default;
+        /// <summary>
+        /// The NUnitEqualityComparer in use for this constraint
+        /// </summary>
+        private readonly NUnitEqualityComparer _comparer = NUnitEqualityComparer.Default;
 
         /// <summary>
         /// Construct an empty CollectionConstraint
@@ -47,6 +50,26 @@ namespace NUnit.Framework.Constraints
         /// <param name="arg"></param>
         protected CollectionItemsEqualConstraint(object arg) : base(arg) { }
 
+        #region Protected Properties
+
+        /// <summary>
+        /// Get a flag indicating whether the user requested us to ignore case.
+        /// </summary>
+        protected bool IgnoringCase
+        {
+            get { return _comparer.IgnoreCase; }
+        }
+
+        /// <summary>
+        /// Get a flag indicating whether any external comparers are in use.
+        /// </summary>
+        protected bool UsingExternalComparer
+        {
+            get { return _comparer.ExternalComparers.Count > 0; }
+        }
+
+        #endregion
+
         #region Modifiers
 
         /// <summary>
@@ -56,7 +79,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.IgnoreCase = true;
+                _comparer.IgnoreCase = true;
                 return this;
             }
         }
@@ -68,7 +91,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using(IComparer comparer)
         {
-            this.comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -79,7 +102,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
         {
-            this.comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -90,7 +113,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using<T>(Comparison<T> comparer)
         {
-            this.comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -101,7 +124,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
         {
-            this.comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -112,13 +135,23 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
         {
-            this.comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied boolean-returning delegate.
+        /// </summary>
+        /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
+        public CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
+        {
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
         internal CollectionItemsEqualConstraint Using(EqualityAdapter adapter)
         {
-            comparer.ExternalComparers.Add(adapter);
+            _comparer.ExternalComparers.Add(adapter);
             return this;
         }
 
@@ -130,7 +163,7 @@ namespace NUnit.Framework.Constraints
         protected bool ItemsEqual(object x, object y)
         {
             Tolerance tolerance = Tolerance.Default;
-            return comparer.AreEqual(x, y, ref tolerance);
+            return _comparer.AreEqual(x, y, ref tolerance);
         }
 
         /// <summary>
@@ -139,7 +172,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The collection to be included in the tally</param>
         protected CollectionTally Tally(IEnumerable c)
         {
-            return new CollectionTally(comparer, c);
+            return new CollectionTally(_comparer, c);
         }
     }
 }

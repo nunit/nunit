@@ -26,7 +26,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.TestData.AssertMultipleData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Assertions.Tests
+namespace NUnit.Framework.Assertions
 {
     public class AssertMultipleTests
     {

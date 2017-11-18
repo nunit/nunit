@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -172,6 +173,20 @@ namespace NUnit.Framework.Constraints
         }
 
 #if (NET40 || NET45 || NETSTANDARD1_3 || NETSTANDARD1_6)
+        [Test]
+        public static void UsesProvidedGenericEqualityComparison()
+        {
+            var comparer = new GenericEqualityComparison<int>();
+            Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>(comparer.Delegate));
+            Assert.That(comparer.WasCalled, "Comparer was not called");
+        }
+
+        [Test]
+        public static void UsesBooleanReturningDelegateWithImplicitParameterTypes()
+        {
+            Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>((x, y) => x.Equals(y)));
+        }
+
         [Test]
         public void CheckCollectionEquivalentConstraintResultIsReturned()
         {
