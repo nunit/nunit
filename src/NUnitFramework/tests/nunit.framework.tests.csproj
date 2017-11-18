@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>nunit.framework.tests</AssemblyName>
-    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
+    <RootNamespace>NUnit.Framework</RootNamespace>
     <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
