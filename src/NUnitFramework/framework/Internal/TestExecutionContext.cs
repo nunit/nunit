@@ -508,7 +508,7 @@ namespace NUnit.Framework.Internal
         /// Invokes <paramref name="action"/> in this context instance, handling all exceptions.
         /// </summary>
         /// <param name="action">May be <see langword="null"/>.</param>
-        public void ExecuteWithExceptionHandling(Action<TestExecutionContext> action)
+        internal void ExecuteWithExceptionHandling(Action<TestExecutionContext> action)
         {
             if (action == null) return;
 

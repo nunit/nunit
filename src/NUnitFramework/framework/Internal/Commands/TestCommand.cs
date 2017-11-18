@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Commands
     /// in the framework. A TestCommand represents a single stage in
     /// the execution of a test, e.g.: SetUp/TearDown, checking for
     /// Timeout, verifying the returned result from a method, etc.
-    /// 
+    ///
     /// TestCommands may decorate other test commands so that the
     /// execution of a lower-level command is nested within that
     /// of a higher level command. All nested commands are executed
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="context">The <see cref="TestExecutionContext"/> to be used for running the test.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="context"/> is <see langword="null"/></exception>
-        public void ExecuteAndSetCurrentResult(TestExecutionContext context)
+        internal void ExecuteAndSetCurrentResult(TestExecutionContext context)
         {
             Guard.ArgumentNotNull(context, nameof(context));
 
