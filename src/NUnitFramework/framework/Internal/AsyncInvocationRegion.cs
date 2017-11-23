@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
 
         public static AsyncInvocationRegion Create(Delegate @delegate)
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             return Create(@delegate.GetMethodInfo());
 #else
             return Create(@delegate.Method);
@@ -75,7 +75,7 @@ at wrapping a non-async method invocation in an async region was done");
 
         public static bool IsAsyncOperation(Delegate @delegate)
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             return IsAsyncOperation(@delegate.GetMethodInfo());
 #else
             return IsAsyncOperation(@delegate.Method);

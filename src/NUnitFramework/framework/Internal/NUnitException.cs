@@ -24,7 +24,7 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     using System.Runtime.Serialization;
 #endif
 
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     /// Thrown when an assertion failed. Here to preserve the inner
     /// exception and hence its stack trace.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [Serializable]
 #endif
     public class NUnitException : Exception
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
             base(message, inner)
         { }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         /// <summary>
         /// Serialization Constructor
         /// </summary>

@@ -356,7 +356,7 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             [Test]
             public void CanMatchHashtables_SameOrder()
             {

@@ -27,7 +27,7 @@ using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
 using System.Linq;
 #endif
 
@@ -474,7 +474,7 @@ namespace NUnit.Framework.Attributes
         {
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
 #else
             var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
@@ -486,7 +486,7 @@ namespace NUnit.Framework.Attributes
         {
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             var param = method.GetParameters()[0];
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
 #else
             var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;

@@ -334,7 +334,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(minfo != null, Is.EqualTo(shouldFind));
         }
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         [Test]
         public void CanGetAttributesUsingAnInterface()
         {
@@ -439,7 +439,7 @@ namespace NUnit.Framework.Compatibility
     }
 
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
     public class NoGetterPropertyBaseClass
     {
         public string NoGetter { set { } }

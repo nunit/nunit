@@ -9,7 +9,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;NUNITLITE</DefineConstants>

@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             OutWriter = new StringWriter(_output);
 #else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
@@ -516,7 +516,7 @@ namespace NUnit.Framework.Internal
 
                 SetResult(((ResultStateException)ex).ResultState, message, stackTrace);
             }
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled,
                     "Test cancelled by user",
@@ -553,7 +553,7 @@ namespace NUnit.Framework.Internal
                 SetResult(((ResultStateException)ex).ResultState.WithSite(site),
                     ex.Message,
                     StackFilter.DefaultFilter.Filter(ex.StackTrace));
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled.WithSite(site),
                     "Test cancelled by user",

@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         const string UriSchemeFile = "file";
         const string SchemeDelimiter = "://";
 #else
@@ -52,16 +52,12 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if NETSTANDARD1_3
-            return assembly.ManifestModule.FullyQualifiedName;
-#else
             string codeBase = assembly.CodeBase;
 
             if (IsFileUri(codeBase))
                 return GetAssemblyPathFromCodeBase(codeBase);
 
             return assembly.Location;
-#endif
         }
 
         #endregion
@@ -96,7 +92,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
         /// </summary>

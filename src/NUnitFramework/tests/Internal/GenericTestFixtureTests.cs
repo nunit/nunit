@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
 {
     [TestFixture(typeof(List<int>))]
     [TestFixture(TypeArgs=new Type[] {typeof(List<object>)} )]
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [TestFixture(TypeArgs=new Type[] {typeof(ArrayList)} )]
 #endif
     public class GenericTestFixture_IList<T> where T : IList, new()

@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// type that supports taking a difference between two 
     /// objects and comparing that difference to a value.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [Serializable]
 #endif
     public class Tolerance

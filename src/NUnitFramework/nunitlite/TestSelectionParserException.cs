@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
 using System.Runtime.Serialization;
 #endif
 
@@ -32,7 +32,7 @@ namespace NUnit.Common
     /// TestSelectionParserException is thrown when an error
     /// is found while parsing the selection expression.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [Serializable]
 #endif
     public class TestSelectionParserException : Exception
@@ -49,7 +49,7 @@ namespace NUnit.Common
         /// <param name="innerException"></param>
         public TestSelectionParserException(string message, Exception innerException) : base(message, innerException) { }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         /// <summary>
         /// Serialization constructor
         /// </summary>

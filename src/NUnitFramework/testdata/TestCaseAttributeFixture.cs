@@ -83,7 +83,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
         [TestCase(3, IncludePlatform = "MacOSX")]

@@ -30,7 +30,7 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
 using System.Security.Principal;
 #endif
 
@@ -377,7 +377,7 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [TestFixture]
     class ChangesMadeInFixtureSetUp
     {

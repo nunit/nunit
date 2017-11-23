@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if (NET40 || NET45 || NETSTANDARD1_3 || NETSTANDARD1_6)
+#if (NET40 || NET45 || NETSTANDARD1_6)
 using System;
 using System.Threading.Tasks;
 
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
 		}
 
 		[Test]
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Platform(Exclude="Linux", Reason="Intermittent failure under Linux")]
 #endif
 		public void SyntaxError()

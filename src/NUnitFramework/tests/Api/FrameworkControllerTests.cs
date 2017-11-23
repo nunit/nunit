@@ -79,7 +79,7 @@ namespace NUnit.Framework.Api
         [SetUp]
         public void CreateController()
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
 #else
             _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, "ID", _settings);
@@ -221,7 +221,7 @@ namespace NUnit.Framework.Api
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
             Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_NAME));
 #else
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_PATH));
@@ -262,7 +262,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void LoadTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -351,7 +351,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void ExploreTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -405,7 +405,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void CountTestsAction_FileNotFound_ReturnsZero()
         {
@@ -460,7 +460,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void RunTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -527,7 +527,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
         {

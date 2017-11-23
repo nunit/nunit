@@ -58,8 +58,6 @@ using System.Security;
 [assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
 #elif NET20
 [assembly: AssemblyTitle("NUnit Framework .NET 2.0")]
-#elif NETSTANDARD1_3
-[assembly: AssemblyTitle("NUnit Framework .NET Standard 1.3")]
 #elif NETSTANDARD1_6
 [assembly: AssemblyTitle("NUnit Framework .NET Standard 1.6")]
 #else
@@ -70,6 +68,4 @@ using System.Security;
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 
-#if !NETSTANDARD1_3
 [assembly: AllowPartiallyTrustedCallers]
-#endif

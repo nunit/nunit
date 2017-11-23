@@ -71,7 +71,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         Thread _thread;
 
         private void StartExecution()
@@ -94,17 +94,13 @@ namespace NUnit.Framework.Internal.Execution
 
             public static void DummyTest()
             {
-#if !NETSTANDARD1_3
                 if (Delay > 0)
                     Thread.Sleep(Delay);
-#else
-                System.Threading.Tasks.Task.Delay(Delay);
-#endif
             }
         }
 
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
 
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)

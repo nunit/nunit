@@ -31,7 +31,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Interfaces;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
 using System.Security.Principal;
 #endif
 
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
         private TestExecutionContext _setupContext;
         private ResultState _fixtureResult;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         string originalDirectory;
         IPrincipal originalPrincipal;
 #endif
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal
         {
             _setupContext = TestExecutionContext.CurrentContext;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
 
@@ -97,12 +97,12 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             Environment.CurrentDirectory = originalDirectory;
             Thread.CurrentPrincipal = originalPrincipal;
 #endif
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void CurrentContextFlowsToUserCreatedThread()
         {
@@ -321,7 +321,7 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void TestHasWorkerWhenParallel()
         {
@@ -748,7 +748,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentCulture and CurrentUICulture
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         CultureInfo originalCulture;
         CultureInfo originalUICulture;
 
@@ -837,7 +837,7 @@ namespace NUnit.Framework.Internal
 
         #region CurrentPrincipal
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void CanAccessCurrentPrincipal()
         {
@@ -969,7 +969,7 @@ namespace NUnit.Framework.Internal
 
         #region Cross-domain Tests
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
@@ -1024,7 +1024,7 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {

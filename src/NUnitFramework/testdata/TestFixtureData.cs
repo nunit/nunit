@@ -23,7 +23,7 @@
 
 using System;
 using NUnit.Framework;
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
 using System.Security.Principal;
 #endif
 
@@ -526,7 +526,7 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {

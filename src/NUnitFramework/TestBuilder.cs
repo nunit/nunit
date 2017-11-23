@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,10 +34,6 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
-
-#if NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_1
-using BindingFlags = NUnit.Compatibility.BindingFlags;
-#endif
 
 namespace NUnit.TestUtilities
 {
@@ -173,7 +169,7 @@ namespace NUnit.TestUtilities
             return RunTest(testMethod, fixture);
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_1
+#if !NETSTANDARD1_6 && !NETCOREAPP1_1
         public static ITestResult RunAsTestCase(Action action)
         {
             var method = action.Method;
@@ -199,11 +195,7 @@ namespace NUnit.TestUtilities
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
             {
-#if NETSTANDARD1_3
-                System.Threading.Tasks.Task.Delay(1);
-#else
                 Thread.Sleep(1);
-#endif
             }
 
             return work.Result;

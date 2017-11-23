@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
             // Wrap the current listener, listening to events, and forwarding the original event
             ListenerResult = new TestListenerIntercepter(TestExecutionContext.CurrentContext.Listener);
             TestExecutionContext.CurrentContext.Listener = ListenerResult;
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             ListenerWriter = new EventListenerTextWriter(STREAM_NAME, TextWriter.Null);
 #else
             ListenerWriter = TextWriter.Synchronized(new EventListenerTextWriter(STREAM_NAME, TextWriter.Null));

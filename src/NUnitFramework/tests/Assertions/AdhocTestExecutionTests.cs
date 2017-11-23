@@ -4,7 +4,7 @@ using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Assertions
                 throw testException;
         }
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;

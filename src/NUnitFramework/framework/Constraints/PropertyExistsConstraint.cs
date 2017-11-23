@@ -25,10 +25,6 @@ using System;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-#if NETSTANDARD1_3
-using NUnit.Compatibility;
-#endif
-
 namespace NUnit.Framework.Constraints
 {
     /// <summary>

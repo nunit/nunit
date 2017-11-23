@@ -26,13 +26,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-#if !NET20 && !NET35 && !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NET20 && !NET35 && !NETSTANDARD1_6
 using System.Runtime.ExceptionServices;
 #endif
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
 using System.Linq;
 #endif
 
@@ -111,7 +111,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
                 .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
 #else
@@ -201,7 +201,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !NET20 && !NET35 && !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NET20 && !NET35 && !NETSTANDARD1_6
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
         public static object InvokeMethod( MethodInfo method, object fixture, params object[] args )
@@ -212,7 +212,7 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
                 catch (System.Threading.ThreadAbortException)
                 {
                     // No need to wrap or rethrow ThreadAbortException
@@ -234,20 +234,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-#if NETSTANDARD1_3
-        /// <summary>
-        /// <para>
-        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
-        /// rather than throwing <see cref="AmbiguousMatchException"/>
-        /// for properties that shadow properties of a different property type.
-        /// </para>
-        /// <para>
-        /// If you request both public and nonpublic properties, every public property is preferred
-        /// over every nonpublic property. It would violate the principle of least surprise for a
-        /// derived class’s implementation detail to be chosen over the public API for a type.
-        /// </para>
-        /// </summary>
-#elif NETSTANDARD1_6
+#if NETSTANDARD1_6
         /// <summary>
         /// <para>
         /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,

@@ -674,7 +674,7 @@ namespace NUnit.TestData
             }
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public static void WarningInThreadPoolQueueUserWorkItem()
         {

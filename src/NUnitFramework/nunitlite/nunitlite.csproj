@@ -2,13 +2,13 @@
   <PropertyGroup>
     <AssemblyName>nunitlite</AssemblyName>
     <RootNamespace>NUnitLite</RootNamespace>
-    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>TRACE;NUNITLITE</DefineConstants>
@@ -32,7 +32,7 @@
     <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.6'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

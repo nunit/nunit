@@ -29,7 +29,7 @@ namespace NUnitLite.Tests
 {
     public class MakeRunSettingsTests
     {
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void WhenTimeoutIsSpecified_RunSettingsIncludeIt()
         {

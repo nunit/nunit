@@ -100,7 +100,7 @@ namespace NUnit.Tests
 
             public const int Inconclusive = MockTestFixture.Inconclusive;
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             public static readonly Assembly ThisAssembly = typeof(MockAssembly).GetTypeInfo().Assembly;
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(ThisAssembly);
 

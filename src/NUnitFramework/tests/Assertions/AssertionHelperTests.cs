@@ -310,7 +310,7 @@ namespace NUnit.Framework.Syntax
 
         #region After
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void After()
         {
@@ -746,7 +746,7 @@ namespace NUnit.Framework.Syntax
 
         #region BinarySerializable
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void BinarySerializableConstraint()
         {
@@ -760,7 +760,7 @@ namespace NUnit.Framework.Syntax
 
         #region XmlSerializable
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Test]
         public void XmlSerializableConstraint()
         {

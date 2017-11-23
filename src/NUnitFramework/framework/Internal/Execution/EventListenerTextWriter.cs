@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         override public System.Text.Encoding Encoding
 		{
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             get { return Encoding.UTF8; }
 #else
             get { return Encoding.Default; }

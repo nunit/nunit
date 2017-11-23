@@ -2,13 +2,13 @@
   <PropertyGroup>
     <AssemblyName>nunit.framework.tests</AssemblyName>
     <RootNamespace>NUnit.Framework</RootNamespace>
-    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -17,11 +17,11 @@
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;NUNITLITE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;NUNITLITE;ASYNC</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.6'">
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;NUNITLITE;ASYNC</DefineConstants>
   </PropertyGroup>
 
@@ -75,11 +75,11 @@
     <PackageReference Include="System.ValueTuple" version="4.3.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.6'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Configuration" />

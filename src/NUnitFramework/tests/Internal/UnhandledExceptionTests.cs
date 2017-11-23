@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // Enable these tests if you need to debug unhandled exceptions
-#if !NETSTANDARD1_3 && false
+#if false
 using System;
 using System.Collections;
 using System.Text;

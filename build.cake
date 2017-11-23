@@ -29,7 +29,7 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var AllFrameworks = new string[] {
-    "net45", "net40", "net35", "net20", "netstandard1.3", "netstandard1.6" };
+    "net45", "net40", "net35", "net20", "netstandard1.6" };
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -215,19 +215,6 @@ Task("Test20")
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
     });
 
-Task("TestNetStandard13")
-    .Description("Tests the .NET Standard 1.3 version of the framework")
-    .WithCriteria(IsRunningOnWindows())
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netstandard1.3";
-        var dir = BIN_DIR + "netcoreapp1.1" + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, "../" + runtime + "/" + FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
-    });
-
 Task("TestNetStandard16")
     .Description("Tests the .NET Standard 1.6 version of the framework")
     .WithCriteria(IsRunningOnWindows())
@@ -346,7 +333,6 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net35/*.*") +
             GetFiles(currentImageDir + "bin/net40/*.*") +
             GetFiles(currentImageDir + "bin/net45/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard1.3/*.*") +
             GetFiles(currentImageDir + "bin/netstandard1.6/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
@@ -478,7 +464,6 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
-    .IsDependentOn("TestNetStandard13")
     .IsDependentOn("TestNetStandard16");
 
 Task("Package")
