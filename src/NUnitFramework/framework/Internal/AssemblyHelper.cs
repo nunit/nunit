@@ -27,16 +27,6 @@ using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
-#if NETSTANDARD1_6
-    internal class AssemblyLoader : System.Runtime.Loader.AssemblyLoadContext
-    {
-        protected override Assembly Load(AssemblyName assemblyName)
-        {
-            return Assembly.Load(assemblyName);
-        }
-    }
-#endif
-
     /// <summary>
     /// AssemblyHelper provides static methods for working
     /// with assemblies.
@@ -106,7 +96,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD1_6
         /// <summary>
         /// Loads an assembly given a string, which is the AssemblyName
         /// </summary>
@@ -119,27 +109,6 @@ namespace NUnit.Framework.Internal
                 name = Path.GetFileNameWithoutExtension(name);
 
             return Assembly.Load(new AssemblyName { Name = name });
-        }
-#elif NETSTANDARD1_6
-        /// <summary>
-        /// Loads an assembly given a string, which may be the
-        /// path to the assembly or the AssemblyName
-        /// </summary>
-        /// <param name="nameOrPath"></param>
-        /// <returns></returns>
-        public static Assembly Load(string nameOrPath)
-        {
-            var ext = Path.GetExtension(nameOrPath).ToLower();
-
-            // Handle case where this is the path to an assembly
-            if (ext == ".dll" || ext == ".exe")
-            {
-                var loader = new AssemblyLoader();
-                return loader.LoadFromAssemblyPath(Path.GetFullPath(nameOrPath));
-            }
-
-            // Assume it's the string representation of an AssemblyName
-            return Assembly.Load(new AssemblyName { Name = nameOrPath });
         }
 #else
         /// <summary>

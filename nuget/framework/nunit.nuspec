@@ -42,7 +42,6 @@ Supported platforms:
       </group>
       <group targetFramework="netstandard1.6">
         <dependency id="NETStandard.Library" version="1.6.0" />
-        <dependency id="System.Runtime.Loader" version="4.3.0" />
         <dependency id="System.Threading.Thread" version="4.3.0" />
       </group>
     </dependencies>
