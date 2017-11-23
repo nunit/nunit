@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
         }
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void WorksWithNonGenericDictionary()
         {

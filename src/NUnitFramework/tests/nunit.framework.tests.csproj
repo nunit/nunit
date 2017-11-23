@@ -2,13 +2,13 @@
   <PropertyGroup>
     <AssemblyName>nunit.framework.tests</AssemblyName>
     <RootNamespace>NUnit.Framework</RootNamespace>
-    <TargetFrameworks>net20;net35;net40;net45;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp1.1'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -17,11 +17,11 @@
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;NUNITLITE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;NUNITLITE;ASYNC</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.6'">
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netcoreapp1.1'">
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;NUNITLITE;ASYNC</DefineConstants>
   </PropertyGroup>
 
@@ -61,6 +61,11 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net20'">
     <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
@@ -75,17 +80,9 @@
     <PackageReference Include="System.ValueTuple" version="4.3.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.6'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Configuration" />
+  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp1.1'">
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
 
   <ItemGroup>

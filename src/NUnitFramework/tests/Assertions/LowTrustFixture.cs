@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Assertions
     {
         private AppDomain _appDomain;
 
-        #region Constructor(s)
+#region Constructor(s)
 
         /// <summary>
         /// Creates a low trust <see cref="TestSandBox"/> instance.
@@ -127,9 +127,9 @@ namespace NUnit.Framework.Assertions
                 strongNames.ToArray());
         }
 
-        #endregion
+#endregion
 
-        #region Finalizer and Dispose methods
+#region Finalizer and Dispose methods
 
         /// <summary>
         /// The <see cref="TestSandBox"/> finalizer.
@@ -160,9 +160,9 @@ namespace NUnit.Framework.Assertions
             }
         }
 
-        #endregion
+#endregion
 
-        #region PermissionSet factory methods
+#region PermissionSet factory methods
         public static PermissionSet GetLowTrustPermissionSet()
         {
             var permissions = new PermissionSet(PermissionState.None);
@@ -174,9 +174,9 @@ namespace NUnit.Framework.Assertions
             return permissions;
         }
 
-        #endregion
+#endregion
 
-        #region Run methods
+#region Run methods
 
         public T Run<T>(Func<T> func)
         {
@@ -208,9 +208,9 @@ namespace NUnit.Framework.Assertions
             }
         }
 
-        #endregion
+#endregion
 
-        #region Private methods
+#region Private methods
 
         private static StrongName GetStrongName(Assembly assembly)
         {
@@ -225,9 +225,9 @@ namespace NUnit.Framework.Assertions
             return new StrongName(new StrongNamePublicKeyBlob(publicKey), assemblyName.Name, assemblyName.Version);
         }
 
-        #endregion
+#endregion
 
-        #region Inner classes
+#region Inner classes
 
         [Serializable]
         internal class MethodRunner : MarshalByRefObject
@@ -249,7 +249,7 @@ namespace NUnit.Framework.Assertions
             }
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

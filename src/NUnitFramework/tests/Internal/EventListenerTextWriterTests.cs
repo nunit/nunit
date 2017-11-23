@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
             // Wrap the current listener, listening to events, and forwarding the original event
             ListenerResult = new TestListenerIntercepter(TestExecutionContext.CurrentContext.Listener);
             TestExecutionContext.CurrentContext.Listener = ListenerResult;
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
             ListenerWriter = new EventListenerTextWriter(STREAM_NAME, TextWriter.Null);
 #else
             ListenerWriter = TextWriter.Synchronized(new EventListenerTextWriter(STREAM_NAME, TextWriter.Null));

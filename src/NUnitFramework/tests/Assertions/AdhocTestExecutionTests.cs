@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -42,13 +41,13 @@ namespace NUnit.Framework.Assertions
             {
                 RestoreExecutionContext(savedContext);
             }
-            
+
             // Throw any exception we got only after context is restored
             if (testException != null)
                 throw testException;
         }
 
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;

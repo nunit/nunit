@@ -23,18 +23,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
 
 namespace NUnit.Framework.Compatibility
 {
-    /// <summary>
-    /// A series of unit tests to ensure that the type extensions in the .NET Standard
-    /// framework behave the same as their counterparts in the full framework
-    /// </summary>
-    [TestFixture]
-    public class ReflectionExtensionsTests
+    using System.Reflection;
+
+    partial class ReflectionExtensionsTests
     {
         [Test]
         public void CanCallTypeInfoOnAllPlatforms()
@@ -42,7 +38,20 @@ namespace NUnit.Framework.Compatibility
             var result = typeof(Object).GetTypeInfo();
             Assert.That(result, Is.Not.Null);
         }
+    }
+}
 
+namespace NUnit.Framework.Compatibility
+{
+    using BindingFlags = System.Reflection.BindingFlags;
+
+    /// <summary>
+    /// A series of unit tests to ensure that the type extensions in the .NET Standard
+    /// framework behave the same as their counterparts in the full framework
+    /// </summary>
+    [TestFixture]
+    public partial class ReflectionExtensionsTests
+    {
         [Test]
         public void CanGetGenericArguments()
         {
@@ -334,7 +343,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(minfo != null, Is.EqualTo(shouldFind));
         }
 
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
         [Test]
         public void CanGetAttributesUsingAnInterface()
         {
@@ -439,7 +448,7 @@ namespace NUnit.Framework.Compatibility
     }
 
 
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
     public class NoGetterPropertyBaseClass
     {
         public string NoGetter { set { } }

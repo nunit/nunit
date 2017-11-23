@@ -71,7 +71,6 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-#if !NETSTANDARD1_6
         Thread _thread;
 
         private void StartExecution()
@@ -84,7 +83,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             _workItem.Execute();
         }
-#endif
 
 
         // Use static for simplicity
@@ -100,7 +98,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)

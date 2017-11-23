@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.TestUtilities.Comparers;
@@ -309,8 +309,7 @@ namespace NUnit.Framework.Syntax
         #endregion
 
         #region After
-
-#if !NETSTANDARD1_6
+        
         [Test]
         public void After()
         {
@@ -334,7 +333,6 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<DelayedConstraint.WithRawDelayInterval>());
             Expect(constraint.ToString(), EqualTo("<after 1000 <and <greaterthan 0> <lessthan 10>>>"));
         }
-#endif
 
         #endregion
 
@@ -746,7 +744,7 @@ namespace NUnit.Framework.Syntax
 
         #region BinarySerializable
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void BinarySerializableConstraint()
         {
@@ -760,7 +758,7 @@ namespace NUnit.Framework.Syntax
 
         #region XmlSerializable
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void XmlSerializableConstraint()
         {

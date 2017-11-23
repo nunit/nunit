@@ -50,11 +50,12 @@ var PACKAGE_SOURCE = new string[]
     };
 
 // Test Runners
-var NUNITLITE_RUNNER = "nunitlite-runner.exe";
+var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
+var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
+var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
 
 // Packages
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
@@ -176,7 +177,7 @@ Task("Test45")
         var runtime = "net45";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("Test40")
@@ -188,7 +189,7 @@ Task("Test40")
         var runtime = "net40";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("Test35")
@@ -200,7 +201,7 @@ Task("Test35")
         var runtime = "net35";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("Test20")
@@ -212,7 +213,7 @@ Task("Test20")
         var runtime = "net20";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("TestNetStandard16")
@@ -222,10 +223,10 @@ Task("TestNetStandard16")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "netstandard1.6";
-        var dir = BIN_DIR + "netcoreapp1.1" + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, "../" + runtime + "/" + FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        var runtime = "netcoreapp1.1";
+        var dir = BIN_DIR + runtime + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
 //////////////////////////////////////////////////////////////////////

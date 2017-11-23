@@ -265,7 +265,7 @@ namespace NUnitLite.Tests
                 Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
             }
         }
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [TestCase("DefaultTimeout", "timeout")]
 #endif
         [TestCase("RandomSeed", "seed")]
@@ -313,7 +313,7 @@ namespace NUnitLite.Tests
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [TestCase("--timeout")]
 #endif
         public void MissingValuesAreReported(string option)
@@ -389,7 +389,7 @@ namespace NUnitLite.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {

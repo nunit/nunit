@@ -29,10 +29,6 @@ using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 
-#if !NETSTANDARD1_6
-using System.Data;
-#endif
-
 namespace NUnit.Framework.Assertions
 {
     /// <summary>

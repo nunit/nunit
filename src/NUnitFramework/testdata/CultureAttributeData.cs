@@ -39,7 +39,7 @@ namespace NUnit.TestData.CultureAttributeData
         public void FrenchCanadaTest() { }
     }
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
     [TestFixture, SetCulture("xx-XX")]
     public class FixtureWithInvalidSetCultureAttribute
     {

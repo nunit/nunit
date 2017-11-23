@@ -674,7 +674,6 @@ namespace NUnit.TestData
             }
         }
 
-#if !NETSTANDARD1_6
         [Test]
         public static void WarningInThreadPoolQueueUserWorkItem()
         {
@@ -696,7 +695,7 @@ namespace NUnit.TestData
                     Assert.Fail("Timeout while waiting for Threadpool.QueueUserWorkItem to execute.");
             }
         }
-#endif
+
 #if ASYNC
         [Test]
         public static void WarningInTaskRun()

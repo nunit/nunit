@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Constraints
                     yield return new TestCaseData(new Dictionary<string, int> { { "b", 2 } }, new Dictionary<string, int> { { "b", 2 }, { "a", 1 } });
                     yield return new TestCaseData(new Dictionary<char, int> { { 'a', 1 } }, new Dictionary<char, int> { { 'A', 1 }, { 'B', 2 } });
 
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
                     yield return new TestCaseData(new Hashtable { { 1, "A" } }, new Hashtable { { 1, "a" }, { 2, "b" } });
                     yield return new TestCaseData(new Hashtable { { 2, 'b' } }, new Hashtable { { 1, 'A' }, { 2, 'B' } });
                     yield return new TestCaseData(new Hashtable { { "A", 1 } }, new Hashtable { { "b", 2 }, { "a", 1 } });

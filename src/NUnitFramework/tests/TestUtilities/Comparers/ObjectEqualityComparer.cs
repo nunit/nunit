@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -37,7 +37,7 @@ namespace NUnit.TestUtilities.Comparers
         bool IEqualityComparer.Equals(object x, object y)
         {
             Called = true;
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
             return Comparer<object>.Default.Compare(x, y) == 0;
 #else
             return Comparer.Default.Compare(x, y) == 0;

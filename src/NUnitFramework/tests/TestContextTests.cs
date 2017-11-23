@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -402,7 +402,7 @@ namespace NUnit.Framework
         }
 
         [TestCase(null)]
-#if !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [TestCase("bad<>path.png", IncludePlatform = "Win")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
