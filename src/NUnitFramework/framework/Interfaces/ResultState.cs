@@ -208,7 +208,7 @@ namespace NUnit.Framework.Interfaces
         public override bool Equals(object obj)
         {
             var other = obj as ResultState;
-            if (other == null) return false;
+            if (object.ReferenceEquals(other, null)) return false;
 
             return Status.Equals(other.Status) && Label.Equals(other.Label) && Site.Equals(other.Site);
         }
@@ -222,6 +222,29 @@ namespace NUnit.Framework.Interfaces
         public override int GetHashCode()
         {
             return (int)Status << 8 + (int)Site ^ Label.GetHashCode(); ;
+        }
+
+        #endregion
+
+        #region Operator Overloads
+
+        /// <summary>
+        /// Overload == operator for ResultStates
+        /// </summary>
+        public static bool operator ==(ResultState left, ResultState right)
+        {
+            if (object.ReferenceEquals(left, null))
+                return object.ReferenceEquals(right, null);
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Overload !+ operator for ResultStates
+        /// </summary>
+        public static bool operator !=(ResultState left, ResultState right)
+        {
+            return !(left == right);
         }
 
         #endregion
