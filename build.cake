@@ -154,6 +154,13 @@ Task("Build")
             Configuration = configuration,
             PlatformTarget = PlatformTarget.MSIL
         });
+
+        DotNetCorePublish("src/NUnitFramework/tests/nunit.framework.tests.csproj", new DotNetCorePublishSettings
+        {
+            Framework = "netcoreapp1.1",
+            Configuration = configuration,
+            OutputDirectory = BIN_DIR + "netcoreapp1.1/"
+        });
     });
 
 //////////////////////////////////////////////////////////////////////
