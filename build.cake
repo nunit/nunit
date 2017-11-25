@@ -29,7 +29,7 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var AllFrameworks = new string[] {
-    "net45", "net40", "net35", "net20", "netstandard1.6" };
+    "net45", "net40", "net35", "net20", "netstandard1.6", "netcoreapp1.1" };
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -265,6 +265,7 @@ var FrameworkFiles = new FilePath[]
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
+    "nunitlite-runner.dll",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
     "Microsoft.Threading.Tasks.Extensions.dll",

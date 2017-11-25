@@ -50,16 +50,16 @@ How to use this package:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
-    <file src="bin/net-2.0/nunitlite.dll" target="lib\net20" />
-    <file src="bin/net-3.5/nunitlite.dll" target="lib\net35" />
-    <file src="bin/net-4.0/nunitlite.dll" target="lib\net40" />
-    <file src="bin/net-4.5/nunitlite.dll" target="lib\net45" />
-    <file src="bin/netstandard16/nunitlite.dll" target="lib\netstandard1.6" />
-    <file src="bin/net-2.0/nunitlite-runner.exe" target="tools\net20" />
-    <file src="bin/net-3.5/nunitlite-runner.exe" target="tools\net35" />
-    <file src="bin/net-4.0/nunitlite-runner.exe" target="tools\net40" />
-    <file src="bin/net-4.5/nunitlite-runner.exe" target="tools\net45" />
-    <file src="bin/netstandard16/nunitlite-runner.exe" target="tools\netcore1.0" />
+    <file src="bin/net20/nunitlite.dll" target="lib\net20" />
+    <file src="bin/net35/nunitlite.dll" target="lib\net35" />
+    <file src="bin/net40/nunitlite.dll" target="lib\net40" />
+    <file src="bin/net45/nunitlite.dll" target="lib\net45" />
+    <file src="bin/netstandard1.6/nunitlite.dll" target="lib\netstandard1.6" />
+    <file src="bin/net20/nunitlite-runner.exe" target="tools\net20" />
+    <file src="bin/net35/nunitlite-runner.exe" target="tools\net35" />
+    <file src="bin/net40/nunitlite-runner.exe" target="tools\net40" />
+    <file src="bin/net45/nunitlite-runner.exe" target="tools\net45" />
+    <file src="bin/netcoreapp1.1/nunitlite-runner.dll" target="tools\netcoreapp1.1" />
     <file src="../../nuget/nunitlite/Program.cs" target="content" />
     <file src="../../nuget/nunitlite/Program.vb" target="content" />
     <file src="../../nuget/nunitlite/install.ps1" target="tools" />

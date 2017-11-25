@@ -28,15 +28,6 @@ Supported platforms:
       <group targetFramework="net35" />
       <group targetFramework="net40" />
       <group targetFramework="net45" />
-      <group targetFramework="Xamarin.iOS">
-        <dependency id="NETStandard.Library" version="1.6.0" />
-      </group>
-      <group targetFramework="MonoAndroid">
-        <dependency id="NETStandard.Library" version="1.6.0" />
-      </group>
-      <group targetFramework="uap">
-        <dependency id="NETStandard.Library" version="1.6.0" />
-      </group>
       <group targetFramework="netstandard1.6">
         <dependency id="NETStandard.Library" version="1.6.0" />
         <dependency id="System.Threading.Thread" version="4.3.0" />
@@ -47,16 +38,16 @@ Supported platforms:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
-    <file src="bin/net-2.0/nunit.framework.dll" target="lib\net20" />
-    <file src="bin/net-2.0/nunit.framework.xml" target="lib\net20" />
-    <file src="bin/net-2.0/NUnit.System.Linq.dll" target="lib\net20" />
-    <file src="bin/net-3.5/nunit.framework.dll" target="lib\net35" />
-    <file src="bin/net-3.5/nunit.framework.xml" target="lib\net35" />
-    <file src="bin/net-4.0/nunit.framework.dll" target="lib\net40" />
-    <file src="bin/net-4.0/nunit.framework.xml" target="lib\net40" />
-    <file src="bin/net-4.5/nunit.framework.dll" target="lib\net45" />
-    <file src="bin/net-4.5/nunit.framework.xml" target="lib\net45" />
-    <file src="bin/netstandard16/nunit.framework.dll" target="lib\netstandard1.6" />
-    <file src="bin/netstandard16/nunit.framework.xml" target="lib\netstandard1.6" />
+    <file src="bin/net20/nunit.framework.dll" target="lib\net20" />
+    <file src="bin/net20/nunit.framework.xml" target="lib\net20" />
+    <file src="bin/net20/NUnit.System.Linq.dll" target="lib\net20" />
+    <file src="bin/net35/nunit.framework.dll" target="lib\net35" />
+    <file src="bin/net35/nunit.framework.xml" target="lib\net35" />
+    <file src="bin/net40/nunit.framework.dll" target="lib\net40" />
+    <file src="bin/net40/nunit.framework.xml" target="lib\net40" />
+    <file src="bin/net45/nunit.framework.dll" target="lib\net45" />
+    <file src="bin/net45/nunit.framework.xml" target="lib\net45" />
+    <file src="bin/netstandard1.6/nunit.framework.dll" target="lib\netstandard1.6" />
+    <file src="bin/netstandard1.6/nunit.framework.xml" target="lib\netstandard1.6" />
   </files>
 </package>
