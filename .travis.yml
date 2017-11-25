@@ -1,5 +1,6 @@
 language: csharp
 sudo: false
+dotnet: 2.0.3
 matrix:
   include:
     - os: linux
