@@ -148,12 +148,18 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        MSBuild(SOLUTION_FILE, new MSBuildSettings {
+        var msbuildSettings = new MSBuildSettings
+        {
             Verbosity = Verbosity.Minimal,
-            ToolVersion = MSBuildToolVersion.VS2017,
-            Configuration = configuration,
-            PlatformTarget = PlatformTarget.MSIL
-        });
+            Configuration = configuration
+        };
+
+        if (IsRunningOnWindows())
+            msbuildSettings.ToolVersion = MSBuildToolVersion.VS2017;
+        else
+            msbuildSettings.ToolPath = Context.Tools.Resolve("msbuild");
+
+        MSBuild(SOLUTION_FILE, msbuildSettings);
 
         DotNetCorePublish("src/NUnitFramework/tests/nunit.framework.tests.csproj", new DotNetCorePublishSettings
         {
