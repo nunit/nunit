@@ -251,7 +251,7 @@ namespace NUnit.Framework.Constraints
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     ConstraintResult result = BaseConstraint.ApplyTo(actual);
@@ -260,7 +260,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
+                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
@@ -282,7 +282,7 @@ namespace NUnit.Framework.Constraints
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     actual = InvokeDelegate(del);
@@ -300,7 +300,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
+                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             actual = InvokeDelegate(del);
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
@@ -324,7 +324,7 @@ namespace NUnit.Framework.Constraints
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     try
@@ -340,7 +340,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
+                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }

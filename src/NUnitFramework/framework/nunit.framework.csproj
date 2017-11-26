@@ -44,10 +44,6 @@
     <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.6'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
