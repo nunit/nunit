@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal
                     continue;
                 }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
                 if (arg is DBNull)
                 {
                     data[i] = null;

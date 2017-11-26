@@ -29,7 +29,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when an assertion failed.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [Serializable]
 #endif
     public class SuccessException : ResultStateException
@@ -48,7 +48,7 @@ namespace NUnit.Framework
             base(message, inner)
         { }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         /// <summary>
         /// Serialization Constructor
         /// </summary>

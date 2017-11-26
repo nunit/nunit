@@ -2,13 +2,13 @@
   <PropertyGroup>
     <AssemblyName>slow-nunit-tests</AssemblyName>
     <RootNamespace>NUnit.Tests</RootNamespace>
-    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp1.1'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>TRACE</DefineConstants>
@@ -26,16 +26,6 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
 
   <ItemGroup>

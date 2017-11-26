@@ -141,7 +141,7 @@ namespace NUnit.Framework.Constraints
                     yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"A", 1}, {"b", 2}});
                     yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }}, new Dictionary<char, int> {{'a', 1}});
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
                     yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"},{2, "B"}});
                     yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{1, 'a'},{2, 'b'}});
                     yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}, {"b", 2}});
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
         }
 
-#if (NET40 || NET45 || NETSTANDARD1_3 || NETSTANDARD1_6)
+#if !(NET20 || NET35)
         [Test]
         public static void UsesProvidedGenericEqualityComparison()
         {

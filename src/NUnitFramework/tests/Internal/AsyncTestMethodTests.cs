@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETCOREAPP1_1
         private static readonly bool PLATFORM_IGNORE = true;
 #else
         private static readonly bool PLATFORM_IGNORE = OSPlatform.CurrentPlatform.IsUnix;

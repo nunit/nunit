@@ -42,7 +42,7 @@ namespace NUnit.Framework.Api
     public class TestAssemblyRunnerTests : ITestListener
     {
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
         private const string COULD_NOT_LOAD_MSG = "The system cannot find the file specified.";
 #else
         private const string COULD_NOT_LOAD_MSG = "Could not load";

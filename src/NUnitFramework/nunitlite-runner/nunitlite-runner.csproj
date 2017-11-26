@@ -9,7 +9,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -26,10 +25,6 @@
     <None Include="..\..\nunit.snk">
       <Link>nunit.snk</Link>
     </None>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp1.1'">
-    <Reference Include="System" />
   </ItemGroup>
 
   <ItemGroup>

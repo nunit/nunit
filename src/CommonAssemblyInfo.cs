@@ -40,10 +40,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 3.5 Debug")]
 #elif NET20
 [assembly: AssemblyConfiguration(".NET 2.0 Debug")]
-#elif NETSTANDARD1_3
-[assembly: AssemblyConfiguration(".NET Standard 1.3 Debug")]
-#elif NETSTANDARD1_6
-[assembly: AssemblyConfiguration(".NET Standard 1.6 Debug")]
+#elif NETCOREAPP1_1
+[assembly: AssemblyConfiguration(".NET Core 1.1 Debug")]
 #else
 [assembly: AssemblyConfiguration("Debug")]
 #endif
@@ -56,10 +54,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 3.5")]
 #elif NET20
 [assembly: AssemblyConfiguration(".NET 2.0")]
-#elif NETSTANDARD1_3
-[assembly: AssemblyConfiguration(".NET Standard 1.3")]
-#elif NETSTANDARD1_6
-[assembly: AssemblyConfiguration(".NET Standard 1.6")]
+#elif NETCOREAPP1_1
+[assembly: AssemblyConfiguration(".NET Core 1.1")]
 #else
 [assembly: AssemblyConfiguration("")]
 #endif

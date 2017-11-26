@@ -79,11 +79,7 @@ namespace NUnit.Framework.Api
         [SetUp]
         public void CreateController()
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
-#else
             _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, "ID", _settings);
-#endif
             _handler = new CallbackEventHandler();
         }
 
@@ -221,11 +217,7 @@ namespace NUnit.Framework.Api
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
             Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_NAME));
-#else
             Assert.That(_controller.AssemblyNameOrPath, Is.EqualTo(MOCK_ASSEMBLY_PATH));
-#endif
             Assert.That(_controller.Settings, Is.SameAs(_settings));
         }
         #endregion
@@ -262,7 +254,6 @@ namespace NUnit.Framework.Api
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void LoadTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -274,7 +265,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
+#if NETCOREAPP1_1
+            Assert.That(GetSkipReason(result), Contains.Substring("The system cannot find the file specified."));
+#else
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
+#endif
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -291,7 +286,7 @@ namespace NUnit.Framework.Api
             Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
-#endif
+
         #endregion
 
         #region ExploreTestsAction
@@ -351,7 +346,6 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void ExploreTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -365,7 +359,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
+#if NETCOREAPP1_1
+            Assert.That(GetSkipReason(result), Contains.Substring("The system cannot find the file specified."));
+#else
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
+#endif
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
 
@@ -385,10 +383,10 @@ namespace NUnit.Framework.Api
             Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
-#endif
-        #endregion
 
-        #region CountTestsAction
+#endregion
+
+#region CountTestsAction
         [TestCaseSource(nameof(EmptyFilters))]
         public void CountTestsAction_AfterLoad_ReturnsCorrectCount(string filter)
         {
@@ -405,7 +403,6 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void CountTestsAction_FileNotFound_ReturnsZero()
         {
@@ -423,10 +420,10 @@ namespace NUnit.Framework.Api
             new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
         }
-#endif
-        #endregion
 
-        #region RunTestsAction
+#endregion
+
+#region RunTestsAction
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
@@ -460,7 +457,6 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RunTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -474,7 +470,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
+#if NETCOREAPP1_1
+            Assert.That(GetSkipReason(result), Contains.Substring("The system cannot find the file specified."));
+#else
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
+#endif
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -494,10 +494,10 @@ namespace NUnit.Framework.Api
             Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
-#endif
-        #endregion
 
-        #region RunAsyncAction
+#endregion
+
+#region RunAsyncAction
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
@@ -527,7 +527,6 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
         {
@@ -561,10 +560,10 @@ namespace NUnit.Framework.Api
             //Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
             //Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
-#endif
-        #endregion
 
-        #region Helper Methods
+#endregion
+
+#region Helper Methods
 
         private static string GetSkipReason(TNode result)
         {
@@ -572,9 +571,9 @@ namespace NUnit.Framework.Api
             return propNode == null ? null : propNode.Attributes["value"];
         }
 
-        #endregion
+#endregion
 
-        #region Nested Callback Class
+#region Nested Callback Class
 
         private class CallbackEventHandler : System.Web.UI.ICallbackEventHandler
         {
@@ -591,6 +590,6 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
     }
 }

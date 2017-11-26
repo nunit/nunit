@@ -29,7 +29,7 @@ var packageVersion = version + modifier + dbgSuffix;
 //////////////////////////////////////////////////////////////////////
 
 var AllFrameworks = new string[] {
-    "net45", "net40", "net35", "net20", "netstandard1.3", "netstandard1.6" };
+    "net45", "net40", "net35", "net20", "netstandard1.6", "netcoreapp1.1" };
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -50,11 +50,12 @@ var PACKAGE_SOURCE = new string[]
     };
 
 // Test Runners
-var NUNITLITE_RUNNER = "nunitlite-runner.exe";
+var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var EXECUTABLE_NUNITLITE_TESTS = "nunitlite.tests.exe";
+var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
+var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
 
 // Packages
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
@@ -147,11 +148,24 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        MSBuild(SOLUTION_FILE, new MSBuildSettings {
+        var msbuildSettings = new MSBuildSettings
+        {
             Verbosity = Verbosity.Minimal,
-            ToolVersion = MSBuildToolVersion.VS2017,
+            Configuration = configuration
+        };
+
+        if (IsRunningOnWindows())
+            msbuildSettings.ToolVersion = MSBuildToolVersion.VS2017;
+        else
+            msbuildSettings.ToolPath = Context.Tools.Resolve("msbuild");
+
+        MSBuild(SOLUTION_FILE, msbuildSettings);
+
+        DotNetCorePublish("src/NUnitFramework/tests/nunit.framework.tests.csproj", new DotNetCorePublishSettings
+        {
+            Framework = "netcoreapp1.1",
             Configuration = configuration,
-            PlatformTarget = PlatformTarget.MSIL
+            OutputDirectory = BIN_DIR + "netcoreapp1.1/"
         });
     });
 
@@ -176,7 +190,7 @@ Task("Test45")
         var runtime = "net45";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("Test40")
@@ -188,7 +202,7 @@ Task("Test40")
         var runtime = "net40";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("Test35")
@@ -200,7 +214,7 @@ Task("Test35")
         var runtime = "net35";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("Test20")
@@ -212,20 +226,7 @@ Task("Test20")
         var runtime = "net20";
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
-    });
-
-Task("TestNetStandard13")
-    .Description("Tests the .NET Standard 1.3 version of the framework")
-    .WithCriteria(IsRunningOnWindows())
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netstandard1.3";
-        var dir = BIN_DIR + "netcoreapp1.1" + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, "../" + runtime + "/" + FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
 Task("TestNetStandard16")
@@ -235,10 +236,10 @@ Task("TestNetStandard16")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "netstandard1.6";
-        var dir = BIN_DIR + "netcoreapp1.1" + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER, dir, "../" + runtime + "/" + FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS, dir, runtime, ref ErrorDetail);
+        var runtime = "netcoreapp1.1";
+        var dir = BIN_DIR + runtime + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -270,6 +271,7 @@ var FrameworkFiles = new FilePath[]
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
+    "nunitlite-runner.dll",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
     "Microsoft.Threading.Tasks.Extensions.dll",
@@ -346,7 +348,6 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net35/*.*") +
             GetFiles(currentImageDir + "bin/net40/*.*") +
             GetFiles(currentImageDir + "bin/net45/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard1.3/*.*") +
             GetFiles(currentImageDir + "bin/netstandard1.6/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
@@ -478,7 +479,6 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
-    .IsDependentOn("TestNetStandard13")
     .IsDependentOn("TestNetStandard16");
 
 Task("Package")

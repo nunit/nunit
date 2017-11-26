@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -25,12 +25,7 @@ using System;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-
-#if NETSTANDARD1_3
-using BF = NUnit.Compatibility.BindingFlags;
-#else
 using BF = System.Reflection.BindingFlags;
-#endif
 
 namespace NUnit.TestUtilities
 {

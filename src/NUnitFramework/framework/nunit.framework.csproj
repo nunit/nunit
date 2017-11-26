@@ -2,14 +2,14 @@
   <PropertyGroup>
     <AssemblyName>nunit.framework</AssemblyName>
     <RootNamespace>NUnit.Framework</RootNamespace>
-    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.6</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
     <DocumentationFile>..\..\..\bin\$(Configuration)\$(TargetFramework)\nunit.framework.xml</DocumentationFile>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netstandard1.6'">Full</DebugType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -22,7 +22,7 @@
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;ASYNC</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.6'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
     <DefineConstants>TRACE;NUNIT_FRAMEWORK;ASYNC</DefineConstants>
   </PropertyGroup>
 
@@ -44,16 +44,11 @@
     <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard1.6'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.6'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Configuration" />

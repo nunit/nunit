@@ -22,16 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Internal;
-
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-using System.Threading.Tasks;
-#endif
-
-#if NETSTANDARD1_6
-using System.Reflection;
-#endif
 
 namespace NUnit.TestUtilities
 {
@@ -82,18 +75,11 @@ namespace NUnit.TestUtilities
 
                     if (useThreadPool)
                     {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-                        Task.Run(work);
-#else
                         ThreadPool.QueueUserWorkItem(_ => work.Invoke());
-#endif
                     }
                     else
                     {
-#if NETSTANDARD1_3
-                        throw new PlatformNotSupportedException(".NET Standard 1.3 does not have access to System.Threading.Thread, so useThreadPool must be true.");
-#else
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
                         var actionMethod = action.GetMethodInfo();
 #else
                         var actionMethod = action.Method;
@@ -103,7 +89,6 @@ namespace NUnit.TestUtilities
                         {
                             Name = $"{nameof(StressUtility)}.{nameof(RunParallel)} ({actionMethod.Name}) dedicated thread {maxParallelism + 1}"
                         }.Start();
-#endif
                     }
                 }
 

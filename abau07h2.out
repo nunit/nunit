@@ -1,8 +1,0 @@
-﻿C:\src\nunit\nunit> "C:\Windows\Microsoft.NET\Framework64\v2.0.50727\csc.exe" /t:library /utf8output /R:"system.dll" /R:"nunit.framework.dll" /out:"test.dll" /debug- /optimize+  ".\abau07h2.0.cs"
-
-
-Microsoft (R) Visual C# 2005 Compiler version 8.00.50727.8825
-for Microsoft (R) Windows (R) 2005 Framework version 2.0.50727
-Copyright (C) Microsoft Corporation 2001-2005. All rights reserved.
-
-error CS0006: Metadata file 'nunit.framework.dll' could not be found

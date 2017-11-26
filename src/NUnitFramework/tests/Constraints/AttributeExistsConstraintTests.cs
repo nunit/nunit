@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
