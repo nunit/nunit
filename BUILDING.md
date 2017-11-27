@@ -9,9 +9,17 @@ See also [Building and testing for Linux on a Windows machine](#building-and-tes
 
 ## Solution Build
 
-The framework is built using a single Visual Studio solution (nunit.sln on Windows
-and nunit.linux.sln on Linux), which may be built with Visual Studio 2012+, SharpDevelop.
-or MonoDevelop.
+The framework is built using a single Visual Studio solution, `nunit.sln`, which may
+be built with [Visual Studio 2017](https://www.visualstudio.com/vs/) on Windows and
+[Visual Studio for Mac](https://www.visualstudio.com/vs/) on macOS. Currently,
+MonoDevelop does not support the new multi-targteted `csproj` project format. Once
+MonoDevelop is updated, it should start working again. Until then, we recommend
+[Visual Studio Code](https://code.visualstudio.com/) and compiling using the build
+scripts on non-Windows platforms.
+
+On all platforms, you will need to install [.NET Core 2.0.3 SDK](https://www.microsoft.com/net/download/windows)
+or newer. On Mac or Linux, you will need to install [Mono 5.2.0](http://www.mono-project.com/download/).
+Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
 
 The solutions all place their output in a common bin directory under the solution root.
 
@@ -74,8 +82,9 @@ platform. The continuous integration which runs on every PR is enough to catch a
 
 Once in a while you may find it desirable to be primarily developing the repository on a Windows
 machine but to run Linux tests on the same set of files while you edit them in Windows.
-One convenient way to do this is to pass the same arguments to [build-mono-docker.ps1](.\build-mono-docker.ps1) that you would pass to build.ps1. It requires
-[Docker](https://docs.docker.com/docker-for-windows/install/) to be installed.
+One convenient way to do this is to pass the same arguments to [build-mono-docker.ps1](.\build-mono-docker.ps1)
+that you would pass to build.ps1. It requires [Docker](https://docs.docker.com/docker-for-windows/install/)
+to be installed.
 
 For example, to build and test everything: `.\build-mono-docker.ps1 -t test`
 
