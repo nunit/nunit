@@ -153,17 +153,7 @@ using System.Runtime.Serialization;
 using System.Linq;
 #endif
 
-#if TEST
-using NDesk.Options;
-#endif
-
-#if NUNIT_CONSOLE || NUNITLITE || NUNIT_ENGINE
 namespace NUnit.Options
-#elif NDESK_OPTIONS
-namespace NDesk.Options
-#else
-namespace Mono.Options
-#endif
 {
     public class OptionValueCollection : IList, IList<string> {
 
