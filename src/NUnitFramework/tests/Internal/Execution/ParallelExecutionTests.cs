@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Execution
         private ConcurrentQueue<TestEvent> _events;
         private TestResult _result;
 
-        private IEnumerable<TestEvent> AllEvents { get { return _events.AsEnumerable();  } }    
+        private IEnumerable<TestEvent> AllEvents { get { return _events.AsEnumerable();  } }
         private IEnumerable<TestEvent> ShiftEvents {  get { return AllEvents.Where(e => e.Action == TestAction.ShiftStarted || e.Action == TestAction.ShiftFinished);  } }
         private IEnumerable<TestEvent> TestEvents {  get { return AllEvents.Where(e => e.Action == TestAction.TestStarting || e.Action == TestAction.TestFinished); } }
 
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal.Execution
             _testSuite = testSuite;
             _expectations = expectations;
         }
-        
+
         [OneTimeSetUp]
         public void RunTestSuite()
         {
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Execution
             var context = new TestExecutionContext();
             context.Dispatcher = dispatcher;
             context.Listener = this;
-            
+
             dispatcher.ShiftStarting += (shift) =>
             {
                 _events.Enqueue(new TestEvent()
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (e.Action == TestAction.ShiftFinished)
                     --count;
-            }           
+            }
         }
 
         [Test]

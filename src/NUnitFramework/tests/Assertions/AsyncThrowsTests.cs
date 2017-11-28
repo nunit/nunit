@@ -26,7 +26,7 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 
-#if NET_4_0
+#if NET40
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 

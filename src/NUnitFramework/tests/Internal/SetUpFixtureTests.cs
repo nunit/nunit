@@ -4,7 +4,6 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -254,4 +253,3 @@ namespace NUnit.Framework.Internal
         #endregion NoNamespaceSetupFixture
     }
 }
-#endif

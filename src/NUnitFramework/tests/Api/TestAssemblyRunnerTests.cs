@@ -41,12 +41,8 @@ namespace NUnit.Framework.Api
     // Functional tests of the TestAssemblyRunner and all subordinate classes
     public class TestAssemblyRunnerTests : ITestListener
     {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
-#else
-        private const string MOCK_ASSEMBLY_FILE = "mock-assembly.exe";
-#endif
-#if NETSTANDARD1_6
+#if NETCOREAPP1_1
         private const string COULD_NOT_LOAD_MSG = "The system cannot find the file specified.";
 #else
         private const string COULD_NOT_LOAD_MSG = "Could not load";

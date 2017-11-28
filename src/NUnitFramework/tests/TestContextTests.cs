@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -377,7 +377,7 @@ namespace NUnit.Framework
 
         private async Task YieldAsync()
         {
-#if NET_4_0
+#if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();
@@ -402,7 +402,7 @@ namespace NUnit.Framework
         }
 
         [TestCase(null)]
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [TestCase("bad<>path.png", IncludePlatform = "Win")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)

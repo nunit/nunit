@@ -351,7 +351,7 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void PlatformAttributeRunsTest()
         {
@@ -421,7 +421,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 
         #region RequiresMTAAttribute
 
@@ -465,11 +465,8 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#endif
-
         #region RequiresThreadAttribute
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -484,9 +481,7 @@ namespace NUnit.Framework.Attributes
             new RequiresThreadAttribute().ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
         }
-#endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -495,9 +490,10 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(ApartmentState.STA));
         }
-#endif
 
         #endregion
+
+#endif
 
         #region SequentialAttribute
 
@@ -518,7 +514,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 
         #region SetCultureAttribute
 

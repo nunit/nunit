@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,10 +23,9 @@
 
 using System;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETCOREAPP1_1
 using System.Linq;
 #endif
 
@@ -86,7 +85,7 @@ namespace NUnit.Framework.Attributes
         {
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             ParameterInfo param = method.GetParameters()[0];
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETCOREAPP1_1
             var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
 #else
             var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;

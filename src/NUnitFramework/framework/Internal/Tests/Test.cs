@@ -333,7 +333,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
@@ -395,7 +395,7 @@ namespace NUnit.Framework.Internal
         public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
         {
             if (Method != null)
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
                 return Method.GetCustomAttributes<TAttr>(inherit).ToArray();
 #else
                 return (TAttr[])Method.MethodInfo.GetCustomAttributes(typeof(TAttr), inherit);
@@ -443,7 +443,7 @@ namespace NUnit.Framework.Internal
             {
                 actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
                 foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
                     actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false).ToArray());
 

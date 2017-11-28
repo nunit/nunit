@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: all items instance of <System.String>" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", <System.Object> >" + Environment.NewLine;
-            
+
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreInstancesOfType(collection,typeof(string)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -260,32 +260,32 @@ namespace NUnit.Framework.Assertions
         public void AreEqual_UsingIterator_Fails()
         {
             int[] array = new int[] { 1, 3, 5 };
- 
-            AssertionException ex = Assert.Throws<AssertionException>( 
+
+            AssertionException ex = Assert.Throws<AssertionException>(
                 delegate { CollectionAssert.AreEqual(array, CountToThree()); } );
-            
+
             Assert.That(ex.Message, Does.Contain("Values differ at index [1]").And.
                                     Contains("Expected: 3").And.
                                     Contains("But was:  2"));
         }
- 
-#if !NET_2_0
+
+#if !NET20
         [Test]
         public void AreEqual_UsingLinqQuery()
         {
             int[] array = new int[] { 1, 2, 3 };
- 
+
             CollectionAssert.AreEqual(array, array.Select((item) => item));
         }
- 
+
         [Test]
         public void AreEqual_UsingLinqQuery_Fails()
         {
             int[] array = new int[] { 1, 2, 3 };
- 
+
             AssertionException ex = Assert.Throws<AssertionException>(
                 delegate { CollectionAssert.AreEqual(array, array.Select((item) => item * 2)); } );
-            
+
             Assert.That(ex.Message, Does.Contain("Values differ at index [0]").And.
                                     Contains("Expected: 1").And.
                                     Contains("But was:  2"));
@@ -341,7 +341,7 @@ namespace NUnit.Framework.Assertions
         {
             ICollection set1 = new SimpleObjectCollection("x", "y", "x");
             ICollection set2 = new SimpleObjectCollection("x", "y", "z");
-            
+
             var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"x\" >" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine +
@@ -357,7 +357,7 @@ namespace NUnit.Framework.Assertions
         {
             ICollection set1 = new SimpleObjectCollection(null, "x", null, "z");
             ICollection set2 = new SimpleObjectCollection("z", null, "x", null);
-            
+
             CollectionAssert.AreEquivalent(set1,set2);
         }
         #endregion
@@ -384,7 +384,7 @@ namespace NUnit.Framework.Assertions
             var set1 = new SimpleObjectCollection("x", "y", "z");
             var set2 = new SimpleObjectCollection("x", "y", "z");
 
-            var expectedMessage = 
+            var expectedMessage =
                 "  Expected: not equal to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
@@ -625,7 +625,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsNotSubsetOf(set2,set1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-        
+
         [Test]
         public void IsNotSubsetOfHandlesNull()
         {

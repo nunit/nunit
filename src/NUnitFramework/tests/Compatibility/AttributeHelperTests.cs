@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var method = type.GetMethod("Add");
+            var method = type.GetTypeInfo().GetMethod("Add");
             Assert.That(method, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(method, typeof(AuthorAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var property = type.GetProperty("MyProperty");
+            var property = type.GetTypeInfo().GetProperty("MyProperty");
             Assert.That(property, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(property, typeof(DatapointSourceAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var field = type.GetField("field");
+            var field = type.GetTypeInfo().GetField("field");
             Assert.That(field, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(field, typeof(DatapointAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var method = type.GetMethod("Add");
+            var method = type.GetTypeInfo().GetMethod("Add");
             Assert.That(method, Is.Not.Null);
             ParameterInfo[] param = method.GetParameters();
             Assert.That(param, Is.Not.Null);

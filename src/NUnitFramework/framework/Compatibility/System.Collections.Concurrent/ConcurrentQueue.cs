@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 //
 //
-
+#if NET20 || NET35
 using System;
 using System.Threading;
 using System.Collections;
@@ -49,7 +49,7 @@ namespace System.Collections.Concurrent
 			public T Value;
 			public Node Next;
 		}
-		
+
 		Node head = new Node ();
 		Node tail;
 		int count;
@@ -90,15 +90,15 @@ namespace System.Collections.Concurrent
 		{
 			Node node = new Node ();
 			node.Value = item;
-			
+
 			Node oldTail = null;
 			Node oldNext = null;
-			
+
 			bool update = false;
 			while (!update) {
 				oldTail = tail;
 				oldNext = oldTail.Next;
-				
+
 				// Did tail was already updated ?
 				if (tail == oldTail) {
 					if (oldNext == null) {
@@ -154,7 +154,7 @@ namespace System.Collections.Concurrent
 				Node oldHead = head;
 				Node oldTail = tail;
 				oldNext = oldHead.Next;
-				
+
 				if (oldHead == head) {
 					// Empty case ?
 					if (oldHead == oldTail) {
@@ -192,7 +192,7 @@ namespace System.Collections.Concurrent
 		{
 			result = default (T);
 			bool update = true;
-			
+
 			while (update)
 			{
 				Node oldHead = head;
@@ -204,13 +204,13 @@ namespace System.Collections.Concurrent
 				}
 
 				result = oldNext.Value;
-				
+
 				//check if head has been updated
 				update = head != oldHead;
 			}
 			return true;
 		}
-		
+
 		internal void Clear ()
 		{
 			count = 0;
@@ -234,7 +234,7 @@ namespace System.Collections.Concurrent
         /// cref="ConcurrentQueue{T}"/>.</returns>
         /// <remarks>
         /// The enumeration represents a moment-in-time snapshot of the contents
-        /// of the queue.  It does not reflect any updates to the collection after 
+        /// of the queue.  It does not reflect any updates to the collection after
         /// <see cref="GetEnumerator"/> was called.  The enumerator is safe to use
         /// concurrently with reads from and writes to the queue.
         /// </remarks>
@@ -242,7 +242,7 @@ namespace System.Collections.Concurrent
 		{
 			return InternalGetEnumerator ();
 		}
-		
+
 		IEnumerator<T> InternalGetEnumerator ()
 		{
 			Node my_head = head;
@@ -366,7 +366,7 @@ namespace System.Collections.Concurrent
 		{
 			return TryDequeue (out item);
 		}
-		
+
         /// <summary>
         /// Gets an object that can be used to synchronize access to the <see
         /// cref="T:System.Collections.ICollection"/>. This property is not supported.
@@ -409,3 +409,4 @@ namespace System.Collections.Concurrent
 		}
 	}
 }
+#endif

@@ -69,7 +69,7 @@ namespace NUnit.Common.Tests
         {
             Assert.That(_parser.Parse(input), Is.EqualTo(output));
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.DoesNotThrow(() => System.Xml.Linq.XDocument.Parse(output));
 #else
             XmlDocument doc = new XmlDocument();

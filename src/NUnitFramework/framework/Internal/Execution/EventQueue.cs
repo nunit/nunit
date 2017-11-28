@@ -28,7 +28,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Threading;
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
 using ManualResetEventSlim = System.Threading.ManualResetEvent;
 #endif
 using NUnit.Framework.Interfaces;

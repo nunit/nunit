@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -31,7 +31,7 @@ using System.IO;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
@@ -116,7 +116,7 @@ namespace NUnitLite
             xmlWriter.WriteEndElement();
         }
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
@@ -125,9 +125,7 @@ namespace NUnitLite
             xmlWriter.WriteAttributeString("cwd", Directory.GetCurrentDirectory());
             xmlWriter.WriteAttributeString("clr-version", RuntimeInformation.FrameworkDescription);
             xmlWriter.WriteAttributeString("os-version", RuntimeInformation.OSDescription);
-#if !NETSTANDARD1_3
             xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
-#endif
             xmlWriter.WriteEndElement();
         }
 #else
@@ -184,7 +182,7 @@ namespace NUnitLite
             xmlWriter.WriteEndElement(); // test-results
             xmlWriter.WriteEndDocument();
             xmlWriter.Flush();
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             xmlWriter.Close();
 #endif
         }

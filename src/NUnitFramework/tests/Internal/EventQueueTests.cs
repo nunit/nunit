@@ -124,7 +124,11 @@ namespace NUnit.Framework.Internal.Execution
             private volatile int receivedEvents;
 
             [Test]
+#if NET35
+            [Timeout(2000)]
+#else
             [Timeout(1000)]
+#endif
             public void DequeueBlocking_Stop()
             {
                 this.q = new EventQueue();
@@ -162,7 +166,11 @@ namespace NUnit.Framework.Internal.Execution
             private volatile bool afterEnqueue;
 
             [Test]
+#if NET35
+            [Timeout(2000)]
+#else
             [Timeout(1000)]
+#endif
             public void SetWaitHandle_Enqueue_Asynchronous()
             {
                 using (AutoResetEvent waitHandle = new AutoResetEvent(false))

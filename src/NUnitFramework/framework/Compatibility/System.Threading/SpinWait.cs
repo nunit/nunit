@@ -22,13 +22,14 @@
 //
 //
 
+#if NET20 || NET35
 using System;
 using System.Diagnostics;
 
 namespace System.Threading
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
 	internal struct SpinWait
 	{
@@ -39,7 +40,7 @@ namespace System.Threading
 		int ntime;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
 		public void SpinOnce ()
 		{
@@ -47,15 +48,15 @@ namespace System.Threading
 
 			if (isSingleCpu) {
                 // On a single-CPU system, spinning does no good
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
                 Thread.Sleep(ntime % step == 0 ? 1 : 0);
 #else
                 Thread.Yield ();
 #endif
-			} 
+			}
 			else {
 				if (ntime % step == 0)
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
                     Thread.Sleep(1);
 #else
                     Thread.Yield ();
@@ -67,7 +68,7 @@ namespace System.Threading
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="condition"></param>
 		public static void SpinUntil (Func<bool> condition)
@@ -78,7 +79,7 @@ namespace System.Threading
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="timeout"></param>
@@ -89,7 +90,7 @@ namespace System.Threading
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="millisecondsTimeout"></param>
@@ -109,7 +110,7 @@ namespace System.Threading
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
 		public void Reset ()
 		{
@@ -117,7 +118,7 @@ namespace System.Threading
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
 		public bool NextSpinWillYield {
 			get {
@@ -126,7 +127,7 @@ namespace System.Threading
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
 		public int Count {
 			get {
@@ -135,3 +136,4 @@ namespace System.Threading
 		}
 	}
 }
+#endif

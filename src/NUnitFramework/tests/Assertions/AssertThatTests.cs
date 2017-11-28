@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -32,7 +32,7 @@ using System;
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET40
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(2 + 2 == 4, "Not Equal to {0}", 4);
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AssertionPasses_BooleanWithMessageStringFunc()
         {
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AssertionPasses_ActualAndConstraintWithMessageStringFunc()
         {
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -174,7 +174,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("got 5"));
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void FailureThrowsAssertionException_BooleanWithMessageStringFunc()
         {
@@ -204,7 +204,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void FailureThrowsAssertionException_ActualAndConstraintWithMessageStringFunc()
         {
@@ -262,7 +262,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 4"));
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertCount, Is.EqualTo(totalCount), "Fixture count is not correct");
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void PassingAssertion_DoesNotCallExceptionStringFunc()
         {
@@ -346,17 +346,17 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
-#if NET_4_5
+#if NET45
             var exception = 
 #endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionTask(), Is.EqualTo(1)));
 
-#if NET_4_5
+#if NET45
             Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionTask"));
 #endif
         }
@@ -365,13 +365,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertThatErrorGenericTask()
         {
-#if NET_4_5
+#if NET45
             var exception = 
 #endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
 
-#if NET_4_5
+#if NET45
         Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
 #endif
         }
@@ -379,13 +379,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertThatErrorVoid()
         {
-#if NET_4_5
+#if NET45
             var exception = 
 #endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));
 
-#if NET_4_5
+#if NET45
         Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
 #endif
         }
@@ -408,7 +408,7 @@ namespace NUnit.Framework.Assertions
         }
 #endif
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void AssertThatWithLambda()
         {

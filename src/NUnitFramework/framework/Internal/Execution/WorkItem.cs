@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
                 : ParallelScope.Default;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             TargetApartment = GetTargetApartment(Test);
 #endif
 
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal.Execution
 #if PARALLEL
             TestWorker = wrappedItem.TestWorker;
 #endif
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             TargetApartment = wrappedItem.TargetApartment;
 #endif
 
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public ParallelScope ParallelScope { get; private set; }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -282,7 +282,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Context != null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             if (force)
             {
                 Thread tThread;
@@ -323,7 +323,7 @@ namespace NUnit.Framework.Internal.Execution
         public void Dispose()
         {
             if (_completionEvent != null)
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
                 _completionEvent.Close();
 #else
                 _completionEvent.Dispose();
@@ -453,7 +453,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         private Thread thread;
         private int nativeThreadId;
 
@@ -527,7 +527,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         /// <summary>
         /// Recursively walks up the test hierarchy to see if the
         /// <see cref="ApartmentState"/> has been set on any of the parent tests.
@@ -548,7 +548,7 @@ namespace NUnit.Framework.Internal.Execution
 #endregion
     }
 
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
     static class ActionTargetsExtensions
     {
         public static bool HasFlag(this ActionTargets targets, ActionTargets value)

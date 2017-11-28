@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -33,7 +33,7 @@ using NUnit.TestUtilities;
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET40
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Assertions
         [TestCase("WarnIf_Passes_BooleanWithMessage")]
         [TestCase("WarnUnless_Passes_BooleanWithMessageAndArgs")]
         [TestCase("WarnIf_Passes_BooleanWithMessageAndArgs")]
-#if !NET_2_0
+#if !NET20
         [TestCase("WarnUnless_Passes_BooleanWithMessageStringFunc")]
         [TestCase("WarnIf_Passes_BooleanWithMessageStringFunc")]
         [TestCase("WarnUnless_Passes_BooleanLambda")]
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Assertions
         [TestCase("WarnIf_Passes_ActualAndConstraintWithMessage")]
         [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessageAndArgs")]
         [TestCase("WarnIf_Passes_ActualAndConstraintWithMessageAndArgs")]
-#if !NET_2_0
+#if !NET20
         [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessageStringFunc")]
         [TestCase("WarnIf_Passes_ActualAndConstraintWithMessageStringFunc")]
         [TestCase("WarnUnless_Passes_ActualLambdaAndConstraint")]
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Assertions
         [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessage")]
         [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessageAndArgs")]
         [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs")]
-#if !NET_2_0
+#if !NET20
         [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc")]
         [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc")]
 #endif
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Assertions
         [TestCase("WarnIf_Fails_BooleanWithMessage", "message")]
         [TestCase("WarnUnless_Fails_BooleanWithMessageAndArgs", "got 5")]
         [TestCase("WarnIf_Fails_BooleanWithMessageAndArgs", "got 5")]
-#if !NET_2_0
+#if !NET20
         [TestCase("WarnUnless_Fails_BooleanWithMessageStringFunc", "got 5")]
         [TestCase("WarnIf_Fails_BooleanWithMessageStringFunc", "got 5")]
         [TestCase("WarnUnless_Fails_BooleanLambda", null)]
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Assertions
         [TestCase("WarnIf_Fails_ActualAndConstraintWithMessage", "Error")]
         [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessageAndArgs", "Should be 5")]
         [TestCase("WarnIf_Fails_ActualAndConstraintWithMessageAndArgs", "Should be 5")]
-#if !NET_2_0
+#if !NET20
         [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessageStringFunc", "Should be 5")]
         [TestCase("WarnIf_Fails_ActualAndConstraintWithMessageStringFunc", "Should be 5")]
         [TestCase("WarnUnless_Fails_ActualLambdaAndConstraint", null)]
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Assertions
         [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessage", "Error")]
         [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessageAndArgs", "Should be 4")]
         [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs", "Should be 4")]
-#if !NET_2_0
+#if !NET20
         [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc", "Should be 4")]
         [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc", "Should be 4")]
 #endif
@@ -162,10 +162,8 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertionResults[0].Message, Is.Not.Null, "Assertion Message should not be null");
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
-#if !NETSTANDARD1_3
             Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
             Assert.That(result.AssertionResults[0].StackTrace.Split(new char[] { '\n' }).Length, Is.LessThan(3));
-#endif
 
             if (expectedMessage != null)
             {
@@ -174,7 +172,7 @@ namespace NUnit.Framework.Assertions
             }
         }
 
-#if !NET_2_0
+#if !NET20
         [Test]
         public void PassingAssertion_DoesNotCallExceptionStringFunc()
         {
@@ -218,13 +216,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void WarnUnless_Async_Error()
         {
-#if !NET_4_0
+#if !NET40
             var exception =
 #endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.Unless(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if !NET_4_0
+#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }
@@ -232,13 +230,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void WarnIf_Async_Error()
         {
-#if !NET_4_0
+#if !NET40
             var exception =
 #endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.If(async () => await ThrowExceptionGenericTask(), Is.Not.EqualTo(1)));
 
-#if !NET_4_0
+#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }
@@ -260,7 +258,7 @@ namespace NUnit.Framework.Assertions
         // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETCOREAPP1_1
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4)]
 #else
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]

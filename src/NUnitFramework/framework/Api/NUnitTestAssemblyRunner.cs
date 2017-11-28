@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
 using System.Windows.Forms;
@@ -301,7 +301,7 @@ namespace NUnit.Framework.Api
                 {
                     System.Diagnostics.Debugger.Launch();
                 }
-#if !(NETSTANDARD1_3 || NETSTANDARD1_6)
+#if !NETSTANDARD1_6
                 catch (SecurityException)
                 {
                     TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission is not set to start the debugger.");
@@ -316,7 +316,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -396,9 +396,9 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of 
-        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the 
+#if !NETSTANDARD1_6
+        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
+        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]

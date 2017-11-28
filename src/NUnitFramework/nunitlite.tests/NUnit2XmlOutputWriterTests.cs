@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETCOREAPP1_0
+#if !NETCOREAPP1_1
 using System;
 using System.IO;
 using System.Text;

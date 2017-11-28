@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
-#if !NETCOREAPP1_0
+#if !NETCOREAPP1_1
 using NUnit.Compatibility;
 #endif
 using NUnit.Framework.Interfaces;
@@ -34,10 +34,6 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
-
-#if NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_0
-using BindingFlags = NUnit.Compatibility.BindingFlags;
-#endif
 
 namespace NUnit.TestUtilities
 {
@@ -173,6 +169,17 @@ namespace NUnit.TestUtilities
             return RunTest(testMethod, fixture);
         }
 
+        public static ITestResult RunAsTestCase(Action action)
+        {
+#if NETCOREAPP1_1
+            var method = action.GetMethodInfo();
+#else
+            var method = action.Method;
+#endif
+            var testMethod = MakeTestCase(method.DeclaringType, method.Name);
+            return RunTest(testMethod);
+        }
+
         public static ITestResult RunTest(Test test)
         {
             return RunTest(test, null);
@@ -190,28 +197,28 @@ namespace NUnit.TestUtilities
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
             {
-#if NETSTANDARD1_3
-                System.Threading.Tasks.Task.Delay(1);
-#else
                 Thread.Sleep(1);
-#endif
             }
 
             return work.Result;
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static bool IsStaticClass(Type type)
         {
+#if NET40
+            return type.IsAbstract && type.IsSealed;
+#else
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
+#endif
         }
 
-#endregion
+        #endregion
 
-#region Nested TestDispatcher Class
+        #region Nested TestDispatcher Class
 
         /// <summary>
         /// SuperSimpleDispatcher merely executes the work item.
@@ -237,6 +244,6 @@ namespace NUnit.TestUtilities
                 throw new NotImplementedException();
             }
         }
-#endregion
+        #endregion
     }
 }

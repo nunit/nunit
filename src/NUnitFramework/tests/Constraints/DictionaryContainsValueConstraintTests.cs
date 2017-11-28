@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void WorksWithNonGenericDictionary()
         {

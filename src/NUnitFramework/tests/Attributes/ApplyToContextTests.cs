@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Attributes
             Assert.True(_context.IsSingleThreaded);
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void SetCultureAttribute()
         {
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Attributes
             attr.ApplyToContext(_context);
             Assert.That(_context.CurrentUICulture, Is.EqualTo(new CultureInfo("fr-FR")));
         }
-        
+
         [Test]
         public void TimeoutAttribute()
         {

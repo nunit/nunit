@@ -152,7 +152,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(s, Is.EqualTo(expectedResult));
         }
 
-#if NET_4_5
+#if NET45
         [Test]
         public static void FormatValue_EmptyValueTupleTest()
         {
@@ -209,7 +209,7 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-#if !NET_2_0 && !NET_3_5
+#if !NET20 && !NET35
         [Test]
         public static void FormatValue_OneElementTupleTest()
         {
