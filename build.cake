@@ -20,7 +20,6 @@ var ErrorDetail = new List<string>();
 var version = "3.10.0";
 var modifier = "";
 
-var isAppveyor = BuildSystem.IsRunningOnAppVeyor;
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
 
@@ -59,7 +58,7 @@ var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
 
 Setup(context =>
 {
-    if (isAppveyor)
+    if (BuildSystem.IsRunningOnAppVeyor)
     {
         var tag = AppVeyor.Environment.Repository.Tag;
 
