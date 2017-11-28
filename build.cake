@@ -42,13 +42,6 @@ var IMAGE_DIR = PROJECT_DIR + "images/";
 
 var SOLUTION_FILE = "./nunit.sln";
 
-// Package sources for nuget restore
-var PACKAGE_SOURCE = new string[]
-    {
-        "https://www.nuget.org/api/v2",
-        "https://www.myget.org/F/nunit/api/v2"
-    };
-
 // Test Runners
 var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
 
@@ -59,14 +52,6 @@ var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
 
 // Packages
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
-
-var packages = new string[]{
-    "src/NUnitFramework/framework/packages.config",
-    "src/NUnitFramework/nunitlite/packages.config",
-    "src/NUnitFramework/nunitlite.tests/packages.config",
-    "src/NUnitFramework/testdata/packages.config",
-    "src/NUnitFramework/tests/packages.config",
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
