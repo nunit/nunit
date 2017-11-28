@@ -161,10 +161,6 @@ Task("CheckForError")
     .Description("Checks for errors running the test suites")
     .Does(() => CheckForError(ref ErrorDetail));
 
-//////////////////////////////////////////////////////////////////////
-// TEST FRAMEWORK
-//////////////////////////////////////////////////////////////////////
-
 Task("Test45")
     .Description("Tests the .NET 4.5 version of the framework")
     .IsDependentOn("Build")
