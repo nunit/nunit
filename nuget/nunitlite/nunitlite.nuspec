@@ -14,7 +14,7 @@
     <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner.
 
 Supported platforms:
-- .NET 2.0+
+- .NET Framework 2.0+
 - .NET Standard 1.6
 - .NET Core
 
