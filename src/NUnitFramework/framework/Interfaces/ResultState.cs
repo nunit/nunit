@@ -240,7 +240,7 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// Overload !+ operator for ResultStates
+        /// Overload != operator for ResultStates
         /// </summary>
         public static bool operator !=(ResultState left, ResultState right)
         {
