@@ -15,15 +15,15 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net20' OR '$(TargetFramework)' == 'net35'">
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL</DefineConstants>
+    <DefineConstants>TRACE;PARALLEL</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45'">
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;PARALLEL;ASYNC</DefineConstants>
+    <DefineConstants>TRACE;PARALLEL;ASYNC</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;ASYNC</DefineConstants>
+    <DefineConstants>TRACE;ASYNC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
