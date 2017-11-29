@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -25,9 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using NUnit.Common;
 using NUnit;
 using NUnit.Framework.Api;
@@ -131,38 +129,25 @@ namespace NUnitLite
                 outWriter = new ColorConsoleWriter();
             }
 
-            TextWriter errWriter = null;
-            if (_options.ErrFile != null)
+            using (outWriter)
             {
-                var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
+                TextWriter errWriter = null;
+                if (_options.ErrFile != null)
+                {
+                    var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
 #if NETSTANDARD1_6
-                errWriter = File.CreateText(errFile);
+                    errWriter = File.CreateText(errFile);
 #else
-                errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
+                    errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
 #endif
-                Console.SetError(errWriter);
-            }
+                    Console.SetError(errWriter);
+                }
 
-            try
-            {
-                _textUI = new TextUI(outWriter, Console.In, _options);
-                return Execute();
-            }
-            finally
-            {
-                if (_options.OutFile != null && outWriter != null)
-#if NETSTANDARD1_6
-                    outWriter.Dispose();
-#else
-                    outWriter.Close();
-#endif
-
-                if (_options.ErrFile != null && errWriter != null)
-#if NETSTANDARD1_6
-                    errWriter.Dispose();
-#else
-                    errWriter.Close();
-#endif
+                using (errWriter)
+                {
+                    _textUI = new TextUI(outWriter, Console.In, _options);
+                    return Execute();
+                }
             }
         }
 

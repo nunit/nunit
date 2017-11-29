@@ -24,19 +24,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if PARALLEL
-using System.Collections.Concurrent;
-#endif
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using NUnit.Framework.Interfaces;
 #if NET20
 using NUnit.Compatibility;
 #endif
-using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
