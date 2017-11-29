@@ -42,6 +42,7 @@ How to use this package:
       <group targetFramework="netstandard1.6">
         <dependency id="NUnit" version="[$version$]" />
         <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="System.Diagnostics.Process" version="4.3.0" />
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="NUnit" version="[$version$]" />

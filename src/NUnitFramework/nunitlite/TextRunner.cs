@@ -412,11 +412,7 @@ namespace NUnitLite
                     ? Path.GetFileNameWithoutExtension(_options.InputFile)
                     : "NUnitLite";
 
-#if NETSTANDARD1_6
-            var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
-#else
             var id = Process.GetCurrentProcess().Id;
-#endif
 
             return string.Format(LOG_FILE_FORMAT, id, baseName, ext);
         }

@@ -146,11 +146,9 @@ namespace NUnit.Framework.Api
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-#if NETSTANDARD1_6
-                    var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
-#else
+
                     var id = Process.GetCurrentProcess().Id;
-#endif
+
                     var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
