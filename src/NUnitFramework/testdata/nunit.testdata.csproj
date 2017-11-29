@@ -4,6 +4,9 @@
   <PropertyGroup>
     <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1</TargetFrameworks>
     <RootNamespace>NUnit.TestData</RootNamespace>
+
+    <!-- Needed because we test stack traces and don't want to have to put
+         [MethodImpl(MethodImplOptions.NoInlining)] on everything involved. -->
     <Optimize>false</Optimize>
   </PropertyGroup>
 
