@@ -5,6 +5,7 @@
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.6' and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PARALLEL</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' != 'net20' and '$(TargetFramework)' != 'net35'">$(DefineConstants);ASYNC</DefineConstants>
 
+    <LangVersion>6</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
