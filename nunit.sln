@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.cake = build.cake
 		BUILDING.md = BUILDING.md
 		CHANGES.md = CHANGES.md
+		src\NUnitFramework\Common.props = src\NUnitFramework\Common.props
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE.txt = LICENSE.txt
 		NOTICES.txt = NOTICES.txt
