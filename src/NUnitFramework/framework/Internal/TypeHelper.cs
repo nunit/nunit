@@ -250,25 +250,22 @@ namespace NUnit.Framework.Internal
             {
                 object arg = arglist[i];
 
-                if (arg != null && arg is IConvertible)
+                if (arg is IConvertible)
                 {
                     Type argType = arg.GetType();
                     Type targetType = parameters[i].ParameterType;
                     bool convert = false;
 
-                    if (argType != targetType && !argType.IsAssignableFrom(targetType))
+                    if (argType != targetType && IsNumeric(argType) && IsNumeric(targetType))
                     {
-                        if (IsNumeric(argType) && IsNumeric(targetType))
-                        {
-                            if (targetType == typeof(double) || targetType == typeof(float))
-                                convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
+                        if (targetType == typeof(double) || targetType == typeof(float))
+                            convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
+                        else
+                            if (targetType == typeof(long))
+                                convert = arg is int || arg is short || arg is byte || arg is sbyte;
                             else
-                                if (targetType == typeof(long))
-                                    convert = arg is int || arg is short || arg is byte || arg is sbyte;
-                                else
-                                    if (targetType == typeof(short))
-                                        convert = arg is byte || arg is sbyte;
-                        }
+                                if (targetType == typeof(short))
+                                    convert = arg is byte || arg is sbyte;
                     }
 
                     if (convert)
