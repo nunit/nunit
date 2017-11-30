@@ -154,7 +154,7 @@ namespace NUnit.Compatibility
         /// <returns></returns>
         public static bool IsInstanceOfType(this Type type, object other)
         {
-            return other != null && type.IsAssignableFrom(other.GetType());
+            return type.GetTypeInfo().IsInstanceOfType(other);
         }
 
         /// <summary>
