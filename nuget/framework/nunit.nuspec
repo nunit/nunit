@@ -48,5 +48,6 @@ Supported platforms:
     <file src="bin/net45/nunit.framework.xml" target="lib\net45" />
     <file src="bin/netstandard1.6/nunit.framework.dll" target="lib\netstandard1.6" />
     <file src="bin/netstandard1.6/nunit.framework.xml" target="lib\netstandard1.6" />
+    <file src="..\..\nuget\framework\NUnit.props" target="build" />
   </files>
 </package>
