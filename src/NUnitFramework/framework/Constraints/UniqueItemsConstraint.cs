@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,9 +29,9 @@ using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
-{ 
+{
     /// <summary>
-    /// UniqueItemsConstraint tests whether all the items in a 
+    /// UniqueItemsConstraint tests whether all the items in a
     /// collection are unique.
     /// </summary>
     public class UniqueItemsConstraint : CollectionItemsEqualConstraint
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
             return (bool)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
         }
 
-        private static readonly MethodInfo ItemsUniqueMethod = 
+        private static readonly MethodInfo ItemsUniqueMethod =
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static bool ItemsUnique<T>(IEnumerable<T> actual)
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1"))
                 {
-#if NET_2_0 || NET_3_5 || NET_4_0
+#if NET20 || NET35 || NET40
                     return type.GetGenericArguments()[0];
 #else
                     return type.GenericTypeArguments[0];

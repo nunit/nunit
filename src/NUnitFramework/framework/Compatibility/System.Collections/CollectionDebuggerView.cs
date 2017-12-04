@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if NET20 || NET35
 using System;
 using System.Diagnostics;
 
@@ -42,7 +43,7 @@ namespace System.Collections.Generic
 		{
 			this.c = col;
 		}
-		
+
 		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
 		public T[] Items {
 			get {
@@ -52,7 +53,7 @@ namespace System.Collections.Generic
 			}
 		}
 	}
-	
+
 	internal sealed class CollectionDebuggerView<T, U>
 	{
 		readonly ICollection<KeyValuePair<T, U>> c;
@@ -70,5 +71,6 @@ namespace System.Collections.Generic
 				return o;
 			}
 		}
-	}	
+	}
 }
+#endif

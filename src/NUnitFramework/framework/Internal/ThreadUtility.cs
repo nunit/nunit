@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -36,8 +35,17 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class ThreadUtility
     {
-        private const int ThreadAbortedCheckDelay = 100;
+        internal static void BlockingDelay(int milliseconds)
+        {
+#if NETSTANDARD1_6
+            System.Threading.Tasks.Task.Delay(milliseconds).GetAwaiter().GetResult();
+#else
+            Thread.Sleep(milliseconds);
+#endif
+        }
 
+#if !NETSTANDARD1_6
+        private const int ThreadAbortedCheckDelay = 100;
 
         /// <summary>
         /// Pre-Task compatibility
@@ -221,6 +229,6 @@ namespace NUnit.Framework.Internal
         {
             CLOSE = 0x0010
         }
+#endif
     }
 }
-#endif

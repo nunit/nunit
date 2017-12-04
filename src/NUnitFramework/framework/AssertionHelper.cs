@@ -31,7 +31,8 @@ namespace NUnit.Framework
     /// AssertionHelper is an optional base class for user tests,
     /// allowing the use of shorter names in making asserts.
     /// </summary>
-    [Obsolete("The AssertionHelper class will be removed in a coming release.")]
+    [Obsolete("The AssertionHelper class will be removed in a coming release. " +
+              "Consider using the NUnit.StaticExpect NuGet package as a replacement.")]
     public class AssertionHelper
     {
         #region Expect
@@ -423,7 +424,7 @@ namespace NUnit.Framework
 
         #region BinarySerializable
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -437,7 +438,7 @@ namespace NUnit.Framework
 
         #region XmlSerializable
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>

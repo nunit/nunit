@@ -59,7 +59,7 @@ namespace NUnit.Framework
             Assert.That(condition, Is.True, null, null);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -76,7 +76,7 @@ namespace NUnit.Framework
 
         #region Lambda returning Boolean
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -145,7 +145,7 @@ namespace NUnit.Framework
                 ReportFailure(result, message, args);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -196,7 +196,7 @@ namespace NUnit.Framework
             Assert.That((object)code, constraint, message, args);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that the code represented by a delegate throws an exception
         /// that satisfies the constraint provided.
@@ -247,7 +247,7 @@ namespace NUnit.Framework
                 ReportFailure(result, message, args);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.

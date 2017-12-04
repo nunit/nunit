@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace NUnit.Compatibility
 {
-#if NET_2_0
+#if NET20
     /// <summary>
     /// 
     /// </summary>

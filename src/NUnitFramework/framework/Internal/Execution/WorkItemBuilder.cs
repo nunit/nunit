@@ -58,9 +58,8 @@ namespace NUnit.Framework.Internal.Execution
                     if (filter.Pass(childTest))
                     {
                         var childItem = CreateWorkItem(childTest, filter, recursive);
-                        childItem.RunsOnMainThread = work.RunsOnMainThread;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
                         if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
                             childItem.TargetApartment = work.TargetApartment;
 #endif

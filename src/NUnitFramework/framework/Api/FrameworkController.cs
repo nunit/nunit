@@ -34,7 +34,7 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Api
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
                     var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
                     var id = Process.GetCurrentProcess().Id;
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Api
             return result.OuterXml;
         }
 
-#if !NET_2_0
+#if !NET20
 
         class ActionCallback : ICallbackEventHandler
         {
@@ -370,7 +370,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="targetNode">Target node</param>
         /// <returns>The new node</returns>
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
@@ -383,9 +383,7 @@ namespace NUnit.Framework.Api
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
             env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
             env.AddAttribute("os-version", RuntimeInformation.OSDescription);
-#if !NETSTANDARD1_3
             env.AddAttribute("machine-name", Environment.MachineName);
-#endif
             env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
             return env;
         }

@@ -14,10 +14,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,7 +26,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
+#if NET20 || NET35
 using System;
 using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
@@ -37,7 +37,7 @@ using System.Diagnostics;
 namespace System
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
 	[SerializableAttribute]
@@ -54,7 +54,7 @@ namespace System
 		bool inited;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
 		public Lazy ()
 			: this (LazyThreadSafetyMode.ExecutionAndPublication)
@@ -62,7 +62,7 @@ namespace System
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="valueFactory"></param>
 		public Lazy (Func<T> valueFactory)
@@ -71,16 +71,16 @@ namespace System
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="isThreadSafe"></param>
 		public Lazy (bool isThreadSafe)
 			: this (Activator.CreateInstance<T>, isThreadSafe ? LazyThreadSafetyMode.ExecutionAndPublication : LazyThreadSafetyMode.None)
 		{
 		}
-		
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="valueFactory"></param>
         /// <param name="isThreadSafe"></param>
@@ -90,16 +90,16 @@ namespace System
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="mode"></param>
 		public Lazy (LazyThreadSafetyMode mode)
 			: this (Activator.CreateInstance<T>, mode)
 		{
 		}
-		
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="valueFactory"></param>
         /// <param name="mode"></param>
@@ -114,7 +114,7 @@ namespace System
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
 		// Don't trigger expensive initialization
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
@@ -133,7 +133,7 @@ namespace System
 		{
 			Func<T> init_factory;
 			T v;
-			
+
 			switch (mode) {
 			case LazyThreadSafetyMode.None:
 				init_factory = factory;
@@ -208,7 +208,7 @@ namespace System
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
 		public bool IsValueCreated {
 			get {
@@ -217,7 +217,7 @@ namespace System
 		}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
 		public override string ToString ()
@@ -227,6 +227,6 @@ namespace System
 			else
 				return "Value is not created";
 		}
-	}		
+	}
 }
-	
+#endif

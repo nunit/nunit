@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
 using System;
 using System.Threading;
 

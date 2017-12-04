@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,42 +34,17 @@ namespace NUnit.Compatibility
         /// <summary>
         /// Gets the custom attributes from the given object.
         /// </summary>
-        /// <remarks>.NET Standard 1.3 libraries do not have an ICustomAttributeProvider, so we need to cast to each of
-        /// it's direct subtypes and try to get attributes off those instead.</remarks>
         /// <param name="actual">The actual.</param>
         /// <param name="attributeType">Type of the attribute.</param>
         /// <param name="inherit">if set to <c>true</c> [inherit].</param>
         /// <returns>A list of the given attribute on the given object.</returns>
         public static Attribute[] GetCustomAttributes(object actual, Type attributeType, bool inherit)
         {
-#if !NETSTANDARD1_3
             var attrProvider = actual as ICustomAttributeProvider;
             if (attrProvider == null)
                 throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider.", actual), "actual");
 
             return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
-#else
-            var member = actual as MemberInfo;
-            if (member != null)
-            {
-                return (Attribute[])member.GetCustomAttributes(attributeType, inherit);
-            }
-
-            var param = actual as ParameterInfo;
-            if (param != null)
-            {
-                return (Attribute[])param.GetCustomAttributes(attributeType, inherit);
-            }
-
-            var assembly = actual as Assembly;
-            if (assembly != null)
-            {
-                return (Attribute[])assembly.GetCustomAttributes(attributeType, inherit);
-            }
-
-            throw new ArgumentException(string.Format("Actual value {0} must be a MemberInfo, ParameterInfo or Assembly.", actual), "actual");
-#endif
-            }
-
         }
+    }
 }

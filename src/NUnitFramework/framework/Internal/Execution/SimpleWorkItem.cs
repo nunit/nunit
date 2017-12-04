@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
                 // users may create their own command wrappers, etc.
                 // we have to protect against unhandled exceptions.
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // If a timeout is specified, create a TimeoutCommand
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
                 // Timeout set at a higher level
                 int timeout = Context.TestCaseTimeout;
 

@@ -142,7 +142,7 @@ using System.Text.RegularExpressions;
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
 using NUnit.Compatibility;
 #else
 using System.Security.Permissions;
@@ -153,17 +153,7 @@ using System.Runtime.Serialization;
 using System.Linq;
 #endif
 
-#if TEST
-using NDesk.Options;
-#endif
-
-#if NUNIT_CONSOLE || NUNITLITE || NUNIT_ENGINE
 namespace NUnit.Options
-#elif NDESK_OPTIONS
-namespace NDesk.Options
-#else
-namespace Mono.Options
-#endif
 {
     public class OptionValueCollection : IList, IList<string> {
 
@@ -362,7 +352,7 @@ namespace Mono.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType &&
                 !tt.GetTypeInfo().IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
@@ -374,13 +364,13 @@ namespace Mono.Options
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -490,7 +480,7 @@ namespace Mono.Options
         }
     }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [Serializable]
 #endif
     public class OptionException : Exception
@@ -513,7 +503,7 @@ namespace Mono.Options
             this.option = optionName;
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -525,7 +515,7 @@ namespace Mono.Options
             get {return this.option;}
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {

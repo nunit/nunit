@@ -30,10 +30,7 @@ using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Interfaces;
-
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Security.Principal;
-#endif
 
 #if ASYNC
 using System.Threading.Tasks;
@@ -51,8 +48,11 @@ namespace NUnit.Framework.Internal
         private TestExecutionContext _setupContext;
         private ResultState _fixtureResult;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         string originalDirectory;
+
+#if !NETCOREAPP1_1
+        CultureInfo originalCulture;
+        CultureInfo originalUICulture;
         IPrincipal originalPrincipal;
 #endif
 
@@ -85,11 +85,11 @@ namespace NUnit.Framework.Internal
         {
             _setupContext = TestExecutionContext.CurrentContext;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+            originalDirectory = Directory.GetCurrentDirectory();
+
+#if !NETCOREAPP1_1
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
-
-            originalDirectory = Environment.CurrentDirectory;
             originalPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -97,13 +97,11 @@ namespace NUnit.Framework.Internal
         [TearDown]
         public void Cleanup()
         {
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+            Directory.SetCurrentDirectory(originalDirectory);
+
+#if !NETCOREAPP1_1
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
-#endif
-
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-            Environment.CurrentDirectory = originalDirectory;
             Thread.CurrentPrincipal = originalPrincipal;
 #endif
 
@@ -118,7 +116,7 @@ namespace NUnit.Framework.Internal
                 "Cannot access CurrentResult in TearDown");
         }
 
-        #region CurrentContext
+#region CurrentContext
 
 #if ASYNC
         [Test]
@@ -141,7 +139,6 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void CurrentContextFlowsToUserCreatedThread()
         {
@@ -157,11 +154,10 @@ namespace NUnit.Framework.Internal
 
             Assert.That(threadContext, Is.Not.Null.And.SameAs(TestExecutionContext.CurrentContext));
         }
-#endif
 
 #endregion
 
-        #region CurrentTest
+#region CurrentTest
 
         [Test]
         public void FixtureSetUpCanAccessFixtureName()
@@ -321,7 +317,7 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PARALLEL
         [Test]
         public void TestHasWorkerWhenParallel()
         {
@@ -331,9 +327,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region CurrentResult
+#region CurrentResult
 
         [Test]
         public void CanAccessResultName()
@@ -408,9 +404,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region StartTime
+#region StartTime
 
         [Test]
         public void CanAccessStartTime()
@@ -431,9 +427,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region StartTicks
+#region StartTicks
 
         [Test]
         public void CanAccessStartTicks()
@@ -454,9 +450,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region OutWriter
+#region OutWriter
 
         [Test]
         public void CanAccessOutWriter()
@@ -477,9 +473,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region TestObject
+#region TestObject
 
         [Test]
         public void CanAccessTestObject()
@@ -500,9 +496,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region StopOnError
+#region StopOnError
 
         [Test]
         public void CanAccessStopOnError()
@@ -522,9 +518,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Listener
+#region Listener
 
         [Test]
         public void CanAccessListener()
@@ -545,9 +541,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Dispatcher
+#region Dispatcher
 
         [Test]
         public void CanAccessDispatcher()
@@ -568,9 +564,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region ParallelScope
+#region ParallelScope
 
         [Test]
         public void CanAccessParallelScope()
@@ -591,9 +587,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region TestWorker
+#region TestWorker
 
 #if PARALLEL
         [Test]
@@ -619,9 +615,9 @@ namespace NUnit.Framework.Internal
 #endif
 #endif
 
-        #endregion
+#endregion
 
-        #region RandomGenerator
+#region RandomGenerator
 
         [Test]
         public void CanAccessRandomGenerator()
@@ -642,9 +638,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region AssertCount
+#region AssertCount
 
         [Test]
         public void CanAccessAssertCount()
@@ -668,9 +664,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region MultipleAssertLevel
+#region MultipleAssertLevel
 
         [Test]
         public void CanAccessMultipleAssertLevel()
@@ -698,9 +694,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region TestCaseTimeout
+#region TestCaseTimeout
 
         [Test]
         public void CanAccessTestCaseTimeout()
@@ -721,9 +717,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region UpstreamActions
+#region UpstreamActions
 
         [Test]
         public void CanAccessUpstreamActions()
@@ -744,14 +740,11 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region CurrentCulture and CurrentUICulture
+#region CurrentCulture and CurrentUICulture
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-        CultureInfo originalCulture;
-        CultureInfo originalUICulture;
-
+#if !NETCOREAPP1_1
         [Test]
         public void CanAccessCurrentCulture()
         {
@@ -835,9 +828,9 @@ namespace NUnit.Framework.Internal
 
 #endregion
 
-        #region CurrentPrincipal
+#region CurrentPrincipal
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test]
         public void CanAccessCurrentPrincipal()
         {
@@ -881,9 +874,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region ValueFormatter
+#region ValueFormatter
 
         [Test]
         public void SetAndRestoreValueFormatter()
@@ -909,9 +902,9 @@ namespace NUnit.Framework.Internal
             Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
         }
 
-        #endregion
+#endregion
 
-        #region SingleThreaded
+#region SingleThreaded
 
         [Test]
         public void SingleThreadedDefaultsToFalse()
@@ -927,9 +920,9 @@ namespace NUnit.Framework.Internal
             Assert.True(new TestExecutionContext(parent).IsSingleThreaded);
         }
 
-        #endregion
+#endregion
 
-        #region ExecutionStatus
+#region ExecutionStatus
 
         [Test]
         public void ExecutionStatusIsPushedToHigherContext()
@@ -965,11 +958,11 @@ namespace NUnit.Framework.Internal
             Assert.That(rightContext.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-        #endregion
+#endregion
 
-        #region Cross-domain Tests
+#region Cross-domain Tests
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
@@ -991,14 +984,14 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
 #if ASYNC
         private async Task YieldAsync()
         {
-#if NET_4_0
+#if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();
@@ -1007,7 +1000,7 @@ namespace NUnit.Framework.Internal
 
         private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
         {
-#if NET_4_0
+#if NET40
             return TaskEx.WhenAll(tasks);
 #else
             return Task.WhenAll(tasks);
@@ -1021,10 +1014,10 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
     }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
     [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {

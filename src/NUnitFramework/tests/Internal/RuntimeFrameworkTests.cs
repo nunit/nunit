@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 using System;
 using System.Reflection;
 
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
             Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
         }
 
-#if NET_4_5
+#if NET45
         [Test]
         public void TargetFrameworkIsSetCorrectly()
         {
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
             var uriStr = uri.ToString();
             Assert.AreEqual( "http://host.com/path./", uriStr );
         }
-#elif NET_4_0
+#elif NET40
         [Test]
         [Platform(Exclude = "Mono", Reason = "Mono does not run assemblies targeting 4.0 in compatibility mode")]
         public void RunsIn40CompatibilityModeWhenCompiled40()

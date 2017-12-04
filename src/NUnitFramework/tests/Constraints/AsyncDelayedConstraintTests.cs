@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if (NET_4_0 || NET_4_5 || NETSTANDARD1_6)
+#if ASYNC
 using System;
 using System.Threading.Tasks;
 
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
 		}
 
 		[Test]
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
         [Platform(Exclude="Linux", Reason="Intermittent failure under Linux")]
 #endif
 		public void SyntaxError()
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Constraints
 
 		private static async Task<int> One()
 		{
-#if NET_4_0
+#if NET40
             return await TaskEx.Run(() => 1);
 #else
 			return await Task.Run(() => 1);

@@ -27,6 +27,7 @@ using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
 {
+#if !NETSTANDARD1_6
     /// <summary>
     /// SimpleWorkItemDispatcher handles execution of WorkItems by
     /// directly executing them. It is provided so that a dispatcher
@@ -35,7 +36,6 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItemDispatcher : IWorkItemDispatcher
     {
-
         // The first WorkItem to be dispatched, assumed to be top-level item
         private WorkItem _topLevelWorkItem;
 
@@ -105,4 +105,5 @@ namespace NUnit.Framework.Internal.Execution
         }
         #endregion
     }
+#endif
 }

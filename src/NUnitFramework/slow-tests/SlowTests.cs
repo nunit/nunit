@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -61,11 +61,7 @@ namespace NUnit.Tests
 
         private static void Delay()
         {
-#if NETSTANDARD1_3
-            System.Threading.Tasks.Task.Delay(DELAY);
-#else
             System.Threading.Thread.Sleep(DELAY);
-#endif
         }
     }
 }
