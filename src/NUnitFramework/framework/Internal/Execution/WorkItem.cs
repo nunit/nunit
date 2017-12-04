@@ -132,11 +132,6 @@ namespace NUnit.Framework.Internal.Execution
         public WorkItemState State { get; private set; }
 
         /// <summary>
-        /// Should the test run on the main thread or not. It is true when the setting RunOnMainThread is set to true.
-        /// </summary>
-        public bool RunsOnMainThread { get; internal set; }
-
-        /// <summary>
         /// The test being executed by the work item
         /// </summary>
         public Test Test { get; private set; }

@@ -236,9 +236,6 @@ namespace NUnit.Framework.Api
             TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
-            if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread))
-                TopLevelWorkItem.RunsOnMainThread = (bool)Settings[FrameworkPackageSettings.RunOnMainThread];
-
             StartRun(listener);
         }
 
@@ -346,16 +343,22 @@ namespace NUnit.Framework.Api
 
             // Set the listener - overriding runners may replace this
             Context.Listener = listener;
-
-#if PARALLEL
+#if NETSTANDARD1_3 || NETSTANDARD1_6
+            Context.Dispatcher = new MainThreadWorkItemDispatcher();
+#else
+    #if PARALLEL
             int levelOfParallelism = GetLevelOfParallelism();
 
             if (levelOfParallelism > 0)
                 Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+            else if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
+                     (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
+                Context.Dispatcher = new MainThreadWorkItemDispatcher();
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
-#else
+    #else
             Context.Dispatcher = new SimpleWorkItemDispatcher();
+    #endif
 #endif
         }
 
@@ -413,6 +416,6 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

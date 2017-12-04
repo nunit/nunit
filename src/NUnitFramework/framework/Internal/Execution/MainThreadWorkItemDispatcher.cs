@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -33,14 +34,8 @@ namespace NUnit.Framework.Internal.Execution
     /// is always available in the context, thereby simplifying the
     /// code needed to run child tests.
     /// </summary>
-    public class SimpleWorkItemDispatcher : IWorkItemDispatcher
+    public class MainThreadWorkItemDispatcher : IWorkItemDispatcher
     {
-
-        // The first WorkItem to be dispatched, assumed to be top-level item
-        private WorkItem _topLevelWorkItem;
-
-        // Thread used to run and cancel tests
-        private Thread _runnerThread;
 
         #region IWorkItemDispatcher Members
 
@@ -55,13 +50,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-            _topLevelWorkItem = topLevelWorkItem;
-            _runnerThread = new Thread(RunnerThreadProc);
+            Dispatch(topLevelWorkItem);
 
-            if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
-                _runnerThread.SetApartmentState(ApartmentState.STA);
-
-            _runnerThread.Start();
         }
 
         /// <summary>
@@ -76,16 +66,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 
-        private void RunnerThreadProc()
-        {
-            _topLevelWorkItem.Execute();
-        }
-
-
-
-        private object cancelLock = new object();
-
-
         /// <summary>
         /// Cancel (abort or stop) the ongoing run.
         /// If no run is in process, the call has no effect.
@@ -93,15 +73,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
         public void CancelRun(bool force)
         {
-            lock (cancelLock)
-            {
-                if (_topLevelWorkItem != null)
-                {
-                    _topLevelWorkItem.Cancel(force);
-                    if (force)
-                        _topLevelWorkItem = null;
-                }
-            }
+            throw new NotSupportedException();
         }
         #endregion
     }
