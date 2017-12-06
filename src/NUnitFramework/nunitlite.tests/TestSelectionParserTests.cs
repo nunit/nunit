@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using NUnit.Framework;
 
@@ -77,12 +75,8 @@ namespace NUnit.Common.Tests
         {
             Assert.That(_parser.Parse(input), Is.EqualTo(output));
 
-#if NETCOREAPP1_1
-            Assert.DoesNotThrow(() => System.Xml.Linq.XDocument.Parse(output));
-#else
             XmlDocument doc = new XmlDocument();
             Assert.DoesNotThrow(() => doc.LoadXml(output));
-#endif
         }
 
         [TestCase(null, typeof(ArgumentNullException))]

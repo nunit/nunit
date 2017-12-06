@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
 using System;
 using System.IO;
 using System.Text;
@@ -47,14 +46,12 @@ namespace NUnitLite.Tests
             Assert.NotNull(result);
 
             StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
-            new NUnit2XmlOutputWriter().WriteResultFile(result, writer, null, null);
-            writer.Close();
+            using (StringWriter writer = new StringWriter(sb))
+                new NUnit2XmlOutputWriter().WriteResultFile(result, writer, null, null);
 
 #if DEBUG
-            StreamWriter sw = new StreamWriter("MockAssemblyResult.xml");
-            sw.WriteLine(sb.ToString());
-            sw.Close();
+            using (StreamWriter sw = new StreamWriter(File.OpenRead("MockAssemblyResult.xml")))
+                sw.WriteLine(sb.ToString());
 #endif
 
             doc = new XmlDocument();
@@ -148,11 +145,13 @@ namespace NUnitLite.Tests
         [TestCase("nunit-version")]
         [TestCase("clr-version")]
         [TestCase("os-version")]
-        [TestCase("platform")]
         [TestCase("cwd")]
         [TestCase("machine-name")]
+#if !NETCOREAPP1_1
+        [TestCase("platform")]
         [TestCase("user")]
         [TestCase("user-domain")]
+#endif
         public void Environment_HasRequiredAttribute(string name)
         {
             RequiredAttribute(envNode, name);
@@ -173,7 +172,7 @@ namespace NUnitLite.Tests
 
             try
             {
-                culture = System.Globalization.CultureInfo.CreateSpecificCulture(cultureName);
+                culture = new System.Globalization.CultureInfo(cultureName);
             }
             catch(ArgumentException)
             {
@@ -229,4 +228,3 @@ namespace NUnitLite.Tests
 #endregion
     }
 }
-#endif

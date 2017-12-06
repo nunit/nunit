@@ -21,6 +21,10 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
+    <PackageReference Include="System.Xml.XPath.XmlDocument" version="4.3.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectCapability Include="TestContainer" />
   </ItemGroup>
