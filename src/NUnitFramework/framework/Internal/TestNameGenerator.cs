@@ -246,7 +246,7 @@ namespace NUnit.Framework.Internal
                             if (i > 0)
                                 builder.Append(", ");
 
-                            var valueDisplayString = GetDisplayString(argArray.GetValue(i), stringMax);
+                            string valueDisplayString = GetDisplayString(argArray.GetValue(i), stringMax);
                             builder.Append(valueDisplayString);
                         }
 
