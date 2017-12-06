@@ -87,12 +87,14 @@ namespace NUnit.Framework.Constraints
         /// <param name="o">The object to remove.</param>
         public void TryRemove(object o)
         {
-            for (int index = 0; index < _missingItems.Count; index++)
+            for (int index = _missingItems.Count - 1; index >= 0; index--)
+            {
                 if (ItemsEqual(_missingItems[index], o))
                 {
                     _missingItems.RemoveAt(index);
                     return;
                 }
+            }
 
             _extraItems.Add(o);
         }
