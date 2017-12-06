@@ -345,12 +345,12 @@ namespace NUnit.Framework.Attributes
             bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
 
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodWitExcludePlatform");
+                typeof(TestCaseAttributeFixture), "MethodWithExcludePlatform");
 
-            Test testCase1 = TestFinder.Find("MethodWitExcludePlatform(1)", suite, false);
-            Test testCase2 = TestFinder.Find("MethodWitExcludePlatform(2)", suite, false);
-            Test testCase3 = TestFinder.Find("MethodWitExcludePlatform(3)", suite, false);
-            Test testCase4 = TestFinder.Find("MethodWitExcludePlatform(4)", suite, false);
+            Test testCase1 = TestFinder.Find("MethodWithExcludePlatform(1)", suite, false);
+            Test testCase2 = TestFinder.Find("MethodWithExcludePlatform(2)", suite, false);
+            Test testCase3 = TestFinder.Find("MethodWithExcludePlatform(3)", suite, false);
+            Test testCase4 = TestFinder.Find("MethodWithExcludePlatform(4)", suite, false);
             if (isLinux)
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
@@ -374,6 +374,22 @@ namespace NUnit.Framework.Attributes
             }
         }
 #endif
+
+        [Test]
+        public void TestNameIntrospectsArrayValues()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), "MethodWithArrayArguments");
+
+            Assert.That(suite.TestCaseCount, Is.EqualTo(3));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
+                Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, ""text"", null ])"));
+                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ 2, 3 ], 4 ])"));
+            });
+        }
 
 
         #region Nullable<> tests

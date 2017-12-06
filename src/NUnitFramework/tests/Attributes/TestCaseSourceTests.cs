@@ -335,6 +335,22 @@ namespace NUnit.Framework.Attributes
 
         static string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
 
+        [Test]
+        public void TestNameIntrospectsArrayValues()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), "MethodWithArrayArguments");
+
+            Assert.That(suite.TestCaseCount, Is.EqualTo(3));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, ""text"", System.Object ])"));
+                Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
+                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ 2, 3 ], 4 ])"));
+            });
+        }
+
         #region Sources used by the tests
         static object[] MyData = new object[] {
             new object[] { 12, 3, 4 },
@@ -351,6 +367,13 @@ namespace NUnit.Framework.Attributes
             new int[] { 12 },
             new int[] { 12, 4 },
             new int[] { 12, 6, 2 }
+        };
+
+        static object[] ComplexArrayBasedTestInput = new[]
+        {
+            new object[] { 1, "text", new object() },
+            new object[0],
+            new object[] { 1, new int[] { 2, 3 }, 4 }
         };
 
         public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)

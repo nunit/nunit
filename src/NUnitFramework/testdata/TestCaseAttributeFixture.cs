@@ -96,9 +96,16 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         [TestCase(2, ExcludePlatform = "Linux")]
         [TestCase(3, ExcludePlatform = "MacOSX")]
         [TestCase(4, ExcludePlatform = "XBox")]
-        public void MethodWitExcludePlatform(int num)
+        public void MethodWithExcludePlatform(int num)
         {
         }
 #endif
+
+        [TestCase((object)new object[] { })]
+        [TestCase((object)new object[] { 1, "text", null })]
+        [TestCase((object)new object[] { 1, new int[] { 2, 3 }, 4 })]
+        public void MethodWithArrayArguments(object o)
+        {
+        }
     }
 }

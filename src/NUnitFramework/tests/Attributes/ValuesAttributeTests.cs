@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities;
 
 #if NETCOREAPP1_1
 using System.Linq;
@@ -94,5 +95,30 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
+
+
+        [Test]
+        public void MethodWithArrayArguments([Values(
+            (object)new object[] { 1, "text", null },
+            (object)new object[0],
+            (object)new object[] { 1, new int[] { 2, 3 }, 4 })] object o)
+        {
+        }
+
+        [Test]
+        public void TestNameIntrospectsArrayValues()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                GetType(), "MethodWithArrayArguments");
+
+            Assert.That(suite.TestCaseCount, Is.EqualTo(3));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, ""text"", null ])"));
+                Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
+                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ 2, 3 ], 4 ])"));
+            });
+        }
     }
 }

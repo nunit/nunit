@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -231,7 +231,30 @@ namespace NUnit.Framework.Internal
                     ? "null"
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
 
-                if (arg is double)
+                Array argArray = arg as Array;
+                if (argArray != null)
+                {
+                    if (argArray.Length == 0)
+                        display = "[]";
+                    else
+                    {
+                        StringBuilder builder = new StringBuilder();
+                        builder.Append("[ ");
+
+                        for (int i = 0; i < argArray.Length; i++)
+                        {
+                            if (i > 0)
+                                builder.Append(", ");
+
+                            var valueDisplayString = GetDisplayString(argArray.GetValue(i), stringMax);
+                            builder.Append(valueDisplayString);
+                        }
+
+                        builder.Append(" ]");
+                        display = builder.ToString();
+                    }
+                }
+                else if (arg is double)
                 {
                     double d = (double)arg;
 
