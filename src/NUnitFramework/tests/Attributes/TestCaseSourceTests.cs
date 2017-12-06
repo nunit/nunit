@@ -369,13 +369,6 @@ namespace NUnit.Framework.Attributes
             new int[] { 12, 6, 2 }
         };
 
-        static object[] ComplexArrayBasedTestInput = new[]
-        {
-            new object[] { 1, "text", new object() },
-            new object[0],
-            new object[] { 1, new int[] { 2, 3 }, 4 }
-        };
-
         public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {
             yield return new object[] { inject1, inject2, inject3 };
