@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -310,7 +310,7 @@ namespace NUnit.Framework.Compatibility
         public void CanGetStaticMethodsOnBase()
         {
             var result = typeof(DerivedTestClass).GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-            foreach(var info in result)
+            foreach (var info in result)
             {
                 if (info.Name == "StaticMethod")
                     Assert.Pass();
@@ -343,7 +343,6 @@ namespace NUnit.Framework.Compatibility
             Assert.That(minfo != null, Is.EqualTo(shouldFind));
         }
 
-#if NETCOREAPP1_1
         [Test]
         public void CanGetAttributesUsingAnInterface()
         {
@@ -359,7 +358,6 @@ namespace NUnit.Framework.Compatibility
             var result = typeof(NoGetterPropertyDerivedClass).GetMember("NoGetter", BindingFlags.Default);
             Assert.That(result, Is.Not.Null);
         }
-#endif
     }
 
     public class BaseTestClass : IDisposable
@@ -447,8 +445,6 @@ namespace NUnit.Framework.Compatibility
         }
     }
 
-
-#if NETCOREAPP1_1
     public class NoGetterPropertyBaseClass
     {
         public string NoGetter { set { } }
@@ -457,5 +453,4 @@ namespace NUnit.Framework.Compatibility
     public class NoGetterPropertyDerivedClass : NoGetterPropertyBaseClass
     {
     }
-#endif
 }
