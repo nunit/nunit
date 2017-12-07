@@ -191,11 +191,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-#if NETSTANDARD1_6
             return Type.GetTypeInfo().GetAttributes<T>(inherit).ToArray();
-#else
-            return (T[])Type.GetCustomAttributes(typeof(T), inherit);
-#endif
         }
 
         /// <summary>

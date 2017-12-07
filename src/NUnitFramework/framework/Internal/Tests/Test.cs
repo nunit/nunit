@@ -333,35 +333,6 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
-#if NETSTANDARD1_6
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied ICustomAttributeProvider, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        /// <param name="provider">An object deriving from MemberInfo</param>
-        public void ApplyAttributesToTest(MemberInfo provider)
-        {
-            foreach (IApplyToTest iApply in provider.GetAttributes<IApplyToTest>(true))
-                iApply.ApplyToTest(this);
-        }
-
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied ICustomAttributeProvider, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        /// <param name="provider">An object deriving from MemberInfo</param>
-        public void ApplyAttributesToTest(Assembly provider)
-        {
-            foreach (IApplyToTest iApply in provider.GetAttributes<IApplyToTest>())
-                iApply.ApplyToTest(this);
-        }
-#else
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
@@ -372,10 +343,9 @@ namespace NUnit.Framework.Internal
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            foreach (IApplyToTest iApply in provider.GetCustomAttributes(typeof(IApplyToTest), true))
+            foreach (IApplyToTest iApply in provider.GetCustomAttributes(true).OfType<IApplyToTest>())
                 iApply.ApplyToTest(this);
         }
-#endif
 
         /// <summary>
         /// Mark the test as Invalid (not runnable) specifying a reason
@@ -395,14 +365,10 @@ namespace NUnit.Framework.Internal
         public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
         {
             if (Method != null)
-#if NETSTANDARD1_6
-                return Method.GetCustomAttributes<TAttr>(inherit).ToArray();
-#else
-                return (TAttr[])Method.MethodInfo.GetCustomAttributes(typeof(TAttr), inherit);
-#endif
+                return Method.GetCustomAttributes<TAttr>(inherit);
 
             if (TypeInfo != null)
-                return TypeInfo.GetCustomAttributes<TAttr>(inherit).ToArray();
+                return TypeInfo.GetCustomAttributes<TAttr>(inherit);
 
             return new TAttr[0];
         }
@@ -443,17 +409,10 @@ namespace NUnit.Framework.Internal
             {
                 actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
 
-#if NETSTANDARD1_6
                 foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
-                    actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false).ToArray());
+                    actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false));
 
-                actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false).ToArray());
-#else
-                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
-                    actions.AddRange((ITestAction[])interfaceType.GetTypeInfo().GetCustomAttributes(typeof(ITestAction), false));
-
-                actions.AddRange((ITestAction[])type.GetTypeInfo().GetCustomAttributes(typeof(ITestAction), false));
-#endif
+                actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false));
             }
 
             return actions.ToArray();

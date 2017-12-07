@@ -22,14 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
-
-#if NETSTANDARD1_6
-using System.Linq;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -87,11 +83,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-#if NETSTANDARD1_6
             return ParameterInfo.GetAttributes<T>(inherit).ToArray();
-#else
-            return (T[])ParameterInfo.GetCustomAttributes(typeof(T), inherit);
-#endif
         }
 
         /// <summary>
