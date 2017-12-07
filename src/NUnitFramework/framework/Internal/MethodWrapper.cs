@@ -168,7 +168,7 @@ namespace NUnit.Framework.Internal
         public bool IsDefined<T>(bool inherit)
         {
 #if NETSTANDARD1_6
-            return MethodInfo.GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
+            return MethodInfo.GetCustomAttributes(inherit).Any(typeof(T).IsInstanceOfType);
 #else
             return MethodInfo.IsDefined(typeof(T), inherit);
 #endif

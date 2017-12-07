@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal
         {
 #if NETSTANDARD1_6
             return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
-                .Any(m => m.GetCustomAttributes(false).Any(a => attributeType.IsAssignableFrom(a.GetType())));
+                .Any(m => m.GetCustomAttributes(false).Any(attributeType.IsInstanceOfType));
 #else
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {

@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
                     continue;
                 }
 
-                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
+                if (targetType.GetTypeInfo().IsInstanceOfType(arg))
                 {
                     continue;
                 }
