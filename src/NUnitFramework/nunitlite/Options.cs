@@ -138,19 +138,14 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using NUnit.Compatibility;
 
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if NETSTANDARD1_6
-using NUnit.Compatibility;
-#else
+#if !NETSTANDARD1_6
 using System.Security.Permissions;
 using System.Runtime.Serialization;
-#endif
-
-#if LINQ
-using System.Linq;
 #endif
 
 namespace NUnit.Options
@@ -352,17 +347,10 @@ namespace NUnit.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-#if NETSTANDARD1_6
             bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType &&
                 !tt.GetTypeInfo().IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
-#else
-            bool nullable = tt.IsValueType && tt.IsGenericType &&
-                !tt.IsGenericTypeDefinition &&
-                tt.GetGenericTypeDefinition () == typeof (Nullable<>);
-            Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
-#endif
 
 #if !NETSTANDARD1_6
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
@@ -719,35 +707,6 @@ namespace NUnit.Options
             return new OptionContext (this);
         }
 
-#if LINQ
-        public List<string> Parse (IEnumerable<string> arguments)
-        {
-            bool process = true;
-            OptionContext c = CreateOptionContext ();
-            c.OptionIndex = -1;
-            var def = GetOptionForName ("<>");
-            var unprocessed =
-                from argument in arguments
-                where ++c.OptionIndex >= 0 && (process || def != null)
-                    ? process
-                        ? argument == "--"
-                            ? (process = false)
-                            : !Parse (argument, c)
-                                ? def != null
-                                    ? Unprocessed (null, def, c, argument)
-                                    : true
-                                : false
-                        : def != null
-                            ? Unprocessed (null, def, c, argument)
-                            : true
-                    : true
-                select argument;
-            List<string> r = unprocessed.ToList ();
-            if (c.Option != null)
-                c.Option.Invoke (c);
-            return r;
-        }
-#else
         public List<string> Parse (IEnumerable<string> arguments)
         {
             OptionContext c = CreateOptionContext ();
@@ -772,7 +731,6 @@ namespace NUnit.Options
                 c.Option.Invoke (c);
             return unprocessed;
         }
-#endif
 
         private static bool Unprocessed (ICollection<string> extra, Option def, OptionContext c, string argument)
         {

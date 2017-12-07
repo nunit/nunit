@@ -364,37 +364,26 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="targetNode">Target node</param>
         /// <returns>The new node</returns>
-#if NETSTANDARD1_6
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
             targetNode.ChildNodes.Insert(0, env);
 
-            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(FrameworkController).GetTypeInfo().Assembly);
-            env.AddAttribute("framework-version", assemblyName.Version.ToString());
-            env.AddAttribute("cwd", Directory.GetCurrentDirectory());
-            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
-            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("framework-version", typeof(FrameworkController).GetTypeInfo().Assembly.GetName().Version.ToString());
+#if NETSTANDARD1_6
             env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
             env.AddAttribute("os-version", RuntimeInformation.OSDescription);
-            env.AddAttribute("machine-name", Environment.MachineName);
-            env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
-            return env;
-        }
 #else
-            public static TNode InsertEnvironmentElement(TNode targetNode)
-        {
-            TNode env = new TNode("environment");
-            targetNode.ChildNodes.Insert(0, env);
-
-            env.AddAttribute("framework-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             env.AddAttribute("clr-version", Environment.Version.ToString());
             env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
-            env.AddAttribute("cwd", Environment.CurrentDirectory);
+#endif
+            env.AddAttribute("cwd", Directory.GetCurrentDirectory());
             env.AddAttribute("machine-name", Environment.MachineName);
+#if !NETSTANDARD1_6
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
+#endif
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
             env.AddAttribute("os-architecture", GetProcessorArchitecture());
@@ -406,7 +395,6 @@ namespace NUnit.Framework.Api
         {
             return IntPtr.Size == 8 ? "x64" : "x86";
         }
-#endif
 
         /// <summary>
         /// Inserts settings element
