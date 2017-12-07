@@ -372,13 +372,13 @@ namespace NUnit.Framework
 
                 if (targetType.IsAssignableFrom(arg.GetType()))
                     continue;
-#if !NETSTANDARD1_6
-                if (arg is DBNull)
+
+                if (arg.GetType().FullName == "System.DBNull")
                 {
                     arglist[i] = null;
                     continue;
                 }
-#endif
+
                 bool convert = false;
 
                 if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
