@@ -21,8 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
-
+#if PARALLEL && PLATFORM
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.TestUtilities;

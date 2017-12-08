@@ -402,7 +402,7 @@ namespace NUnit.Framework
         }
 
         [TestCase(null)]
-#if !NETCOREAPP1_1
+#if PLATFORM
         [TestCase("bad<>path.png", IncludePlatform = "Win")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)

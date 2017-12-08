@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
 		}
 
 		[Test]
-#if !NETCOREAPP1_1
+#if PLATFORM
         [Platform(Exclude="Linux", Reason="Intermittent failure under Linux")]
 #endif
 		public void SyntaxError()

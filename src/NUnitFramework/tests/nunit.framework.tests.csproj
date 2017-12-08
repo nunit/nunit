@@ -2,7 +2,7 @@
 
   <Import Project="..\Common.props" />
   <PropertyGroup>
-    <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
     <DebugType>Full</DebugType>
   </PropertyGroup>
@@ -14,7 +14,7 @@
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
   </ItemGroup>
@@ -29,7 +29,7 @@
     <PackageReference Include="System.ValueTuple" version="4.3.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp1.1'">
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>

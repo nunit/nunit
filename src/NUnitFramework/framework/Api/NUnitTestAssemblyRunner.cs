@@ -29,9 +29,13 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
+
 #if !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
+#endif
+
+#if NET20 || NET35 || NET40 || NET45
 using System.Windows.Forms;
 #endif
 
@@ -56,7 +60,7 @@ namespace NUnit.Framework.Api
         private EventPump _pump;
 #endif
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
@@ -67,9 +71,9 @@ namespace NUnit.Framework.Api
             _builder = builder;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
 #if PARALLEL
         /// <summary>
@@ -133,9 +137,9 @@ namespace NUnit.Framework.Api
         /// </summary>
         private TestExecutionContext Context { get; set; }
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Loads the tests found in an Assembly
@@ -265,9 +269,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         /// <summary>
         /// Initiate the test run.
@@ -316,7 +320,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-#if !NETSTANDARD1_6
+#if NET20 || NET35 || NET40 || NET45
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -396,7 +400,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if !NETSTANDARD1_6
+#if NET20 || NET35 || NET40 || NET45
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -410,6 +414,6 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

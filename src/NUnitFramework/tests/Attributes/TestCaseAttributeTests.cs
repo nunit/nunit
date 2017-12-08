@@ -301,7 +301,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
 
-#if !NETCOREAPP1_1
+#if PLATFORM
         [Test]
         public void CanIncludePlatform()
         {
@@ -345,12 +345,12 @@ namespace NUnit.Framework.Attributes
             bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
 
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodWitExcludePlatform");
+                typeof(TestCaseAttributeFixture), "MethodWithExcludePlatform");
 
-            Test testCase1 = TestFinder.Find("MethodWitExcludePlatform(1)", suite, false);
-            Test testCase2 = TestFinder.Find("MethodWitExcludePlatform(2)", suite, false);
-            Test testCase3 = TestFinder.Find("MethodWitExcludePlatform(3)", suite, false);
-            Test testCase4 = TestFinder.Find("MethodWitExcludePlatform(4)", suite, false);
+            Test testCase1 = TestFinder.Find("MethodWithExcludePlatform(1)", suite, false);
+            Test testCase2 = TestFinder.Find("MethodWithExcludePlatform(2)", suite, false);
+            Test testCase3 = TestFinder.Find("MethodWithExcludePlatform(3)", suite, false);
+            Test testCase4 = TestFinder.Find("MethodWithExcludePlatform(4)", suite, false);
             if (isLinux)
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));

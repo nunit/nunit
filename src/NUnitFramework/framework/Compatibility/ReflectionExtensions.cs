@@ -28,7 +28,7 @@ using System.Linq;
 
 namespace NUnit.Compatibility
 {
-#if !NET45 && !NETSTANDARD1_6
+#if NET20 || NET35 || NET40
     /// <summary>
     /// Provides NUnit specific extensions to aid in Reflection
     /// across multiple frameworks
