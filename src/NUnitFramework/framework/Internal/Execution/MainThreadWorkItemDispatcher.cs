@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// This method is not supported for 
         /// this dispatcher. Using it will throw a
-        /// NotSupportedException
+        /// NotSupportedException.
         /// </summary>
         /// <param name="force">Not used</param>
         /// <exception cref="System.NotSupportedException">If used, it will always throw this.</exception>
