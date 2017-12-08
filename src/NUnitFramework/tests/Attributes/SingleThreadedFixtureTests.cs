@@ -40,11 +40,13 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
+#if THREAD_ABORT
         [Test, Timeout(100)]
         public void TestWithTimeoutIsValid()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
+#endif
 
         [Test]
         public void TestWithRequiresThreadIsInvalid()

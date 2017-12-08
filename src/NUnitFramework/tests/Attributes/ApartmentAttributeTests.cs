@@ -45,7 +45,9 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+#if THREAD_ABORT
         [Timeout(10000)]
+#endif
         [Apartment(ApartmentState.STA)]
         public void TestWithTimeoutAndSTARunsInSTA()
         {
@@ -53,7 +55,9 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestFixture]
+#if THREAD_ABORT
         [Timeout(10000)]
+#endif
         [Apartment(ApartmentState.STA)]
         public class FixtureWithTimeoutRequiresSTA
         {

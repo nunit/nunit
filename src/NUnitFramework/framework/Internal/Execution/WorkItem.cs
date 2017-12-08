@@ -271,7 +271,10 @@ namespace NUnit.Framework.Internal.Execution
             WorkItemComplete();
         }
 
-        private object threadLock = new object();
+#if THREAD_ABORT
+        private readonly object threadLock = new object();
+        private int nativeThreadId;
+#endif
 
         /// <summary>
         /// Cancel (abort or stop) a WorkItem
@@ -282,7 +285,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Context != null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
             if (force)
             {
                 Thread tThread;
@@ -313,9 +316,9 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region IDisposable Implementation
+#region IDisposable Implementation
 
         /// <summary>
         /// Standard Dispose
@@ -455,7 +458,6 @@ namespace NUnit.Framework.Internal.Execution
 
 #if !NETSTANDARD1_6
         private Thread thread;
-        private int nativeThreadId;
 
         private void RunOnSeparateThread(ApartmentState apartment)
         {
@@ -463,8 +465,10 @@ namespace NUnit.Framework.Internal.Execution
             {
                 thread.CurrentCulture = Context.CurrentCulture;
                 thread.CurrentUICulture = Context.CurrentUICulture;
+#if THREAD_ABORT
                 lock (threadLock)
                     nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
+#endif
                 RunOnCurrentThread();
             });
             thread.SetApartmentState(apartment);
@@ -473,7 +477,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-        private void RunOnCurrentThread()
+                private void RunOnCurrentThread()
         {
             Context.CurrentTest = this.Test;
             Context.CurrentResult = this.Result;
