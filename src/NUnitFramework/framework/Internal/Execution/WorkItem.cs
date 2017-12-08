@@ -461,13 +461,13 @@ namespace NUnit.Framework.Internal.Execution
         {
             thread = new Thread(() =>
             {
+                thread.CurrentCulture = Context.CurrentCulture;
+                thread.CurrentUICulture = Context.CurrentUICulture;
                 lock (threadLock)
                     nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
                 RunOnCurrentThread();
             });
             thread.SetApartmentState(apartment);
-            thread.CurrentCulture = Context.CurrentCulture;
-            thread.CurrentUICulture = Context.CurrentUICulture;
             thread.Start();
             thread.Join();
         }
