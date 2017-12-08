@@ -191,11 +191,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-#if NETSTANDARD1_6
             return Type.GetTypeInfo().GetAttributes<T>(inherit).ToArray();
-#else
-            return (T[])Type.GetCustomAttributes(typeof(T), inherit);
-#endif
         }
 
         /// <summary>
@@ -207,7 +203,7 @@ namespace NUnit.Framework.Internal
         public bool IsDefined<T>(bool inherit)
         {
 #if NETSTANDARD1_6
-            return Type.GetTypeInfo().GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
+            return Type.GetTypeInfo().GetCustomAttributes(inherit).Any(typeof(T).IsInstanceOfType);
 #else
             return Type.GetTypeInfo().IsDefined(typeof(T), inherit);
 #endif

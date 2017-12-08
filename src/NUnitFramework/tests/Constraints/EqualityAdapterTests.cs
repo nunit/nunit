@@ -22,33 +22,32 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// Provides methods to support consistent checking for constaints methods.
-    /// </summary>
-    internal static class ConstraintUtils
+    public static class EqualityAdapterTests
     {
-        /// <summary>
-        /// Requires that the provided object is actually of the type required.
-        /// </summary>
-        /// <param name="actual">The object to verify.</param>
-        /// <param name="paramName">Name of the parameter as passed into the checking method.</param>
-        /// <param name="allowNull">
-        /// If <see langword="true"/> and <typeparamref name="T"/> can be null, returns null rather than throwing when <paramref name="actual"/> is null.
-        /// If <typeparamref name="T"/> cannot be null, this parameter is ignored.</param>
-        /// <typeparam name="T">The type to require.</typeparam>
-        public static T RequireActual<T>(object actual, string paramName, bool allowNull = false)
+        public static IEnumerable<EqualityAdapter> EqualityAdapters()
         {
-            T result;
-            if (TypeHelper.TryCast(actual, out result) && (allowNull || result != null))
+            return new[]
             {
-                return result;
-            }
+                EqualityAdapter.For((IEqualityComparer)StringComparer.Ordinal),
+                EqualityAdapter.For((IEqualityComparer<string>)StringComparer.Ordinal),
+                EqualityAdapter.For<string, string>(StringComparer.Ordinal.Equals),
+                EqualityAdapter.For((IComparer)StringComparer.Ordinal),
+                EqualityAdapter.For((IComparer<string>)StringComparer.Ordinal),
+                EqualityAdapter.For<string>(StringComparer.Ordinal.Compare)
+            };
+        }
 
-            var actualDisplay = actual == null ? "null" : actual.GetType().Name;
-            throw new ArgumentException($"Expected: {typeof(T).Name} But was: {actualDisplay}", paramName);
+        [TestCaseSource(nameof(EqualityAdapters))]
+        public static void CanCompareWithNull(EqualityAdapter adapter)
+        {
+            Assert.That(adapter.AreEqual(null, "a"), Is.False);
+            Assert.That(adapter.AreEqual("a", null), Is.False);
+            Assert.That(adapter.AreEqual(null, null), Is.True);
         }
     }
 }

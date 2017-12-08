@@ -96,11 +96,7 @@ namespace NUnit.Framework.Internal
         public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
         {
             return Assembly != null
-#if NETSTANDARD1_6
                 ? Assembly.GetAttributes<TAttr>().ToArray()
-#else
-                ? (TAttr[])Assembly.GetCustomAttributes(typeof(TAttr), false)
-#endif
                 : new TAttr[0];
         }
     }

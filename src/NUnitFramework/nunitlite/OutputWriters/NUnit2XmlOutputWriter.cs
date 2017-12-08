@@ -22,13 +22,12 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using System.IO;
-using NUnit.Common;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 #if NETSTANDARD1_6
@@ -116,42 +115,37 @@ namespace NUnitLite
             xmlWriter.WriteEndElement();
         }
 
-#if NETSTANDARD1_6
         private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
             var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).GetTypeInfo().Assembly);
-            xmlWriter.WriteAttributeString("nunit-version", assemblyName.Version.ToString());
-            xmlWriter.WriteAttributeString("cwd", Directory.GetCurrentDirectory());
-            xmlWriter.WriteAttributeString("clr-version", RuntimeInformation.FrameworkDescription);
-            xmlWriter.WriteAttributeString("os-version", RuntimeInformation.OSDescription);
-            xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
-            xmlWriter.WriteEndElement();
-        }
-#else
-            private void WriteEnvironment()
-        {
-            xmlWriter.WriteStartElement("environment");
-            var assemblyName = AssemblyHelper.GetAssemblyName(Assembly.GetExecutingAssembly());
             xmlWriter.WriteAttributeString("nunit-version",
                                            assemblyName.Version.ToString());
+#if NETSTANDARD1_6
+            xmlWriter.WriteAttributeString("clr-version",
+                                           RuntimeInformation.FrameworkDescription);
+            xmlWriter.WriteAttributeString("os-version",
+                                           RuntimeInformation.OSDescription);
+#else
             xmlWriter.WriteAttributeString("clr-version",
                                            Environment.Version.ToString());
             xmlWriter.WriteAttributeString("os-version",
                                            OSPlatform.CurrentPlatform.ToString());
             xmlWriter.WriteAttributeString("platform",
                                            Environment.OSVersion.Platform.ToString());
+#endif
             xmlWriter.WriteAttributeString("cwd",
-                                           Environment.CurrentDirectory);
+                                           Directory.GetCurrentDirectory());
             xmlWriter.WriteAttributeString("machine-name",
                                            Environment.MachineName);
+#if !NETSTANDARD1_6
             xmlWriter.WriteAttributeString("user",
                                            Environment.UserName);
             xmlWriter.WriteAttributeString("user-domain",
                                            Environment.UserDomainName);
+#endif
             xmlWriter.WriteEndElement();
         }
-#endif
 
         private void WriteResultElement(ITestResult result)
         {
@@ -182,9 +176,7 @@ namespace NUnitLite
             xmlWriter.WriteEndElement(); // test-results
             xmlWriter.WriteEndDocument();
             xmlWriter.Flush();
-#if !NETSTANDARD1_6
-            xmlWriter.Close();
-#endif
+            ((IDisposable)xmlWriter).Dispose();
         }
 
 
@@ -341,9 +333,9 @@ namespace NUnitLite
             xmlWriter.WriteEndElement();
         }
 
-        #endregion
+#endregion
 
-        #region Output Helpers
+#region Output Helpers
         ///// <summary>
         ///// Makes string safe for xml parsing, replacing control chars with '?'
         ///// </summary>
@@ -397,6 +389,6 @@ namespace NUnitLite
                 xmlWriter.WriteCData(text);
         }
 
-        #endregion
+#endregion
     }
 }

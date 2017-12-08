@@ -61,18 +61,16 @@ namespace NUnit.Framework.Internal
                     continue;
                 }
 
-                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
+                if (targetType.GetTypeInfo().IsInstanceOfType(arg))
                 {
                     continue;
                 }
 
-#if !NETSTANDARD1_6
-                if (arg is DBNull)
+                if (arg.GetType().FullName == "System.DBNull")
                 {
                     data[i] = null;
                     continue;
                 }
-#endif
 
                 bool convert = false;
 

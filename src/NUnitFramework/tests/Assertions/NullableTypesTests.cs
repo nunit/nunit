@@ -21,12 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !MONO
 using System;
 
 namespace NUnit.Framework.Assertions
 {
-    // TODO: Test with Mono
     [TestFixture, Category("Generics")]
     public class NullableTypesTests
     {
@@ -262,4 +260,3 @@ namespace NUnit.Framework.Assertions
         }
     }
 }
-#endif

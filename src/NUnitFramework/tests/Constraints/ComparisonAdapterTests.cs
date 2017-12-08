@@ -22,33 +22,30 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// Provides methods to support consistent checking for constaints methods.
-    /// </summary>
-    internal static class ConstraintUtils
+    public static class ComparisonAdapterTests
     {
-        /// <summary>
-        /// Requires that the provided object is actually of the type required.
-        /// </summary>
-        /// <param name="actual">The object to verify.</param>
-        /// <param name="paramName">Name of the parameter as passed into the checking method.</param>
-        /// <param name="allowNull">
-        /// If <see langword="true"/> and <typeparamref name="T"/> can be null, returns null rather than throwing when <paramref name="actual"/> is null.
-        /// If <typeparamref name="T"/> cannot be null, this parameter is ignored.</param>
-        /// <typeparam name="T">The type to require.</typeparam>
-        public static T RequireActual<T>(object actual, string paramName, bool allowNull = false)
+        public static IEnumerable<ComparisonAdapter> ComparisonAdapters()
         {
-            T result;
-            if (TypeHelper.TryCast(actual, out result) && (allowNull || result != null))
+            return new[]
             {
-                return result;
-            }
+                ComparisonAdapter.Default,
+                ComparisonAdapter.For((IComparer)StringComparer.Ordinal),
+                ComparisonAdapter.For((IComparer<string>)StringComparer.Ordinal),
+                ComparisonAdapter.For<string>(StringComparer.Ordinal.Compare)
+            };
+        }
 
-            var actualDisplay = actual == null ? "null" : actual.GetType().Name;
-            throw new ArgumentException($"Expected: {typeof(T).Name} But was: {actualDisplay}", paramName);
+        [TestCaseSource(nameof(ComparisonAdapters))]
+        public static void CanCompareWithNull(ComparisonAdapter adapter)
+        {
+            Assert.That(adapter.Compare(null, "a"), Is.LessThan(0));
+            Assert.That(adapter.Compare("a", null), Is.GreaterThan(0));
+            Assert.That(adapter.Compare(null, null), Is.Zero);
         }
     }
 }
