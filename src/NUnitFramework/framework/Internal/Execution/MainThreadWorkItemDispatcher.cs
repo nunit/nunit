@@ -45,13 +45,12 @@ namespace NUnit.Framework.Internal.Execution
         public int LevelOfParallelism { get { return 0; } }
 
         /// <summary>
-        /// Start execution, creating the execution thread,
-        /// setting the top level work  and dispatching it.
+        /// Start execution, dispatching the top level
+        /// work into the main thread.
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
             Dispatch(topLevelWorkItem);
-
         }
 
         /// <summary>
@@ -65,12 +64,13 @@ namespace NUnit.Framework.Internal.Execution
                 work.Execute();
         }
 
-
         /// <summary>
-        /// Cancel (abort or stop) the ongoing run.
-        /// If no run is in process, the call has no effect.
+        /// This method is not supported for 
+        /// this dispatcher. Using it will throw a
+        /// NotSupportedException
         /// </summary>
-        /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
+        /// <param name="force">Not used</param>
+        /// <exception cref="System.NotSupportedException">If used, it will always throw this.</exception>
         public void CancelRun(bool force)
         {
             throw new NotSupportedException();

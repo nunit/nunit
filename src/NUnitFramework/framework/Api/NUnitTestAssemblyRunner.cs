@@ -349,11 +349,11 @@ namespace NUnit.Framework.Api
 #if PARALLEL
             int levelOfParallelism = GetLevelOfParallelism();
 
-            if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
-            else if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
-                     (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
+            if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
+                (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
                 Context.Dispatcher = new MainThreadWorkItemDispatcher();
+            else if (levelOfParallelism > 0)
+                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
 #else
