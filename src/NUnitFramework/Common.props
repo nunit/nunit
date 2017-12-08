@@ -23,7 +23,7 @@
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.6'
                             and '$(TargetFramework)' != 'netcoreapp1.1'
                             and '$(TargetFramework)' != 'netstandard2.0'
-                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);PLATFORM;THREAD_ABORT</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);PLATFORM_DETECTION;THREAD_ABORT</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

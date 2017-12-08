@@ -351,7 +351,7 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if PLATFORM
+#if PLATFORM_DETECTION
         [Test]
         public void PlatformAttributeRunsTest()
         {

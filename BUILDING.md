@@ -72,7 +72,7 @@ Feature constants are defined in [Common.props](src/NUnitFramework/Common.props)
 
  - `ASYNC` enables asynchrony
  - `PARALLEL` enables running tests in parallel
- - `PLATFORM` enables platform detection
+ - `PLATFORM_DETECTION` enables platform detection
  - `THREAD_ABORT` enables timeouts and forcible cancellation
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.

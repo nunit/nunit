@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM
+#if PLATFORM_DETECTION
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;

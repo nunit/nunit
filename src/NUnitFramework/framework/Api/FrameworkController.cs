@@ -372,7 +372,7 @@ namespace NUnit.Framework.Api
 #else
             env.AddAttribute("clr-version", Environment.Version.ToString());
 #endif
-#if !PLATFORM
+#if !PLATFORM_DETECTION
             env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 #else
             env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
