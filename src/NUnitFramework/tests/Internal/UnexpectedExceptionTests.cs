@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal
         public void FailRecordsInnerExceptionsAsPartOfAggregateException()
         {
             string expectedMessage =
-#if NETCOREAPP1_1
+#if NETCOREAPP1_1 || NETCOREAPP2_0
                 "System.AggregateException : Outer Aggregate Exception (Inner Exception 1 of 2) (Inner Exception 2 of 2)" + Environment.NewLine +
 #else
                 "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal
         public void FailRecordsNestedInnerExceptionAsPartOfAggregateException()
         {
             string expectedMessage =
-#if NETCOREAPP1_1
+#if NETCOREAPP1_1 || NETCOREAPP2_0
                 "System.AggregateException : Outer Aggregate Exception (Inner Exception)" + Environment.NewLine +
 #else
                 "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
