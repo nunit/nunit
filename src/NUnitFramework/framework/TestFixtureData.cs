@@ -83,8 +83,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the name of the test fixture
         /// </summary>
-        /// <returns>The modified TestFixtureData instance</returns>
-        internal TestFixtureData SetName(string name)
+        public TestFixtureData SetName(string name)
         {
             TestName = name;
             return this;
