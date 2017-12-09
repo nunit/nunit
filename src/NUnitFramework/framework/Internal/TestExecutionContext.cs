@@ -504,6 +504,29 @@ namespace NUnit.Framework.Internal
             return context;
         }
 
+        /// <summary>
+        /// Invokes <paramref name="action"/> in this context instance, handling all exceptions.
+        /// </summary>
+        /// <param name="action">May be <see langword="null"/>.</param>
+        internal void ExecuteWithExceptionHandling(Action<TestExecutionContext> action)
+        {
+            if (action == null) return;
+
+            try
+            {
+                action.Invoke(this);
+            }
+            catch (Exception ex)
+            {
+#if THREAD_ABORT
+                if (ex is ThreadAbortException)
+                    Thread.ResetAbort();
+#endif
+                if (CurrentResult == null) CurrentResult = CurrentTest.MakeTestResult();
+                CurrentResult.RecordException(ex);
+            }
+        }
+
 #endregion
 
 #region InitializeLifetimeService
