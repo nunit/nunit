@@ -33,30 +33,42 @@ using System.Reflection;
 
 #if DEBUG
 #if NET45
-[assembly: AssemblyConfiguration(".NET 4.5 Debug")]
+[assembly: AssemblyConfiguration(".NET Framework 4.5 Debug")]
 #elif NET40
-[assembly: AssemblyConfiguration(".NET 4.0 Debug")]
+[assembly: AssemblyConfiguration(".NET Framework 4.0 Debug")]
 #elif NET35
-[assembly: AssemblyConfiguration(".NET 3.5 Debug")]
+[assembly: AssemblyConfiguration(".NET Framework 3.5 Debug")]
 #elif NET20
-[assembly: AssemblyConfiguration(".NET 2.0 Debug")]
+[assembly: AssemblyConfiguration(".NET Framework 2.0 Debug")]
+#elif NETSTANDARD1_6
+[assembly: AssemblyConfiguration(".NET Standard 1.6 Debug")]
+#elif NETSTANDARD2_0
+[assembly: AssemblyConfiguration(".NET Standard 2.0 Debug")]
 #elif NETCOREAPP1_1
 [assembly: AssemblyConfiguration(".NET Core 1.1 Debug")]
+#elif NETCOREAPP2_0
+[assembly: AssemblyConfiguration(".NET Core 2.0 Debug")]
 #else
-[assembly: AssemblyConfiguration("Debug")]
+#error Missing AssemblyConfiguration attribute for this target.
 #endif
 #else
 #if NET45
-[assembly: AssemblyConfiguration(".NET 4.5")]
+[assembly: AssemblyConfiguration(".NET Framework 4.5")]
 #elif NET40
-[assembly: AssemblyConfiguration(".NET 4.0")]
+[assembly: AssemblyConfiguration(".NET Framework 4.0")]
 #elif NET35
-[assembly: AssemblyConfiguration(".NET 3.5")]
+[assembly: AssemblyConfiguration(".NET Framework 3.5")]
 #elif NET20
-[assembly: AssemblyConfiguration(".NET 2.0")]
+[assembly: AssemblyConfiguration(".NET Framework 2.0")]
+#elif NETSTANDARD1_6
+[assembly: AssemblyConfiguration(".NET Standard 1.6")]
+#elif NETSTANDARD2_0
+[assembly: AssemblyConfiguration(".NET Standard 2.0")]
 #elif NETCOREAPP1_1
 [assembly: AssemblyConfiguration(".NET Core 1.1")]
+#elif NETCOREAPP2_0
+[assembly: AssemblyConfiguration(".NET Core 2.0")]
 #else
-[assembly: AssemblyConfiguration("")]
+#error Missing AssemblyConfiguration attribute for this target.
 #endif
 #endif

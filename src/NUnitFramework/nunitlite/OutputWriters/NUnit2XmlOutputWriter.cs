@@ -30,9 +30,6 @@ using System.IO;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_6
-using System.Runtime.InteropServices;
-#endif
 
 namespace NUnitLite
 {
@@ -123,16 +120,21 @@ namespace NUnitLite
                                            assemblyName.Version.ToString());
 #if NETSTANDARD1_6
             xmlWriter.WriteAttributeString("clr-version",
-                                           RuntimeInformation.FrameworkDescription);
-            xmlWriter.WriteAttributeString("os-version",
-                                           RuntimeInformation.OSDescription);
+                                           System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
             xmlWriter.WriteAttributeString("clr-version",
-                                           Environment.Version.ToString());
+                Environment.Version.ToString());
+#endif
+#if !PLATFORM_DETECTION
+            xmlWriter.WriteAttributeString("os-version",
+                                           System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+#else
             xmlWriter.WriteAttributeString("os-version",
                                            OSPlatform.CurrentPlatform.ToString());
+#endif
+#if !NETSTANDARD1_6
             xmlWriter.WriteAttributeString("platform",
-                                           Environment.OSVersion.Platform.ToString());
+                Environment.OSVersion.Platform.ToString());
 #endif
             xmlWriter.WriteAttributeString("cwd",
                                            Directory.GetCurrentDirectory());

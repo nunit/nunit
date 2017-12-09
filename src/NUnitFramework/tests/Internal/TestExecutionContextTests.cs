@@ -834,20 +834,20 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CanAccessCurrentPrincipal()
         {
-            Type expectedType = Thread.CurrentPrincipal.GetType();
-            Assert.That(_fixtureContext.CurrentPrincipal, Is.TypeOf(expectedType), "Fixture");
-            Assert.That(_setupContext.CurrentPrincipal, Is.TypeOf(expectedType), "SetUp");
-            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.TypeOf(expectedType), "Test");
+            var expectedInstance = Thread.CurrentPrincipal;
+            Assert.That(_fixtureContext.CurrentPrincipal, Is.SameAs(expectedInstance), "Fixture");
+            Assert.That(_setupContext.CurrentPrincipal, Is.SameAs(expectedInstance), "SetUp");
+            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.SameAs(expectedInstance), "Test");
         }
 
 #if ASYNC
         [Test]
         public async Task CanAccessCurrentPrincipal_Async()
         {
-            Type expectedType = Thread.CurrentPrincipal.GetType();
-            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.TypeOf(expectedType), "Before yield");
+            var expectedInstance = Thread.CurrentPrincipal;
+            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.SameAs(expectedInstance), "Before yield");
             await YieldAsync();
-            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.TypeOf(expectedType), "After yield");
+            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.SameAs(expectedInstance), "After yield");
         }
 #endif
 
@@ -962,7 +962,7 @@ namespace NUnit.Framework.Internal
 
 #region Cross-domain Tests
 
-#if !NETCOREAPP1_1
+#if NET20 || NET35 || NET40 || NET45
         [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
@@ -1017,7 +1017,7 @@ namespace NUnit.Framework.Internal
 #endregion
     }
 
-#if !NETCOREAPP1_1
+#if NET20 || NET35 || NET40 || NET45
     [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {

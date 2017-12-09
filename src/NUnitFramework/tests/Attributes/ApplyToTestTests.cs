@@ -351,7 +351,7 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if !NETCOREAPP1_1
+#if PLATFORM_DETECTION
         [Test]
         public void PlatformAttributeRunsTest()
         {
@@ -421,7 +421,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETCOREAPP1_1
+#if PARALLEL
 
         #region RequiresMTAAttribute
 
@@ -514,7 +514,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETCOREAPP1_1
+#if PARALLEL
 
         #region SetCultureAttribute
 

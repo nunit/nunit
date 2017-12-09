@@ -258,7 +258,7 @@ namespace NUnit.Framework.Assertions
         // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
-#if NETCOREAPP1_1
+#if !PLATFORM_DETECTION
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4)]
 #else
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]

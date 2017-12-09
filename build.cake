@@ -27,8 +27,17 @@ var packageVersion = version + modifier + dbgSuffix;
 // SUPPORTED FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-var AllFrameworks = new string[] {
-    "net45", "net40", "net35", "net20", "netstandard1.6", "netcoreapp1.1" };
+var AllFrameworks = new string[]
+{
+    "net45",
+    "net40",
+    "net35",
+    "net20",
+    "netstandard1.6",
+    "netstandard2.0",
+    "netcoreapp1.1",
+    "netcoreapp2.0"
+};
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -222,6 +231,19 @@ Task("TestNetStandard16")
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
+Task("TestNetStandard20")
+    .Description("Tests the .NET Standard 2.0 version of the framework")
+    .WithCriteria(IsRunningOnWindows())
+    .IsDependentOn("Build")
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
+    .Does(() =>
+    {
+        var runtime = "netcoreapp2.0";
+        var dir = BIN_DIR + runtime + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+    });
+
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
 //////////////////////////////////////////////////////////////////////
@@ -328,7 +350,8 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net35/*.*") +
             GetFiles(currentImageDir + "bin/net40/*.*") +
             GetFiles(currentImageDir + "bin/net45/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard1.6/*.*");
+            GetFiles(currentImageDir + "bin/netstandard1.6/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard2.0/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
@@ -459,7 +482,8 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
-    .IsDependentOn("TestNetStandard16");
+    .IsDependentOn("TestNetStandard16")
+    .IsDependentOn("TestNetStandard20");
 
 Task("Package")
     .Description("Packages all versions of the framework")

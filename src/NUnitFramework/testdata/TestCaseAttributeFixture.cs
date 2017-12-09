@@ -83,7 +83,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 
-#if !NETCOREAPP1_1
+#if PLATFORM_DETECTION
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
         [TestCase(3, IncludePlatform = "MacOSX")]
@@ -96,7 +96,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         [TestCase(2, ExcludePlatform = "Linux")]
         [TestCase(3, ExcludePlatform = "MacOSX")]
         [TestCase(4, ExcludePlatform = "XBox")]
-        public void MethodWitExcludePlatform(int num)
+        public void MethodWithExcludePlatform(int num)
         {
         }
 #endif

@@ -33,9 +33,12 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
 #if !NETSTANDARD1_6
-using System.Runtime.Remoting.Messaging;
 using System.Security;
 using System.Security.Principal;
+#endif
+
+#if NET20 || NET35 || NET40 || NET45
+using System.Runtime.Remoting.Messaging;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -45,9 +48,9 @@ namespace NUnit.Framework.Internal
     /// singleton settings in the environment that affect tests
     /// or which might be changed by the user tests.
     /// </summary>
-    public class TestExecutionContext
-#if !NETSTANDARD1_6
-        : LongLivedMarshalByRefObject, ILogicalThreadAffinative
+    public class TestExecutionContext : LongLivedMarshalByRefObject
+#if NET20 || NET35 || NET40 || NET45
+        , ILogicalThreadAffinative
 #endif
     {
         // NOTE: Be very careful when modifying this class. It uses
@@ -103,9 +106,9 @@ namespace NUnit.Framework.Internal
         private IPrincipal _currentPrincipal;
 #endif
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
@@ -160,13 +163,13 @@ namespace NUnit.Framework.Internal
             IsSingleThreaded = other.IsSingleThreaded;
         }
 
-        #endregion
+#endregion
 
-        #region CurrentContext Instance
+#region CurrentContext Instance
 
         // NOTE: We use different implementations for various platforms.
 
-#if NETSTANDARD1_6
+#if !(NET20 || NET35 || NET40 || NET45)
         private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
         /// <summary>
         /// Gets and sets the current context.
@@ -221,9 +224,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Gets or sets the current test
@@ -425,9 +428,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsSingleThreaded { get; set; }
 
-        #endregion
+#endregion
 
-        #region Instance Methods
+#region Instance Methods
 
         /// <summary>
         /// Record any changes in the environment made by
@@ -501,9 +504,9 @@ namespace NUnit.Framework.Internal
             return context;
         }
 
-        #endregion
+#endregion
 
-        #region InitializeLifetimeService
+#region InitializeLifetimeService
 
 #if !NETSTANDARD1_6
         /// <summary>
@@ -517,9 +520,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Nested IsolatedContext Class
+#region Nested IsolatedContext Class
 
         /// <summary>
         /// An IsolatedContext is used when running code
@@ -558,9 +561,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested AdhocTestExecutionContext
+#region Nested AdhocTestExecutionContext
 
         /// <summary>
         /// An AdhocTestExecutionContext is created whenever a context is needed
@@ -585,6 +588,6 @@ namespace NUnit.Framework.Internal
             private void AdhocTestMethod() { }
         }
 
-        #endregion
+#endregion
     }
 }

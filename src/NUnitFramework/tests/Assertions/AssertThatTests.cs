@@ -346,7 +346,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
-#if !NETCOREAPP1_1
+#if PLATFORM_DETECTION
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {

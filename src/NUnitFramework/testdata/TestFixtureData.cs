@@ -526,7 +526,7 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-#if !NETCOREAPP1_1
+#if !(NETCOREAPP1_1 || NETCOREAPP2_0)
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {

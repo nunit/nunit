@@ -61,7 +61,9 @@ namespace NUnit.Framework.Attributes
             attr.ApplyToContext(_context);
             Assert.That(_context.CurrentUICulture, Is.EqualTo(new CultureInfo("fr-FR")));
         }
+#endif
 
+#if THREAD_ABORT
         [Test]
         public void TimeoutAttribute()
         {

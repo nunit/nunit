@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
         private const int ThreadAbortedCheckDelay = 100;
 
         /// <summary>

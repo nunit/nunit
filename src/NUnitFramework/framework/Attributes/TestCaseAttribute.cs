@@ -225,7 +225,7 @@ namespace NUnit.Framework
             }
         }
 
-#if !NETSTANDARD1_6
+#if PLATFORM_DETECTION
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>
@@ -423,7 +423,7 @@ namespace NUnit.Framework
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 
-#if !NETSTANDARD1_6
+#if PLATFORM_DETECTION
             if (test.RunState != RunState.NotRunnable &&
                 test.RunState != RunState.Ignored)
             {
