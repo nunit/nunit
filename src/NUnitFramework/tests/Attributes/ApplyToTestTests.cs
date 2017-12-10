@@ -423,6 +423,7 @@ namespace NUnit.Framework.Attributes
 
 #if PARALLEL
 
+#if COM_APARTMENT
         #region RequiresMTAAttribute
 
         [Test]
@@ -464,6 +465,7 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
+#endif
 
         #region RequiresThreadAttribute
 
@@ -482,6 +484,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
         }
 
+#if COM_APARTMENT
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -490,7 +493,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(ApartmentState.STA));
         }
-
+#endif
         #endregion
 
 #endif

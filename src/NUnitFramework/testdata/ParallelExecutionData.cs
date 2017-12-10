@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -86,6 +86,7 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 
+#if COM_APARTMENT
     [Apartment(ApartmentState.STA)]
     public class STAFixture
     {
@@ -95,6 +96,7 @@ namespace NUnit.TestData.ParallelExecutionData
             Thread.Sleep(100);
         }
     }
+#endif
 
     public class TestFixtureWithParallelParameterizedTest
     {

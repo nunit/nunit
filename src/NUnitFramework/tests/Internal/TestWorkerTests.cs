@@ -36,7 +36,11 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void SetUp()
         {
+#if COM_APARTMENT
             _queue = new WorkItemQueue("TestQ", true, ApartmentState.MTA);
+#else
+            _queue = new WorkItemQueue("TestQ", true);
+#endif
             _worker = new TestWorker(_queue, "TestQ_Worker");
         }
 

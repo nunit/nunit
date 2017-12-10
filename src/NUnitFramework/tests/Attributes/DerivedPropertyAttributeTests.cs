@@ -36,6 +36,8 @@ namespace NUnit.Framework.Attributes
 #if !NETCOREAPP1_1
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
+#endif
+#if COM_APARTMENT
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
 #endif

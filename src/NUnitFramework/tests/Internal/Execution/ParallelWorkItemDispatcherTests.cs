@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -42,7 +42,15 @@ namespace NUnit.Framework.Internal.Execution
         public void ConstructorCreatesQueues()
         {
             Assert.That(_dispatcher.Queues.Select(q => q.Name),
-                Is.EquivalentTo(new[] { "ParallelQueue", "NonParallelQueue", "ParallelSTAQueue", "NonParallelSTAQueue" }));
+                Is.EquivalentTo(new[]
+                {
+                    "ParallelQueue",
+                    "NonParallelQueue",
+#if COM_APARTMENT
+                    "ParallelSTAQueue",
+                    "NonParallelSTAQueue"
+#endif
+                }));
         }
 
         [Test]
@@ -51,6 +59,8 @@ namespace NUnit.Framework.Internal.Execution
             var shifts = new List<WorkShift>(_dispatcher.Shifts);
 
             Assert.That(shifts, Is.Unique);
+
+#if COM_APARTMENT
             Assert.That(shifts.Count, Is.EqualTo(3));
 
             // Parallel Shift
@@ -71,6 +81,21 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(shifts[2].Queues.Count, Is.EqualTo(1));
             Assert.That(shifts[2].Queues[0].Name, Is.EqualTo("NonParallelSTAQueue"));
             Assert.That(shifts[2].Workers.Count, Is.EqualTo(1));
+#else
+            Assert.That(shifts.Count, Is.EqualTo(2));
+
+            // Parallel Shift
+            Assert.That(shifts[0].Name, Is.EqualTo("Parallel"));
+            Assert.That(shifts[0].Queues.Count, Is.EqualTo(1));
+            Assert.That(shifts[0].Queues[0].Name, Is.EqualTo("ParallelQueue"));
+            Assert.That(shifts[0].Workers.Count, Is.EqualTo(LEVEL_OF_PARALLELISM));
+
+            // NonParallel Shift
+            Assert.That(shifts[1].Name, Is.EqualTo("NonParallel"));
+            Assert.That(shifts[1].Queues.Count, Is.EqualTo(1));
+            Assert.That(shifts[1].Queues[0].Name, Is.EqualTo("NonParallelQueue"));
+            Assert.That(shifts[1].Workers.Count, Is.EqualTo(1));
+#endif
         }
     }
 }

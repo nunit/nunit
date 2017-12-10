@@ -156,8 +156,9 @@ namespace NUnit.Framework.Internal.Execution
         {
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
+#if COM_APARTMENT
             _workerThread.SetApartmentState(WorkQueue.TargetApartment);
-
+#endif
             log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
         }

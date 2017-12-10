@@ -101,6 +101,7 @@ namespace NUnit.Framework.Internal.Execution
         private int _addId = int.MinValue;
         private int _removeId = int.MinValue;
 
+#if COM_APARTMENT
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
         /// </summary>
@@ -108,10 +109,20 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="isParallel">Flag indicating whether this is a parallel queue</param>
         /// <param name="apartment">ApartmentState to use for items on this queue</param>
         public WorkItemQueue(string name, bool isParallel, ApartmentState apartment)
+#else
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
+        /// </summary>
+        /// <param name="name">The name of the queue.</param>
+        /// <param name="isParallel">Flag indicating whether this is a parallel queue</param>
+        public WorkItemQueue(string name, bool isParallel)
+#endif
         {
             Name = name;
             IsParallelQueue = isParallel;
+#if COM_APARTMENT
             TargetApartment = apartment;
+#endif
             State = WorkItemQueueState.Paused;
             ItemsProcessed = 0;
 
@@ -126,7 +137,7 @@ namespace NUnit.Framework.Internal.Execution
                 _innerQueues[i] = new ConcurrentQueue<WorkItem>();
         }
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Gets the name of the work item queue.
@@ -138,10 +149,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsParallelQueue { get; private set; }
 
+#if COM_APARTMENT
         /// <summary>
         /// Gets the target ApartmentState for work items on this queue
         /// </summary>
         public ApartmentState TargetApartment { get; private set; }
+#endif
 
         private int _itemsProcessed;
         /// <summary>
@@ -178,9 +191,9 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Enqueue a WorkItem to be processed
