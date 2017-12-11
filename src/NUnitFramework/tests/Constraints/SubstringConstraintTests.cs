@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -46,36 +46,39 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
 
-        [TestCase(" ss ", "ß", StringComparison.CurrentCulture, true)]
-        [TestCase(" SS ", "ß", StringComparison.CurrentCulture, false)]
-        [TestCase(" ss ", "s", StringComparison.CurrentCulture, true)]
-        [TestCase(" SS ", "s", StringComparison.CurrentCulture, false)]
-        [TestCase(" ss ", "ß", StringComparison.CurrentCultureIgnoreCase, true)]
-        [TestCase(" SS ", "ß", StringComparison.CurrentCultureIgnoreCase, true)]
-        [TestCase(" ss ", "s", StringComparison.CurrentCultureIgnoreCase, true)]
-        [TestCase(" SS ", "s", StringComparison.CurrentCultureIgnoreCase, true)]
+        [TestCase(" ss ", "ß", StringComparison.CurrentCulture)]
+        [TestCase(" SS ", "ß", StringComparison.CurrentCulture)]
+        [TestCase(" ss ", "s", StringComparison.CurrentCulture)]
+        [TestCase(" SS ", "s", StringComparison.CurrentCulture)]
+        [TestCase(" ss ", "ß", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase(" SS ", "ß", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase(" ss ", "s", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase(" SS ", "s", StringComparison.CurrentCultureIgnoreCase)]
 #if !NETCOREAPP1_1
-        [TestCase(" ss ", "ß", StringComparison.InvariantCulture, true)]
-        [TestCase(" SS ", "ß", StringComparison.InvariantCulture, false)]
-        [TestCase(" ss ", "s", StringComparison.InvariantCulture, true)]
-        [TestCase(" SS ", "s", StringComparison.InvariantCulture, false)]
-        [TestCase(" ss ", "ß", StringComparison.InvariantCultureIgnoreCase, true)]
-        [TestCase(" SS ", "ß", StringComparison.InvariantCultureIgnoreCase, true)]
-        [TestCase(" ss ", "s", StringComparison.InvariantCultureIgnoreCase, true)]
-        [TestCase(" SS ", "s", StringComparison.InvariantCultureIgnoreCase, true)]
+        [TestCase(" ss ", "ß", StringComparison.InvariantCulture)]
+        [TestCase(" SS ", "ß", StringComparison.InvariantCulture)]
+        [TestCase(" ss ", "s", StringComparison.InvariantCulture)]
+        [TestCase(" SS ", "s", StringComparison.InvariantCulture)]
+        [TestCase(" ss ", "ß", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase(" SS ", "ß", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase(" ss ", "s", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase(" SS ", "s", StringComparison.InvariantCultureIgnoreCase)]
 #endif
-        [TestCase(" ss ", "ß", StringComparison.Ordinal, false)]
-        [TestCase(" SS ", "ß", StringComparison.Ordinal, false)]
-        [TestCase(" ss ", "s", StringComparison.Ordinal, true)]
-        [TestCase(" SS ", "s", StringComparison.Ordinal, false)]
-        [TestCase(" ss ", "ß", StringComparison.OrdinalIgnoreCase, false)]
-        [TestCase(" SS ", "ß", StringComparison.OrdinalIgnoreCase, false)]
-        [TestCase(" ss ", "s", StringComparison.OrdinalIgnoreCase, true)]
-        [TestCase(" SS ", "s", StringComparison.OrdinalIgnoreCase, true)]
-        public void SpecifyComparisonType(string actual, string expected, StringComparison comparison, bool succeeds)
+        [TestCase(" ss ", "ß", StringComparison.Ordinal)]
+        [TestCase(" SS ", "ß", StringComparison.Ordinal)]
+        [TestCase(" ss ", "s", StringComparison.Ordinal)]
+        [TestCase(" SS ", "s", StringComparison.Ordinal)]
+        [TestCase(" ss ", "ß", StringComparison.OrdinalIgnoreCase)]
+        [TestCase(" SS ", "ß", StringComparison.OrdinalIgnoreCase)]
+        [TestCase(" ss ", "s", StringComparison.OrdinalIgnoreCase)]
+        [TestCase(" SS ", "s", StringComparison.OrdinalIgnoreCase)]
+        public void SpecifyComparisonType(string actual, string expected, StringComparison comparison)
         {
+            // Get platform-specific StringComparison behavior
+            var shouldSucceed = actual.IndexOf(expected, comparison) != -1;
+
             Constraint constraint = Contains.Substring(expected).Using(comparison);
-            if (!succeeds)
+            if (!shouldSucceed)
                 constraint = new NotConstraint(constraint);
 
             Assert.That(actual, constraint);
@@ -87,7 +90,7 @@ namespace NUnit.Framework.Constraints
             var subStringConstraint = theConstraint as SubstringConstraint;
             // Invoke Using method before IgnoreCase
             Assert.That(() => subStringConstraint.Using(StringComparison.CurrentCulture).IgnoreCase,
-    Throws.TypeOf<InvalidOperationException>());
+                Throws.TypeOf<InvalidOperationException>());
 #if !NETCOREAPP1_1
             Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCulture).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
@@ -113,7 +116,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
         }
-        
+
         [Test]
         public void UseSameComparisonTypes_DoesNotThrowException()
         {
@@ -144,9 +147,9 @@ namespace NUnit.Framework.Constraints
         }
 
         static object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
-        
+
         static object[] FailureData = new object[] {
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
