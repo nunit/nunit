@@ -25,6 +25,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using NUnit.Compatibility;
+using NUnit.Framework.Constraints;
 using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
@@ -130,16 +133,15 @@ namespace NUnit.Framework.Assertions
             new List<string>(RANGE.Select(v => v.ToString()))
         };
 
-        [MaxTime(100)]
         [TestCaseSource(nameof(PerformanceData))]
         public void PerformanceTests(IEnumerable values)
         {
-            CollectionAssert.AllItemsAreUnique(values);
+            Warn.Unless(() => CollectionAssert.AllItemsAreUnique(values), HelperConstraints.HasMaxTime(100));
         }
 
-        #endregion
+#endregion
 
-        #region AreEqual
+#region AreEqual
 
         [Test]
         public void AreEqual()
@@ -307,9 +309,9 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.AreEqual(y, x, "CollectionAssert 2");
         }
 
-        #endregion
+#endregion
 
-        #region AreEquivalent
+#region AreEquivalent
 
         [Test]
         public void Equivalent()
@@ -360,9 +362,9 @@ namespace NUnit.Framework.Assertions
 
             CollectionAssert.AreEquivalent(set1,set2);
         }
-        #endregion
+#endregion
 
-        #region AreNotEqual
+#region AreNotEqual
 
         [Test]
         public void AreNotEqual()
@@ -417,9 +419,9 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.AreNotEqual(y, x, "CollectionAssert 2");
         }
 
-        #endregion
+#endregion
 
-        #region AreNotEquivalent
+#region AreNotEquivalent
 
         [Test]
         public void NotEquivalent()
@@ -452,9 +454,9 @@ namespace NUnit.Framework.Assertions
 
             CollectionAssert.AreNotEquivalent(set1,set2);
         }
-        #endregion
+#endregion
 
-        #region Contains
+#region Contains
         [Test]
         public void Contains_IList()
         {
@@ -534,9 +536,9 @@ namespace NUnit.Framework.Assertions
             var ca = new SimpleObjectCollection(new object[] { 1, 2, 3, null, 4, 5 });
             CollectionAssert.Contains( ca, null );
         }
-        #endregion
+#endregion
 
-        #region DoesNotContain
+#region DoesNotContain
         [Test]
         public void DoesNotContain()
         {
@@ -563,9 +565,9 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.DoesNotContain(list,"y"));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-        #endregion
+#endregion
 
-        #region IsSubsetOf
+#region IsSubsetOf
         [Test]
         public void IsSubsetOf()
         {
@@ -599,9 +601,9 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.IsSubsetOf(set2,set1);
             Assert.That(set2, Is.SubsetOf(set1));
         }
-        #endregion
+#endregion
 
-        #region IsNotSubsetOf
+#region IsNotSubsetOf
         [Test]
         public void IsNotSubsetOf()
         {
@@ -634,9 +636,9 @@ namespace NUnit.Framework.Assertions
 
             CollectionAssert.IsNotSubsetOf(set1,set2);
         }
-        #endregion
+#endregion
 
-        #region IsOrdered
+#region IsOrdered
 
         [Test]
         public void IsOrdered()
@@ -701,9 +703,9 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.IsOrdered(list, new TestComparer());
         }
 
-        #endregion
+#endregion
 
-        #region Equals
+#region Equals
 
         [Test]
         public void EqualsFailsWhenUsed()
@@ -718,7 +720,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.ReferenceEquals(string.Empty, string.Empty));
             Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used for Assertions"));
         }
-        #endregion
+#endregion
 
     }
 }
