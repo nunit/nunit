@@ -22,17 +22,14 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
-    /// SimpleWorkItemDispatcher handles execution of WorkItems by
-    /// directly executing them. It is provided so that a dispatcher
-    /// is always available in the context, thereby simplifying the
-    /// code needed to run child tests.
+    /// MainThreadWorkItemDispatcher handles execution of WorkItems by
+    /// directly executing them on the main thread. This is different
+    /// from the SimpleWorkItemDispatcher where the workitem is dispatched
+    /// onto its own thread.
     /// </summary>
     public class MainThreadWorkItemDispatcher : IWorkItemDispatcher
     {
