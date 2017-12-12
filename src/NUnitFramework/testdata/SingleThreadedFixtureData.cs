@@ -11,6 +11,7 @@ namespace NUnit.TestData
         public void TestWithRequiresThread() { }
     }
 
+#if APARTMENT_STATE
     [SingleThreaded]
     public class SingleThreadedFixture_TestWithDifferentApartment
     {
@@ -24,6 +25,7 @@ namespace NUnit.TestData
         [Test, RequiresThread, Apartment(ApartmentState.STA)]
         public void TestWithRequiresThreadAndDifferentApartment() { }
     }
+#endif
 
 #if THREAD_ABORT
     [SingleThreaded]

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Attributes
         {
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
-        }        
+        }
 
         [Test, SetUICulture("fr-FR")]
         public void SetUICultureOnlyToFrench()
@@ -119,10 +119,12 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test, SetCulture("de-DE")]
-        [TestCase(ExpectedResult="01.06.2010 00:00:00")]
-        public string UseWithParameterizedTest()
+        public void UseWithParameterizedTest()
         {
-            return new DateTime(2010, 6, 1).ToString();
+            // Get platform-specific culture formatting behavior
+            var expectedResult = new DateTime(2010, 6, 1).ToString(new CultureInfo("de-DE"));
+
+            Assert.That(new DateTime(2010, 6, 1).ToString(), Is.EqualTo(expectedResult));
         }
     }
 }

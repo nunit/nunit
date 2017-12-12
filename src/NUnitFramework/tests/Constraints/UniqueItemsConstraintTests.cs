@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -68,14 +68,16 @@ namespace NUnit.Framework.Constraints
             new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), true)
         };
 
-        [MaxTime(100)]
         [TestCaseSource(nameof(PerformanceData))]
         public void PerformanceTests(IEnumerable values, bool ignoreCase)
         {
-            if (ignoreCase)
-                Assert.That(values, Is.Unique.IgnoreCase);
-            else
-                Assert.That(values, Is.Unique);
+            Warn.Unless(() =>
+            {
+                if (ignoreCase)
+                    Assert.That(values, Is.Unique.IgnoreCase);
+                else
+                    Assert.That(values, Is.Unique);
+            }, HelperConstraints.HasMaxTime(100));
         }
     }
 }

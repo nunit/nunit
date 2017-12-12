@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
                 : ParallelScope.Default;
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
             TargetApartment = GetTargetApartment(Test);
 #endif
 
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal.Execution
 #if PARALLEL
             TestWorker = wrappedItem.TestWorker;
 #endif
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
             TargetApartment = wrappedItem.TargetApartment;
 #endif
 
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public ParallelScope ParallelScope { get; private set; }
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
@@ -221,10 +221,14 @@ namespace NUnit.Framework.Internal.Execution
             // (--workers=0 option) it occurs routinely whenever a
             // different apartment is requested.
 
+#if APARTMENT_STATE
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
 
             if (Test.RequiresThread || targetApartment != CurrentApartment)
+#else
+            if (Test.RequiresThread)
+#endif
             {
                 // Handle error conditions in a single threaded fixture
                 if (Context.IsSingleThreaded)
@@ -242,12 +246,16 @@ namespace NUnit.Framework.Internal.Execution
                 log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
+#if APARTMENT_STATE
                 RunOnSeparateThread(targetApartment);
+#else
+                RunOnSeparateThread();
+#endif
             }
             else
                 RunOnCurrentThread();
 #else
-            RunOnCurrentThread();
+                RunOnCurrentThread();
 #endif
         }
 
@@ -459,7 +467,11 @@ namespace NUnit.Framework.Internal.Execution
 #if !NETSTANDARD1_6
         private Thread thread;
 
+#if APARTMENT_STATE
         private void RunOnSeparateThread(ApartmentState apartment)
+#else
+        private void RunOnSeparateThread()
+#endif
         {
             thread = new Thread(() =>
             {
@@ -471,7 +483,9 @@ namespace NUnit.Framework.Internal.Execution
 #endif
                 RunOnCurrentThread();
             });
+#if APARTMENT_STATE
             thread.SetApartmentState(apartment);
+#endif
             thread.Start();
             thread.Join();
         }
@@ -531,7 +545,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
         /// <summary>
         /// Recursively walks up the test hierarchy to see if the
         /// <see cref="ApartmentState"/> has been set on any of the parent tests.

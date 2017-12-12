@@ -74,6 +74,7 @@ Feature constants are defined in [Common.props](src/NUnitFramework/Common.props)
  - `PARALLEL` enables running tests in parallel
  - `PLATFORM_DETECTION` enables platform detection
  - `THREAD_ABORT` enables timeouts and forcible cancellation
+ - `APARTMENT_STATE` enables control of the thread apartment state
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
 For example, `NET20` or `NET45`, `NETSTANDARD1_6`, `NETCOREAPP2_0`, and so on.

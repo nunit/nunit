@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
 using System;
 using System.Threading;
 using NUnit.Framework.Internal;

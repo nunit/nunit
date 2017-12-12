@@ -233,7 +233,6 @@ Task("TestNetStandard16")
 
 Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework")
-    .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
