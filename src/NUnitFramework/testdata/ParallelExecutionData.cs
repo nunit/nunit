@@ -86,7 +86,7 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
     [Apartment(ApartmentState.STA)]
     public class STAFixture
     {

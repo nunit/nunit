@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Execution
                     {
                         var childItem = CreateWorkItem(childTest, filter, recursive);
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
                         if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
                             childItem.TargetApartment = work.TargetApartment;
 #endif

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
 using System;
 using System.Threading;
 

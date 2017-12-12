@@ -54,7 +54,7 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThreadAttribute may not be specified");
         }
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
         [Test]
         public void TestWithDifferentApartmentIsInvalid()
         {
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
     [SingleThreaded, Apartment(ApartmentState.STA)]
     public class SingleThreadedFixtureRunInSTA : ThreadingTests
     {

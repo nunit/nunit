@@ -41,7 +41,7 @@ namespace NUnit.Framework
         public RequiresThreadAttribute()
             : base(true) { }
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
         /// <summary>
         /// Construct a RequiresThreadAttribute, specifying the apartment
         /// </summary>

@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private static WorkItemQueue CreateQueue(string name)
         {
-#if COM_APARTMENT
+#if APARTMENT_STATE
             return new WorkItemQueue(name, true, ApartmentState.MTA);
 #else
             return new WorkItemQueue(name, true);

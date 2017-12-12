@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     "ParallelQueue",
                     "NonParallelQueue",
-#if COM_APARTMENT
+#if APARTMENT_STATE
                     "ParallelSTAQueue",
                     "NonParallelSTAQueue"
 #endif
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Execution
 
             Assert.That(shifts, Is.Unique);
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
             Assert.That(shifts.Count, Is.EqualTo(3));
 
             // Parallel Shift

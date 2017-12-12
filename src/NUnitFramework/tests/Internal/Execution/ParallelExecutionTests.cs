@@ -422,7 +422,7 @@ namespace NUnit.Framework.Internal.Execution
                     That("TestFixture2_Test").RunsOn("NonParallelWorker")))
                 .SetName("Issue-2464");
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll").Parallelizable()
                     .Containing(Fixture(typeof(STAFixture)).Parallelizable()),

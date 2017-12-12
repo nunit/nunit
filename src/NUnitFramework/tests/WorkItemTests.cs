@@ -98,7 +98,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
 
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)

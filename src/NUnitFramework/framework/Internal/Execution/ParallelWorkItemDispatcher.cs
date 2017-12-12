@@ -77,11 +77,11 @@ namespace NUnit.Framework.Internal.Execution
 
             // Assign queues to shifts
             ParallelShift.AddQueue(ParallelQueue);
-#if COM_APARTMENT
+#if APARTMENT_STATE
             ParallelShift.AddQueue(ParallelSTAQueue);
 #endif
             NonParallelShift.AddQueue(NonParallelQueue);
-#if COM_APARTMENT
+#if APARTMENT_STATE
             NonParallelSTAShift.AddQueue(NonParallelSTAQueue);
 #endif
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal.Execution
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
             ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "ParallelSTAWorker"));
 #endif
 
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal.Execution
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelShift.Assign(worker);
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
             worker = new TestWorker(NonParallelSTAQueue, "NonParallelSTAWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelSTAShift.Assign(worker);
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 yield return ParallelShift;
                 yield return NonParallelShift;
-#if COM_APARTMENT
+#if APARTMENT_STATE
                 yield return NonParallelSTAShift;
 #endif
             }
@@ -148,11 +148,11 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 yield return ParallelQueue;
-#if COM_APARTMENT
+#if APARTMENT_STATE
                 yield return ParallelSTAQueue;
 #endif
                 yield return NonParallelQueue;
-#if COM_APARTMENT
+#if APARTMENT_STATE
                 yield return NonParallelSTAQueue;
 #endif
             }
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Internal.Execution
         // See comment in Workshift.cs for a more detailed explanation.
         private WorkShift ParallelShift { get; } = new WorkShift("Parallel");
         private WorkShift NonParallelShift { get; } = new WorkShift("NonParallel");
-#if COM_APARTMENT
+#if APARTMENT_STATE
         private WorkShift NonParallelSTAShift { get; } = new WorkShift("NonParallelSTA");
 
         // WorkItemQueues
@@ -228,7 +228,7 @@ namespace NUnit.Framework.Internal.Execution
                     work.Execute();
                     break;
                 case ParallelExecutionStrategy.Parallel:
-#if COM_APARTMENT
+#if APARTMENT_STATE
                     if (work.TargetApartment == ApartmentState.STA)
                         ParallelSTAQueue.Enqueue(work);
                     else
@@ -236,7 +236,7 @@ namespace NUnit.Framework.Internal.Execution
                         ParallelQueue.Enqueue(work);
                     break;
                 case ParallelExecutionStrategy.NonParallel:
-#if COM_APARTMENT
+#if APARTMENT_STATE
                     if (work.TargetApartment == ApartmentState.STA)
                         NonParallelSTAQueue.Enqueue(work);
                     else

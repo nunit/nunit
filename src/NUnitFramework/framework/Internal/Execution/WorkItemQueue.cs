@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal.Execution
         private int _addId = int.MinValue;
         private int _removeId = int.MinValue;
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
         /// </summary>
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             Name = name;
             IsParallelQueue = isParallel;
-#if COM_APARTMENT
+#if APARTMENT_STATE
             TargetApartment = apartment;
 #endif
             State = WorkItemQueueState.Paused;
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsParallelQueue { get; private set; }
 
-#if COM_APARTMENT
+#if APARTMENT_STATE
         /// <summary>
         /// Gets the target ApartmentState for work items on this queue
         /// </summary>
