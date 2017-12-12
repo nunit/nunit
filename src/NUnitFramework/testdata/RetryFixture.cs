@@ -42,7 +42,7 @@ namespace NUnit.TestData.RepeatingTests
         public void FailsEveryTime()
         {
             count++;
-            Assert.IsFalse (true);
+            Assert.IsFalse(true);
         }
     }
 
@@ -173,6 +173,34 @@ namespace NUnit.TestData.RepeatingTests
         {
             count++;
             Assert.IsTrue(false);
+        }
+    }
+
+    public sealed class RetryWithoutSetUpOrTearDownFixture
+    {
+        public int Count { get; private set; }
+
+        [Test, Retry(3)]
+        public void SucceedsOnThirdTry()
+        {
+            Count++;
+
+            if (Count < 3)
+                Assert.Fail();
+        }
+
+        [Test, Retry(3)]
+        public void FailsEveryTime()
+        {
+            Count++;
+            Assert.Fail();
+        }
+
+        [Test, Retry(3)]
+        public void ErrorsOnFirstTry()
+        {
+            Count++;
+            throw new Exception("Deliberate exception");
         }
     }
 }

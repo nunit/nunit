@@ -91,7 +91,17 @@ namespace NUnit.Framework
 
                 while (count-- > 0)
                 {
-                    context.CurrentResult = innerCommand.Execute(context);
+                    try
+                    {
+                        context.CurrentResult = innerCommand.Execute(context);
+                    }
+                    // Commands are supposed to catch exceptions, but some don't
+                    // and we want to look at restructuring the API in the future.
+                    catch (Exception ex)
+                    {
+                        if (context.CurrentResult == null) context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentResult.RecordException(ex);
+                    }
 
                     if (context.CurrentResult.ResultState != ResultState.Failure)
                         break;
