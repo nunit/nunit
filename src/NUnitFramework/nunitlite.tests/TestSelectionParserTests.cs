@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -41,9 +41,17 @@ namespace NUnit.Common.Tests
 
         [TestCase("cat=Urgent", "<cat>Urgent</cat>")]
         [TestCase("cat==Urgent", "<cat>Urgent</cat>")]
+        [TestCase("cat=='Urgent,+-!'", "<cat>Urgent,+-!</cat>")]
         [TestCase("cat!=Urgent", "<not><cat>Urgent</cat></not>")]
+        [TestCase("cat!='Urgent,+-!'", "<not><cat>Urgent,+-!</cat></not>")]
         [TestCase("cat =~ Urgent", "<cat re='1'>Urgent</cat>")]
+        [TestCase("cat =~ 'Urgent,+-!'", "<cat re='1'>Urgent,+-!</cat>")]
+        [TestCase("cat =~ 'Urgent,\\+-!'", "<cat re='1'>Urgent,+-!</cat>")]
+        [TestCase("cat =~ 'Urgent,\\\\+-!'", "<cat re='1'>Urgent,\\+-!</cat>")]
         [TestCase("cat !~ Urgent", "<not><cat re='1'>Urgent</cat></not>")]
+        [TestCase("cat !~ 'Urgent,+-!'", "<not><cat re='1'>Urgent,+-!</cat></not>")]
+        [TestCase("cat !~ 'Urgent,\\+-!'", "<not><cat re='1'>Urgent,+-!</cat></not>")]
+        [TestCase("cat !~ 'Urgent,\\\\+-!'", "<not><cat re='1'>Urgent,\\+-!</cat></not>")]
         [TestCase("cat = Urgent || cat = High", "<or><cat>Urgent</cat><cat>High</cat></or>")]
         [TestCase("Priority == High", "<prop name='Priority'>High</prop>")]
         [TestCase("Priority != Urgent", "<not><prop name='Priority'>Urgent</prop></not>")]

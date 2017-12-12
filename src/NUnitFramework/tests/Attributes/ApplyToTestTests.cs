@@ -41,6 +41,17 @@ namespace NUnit.Framework.Attributes
         }
 
         #region CategoryAttribute
+        
+        [TestCase('!')]
+        [TestCase('+')]
+        [TestCase(',')]
+        [TestCase('-')]
+        public void CategoryAttributePassesOnSpecialCharacters(char specialCharacter)
+        {
+            var categoryName = new string(specialCharacter, 5);
+            new CategoryAttribute(categoryName).ApplyToTest(test);
+            Assert.That(test.Properties.Get(PropertyNames.Category), Is.EqualTo(categoryName));
+        }
 
         [Test]
         public void CategoryAttributeSetsCategory()

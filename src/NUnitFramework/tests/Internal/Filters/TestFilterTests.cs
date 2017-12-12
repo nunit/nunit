@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -73,6 +73,7 @@ namespace NUnit.Framework.Internal.Filters
         protected readonly TestSuite _emptyNestedFixture = TestBuilder.MakeFixture(typeof(NestingFixture.EmptyNestedFixture));
         protected readonly TestSuite _topLevelSuite = new TestSuite("MySuite");
         protected readonly TestSuite _explicitFixture = TestBuilder.MakeFixture(typeof(ExplicitFixture));
+        protected readonly TestSuite _specialFixture = TestBuilder.MakeFixture(typeof(SpecialCharactersFixture));
 
         [OneTimeSetUp]
         public void SetUpSuite()
@@ -95,6 +96,14 @@ namespace NUnit.Framework.Internal.Filters
             [Test]
             public void Test() { }
 
+        }
+
+
+        [Category("Special,Character-Fixture+!")]
+        private class SpecialCharactersFixture
+        {
+            [Test]
+            public void Test() { }
         }
 
         [Category("Another"), Property("Priority", "Low"), Author("Fred Smith")]
