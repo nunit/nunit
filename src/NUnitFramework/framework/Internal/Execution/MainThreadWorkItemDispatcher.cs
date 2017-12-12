@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,26 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+using System;
 
 namespace NUnit.Framework.Internal.Execution
 {
-#if !NETSTANDARD1_6
     /// <summary>
-    /// SimpleWorkItemDispatcher handles execution of WorkItems by
-    /// directly executing them. It is provided so that a dispatcher
-    /// is always available in the context, thereby simplifying the
-    /// code needed to run child tests.
+    /// MainThreadWorkItemDispatcher handles execution of WorkItems by
+    /// directly executing them on the main thread. This is different
+    /// from the SimpleWorkItemDispatcher where the workitem is dispatched
+    /// onto its own thread.
     /// </summary>
-    public class SimpleWorkItemDispatcher : IWorkItemDispatcher
+    public class MainThreadWorkItemDispatcher : IWorkItemDispatcher
     {
-        // The first WorkItem to be dispatched, assumed to be top-level item
-        private WorkItem _topLevelWorkItem;
-
-        // Thread used to run and cancel tests
-        private Thread _runnerThread;
 
         #region IWorkItemDispatcher Members
 
@@ -50,18 +42,12 @@ namespace NUnit.Framework.Internal.Execution
         public int LevelOfParallelism { get { return 0; } }
 
         /// <summary>
-        /// Start execution, creating the execution thread,
-        /// setting the top level work  and dispatching it.
+        /// Start execution, dispatching the top level
+        /// work into the main thread.
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-            _topLevelWorkItem = topLevelWorkItem;
-            _runnerThread = new Thread(RunnerThreadProc);
-
-            if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
-                _runnerThread.SetApartmentState(ApartmentState.STA);
-
-            _runnerThread.Start();
+            Dispatch(topLevelWorkItem);
         }
 
         /// <summary>
@@ -75,35 +61,17 @@ namespace NUnit.Framework.Internal.Execution
                 work.Execute();
         }
 
-
-        private void RunnerThreadProc()
-        {
-            _topLevelWorkItem.Execute();
-        }
-
-
-
-        private object cancelLock = new object();
-
-
         /// <summary>
-        /// Cancel (abort or stop) the ongoing run.
-        /// If no run is in process, the call has no effect.
+        /// This method is not supported for 
+        /// this dispatcher. Using it will throw a
+        /// NotSupportedException.
         /// </summary>
-        /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
+        /// <param name="force">Not used</param>
+        /// <exception cref="System.NotSupportedException">If used, it will always throw this.</exception>
         public void CancelRun(bool force)
         {
-            lock (cancelLock)
-            {
-                if (_topLevelWorkItem != null)
-                {
-                    _topLevelWorkItem.Cancel(force);
-                    if (force)
-                        _topLevelWorkItem = null;
-                }
-            }
+            throw new NotSupportedException();
         }
         #endregion
     }
-#endif
 }

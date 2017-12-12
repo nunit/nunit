@@ -194,10 +194,10 @@ namespace NUnit.Framework.Api
         /// <returns>Test Assembly with test cases that matches the filter</returns>
         public ITest ExploreTests(ITestFilter filter)
         {
-            if(LoadedTest == null)
+            if (LoadedTest == null)
                 throw new InvalidOperationException("The ExploreTests method was called but no test has been loaded");
 
-            if(filter == TestFilter.Empty)
+            if (filter == TestFilter.Empty)
                 return LoadedTest;
 
             return new TestAssembly(LoadedTest as TestAssembly, filter);
@@ -347,16 +347,22 @@ namespace NUnit.Framework.Api
 
             // Set the listener - overriding runners may replace this
             Context.Listener = listener;
-
+#if NETSTANDARD1_6
+            Context.Dispatcher = new MainThreadWorkItemDispatcher();
+#else
 #if PARALLEL
             int levelOfParallelism = GetLevelOfParallelism();
 
-            if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+            if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
+                (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
+                Context.Dispatcher = new MainThreadWorkItemDispatcher();
+            else if (levelOfParallelism > 0)
+                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
 #else
             Context.Dispatcher = new SimpleWorkItemDispatcher();
+#endif
 #endif
         }
 
