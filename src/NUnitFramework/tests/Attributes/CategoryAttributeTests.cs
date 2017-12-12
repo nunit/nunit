@@ -84,7 +84,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void TestWithVvalidCategoryNameIsNotRunnable()
+        public void TestWithValidCategoryNameIsNotRunnable()
         {
             Test testValidSpecialChars = (Test)fixture.Tests[3];
             Assert.That(testValidSpecialChars.RunState, Is.EqualTo(RunState.Runnable));
