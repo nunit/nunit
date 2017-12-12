@@ -94,13 +94,15 @@ namespace NUnit.Framework
                     try
                     {
                         context.CurrentResult = innerCommand.Execute(context);
-
-                        if (context.CurrentResult.ResultState != ResultState.Failure)
-                            break;
                     }
-                    catch when (count > 0)
+                    catch (Exception ex)
                     {
+                        if (context.CurrentResult == null) context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentResult.RecordException(ex);
                     }
+
+                    if (context.CurrentResult.ResultState != ResultState.Failure)
+                        break;
 
                     // Clear result for retry
                     if (count > 0)
