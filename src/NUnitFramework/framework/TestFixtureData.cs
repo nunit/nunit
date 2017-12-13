@@ -90,7 +90,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Sets the list of display names to use as the parameters in the test name.
+        /// Sets the list of display names to use as the whole argument list in the test name.
+        /// There may be more or fewer names in the display list than actual arguments.
         /// </summary>
         public TestFixtureData SetArgDisplayNames(params string[] displayNames)
         {
