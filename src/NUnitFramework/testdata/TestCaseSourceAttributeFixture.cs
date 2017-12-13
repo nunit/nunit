@@ -210,7 +210,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             var data = new TestCaseData(args) { Properties = { ["ExpectedTestName"] = { expectedTestName } } };
             if (testName != null) data.SetName(testName);
-            if (argDisplayNames != null) data.SetArgDisplay(argDisplayNames);
+            if (argDisplayNames != null) data.SetArgDisplayNames(argDisplayNames);
             return data;
         }
 

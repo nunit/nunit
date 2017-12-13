@@ -103,7 +103,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the list of display names to use as the parameters in the test name.
         /// </summary>
-        public TestCaseData SetArgDisplay(params string[] displayNames)
+        public TestCaseData SetArgDisplayNames(params string[] displayNames)
         {
             ArgDisplayNames = displayNames;
             return this;

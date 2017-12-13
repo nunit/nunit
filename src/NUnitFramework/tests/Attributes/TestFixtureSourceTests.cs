@@ -96,7 +96,7 @@ namespace NUnit.Framework.Attributes
                 var expectedName = (string)testFixture.Properties.Get("ExpectedFixtureName");
 
                 yield return new TestCaseData((TestFixture)testFixture, expectedName)
-                    .SetArgDisplay(expectedName); // SetArgNames (here) is purely cosmetic for the purposes of these tests
+                    .SetArgDisplayNames(expectedName); // SetArgDisplayNames (here) is purely cosmetic for the purposes of these tests
             }
         }
 
