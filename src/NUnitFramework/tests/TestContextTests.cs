@@ -84,7 +84,7 @@ namespace NUnit.Framework
             Assert.That(_testDirectory, Is.Not.Null);
         }
 
-        [TestCaseSource("TestDirectorySource")]
+        [TestCaseSource(nameof(TestDirectorySource))]
         public void TestCaseSourceCanAccessTestDirectory(string testDirectory)
         {
             Assert.That(testDirectory, Is.EqualTo(_testDirectory));
@@ -113,7 +113,7 @@ namespace NUnit.Framework
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
         }
 
-        [TestCaseSource("WorkDirectorySource")]
+        [TestCaseSource(nameof(WorkDirectorySource))]
         public void TestCaseSourceCanAccessWorkDirectory(string workDirectory)
         {
             Assert.That(workDirectory, Is.EqualTo(_workDirectory));

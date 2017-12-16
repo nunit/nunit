@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
 
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
                 throw new ArgumentException(string.Format(
-                    "Type {0} is not an attribute", expectedType), "type");
+                    "Type {0} is not an attribute", expectedType), nameof(type));
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the expected attribute is present, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentNotNull(actual, "actual");
+            Guard.ArgumentNotNull(actual, nameof(actual));
             Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
             ConstraintResult result = new ConstraintResult(this, actual);
             result.Status = attrs.Length > 0

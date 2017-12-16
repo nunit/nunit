@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Commands
         public ConstructFixtureCommand(TestCommand innerCommand)
             : base(innerCommand) 
         {
-            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", "innerCommand");
+            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {

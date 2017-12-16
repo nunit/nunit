@@ -42,7 +42,7 @@ namespace NUnit.Compatibility
         {
             var attrProvider = actual as ICustomAttributeProvider;
             if (attrProvider == null)
-                throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider.", actual), "actual");
+                throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider.", actual), nameof(actual));
 
             return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
         }

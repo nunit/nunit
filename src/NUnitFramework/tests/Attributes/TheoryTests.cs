@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -37,25 +37,25 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TheoryWithNoArgumentsIsTreatedAsTest()
         {
-            TestAssert.IsRunnable(fixtureType, "TheoryWithNoArguments");
+            TestAssert.IsRunnable(fixtureType, nameof(TheoryFixture.TheoryWithNoArguments));
         }
 
         [Test]
         public void TheoryWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsRunnable(fixtureType, "TheoryWithArgumentsButNoDatapoints", ResultState.Failure);
+            TestAssert.IsRunnable(fixtureType, nameof(TheoryFixture.TheoryWithArgumentsButNoDatapoints), ResultState.Failure);
         }
 
         [Test]
         public void UnsupportedNullableTypeArgumentWithNoDatapointsIsRunnableButFails()
         {
-            TestAssert.IsRunnable(fixtureType, "TestWithUnsupportedNullableTypeArgumentWithNoDataPoints", ResultState.Failure);
+            TestAssert.IsRunnable(fixtureType, nameof(TheoryFixture.TestWithUnsupportedNullableTypeArgumentWithNoDataPoints), ResultState.Failure);
         }
 
         [Test]
         public void TheoryWithDatapointsIsRunnable()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TheoryWithArgumentsAndDatapoints");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TheoryWithArgumentsAndDatapoints));
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(9));
         }
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void BooleanArgumentsAreSuppliedAutomatically()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithBooleanArguments");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithBooleanArguments));
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(4));
         }
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void NullableBooleanArgumentsAreSuppliedAutomatically()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithNullableBooleanArguments");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithNullableBooleanArguments));
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(9));
         }
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void DatapointAndAttributeDataMayBeCombined()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithBothDatapointAndAttributeData");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithBothDatapointAndAttributeData));
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void EnumArgumentsAreSuppliedAutomatically()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithEnumAsArgument");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithEnumAsArgument));
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(16));
         }
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void NullableEnumArgumentsAreSuppliedAutomatically()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithNullableEnumAsArgument");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithNullableEnumAsArgument));
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(17));
         }
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Attributes
             // TheoryAttribute and CombinatorialAttribute were adding cases.
             // Solution is to make TheoryAttribute a CombiningAttribute so
             // that no extra attribute is added to the method.
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithAllDataSuppliedByAttributes");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithAllDataSuppliedByAttributes));
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(4));
         }
@@ -156,14 +156,14 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SimpleTestIgnoresDataPoints()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithArguments");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithArguments));
             Assert.That(test.TestCaseCount, Is.EqualTo(2));
         }
 
         [Test]
         public void TheoryFailsIfAllTestsAreInconclusive()
         {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, "TestWithAllBadValues");
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, nameof(TheoryFixture.TestWithAllBadValues));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Is.EqualTo("All test cases were inconclusive"));
         }

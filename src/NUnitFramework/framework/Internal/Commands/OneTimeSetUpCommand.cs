@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand) 
         {
             Guard.ArgumentValid(Test is TestSuite && Test.TypeInfo != null, 
-                "OneTimeSetUpCommand must reference a TestFixture or SetUpFixture", "innerCommand");
+                "OneTimeSetUpCommand must reference a TestFixture or SetUpFixture", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {

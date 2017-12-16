@@ -34,33 +34,33 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class DescriptionTests
     {
-        static readonly Type FixtureType = typeof( DescriptionFixture );
+        static readonly Type FixtureType = typeof(DescriptionFixture);
 
         [Test]
         public void ReflectionTest()
         {
-            Test testCase = TestBuilder.MakeTestCase( FixtureType, "Method" );
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.Method));
             Assert.AreEqual( RunState.Runnable, testCase.RunState );
         }
 
         [Test]
         public void Description()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "Method");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.Method));
             Assert.AreEqual("Test Description", testCase.Properties.Get(PropertyNames.Description));
         }
 
         [Test]
         public void NoDescription()
         {
-            Test testCase = TestBuilder.MakeTestCase( FixtureType, "NoDescriptionMethod" );
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.NoDescriptionMethod) );
             Assert.IsNull(testCase.Properties.Get(PropertyNames.Description));
         }
 
         [Test]
         public void LongDescription()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "TestWithLongDescription");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.TestWithLongDescription));
             Assert.AreEqual("This is a really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really long description", testCase.Properties.Get(PropertyNames.Description));
         }
 
@@ -78,14 +78,14 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SeparateDescriptionAttribute()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateDescriptionMethod");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.SeparateDescriptionMethod));
             Assert.AreEqual("Separate Description", testCase.Properties.Get(PropertyNames.Description));
         }
 
         [Test]
         public void DescriptionOnTestCase()
         {
-            TestSuite parameterizedMethodSuite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, "TestCaseWithDescription");
+            TestSuite parameterizedMethodSuite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, nameof(DescriptionFixture.TestCaseWithDescription));
             Assert.AreEqual("method description", parameterizedMethodSuite.Properties.Get(PropertyNames.Description));
             Test testCase = (Test)parameterizedMethodSuite.Tests[0];
             Assert.AreEqual("case description", testCase.Properties.Get(PropertyNames.Description));

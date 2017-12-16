@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Constraints
             test.Using(comparer);
             Assert.DoesNotThrow(() => test.ApplyTo(7));
         }
-        [TestCaseSource("NoIComparableTestCase")]
+        [TestCaseSource(nameof(NoIComparableTestCase))]
         public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj,object from, object to, System.Collections.IComparer comparer)
         {
             RangeConstraint test = new RangeConstraint(from, to);

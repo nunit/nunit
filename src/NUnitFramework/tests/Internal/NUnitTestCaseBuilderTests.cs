@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,27 +34,27 @@ namespace NUnit.Framework.Internal
 #if ASYNC
         private readonly Type fixtureType = typeof(AsyncDummyFixture);
 
-        [TestCase("AsyncVoid", RunState.NotRunnable)]
-        [TestCase("AsyncTask", RunState.Runnable)]
-        [TestCase("AsyncGenericTask", RunState.NotRunnable)]
-        [TestCase("NonAsyncTask", RunState.Runnable)]
-        [TestCase("NonAsyncGenericTask", RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncVoid), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncTask), RunState.Runnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncGenericTask), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.NonAsyncTask), RunState.Runnable)]
+        [TestCase(nameof(AsyncDummyFixture.NonAsyncGenericTask), RunState.NotRunnable)]
         public void AsyncTests(string methodName, RunState expectedState)
         {
             var test = TestBuilder.MakeTestCase(fixtureType, methodName);
             Assert.That(test.RunState, Is.EqualTo(expectedState));
         }
 
-        [TestCase("AsyncVoidTestCase", RunState.NotRunnable)]
-        [TestCase("AsyncVoidTestCaseWithExpectedResult", RunState.NotRunnable)]
-        [TestCase("AsyncTaskTestCase", RunState.Runnable)]
-        [TestCase("AsyncTaskTestCaseWithExpectedResult", RunState.NotRunnable)]
-        [TestCase("AsyncGenericTaskTestCase", RunState.NotRunnable)]
-        [TestCase("AsyncGenericTaskTestCaseWithExpectedResult", RunState.Runnable)]
-        [TestCase("TaskTestCase", RunState.Runnable)]
-        [TestCase("TaskTestCaseWithExpectedResult", RunState.NotRunnable)]
-        [TestCase("GenericTaskTestCase", RunState.NotRunnable)]
-        [TestCase("GenericTaskTestCaseWithExpectedResult", RunState.Runnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncVoidTestCase), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncVoidTestCaseWithExpectedResult), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncTaskTestCase), RunState.Runnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncTaskTestCaseWithExpectedResult), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncGenericTaskTestCase), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.AsyncGenericTaskTestCaseWithExpectedResult), RunState.Runnable)]
+        [TestCase(nameof(AsyncDummyFixture.TaskTestCase), RunState.Runnable)]
+        [TestCase(nameof(AsyncDummyFixture.TaskTestCaseWithExpectedResult), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.GenericTaskTestCase), RunState.NotRunnable)]
+        [TestCase(nameof(AsyncDummyFixture.GenericTaskTestCaseWithExpectedResult), RunState.Runnable)]
         public void AsyncTestCases(string methodName, RunState expectedState)
         {
             var suite = TestBuilder.MakeParameterizedMethodSuite(fixtureType, methodName);
@@ -65,14 +65,14 @@ namespace NUnit.Framework.Internal
 
         private readonly Type optionalTestParametersFixtureType = typeof(OptionalTestParametersFixture);
 
-        [TestCase("MethodWithOptionalParams0", RunState.NotRunnable)]
-        [TestCase("MethodWithOptionalParams1", RunState.Runnable)]
-        [TestCase("MethodWithOptionalParams2", RunState.Runnable)]
-        [TestCase("MethodWithOptionalParams3", RunState.NotRunnable)]
-        [TestCase("MethodWithAllOptionalParams0", RunState.Runnable)]
-        [TestCase("MethodWithAllOptionalParams1", RunState.Runnable)]
-        [TestCase("MethodWithAllOptionalParams2", RunState.Runnable)]
-        [TestCase("MethodWithAllOptionalParams3", RunState.NotRunnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams0), RunState.NotRunnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams1), RunState.Runnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams2), RunState.Runnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams3), RunState.NotRunnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithAllOptionalParams0), RunState.Runnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithAllOptionalParams1), RunState.Runnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithAllOptionalParams2), RunState.Runnable)]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithAllOptionalParams3), RunState.NotRunnable)]
         public void ParametrizedTestCaseTests(string methodName, RunState expectedState)
         {
             var suite = TestBuilder.MakeParameterizedMethodSuite(optionalTestParametersFixtureType, methodName);

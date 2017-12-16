@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the test</param>
         protected Test( string name )
         {
-            Guard.ArgumentNotNullOrEmpty(name, "name");
+            Guard.ArgumentNotNullOrEmpty(name, nameof(name));
 
             Initialize(name);
         }
@@ -353,7 +353,7 @@ namespace NUnit.Framework.Internal
         /// <param name="reason">The reason the test is not runnable</param>
         public void MakeInvalid(string reason)
         {
-            Guard.ArgumentNotNullOrEmpty(reason, "reason");
+            Guard.ArgumentNotNullOrEmpty(reason, nameof(reason));
 
             RunState = RunState.NotRunnable;
             Properties.Add(PropertyNames.SkipReason, reason);

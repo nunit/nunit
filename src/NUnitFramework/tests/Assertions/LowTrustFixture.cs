@@ -189,7 +189,7 @@ namespace NUnit.Framework.Assertions
         }
         public object Run(MethodInfo method, params object[] parameters)
         {
-            if (method == null) throw new ArgumentNullException("method");
+            if (method == null) throw new ArgumentNullException(nameof(method));
             if (_appDomain == null) throw new ObjectDisposedException(null);
 
             var methodRunnerType = typeof(MethodRunner);

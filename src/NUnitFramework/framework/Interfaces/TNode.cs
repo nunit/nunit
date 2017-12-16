@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -289,11 +289,11 @@ namespace NUnit.Framework.Interfaces
 
         private static NodeList ApplySelection(NodeList nodeList, string xpath)
         {
-            Guard.ArgumentNotNullOrEmpty(xpath, "xpath");
+            Guard.ArgumentNotNullOrEmpty(xpath, nameof(xpath));
             if (xpath[0] == '/')
-                throw new ArgumentException("XPath expressions starting with '/' are not supported", "xpath");
+                throw new ArgumentException("XPath expressions starting with '/' are not supported", nameof(xpath));
             if (xpath.IndexOf("//") >= 0)
-                throw new ArgumentException("XPath expressions with '//' are not supported", "xpath");
+                throw new ArgumentException("XPath expressions with '//' are not supported", nameof(xpath));
 
             string head = xpath;
             string tail = null;
@@ -374,14 +374,14 @@ namespace NUnit.Framework.Interfaces
                 if (lbrack >= 0)
                 {
                     if (!xpath.EndsWith("]"))
-                        throw new ArgumentException("Invalid property expression", "xpath");
+                        throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _nodeName = xpath.Substring(0, lbrack);
                     string filter = xpath.Substring(lbrack+1, xpath.Length - lbrack - 2);
 
                     int equals = filter.IndexOf('=');
                     if (equals < 0 || filter[0] != '@')
-                        throw new ArgumentException("Invalid property expression", "xpath");
+                        throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _propName = filter.Substring(1, equals - 1).Trim();
                     _propValue = filter.Substring(equals + 1).Trim(new char[] { ' ', '"', '\'' });

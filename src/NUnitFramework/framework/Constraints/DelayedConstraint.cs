@@ -214,7 +214,7 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             if (delayInMilliseconds < 0)
-                throw new ArgumentException("Cannot check a condition in the past", "delayInMilliseconds");
+                throw new ArgumentException("Cannot check a condition in the past", nameof(delayInMilliseconds));
 
             DelayInterval = new Interval(delayInMilliseconds).InMilliseconds;
             PollingInterval = new Interval(pollingIntervalInMilliseconds).InMilliseconds;

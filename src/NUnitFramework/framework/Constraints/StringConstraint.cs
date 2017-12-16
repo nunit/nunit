@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
         {
             string actualAsString = actual as string;
             if (actual != null && actualAsString == null)
-                throw new ArgumentException("Actual value must be a string", "actual");
+                throw new ArgumentException("Actual value must be a string", nameof(actual));
 
             return new ConstraintResult(this, actual, Matches(actualAsString));
         }

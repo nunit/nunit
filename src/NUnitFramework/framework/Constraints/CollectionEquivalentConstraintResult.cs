@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
             bool isSuccess)
             : base(constraint, actual, isSuccess)
         {
-            Guard.ArgumentNotNull(tallyResult, "tallyResult");
+            Guard.ArgumentNotNull(tallyResult, nameof(tallyResult));
 
             _tallyResult = tallyResult;
         }

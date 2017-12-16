@@ -87,14 +87,14 @@ namespace NUnit.Framework.Constraints
             FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
         }
 
-        [Test, TestCaseSource("SuccessDelegates")]
+        [Test, TestCaseSource(nameof(SuccessDelegates))]
         public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
         {
             SetValuesAfterDelay(DELAY);
             Assert.That(theConstraint.ApplyTo(del).IsSuccess);
         }
 
-        [Test, TestCaseSource("FailureDelegates")]
+        [Test, TestCaseSource(nameof(FailureDelegates))]
         public void FailsWithBadDelegates(ActualValueDelegate<object> del)
         {
             Assert.IsFalse(theConstraint.ApplyTo(del).IsSuccess);

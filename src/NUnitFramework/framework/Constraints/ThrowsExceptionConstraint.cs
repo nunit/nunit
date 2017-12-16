@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
             else
 #endif
             {
-                throw new ArgumentException(string.Format("The actual value must be a TestDelegate or AsyncTestDelegate but was {0}", actual.GetType().Name), "actual");
+                throw new ArgumentException(string.Format("The actual value must be a TestDelegate or AsyncTestDelegate but was {0}", actual.GetType().Name), nameof(actual));
             }
             return new ThrowsExceptionConstraintResult(this, caughtException);
         }

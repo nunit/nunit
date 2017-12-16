@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Attributes
     {
         [Test]
         public void ValueSourceCanBeStaticProperty(
-            [ValueSource("StaticProperty")] string source)
+            [ValueSource(nameof(StaticProperty))] string source)
         {
             Assert.AreEqual("StaticProperty", source);
         }
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void ValueSourceCanBeInheritedStaticProperty(
-            [ValueSource("InheritedStaticProperty")] bool source)
+            [ValueSource(nameof(InheritedStaticProperty))] bool source)
         {
             Assert.AreEqual(true, source);
         }
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Attributes
         }
 
         public void MethodWithValueSourceInstanceProperty(
-            [ValueSource("InstanceProperty")] string source)
+            [ValueSource(nameof(InstanceProperty))] string source)
         {
             Assert.AreEqual("InstanceProperty", source);
         }
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void ValueSourceCanBeStaticMethod(
-            [ValueSource("StaticMethod")] string source)
+            [ValueSource(nameof(StaticMethod))] string source)
         {
             Assert.AreEqual("StaticMethod", source);
         }
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Attributes
         }
 
         public void MethodWithValueSourceInstanceMethod(
-            [ValueSource("InstanceMethod")] string source)
+            [ValueSource(nameof(InstanceMethod))] string source)
         {
             Assert.AreEqual("InstanceMethod", source);
         }
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void ValueSourceCanBeStaticField(
-            [ValueSource("StaticField")] string source)
+            [ValueSource(nameof(StaticField))] string source)
         {
             Assert.AreEqual("StaticField", source);
         }
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Attributes
         }
 
         public void MethodWithValueSourceInstanceField(
-            [ValueSource("InstanceField")] string source)
+            [ValueSource(nameof(InstanceField))] string source)
         {
             Assert.AreEqual("InstanceField", source);
         }
@@ -133,9 +133,9 @@ namespace NUnit.Framework.Attributes
 
         [Test, Sequential]
         public void MultipleArguments(
-            [ValueSource("Numerators")] int n, 
-            [ValueSource("Denominators")] int d, 
-            [ValueSource("Quotients")] int q)
+            [ValueSource(nameof(Numerators))] int n, 
+            [ValueSource(nameof(Denominators))] int d, 
+            [ValueSource(nameof(Quotients))] int q)
         {
             Assert.AreEqual(q, n / d);
         }
@@ -146,9 +146,9 @@ namespace NUnit.Framework.Attributes
 
         [Test, Sequential]
         public void ValueSourceMayBeInAnotherClass(
-            [ValueSource(typeof(DivideDataProvider), "Numerators")] int n,
-            [ValueSource(typeof(DivideDataProvider), "Denominators")] int d,
-            [ValueSource(typeof(DivideDataProvider), "Quotients")] int q)
+            [ValueSource(typeof(DivideDataProvider), nameof(DivideDataProvider.Numerators))] int n,
+            [ValueSource(typeof(DivideDataProvider), nameof(DivideDataProvider.Denominators))] int d,
+            [ValueSource(typeof(DivideDataProvider), nameof(DivideDataProvider.Quotients))] int q)
         {
             Assert.AreEqual(q, n / d);
         }
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void ValueSourceMayBeGeneric(
-            [ValueSourceAttribute(typeof(ValueProvider), "IntegerProvider")] int val)
+            [ValueSourceAttribute(typeof(ValueProvider), nameof(ValueProvider.IntegerProvider))] int val)
         {
             Assert.That(2 * val, Is.EqualTo(val + val));
         }
@@ -201,10 +201,10 @@ namespace NUnit.Framework.Attributes
 
         [Test, Explicit("Null or nonexisting data sources definitions should not prevent other tests from run #1121")]
         public void ValueSourceMayNotBeNull(
-            [ValueSource("NullSource")] string nullSource,
-            [ValueSource("NullDataSourceProvider")] string nullDataSourceProvided,
-            [ValueSource(typeof(ValueProvider), "ForeignNullResultProvider")] string nullDataSourceProvider,
-            [ValueSource("NullDataSourceProperty")] int nullDataSourceProperty,
+            [ValueSource(nameof(NullSource))] string nullSource,
+            [ValueSource(nameof(NullDataSourceProvider))] string nullDataSourceProvided,
+            [ValueSource(typeof(ValueProvider), nameof(ValueProvider.ForeignNullResultProvider))] string nullDataSourceProvider,
+            [ValueSource(nameof(NullDataSourceProperty))] int nullDataSourceProperty,
             [ValueSource("SomeNonExistingMemberSource")] int nonExistingMember)
         {
             Assert.Fail();

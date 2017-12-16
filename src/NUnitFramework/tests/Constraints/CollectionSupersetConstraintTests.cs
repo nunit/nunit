@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
         };
 
         [Test]
-        [TestCaseSource(typeof(IgnoreCaseDataProvider), "TestCases")]
+        [TestCaseSource(typeof(IgnoreCaseDataProvider), nameof(IgnoreCaseDataProvider.TestCases))]
         public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
         {
             var constraint = new CollectionSupersetConstraint( expected ).IgnoreCase;

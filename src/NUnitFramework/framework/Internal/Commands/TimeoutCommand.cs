@@ -49,8 +49,8 @@ namespace NUnit.Framework.Internal.Commands
         public TimeoutCommand(TestCommand innerCommand, int timeout)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", "innerCommand");
-            Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", "timeout");
+            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", nameof(innerCommand));
+            Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
 
             BeforeTest = (context) =>
             {

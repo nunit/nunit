@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Commands
         public SetUpTearDownCommand(TestCommand innerCommand, SetUpTearDownItem setUpTearDown)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
+            Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.OperationValid(Test.TypeInfo != null, "TestMethod must have a non-null TypeInfo");
             Guard.ArgumentNotNull(setUpTearDown, nameof(setUpTearDown));
 

@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns></returns>
         public TestSuite BuildFrom(ITypeInfo typeInfo, ITestFixtureData testFixtureData)
         {
-            Guard.ArgumentNotNull(testFixtureData, "testFixtureData");
+            Guard.ArgumentNotNull(testFixtureData, nameof(testFixtureData));
 
             object[] arguments = testFixtureData.Arguments;
 

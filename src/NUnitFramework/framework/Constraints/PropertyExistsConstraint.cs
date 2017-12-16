@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentNotNull(actual, "actual");
+            Guard.ArgumentNotNull(actual, nameof(actual));
 
             actualType = actual as Type;
             if (actualType == null)

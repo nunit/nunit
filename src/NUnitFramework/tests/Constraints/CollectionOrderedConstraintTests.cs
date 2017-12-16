@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
 
         #region Ordering Tests
 
-        [TestCaseSource("OrderedByData")]
+        [TestCaseSource(nameof(OrderedByData))]
         public void IsOrderedBy(IEnumerable collection, Constraint constraint)
         {
             Assert.That(collection, constraint);

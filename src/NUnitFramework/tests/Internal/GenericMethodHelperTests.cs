@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal
                 TypeArgs<string,int,string[]>()) 
         };
 
-        [TestCaseSource("TypeArgData")]
+        [TestCaseSource(nameof(TypeArgData))]
         public void GetTypeArgumentsForMethodTests(string methodName, object[] args, Type[] typeArgs)
         {
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
