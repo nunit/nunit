@@ -1,6 +1,10 @@
 language: csharp
 sudo: false
 
+notifications:
+  email:
+    on_success: never
+
 # Need 2.*, should keep up to date with security releases
 dotnet: 2.0.3
 
