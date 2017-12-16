@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentNotNull(actual, "actual");
+            Guard.ArgumentNotNull(actual, nameof(actual));
             Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
             if (attrs.Length == 0)
                 throw new ArgumentException(string.Format("Attribute {0} was not found", expectedType), nameof(actual));

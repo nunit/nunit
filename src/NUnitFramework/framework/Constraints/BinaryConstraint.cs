@@ -46,10 +46,10 @@ namespace NUnit.Framework.Constraints
         protected BinaryConstraint(IConstraint left, IConstraint right)
             : base(left, right)
         {
-            Guard.ArgumentNotNull(left, "left");
+            Guard.ArgumentNotNull(left, nameof(left));
             this.Left = left;
 
-            Guard.ArgumentNotNull(right, "right");
+            Guard.ArgumentNotNull(right, nameof(right));
             this.Right = right;
         }
     }

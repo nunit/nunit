@@ -212,7 +212,7 @@ namespace NUnit.Framework.Internal.Execution
         internal void Enqueue(WorkItem work, int priority)
         {
             Guard.ArgumentInRange(priority >= 0 && priority < PRIORITY_LEVELS,
-                "Invalid priority specified", "priority");
+                "Invalid priority specified", nameof(priority));
 
             do
             {

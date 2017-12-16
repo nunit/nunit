@@ -41,7 +41,7 @@ namespace NUnit.Framework
         /// <param name="apartmentState">The apartment state that this test must be run under. You must pass in a valid apartment state.</param>
         public ApartmentAttribute(ApartmentState apartmentState)
         {
-            Guard.ArgumentValid(apartmentState != ApartmentState.Unknown, "must be STA or MTA", "apartmentState");
+            Guard.ArgumentValid(apartmentState != ApartmentState.Unknown, "must be STA or MTA", nameof(apartmentState));
             Properties.Add(PropertyNames.ApartmentState, apartmentState);
         }
     }

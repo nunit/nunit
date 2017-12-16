@@ -75,7 +75,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SourceUsingInstanceMethodIsNotRunnable()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstanceMethodAsSource");
+            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithInstanceMethodAsSource));
             Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
         }
 
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SourceUsingInstanceFieldIsNotRunnable()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstanceFieldAsSource");
+            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithInstanceFieldAsSource));
             Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
         }
 
@@ -197,8 +197,8 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SourceInAnotherClassPassingParamsToField()
         {
-            var testMethod = (TestMethod)TestBuilder.mpMakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "SourceInAnotherClassPassingParamsToField").Tests[0];
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingParamsToField)).Tests[0];
             Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
             ITestResult result = TestBuilder.RunTest(testMethod, null);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
@@ -211,7 +211,7 @@ namespace NUnit.Framework.Attributes
         public void SourceInAnotherClassPassingParamsToProperty()
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "SourceInAnotherClassPassingParamsToProperty").Tests[0];
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingParamsToProperty)).Tests[0];
             Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
             ITestResult result = TestBuilder.RunTest(testMethod, null);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
@@ -224,7 +224,7 @@ namespace NUnit.Framework.Attributes
         public void SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam()
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam").Tests[0];
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam)).Tests[0];
             Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
             ITestResult result = TestBuilder.RunTest(testMethod, null);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Attributes
         public void IgnoreTakesPrecedenceOverExpectedException()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodCallsIgnore").Children.ToArray()[0];
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodCallsIgnore)).Children.ToArray()[0];
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore this", result.Message);
         }
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Attributes
         public void CanIgnoreIndividualTestCases()
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodWithIgnoredTestCases");
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithIgnoredTestCases));
 
             Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
@@ -266,7 +266,7 @@ namespace NUnit.Framework.Attributes
         public void CanMarkIndividualTestCasesExplicit()
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodWithExplicitTestCases");
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithExplicitTestCases));
 
             Test testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
@@ -283,7 +283,7 @@ namespace NUnit.Framework.Attributes
         public void HandlesExceptionInTestCaseSource()
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodWithSourceThrowingException").Tests[0];
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithSourceThrowingException)).Tests[0];
             Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
             ITestResult result = TestBuilder.RunTest(testMethod, null);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
@@ -307,7 +307,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestMethodIsNotRunnableWhenSourceDoesNotExist()
         {
-            TestSuite suiteToTest = TestBuilder.MakeParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithNonExistingSource");
+            TestSuite suiteToTest = TestBuilder.MakeParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithNonExistingSource));
             
             Assert.That(suiteToTest.Tests.Count == 1);
             Assert.AreEqual(RunState.NotRunnable, suiteToTest.Tests[0].RunState);

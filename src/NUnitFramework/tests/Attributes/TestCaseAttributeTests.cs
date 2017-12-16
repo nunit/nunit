@@ -350,10 +350,10 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase1 = TestFinder.Find("MethodWithExcludePlatform(1)", suite, false);
-            Test testCase2 = TestFinder.Find("MethodWithExcludePlatform(2)", suite, false);
-            Test testCase3 = TestFinder.Find("MethodWithExcludePlatform(3)", suite, false);
-            Test testCase4 = TestFinder.Find("MethodWithExcludePlatform(4)", suite, false);
+            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Test testCase4 = TestFinder.Find($"{methodName}(4)", suite, false);
             if (isLinux)
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
