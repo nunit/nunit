@@ -112,7 +112,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MayNotUseParallelScopeFixturesOnParameterizedTestMethod()
         {
-            var test = TestBuilder.MakeTestCase(GetType(), nameof(DummyTestCase));
+            var test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(DummyTestCase));
             var attr = new ParallelizableAttribute(ParallelScope.Fixtures);
             attr.ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -128,9 +128,9 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void OkTotUseParallelScopeChildrenOnParameterizedTestMethod()
+        public void OkToUseParallelScopeChildrenOnParameterizedTestMethod()
         {
-            var test = TestBuilder.MakeTestCase(GetType(), nameof(DummyTestCase));
+            var test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(DummyTestCase));
             var attr = new ParallelizableAttribute(ParallelScope.Children);
             attr.ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
