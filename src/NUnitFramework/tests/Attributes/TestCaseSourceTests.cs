@@ -57,7 +57,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SourceUsingInstancePropertyIsNotRunnable()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), "MethodWithInstancePropertyAsSource");
+            var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithInstancePropertyAsSource));
             Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
         }
 
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SourceInAnotherClassPassingParamsToField()
         {
-            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+            var testMethod = (TestMethod)TestBuilder.mpMakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "SourceInAnotherClassPassingParamsToField").Tests[0];
             Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
             ITestResult result = TestBuilder.RunTest(testMethod, null);

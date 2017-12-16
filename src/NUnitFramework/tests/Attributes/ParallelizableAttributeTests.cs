@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MayNotUseParallelScopeFixturesOnTestMethod()
         {
-            var test = TestBuilder.MakeTestCase(GetType(), "DummyMethod");
+            var test = TestBuilder.MakeTestCase(GetType(), nameof(DummyMethod));
             var attr = new ParallelizableAttribute(ParallelScope.Fixtures);
             attr.ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MayNotUseParallelScopeFixturesOnParameterizedTestMethod()
         {
-            var test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "DummyTestCase");
+            var test = TestBuilder.MakeTestCase(GetType(), nameof(DummyTestCase));
             var attr = new ParallelizableAttribute(ParallelScope.Fixtures);
             attr.ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MayNotUseParallelScopeChildrenOnTestMethod()
         {
-            var test = TestBuilder.MakeTestCase(GetType(), "DummyMethod");
+            var test = TestBuilder.MakeTestCase(GetType(), nameof(DummyMethod));
             var attr = new ParallelizableAttribute(ParallelScope.Children);
             attr.ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void OkTotUseParallelScopeChildrenOnParameterizedTestMethod()
         {
-            var test = TestBuilder.MakeParameterizedMethodSuite(GetType(), "DummyTestCase");
+            var test = TestBuilder.MakeTestCase(GetType(), nameof(DummyTestCase));
             var attr = new ParallelizableAttribute(ParallelScope.Children);
             attr.ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
