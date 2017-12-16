@@ -54,7 +54,7 @@ namespace NUnit.Common
         internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, bool requireInputFile, params string[] args)
         {
             // Apply default options
-            if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
+            if (defaultOptionsProvider == null) throw new ArgumentNullException(nameof(defaultOptionsProvider));
 
             TeamCity = defaultOptionsProvider.TeamCity;
 

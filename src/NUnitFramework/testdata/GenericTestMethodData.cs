@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -41,7 +41,7 @@ namespace NUnit.TestData
 
     public class IncompatibleGenericTestCaseSourceData
     {
-        [TestCaseSource("Source")]
+        [TestCaseSource(nameof(Source))]
         public void TestCaseSource_OneTypeParameterOnTwoArgs<T>(T x, T y, string label)
         {
         }

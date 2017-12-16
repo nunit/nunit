@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
             new TestCaseData( new int[] { 5, 5, 5 }, 25, 25 ).SetName("Test 5x5x5")
         };
 
-        [Test, TestCaseSource("cases")]
+        [Test, TestCaseSource(nameof(cases))]
         public void Test(int[] dimensions, int bestSoFar, int targetCases)
         {
             int features = dimensions.Length;

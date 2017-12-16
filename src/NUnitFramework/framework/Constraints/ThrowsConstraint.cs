@@ -220,7 +220,7 @@ namespace NUnit.Framework.Constraints
                         String.Format(
                             "The actual value must be a TestDelegate or AsyncTestDelegate but was {0}",
                             actual.GetType().Name),
-                        "actual");
+                        nameof(actual));
 
                 return invocationDescriptor;
             }

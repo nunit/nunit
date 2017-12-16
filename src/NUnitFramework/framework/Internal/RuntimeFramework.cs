@@ -213,7 +213,7 @@ namespace NUnit.Framework.Internal
 
         private static void ThrowInvalidFrameworkVersion(Version version)
         {
-            throw new ArgumentException("Unknown framework version " + version, "version");
+            throw new ArgumentException("Unknown framework version " + version, nameof(version));
         }
 
         private void InitFromClrVersion(Version version)

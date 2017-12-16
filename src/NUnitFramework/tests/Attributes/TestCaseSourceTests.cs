@@ -37,13 +37,13 @@ namespace NUnit.Framework.Attributes
     {
         #region Tests With Static and Instance Members as Source
 
-        [Test, TestCaseSource("StaticProperty")]
+        [Test, TestCaseSource(nameof(StaticProperty))]
         public void SourceCanBeStaticProperty(string source)
         {
             Assert.AreEqual("StaticProperty", source);
         }
 
-        [Test, TestCaseSource("InheritedStaticProperty")]
+        [Test, TestCaseSource(nameof(InheritedStaticProperty))]
         public void TestSourceCanBeInheritedStaticProperty(bool source)
         {
             Assert.AreEqual(true, source);
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
         }
 
-        [Test, TestCaseSource("StaticMethod")]
+        [Test, TestCaseSource(nameof(StaticMethod))]
         public void SourceCanBeStaticMethod(string source)
         {
             Assert.AreEqual("StaticMethod", source);
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Attributes
             return new object[] { new object[] { "InstanceMethod" } };
         }
 
-        [Test, TestCaseSource("StaticField")]
+        [Test, TestCaseSource(nameof(StaticField))]
         public void SourceCanBeStaticField(string source)
         {
             Assert.AreEqual("StaticField", source);
@@ -124,59 +124,59 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-        [Test, TestCaseSource("MyData")]
+        [Test, TestCaseSource(nameof(MyData))]
         public void SourceMayReturnArgumentsAsObjectArray(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
         }
 
-        [TestCaseSource("MyData")]
+        [TestCaseSource(nameof(MyData))]
         public void TestAttributeIsOptional(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
         }
 
-        [Test, TestCaseSource("MyIntData")]
+        [Test, TestCaseSource(nameof(MyIntData))]
         public void SourceMayReturnArgumentsAsIntArray(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
         }
 
-        [Test, TestCaseSource("MyArrayData")]
+        [Test, TestCaseSource(nameof(MyArrayData))]
         public void SourceMayReturnArrayForArray(int[] array)
         {
             Assert.That(true);
         }
 
-        [Test, TestCaseSource("EvenNumbers")]
+        [Test, TestCaseSource(nameof(EvenNumbers))]
         public void SourceMayReturnSinglePrimitiveArgumentAlone(int n)
         {
             Assert.AreEqual(0, n % 2);
         }
 
-        [Test, TestCaseSource("Params")]
+        [Test, TestCaseSource(nameof(Params))]
         public int SourceMayReturnArgumentsAsParamSet(int n, int d)
         {
             return n / d;
         }
 
         [Test]
-        [TestCaseSource("MyData")]
-        [TestCaseSource("MoreData", Category = "Extra")]
+        [TestCaseSource(nameof(MyData))]
+        [TestCaseSource(nameof(MoreData), Category = "Extra")]
         [TestCase(12, 2, 6)]
         public void TestMayUseMultipleSourceAttributes(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
         }
 
-        [Test, TestCaseSource("FourArgs")]
+        [Test, TestCaseSource(nameof(FourArgs))]
         public void TestWithFourArguments(int n, int d, int q, int r)
         {
             Assert.AreEqual(q, n / d);
             Assert.AreEqual(r, n % d);
         }
 
-        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), "HereIsTheData")]
+        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheData))]
         public void SourceMayBeInAnotherClass(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(q, n / d);
         }
 
-        [Test, Category("Top"), TestCaseSource("StaticMethodDataWithParameters", new object[] { 8000, 8, 1000 })]
+        [Test, Category("Top"), TestCaseSource(nameof(StaticMethodDataWithParameters), new object[] { 8000, 8, 1000 })]
         public void SourceCanBeStaticMethodPassingSomeDataToConstructor(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
@@ -233,7 +233,7 @@ namespace NUnit.Framework.Attributes
                             "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.", result.Message);
         }
 
-        [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), "TestCases")]
+        [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), nameof(DivideDataProviderWithReturnValue.TestCases))]
         public int SourceMayBeInAnotherClassWithReturn(int n, int d)
         {
             return n / d;
@@ -290,7 +290,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("System.Exception : my message", result.Message);
         }
 
-        [TestCaseSource("exception_source"), Explicit("Used for GUI tests")]
+        [TestCaseSource(nameof(exception_source)), Explicit("Used for GUI tests")]
         public void HandlesExceptionInTestCaseSource_GuiDisplay(string lhs, string rhs)
         {
             Assert.AreEqual(lhs, rhs);
@@ -299,7 +299,7 @@ namespace NUnit.Framework.Attributes
 
         private static IEnumerable<TestCaseData> ZeroTestCasesSource() => Enumerable.Empty<TestCaseData>();
 
-        [TestCaseSource("ZeroTestCasesSource")]
+        [TestCaseSource(nameof(ZeroTestCasesSource))]
         public void TestWithZeroTestSourceCasesShouldPassWithoutRequiringArguments(int requiredParameter)
         {
         }
@@ -320,14 +320,14 @@ namespace NUnit.Framework.Attributes
                 new string[] { "B" })
         };
 
-        [Test, TestCaseSource("testCases")]
+        [Test, TestCaseSource(nameof(testCases))]
         public void MethodTakingTwoStringArrays(string[] a, string[] b)
         {
             Assert.That(a, Is.TypeOf(typeof(string[])));
             Assert.That(b, Is.TypeOf(typeof(string[])));
         }
 
-        [TestCaseSource("SingleMemberArrayAsArgument")]
+        [TestCaseSource(nameof(SingleMemberArrayAsArgument))]
         public void Issue1337SingleMemberArrayAsArgument(string[] args)
         {
             Assert.That(args.Length == 1 && args[0] == "1");

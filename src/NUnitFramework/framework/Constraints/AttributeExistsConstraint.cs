@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
 
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
                 throw new ArgumentException(string.Format(
-                    "Type {0} is not an attribute", expectedType), "type");
+                    "Type {0} is not an attribute", expectedType), nameof(type));
         }
 
         /// <summary>

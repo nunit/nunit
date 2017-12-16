@@ -39,7 +39,7 @@ namespace NUnit.TestData.CategoryAttributeData
         public void Test2() { }
 
         [Test, Category("Top")]
-        [TestCaseSource("Test3Data")]
+        [TestCaseSource(nameof(Test3Data))]
         public void Test3(int x) { }
 
         [Test, Category("A-B"), Category("A,B"), Category("A!B"), Category("A+B")]

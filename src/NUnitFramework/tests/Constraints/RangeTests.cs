@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -104,25 +104,25 @@ namespace NUnit.Framework.Constraints
             Assert.That(val, Is.InRange(min, max));
         }
 
-        [Test, TestCaseSource("InRangeObjectsWithNoIComparable")]
+        [Test, TestCaseSource(nameof(InRangeObjectsWithNoIComparable))]
         public void InRangeNoIComparableTest(object testObj, object from, object to, ObjectToStringComparer comparer)
         {
             Assert.That(testObj, Is.InRange(from, to).Using(comparer));
             Assert.AreEqual(comparer.WasCalled, true);
         }
 
-        [Test, TestCaseSource("NotInRangeObjectsWithNoIComparable")]
+        [Test, TestCaseSource(nameof(NotInRangeObjectsWithNoIComparable))]
         public void NotInRangeNoIComparableTest(object testObj, object from, object to, ObjectToStringComparer comparer)
         {
             Assert.That(testObj, Is.Not.InRange(from, to).Using(comparer));
             Assert.AreEqual(comparer.WasCalled, true);
         }
-        [TestCaseSource("InRangeObjectsWithNoIComparableAndNotUsingComparerException")]
+        [TestCaseSource(nameof(InRangeObjectsWithNoIComparableAndNotUsingComparerException))]
         public void InRangeNoIComparableThrowsExceptionTest(object testObj, object from, object to)
         {
             Assert.Throws<ArgumentException>(() => Assert.That(testObj, Is.InRange(from, to)));
         }
-        [TestCaseSource("InRangeObjectsWithNoIComparableAndNotUsingComparerException")]
+        [TestCaseSource(nameof(InRangeObjectsWithNoIComparableAndNotUsingComparerException))]
         public void NotInRangeNoIComparableThrowsExceptionTest(object testObj, object from, object to)
         {
             Assert.Throws<ArgumentException>(() => Assert.That(testObj, Is.Not.InRange(from, to)));

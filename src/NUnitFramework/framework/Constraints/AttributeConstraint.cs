@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
 
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
                 throw new ArgumentException(string.Format(
-                    "Type {0} is not an attribute", expectedType), "type");
+                    "Type {0} is not an attribute", expectedType), nameof(type));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Constraints
             Guard.ArgumentNotNull(actual, "actual");
             Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
             if (attrs.Length == 0)
-                throw new ArgumentException(string.Format("Attribute {0} was not found", expectedType), "actual");
+                throw new ArgumentException(string.Format("Attribute {0} was not found", expectedType), nameof(actual));
 
             attrFound = attrs[0];
             return BaseConstraint.ApplyTo(attrFound);
