@@ -58,6 +58,26 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(nTries, fixture.Count);
         }
 
+        [TestCase(typeof(RetrySucceedsOnFirstTryFixture), "Passed")]
+        [TestCase(typeof(RetrySucceedsOnSecondTryFixture), "Failed", "Passed")]
+        [TestCase(typeof(RetrySucceedsOnThirdTryFixture), "Failed", "Failed", "Passed")]
+        [TestCase(typeof(RetryFailsEveryTimeFixture), "Failed", "Failed", "Failed")]
+        [TestCase(typeof(RetryIgnoredOnFirstTryFixture), "Skipped:Ignored")]
+        [TestCase(typeof(RetryIgnoredOnSecondTryFixture), "Failed", "Skipped:Ignored")]
+        [TestCase(typeof(RetryIgnoredOnThirdTryFixture), "Failed", "Failed", "Skipped:Ignored")]
+        [TestCase(typeof(RetryErrorOnFirstTryFixture), "Failed:Error")]
+        [TestCase(typeof(RetryErrorOnSecondTryFixture), "Failed", "Failed:Error")]
+        [TestCase(typeof(RetryErrorOnThirdTryFixture), "Failed", "Failed", "Failed:Error")]
+        public void RetryExposesEachResultInTearDown(Type fixtureType, params string[] results)
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.AreEqual(results.Length, fixture.TearDownResults.Count);
+            for (int i = 0; i < results.Length; i++)
+                Assert.That(fixture.TearDownResults[i], Is.EqualTo(results[i]), $"Teardown {i} received incorrect result");
+        }
+
         [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.SucceedsOnThirdTry), "Passed", 3)]
         [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.FailsEveryTime), "Failed", 3)]
         [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.ErrorsOnFirstTry), "Failed:Error", 1)]
