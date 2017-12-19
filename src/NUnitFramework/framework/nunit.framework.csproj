@@ -7,6 +7,10 @@
     <DocumentationFile>$(OutputPath)\$(TargetFramework)\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ApiContractGenerator.MSBuild" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net20'">
     <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>
@@ -14,6 +18,11 @@
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApiContractAssembly Include="$(TargetPath)" />
+    <ApiContractIgnoredNamespace Include="NUnit.Framework.Internal" />
   </ItemGroup>
 
 </Project>
