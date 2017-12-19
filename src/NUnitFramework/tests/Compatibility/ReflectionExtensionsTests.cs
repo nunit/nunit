@@ -253,7 +253,7 @@ namespace NUnit.Framework.Compatibility
         {
             var result = typeof(DerivedTestClass).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
             var methodNames = result.Select(m => m.Name);
-            CollectionAssert.AreEquivalent(methodNames, new string[] { "Hello", "Hello", "DerivedInstanceMethod" });
+            CollectionAssert.AreEquivalent(new string[] { "Hello", "Hello", "DerivedInstanceMethod" }, methodNames);
         }
 
         [Test]
