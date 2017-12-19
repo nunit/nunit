@@ -256,6 +256,15 @@ namespace NUnit.Framework.Compatibility
             CollectionAssert.AreEquivalent(methodNames, new string[] { "Hello", "Hello", "DerivedInstanceMethod" });
         }
 
+        [Test]
+        public void CanGetVirtualMethodsFromMostDerivedClassOnly()
+        {
+            var result = typeof(MostDerivedTestClass).GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public);
+            var methodNames = result.Where(m => m.Name == "Hello").Select(m => m.Name);
+
+            CollectionAssert.AreEquivalent(new string[] { "Hello", "Hello" }, methodNames);
+        }
+
         [TestCase(BindingFlags.Instance | BindingFlags.Public,
             new[] { "DerivedInstanceMethod", "InstanceMethod" },
             new[] { "DerivedProtectedInstanceMethod", "DerivedPrivateInstanceMethod", "ProtectedInstanceMethod", "PrivateInstanceMethod" })]
@@ -428,6 +437,13 @@ namespace NUnit.Framework.Compatibility
 
         private static void DerivedPrivateStaticMethod() { }
 
+        public override void Hello() { }
+
+        public override void Hello(string msg) { }
+    }
+
+    public class MostDerivedTestClass : DerivedTestClass
+    {
         public override void Hello() { }
 
         public override void Hello(string msg) { }
