@@ -348,7 +348,7 @@ namespace NUnit.Compatibility
             if (type != null)
             {
                 var baseMethods = type.GetAllMethods(includeBaseStatic)
-                    .Where(b => !b.IsPrivate && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b));
+                    .Where(b => !b.IsPrivate && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b.GetRuntimeBaseDefinition()));
                 methods.AddRange(baseMethods);
             }
 
