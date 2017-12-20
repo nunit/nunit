@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -89,5 +90,55 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
+
+        [Test]
+        public void CanConvertIntToNullableShort([Values(1)] short? x)
+        {
+            Assert.That(x.HasValue);
+            Assert.That(x.Value, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CanConvertIntToNullableByte([Values(1)] byte? x)
+        {
+            Assert.That(x.HasValue);
+            Assert.That(x.Value, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CanConvertIntToNullableSByte([Values(1)] sbyte? x)
+        {
+            Assert.That(x.HasValue);
+            Assert.That(x.Value, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CanConvertIntToNullableLong([Values(1)] long? x)
+        {
+            Assert.That(x.HasValue);
+            Assert.That(x.Value, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CanConvertStringToNullableDateTime([Values("12-October-1942")] DateTime? dt)
+        {
+            Assert.That(dt.HasValue);
+            Assert.AreEqual(1942, dt.Value.Year);
+        }
+
+        [Test]
+        public void CanConvertStringToNullableTimeSpan([Values("4:44:15")] TimeSpan? ts)
+        {
+            Assert.That(ts.HasValue);
+            Assert.AreEqual(4, ts.Value.Hours);
+            Assert.AreEqual(44, ts.Value.Minutes);
+            Assert.AreEqual(15, ts.Value.Seconds);
+        }
+
+        [Test]
+        public void NullableSimpleFormalParametersWithArgument([Values(1)] int? a)
+        {
+            Assert.AreEqual(1, a);
+        }
     }
 }
