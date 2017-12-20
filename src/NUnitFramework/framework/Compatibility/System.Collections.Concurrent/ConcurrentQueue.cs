@@ -160,7 +160,7 @@ namespace System.Collections.Concurrent
 					if (oldHead == oldTail) {
 						// This should be false then
 						if (oldNext != null) {
-							// If not then the linked list is mal formed, update tail
+							// If not then the linked list is malformed, update tail
 							Interlocked.CompareExchange (ref tail, oldNext, oldTail);
 							continue;
 						}
@@ -318,7 +318,7 @@ namespace System.Collections.Concurrent
 			if (index < 0)
 				throw new ArgumentOutOfRangeException ("index");
 			if (index >= array.Length)
-				throw new ArgumentException ("index is equals or greather than array length", "index");
+				throw new ArgumentException ("The index is greater than or equal to the array length", "index");
 
 			IEnumerator<T> e = InternalGetEnumerator ();
 			int i = index;

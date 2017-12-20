@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints
 
         private readonly NUnitEqualityComparer comparer;
 
-        /// <summary>The result of the comparision between the two collections.</summary>
+        /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
         {
             get

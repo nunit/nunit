@@ -423,7 +423,7 @@ namespace NUnit.Framework.Internal
         #region IXmlNodeBuilder Members
 
         /// <summary>
-        /// Returns the Xml representation of the test
+        /// Returns the XML representation of the test
         /// </summary>
         /// <param name="recursive">If true, include child tests recursively</param>
         /// <returns></returns>

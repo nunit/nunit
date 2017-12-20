@@ -203,7 +203,7 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// Finds a single descendant of this node matching an xpath
+        /// Finds a single descendant of this node matching an XPath
         /// specification. The format of the specification is
         /// limited to what is needed by NUnit and its tests.
         /// </summary>
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// Finds all descendants of this node matching an xpath
+        /// Finds all descendants of this node matching an XPath
         /// specification. The format of the specification is
         /// limited to what is needed by NUnit and its tests.
         /// </summary>

@@ -514,7 +514,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             // If there is no fixture and so nothing to do but dispatch
             // grandchildren we run directly. This saves time that would
-            // otherwise be spent enqueuing and dequeing items.
+            // otherwise be spent enqueuing and dequeuing items.
             if (Test.TypeInfo == null)
                 return ParallelExecutionStrategy.Direct;
 

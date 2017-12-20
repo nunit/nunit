@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -284,10 +284,10 @@ namespace NUnit.Framework.Internal.Builders
         /// </para>
         /// <para>Maximizing test coverage</para>
         /// <para>
-        /// To maximize tests coverage, the algorithm walks thru the list of mutable
+        /// To maximize tests coverage, the algorithm walks through the list of mutable
         /// dimensions (mutable dimension is a dimension that are not included in
         /// the previously selected tuple). Then for every dimension, the algorithm
-        /// walks thru the list of features and checks if this feature provides
+        /// walks through the list of features and checks if this feature provides
         /// better coverage than randomly selected feature, and if yes keeps this
         /// feature.
         /// </para>

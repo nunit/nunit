@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal.Execution
     /// <summary>
     /// MainThreadWorkItemDispatcher handles execution of WorkItems by
     /// directly executing them on the main thread. This is different
-    /// from the SimpleWorkItemDispatcher where the workitem is dispatched
+    /// from the SimpleWorkItemDispatcher where the work item is dispatched
     /// onto its own thread.
     /// </summary>
     public class MainThreadWorkItemDispatcher : IWorkItemDispatcher

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +25,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>The message produced by the assertion, or null</summary>
         public string Message { get; private set; }
 
-        /// <summary>The stacktrace associated with the assertion, or null</summary>
+        /// <summary>The stack trace associated with the assertion, or null</summary>
         public string StackTrace { get; private set; }
 
         /// <summary>

@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstraintExpression"/>
-        /// class passing in a ConstraintBuilder, which may be pre-populated.
+        /// class passing in a ConstraintBuilder, which may be prepopulated.
         /// </summary>
         /// <param name="builder">The builder.</param>
         public ConstraintExpression(ConstraintBuilder builder)
@@ -473,7 +473,7 @@ namespace NUnit.Framework.Constraints
 
 #if !NETSTANDARD1_6
         /// <summary>
-        /// Returns a constraint that tests whether an object graph is serializable in xml format.
+        /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
         public XmlSerializableConstraint XmlSerializable
         {

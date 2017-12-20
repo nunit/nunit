@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Interfaces
         Assembly Assembly { get; }
 
         /// <summary>
-        /// Gets the Namespace of the Type
+        /// Gets the namespace of the Type
         /// </summary>
         string Namespace { get; }
 

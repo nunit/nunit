@@ -21,7 +21,7 @@ Supported platforms:
 How to use this package:
 
 1. Create a console application for your tests and delete the generated class containing Main().
-2. Install the NUnitLite package, which creates a new Main() as well as adding a reference to NUnitLite. This will also bring in the NUnit package, which adds a reference to the nunit framework to your project.
+2. Install the NUnitLite package, which creates a new Main() as well as adding a reference to NUnitLite. This will also bring in the NUnit package, which adds a reference to the NUnit framework to your project.
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>

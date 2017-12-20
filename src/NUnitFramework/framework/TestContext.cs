@@ -481,7 +481,7 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// Gets any stacktrace associated with an
+            /// Gets any stack trace associated with an
             /// error or failure.
             /// </summary>
             public virtual string StackTrace

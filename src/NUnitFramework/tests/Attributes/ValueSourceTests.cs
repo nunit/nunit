@@ -199,7 +199,7 @@ namespace NUnit.Framework.Attributes
             get { return null; }
         }
 
-        [Test, Explicit("Null or nonexisting data sources definitions should not prevent other tests from run #1121")]
+        [Test, Explicit("Null or nonexistent data sources definitions should not prevent other tests from run #1121")]
         public void ValueSourceMayNotBeNull(
             [ValueSource(nameof(NullSource))] string nullSource,
             [ValueSource(nameof(NullDataSourceProvider))] string nullDataSourceProvided,

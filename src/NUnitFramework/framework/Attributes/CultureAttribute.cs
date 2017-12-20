@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -47,7 +47,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Constructor taking one or more cultures
         /// </summary>
-        /// <param name="cultures">Comma-deliminted list of cultures</param>
+        /// <param name="cultures">Comma-delimited list of cultures</param>
         public CultureAttribute(string cultures) : base(cultures) { }
 
         #region IApplyToTest members
