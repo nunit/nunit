@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -54,46 +53,45 @@ namespace NUnit.Framework.Internal
         {
             for (int i = 0; i < data.Length; i++)
             {
-                object arg = data[i];
-
-                if (arg == null)
-                {
-                    continue;
-                }
-
-                if (targetType.GetTypeInfo().IsInstanceOfType(arg))
-                {
-                    continue;
-                }
-
-                if (arg.GetType().FullName == "System.DBNull")
-                {
-                    data[i] = null;
-                    continue;
-                }
-
-                bool convert = false;
-
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
-                {
-                    convert = arg is int;
-                }
-                else if (targetType == typeof(decimal))
-                {
-                    convert = arg is double || arg is string || arg is int;
-                }
-                else if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
-                {
-                    convert = arg is string;
-                }
-
-                if (convert)
-                {
-                    data[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
-                }
+                data[i] = NUnitConvert(data[i], targetType);
             }
 
             return data;
+        }
+
+        public static object NUnitConvert(object value, Type targetType)
+        {
+            if (value == null || targetType.GetTypeInfo().IsInstanceOfType(value))
+            {
+                return value;
+            }
+
+            if (value.GetType().FullName == "System.DBNull")
+            {
+                return null;
+            }
+
+            bool convert = false;
+
+            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
+            {
+                convert = value is int;
+            }
+            else if (targetType == typeof(decimal))
+            {
+                convert = value is double || value is string || value is int;
+            }
+            else if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
+            {
+                convert = value is string;
+            }
+
+            if (convert)
+            {
+                return Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            return value;
         }
     }
 }
