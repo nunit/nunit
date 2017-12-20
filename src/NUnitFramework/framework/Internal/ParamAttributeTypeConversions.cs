@@ -73,22 +73,31 @@ namespace NUnit.Framework.Internal
 
             bool convert = false;
 
-            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
+            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
+                targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
             {
                 convert = value is int;
             }
-            else if (targetType == typeof(decimal))
+            else if (targetType == typeof(decimal) || targetType == typeof(decimal?))
             {
                 convert = value is double || value is string || value is int;
             }
-            else if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
+            else if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
             {
                 convert = value is string;
             }
 
             if (convert)
             {
-                return Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture);
+                Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ?
+                    targetType.GetGenericArguments()[0] : targetType;
+                return Convert.ChangeType(value, convertTo, System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            // Convert.ChangeType doesn't work for TimeSpan from string
+            if ((targetType == typeof(TimeSpan) || targetType == typeof(TimeSpan?)) && value is string)
+            {
+                return TimeSpan.Parse((string)value);
             }
 
             return value;
