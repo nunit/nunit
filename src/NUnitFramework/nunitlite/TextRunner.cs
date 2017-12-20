@@ -222,7 +222,7 @@ namespace NUnitLite
 
                 var runSettings = MakeRunSettings(_options);
 
-                // We display the filters at this point so  that any exception message
+                // We display the filters at this point so that any exception message
                 // thrown by CreateTestFilter will be understandable.
                 _textUI.DisplayTestFilters();
 

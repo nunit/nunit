@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// AttributeExistsConstraint tests for the presence of a
-    /// specified attribute on  a Type.
+    /// specified attribute on a Type.
     /// </summary>
     public class AttributeExistsConstraint : Constraint
     {

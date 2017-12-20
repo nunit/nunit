@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal.Execution
 
         /// <summary>
         /// Start execution, creating the execution thread,
-        /// setting the top level work  and dispatching it.
+        /// setting the top level work and dispatching it.
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {

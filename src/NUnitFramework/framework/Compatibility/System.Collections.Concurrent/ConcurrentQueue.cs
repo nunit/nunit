@@ -36,7 +36,7 @@ namespace System.Collections.Concurrent
     /// </summary>
     /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
     /// <remarks>
-    /// All public  and protected members of <see cref="ConcurrentQueue{T}"/> are thread-safe and may be used
+    /// All public and protected members of <see cref="ConcurrentQueue{T}"/> are thread-safe and may be used
     /// concurrently from multiple threads.
     /// </remarks>
 	[System.Diagnostics.DebuggerDisplay ("Count={Count}")]
