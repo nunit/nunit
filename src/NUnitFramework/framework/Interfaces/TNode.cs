@@ -134,7 +134,7 @@ namespace NUnit.Framework.Interfaces
         #region Static Methods
 
         /// <summary>
-        /// Create a TNode from it's XML text representation
+        /// Create a TNode from its XML text representation
         /// </summary>
         /// <param name="xmlText">The XML text to be parsed</param>
         /// <returns>A TNode</returns>

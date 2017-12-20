@@ -24,7 +24,7 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Operator that requires at least one of it's arguments to succeed
+    /// Operator that requires at least one of its arguments to succeed
     /// </summary>
     public class OrOperator : BinaryOperator
     {

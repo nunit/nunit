@@ -372,7 +372,7 @@ namespace NUnit.Framework.Internal.Execution
             // fixture setup or teardown. Each context only
             // counts the asserts taking place in that context.
             // Each result accumulates the count from child
-            // results along with it's own asserts.
+            // results along with its own asserts.
             Result.AssertCount += Context.AssertCount;
 
             Context.Listener.TestFinished(Result);

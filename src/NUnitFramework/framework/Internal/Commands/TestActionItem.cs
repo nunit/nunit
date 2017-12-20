@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// TestActionItem wraps a single execution of an ITestAction.
-    /// It's primary purpose is to track whether the BeforeTest
+    /// Its primary purpose is to track whether the BeforeTest
     /// method has been called and suppress calling the
     /// AfterTest method if it has not. This is necessary when
     /// ITestActions are used before and after a CompositeWorkItem,

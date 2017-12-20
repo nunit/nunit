@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Determine if a test matches the filter explicitly. That is, it must
-        /// be a direct match of the test itself or one of it's children.
+        /// be a direct match of the test itself or one of its children.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the test matches the filter explicitly, otherwise false</returns>
@@ -144,7 +144,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Create a TestFilter from it's TNode representation
+        /// Create a TestFilter from its TNode representation
         /// </summary>
         public static TestFilter FromXml(TNode node)
         {
