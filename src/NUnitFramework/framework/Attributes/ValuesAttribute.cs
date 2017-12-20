@@ -92,7 +92,7 @@ namespace NUnit.Framework
         /// <param name="args"></param>
         public ValuesAttribute(params object[] args)
         {
-            data = args;
+            data = args ?? new object[] { null };
         }
 
         /// <summary>
