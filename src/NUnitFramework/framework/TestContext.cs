@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -117,7 +117,7 @@ namespace NUnit.Framework
 
 #if PARALLEL
         /// <summary>
-        /// Gets the unique name of the  Worker that is executing this test.
+        /// Gets the unique name of the Worker that is executing this test.
         /// </summary>
         public string WorkerId
         {
@@ -481,7 +481,7 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// Gets any stacktrace associated with an
+            /// Gets any stack trace associated with an
             /// error or failure.
             /// </summary>
             public virtual string StackTrace

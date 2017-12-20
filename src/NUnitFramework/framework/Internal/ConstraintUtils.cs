@@ -26,7 +26,7 @@ using System;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Provides methods to support consistent checking for constaints methods.
+    /// Provides methods to support consistent checking in constraints.
     /// </summary>
     internal static class ConstraintUtils
     {

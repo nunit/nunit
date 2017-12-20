@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// OSPlatform represents a particular operating system platform
     /// </summary>
-    // This class invokes security critical P/Invoke and 'System.Runtime.InteropServices.Marshall' methods. 
+    // This class invokes security critical P/Invoke and 'System.Runtime.InteropServices.Marshal' methods. 
     // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
     // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
     [SecuritySafeCritical]

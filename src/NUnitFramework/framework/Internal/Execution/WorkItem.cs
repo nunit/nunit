@@ -372,7 +372,7 @@ namespace NUnit.Framework.Internal.Execution
             // fixture setup or teardown. Each context only
             // counts the asserts taking place in that context.
             // Each result accumulates the count from child
-            // results along with it's own asserts.
+            // results along with its own asserts.
             Result.AssertCount += Context.AssertCount;
 
             Context.Listener.TestFinished(Result);
@@ -514,7 +514,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             // If there is no fixture and so nothing to do but dispatch
             // grandchildren we run directly. This saves time that would
-            // otherwise be spent enqueuing and dequeing items.
+            // otherwise be spent enqueuing and dequeuing items.
             if (Test.TypeInfo == null)
                 return ParallelExecutionStrategy.Direct;
 

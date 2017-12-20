@@ -34,7 +34,7 @@ using NUnit.Framework.Internal;
 namespace NUnitLite
 {
     /// <summary>
-    /// NUnit2XmlOutputWriter is able to create an xml file representing
+    /// NUnit2XmlOutputWriter is able to create an XML file representing
     /// the result of a test run in NUnit 2.x format.
     /// </summary>
     public class NUnit2XmlOutputWriter : OutputWriter

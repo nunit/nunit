@@ -102,7 +102,7 @@ namespace NUnit.Framework.Constraints
         ///   <para>
         ///     Floating point values can only represent a finite subset of natural numbers.
         ///     For example, the values 2.00000000 and 2.00000024 can be stored in a float,
-        ///     but nothing inbetween them.
+        ///     but nothing in between them.
         ///   </para>
         ///   <para>
         ///     This comparison will count how many possible floating point values are between
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Constraints
         ///   <para>
         ///     Double precision floating point values can only represent a limited series of
         ///     natural numbers. For example, the values 2.0000000000000000 and 2.0000000000000004
-        ///     can be stored in a double, but nothing inbetween them.
+        ///     can be stored in a double, but nothing in between them.
         ///   </para>
         ///   <para>
         ///     This comparison will count how many possible double precision floating point

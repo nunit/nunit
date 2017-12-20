@@ -28,7 +28,7 @@ using System.IO;
 namespace NUnitLite
 {
     /// <summary>
-    /// DebugWriter is a TextWriter that sends it's 
+    /// DebugWriter is a TextWriter that sends its 
     /// output to Debug. We don't use Trace because
     /// writing to it is not supported in CF.
     /// </summary>

@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Execution
         private Thread _pumpThread;
 
         /// <summary>
-        /// The current state of the eventpump
+        /// The current state of the event pump
         /// </summary>
         private int _pumpState = (int)EventPumpState.Stopped;
 

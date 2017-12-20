@@ -30,7 +30,7 @@ namespace NUnit.Framework
         #region IsAssignableFrom
 
         /// <summary>
-        /// Asserts that an object may be assigned a  value of a given Type.
+        /// Asserts that an object may be assigned a value of a given Type.
         /// </summary>
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
@@ -42,7 +42,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an object may be assigned a  value of a given Type.
+        /// Asserts that an object may be assigned a value of a given Type.
         /// </summary>
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
@@ -56,7 +56,7 @@ namespace NUnit.Framework
         #region IsAssignableFrom<TExpected>
 
         /// <summary>
-        /// Asserts that an object may be assigned a  value of a given Type.
+        /// Asserts that an object may be assigned a value of a given Type.
         /// </summary>
         /// <typeparam name="TExpected">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>
@@ -68,7 +68,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an object may be assigned a  value of a given Type.
+        /// Asserts that an object may be assigned a value of a given Type.
         /// </summary>
         /// <typeparam name="TExpected">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>
@@ -82,7 +82,7 @@ namespace NUnit.Framework
         #region IsNotAssignableFrom
 
         /// <summary>
-        /// Asserts that an object may not be assigned a  value of a given Type.
+        /// Asserts that an object may not be assigned a value of a given Type.
         /// </summary>
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
@@ -94,7 +94,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an object may not be assigned a  value of a given Type.
+        /// Asserts that an object may not be assigned a value of a given Type.
         /// </summary>
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
@@ -108,7 +108,7 @@ namespace NUnit.Framework
         #region IsNotAssignableFrom<TExpected>
 
         /// <summary>
-        /// Asserts that an object may not be assigned a  value of a given Type.
+        /// Asserts that an object may not be assigned a value of a given Type.
         /// </summary>
         /// <typeparam name="TExpected">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>
@@ -120,7 +120,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an object may not be assigned a  value of a given Type.
+        /// Asserts that an object may not be assigned a value of a given Type.
         /// </summary>
         /// <typeparam name="TExpected">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>

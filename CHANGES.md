@@ -12,7 +12,7 @@ and `ApartmentState` not being properly applied to tests in all cases.
  * 1346 NullReferenceException when [TestFixtureSource] refers to data in a generic class.
  * 1473 Allow Is.Ordered to Compare Null Values
  * 1899 Constraint Throws.Exception does not catch exception with async lambdas
- * 1905 SetupFixture without namespace will make assembly-level Parallelable attribute useless
+ * 1905 SetupFixture without namespace will make assembly-level Parallelizable attribute useless
  * 2091 When a native exception of corrupted state is thrown, nunit test thread crashes and the nunit-console process hangs
  * 2102 NUnitLite incorrectly reports Win 10 OS name
  * 2271 When CollectionAssert.AreEqual do compare each element, it will ignore the IEquatable of the element too
@@ -108,7 +108,7 @@ that test fixtures will be run.
  * 2251 Randomizer.NextGuid()
  * 2253 Parallelizable(ParallelScope.Fixtures) doesn't work on a TestFixture
  * 2254 EqualTo on ValueTuple with Nullable unexpected
- * 2261 When an assembly is marked with ParallelScope.None and there are Parallelizable tests Nunit hangs
+ * 2261 When an assembly is marked with ParallelScope.None and there are Parallelizable tests NUnit hangs
  * 2269 Parallelizable and NonParallelizable attributes on setup and teardown silently ignored
  * 2276 Intermittent test failures in Travic CI: TestContextTests
  * 2281 Add type constraint for Throws and any method requiring Exception
@@ -132,7 +132,7 @@ that test fixtures will be run.
 
 ### NUnit 3.7.1 - June 6, 2017
 
-This is a hotfix release that addresses occasional hangs when using test parallization
+This is a hotfix release that addresses occasional hangs when using test parallelization
 and fixes crashes in NCrunch prior to version 3.9.
 
 #### Issues Resolved

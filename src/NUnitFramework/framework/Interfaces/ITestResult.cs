@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// Gets any stacktrace associated with an
+        /// Gets any stack trace associated with an
         /// error or failure. Not available in
         /// the Compact Framework 1.0.
         /// </summary>

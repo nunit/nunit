@@ -28,7 +28,7 @@ namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The ITestCaseData interface is implemented by a class
-    /// that is able to return complete testcases for use by
+    /// that is able to return complete test cases for use by
     /// a parameterized test method.
     /// </summary>
     public interface ITestCaseData : ITestData

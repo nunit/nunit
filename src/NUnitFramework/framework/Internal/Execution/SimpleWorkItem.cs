@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal.Execution
                         command = new TestActionCommand(command, action); ;
 
                 // Try to locate the parent fixture. In current implementations, the test method 
-                // is either one or two levels levels below the TestFixture - if this changes, 
+                // is either one or two levels below the TestFixture - if this changes, 
                 // so should the following code.
                 TestFixture parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
 

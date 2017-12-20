@@ -156,7 +156,7 @@ namespace NUnit.Framework
 
         private static void ThrowInvalidDataSourceException()
         {
-            throw new InvalidDataSourceException("The sourceName specified on a ValueSourceAttribute must refer to a non null static field, property or method.");
+            throw new InvalidDataSourceException("The sourceName specified on a ValueSourceAttribute must refer to a non-null static field, property or method.");
         }
 
         #endregion

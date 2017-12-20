@@ -367,7 +367,7 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
-        /// Handle the the Completed event for the top level work item
+        /// Handle the Completed event for the top level work item
         /// </summary>
         private void OnRunCompleted(object sender, EventArgs e)
         {
