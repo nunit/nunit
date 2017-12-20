@@ -29,6 +29,18 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class ParamAttributeTypeConversionTests
     {
+        [Test]
+        public static void NullDataArgumentShouldThrowArgumentNullException()
+        {
+            Assert.That(() => ParamAttributeTypeConversions.ConvertData(null, typeof(object)), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public static void NullTypeArgumentShouldThrowArgumentNullException()
+        {
+            Assert.That(() => ParamAttributeTypeConversions.ConvertData(new object[0], null), Throws.ArgumentNullException);
+        }
+
         [TestCase(typeof(short))]
         [TestCase(typeof(byte))]
         [TestCase(typeof(sbyte))]
