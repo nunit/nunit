@@ -39,6 +39,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static IEnumerable ConvertData(object[] data, Type targetType)
         {
+            Guard.ArgumentNotNull(data, nameof(data));
+            Guard.ArgumentNotNull(targetType, nameof(targetType));
+
             if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
             {
                 return Enum.GetValues(targetType);

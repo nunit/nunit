@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -89,5 +90,35 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
+
+        [Test]
+        public void SupportsNullableDecimal([Values(null)] decimal? x)
+        {
+            Assert.That(x.HasValue, Is.False);
+        }
+
+        [Test]
+        public void SupportsNullableDateTime([Values(null)] DateTime? dt)
+        {
+            Assert.That(dt.HasValue, Is.False);
+        }
+
+        [Test]
+        public void SupportsNullableTimeSpan([Values(null)] TimeSpan? dt)
+        {
+            Assert.That(dt.HasValue, Is.False);
+        }
+
+        [Test]
+        public void NullableSimpleFormalParametersWithArgument([Values(1)] int? a)
+        {
+            Assert.AreEqual(1, a);
+        }
+
+        [Test]
+        public void NullableSimpleFormalParametersWithNullArgument([Values(null)] int? a)
+        {
+            Assert.IsNull(a);
+        }
     }
 }
