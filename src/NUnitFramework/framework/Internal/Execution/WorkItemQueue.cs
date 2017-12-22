@@ -77,10 +77,14 @@ namespace NUnit.Framework.Internal.Execution
         private class SavedState
         {
             public ConcurrentQueue<WorkItem>[] InnerQueues;
+            public int AddId;
+            public int RemoveId;
 
             public SavedState(WorkItemQueue queue)
             {
                 InnerQueues = queue._innerQueues;
+                AddId = queue._addId;
+                RemoveId = queue._removeId;
             }
         }
 
@@ -135,6 +139,8 @@ namespace NUnit.Framework.Internal.Execution
 
             for (int i = 0; i < PRIORITY_LEVELS; i++)
                 _innerQueues[i] = new ConcurrentQueue<WorkItem>();
+
+            _addId = _removeId = 0;
         }
 
 #region Properties
@@ -359,17 +365,19 @@ namespace NUnit.Framework.Internal.Execution
             // else can take a look at it later on.
             //Guard.OperationValid(State != WorkItemQueueState.Running, $"Attempted to restore state of {Name} while queue was running.");
 
-            var savedQueues = _savedState.Pop().InnerQueues;
+            var state = _savedState.Pop();
 
             // If there are any queued items, copy to the next lower level
             for (int i = 0; i < PRIORITY_LEVELS; i++)
             {
                 WorkItem work;
                 while (_innerQueues[i].TryDequeue(out work))
-                    savedQueues[i].Enqueue(work);
+                    state.InnerQueues[i].Enqueue(work);
             }
 
-            _innerQueues = savedQueues;
+            _innerQueues = state.InnerQueues;
+            _addId += state.AddId;
+            _removeId += state.RemoveId;
         }
 
 #endregion
