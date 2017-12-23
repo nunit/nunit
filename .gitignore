@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+launchSettings.json
 
 # Build results
 
