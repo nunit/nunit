@@ -1,3 +1,4 @@
+#load pubapi.cake
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.7.0
 
 //////////////////////////////////////////////////////////////////////
@@ -7,11 +8,15 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
+bool CI;
+if (!bool.TryParse(EnvironmentVariable("CI"), out CI)) CI = false;
+
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
 //////////////////////////////////////////////////////////////////////
 
 var ErrorDetail = new List<string>();
+var WarningDetail = new List<string>();
 
 //////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
@@ -141,16 +146,25 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
+        var originalPublicApi = PubApiFiles.ReadSnapshot(Directory("src/NUnitFramework/pubapi"));
+
         MSBuild(SOLUTION_FILE, CreateSettings());
 
         Information("Publishing netcoreapp1.1 tests so that dependencies are present...");
-
         MSBuild("src/NUnitFramework/tests/nunit.framework.tests.csproj", CreateSettings()
             .WithTarget("Publish")
             .WithProperty("TargetFramework", "netcoreapp1.1")
             .WithProperty("NoBuild", "true") // https://github.com/dotnet/cli/issues/5331#issuecomment-338392972
             .WithProperty("PublishDir", BIN_DIR + "netcoreapp1.1/")
             .WithRawArgument("/nologo"));
+
+        var changedApiFiles = originalPublicApi.GetChangedFiles();
+        if (changedApiFiles.Any())
+        {
+            (CI ? ErrorDetail : WarningDetail).Add(
+                "Public API changes should be committed as part of the PR. Files which changed during the build:" + Environment.NewLine
+                + string.Join(Environment.NewLine, changedApiFiles));
+        }
     });
 
 MSBuildSettings CreateSettings()
@@ -374,7 +388,13 @@ Task("UploadArtifacts")
 // SETUP AND TEARDOWN TASKS
 //////////////////////////////////////////////////////////////////////
 
-Teardown(context => CheckForError(ref ErrorDetail));
+Teardown(context =>
+{
+    foreach (var message in WarningDetail)
+        Warning(message);
+
+    CheckForError(ref ErrorDetail);
+});
 
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS - GENERAL
