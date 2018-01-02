@@ -138,13 +138,19 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestMethodWithReturnTypeIsNotRunnable()
         {
-            TestAssert.IsNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithReturnType));
+            TestAssert.IsNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithReturnValue_WithoutExpectedResult));
         }
 
         [Test]
         public void TestMethodWithExpectedReturnTypeIsRunnable()
         {
-            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithExpectedReturnType));
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithReturnValue_WithExpectedResult));
+        }
+
+        [Test]
+        public void TestMethodWithExpectedReturnAndArgumentsIsNotRunnable()
+        {
+            TestAssert.IsNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithReturnValueAndArgs_WithExpectedResult));
         }
 
         [Test]
