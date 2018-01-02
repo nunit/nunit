@@ -141,26 +141,29 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        var msbuildSettings = new MSBuildSettings
-        {
-            Verbosity = Verbosity.Minimal,
-            Configuration = configuration
-        };
+        MSBuild(SOLUTION_FILE, CreateSettings());
 
-        if (IsRunningOnWindows())
-            msbuildSettings.ToolVersion = MSBuildToolVersion.VS2017;
-        else
-            msbuildSettings.ToolPath = Context.Tools.Resolve("msbuild");
+        Information("Publishing netcoreapp1.1 tests so that dependencies are present...");
 
-        MSBuild(SOLUTION_FILE, msbuildSettings);
-
-        DotNetCorePublish("src/NUnitFramework/tests/nunit.framework.tests.csproj", new DotNetCorePublishSettings
-        {
-            Framework = "netcoreapp1.1",
-            Configuration = configuration,
-            OutputDirectory = BIN_DIR + "netcoreapp1.1/"
-        });
+        MSBuild("src/NUnitFramework/tests/nunit.framework.tests.csproj", CreateSettings()
+            .WithTarget("Publish")
+            .WithProperty("TargetFramework", "netcoreapp1.1")
+            .WithProperty("NoBuild", "true") // https://github.com/dotnet/cli/issues/5331#issuecomment-338392972
+            .WithProperty("PublishDir", BIN_DIR + "netcoreapp1.1/")
+            .WithRawArgument("/nologo"));
     });
+
+MSBuildSettings CreateSettings()
+{
+    var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
+
+    if (IsRunningOnWindows())
+        settings.ToolVersion = MSBuildToolVersion.VS2017;
+    else
+        settings.ToolPath = Context.Tools.Resolve("msbuild");
+
+    return settings;
+}
 
 //////////////////////////////////////////////////////////////////////
 // TEST
@@ -463,6 +466,22 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
         errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
     else if (rc < 0)
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+}
+
+public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
+{
+    if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+    if (!string.IsNullOrEmpty(rawArgument))
+    {
+        var previousCustomizer = settings.ArgumentCustomization;
+        if (previousCustomizer != null)
+            settings.ArgumentCustomization = builder => previousCustomizer.Invoke(builder).Append(rawArgument);
+        else
+            settings.ArgumentCustomization = builder => builder.Append(rawArgument);
+    }
+
+    return settings;
 }
 
 //////////////////////////////////////////////////////////////////////
