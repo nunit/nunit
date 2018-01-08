@@ -101,5 +101,15 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, categories.Count);
             Assert.AreEqual("SAMPLE", categories[0]);
         }
+
+        [Test]
+        public void RetryUpdatesCurrentAttemptProperty()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "NeverPasses");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count, "expected the CurrentAttempt property to equal the number of executions");
+            Assert.AreEqual(result.Test.Properties.Get(PropertyNames.CurrentAttempt), fixture.Count, "expected the CurrentAttempt property in the result to be set correctly after execution");
+        }
     }
 }

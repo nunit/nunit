@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -137,6 +137,11 @@ namespace NUnit.Framework.Internal
         /// The optional Order the test will run in
         /// </summary>
         public const string Order = "Order";
+
+        /// <summary>
+        /// The attempt currently being executed in a test using the <see cref="RetryAttribute"/>
+        /// </summary>
+        public const string CurrentAttempt = "CurrentAttempt";
         #endregion
     }
 }
