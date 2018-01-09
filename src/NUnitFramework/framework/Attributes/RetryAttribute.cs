@@ -87,15 +87,12 @@ namespace NUnit.Framework
             /// <returns>A TestResult</returns>
             public override TestResult Execute(TestExecutionContext context)
             {
-                int currentAttempt = 0;
+                int count = _tryCount;
 
-                while (currentAttempt++ < _tryCount)
+                while (count-- > 0)
                 {
                     try
                     {
-                        // update CurrentAttempt property in test
-                        context.CurrentTest.Properties.Set(PropertyNames.CurrentAttempt, currentAttempt);
-
                         context.CurrentResult = innerCommand.Execute(context);
                     }
                     // Commands are supposed to catch exceptions, but some don't
@@ -110,8 +107,11 @@ namespace NUnit.Framework
                         break;
 
                     // Clear result for retry
-                    if (currentAttempt < _tryCount)
+                    if (count > 0)
+                    {
                         context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+                    }
                 }
 
                 return context.CurrentResult;

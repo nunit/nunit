@@ -137,11 +137,6 @@ namespace NUnit.Framework.Internal
         /// The optional Order the test will run in
         /// </summary>
         public const string Order = "Order";
-
-        /// <summary>
-        /// The attempt currently being executed in a test using the <see cref="RetryAttribute"/>
-        /// </summary>
-        public const string CurrentAttempt = "CurrentAttempt";
         #endregion
     }
 }

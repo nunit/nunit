@@ -103,13 +103,23 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void RetryUpdatesCurrentAttemptProperty()
+        public void RetryUpdatesCurrentRepeatCountPropertyOnAlwaysFailingTest()
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
             ITestResult result = TestBuilder.RunTestCase(fixture, "NeverPasses");
 
-            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count, "expected the CurrentAttempt property to equal the number of executions");
-            Assert.AreEqual(result.Test.Properties.Get(PropertyNames.CurrentAttempt), fixture.Count, "expected the CurrentAttempt property in the result to be set correctly after execution");
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 1, "expected that the test failed all retries");
+        }
+
+        [Test]
+        public void RetryUpdatesCurrentRepeatCountPropertyOnEachAttempt()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "PassesOnLastRetry");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 0, "expected that the test passed final retry");
         }
     }
 }

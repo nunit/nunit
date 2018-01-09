@@ -417,6 +417,16 @@ namespace NUnit.Framework
         }
 
         #endregion
+
+        #region Retry
+        [Test]
+        public void TestCanAccessCurrentRepeatCount()
+        {
+            var context = TestExecutionContext.CurrentContext;
+
+            Assert.That(context.CurrentRepeatCount, Is.EqualTo(0), "expected TestContext.CurrentRepeatCount to be accessible and be zero on first execution of test");
+        }
+        #endregion
     }
 
     [TestFixture]
