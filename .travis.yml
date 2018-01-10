@@ -4,16 +4,14 @@ sudo: false
 # Need 2.*, should keep up to date with security releases
 dotnet: 2.0.3
 
-# Mono: Need 5.2+ for the included MSBuild
-# Right now Mono 5.4+ crashes while compiling build.cake. Should diagnose.
 matrix:
   include:
 
     - os: linux
-      mono: 5.2.0
+      mono: 5.4.1
 
     - os: osx
-      mono: 5.2.0
+      mono: 5.4.1
 
       # .NET Core 2 requires OSX 10.12+
       # https://github.com/dotnet/core/blob/master/release-notes/2.0/2.0-supported-os.md#macos
