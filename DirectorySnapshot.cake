@@ -1,25 +1,31 @@
-public sealed class PubApiFiles
+public sealed class DirectorySnapshot
 {
-    private readonly string pubapiDirectory;
+    private readonly string directory;
+    private readonly string filePattern;
     private readonly Dictionary<string, byte[]> original = new Dictionary<string, byte[]>();
 
-    public static PubApiFiles ReadSnapshot(DirectoryPath pubapiDirectory) => new PubApiFiles(pubapiDirectory);
-
-    private PubApiFiles(DirectoryPath pubapiDirectory)
+    public static DirectorySnapshot Read(string directory, string filePattern)
     {
-        this.pubapiDirectory = pubapiDirectory.FullPath;
-        foreach (var file in GetPubApiFiles())
+        return new DirectorySnapshot(directory, filePattern);
+    }
+
+    private DirectorySnapshot(string directory, string filePattern)
+    {
+        this.directory = directory;
+        this.filePattern = filePattern;
+
+        foreach (var file in GetFiles())
             original.Add(System.IO.Path.GetFileName(file), System.IO.File.ReadAllBytes(file));
     }
 
-    private IReadOnlyCollection<string> GetPubApiFiles()
+    private IReadOnlyCollection<string> GetFiles()
     {
-        return System.IO.Directory.GetFiles(pubapiDirectory, "*.pubapi.cs");
+        return System.IO.Directory.GetFiles(directory, filePattern);
     }
 
     public IReadOnlyCollection<string> GetChangedFiles()
     {
-        return GetPubApiFiles().Where(IsChanged).ToList();
+        return GetFiles().Where(IsChanged).ToList();
     }
 
     private bool IsChanged(string filePath)

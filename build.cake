@@ -1,4 +1,4 @@
-#load pubapi.cake
+#load DirectorySnapshot.cake
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.7.0
 
 //////////////////////////////////////////////////////////////////////
@@ -146,7 +146,7 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        var originalPublicApi = PubApiFiles.ReadSnapshot(Directory("src/NUnitFramework/pubapi"));
+        var originalExternalShape = DirectorySnapshot.Read("src/NUnitFramework/externalshape", "*.shape.cs");
 
         MSBuild(SOLUTION_FILE, CreateSettings());
 
@@ -158,12 +158,12 @@ Task("Build")
             .WithProperty("PublishDir", BIN_DIR + "netcoreapp1.1/")
             .WithRawArgument("/nologo"));
 
-        var changedApiFiles = originalPublicApi.GetChangedFiles();
-        if (changedApiFiles.Any())
+        var changedShapeFiles = originalExternalShape.GetChangedFiles();
+        if (changedShapeFiles.Any())
         {
             (CI ? ErrorDetail : WarningDetail).Add(
-                "Public API changes should be committed as part of the PR. Files which changed during the build:" + Environment.NewLine
-                + string.Join(Environment.NewLine, changedApiFiles));
+                "Changes to NUnit’s external shape should be committed as part of the PR and discussed. Files which changed during the build:" + Environment.NewLine
+                + string.Join(Environment.NewLine, changedShapeFiles));
         }
     });
 

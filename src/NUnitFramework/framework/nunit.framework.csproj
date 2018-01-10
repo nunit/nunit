@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ApiContractAssembly Include="$(TargetPath)" />
+    <ApiContractAssembly Include="$(TargetPath)" OutputPath="..\externalshape\%(Filename).$(TargetFramework).shape.cs" />
     <ApiContractIgnoredNamespace Include="NUnit.Framework.Internal" />
   </ItemGroup>
 
