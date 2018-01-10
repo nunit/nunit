@@ -181,6 +181,16 @@ namespace NUnit.Framework
             get { return _testExecutionContext.AssertCount; }
         }
 
+        /// <summary>
+        /// Get the number of times the current Test has been repeated. This is currently only 
+        /// set when using the <see cref="RetryAttribute"/>.
+        /// TODO: add this to the RepeatAttribute as well
+        /// </summary>
+        public int CurrentRepeatCount
+        {
+            get { return _testExecutionContext.CurrentRepeatCount; }
+        }
+
         #endregion
 
         #region Static Methods

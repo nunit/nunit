@@ -984,6 +984,16 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        #endregion
+
+#region CurrentRepeatCount Tests
+        [Test]
+        public void CanAccessCurrentRepeatCount()
+        {
+            Assert.That(_fixtureContext.CurrentRepeatCount, Is.EqualTo(0), "expected value to default to zero");
+            _fixtureContext.CurrentRepeatCount++;
+            Assert.That(_fixtureContext.CurrentRepeatCount, Is.EqualTo(1), "expected value to be able to be incremented from the TestExecutionContext");
+        }
 #endregion
 
 #region Helper Methods

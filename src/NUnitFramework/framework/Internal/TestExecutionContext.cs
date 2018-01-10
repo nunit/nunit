@@ -428,6 +428,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsSingleThreaded { get; set; }
 
+        /// <summary>
+        /// The number of times the current test has been scheduled for execution.
+        /// Currently only being executed in a test using the <see cref="RetryAttribute"/>
+        /// </summary>
+        public int CurrentRepeatCount { get; set; }
+
 #endregion
 
 #region Instance Methods

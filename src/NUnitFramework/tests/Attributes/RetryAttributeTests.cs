@@ -101,5 +101,25 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, categories.Count);
             Assert.AreEqual("SAMPLE", categories[0]);
         }
+
+        [Test]
+        public void RetryUpdatesCurrentRepeatCountPropertyOnAlwaysFailingTest()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "NeverPasses");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 1, "expected that the test failed all retries");
+        }
+
+        [Test]
+        public void RetryUpdatesCurrentRepeatCountPropertyOnEachAttempt()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "PassesOnLastRetry");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 0, "expected that the test passed final retry");
+        }
     }
 }

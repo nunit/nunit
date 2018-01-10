@@ -108,7 +108,10 @@ namespace NUnit.Framework
 
                     // Clear result for retry
                     if (count > 0)
+                    {
                         context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+                    }
                 }
 
                 return context.CurrentResult;

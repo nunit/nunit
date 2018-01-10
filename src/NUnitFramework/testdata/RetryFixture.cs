@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace NUnit.TestData.RepeatingTests
 {
@@ -201,6 +202,27 @@ namespace NUnit.TestData.RepeatingTests
         {
             Count++;
             throw new Exception("Deliberate exception");
+        }
+    }
+
+    public class RetryTestVerifyAttempt : RepeatingTestsFixtureBase
+    {
+        [Test, Retry(3)]
+        public void NeverPasses()
+        {
+            count = TestContext.CurrentContext.CurrentRepeatCount;
+            Assert.Fail("forcing a failure so we retry maximum times");
+        }
+
+        [Test, Retry(3)]
+        public void PassesOnLastRetry()
+        {
+            Assert.That(count, Is.EqualTo(TestContext.CurrentContext.CurrentRepeatCount), "expected CurrentRepeatCount to be incremented only after first attempt");
+            if (count < 2) // second Repeat is 3rd Retry (i.e. end of attempts)
+            {
+                count++;
+                Assert.Fail("forced failure so we will use maximum number of Retries for PassesOnLastRetry");
+            }
         }
     }
 }
