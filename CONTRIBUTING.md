@@ -50,6 +50,10 @@ It is also a good idea to add a comment to an issue that you are working on to l
 
 Please read through the [developer docs](https://github.com/nunit/docs/wiki/Team-Practices#technical-practices) before contributing to understand our coding standards and contribution guidelines.
 
+## Changing the Externally-Visible Shape
+
+TODO
+
 ## License
 
 NUnit is under the [MIT license](https://github.com/nunit/nunit/blob/master/LICENSE.txt). By contributing to NUnit, you assert that:
