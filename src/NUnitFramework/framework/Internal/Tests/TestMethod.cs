@@ -121,6 +121,11 @@ namespace NUnit.Framework.Internal
 
             PopulateTestNode(thisNode, recursive);
 
+            if (!string.IsNullOrEmpty(this.parms.TestName))
+            {
+                thisNode.AddAttribute("TestName", this.parms.TestName);
+            }
+
             thisNode.AddAttribute("seed", this.Seed.ToString());
 
             return thisNode;
