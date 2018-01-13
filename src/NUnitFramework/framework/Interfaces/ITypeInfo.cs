@@ -50,12 +50,12 @@ namespace NUnit.Framework.Interfaces
         bool IsType(Type type);
 
         /// <summary>
-        /// Gets the Name of the Type
+        /// Gets the name of the Type
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// Gets the FullName of the Type
+        /// Gets the full name of the Type
         /// </summary>
         string FullName { get; }
 
