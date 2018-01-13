@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstraintExpression"/>
-        /// class passing in a ConstraintBuilder, which may be prepopulated.
+        /// class passing in a ConstraintBuilder, which may be pre-populated.
         /// </summary>
         /// <param name="builder">The builder.</param>
         public ConstraintExpression(ConstraintBuilder builder)
