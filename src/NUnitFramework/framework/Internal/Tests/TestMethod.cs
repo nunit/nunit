@@ -121,11 +121,6 @@ namespace NUnit.Framework.Internal
 
             PopulateTestNode(thisNode, recursive);
 
-            if (!string.IsNullOrEmpty(this.parms.TestName))
-            {
-                thisNode.AddAttribute("TestName", this.parms.TestName);
-            }
-
             thisNode.AddAttribute("seed", this.Seed.ToString());
 
             return thisNode;
@@ -155,6 +150,14 @@ namespace NUnit.Framework.Internal
         public override string MethodName
         {
             get { return Method.Name; }
+        }
+
+        /// <summary>
+        /// Returns the TestName of the method
+        /// </summary>
+        public override string TestName
+        {
+            get { return parms.TestName; }
         }
 
         #endregion
