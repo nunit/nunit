@@ -157,7 +157,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override string TestName
         {
-            get { return parms.TestName; }
+            get { return (parms != null ? parms.TestName : null); }
         }
 
         #endregion
