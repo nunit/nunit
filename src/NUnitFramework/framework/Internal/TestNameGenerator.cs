@@ -231,14 +231,14 @@ namespace NUnit.Framework.Internal
                     ? "null"
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
 
-                Array argArray = arg as Array;
+                var argArray = arg as Array;
                 if (argArray != null)
                 {
                     if (argArray.Length == 0)
                         display = "[]";
                     else
                     {
-                        StringBuilder builder = new StringBuilder();
+                        var builder = new StringBuilder();
                         builder.Append("[ ");
 
                         for (int i = 0; i < argArray.Length; i++)
@@ -246,8 +246,17 @@ namespace NUnit.Framework.Internal
                             if (i > 0)
                                 builder.Append(", ");
 
-                            string valueDisplayString = GetDisplayString(argArray.GetValue(i), stringMax);
-                            builder.Append(valueDisplayString);
+                            var element = argArray.GetValue(i);
+                            var childArray = element as Array;
+                            if (childArray != null)
+                            {
+                                builder.Append("[ ... ]");
+                            }
+                            else
+                            {
+                                var valueDisplayString = GetDisplayString(argArray.GetValue(i), stringMax);
+                                builder.Append(valueDisplayString);
+                            }
                         }
 
                         builder.Append(" ]");

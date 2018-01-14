@@ -135,7 +135,7 @@ namespace NUnit.Framework.Attributes
         public void TestNameIntrospectsArrayValues()
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                GetType(), "MethodWithArrayArguments");
+                GetType(), nameof(MethodWithArrayArguments));
 
             Assert.That(suite.TestCaseCount, Is.EqualTo(3));
 
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Attributes
             {
                 Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, ""text"", null ])"));
                 Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
-                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ 2, 3 ], 4 ])"));
+                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ ... ], 4 ])"));
             });
         }
     }

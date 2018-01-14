@@ -224,7 +224,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void MethodWithArrayArguments([ValueSource("ComplexArrayBasedTestInput")] object o)
+        public void MethodWithArrayArguments([ValueSource(nameof(ComplexArrayBasedTestInput))] object o)
         {
         }
 
@@ -239,7 +239,7 @@ namespace NUnit.Framework.Attributes
         public void TestNameIntrospectsArrayValues()
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                GetType(), "MethodWithArrayArguments");
+                GetType(), nameof(MethodWithArrayArguments));
 
             Assert.That(suite.TestCaseCount, Is.EqualTo(3));
 
@@ -247,7 +247,7 @@ namespace NUnit.Framework.Attributes
             {
                 Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, ""text"", System.Object ])"));
                 Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
-                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ 2, 3 ], 4 ])"));
+                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ ... ], 4 ])"));
             });
         }
     }

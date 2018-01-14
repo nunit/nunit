@@ -147,7 +147,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        [TestCaseSource("ComplexArrayBasedTestInput")]
+        [TestCaseSource(nameof(ComplexArrayBasedTestInput))]
         public void MethodWithArrayArguments(object o)
         {
         }
