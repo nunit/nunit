@@ -251,10 +251,9 @@ namespace NUnit.Framework.Internal
 
                             var element = argArray.GetValue(i);
                             var childArray = element as Array;
+
                             if (childArray != null)
-                            {
                                 builder.Append("[ ... ]");
-                            }
                             else
                             {
                                 var elementDisplayString = GetDisplayString(element, stringMax);
@@ -263,9 +262,7 @@ namespace NUnit.Framework.Internal
                         }
 
                         if (argArray.Length > MaxNumItemsToEnumerate)
-                        {
                             builder.Append(", ...");
-                        }
 
                         builder.Append(" ]");
                         display = builder.ToString();
