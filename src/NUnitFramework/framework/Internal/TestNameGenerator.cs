@@ -241,7 +241,10 @@ namespace NUnit.Framework.Internal
                         var builder = new StringBuilder();
                         builder.Append("[ ");
 
-                        for (int i = 0; i < argArray.Length; i++)
+                        const int MaxNumItemsToEnumerate = 5;
+
+                        var numItemsToEnumerate = Math.Min(argArray.Length, MaxNumItemsToEnumerate);
+                        for (int i = 0; i < numItemsToEnumerate; i++)
                         {
                             if (i > 0)
                                 builder.Append(", ");
@@ -257,6 +260,11 @@ namespace NUnit.Framework.Internal
                                 var valueDisplayString = GetDisplayString(argArray.GetValue(i), stringMax);
                                 builder.Append(valueDisplayString);
                             }
+                        }
+
+                        if (argArray.Length > MaxNumItemsToEnumerate)
+                        {
+                            builder.Append(", ...");
                         }
 
                         builder.Append(" ]");

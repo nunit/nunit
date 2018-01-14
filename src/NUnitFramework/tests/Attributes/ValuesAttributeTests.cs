@@ -127,7 +127,8 @@ namespace NUnit.Framework.Attributes
         public void MethodWithArrayArguments([Values(
             (object)new object[] { 1, "text", null },
             (object)new object[0],
-            (object)new object[] { 1, new int[] { 2, 3 }, 4 })] object o)
+            (object)new object[] { 1, new int[] { 2, 3 }, 4 },
+            (object)new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })] object o)
         {
         }
 
@@ -137,13 +138,14 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 GetType(), nameof(MethodWithArrayArguments));
 
-            Assert.That(suite.TestCaseCount, Is.EqualTo(3));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(4));
 
             Assert.Multiple(() =>
             {
                 Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, ""text"", null ])"));
                 Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
                 Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ ... ], 4 ])"));
+                Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, 2, 3, 4, 5, ... ])"));
             });
         }
     }

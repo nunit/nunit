@@ -188,7 +188,8 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             new object[] { 1, "text", new object() },
             new object[0],
-            new object[] { 1, new int[] { 2, 3 }, 4 }
+            new object[] { 1, new int[] { 2, 3 }, 4 },
+            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
         };
     }
 }

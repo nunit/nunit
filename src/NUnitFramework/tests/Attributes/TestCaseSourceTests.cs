@@ -341,13 +341,14 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithArrayArguments));
 
-            Assert.That(suite.TestCaseCount, Is.EqualTo(3));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(4));
 
             Assert.Multiple(() =>
             {
                 Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, ""text"", System.Object ])"));
                 Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
                 Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, [ ... ], 4 ])"));
+                Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([ 1, 2, 3, 4, 5, ... ])"));
             });
         }
 
