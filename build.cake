@@ -27,8 +27,17 @@ var packageVersion = version + modifier + dbgSuffix;
 // SUPPORTED FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-var AllFrameworks = new string[] {
-    "net45", "net40", "net35", "net20", "netstandard1.6", "netcoreapp1.1" };
+var AllFrameworks = new string[]
+{
+    "net45",
+    "net40",
+    "net35",
+    "net20",
+    "netstandard1.6",
+    "netstandard2.0",
+    "netcoreapp1.1",
+    "netcoreapp2.0"
+};
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -132,26 +141,29 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        var msbuildSettings = new MSBuildSettings
-        {
-            Verbosity = Verbosity.Minimal,
-            Configuration = configuration
-        };
+        MSBuild(SOLUTION_FILE, CreateSettings());
 
-        if (IsRunningOnWindows())
-            msbuildSettings.ToolVersion = MSBuildToolVersion.VS2017;
-        else
-            msbuildSettings.ToolPath = Context.Tools.Resolve("msbuild");
+        Information("Publishing netcoreapp1.1 tests so that dependencies are present...");
 
-        MSBuild(SOLUTION_FILE, msbuildSettings);
-
-        DotNetCorePublish("src/NUnitFramework/tests/nunit.framework.tests.csproj", new DotNetCorePublishSettings
-        {
-            Framework = "netcoreapp1.1",
-            Configuration = configuration,
-            OutputDirectory = BIN_DIR + "netcoreapp1.1/"
-        });
+        MSBuild("src/NUnitFramework/tests/nunit.framework.tests.csproj", CreateSettings()
+            .WithTarget("Publish")
+            .WithProperty("TargetFramework", "netcoreapp1.1")
+            .WithProperty("NoBuild", "true") // https://github.com/dotnet/cli/issues/5331#issuecomment-338392972
+            .WithProperty("PublishDir", BIN_DIR + "netcoreapp1.1/")
+            .WithRawArgument("/nologo"));
     });
+
+MSBuildSettings CreateSettings()
+{
+    var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
+
+    if (IsRunningOnWindows())
+        settings.ToolVersion = MSBuildToolVersion.VS2017;
+    else
+        settings.ToolPath = Context.Tools.Resolve("msbuild");
+
+    return settings;
+}
 
 //////////////////////////////////////////////////////////////////////
 // TEST
@@ -217,6 +229,18 @@ Task("TestNetStandard16")
     .Does(() =>
     {
         var runtime = "netcoreapp1.1";
+        var dir = BIN_DIR + runtime + "/";
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+    });
+
+Task("TestNetStandard20")
+    .Description("Tests the .NET Standard 2.0 version of the framework")
+    .IsDependentOn("Build")
+    .OnError(exception => { ErrorDetail.Add(exception.Message); })
+    .Does(() =>
+    {
+        var runtime = "netcoreapp2.0";
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
@@ -328,7 +352,8 @@ Task("PackageZip")
             GetFiles(currentImageDir + "bin/net35/*.*") +
             GetFiles(currentImageDir + "bin/net40/*.*") +
             GetFiles(currentImageDir + "bin/net45/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard1.6/*.*");
+            GetFiles(currentImageDir + "bin/netstandard1.6/*.*") +
+            GetFiles(currentImageDir + "bin/netstandard2.0/*.*");
         Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
@@ -443,6 +468,22 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
+public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
+{
+    if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+    if (!string.IsNullOrEmpty(rawArgument))
+    {
+        var previousCustomizer = settings.ArgumentCustomization;
+        if (previousCustomizer != null)
+            settings.ArgumentCustomization = builder => previousCustomizer.Invoke(builder).Append(rawArgument);
+        else
+            settings.ArgumentCustomization = builder => builder.Append(rawArgument);
+    }
+
+    return settings;
+}
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
@@ -459,7 +500,8 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
-    .IsDependentOn("TestNetStandard16");
+    .IsDependentOn("TestNetStandard16")
+    .IsDependentOn("TestNetStandard20");
 
 Task("Package")
     .Description("Packages all versions of the framework")

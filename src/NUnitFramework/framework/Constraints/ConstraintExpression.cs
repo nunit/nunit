@@ -473,7 +473,7 @@ namespace NUnit.Framework.Constraints
 
 #if !NETSTANDARD1_6
         /// <summary>
-        /// Returns a constraint that tests whether an object graph is serializable in xml format.
+        /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
         public XmlSerializableConstraint XmlSerializable
         {

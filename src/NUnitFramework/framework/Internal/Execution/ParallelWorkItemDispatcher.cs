@@ -77,9 +77,13 @@ namespace NUnit.Framework.Internal.Execution
 
             // Assign queues to shifts
             ParallelShift.AddQueue(ParallelQueue);
+#if APARTMENT_STATE
             ParallelShift.AddQueue(ParallelSTAQueue);
+#endif
             NonParallelShift.AddQueue(NonParallelQueue);
+#if APARTMENT_STATE
             NonParallelSTAShift.AddQueue(NonParallelSTAQueue);
+#endif
 
             // Create workers and assign to shifts and queues
             // TODO: Avoid creating all the workers till needed
@@ -89,15 +93,19 @@ namespace NUnit.Framework.Internal.Execution
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
+#if APARTMENT_STATE
             ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "ParallelSTAWorker"));
+#endif
 
             var worker = new TestWorker(NonParallelQueue, "NonParallelWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelShift.Assign(worker);
 
+#if APARTMENT_STATE
             worker = new TestWorker(NonParallelSTAQueue, "NonParallelSTAWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelSTAShift.Assign(worker);
+#endif
         }
 
         private void OnStartNonParallelWorkItem(TestWorker worker, WorkItem work)
@@ -108,9 +116,9 @@ namespace NUnit.Framework.Internal.Execution
                 IsolateQueues(work);
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Number of parallel worker threads
@@ -126,7 +134,9 @@ namespace NUnit.Framework.Internal.Execution
             {
                 yield return ParallelShift;
                 yield return NonParallelShift;
+#if APARTMENT_STATE
                 yield return NonParallelSTAShift;
+#endif
             }
         }
 
@@ -138,9 +148,13 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 yield return ParallelQueue;
+#if APARTMENT_STATE
                 yield return ParallelSTAQueue;
+#endif
                 yield return NonParallelQueue;
+#if APARTMENT_STATE
                 yield return NonParallelSTAQueue;
+#endif
             }
         }
 
@@ -148,6 +162,7 @@ namespace NUnit.Framework.Internal.Execution
         // See comment in Workshift.cs for a more detailed explanation.
         private WorkShift ParallelShift { get; } = new WorkShift("Parallel");
         private WorkShift NonParallelShift { get; } = new WorkShift("NonParallel");
+#if APARTMENT_STATE
         private WorkShift NonParallelSTAShift { get; } = new WorkShift("NonParallelSTA");
 
         // WorkItemQueues
@@ -155,10 +170,14 @@ namespace NUnit.Framework.Internal.Execution
         private WorkItemQueue ParallelSTAQueue { get; } = new WorkItemQueue("ParallelSTAQueue", true, ApartmentState.STA);
         private WorkItemQueue NonParallelQueue { get; } = new WorkItemQueue("NonParallelQueue", false, ApartmentState.MTA);
         private WorkItemQueue NonParallelSTAQueue { get; } = new WorkItemQueue("NonParallelSTAQueue", false, ApartmentState.STA);
+#else
+        // WorkItemQueues
+        private WorkItemQueue ParallelQueue { get; } = new WorkItemQueue("ParallelQueue", true);
+        private WorkItemQueue NonParallelQueue { get; } = new WorkItemQueue("NonParallelQueue", false);
+#endif
+#endregion
 
-        #endregion
-
-        #region IWorkItemDispatcher Members
+#region IWorkItemDispatcher Members
 
         /// <summary>
         /// Start execution, setting the top level work,
@@ -209,15 +228,19 @@ namespace NUnit.Framework.Internal.Execution
                     work.Execute();
                     break;
                 case ParallelExecutionStrategy.Parallel:
+#if APARTMENT_STATE
                     if (work.TargetApartment == ApartmentState.STA)
                         ParallelSTAQueue.Enqueue(work);
                     else
+#endif
                         ParallelQueue.Enqueue(work);
                     break;
                 case ParallelExecutionStrategy.NonParallel:
+#if APARTMENT_STATE
                     if (work.TargetApartment == ApartmentState.STA)
                         NonParallelSTAQueue.Enqueue(work);
                     else
+#endif
                         NonParallelQueue.Enqueue(work);
                     break;
             }
@@ -274,9 +297,9 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private void OnEndOfShift(WorkShift endingShift)
         {

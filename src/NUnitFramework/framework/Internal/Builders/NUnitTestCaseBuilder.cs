@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Builders
             // original MethodInfo, so we don't use it here.
             string prefix = testMethod.Method.TypeInfo.FullName;
 
-            // Needed to give proper fullname to test in a parameterized fixture.
+            // Needed to give proper full name to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.
             if (parentSuite != null)
                 prefix = parentSuite.FullName;

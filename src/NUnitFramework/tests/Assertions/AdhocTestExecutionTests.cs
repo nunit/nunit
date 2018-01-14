@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-#if !NETCOREAPP1_1
+#if NET20 || NET35 || NET40 || NET45
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Assertions
                 throw testException;
         }
 
-#if NETCOREAPP1_1
+#if !(NET20 || NET35 || NET40 || NET45)
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;

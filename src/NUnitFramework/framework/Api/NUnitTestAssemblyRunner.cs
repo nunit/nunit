@@ -29,9 +29,13 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
+
 #if !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
+#endif
+
+#if NET20 || NET35 || NET40 || NET45
 using System.Windows.Forms;
 #endif
 
@@ -56,7 +60,7 @@ namespace NUnit.Framework.Api
         private EventPump _pump;
 #endif
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
@@ -67,9 +71,9 @@ namespace NUnit.Framework.Api
             _builder = builder;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
 #if PARALLEL
         /// <summary>
@@ -133,9 +137,9 @@ namespace NUnit.Framework.Api
         /// </summary>
         private TestExecutionContext Context { get; set; }
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Loads the tests found in an Assembly
@@ -190,10 +194,10 @@ namespace NUnit.Framework.Api
         /// <returns>Test Assembly with test cases that matches the filter</returns>
         public ITest ExploreTests(ITestFilter filter)
         {
-            if(LoadedTest == null)
+            if (LoadedTest == null)
                 throw new InvalidOperationException("The ExploreTests method was called but no test has been loaded");
 
-            if(filter == TestFilter.Empty)
+            if (filter == TestFilter.Empty)
                 return LoadedTest;
 
             return new TestAssembly(LoadedTest as TestAssembly, filter);
@@ -265,9 +269,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         /// <summary>
         /// Initiate the test run.
@@ -316,7 +320,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-#if !NETSTANDARD1_6
+#if NET20 || NET35 || NET40 || NET45
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -343,21 +347,27 @@ namespace NUnit.Framework.Api
 
             // Set the listener - overriding runners may replace this
             Context.Listener = listener;
-
+#if NETSTANDARD1_6
+            Context.Dispatcher = new MainThreadWorkItemDispatcher();
+#else
 #if PARALLEL
             int levelOfParallelism = GetLevelOfParallelism();
 
-            if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+            if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
+                (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
+                Context.Dispatcher = new MainThreadWorkItemDispatcher();
+            else if (levelOfParallelism > 0)
+                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
 #else
             Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
+#endif
         }
 
         /// <summary>
-        /// Handle the the Completed event for the top level work item
+        /// Handle the Completed event for the top level work item
         /// </summary>
         private void OnRunCompleted(object sender, EventArgs e)
         {
@@ -396,7 +406,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if !NETSTANDARD1_6
+#if NET20 || NET35 || NET40 || NET45
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -410,6 +420,6 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

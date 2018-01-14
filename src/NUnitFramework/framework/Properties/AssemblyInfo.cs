@@ -51,17 +51,19 @@ using System.Security;
                               "723bc8d775a66b594adeb967537729fe2a446b548cd57a6")]
 
 #if NET45
-[assembly: AssemblyTitle("NUnit Framework .NET 4.5")]
+[assembly: AssemblyTitle("NUnit Framework (.NET Framework 4.5)")]
 #elif NET40
-[assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
+[assembly: AssemblyTitle("NUnit Framework (.NET Framework 4.0)")]
 #elif NET35
-[assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
+[assembly: AssemblyTitle("NUnit Framework (.NET Framework 3.5)")]
 #elif NET20
-[assembly: AssemblyTitle("NUnit Framework .NET 2.0")]
+[assembly: AssemblyTitle("NUnit Framework (.NET Framework 2.0)")]
 #elif NETSTANDARD1_6
-[assembly: AssemblyTitle("NUnit Framework .NET Standard 1.6")]
+[assembly: AssemblyTitle("NUnit Framework (.NET Standard 1.6)")]
+#elif NETSTANDARD2_0
+[assembly: AssemblyTitle("NUnit Framework (.NET Standard 2.0)")]
 #else
-[assembly: AssemblyTitle("NUnit Framework")]
+#error Missing AssemblyTitle attribute for this target.
 #endif
 
 [assembly: AssemblyDescription("")]

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
+#if APARTMENT_STATE
 using System;
 using System.Threading;
 
@@ -45,7 +45,9 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+#if THREAD_ABORT
         [Timeout(10000)]
+#endif
         [Apartment(ApartmentState.STA)]
         public void TestWithTimeoutAndSTARunsInSTA()
         {
@@ -53,7 +55,9 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestFixture]
+#if THREAD_ABORT
         [Timeout(10000)]
+#endif
         [Apartment(ApartmentState.STA)]
         public class FixtureWithTimeoutRequiresSTA
         {

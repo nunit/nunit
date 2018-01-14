@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class as a 'virtual namespace' into which
-        /// all it's sibling classes are inserted.
+        /// all its sibling classes are inserted.
         /// </summary>
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureReplacesNamespaceNodeInTree()
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class with no parent namespace
-        /// as a 'virtual assembly' into which all it's sibling fixtures are inserted.
+        /// as a 'virtual assembly' into which all its sibling fixtures are inserted.
         /// </summary>
         [Test]
         public void AssemblySetUpFixtureFollowsAssemblyNodeInTree()

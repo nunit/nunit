@@ -37,31 +37,31 @@ namespace NUnit.Framework.Internal
         [Test]
         public void InstanceTestMethodIsRunnable()
         {
-            TestAssert.IsRunnable( fixtureType, "InstanceTestMethod" );
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.InstanceTestMethod) );
         }
 
         [Test]
         public void StaticTestMethodIsRunnable()
         {
-            TestAssert.IsRunnable( fixtureType, "StaticTestMethod" );
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.StaticTestMethod) );
         }
 
         [Test]
         public void TestMethodWithoutParametersWithArgumentsProvidedIsNotRunnable()
         {
-            TestAssert.ChildNotRunnable(fixtureType, "TestMethodWithoutParametersWithArgumentsProvided");
+            TestAssert.ChildNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithoutParametersWithArgumentsProvided));
         }
 
         [Test]
         public void TestMethodWithArgumentsNotProvidedIsNotRunnable()
         {
-            TestAssert.IsNotRunnable(fixtureType, "TestMethodWithArgumentsNotProvided");
+            TestAssert.IsNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithArgumentsNotProvided));
         }
 
         [Test]
         public void TestMethodHasAttributesAppliedCorrectlyEvenIfNotRunnable()
         {
-            var test = TestBuilder.MakeTestCase(fixtureType, "TestMethodWithArgumentsNotProvidedAndExtraAttributes");
+            var test = TestBuilder.MakeTestCase(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithArgumentsNotProvidedAndExtraAttributes));
             // NOTE: IgnoreAttribute has no effect, either on RunState or on the reason
             Assert.That(test.RunState == RunState.NotRunnable);
             Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("No arguments were provided"));
@@ -72,85 +72,91 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestMethodWithArgumentsProvidedIsRunnable()
         {
-            TestAssert.IsRunnable(fixtureType, "TestMethodWithArgumentsProvided");
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithArgumentsProvided));
         }
 
         [Test]
         public void TestMethodWithWrongNumberOfArgumentsProvidedIsNotRunnable()
         {
-            TestAssert.ChildNotRunnable(fixtureType, "TestMethodWithWrongNumberOfArgumentsProvided");
+            TestAssert.ChildNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithWrongNumberOfArgumentsProvided));
         }
 
         [Test]
         public void TestMethodWithWrongArgumentTypesProvidedGivesError()
         {
-            TestAssert.IsRunnable(fixtureType, "TestMethodWithWrongArgumentTypesProvided", ResultState.Error);
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithWrongArgumentTypesProvided), ResultState.Error);
         }
 
         [Test]
         public void StaticTestMethodWithArgumentsNotProvidedIsNotRunnable()
         {
-            TestAssert.IsNotRunnable(fixtureType, "StaticTestMethodWithArgumentsNotProvided");
+            TestAssert.IsNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.StaticTestMethodWithArgumentsNotProvided));
         }
 
         [Test]
         public void StaticTestMethodWithArgumentsProvidedIsRunnable()
         {
-            TestAssert.IsRunnable(fixtureType, "StaticTestMethodWithArgumentsProvided");
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.StaticTestMethodWithArgumentsProvided));
         }
 
         [Test]
         public void StaticTestMethodWithWrongNumberOfArgumentsProvidedIsNotRunnable()
         {
-            TestAssert.ChildNotRunnable(fixtureType, "StaticTestMethodWithWrongNumberOfArgumentsProvided");
+            TestAssert.ChildNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.StaticTestMethodWithWrongNumberOfArgumentsProvided));
         }
 
         [Test]
         public void StaticTestMethodWithWrongArgumentTypesProvidedGivesError()
         {
-            TestAssert.IsRunnable(fixtureType, "StaticTestMethodWithWrongArgumentTypesProvided", ResultState.Error);
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.StaticTestMethodWithWrongArgumentTypesProvided), ResultState.Error);
         }
 
         [Test]
         public void TestMethodWithConvertibleArgumentsIsRunnable()
         {
-            TestAssert.IsRunnable(fixtureType, "TestMethodWithConvertibleArguments");
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithConvertibleArguments));
         }
 
         [Test]
         public void TestMethodWithNonConvertibleArgumentsGivesError()
         {
-            TestAssert.IsRunnable(fixtureType, "TestMethodWithNonConvertibleArguments", ResultState.Error);
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithNonConvertibleArguments), ResultState.Error);
         }
 
         [Test]
         public void ProtectedTestMethodIsNotRunnable()
         {
-            TestAssert.IsNotRunnable( fixtureType, "ProtectedTestMethod" );
+            TestAssert.IsNotRunnable(fixtureType, "ProtectedTestMethod");
         }
 
         [Test]
         public void PrivateTestMethodIsNotRunnable()
         {
-            TestAssert.IsNotRunnable( fixtureType, "PrivateTestMethod" );
+            TestAssert.IsNotRunnable(fixtureType, "PrivateTestMethod");
         }
 
         [Test]
         public void TestMethodWithReturnTypeIsNotRunnable()
         {
-            TestAssert.IsNotRunnable( fixtureType, "TestMethodWithReturnType" );
+            TestAssert.IsNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithReturnValue_WithoutExpectedResult));
         }
 
         [Test]
         public void TestMethodWithExpectedReturnTypeIsRunnable()
         {
-            TestAssert.IsRunnable(fixtureType, "TestMethodWithExpectedReturnType");
+            TestAssert.IsRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithReturnValue_WithExpectedResult));
+        }
+
+        [Test]
+        public void TestMethodWithExpectedReturnAndArgumentsIsNotRunnable()
+        {
+            TestAssert.IsNotRunnable(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithReturnValueAndArgs_WithExpectedResult));
         }
 
         [Test]
         public void TestMethodWithMultipleTestCasesExecutesMultipleTimes()
         {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, "TestMethodWithMultipleTestCases");
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, nameof(TestMethodSignatureFixture.TestMethodWithMultipleTestCases));
 
             Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
             ResultSummary summary = new ResultSummary(result);
@@ -160,7 +166,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestMethodWithMultipleTestCasesUsesCorrectNames()
         {
-            string name = "TestMethodWithMultipleTestCases";
+            string name = nameof(TestMethodSignatureFixture.TestMethodWithMultipleTestCases);
             string fullName = typeof (TestMethodSignatureFixture).FullName + "." + name;
 
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(fixtureType, name);

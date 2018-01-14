@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Execution
                     {
                         var childItem = CreateWorkItem(childTest, filter, recursive);
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
                         if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
                             childItem.TargetApartment = work.TargetApartment;
 #endif

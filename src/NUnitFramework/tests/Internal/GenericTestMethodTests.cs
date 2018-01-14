@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("ABC", label);
         }
 
-        [TestCaseSource("Source")]
+        [TestCaseSource(nameof(Source))]
         public void TestCaseSource_OneTypeParameterOnTwoArgs<T>(T x, T y, string label)
         {
             Assert.AreEqual(5, x);
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal
             Assert.That(invalid, Is.EqualTo(2), "Invalid count");
         }
 
-        [TestCaseSource("Source")]
+        [TestCaseSource(nameof(Source))]
         public void TestCaseSource_TwoTypeParameters<T1, T2>(T1 x, T2 y, string label)
         {
             Assert.AreEqual(5, x);

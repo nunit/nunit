@@ -37,8 +37,8 @@ namespace NUnit.TestUtilities
         private FileInfo _fileInfo;
         private long _fileLength;
 
-        public TestFile(string fileName, string resourceName)
-            : this(fileName, resourceName, false)
+        public TestFile(string resourceName)
+            : this(Path.GetTempFileName(), resourceName, false)
         {
         }
 

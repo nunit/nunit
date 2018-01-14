@@ -84,7 +84,7 @@ namespace NUnit.Framework
             Assert.That(_testDirectory, Is.Not.Null);
         }
 
-        [TestCaseSource("TestDirectorySource")]
+        [TestCaseSource(nameof(TestDirectorySource))]
         public void TestCaseSourceCanAccessTestDirectory(string testDirectory)
         {
             Assert.That(testDirectory, Is.EqualTo(_testDirectory));
@@ -113,7 +113,7 @@ namespace NUnit.Framework
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
         }
 
-        [TestCaseSource("WorkDirectorySource")]
+        [TestCaseSource(nameof(WorkDirectorySource))]
         public void TestCaseSourceCanAccessWorkDirectory(string workDirectory)
         {
             Assert.That(workDirectory, Is.EqualTo(_workDirectory));
@@ -402,7 +402,7 @@ namespace NUnit.Framework
         }
 
         [TestCase(null)]
-#if !NETCOREAPP1_1
+#if PLATFORM_DETECTION
         [TestCase("bad<>path.png", IncludePlatform = "Win")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
@@ -416,6 +416,16 @@ namespace NUnit.Framework
             Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
         }
 
+        #endregion
+
+        #region Retry
+        [Test]
+        public void TestCanAccessCurrentRepeatCount()
+        {
+            var context = TestExecutionContext.CurrentContext;
+
+            Assert.That(context.CurrentRepeatCount, Is.EqualTo(0), "expected TestContext.CurrentRepeatCount to be accessible and be zero on first execution of test");
+        }
         #endregion
     }
 

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// XmlSerializableConstraint tests whether 
-    /// an object is serializable in xml format.
+    /// an object is serializable in XML format.
     /// </summary>
     public class XmlSerializableConstraint : Constraint
     {
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "xml serializable"; }
+            get { return "XML serializable"; }
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             if(actual == null)
-                throw new ArgumentNullException("actual");
+                throw new ArgumentNullException(nameof(actual));
 
             MemoryStream stream = new MemoryStream();
 

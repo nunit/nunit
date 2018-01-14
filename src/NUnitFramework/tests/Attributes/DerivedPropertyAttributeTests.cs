@@ -36,8 +36,12 @@ namespace NUnit.Framework.Attributes
 #if !NETCOREAPP1_1
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
+#endif
+#if APARTMENT_STATE
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
+#endif
+#if THREAD_ABORT
         [TestCase(typeof(TimeoutAttribute), PropertyNames.Timeout, 50)]
 #endif
         public void ConstructWithOneArg<T>(Type attrType, string propName, T propValue)

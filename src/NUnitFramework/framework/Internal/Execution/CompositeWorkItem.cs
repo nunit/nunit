@@ -356,7 +356,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             // Since child tests may be run on various threads, this
             // method may be called simultaneously by different children.
-            // The lock is a member of the parent item and thereore
+            // The lock is a member of the parent item and therefore
             // only blocks its own children.
             lock (_childCompletionLock)
             {

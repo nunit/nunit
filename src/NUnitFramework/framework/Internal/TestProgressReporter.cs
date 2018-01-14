@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         #region Helper Methods
 
         /// <summary>
-        /// Returns the parent test item for the targer test item if it exists
+        /// Returns the parent test item for the target test item if it exists
         /// </summary>
         /// <param name="test"></param>
         /// <returns>parent test item</returns>
@@ -136,8 +136,8 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Makes a string safe for use as an attribute, replacing
-        /// characters characters that can't be used with their
-        /// corresponding xml representations.
+        /// characters that can't be used with their
+        /// corresponding XML representations.
         /// </summary>
         /// <param name="original">The string to be used</param>
         /// <returns>A new string with the values replaced</returns>

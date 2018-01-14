@@ -99,9 +99,9 @@ namespace NUnit.Framework.Attributes
             return (sbyte)(x + y);
         }
 
-        [TestCase("MethodCausesConversionOverflow", RunState.NotRunnable)]
-        [TestCase("VoidTestCaseWithExpectedResult", RunState.NotRunnable)]
-        [TestCase("TestCaseWithNullableReturnValueAndNullExpectedResult", RunState.Runnable)]
+        [TestCase(nameof(TestCaseAttributeFixture.MethodCausesConversionOverflow), RunState.NotRunnable)]
+        [TestCase(nameof(TestCaseAttributeFixture.VoidTestCaseWithExpectedResult), RunState.NotRunnable)]
+        [TestCase(nameof(TestCaseAttributeFixture.TestCaseWithNullableReturnValueAndNullExpectedResult), RunState.Runnable)]
         public void TestCaseRunnableState(string methodName, RunState expectedState)
         {
             var test = (Test)TestBuilder.MakeParameterizedMethodSuite(
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyDescription()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodHasDescriptionSpecified").Tests[0];
+                typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasDescriptionSpecified)).Tests[0];
             Assert.AreEqual("My Description", test.Properties.Get(PropertyNames.Description));
         }
 
@@ -234,7 +234,7 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyTestName_FixedText()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified_FixedText").Tests[0];
+                typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasTestNameSpecified_FixedText)).Tests[0];
             Assert.AreEqual("XYZ", test.Name);
             Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.FullName);
         }
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyTestName_WithMethodName()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified_WithMethodName").Tests[0];
+                typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasTestNameSpecified_WithMethodName)).Tests[0];
             var expectedName = "MethodHasTestNameSpecified_WithMethodName+XYZ";
             Assert.AreEqual(expectedName, test.Name);
             Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture." + expectedName, test.FullName);
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyCategory()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodHasSingleCategory").Tests[0];
+                typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasSingleCategory)).Tests[0];
             IList categories = test.Properties["Category"];
             Assert.AreEqual(new string[] { "XYZ" }, categories);
         }
@@ -262,7 +262,7 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyMultipleCategories()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodHasMultipleCategories").Tests[0];
+                typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasMultipleCategories)).Tests[0];
             IList categories = test.Properties["Category"];
             Assert.AreEqual(new string[] { "X", "Y", "Z" }, categories);
         }
@@ -270,16 +270,17 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanIgnoreIndividualTestCases()
         {
+            var methodName = nameof(TestCaseAttributeFixture.MethodWithIgnoredTestCases);
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodWithIgnoredTestCases");
+                typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
+            Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
  
-            testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
+            testCase = TestFinder.Find($"{methodName}(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
  
-            testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
+            testCase = TestFinder.Find($"{methodName}(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
         }
@@ -287,21 +288,22 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanMarkIndividualTestCasesExplicit()
         {
+            var methodName = nameof(TestCaseAttributeFixture.MethodWithExplicitTestCases);
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodWithExplicitTestCases");
+                typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", suite, false);
+            Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
  
-            testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", suite, false);
+            testCase = TestFinder.Find($"{methodName}(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
  
-            testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
+            testCase = TestFinder.Find($"{methodName}(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
 
-#if !NETCOREAPP1_1
+#if PLATFORM_DETECTION
         [Test]
         public void CanIncludePlatform()
         {
@@ -344,13 +346,14 @@ namespace NUnit.Framework.Attributes
             bool isLinux = OSPlatform.CurrentPlatform.IsUnix;
             bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
 
+            const string methodName = nameof(TestCaseAttributeFixture.MethodWithExcludePlatform);
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodWithExcludePlatform");
+                typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase1 = TestFinder.Find("MethodWithExcludePlatform(1)", suite, false);
-            Test testCase2 = TestFinder.Find("MethodWithExcludePlatform(2)", suite, false);
-            Test testCase3 = TestFinder.Find("MethodWithExcludePlatform(3)", suite, false);
-            Test testCase4 = TestFinder.Find("MethodWithExcludePlatform(4)", suite, false);
+            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Test testCase4 = TestFinder.Find($"{methodName}(4)", suite, false);
             if (isLinux)
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));

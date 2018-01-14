@@ -67,8 +67,8 @@ namespace NUnit.Framework.Internal
         public void Set(string key, object value)
         {
             // Guard against mystery exceptions later!
-            Guard.ArgumentNotNull(key, "key");
-            Guard.ArgumentNotNull(value, "value");
+            Guard.ArgumentNotNull(key, nameof(key));
+            Guard.ArgumentNotNull(value, nameof(value));
 
             IList list = new List<object>();
             list.Add(value);

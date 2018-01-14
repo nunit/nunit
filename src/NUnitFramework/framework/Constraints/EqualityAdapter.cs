@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Compatibility;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -163,17 +164,16 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public override bool CanCompare(object x, object y)
             {
-                return typeof(T).GetTypeInfo().IsAssignableFrom(x.GetType().GetTypeInfo())
-                    && typeof(T).GetTypeInfo().IsAssignableFrom(y.GetType().GetTypeInfo());
+                return TypeHelper.CanCast<T>(x) && TypeHelper.CanCast<T>(y);
             }
 
-            protected void ThrowIfNotCompatible(object x, object y)
+            protected void CastOrThrow(object x, object y, out T xValue, out T yValue)
             {
-                if (!typeof(T).GetTypeInfo().IsAssignableFrom(x.GetType().GetTypeInfo()))
-                    throw new ArgumentException("Cannot compare " + x.ToString());
+                if (!TypeHelper.TryCast(x, out xValue))
+                    throw new ArgumentException($"Cannot compare {x?.ToString() ?? "null"}");
 
-                if (!typeof(T).GetTypeInfo().IsAssignableFrom(y.GetType().GetTypeInfo()))
-                    throw new ArgumentException("Cannot compare " + y.ToString());
+                if (!TypeHelper.TryCast(y, out yValue))
+                    throw new ArgumentException($"Cannot compare {y?.ToString() ?? "null"}");
             }
         }
 
@@ -200,8 +200,9 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                ThrowIfNotCompatible(x, y);
-                return comparer.Equals((T)x, (T)y);
+                T xValue, yValue;
+                CastOrThrow(x, y, out xValue, out yValue);
+                return comparer.Equals(xValue, yValue);
             }
         }
 
@@ -231,8 +232,9 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                ThrowIfNotCompatible(x, y);
-                return comparer.Compare((T)x, (T)y) == 0;
+                T xValue, yValue;
+                CastOrThrow(x, y, out xValue, out yValue);
+                return comparer.Compare(xValue, yValue) == 0;
             }
         }
 
@@ -259,8 +261,9 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                ThrowIfNotCompatible(x, y);
-                return comparer.Invoke((T)x, (T)y) == 0;
+                T xValue, yValue;
+                CastOrThrow(x, y, out xValue, out yValue);
+                return comparer.Invoke(xValue, yValue) == 0;
             }
         }
 

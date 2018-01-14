@@ -136,7 +136,7 @@ namespace NUnit.Framework.Constraints
             /// As a side effect, the constraint's Builder
             /// field is set to null.
             /// </summary>
-            /// <returns>The topmost contraint on the stack</returns>
+            /// <returns>The topmost constraint on the stack</returns>
             public IConstraint Pop()
             {
                 IConstraint constraint = stack.Pop();

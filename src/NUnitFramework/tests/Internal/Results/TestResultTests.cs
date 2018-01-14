@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal.Results
         protected static void NoReasonNodeExpectedValidation(TNode testNode)
         {
             TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason, "This test expects no reason element to be present in the xml representation.");
+            Assert.IsNull(reason, "This test expects no reason element to be present in the XML representation.");
         }
 
         #region Nested DummySuite

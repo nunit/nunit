@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
         public ExactCountConstraint(int expectedCount, IConstraint itemConstraint)
             : base(itemConstraint)
         {
-            Guard.ArgumentNotNull(itemConstraint, "itemConstraint");
+            Guard.ArgumentNotNull(itemConstraint, nameof(itemConstraint));
 
             _itemConstraint = itemConstraint.Resolve();
             _expectedCount = expectedCount;

@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         public abstract int MaxLineLength { get; set; }
 
         /// <summary>
-        /// Method to write single line  message with optional args, usually
+        /// Method to write single line message with optional args, usually
         /// written to precede the general failure message.
         /// </summary>
         /// <param name="message">The message to be written</param>
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Method to write single line  message with optional args, usually
+        /// Method to write single line message with optional args, usually
         /// written to precede the general failure message, at a given 
         /// indentation level.
         /// </summary>

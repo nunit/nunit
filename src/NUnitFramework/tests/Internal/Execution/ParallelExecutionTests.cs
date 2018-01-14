@@ -422,6 +422,7 @@ namespace NUnit.Framework.Internal.Execution
                     That("TestFixture2_Test").RunsOn("NonParallelWorker")))
                 .SetName("Issue-2464");
 
+#if APARTMENT_STATE
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll").Parallelizable()
                     .Containing(Fixture(typeof(STAFixture)).Parallelizable()),
@@ -430,11 +431,12 @@ namespace NUnit.Framework.Internal.Execution
                     That("STAFixture").RunsOn("ParallelSTAWorker"),
                     That("STAFixture_Test").RunsOn("ParallelSTAWorker")))
                 .SetName("Issue-2467");
+#endif
         }
 
-        #endregion
+#endregion
 
-        #region ITestListener implementation
+#region ITestListener implementation
 
         public void TestStarted(ITest test)
         {
@@ -462,9 +464,9 @@ namespace NUnit.Framework.Internal.Execution
 
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private static TestSuite Suite(string name)
         {
@@ -496,9 +498,9 @@ namespace NUnit.Framework.Internal.Execution
             return sb.ToString();
         }
 
-        #endregion
+#endregion
 
-        #region Nested Types
+#region Nested Types
 
         public enum TestAction
         {
@@ -601,7 +603,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

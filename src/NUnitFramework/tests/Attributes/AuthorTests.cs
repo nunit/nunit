@@ -1,4 +1,4 @@
-﻿// **********************************************************************************
+// **********************************************************************************
 // The MIT License (MIT)
 // 
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
@@ -44,21 +44,21 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ReflectionTest()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "Method");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.Method));
             Assert.AreEqual(RunState.Runnable, testCase.RunState);
         }
 
         [Test]
         public void Author()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "Method");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.Method));
             Assert.AreEqual("Rob Prouse", testCase.Properties.Get(PropertyNames.Author));
         }
 
         [Test]
         public void NoAuthor()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "NoAuthorMethod");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.NoAuthorMethod));
             Assert.IsNull(testCase.Properties.Get(PropertyNames.Author));
         }
 
@@ -76,21 +76,21 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SeparateAuthorAttribute()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateAuthorMethod");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.SeparateAuthorMethod));
             Assert.AreEqual("Rob Prouse", testCase.Properties.Get(PropertyNames.Author));
         }
 
         [Test]
         public void SeparateAuthorWithEmailAttribute()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateAuthorWithEmailMethod");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.SeparateAuthorWithEmailMethod));
             Assert.AreEqual("Rob Prouse <rob@prouse.org>", testCase.Properties.Get(PropertyNames.Author));
         }
 
         [Test]
         public void AuthorOnTestCase()
         {
-            TestSuite parameterizedMethodSuite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, "TestCaseWithAuthor");
+            TestSuite parameterizedMethodSuite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, nameof(AuthorFixture.TestCaseWithAuthor));
             Assert.AreEqual("Rob Prouse", parameterizedMethodSuite.Properties.Get(PropertyNames.Author));
             var testCase = (Test)parameterizedMethodSuite.Tests[0];
             Assert.AreEqual("Charlie Poole", testCase.Properties.Get(PropertyNames.Author));
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Attributes
         [Author("NUnit")]
         public void TestMethodMultipleAuthors()
         {
-            Test test = TestBuilder.MakeTestFromMethod(FixtureType, "TestMethodMultipleAuthors");
+            Test test = TestBuilder.MakeTestFromMethod(FixtureType, nameof(AuthorFixture.TestMethodMultipleAuthors));
             Assert.That(test.Properties[PropertyNames.Author], Is.EquivalentTo(
                 new[] { "Rob Prouse <rob@prouse.org>","Charlie Poole <charlie@poole.org>", "NUnit"}));
         }

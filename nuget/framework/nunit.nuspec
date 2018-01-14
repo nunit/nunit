@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-  <metadata>
+  <metadata minClientVersion="2.12">
     <id>NUnit</id>
     <title>NUnit</title>
     <version>$version$</version>
@@ -17,7 +17,7 @@ This package includes the NUnit 3 framework assembly, which is referenced by you
 
 Supported platforms:
 - .NET Framework 2.0+
-- .NET Standard 1.6
+- .NET Standard 1.6+
 - .NET Core</description>
     <releaseNotes>This package includes the NUnit 3 framework assembly, which is referenced by your tests. You will need to install version 3 of the nunit3-console program or a third-party runner that supports NUnit 3 in order to execute tests. Runners intended for use with NUnit 2.x will not run NUnit 3 tests correctly.</releaseNotes>
     <language>en-US</language>
@@ -29,7 +29,10 @@ Supported platforms:
       <group targetFramework="net40" />
       <group targetFramework="net45" />
       <group targetFramework="netstandard1.6">
-        <dependency id="NETStandard.Library" version="1.6.0" />
+        <dependency id="NETStandard.Library" version="1.6.1" />
+      </group>
+      <group targetFramework="netstandard2.0">
+        <dependency id="NETStandard.Library" version="2.0.0" />
       </group>
     </dependencies>
   </metadata>
@@ -48,6 +51,8 @@ Supported platforms:
     <file src="bin/net45/nunit.framework.xml" target="lib\net45" />
     <file src="bin/netstandard1.6/nunit.framework.dll" target="lib\netstandard1.6" />
     <file src="bin/netstandard1.6/nunit.framework.xml" target="lib\netstandard1.6" />
+    <file src="bin/netstandard2.0/nunit.framework.dll" target="lib\netstandard2.0" />
+    <file src="bin/netstandard2.0/nunit.framework.xml" target="lib\netstandard2.0" />
     <file src="..\..\nuget\framework\NUnit.props" target="build" />
   </files>
 </package>

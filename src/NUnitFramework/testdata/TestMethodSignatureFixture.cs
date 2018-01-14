@@ -29,10 +29,10 @@ namespace NUnit.TestData.TestMethodSignatureFixture
     [TestFixture]
     public class TestMethodSignatureFixture
     {
-        public static int Tests = 21;
-        public static int Runnable = 12;
-        public static int NotRunnable = 9;
-        public static int Errors = 3;
+        public static int Tests = 24;
+        public static int Runnable = 13;
+        public static int NotRunnable = 11;
+        public static int Errors = 4;
         public static int Failures = 0;
 
         [Test]
@@ -119,15 +119,29 @@ namespace NUnit.TestData.TestMethodSignatureFixture
         private void PrivateTestMethod() { }
 
         [Test]
-        public bool TestMethodWithReturnType() 
+        public bool TestMethodWithReturnValue_WithoutExpectedResult() 
         {
             return true;
         }
 
         [Test(ExpectedResult = true)]
-        public bool TestMethodWithExpectedReturnType()
+        public bool TestMethodWithReturnValue_WithExpectedResult()
         {
             return true;
+        }
+
+        [Test(ExpectedResult = true)]
+        public bool TestMethodWithReturnValueAndArgs_WithExpectedResult(int x, int y)
+        {
+            return x == y;
+        }
+
+        [Test(ExpectedResult = 1024)]
+        [TestCase(1, 1, ExpectedResult = 2)]
+        [TestCase(5, 3, ExpectedResult = 8)]
+        public int TestCasesWithReturnValueAndArgs_WithExpectedResult(int x, int y)
+        {
+            return x + y;
         }
     }
 }

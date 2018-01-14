@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +28,7 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// The NonTestAssemblyAttribute may be used by third-party frameworks
-    /// or other software that references the nunit framework but does not
+    /// or other software that references the NUnit framework but does not
     /// contain tests. Applying the attribute indicates that the assembly
     /// is not a test assembly and may prevent errors if certain runners
     /// attempt to load the assembly. Note that recognition of the attribute

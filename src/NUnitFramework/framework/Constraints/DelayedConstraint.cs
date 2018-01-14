@@ -214,7 +214,7 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             if (delayInMilliseconds < 0)
-                throw new ArgumentException("Cannot check a condition in the past", "delayInMilliseconds");
+                throw new ArgumentException("Cannot check a condition in the past", nameof(delayInMilliseconds));
 
             DelayInterval = new Interval(delayInMilliseconds).InMilliseconds;
             PollingInterval = new Interval(pollingIntervalInMilliseconds).InMilliseconds;
@@ -347,7 +347,7 @@ namespace NUnit.Framework.Constraints
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
-#if NET40 || NET45 || NETSTANDARD1_6
+#if ASYNC
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
                     return region.WaitForPendingOperationsToComplete(del());

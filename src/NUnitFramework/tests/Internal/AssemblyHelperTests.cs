@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
         // The following tests are only useful to the extent that the test cases
         // match what will actually be provided to the method in production.
         // As currently used, NUnit's codebase can only use the file: schema,
-        // since we don't load assemblies from anything but files. The uri's
+        // since we don't load assemblies from anything but files. The URIs
         // provided can be absolute file paths or UNC paths.
 
         // Local paths - Windows Drive

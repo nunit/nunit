@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008-2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_6
+#if PLATFORM_DETECTION
 using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// OSPlatform represents a particular operating system platform
     /// </summary>
-    // This class invokes security critical P/Invoke and 'System.Runtime.InteropServices.Marshall' methods. 
+    // This class invokes security critical P/Invoke and 'System.Runtime.InteropServices.Marshal' methods. 
     // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute' 
     // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
     [SecuritySafeCritical]

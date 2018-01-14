@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
+#if NET20 || NET35 || NET40 || NET45
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,7 +189,7 @@ namespace NUnit.Framework.Assertions
         }
         public object Run(MethodInfo method, params object[] parameters)
         {
-            if (method == null) throw new ArgumentNullException("method");
+            if (method == null) throw new ArgumentNullException(nameof(method));
             if (_appDomain == null) throw new ObjectDisposedException(null);
 
             var methodRunnerType = typeof(MethodRunner);

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             if(actual == null)
-                throw new ArgumentNullException("actual", "The actual value must be a non-null string" + ErrorSubstring);
+                throw new ArgumentNullException(nameof(actual), "The actual value must be a non-null string" + ErrorSubstring);
 
             if(actual is string)
             {
@@ -122,14 +122,14 @@ namespace NUnit.Framework.Constraints
             {
                 return new ConstraintResult(this, actual, directoryInfo.Exists);
             }
-            throw new ArgumentException("The actual value must be a string" + ErrorSubstring, "actual");
+            throw new ArgumentException("The actual value must be a string" + ErrorSubstring, nameof(actual));
         }
 
         private ConstraintResult CheckString<TActual>(TActual actual)
         {
             var str = actual as string;
             if (String.IsNullOrEmpty(str))
-                throw new ArgumentException("The actual value cannot be an empty string", "actual");
+                throw new ArgumentException("The actual value cannot be an empty string", nameof(actual));
 
             var fileInfo = new FileInfo(str);
             if (_ignoreDirectories && !_ignoreFiles)

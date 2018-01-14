@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,54 +22,56 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
-    /// ExplicitAttribute marks a test or test fixture so that it will
-    /// only be run if explicitly executed from the GUI or command line
-    /// or if it is included by use of a filter. The test will not be
-    /// run simply because an enclosing suite is run.
+    /// MainThreadWorkItemDispatcher handles execution of WorkItems by
+    /// directly executing them on the main thread. This is different
+    /// from the SimpleWorkItemDispatcher where the work item is dispatched
+    /// onto its own thread.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
-    public class ExplicitAttribute : NUnitAttribute, IApplyToTest
+    public class MainThreadWorkItemDispatcher : IWorkItemDispatcher
     {
-        private string _reason;
+
+        #region IWorkItemDispatcher Members
 
         /// <summary>
-        /// Default constructor
+        ///  The level of parallelism supported
         /// </summary>
-        public ExplicitAttribute()
+        public int LevelOfParallelism { get { return 0; } }
+
+        /// <summary>
+        /// Start execution, dispatching the top level
+        /// work into the main thread.
+        /// </summary>
+        public void Start(WorkItem topLevelWorkItem)
         {
+            Dispatch(topLevelWorkItem);
         }
 
         /// <summary>
-        /// Constructor with a reason
+        /// Dispatch a single work item for execution by
+        /// executing it directly.
+        /// <param name="work">The item to dispatch</param>
         /// </summary>
-        /// <param name="reason">The reason test is marked explicit</param>
-        public ExplicitAttribute(string reason)
+        public void Dispatch(WorkItem work)
         {
-            _reason = reason;
+            if (work != null)
+                work.Execute();
         }
-
-        #region IApplyToTest members
 
         /// <summary>
-        /// Modifies a test by marking it as explicit.
+        /// This method is not supported for 
+        /// this dispatcher. Using it will throw a
+        /// NotSupportedException.
         /// </summary>
-        /// <param name="test">The test to modify</param>
-        public void ApplyToTest(Test test)
+        /// <param name="force">Not used</param>
+        /// <exception cref="System.NotSupportedException">If used, it will always throw this.</exception>
+        public void CancelRun(bool force)
         {
-            if (test.RunState != RunState.NotRunnable && test.RunState != RunState.Ignored)
-            {
-                test.RunState = RunState.Explicit;
-                if (_reason != null)
-                    test.Properties.Set(PropertyNames.SkipReason, _reason);
-            }
+            throw new NotSupportedException();
         }
-
         #endregion
     }
 }

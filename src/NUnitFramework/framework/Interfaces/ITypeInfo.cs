@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -50,12 +50,12 @@ namespace NUnit.Framework.Interfaces
         bool IsType(Type type);
 
         /// <summary>
-        /// Gets the Name of the Type
+        /// Gets the name of the Type
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// Gets the FullName of the Type
+        /// Gets the full name of the Type
         /// </summary>
         string FullName { get; }
 
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Interfaces
         Assembly Assembly { get; }
 
         /// <summary>
-        /// Gets the Namespace of the Type
+        /// Gets the namespace of the Type
         /// </summary>
         string Namespace { get; }
 

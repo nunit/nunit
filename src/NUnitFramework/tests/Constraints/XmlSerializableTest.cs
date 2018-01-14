@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         public void SetUp()
         {
             theConstraint = new XmlSerializableConstraint();
-            expectedDescription = "xml serializable";
+            expectedDescription = "XML serializable";
             stringRepresentation = "<xmlserializable>";
         }
 

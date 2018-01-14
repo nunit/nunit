@@ -83,7 +83,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 
-#if !NETCOREAPP1_1
+#if PLATFORM_DETECTION
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
         [TestCase(3, IncludePlatform = "MacOSX")]

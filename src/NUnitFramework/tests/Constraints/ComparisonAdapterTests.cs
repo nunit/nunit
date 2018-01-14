@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,26 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !(NET20 || NET35 || NET40 || NET45)
-namespace System.Web.UI
-{
-    /// <summary>
-    /// A shim of the .NET interface for platforms that do not support it.
-    /// Used to indicate that a control can be the target of a callback event on the server.
-    /// </summary>
-    public interface ICallbackEventHandler
-    {
-        /// <summary>
-        /// Processes a callback event that targets a control.
-        /// </summary>
-        /// <param name="report"></param>
-        void RaiseCallbackEvent(string report);
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
-        /// <summary>
-        /// Returns the results of a callback event that targets a control.
-        /// </summary>
-        /// <returns></returns>
-        string GetCallbackResult();
+namespace NUnit.Framework.Constraints
+{
+    public static class ComparisonAdapterTests
+    {
+        public static IEnumerable<ComparisonAdapter> ComparisonAdapters()
+        {
+            return new[]
+            {
+                ComparisonAdapter.Default,
+                ComparisonAdapter.For((IComparer)StringComparer.Ordinal),
+                ComparisonAdapter.For((IComparer<string>)StringComparer.Ordinal),
+                ComparisonAdapter.For<string>(StringComparer.Ordinal.Compare)
+            };
+        }
+
+        [TestCaseSource(nameof(ComparisonAdapters))]
+        public static void CanCompareWithNull(ComparisonAdapter adapter)
+        {
+            Assert.That(adapter.Compare(null, "a"), Is.LessThan(0));
+            Assert.That(adapter.Compare("a", null), Is.GreaterThan(0));
+            Assert.That(adapter.Compare(null, null), Is.Zero);
+        }
     }
 }
-#endif

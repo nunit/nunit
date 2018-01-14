@@ -26,7 +26,7 @@ using System;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Provides methods to support consistent checking for constaints methods.
+    /// Provides methods to support consistent checking in constraints.
     /// </summary>
     internal static class ConstraintUtils
     {
@@ -41,8 +41,11 @@ namespace NUnit.Framework.Internal
         /// <typeparam name="T">The type to require.</typeparam>
         public static T RequireActual<T>(object actual, string paramName, bool allowNull = false)
         {
-            if (actual is T) return (T)actual;
-            if (allowNull && actual == null && default(T) == null) return default(T);
+            T result;
+            if (TypeHelper.TryCast(actual, out result) && (allowNull || result != null))
+            {
+                return result;
+            }
 
             var actualDisplay = actual == null ? "null" : actual.GetType().Name;
             throw new ArgumentException($"Expected: {typeof(T).Name} But was: {actualDisplay}", paramName);

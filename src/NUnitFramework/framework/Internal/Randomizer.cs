@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2013-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public uint NextUInt(uint min, uint max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
 
             if (min == max)
                 return min;
@@ -275,7 +275,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public long NextLong(long min, long max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
 
             if (min == max)
                 return min;
@@ -322,7 +322,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ulong NextULong(ulong min, ulong max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
 
             ulong range = max - min;
 
@@ -417,7 +417,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool NextBool(double probability)
         {
-            Guard.ArgumentInRange(probability >= 0.0 && probability <= 1.0, "Probability must be from 0.0 to 1.0", "probability");
+            Guard.ArgumentInRange(probability >= 0.0 && probability <= 1.0, "Probability must be from 0.0 to 1.0", nameof(probability));
 
             return NextDouble() < probability;
         }
@@ -441,7 +441,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public double NextDouble(double min, double max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
 
             if (max == min)
                 return min;
@@ -506,7 +506,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Default characters for random functions.
         /// </summary>
-        /// <remarks>Default characters are the English alphabet (uppercase &amp; lowercase), arabic numerals, and underscore</remarks>
+        /// <remarks>Default characters are the English alphabet (uppercase &amp; lowercase), Arabic numerals, and underscore</remarks>
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
 
         private const int DefaultStringLength = 25;
@@ -587,12 +587,12 @@ namespace NUnit.Framework.Internal
         /// </remarks>
         public decimal NextDecimal(decimal min, decimal max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", "max");
+            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
 
             // Check that the range is not greater than MaxValue without 
             // first calculating it, since this would cause overflow
             Guard.ArgumentValid(max < 0M == min < 0M || min + decimal.MaxValue >= max,
-                "Range too great for decimal data, use double range", "max");
+                "Range too great for decimal data, use double range", nameof(max));
 
             if (min == max)
                 return min;

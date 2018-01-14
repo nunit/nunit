@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
+#if !(NETCOREAPP1_1 || NETCOREAPP2_0)
 using System;
 using System.Reflection;
 
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Internal
             Assert.That(RuntimeFramework.CurrentFramework.ClrVersion.Build, Is.GreaterThan(0));
         }
 
-        [TestCaseSource("frameworkData")]
+        [TestCaseSource(nameof(frameworkData))]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
             RuntimeFramework framework = new RuntimeFramework(data.runtime, data.frameworkVersion);
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(data.clrVersion, framework.ClrVersion, "#3");
         }
 
-        [TestCaseSource("frameworkData")]
+        [TestCaseSource(nameof(frameworkData))]
         public void CanCreateUsingClrVersion(FrameworkData data)
         {
             Assume.That(data.frameworkVersion.Major != 3, "#0");
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(data.clrVersion, framework.ClrVersion, "#3");
         }
 
-        [TestCaseSource("frameworkData")]
+        [TestCaseSource(nameof(frameworkData))]
         public void CanParseRuntimeFramework(FrameworkData data)
         {
             RuntimeFramework framework = RuntimeFramework.Parse(data.representation);
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(data.clrVersion, framework.ClrVersion, "#2");
         }
 
-        [TestCaseSource("frameworkData")]
+        [TestCaseSource(nameof(frameworkData))]
         public void CanDisplayFrameworkAsString(FrameworkData data)
         {
             RuntimeFramework framework = new RuntimeFramework(data.runtime, data.frameworkVersion);
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(data.displayName, framework.DisplayName, "#2");
         }
 
-        [TestCaseSource("matchData")]
+        [TestCaseSource(nameof(matchData))]
         public bool CanMatchRuntimes(RuntimeFramework f1, RuntimeFramework f2)
         {
             return f1.Supports(f2);

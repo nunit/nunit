@@ -24,19 +24,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if PARALLEL
-using System.Collections.Concurrent;
-#endif
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using NUnit.Framework.Interfaces;
 #if NET20
 using NUnit.Compatibility;
 #endif
-using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -228,7 +225,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets any stacktrace associated with an
+        /// Gets any stack trace associated with an
         /// error or failure.
         /// </summary>
         public virtual string StackTrace
@@ -351,7 +348,7 @@ namespace NUnit.Framework.Internal
         #region IXmlNodeBuilder Members
 
         /// <summary>
-        /// Returns the Xml representation of the result.
+        /// Returns the XML representation of the result.
         /// </summary>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns>An XmlNode representing the result</returns>
@@ -566,7 +563,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// RecordTearDownException appends the message and stacktrace
+        /// RecordTearDownException appends the message and stack trace
         /// from an exception arising during teardown of the test
         /// to any previously recorded information, so that any
         /// earlier failure information is not lost. Note that

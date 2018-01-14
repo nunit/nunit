@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_6 || NETSTANDARD2_0
         private sealed class ReflectionAssemblyLoader
         {
             private static ReflectionAssemblyLoader instance;

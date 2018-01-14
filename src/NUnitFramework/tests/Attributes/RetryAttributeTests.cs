@@ -45,7 +45,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(RetryErrorOnSecondTryFixture), "Failed(Child)", 2)]
         [TestCase(typeof(RetryErrorOnThirdTryFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RetryTestCaseFixture), "Failed(Child)", 3)]
-        public void RetryWorksAsExpected(Type fixtureType, string outcome, int nTries)
+        public void RetryWorksAsExpectedOnFixturesWithSetupAndTeardown(Type fixtureType, string outcome, int nTries)
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
@@ -58,6 +58,39 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(nTries, fixture.Count);
         }
 
+        [TestCase(typeof(RetrySucceedsOnFirstTryFixture), "Passed")]
+        [TestCase(typeof(RetrySucceedsOnSecondTryFixture), "Failed", "Passed")]
+        [TestCase(typeof(RetrySucceedsOnThirdTryFixture), "Failed", "Failed", "Passed")]
+        [TestCase(typeof(RetryFailsEveryTimeFixture), "Failed", "Failed", "Failed")]
+        [TestCase(typeof(RetryIgnoredOnFirstTryFixture), "Skipped:Ignored")]
+        [TestCase(typeof(RetryIgnoredOnSecondTryFixture), "Failed", "Skipped:Ignored")]
+        [TestCase(typeof(RetryIgnoredOnThirdTryFixture), "Failed", "Failed", "Skipped:Ignored")]
+        [TestCase(typeof(RetryErrorOnFirstTryFixture), "Failed:Error")]
+        [TestCase(typeof(RetryErrorOnSecondTryFixture), "Failed", "Failed:Error")]
+        [TestCase(typeof(RetryErrorOnThirdTryFixture), "Failed", "Failed", "Failed:Error")]
+        public void RetryExposesEachResultInTearDown(Type fixtureType, params string[] results)
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.AreEqual(results.Length, fixture.TearDownResults.Count);
+            for (int i = 0; i < results.Length; i++)
+                Assert.That(fixture.TearDownResults[i], Is.EqualTo(results[i]), $"Teardown {i} received incorrect result");
+        }
+
+        [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.SucceedsOnThirdTry), "Passed", 3)]
+        [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.FailsEveryTime), "Failed", 3)]
+        [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.ErrorsOnFirstTry), "Failed:Error", 1)]
+        public void RetryWorksAsExpectedOnFixturesWithoutSetupOrTeardown(string methodName, string outcome, int nTries)
+        {
+            var fixture = (RetryWithoutSetUpOrTearDownFixture)Reflect.Construct(typeof(RetryWithoutSetUpOrTearDownFixture));
+            ITestResult result = TestBuilder.RunTestCase(fixture, methodName);
+
+            Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+            Assert.AreEqual(nTries, fixture.Count);
+        }
+
+
         [Test]
         public void CategoryWorksWithRetry()
         {
@@ -67,6 +100,26 @@ namespace NUnit.Framework.Attributes
             Assert.IsNotNull(categories);
             Assert.AreEqual(1, categories.Count);
             Assert.AreEqual("SAMPLE", categories[0]);
+        }
+
+        [Test]
+        public void RetryUpdatesCurrentRepeatCountPropertyOnAlwaysFailingTest()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "NeverPasses");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 1, "expected that the test failed all retries");
+        }
+
+        [Test]
+        public void RetryUpdatesCurrentRepeatCountPropertyOnEachAttempt()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "PassesOnLastRetry");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 0, "expected that the test passed final retry");
         }
     }
 }

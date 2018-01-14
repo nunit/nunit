@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -75,7 +75,7 @@ namespace NUnitLite
                 default:
                     throw new ArgumentException(
                         string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
+                        nameof(spec));
             }
 
             outputWriter.WriteResultFile(result, outputPath, runSettings, filter);
@@ -105,7 +105,7 @@ namespace NUnitLite
                 default:
                     throw new ArgumentException(
                         string.Format("Invalid output format '{0}'", spec.Format),
-                        "spec");
+                        nameof(spec));
             }
 
             outputWriter.WriteTestFile(test, outputPath);

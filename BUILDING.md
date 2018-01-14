@@ -60,3 +60,39 @@ Once in a while you may find it desirable to be primarily developing the reposit
 For example, to build and test everything: `.\build-mono-docker.ps1 -t test`
 
 This will run a temporary container using the latest [Mono image](https://hub.docker.com/r/library/mono/), mounting the repo inside the container and executing the [build.sh](build.sh) Cake bootstrapper with the arguments you specify.
+
+### Defined constants
+
+NUnit often uses conditional preprocessor to light up APIs and behaviors per platform.
+
+In general, try to use feature constants rather than platform constants.
+This brings clarity to the code and makes it easy to change the mapping between features and platforms.
+
+Feature constants are defined in [Common.props](src/NUnitFramework/Common.props):
+
+ - `ASYNC` enables asynchrony
+ - `PARALLEL` enables running tests in parallel
+ - `PLATFORM_DETECTION` enables platform detection
+ - `THREAD_ABORT` enables timeouts and forcible cancellation
+ - `APARTMENT_STATE` enables control of the thread apartment state
+
+Platform constants are defined by convention by the csproj SDK, one per target framework.
+For example, `NET20` or `NET45`, `NETSTANDARD1_6`, `NETCOREAPP2_0`, and so on.
+It is most helpful to call out which platforms are the exception in rather than the rule
+in a given scenario. Keep in mind the effect the preprocessor would have on a newly added platform.
+
+For example, rather than this code:
+
+```cs
+#if NET45 || NETSTANDARD1_6 || NETSTANDARD2_0
+// Something that .NET Framework 4.0 can't do
+#endif
+```
+
+Consider this:
+
+```cs
+#if !(NET20 || NET35 || NET40)
+// Something that .NET Framework 4.0 can't do
+#endif
+```

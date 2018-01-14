@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -49,8 +49,8 @@ namespace NUnit.Framework.Internal.Commands
         public TimeoutCommand(TestCommand innerCommand, int timeout)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", "innerCommand");
-            Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", "timeout");
+            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", nameof(innerCommand));
+            Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
 
             BeforeTest = (context) =>
             {

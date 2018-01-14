@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Get the display name for a TestMethod and it's arguments
+        /// Get the display name for a TestMethod and its arguments
         /// </summary>
         /// <param name="testMethod">A TestMethod</param>
         /// <returns>The display name</returns>
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Get the display name for a TestMethod and it's arguments
+        /// Get the display name for a TestMethod and its arguments
         /// </summary>
         /// <param name="testMethod">A TestMethod</param>
         /// <param name="args">Arguments to be used</param>

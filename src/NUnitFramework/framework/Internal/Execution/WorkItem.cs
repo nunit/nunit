@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
                 : ParallelScope.Default;
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
             TargetApartment = GetTargetApartment(Test);
 #endif
 
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal.Execution
 #if PARALLEL
             TestWorker = wrappedItem.TestWorker;
 #endif
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
             TargetApartment = wrappedItem.TargetApartment;
 #endif
 
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public ParallelScope ParallelScope { get; private set; }
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
 #endif
@@ -221,10 +221,14 @@ namespace NUnit.Framework.Internal.Execution
             // (--workers=0 option) it occurs routinely whenever a
             // different apartment is requested.
 
+#if APARTMENT_STATE
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
 
             if (Test.RequiresThread || targetApartment != CurrentApartment)
+#else
+            if (Test.RequiresThread)
+#endif
             {
                 // Handle error conditions in a single threaded fixture
                 if (Context.IsSingleThreaded)
@@ -242,12 +246,16 @@ namespace NUnit.Framework.Internal.Execution
                 log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
+#if APARTMENT_STATE
                 RunOnSeparateThread(targetApartment);
+#else
+                RunOnSeparateThread();
+#endif
             }
             else
                 RunOnCurrentThread();
 #else
-            RunOnCurrentThread();
+                RunOnCurrentThread();
 #endif
         }
 
@@ -271,7 +279,10 @@ namespace NUnit.Framework.Internal.Execution
             WorkItemComplete();
         }
 
-        private object threadLock = new object();
+#if THREAD_ABORT
+        private readonly object threadLock = new object();
+        private int nativeThreadId;
+#endif
 
         /// <summary>
         /// Cancel (abort or stop) a WorkItem
@@ -282,7 +293,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Context != null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
             if (force)
             {
                 Thread tThread;
@@ -313,9 +324,9 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region IDisposable Implementation
+#region IDisposable Implementation
 
         /// <summary>
         /// Standard Dispose
@@ -361,7 +372,7 @@ namespace NUnit.Framework.Internal.Execution
             // fixture setup or teardown. Each context only
             // counts the asserts taking place in that context.
             // Each result accumulates the count from child
-            // results along with it's own asserts.
+            // results along with its own asserts.
             Result.AssertCount += Context.AssertCount;
 
             Context.Listener.TestFinished(Result);
@@ -455,25 +466,32 @@ namespace NUnit.Framework.Internal.Execution
 
 #if !NETSTANDARD1_6
         private Thread thread;
-        private int nativeThreadId;
 
+#if APARTMENT_STATE
         private void RunOnSeparateThread(ApartmentState apartment)
+#else
+        private void RunOnSeparateThread()
+#endif
         {
             thread = new Thread(() =>
             {
+                thread.CurrentCulture = Context.CurrentCulture;
+                thread.CurrentUICulture = Context.CurrentUICulture;
+#if THREAD_ABORT
                 lock (threadLock)
                     nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
+#endif
                 RunOnCurrentThread();
             });
+#if APARTMENT_STATE
             thread.SetApartmentState(apartment);
-            thread.CurrentCulture = Context.CurrentCulture;
-            thread.CurrentUICulture = Context.CurrentUICulture;
+#endif
             thread.Start();
             thread.Join();
         }
 #endif
 
-        private void RunOnCurrentThread()
+                private void RunOnCurrentThread()
         {
             Context.CurrentTest = this.Test;
             Context.CurrentResult = this.Result;
@@ -496,7 +514,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             // If there is no fixture and so nothing to do but dispatch
             // grandchildren we run directly. This saves time that would
-            // otherwise be spent enqueuing and dequeing items.
+            // otherwise be spent enqueuing and dequeuing items.
             if (Test.TypeInfo == null)
                 return ParallelExecutionStrategy.Direct;
 
@@ -527,7 +545,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-#if !NETSTANDARD1_6
+#if APARTMENT_STATE
         /// <summary>
         /// Recursively walks up the test hierarchy to see if the
         /// <see cref="ApartmentState"/> has been set on any of the parent tests.

@@ -126,8 +126,8 @@ namespace NUnit.Framework.Internal.Execution
                     // This gives us a new set of queues, which are initially 
                     // empty. The intention is that only children of the current
                     // executing item should make use of the new set of queues.
-                    // TODO: If we had a separate NonParallelTestWOrker, it 
-                    // could simply create the isolated queue without  any
+                    // TODO: If we had a separate NonParallelTestWorker, it 
+                    // could simply create the isolated queue without any
                     // worrying about competing workers.
                     Busy(this, _currentWorkItem);
 
@@ -156,8 +156,9 @@ namespace NUnit.Framework.Internal.Execution
         {
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
+#if APARTMENT_STATE
             _workerThread.SetApartmentState(WorkQueue.TargetApartment);
-
+#endif
             log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
         }

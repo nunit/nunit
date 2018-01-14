@@ -199,6 +199,26 @@ namespace NUnit.Framework.Api
             Assert.That(key2Node.Attributes["value"], Is.EqualTo(value));
         }
 
+        [Test]
+        public void InsertSettingsElement_SettingIsDictionaryHasNull_CreatesEntriesWithKeysAndValuesFromDictionary()
+        {
+            string value = "test";
+            var outerNode = new TNode("test");
+            var testSettings = new Dictionary<string, object>();
+            testSettings.Add("outerkey", new Dictionary<string, object> { { "key1", null }, { "key2", value } });
+
+            var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
+            var settingNode = inserted.FirstChild;
+
+            var key1Node = settingNode.ChildNodes[0];
+            Assert.That(key1Node.Attributes["key"], Is.EqualTo("key1"));
+            Assert.That(key1Node.Attributes["value"], Is.EqualTo(string.Empty));
+
+            var key2Node = settingNode.ChildNodes[1];
+            Assert.That(key2Node.Attributes["key"], Is.EqualTo("key2"));
+            Assert.That(key2Node.Attributes["value"], Is.EqualTo(value));
+        }
+
         public static IEnumerable SettingsData()
         {
             yield return new TestCaseData("value");

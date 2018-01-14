@@ -68,7 +68,7 @@ namespace NUnitLite.Tests
         [Test]
         public void ThreeTestsFromATestListFile()
         {
-            using (var tf = new TestFile("TestListFile.txt", "TestListFile.txt"))
+            using (var tf = new TestFile("TestListFile.txt"))
             {
                 var filter = GetFilter("--testlist:" + tf.File.FullName);
                 Assert.That(filter, Is.TypeOf<OrFilter>());
@@ -89,8 +89,8 @@ namespace NUnitLite.Tests
         [Test]
         public void SixTestsFromTwoTestListFiles()
         {
-            using (var tf = new TestFile("TestListFile.txt", "TestListFile.txt"))
-            using (var tf2 = new TestFile("TestListFile2.txt", "TestListFile2.txt"))
+            using (var tf = new TestFile("TestListFile.txt"))
+            using (var tf2 = new TestFile("TestListFile2.txt"))
             {
                 var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName );
                 Assert.That(filter, Is.TypeOf<OrFilter>());

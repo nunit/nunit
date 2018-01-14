@@ -28,7 +28,7 @@ using System.Linq;
 
 namespace NUnit.Compatibility
 {
-#if !NET45 && !NETSTANDARD1_6
+#if NET20 || NET35 || NET40
     /// <summary>
     /// Provides NUnit specific extensions to aid in Reflection
     /// across multiple frameworks
@@ -154,7 +154,7 @@ namespace NUnit.Compatibility
         /// <returns></returns>
         public static bool IsInstanceOfType(this Type type, object other)
         {
-            return other != null && type.IsAssignableFrom(other.GetType());
+            return type.GetTypeInfo().IsInstanceOfType(other);
         }
 
         /// <summary>
@@ -348,7 +348,7 @@ namespace NUnit.Compatibility
             if (type != null)
             {
                 var baseMethods = type.GetAllMethods(includeBaseStatic)
-                    .Where(b => !b.IsPrivate && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b));
+                    .Where(b => !b.IsPrivate && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b.GetRuntimeBaseDefinition()));
                 methods.AddRange(baseMethods);
             }
 
@@ -393,12 +393,14 @@ namespace NUnit.Compatibility
             return infos;
         }
     }
+#endif
 
     /// <summary>
     /// Extensions to the various MemberInfo derived classes
     /// </summary>
     public static class MemberInfoExtensions
     {
+#if NETSTANDARD1_6
         /// <summary>
         /// Returns the get method for the given property
         /// </summary>
@@ -415,13 +417,14 @@ namespace NUnit.Compatibility
 
             return pinfo.GetMethod;
         }
+#endif
 
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this member
         /// </summary>
         public static IEnumerable<T> GetAttributes<T>(this MemberInfo info, bool inherit) where T : class
         {
-            return GetAttributesImpl<T>(info.GetCustomAttributes(inherit));
+            return info.GetCustomAttributes(inherit).OfType<T>();
         }
 
         /// <summary>
@@ -429,7 +432,7 @@ namespace NUnit.Compatibility
         /// </summary>
         public static IEnumerable<T> GetAttributes<T>(this ParameterInfo info, bool inherit) where T : class
         {
-            return GetAttributesImpl<T>(info.GetCustomAttributes(inherit));
+            return info.GetCustomAttributes(inherit).OfType<T>();
         }
 
         /// <summary>
@@ -437,50 +440,13 @@ namespace NUnit.Compatibility
         /// </summary>
         public static IEnumerable<T> GetAttributes<T>(this Assembly asm) where T : class
         {
-            return GetAttributesImpl<T>(asm.GetCustomAttributes());
-        }
-
-        private static IEnumerable<T> GetAttributesImpl<T>(IEnumerable<Attribute> attributes) where T : class
-        {
-            var attrs = new List<T>();
-
-            attributes.Where(a => typeof(T).IsAssignableFrom(a.GetType()))
-                .All(a => { attrs.Add(a as T); return true; });
-
-            return attrs;
-        }
-    }
-
-    /// <summary>
-    /// Extensions for Assembly that are not available in .NET Standard
-    /// </summary>
-    public static class AssemblyExtensions
-    {
-        /// <summary>
-        /// DNX does not have a version of GetCustomAttributes on Assembly that takes an inherit
-        /// parameter since it doesn't make sense on Assemblies. This version just ignores the
-        /// inherit parameter.
-        /// </summary>
-        /// <param name="asm">The assembly</param>
-        /// <param name="attributeType">The type of attribute you are looking for</param>
-        /// <param name="inherit">Ignored</param>
-        /// <returns></returns>
-        public static object[] GetCustomAttributes(this Assembly asm, Type attributeType, bool inherit)
-        {
-            return asm.GetCustomAttributes(attributeType).ToArray();
-        }
-
-        /// <summary>
-        /// Gets the types in a given assembly
-        /// </summary>
-        /// <param name="asm"></param>
-        /// <returns></returns>
-        public static IList<Type> GetTypes(this Assembly asm)
-        {
-            return asm.DefinedTypes.Select(info => info.AsType()).ToList();
-        }
-    }
+#if NET20 || NET35 || NET40
+            return asm.GetCustomAttributes(false).OfType<T>();
+#else
+            return asm.GetCustomAttributes().OfType<T>();
 #endif
+        }
+    }
 
     /// <summary>
     /// Type extensions that apply to all target frameworks

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-  <metadata>
+  <metadata minClientVersion="2.12">
     <id>NUnitLite</id>
     <title>NUnitLite</title>
     <version>$version$</version>
@@ -15,13 +15,13 @@
 
 Supported platforms:
 - .NET Framework 2.0+
-- .NET Standard 1.6
+- .NET Standard 1.6+
 - .NET Core
 
 How to use this package:
 
 1. Create a console application for your tests and delete the generated class containing Main().
-2. Install the NUnitLite package, which creates a new Main() as well as adding a reference to NUnitLite. This will also bring in the NUnit package, which adds a reference to the nunit framework to your project.
+2. Install the NUnitLite package, which creates a new Main() as well as adding a reference to NUnitLite. This will also bring in the NUnit package, which adds a reference to the NUnit framework to your project.
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
@@ -41,7 +41,11 @@ How to use this package:
       </group>
       <group targetFramework="netstandard1.6">
         <dependency id="NUnit" version="[$version$]" />
-        <dependency id="NETStandard.Library" version="1.6.0" />
+        <dependency id="NETStandard.Library" version="1.6.1" />
+      </group>
+      <group targetFramework="netstandard2.0">
+        <dependency id="NUnit" version="[$version$]" />
+        <dependency id="NETStandard.Library" version="2.0.0" />
       </group>
     </dependencies>
   </metadata>
@@ -54,11 +58,13 @@ How to use this package:
     <file src="bin/net40/nunitlite.dll" target="lib\net40" />
     <file src="bin/net45/nunitlite.dll" target="lib\net45" />
     <file src="bin/netstandard1.6/nunitlite.dll" target="lib\netstandard1.6" />
+    <file src="bin/netstandard2.0/nunitlite.dll" target="lib\netstandard2.0" />
     <file src="bin/net20/nunitlite-runner.exe" target="tools\net20" />
     <file src="bin/net35/nunitlite-runner.exe" target="tools\net35" />
     <file src="bin/net40/nunitlite-runner.exe" target="tools\net40" />
     <file src="bin/net45/nunitlite-runner.exe" target="tools\net45" />
     <file src="bin/netcoreapp1.1/nunitlite-runner.dll" target="tools\netcoreapp1.1" />
+    <file src="bin/netcoreapp2.0/nunitlite-runner.dll" target="tools\netcoreapp2.0" />
     <file src="../../nuget/nunitlite/Program.cs" target="content" />
     <file src="../../nuget/nunitlite/Program.vb" target="content" />
     <file src="../../nuget/nunitlite/install.ps1" target="tools" />
