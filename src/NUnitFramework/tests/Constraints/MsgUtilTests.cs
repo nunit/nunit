@@ -33,7 +33,10 @@ namespace NUnit.Framework.Constraints
     public static class MsgUtilTests
     {
         #region FormatValue
-        class CustomFormattableType { }
+        class CustomFormattableType
+        {
+            public string Value => "value";
+        }
 
         [Test]
         public static void FormatValue_ContextualCustomFormatterInvoked_FactoryArg()
@@ -55,9 +58,9 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void FormatValue_ContextualCustomFormatterInvoked_FormatterArg()
         {
-            TestContext.AddFormatter<CustomFormattableType>(val => "custom_formatted_using_type");
+            TestContext.AddFormatter<CustomFormattableType>(val => "custom_formatted_using_type : " + val.Value);
 
-            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted_using_type"));
+            Assert.That(MsgUtils.FormatValue(new CustomFormattableType()), Is.EqualTo("custom_formatted_using_type : value"));
         }
 
         [Test]
