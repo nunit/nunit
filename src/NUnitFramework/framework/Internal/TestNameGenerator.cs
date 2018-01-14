@@ -257,8 +257,8 @@ namespace NUnit.Framework.Internal
                             }
                             else
                             {
-                                var valueDisplayString = GetDisplayString(argArray.GetValue(i), stringMax);
-                                builder.Append(valueDisplayString);
+                                var elementDisplayString = GetDisplayString(element, stringMax);
+                                builder.Append(elementDisplayString);
                             }
                         }
 
