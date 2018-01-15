@@ -715,4 +715,62 @@ namespace NUnit.TestData
 #endregion
     }
 
+    public abstract class WarningInSetUpOrTearDownFixture
+    {
+        [Test]
+        public void WarningPassesInTest()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void WarningFailsInTest()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void ThreeWarningsFailInTest()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(5));
+            Warn.Unless(2 + 2, Is.EqualTo(22));
+            Warn.Unless(2 + 2, Is.EqualTo(42));
+        }
+    }
+
+    public class WarningInSetUpPasses : WarningInSetUpOrTearDownFixture
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(4));
+        }
+    }
+
+    public class WarningInSetUpFails : WarningInSetUpOrTearDownFixture
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(5));
+        }
+    }
+
+    public class WarningInTearDownPasses : WarningInSetUpOrTearDownFixture
+    {
+        [TearDown]
+        public void TearDown()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(4));
+        }
+    }
+
+    public class WarningInTearDownFails : WarningInSetUpOrTearDownFixture
+    {
+        [TearDown]
+        public void TearDown()
+        {
+            Warn.Unless(2 + 2, Is.EqualTo(5));
+        }
+    }
 }

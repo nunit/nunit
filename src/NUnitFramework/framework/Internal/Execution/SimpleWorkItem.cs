@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var item in setUpTearDownList)
                     command = new SetUpTearDownCommand(command, item);
 
-                // In the current implementation, upstream actions only apply to tests. If that should change in the future,
+                // In the current implementation, upstream actions only apply to tests. If that should cha nge in the future,
                 // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
                 // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
                 int index = Context.UpstreamActions.Count;
