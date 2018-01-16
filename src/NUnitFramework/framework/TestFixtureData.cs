@@ -95,7 +95,7 @@ namespace NUnit.Framework
         /// </summary>
         public TestFixtureData SetArgDisplayNames(params string[] displayNames)
         {
-            ArgDisplayNames = displayNames;
+            ArgDisplayNames = displayNames ?? new string[] { null };
             return this;
         }
 

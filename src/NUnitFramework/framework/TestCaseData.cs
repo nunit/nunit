@@ -106,7 +106,7 @@ namespace NUnit.Framework
         /// </summary>
         public TestCaseData SetArgDisplayNames(params string[] displayNames)
         {
-            ArgDisplayNames = displayNames;
+            ArgDisplayNames = displayNames ?? new string[] { null };
             return this;
         }
 
