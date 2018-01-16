@@ -265,6 +265,9 @@ namespace NUnit.TestData.TestFixtureSourceData
         {
             yield return CreateTestFixtureData(null, new object[] { "argValue" }, null, typeof(IndividualInstanceNameTestDataFixture).Name + "(\"argValue\")");
 
+            yield return CreateTestFixtureData(null, new object[] { "argValue" }, null, typeof(IndividualInstanceNameTestDataFixture).Name + "()")
+                .SetArgDisplayNames(null); // Test use of target-typed null literal
+
             yield return CreateTestFixtureData(null, new object[] { "argValue" }, new[] { "argName" }, typeof(IndividualInstanceNameTestDataFixture).Name + "(argName)");
 
             yield return CreateTestFixtureData("a", new object[] { "argValue" }, new[] { "argName" }, "a");

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -189,6 +189,9 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             yield return CreateTestCaseData(null, new object[] { "argValue" }, null, nameof(TestCaseNameTestDataMethod) + "(\"argValue\")");
 
+            yield return CreateTestCaseData(null, new object[] { "argValue" }, null, nameof(TestCaseNameTestDataMethod) + "()")
+                .SetArgDisplayNames(null); // Test use of target-typed null literal
+
             yield return CreateTestCaseData(null, new object[] { "argValue" }, new[] { "argName" }, nameof(TestCaseNameTestDataMethod) + "(argName)");
 
             yield return CreateTestCaseData("a", new object[] { "argValue" }, new[] { "argName" }, "a");
@@ -202,6 +205,8 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             yield return CreateTestCaseData("{a}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "(argName1,argName2)");
 
             yield return CreateTestCaseData("{0}, {1}", new object[] { "argValue1", "argValue2" }, new[] { "argName" }, "argName, ");
+
+            yield return CreateTestCaseData("{0}, {1}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "argName1, argName2");
 
             yield return CreateTestCaseData("{0}, {1}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "argName1, argName2");
         }
