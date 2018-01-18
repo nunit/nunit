@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -126,6 +126,13 @@ namespace NUnit.Framework.Internal
 
             Assert.That(props,
                 Is.EquivalentTo(new string[] { "Answer=42", "Tag=bug", "Tag=easy" }));
+        }
+
+        [Test]
+        public void TestNullPropertyValueIsntAdded()
+        {
+            Assert.Throws<ArgumentNullException>(() => bag.Add("dontAddMe", null));
+            Assert.IsFalse(bag.ContainsKey("dontAddMe"));
         }
     }
 }
