@@ -135,11 +135,12 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeQueues()
         {
-            _innerQueues = new ConcurrentQueue<WorkItem>[PRIORITY_LEVELS];
+            ConcurrentQueue<WorkItem>[] newQueues = new ConcurrentQueue<WorkItem>[PRIORITY_LEVELS];
 
             for (int i = 0; i < PRIORITY_LEVELS; i++)
-                _innerQueues[i] = new ConcurrentQueue<WorkItem>();
+                newQueues[i] = new ConcurrentQueue<WorkItem>();
 
+            _innerQueues = newQueues;
             _addId = _removeId = 0;
         }
 
